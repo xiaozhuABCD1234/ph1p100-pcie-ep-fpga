@@ -61,7 +61,13 @@ module pcie_ep_engine #(
     input       wire    [31:0]      img_fb_rdata           ,
     output      wire    [31:0]      img_dbg_rd_idx         ,
     input       wire    [255:0]     cam_stat_bus           ,
-    output      wire    [6:0]       cam_tap_cfg            
+    output      wire    [6:0]       cam_tap_cfg            ,
+    // ==== 本移植新增：DDR3 整帧搬运（CTRL[5] + 只读握手字）====
+    output      wire                img_ctrl_ddr_en        ,
+    input       wire    [127:0]     img_ddr_ro             ,
+    // fb 读口仲裁（img_frame_src ↔ ep_bar_win，两个都在外层 top 里）
+    output      wire                img_host_rd_prio       ,
+    input       wire                img_host_grant         
 );
 
 `include "../common/TLP_FMT_TYPE.v"
@@ -349,7 +355,11 @@ ep_bar_win #(
     .fb_rdata       (img_fb_rdata           ),
     .dbg_rd_idx     (img_dbg_rd_idx         ),
     .cam_stat       (cam_stat_bus           ),
-    .cam_tap_cfg    (cam_tap_cfg            )
+    .cam_tap_cfg    (cam_tap_cfg            ),
+    .ctrl_ddr_en    (img_ctrl_ddr_en        ),
+    .ddr_ro         (img_ddr_ro             ),
+    .host_rd_prio   (img_host_rd_prio       ),
+    .host_grant     (img_host_grant         )
 );
 
 // ====================================================================

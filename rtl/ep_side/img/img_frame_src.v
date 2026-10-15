@@ -20,6 +20,18 @@
 //    - cam_sel=1        ：写口与状态字改由 cam_fb_writer（IMX415/CIS-2）提供，
 //                         布局不变（字 0 = 帧号 = FRAME_CNT，之后 4 像素/字）。
 //    两种写源都只是「同一块 fb[] 的写口」在 mux，不会同时写也不会写坏地址。
+//
+//  读口：只有**一个**，由主机预取与 DDR 整帧搬运共用，就在这里仲裁：
+//    · host_rd_prio（来自 ep_bar_win）为 1 时读口必须给主机 —— 那是「端口刚
+//      换了 ptr（一次 0x60 读或一次 0x5C 写），4 个字还没重新预取完」的情况，
+//      这时不给主机，主机下一拍读 0x60 就会拿到过期数据；
+//    · 否则 DMA 想读就把口给它；DMA 空闲时 host_grant 恒 1，
+//      预取行为与以前完全一样（所以这是用仲裁代替「加第二个读口」）。
+//    为什么加第二个读口不行：fb[] 会从 1W1R 变成 1W2R，实测 TD 无法把这个
+//    三端口存储器落进 ERAM20K —— 一次实现用 ERAM、另一份落成 DRAM，
+//    38600 个 dram lut 直接把 place 撞爆（日志 SYN-2599 + PHY-9009）。
+//    ⇒ 共用唯一读口，ERAM 用量不变，主机读帧路径的时序假设也不变。
+//    读数据按「上一拍的授权」分发给两个消费者，两边都仍是「地址→1 拍后数据」。
 ///////////////////////////////////////////////////////////////
 `timescale 1ns/1ps
 
@@ -36,7 +48,13 @@ module img_frame_src #(
     input  wire        trigger,       // 单帧触发（1 拍脉冲）
 
     input  wire [31:0] rd_addr,       // 帧缓存读字节地址（来自寄存器块）
-    output wire [31:0] rd_data,       // 读数据（1 拍延迟）,
+    output wire [31:0] rd_data,       // 读数据（1 拍延迟，且只在 host_grant 那拍成立）,
+    input  wire        host_rd_prio,  // 1 = 主机的预取寄存器已经不是 ptr..ptr+12 → 读口必须给主机
+    input  wire        dma_rd_req,    // 1 = DDR 搬运本拍想读一个字（ddr_frame_writer 的 fb_req）
+    output wire        host_grant,    // 本拍读口归主机（DMA 借走时为 0）
+    output wire        dma_grant,     // 本拍读口归 DMA（= !host_grant）
+    input  wire [31:0] rd2_addr,      // DDR 搬运的读字节地址
+    output wire [31:0] rd2_data,      // 给 DDR 搬运的读数据（1 拍延迟）
     output wire [31:0] dbg_rd_idx,    // 调试：内部字索引（低 17 位有效）
 
     output wire [31:0] frame_cnt,     // 已完成帧数（按写源选择）
@@ -108,15 +126,28 @@ module img_frame_src #(
 
     // 读口按参考工程 f9p_ph1p100_imx415x2/cam_preview.v 的写法：
     // 组合读 + 输出寄存器（TD 对这个形式必推断 ERAM20K）
-    wire [AW-1:0] rd_word_idx = rd_addr[31:2];   // 先取字地址再截位（别用参数化位选）
-    wire [31:0]   w_fb_rdata = fb[rd_word_idx];
+    wire [AW-1:0] rd_word_idx  = rd_addr[31:2];    // 先取字地址再截位（别用参数化位选）
+    wire [AW-1:0] rd2_word_idx = rd2_addr[31:2];
+
+    // 单口仲裁：主机预取一「脏」就优先，否则 DMA 借走
+    assign host_grant = host_rd_prio | ~dma_rd_req;
+    assign dma_grant  = ~host_grant;
+
+    wire [AW-1:0] sel_word_idx = host_grant ? rd_word_idx : rd2_word_idx;
+    wire [31:0]   w_fb_rdata   = fb[sel_word_idx];
     assign dbg_rd_idx = {15'd0, rd_word_idx};
 
-    reg [31:0] rd_data_r;
-    always @(posedge clk)
-        rd_data_r <= w_fb_rdata;
+    reg [31:0] fb_rdata_r;
+    reg        grant_r;             // 上一拍读口归谁（数据比地址晚 1 拍）
+    always @(posedge clk) begin
+        fb_rdata_r <= w_fb_rdata;
+        grant_r    <= host_grant;
+    end
 
-    assign rd_data = rd_data_r;
+    // 两个消费者各自只看自己拿到口那一拍的数据
+    //（主机侧还有 host_grant_q 做二次把关，见 ep_bar_win）
+    assign rd_data  = grant_r ? fb_rdata_r : 32'd0;
+    assign rd2_data = grant_r ? 32'd0 : fb_rdata_r;
 
     // ------------------------------------------------------------------
     // 测试图发生器（每 4 拍组一个 32bit 字）

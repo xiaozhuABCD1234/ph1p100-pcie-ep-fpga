@@ -37,6 +37,7 @@ add_files rtl/ep_side/cam/wfifo.v
 add_files rtl/ep_side/cam/ui_cfg_imx415.v
 add_files rtl/ep_side/cam/ui_i2c.v
 add_files rtl/ep_side/cam/ui_imx415_reg.v
+add_files rtl/ep_side/ddr/ddr_frame_writer.v
 add_files constraints/ph1p_pcie_case_ep.adc
 add_files constraints/ph1p_pcie_case_ep.sdc
 add_files al_ip/pcie_ep_core/pcie_ep_core.xml

@@ -92,6 +92,26 @@ UART 命令脚本：`doc/uart_cmd_file_pcie.txt`（可经板载串口下发校�
   共 76800 字 = 307200 字节（末 4 像素与测试图源一样不写）。
 - 测试台 `sim_do/tb_cam_fb_writer.v`（逐字比对整帧 + 帧号 + 丢包计数）。
 
+## 片内帧缓存 → 板上 DDR3（`rtl/ep_side/ddr/ddr_frame_writer.v`）
+
+帧缓存里那一帧现在能整帧搬进 DDR3，主机只读寄存器就知道去哪块内存取。
+
+- **开关/触发**：BAR0 `0x44 CTRL` 新增 `bit5`（默认 0）。置 1 后，帧计数器一变
+  （= 一帧已整帧写好）就搬一帧；`0x4C FRAME_CNT` 语义不变。
+- **双缓冲**：顶层 `DDR_FRAME_BASE0`/`DDR_FRAME_BASE1` = 1MB / 1.5MB，按帧号奇偶交替，
+  每帧 307200 字节（两块都 4KB 对齐，正好一个 AXI4 突发不跨 4KB 页）。
+  主机正在读的那块不会被下一帧覆盖。
+- **通路**：读 fb[] → 8 个字拼 256bit 一拍 → 异步 FIFO（格雷码指针，照 cam_fb_writer 的写法）
+  → `dhi_clk`(100MHz) 域 → 每 4KB 一个 AXI4 突发（awlen=127、awsize=5、INCR、256bit 数据）。
+  **fb 读口只有一份**，与主机读 0x60 的预取共用，仲裁在 `img_frame_src`：主机的预取一「脏」
+  （刚换过 ptr）就把口还给主机，其余时间给搬运。
+- **握手（只读）**：`0xA0 DDR_FRAME_SEQ`（单调递增，= DDR 里该帧字 0 的帧号）、
+  `0xA4 DDR_BASE`、`0xA8 DDR_STATUS`（bit0 valid / bit1 busy / bit2 err / bit3 alive /
+  bit4 cal_done / [31:16] err_cnt）、`0xAC DDR_LEN`。只有整帧的写响应全部收齐、
+  且没有撕裂 / 没有非 OKAY 才发布序号 —— 主机看到序号变了，那一帧就是完整的。
+- **测试台**：`sim_do/tb_ddr_frame_writer.v`（双缓冲 + 逐字节比对 + 撕裂用例 + AXI backpressure）。
+  **本机没有仿真器，只写不跑。**
+
 ## 提交信息规范
 
 `<类型>(<范围>): <做了什么>`，首行不超过 78 字符；正文写清"为什么、怎么做的"，一行一句。

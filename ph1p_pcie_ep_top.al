@@ -291,6 +291,14 @@
                     <Attr Name="CompileOrder" Val="35"/>
                 </FileInfo>
             </File>
+            <File Path="rtl/ep_side/ddr/ddr_frame_writer.v">
+                <FileInfo>
+                    <Attr Name="UsedInSyn" Val="true"/>
+                    <Attr Name="UsedInP&R" Val="true"/>
+                    <Attr Name="BelongTo" Val="design_1"/>
+                    <Attr Name="CompileOrder" Val="36"/>
+                </FileInfo>
+            </File>
         </Verilog>
         <ADC_FILE>
             <File Path="constraints/ph1p_pcie_case_ep.adc">

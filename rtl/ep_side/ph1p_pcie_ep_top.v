@@ -88,6 +88,13 @@
     localparam IMG_PTRBYTES = IMG_W * IMG_H;
     localparam IMG_PTRMSK   = (IMG_WORDS * 4) - 4;   // 保留（未用）
 
+    // ---- DDR3 整帧搬运（ddr_frame_writer，本移植新增）----
+    //  双缓冲：两块固定基址按帧号奇偶交替。两块都要 ≥ 每帧字节数（640x480=307200B）、
+    //  4KB 对齐、互不重叠；默认取 1MB / 1.5MB（间隔 512KB > 307200B）。
+    //  这两条基址只在这里定义，直接当参数传给 ddr_frame_writer，别处不写魔数。
+    localparam [31:0] DDR_FRAME_BASE0  = 32'h0010_0000;   // 双缓冲块 0
+    localparam [31:0] DDR_FRAME_BASE1  = 32'h0018_0000;   // 双缓冲块 1
+
 // ==== 图像通路（本移植新增：img_regs + img_frame_src）====
 wire [31:0]  img_fb_raddr;
 wire [31:0]  img_fb_rdata;
@@ -124,6 +131,32 @@ assign img_cam_sel = img_pattern[1];   // = CTRL[4]（原语义不变）
 wire [255:0] w_cam_stat;      // 声明必须早于例化处使用（否则 TD 造 1 位隐式网）
 wire [6:0]   cam_tap_cfg;
 wire         w_uart_rxd_unused = 1'b1;
+
+// ==== DDR3 整帧搬运（ddr_frame_writer + u_ddr3_mc_0 的 AXI 写通道）====
+//  握手寄存器面在 ep_bar_win（0xA0~0xAC），经 pcie_ep_engine 的
+//  img_ctrl_ddr_en / img_ddr_ro 两个端口过一下（与 cam_stat_bus 同一种做法）。
+wire         img_ddr_en;         // CTRL[5]
+wire [127:0] w_ddr_ro;           // {len, status, base, seq} → ep_bar_win 0xAC/0xA8/0xA4/0xA0
+wire [31:0]  w_ddr_seq, w_ddr_base, w_ddr_status, w_ddr_len;
+wire [31:0]  img_fb_rd2_addr;    // DDR 搬运的读地址（与主机预取共用 fb 唯一读口）
+wire [31:0]  img_fb_rd2_data;
+wire         img_host_rd_prio;   // ep_bar_win 的预取还没刷完 → 读口要还给它
+wire         img_host_grant;     // 本拍读口归主机（与 img_fb_rd2_* 配套的仲裁输出）
+wire         img_dma_grant;      // 本拍读口归 DMA
+wire         img_ddr_fb_req;     // DDR 搬运本拍想读一个字
+wire [28:0]  w_ddr_awaddr;
+wire [7:0]   w_ddr_awlen;
+wire [2:0]   w_ddr_awsize;
+wire [1:0]   w_ddr_awburst;
+wire         w_ddr_awvalid, w_ddr_awready;
+wire [255:0] w_ddr_wdata;
+wire [31:0]  w_ddr_wstrb;
+wire         w_ddr_wlast, w_ddr_wvalid, w_ddr_wready;
+wire [1:0]   w_ddr_bresp;
+wire         w_ddr_bvalid, w_ddr_bready;
+wire         w_ddrphy_rdy;       // = 1 表示 DDRPHY 校准完成（IP 的 cal_done）
+
+assign {w_ddr_len, w_ddr_status, w_ddr_base, w_ddr_seq} = w_ddr_ro;
 
     // clock and reset signals
     wire                          tl_clk_gate                             ;
@@ -489,7 +522,12 @@ pcie_ep_engine #(
     .img_fb_rdata                            (img_fb_rdata                           )
     ,.img_dbg_rd_idx                          (img_dbg_idx                            ),
     .cam_stat_bus                            (w_cam_stat                             ),
-    .cam_tap_cfg                             (cam_tap_cfg                            )
+    .cam_tap_cfg                             (cam_tap_cfg                            ),
+    // DDR3 整帧搬运（CTRL[5] + 只读握手字 + fb 读口仲裁）
+    .img_ctrl_ddr_en                         (img_ddr_en                             ),
+    .img_ddr_ro                              (w_ddr_ro                               ),
+    .img_host_rd_prio                        (img_host_rd_prio                       ),
+    .img_host_grant                          (img_host_grant                         )
 );
 
 pcie_ep_int_handle u_pcie_ep_int_handle(
@@ -619,6 +657,13 @@ img_frame_src #(
     .trigger   (img_trigger     ),
     .rd_addr   (img_fb_raddr    ),
     .rd_data   (img_fb_rdata    ),
+    // fb 唯一读口的仲裁：主机预取 vs DDR 整帧搬运（见本文件头部与 img_frame_src）
+    .host_rd_prio (img_host_rd_prio ),
+    .dma_rd_req   (img_ddr_fb_req   ),
+    .host_grant   (img_host_grant   ),
+    .dma_grant    (img_dma_grant    ),
+    .rd2_addr     (img_fb_rd2_addr  ),
+    .rd2_data     (img_fb_rd2_data  ),
     .dbg_rd_idx(img_dbg_idx ),
     .frame_cnt (img_frame_cnt   ),
     .width     (img_width       ),
@@ -1157,8 +1202,17 @@ assign  debug_led[3] = ltssm_reg_dly[4];
 //        apb_prst_n = cfg_rst_n（与 apb_pclk = cfg_clk 同域）。
 //      · 用户刷新：usr_ref_type = 2'b00（IPUG034 表 2-19：00 = 正常 tREFI 自动刷新），
 //        usr_ref_req = 1'b0（不请求用户刷新）。
-//      · ecc_err_*、ctl_ram_*、ddrphy_rdy 等输出本步不使用，留空（与厂商例程
+//      · ecc_err_*、ctl_ram_* 等输出本步不使用，留空（与厂商例程
 //        ddrmc_test_top 的接法一致）。
+//
+//  (5) 【本步新增】用户侧 AXI 写通道接 ddr_frame_writer（整帧搬进 DDR3）：
+//      · 写通道（aw/w/b）从「常量 0」改成 ddr_frame_writer 的输出；
+//        读通道仍完全不接（arvalid=0，rready=1）。
+//      · ddrphy_rdy 接出来当 DDR_STATUS.bit4（校准完成）—— 板子上一眼就能看出
+//        DDR 到底有没有起来，比只看握手卡住强。
+//      · ddr_frame_writer 的片内侧时钟/复位是 tl_clk_user / power_on_rst_dly，
+//        AXI 侧是 dhi_clk / ddrphy_rst_n，跨域全部走异步 FIFO + 2 级同步器
+//        （见 rtl/ep_side/ddr/ddr_frame_writer.v 头部）。
 // ====================================================================
 // 注意：IP 的 apb_pclk 与 cfg_clk 是同一个物理时钟的两个输出端口，
 //       不能同时接到一条 wire（会变成双驱动），这里只取 cfg_clk 一路。
@@ -1185,26 +1239,26 @@ ddr3_mc_0 u_ddr3_mc_0 (
     .cfg_clk        (w_ddr_cfg_clk       ),
     .cfg_rst_n      (w_ddr_cfg_rst_n     ),
     .ddrphy_rst_n   (w_ddrphy_rst_n      ),
-    .ddrphy_rdy     (                    ),
+    .ddrphy_rdy     (w_ddrphy_rdy       ),
 
     .axi_aclk       (w_ddr_dhi_clk       ),
     .axi_aresetn    (w_ddrphy_rst_n      ),
     .axi_awid       (4'd0                ),
-    .axi_awaddr     (29'd0               ),
-    .axi_awlen      (8'd0                ),
-    .axi_awsize     (3'd0                ),
-    .axi_awburst    (2'd0                ),
-    .axi_awvalid    (1'b0                ),
-    .axi_awready    (                    ),
-    .axi_wdata      (256'd0              ),
-    .axi_wstrb      (32'd0               ),
-    .axi_wlast      (1'b0                ),
-    .axi_wvalid     (1'b0                ),
-    .axi_wready     (                    ),
+    .axi_awaddr     (w_ddr_awaddr        ),
+    .axi_awlen      (w_ddr_awlen         ),
+    .axi_awsize     (w_ddr_awsize        ),
+    .axi_awburst    (w_ddr_awburst       ),
+    .axi_awvalid    (w_ddr_awvalid       ),
+    .axi_awready    (w_ddr_awready       ),
+    .axi_wdata      (w_ddr_wdata         ),
+    .axi_wstrb      (w_ddr_wstrb         ),
+    .axi_wlast      (w_ddr_wlast         ),
+    .axi_wvalid     (w_ddr_wvalid        ),
+    .axi_wready     (w_ddr_wready        ),
     .axi_bid        (                    ),
-    .axi_bresp      (                    ),
-    .axi_bvalid     (                    ),
-    .axi_bready     (1'b1                ),
+    .axi_bresp      (w_ddr_bresp         ),
+    .axi_bvalid     (w_ddr_bvalid        ),
+    .axi_bready     (w_ddr_bready        ),
     .axi_arid       (4'd0                ),
     .axi_araddr     (29'd0               ),
     .axi_arlen      (8'd0                ),
@@ -1242,6 +1296,65 @@ ddr3_mc_0 u_ddr3_mc_0 (
     .ddr_dqs_n      (ddr_dqs_n           ),
     .ddr_dq         (ddr_dq              ),
     .ddr_dm         (ddr_dm              )
+);
+
+// ====================================================================
+//  整帧搬运到 DDR3（ddr_frame_writer，本移植新增）
+//
+//  触发：写源 mux 之后的帧计数器 img_frame_cnt 一变（= 一帧已整帧写好进 fb[]），
+//        且 CTRL[5]（img_ddr_en）为 1、DDR 用户侧已出复位。
+//  数据：img_frame_src 的帧缓存读口（img_fb_rd2_addr/data）逐字读、
+//        8 个字拼 256bit 一拍，过异步 FIFO 到 dhi_clk 域，每 4KB 一个 AXI 突发。
+//        那个读口只有一份，主机读 0x60 的预取也在用 → 仲裁在 img_frame_src 里：
+//        主机的预取一「脏」（刚换过 ptr）就把口还给主机，
+//        其余时间给本搬运。没有采用「再加一个读口」的原因见 img_frame_src 头部。
+//  双缓冲：帧号奇偶 → DDR_FRAME_BASE0 / DDR_FRAME_BASE1。
+//  握手：wr_frame_seq / wr_base / wr_status / wr_len → ep_bar_win 0xA0~0xAC。
+//        只有整帧的写响应全部收齐（且无撕裂、无非 OKAY）才发布序号，
+//        所以主机读到序号变化时，那一帧在 DDR 里一定是完整的。
+//  撕裂保护：搬运期间 fb 又被新一帧写入（img_busy）则本帧不发布、err_cnt+1。
+// ====================================================================
+ddr_frame_writer #(
+    .W           (IMG_W             ),
+    .H           (IMG_H             ),
+    .BASE0       (DDR_FRAME_BASE0   ),
+    .BASE1       (DDR_FRAME_BASE1   ),
+    .FIFO_AW     (5                 ),
+    .BURST_BEATS (128               )
+) u_ddr_frame_writer (
+    .clk_fb        (tl_clk_user       ),
+    .rst_fb        (power_on_rst_dly ),
+    .ddr_en        (img_ddr_en       ),
+    .fb_frame_cnt  (img_frame_cnt    ),
+    .fb_busy       (img_busy         ),
+    .fb_rd_addr    (img_fb_rd2_addr  ),
+    .fb_rd_data    (img_fb_rd2_data  ),
+    .fb_req        (img_ddr_fb_req   ),
+    .fb_grant      (img_dma_grant    ),
+
+    .clk_ddr       (w_ddr_dhi_clk     ),
+    .rst_ddr       (~w_ddrphy_rst_n   ),
+    .ddr_cal_done  (w_ddrphy_rdy      ),
+
+    .m_axi_awaddr  (w_ddr_awaddr      ),
+    .m_axi_awlen   (w_ddr_awlen       ),
+    .m_axi_awsize  (w_ddr_awsize      ),
+    .m_axi_awburst (w_ddr_awburst     ),
+    .m_axi_awvalid (w_ddr_awvalid     ),
+    .m_axi_awready (w_ddr_awready     ),
+    .m_axi_wdata   (w_ddr_wdata       ),
+    .m_axi_wstrb   (w_ddr_wstrb       ),
+    .m_axi_wlast   (w_ddr_wlast       ),
+    .m_axi_wvalid  (w_ddr_wvalid      ),
+    .m_axi_wready  (w_ddr_wready      ),
+    .m_axi_bresp   (w_ddr_bresp       ),
+    .m_axi_bvalid  (w_ddr_bvalid      ),
+    .m_axi_bready  (w_ddr_bready      ),
+
+    .wr_frame_seq  (w_ddr_seq         ),
+    .wr_base       (w_ddr_base        ),
+    .wr_status     (w_ddr_status      ),
+    .wr_len        (w_ddr_len         )
 );
 
 endmodule

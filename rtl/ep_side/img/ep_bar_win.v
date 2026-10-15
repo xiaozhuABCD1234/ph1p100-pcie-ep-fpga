@@ -16,6 +16,8 @@
 //  mrdata_rd_data 打进完成包，所以：
 //    - 地址必须在 rx_sop_ff 那拍锁存，数据下一拍组合给出
 //    - 寄存器区用组合 mux；帧缓存用 4 个预取寄存器轮转刷新，保证"预先备好"
+//      （fb 读口只有一份，与 DDR 整帧搬运共用，仲裁在 img_frame_src 里；
+//       预取只在 host_grant=1 那拍存/前进，见下面预取段的注释）
 //
 //  寄存器表（BAR0 字节偏移，4 字节对齐）：
 //    0x40 MAGIC     R    0x50434946
@@ -41,6 +43,13 @@
 //    0x68 CLK_MHZ   R
 //    0x6C SCRATCH   R/W 读写回环自检
 //    0x70 PF0       R    PTR 处预取的 dw0（肉眼调试用）
+//    0xA0 DDR_FRAME_SEQ R 已整帧落 DDR3 的帧号（单调递增；= DDR 里该帧字 0 的帧号）
+//    0xA4 DDR_BASE      R 该帧在 DDR3 里的字节基址（双缓冲两块交替）
+//    0xA8 DDR_STATUS    R bit0 valid / bit1 busy / bit2 err / bit3 alive /
+//                          bit4 cal_done / [31:16] err_cnt
+//    0xAC DDR_LEN       R 每帧字节数（= 0x58 DATA_LEN）
+//  另：CTRL bit5 = ddr_en（1 = 每完成一帧自动搬进 DDR3；默认 0，原语义不变）
+//    搬运通路本体在 rtl/ep_side/ddr/ddr_frame_writer.v，这里只做寄存器面。
 ///////////////////////////////////////////////////////////////
 `timescale 1ns/1ps
 
@@ -67,6 +76,12 @@ module ep_bar_win #(
     output reg          ctrl_trigger,
     // ctrl_pattern 端口：bit1 = CTRL[4] 相机写源选择（借道），bit0 = 原 pattern[0]
     output wire [1:0]   ctrl_pattern,
+    // DDR3 整帧搬运（CTRL[5] + 只读握手字，字面顺序 {len, status, base, seq}）
+    output reg          ctrl_ddr_en,
+    input  wire [127:0] ddr_ro,
+    // 与 DDR 搬运共用 fb 唯一读口的握手指（见 img_frame_src 头部仲裁）
+    output wire         host_rd_prio,
+    input  wire         host_grant,
     input  wire         st_ready,
     input  wire         st_busy,
     input  wire [31:0]  st_frame_cnt,
@@ -143,6 +158,7 @@ module ep_bar_win #(
             ctrl_trigger  <= 1'b0;
             ctrl_pattern_r <= 2'd0;
             ctrl_cam_sel   <= 1'b0;      // 默认走测试图源（向后兼容）
+            ctrl_ddr_en    <= 1'b0;      // 默认不往 DDR3 搬（保持原行为）
             ptr           <= 32'd0;
             scratch       <= 32'd0;
             last_wr       <= 32'd0;
@@ -163,6 +179,7 @@ module ep_bar_win #(
                         ctrl_trigger <= tlp_dw_s[1];     // 下一拍自动清 → 单帧脉冲
                         ctrl_pattern_r <= tlp_dw_s[3:2];
                         ctrl_cam_sel   <= tlp_dw_s[4];   // 1 = 相机写源
+                        ctrl_ddr_en    <= tlp_dw_s[5];   // 1 = 每完成一帧自动搬进 DDR3
                     end
                     12'h5C: ptr     <= ptr_fix(tlp_dw_s);
                     12'h9C: cam_tap_cfg <= tlp_dw_s[6:0];
@@ -188,25 +205,59 @@ module ep_bar_win #(
 
     // ------------------------------------------------------------------
     // 帧缓存预取：4 个 dw 轮转刷新（4 拍一轮，主机访问间隔远大于此）
+    //
+    //  与 DDR 整帧搬运共用 fb 的***唯一***读口（仲裁在 img_frame_src，见那里头部）：
+    //    · host_grant = 1 的那拍读口是我们的 → 下一拍数据也是我们的，
+    //      按 pf_sel 回退一格存、pf_sel 前进；
+    //    · host_grant = 0（DMA 借走）→ 那拍不存、pf_sel 也不前进
+    //      （否则会把 DMA 地址上的数据存进 pf，并且 pf_sel 与实际地址错位）。
+    //    · DMA 空闲时 host_grant 恒 1 ⇒ 行为与加仲裁之前完全一样。
+    //
+    //  host_rd_prio = 「预取寄存器已经不是 ptr..ptr+12 了，读口必须还给我」：
+    //    ptr 一变（一次 0x60 读、一次 0x5C 写）就置 1；之后连续拿到 6 拍读口
+    //    才清 0（四个字只需 4 拍，多 2 拍是把「地址→数据 1 拍」两级流水算进去，
+    //    保证数据真的都到寄存器里了才放手）。原来 ptr 变后自由跑 4 拍刷完，
+    //    主机只需间隔 ≥5 拍；这里给的是 ≥6 拍，只强不弱。
+    //    复位后先置 1，保证第一拍就刷齐，不依赖复位前的相位。
     // ------------------------------------------------------------------
     reg [31:0] pf0, pf1, pf2, pf3;
     reg [1:0]  pf_sel;
+    reg        host_grant_q;      // 上一拍读口是否归我们（fb_rdata 与地址差 1 拍）
+    reg        pf_dirty;
+    reg [2:0]  pf_cnt;            // 脏状态下已经拿到几拍读口
 
-    assign fb_raddr = ptr + {30'd0, pf_sel, 2'b00};
+    assign fb_raddr     = ptr + {30'd0, pf_sel, 2'b00};
+    assign host_rd_prio = pf_dirty;
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             pf0 <= 32'd0; pf1 <= 32'd0; pf2 <= 32'd0; pf3 <= 32'd0;
-            pf_sel <= 2'd0;
+            pf_sel       <= 2'd0;
+            host_grant_q <= 1'b0;
+            pf_dirty     <= 1'b1;
+            pf_cnt       <= 3'd0;
         end else begin
-            // fb_rdata 是“上一拍地址”的数据 → 按 pf_sel 回退一格存入
-            case (pf_sel)
-                2'd1: pf0 <= fb_rdata;   // 上一拍地址 = ptr+0
-                2'd2: pf1 <= fb_rdata;   // ptr+4
-                2'd3: pf2 <= fb_rdata;   // ptr+8
-                2'd0: pf3 <= fb_rdata;   // ptr+12
-            endcase
-            pf_sel <= pf_sel + 2'd1;
+            host_grant_q <= host_grant;
+
+            // 脏计数器：ptr 变了重新计；连续拿到 6 拍读口（四字刷齐 + 2 拍流水）才放手
+            if (rd_data_go || (req_wr && (tlp_addr[11:0] == 12'h5C))) begin
+                pf_dirty <= 1'b1;
+                pf_cnt   <= 3'd0;
+            end else if (pf_dirty && host_grant) begin
+                pf_cnt <= pf_cnt + 3'd1;
+                if (pf_cnt == 3'd5) pf_dirty <= 1'b0;
+            end
+
+            // fb_rdata 是“上一拍地址”的数据（且那一拍读口得是我们的）
+            if (host_grant_q) begin
+                case (pf_sel)
+                    2'd1: pf0 <= fb_rdata;   // 上一拍地址 = ptr+0
+                    2'd2: pf1 <= fb_rdata;   // ptr+4
+                    2'd3: pf2 <= fb_rdata;   // ptr+8
+                    2'd0: pf3 <= fb_rdata;   // ptr+12
+                endcase
+                pf_sel <= pf_sel + 2'd1;
+            end
         end
     end
 
@@ -218,7 +269,7 @@ module ep_bar_win #(
     always @(*) begin
         case (r_idx)
             12'h40:  rd_dw_comb = MAGIC;
-            12'h44:  rd_dw_comb = {27'd0, ctrl_cam_sel, ctrl_pattern_r, ctrl_trigger, ctrl_enable};
+            12'h44:  rd_dw_comb = {26'd0, ctrl_ddr_en, ctrl_cam_sel, ctrl_pattern_r, ctrl_trigger, ctrl_enable};
             12'h48:  rd_dw_comb = {30'd0, st_busy, st_ready};
             12'h4C:  rd_dw_comb = st_frame_cnt;
             12'h50:  rd_dw_comb = {16'd0, st_width};
@@ -241,6 +292,11 @@ module ep_bar_win #(
             12'h94:  rd_dw_comb = cam_stat[191:160];
             12'h98:  rd_dw_comb = cam_stat[223:192];
             12'h9C:  rd_dw_comb = {25'd0, cam_tap_cfg};   // 读回 tap 配置
+            // DDR3 整帧搬运握手（ddr_frame_writer，见 rtl/ep_side/ddr/）
+            12'hA0:  rd_dw_comb = ddr_ro[31:0];           // DDR_FRAME_SEQ
+            12'hA4:  rd_dw_comb = ddr_ro[63:32];          // DDR_BASE
+            12'hA8:  rd_dw_comb = ddr_ro[95:64];          // DDR_STATUS
+            12'hAC:  rd_dw_comb = ddr_ro[127:96];         // DDR_LEN
             default: rd_dw_comb = 32'hDEAD_BEEF;
         endcase
     end

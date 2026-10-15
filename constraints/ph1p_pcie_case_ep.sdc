@@ -26,7 +26,24 @@ create_generated_clock -name {cam_b_byte_clk} -source [get_ports {mipi_b_clk_hs_
 # 同步器（top 里 s_a_tgl/s_a_vs/... 三级打拍 + clk_activity + pulse2toggle），
 # 所以这里按"异步时钟域"如实声明，否则 STA 会拿 5.332ns/16ns 两个无关周期去凑最近沿
 # （实测预算只剩 0.004ns），报出与逻辑无关的 −6.8ns 假违规（TD DRC TMST-7700/5089）。
+#
+# =============================================================================
+# DDR3 用户侧时钟（TD 报告里写作 u_ddr3_mc_0/usr_clk，100MHz）——本步新增的
+# 「整帧搬进 DDR3」通路时钟域：
+#   来源：al_ip/ddr3_mc_0/src/sdc/ddr3_mc_0.sdc 里
+#         rename_clock -name usr_clk [...u_pll1/u_pll_inst.clkc[0]]
+#   跨域做法（见 rtl/ep_side/ddr/ddr_frame_writer.v 头部）：
+#     · 数据：异步 FIFO（格雷码指针 + 2 级同步器）tl_clk_user → usr_clk；
+#     · 请求/基址：单比特电平 2 级同步 + 数据在整个请求期间保持不动；
+#     · done/err：usr_clk 域电平 2 级同步回 tl_clk_user。
+#   两端时钟由各自的恢复/复位决定，没有固定相位关系，所以与相机段一样按
+#   "异步时钟域"如实声明（否则 STA 会去凑 16ns/10ns 的最近沿，报假违规）。
+#   通配写法：*usr_clk 既能匹配裸名 usr_clk，也能匹配 TD 报告里的
+#   u_ddr3_mc_0/usr_clk（TD 的 get_clocks 支持通配，参考 TD 自带
+#   ip/depot/QSGMII_over_SERDES_1.1/.../plugin_end.tcl 的 */inst/... 用法）。
+# =============================================================================
 set_clock_groups -asynchronous \
     -group [get_clocks {tl_clk_user sys_clk}] \
     -group [get_clocks {cam_a_clk_lane cam_a_byte_clk}] \
-    -group [get_clocks {cam_b_clk_lane cam_b_byte_clk}]
+    -group [get_clocks {cam_b_clk_lane cam_b_byte_clk}] \
+    -group [get_clocks {*usr_clk}]
