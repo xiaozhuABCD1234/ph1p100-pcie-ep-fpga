@@ -1,0 +1,8 @@
+`define MC0_DRAM_DDR3
+`define MC0_DDR3_512M
+`define MC0_DDR3_X8
+`define MC0_DDR3_800D
+`define PH1P100
+`define MC0_MIS_AXI
+`define PH1P_VCCIO_1V50
+`define DHI_DATA_FORMAT_BYTE

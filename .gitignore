@@ -22,5 +22,9 @@ log/bw_*
 multirun_script.tcl
 
 # TD IpTool 在工程内留下的日志（GUI 生成 IP 时写进 CWD 与 al_ip）
+# 注意：只忽略日志，IP 目录本身（al_ip/<ip>/ 下的 xml/RTL/adc/params/sdc）必须入库，
+#       否则工程搬走后无法重建 IP。
 log/ipgen.log
-al_ip/*_drc_check.log
+*_adc.log
+*_proc.log
+*_drc_check.log
