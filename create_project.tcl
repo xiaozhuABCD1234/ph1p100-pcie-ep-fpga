@@ -5,6 +5,7 @@ create_project ph1p_pcie_ep_top ./ -family PH1 -device PH1P100SBG484 -speed 3 -f
 add_files rtl/ep_side/img/ep_bar_win.v
 add_files rtl/ep_side/img/img_regs.v
 add_files rtl/ep_side/img/img_frame_src.v
+add_files rtl/ep_side/img/cam_fb_writer.v
 add_files rtl/common/ph1p_pcie_case_param.v
 add_files rtl/common/ph1p_pcie_rst_sync.v
 add_files rtl/common/uart/bps_setting.v

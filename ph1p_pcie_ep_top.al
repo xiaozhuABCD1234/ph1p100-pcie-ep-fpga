@@ -35,7 +35,7 @@
                     <Attr Name="CompileOrder" Val="3"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/common/ph1p_pcie_case_param.v">
+            <File Path="rtl/ep_side/img/cam_fb_writer.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -43,7 +43,7 @@
                     <Attr Name="CompileOrder" Val="4"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/common/ph1p_pcie_rst_sync.v">
+            <File Path="rtl/common/ph1p_pcie_case_param.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -51,7 +51,7 @@
                     <Attr Name="CompileOrder" Val="5"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/common/uart/bps_setting.v">
+            <File Path="rtl/common/ph1p_pcie_rst_sync.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -59,7 +59,7 @@
                     <Attr Name="CompileOrder" Val="6"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/common/uart/pcie_uart.v">
+            <File Path="rtl/common/uart/bps_setting.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -67,7 +67,7 @@
                     <Attr Name="CompileOrder" Val="7"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/common/uart/pcie_uprotocol.v">
+            <File Path="rtl/common/uart/pcie_uart.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -75,7 +75,7 @@
                     <Attr Name="CompileOrder" Val="8"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/common/uart/uart_cdc.v">
+            <File Path="rtl/common/uart/pcie_uprotocol.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -83,7 +83,7 @@
                     <Attr Name="CompileOrder" Val="9"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/common/uart/uart_rx_setting.v">
+            <File Path="rtl/common/uart/uart_cdc.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -91,7 +91,7 @@
                     <Attr Name="CompileOrder" Val="10"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/common/uart/uart_tx_setting.v">
+            <File Path="rtl/common/uart/uart_rx_setting.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -99,7 +99,7 @@
                     <Attr Name="CompileOrder" Val="11"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/common/ubus2hxt_apb.v">
+            <File Path="rtl/common/uart/uart_tx_setting.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -107,7 +107,7 @@
                     <Attr Name="CompileOrder" Val="12"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/common/ubus2pcie_apb.v">
+            <File Path="rtl/common/ubus2hxt_apb.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -115,7 +115,7 @@
                     <Attr Name="CompileOrder" Val="13"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/pcie_ep_engine.v">
+            <File Path="rtl/common/ubus2pcie_apb.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -123,7 +123,7 @@
                     <Attr Name="CompileOrder" Val="14"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/pcie_ep_int_handle.v">
+            <File Path="rtl/ep_side/pcie_ep_engine.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -131,7 +131,7 @@
                     <Attr Name="CompileOrder" Val="15"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/ph1p_pcie_ep_top.v">
+            <File Path="rtl/ep_side/pcie_ep_int_handle.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -139,7 +139,7 @@
                     <Attr Name="CompileOrder" Val="16"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/ubus_bridge/ep_ubus_bridge.v">
+            <File Path="rtl/ep_side/ph1p_pcie_ep_top.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -147,7 +147,7 @@
                     <Attr Name="CompileOrder" Val="17"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/cam/clk_activity.v">
+            <File Path="rtl/ep_side/ubus_bridge/ep_ubus_bridge.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -155,7 +155,7 @@
                     <Attr Name="CompileOrder" Val="18"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/cam/pulse2toggle.v">
+            <File Path="rtl/ep_side/cam/clk_activity.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -163,7 +163,7 @@
                     <Attr Name="CompileOrder" Val="19"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/cam/auto_delay_ctl.v">
+            <File Path="rtl/ep_side/cam/pulse2toggle.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -171,7 +171,7 @@
                     <Attr Name="CompileOrder" Val="20"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/cam/csi_rx_10bit_unpack.v">
+            <File Path="rtl/ep_side/cam/auto_delay_ctl.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -179,7 +179,7 @@
                     <Attr Name="CompileOrder" Val="21"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/cam/csi_rx_byte_align.v">
+            <File Path="rtl/ep_side/cam/csi_rx_10bit_unpack.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -187,7 +187,7 @@
                     <Attr Name="CompileOrder" Val="22"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/cam/csi_rx_clock_det.v">
+            <File Path="rtl/ep_side/cam/csi_rx_byte_align.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -195,7 +195,7 @@
                     <Attr Name="CompileOrder" Val="23"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/cam/csi_rx_hdr_ecc.v">
+            <File Path="rtl/ep_side/cam/csi_rx_clock_det.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -203,7 +203,7 @@
                     <Attr Name="CompileOrder" Val="24"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/cam/csi_rx_packet_handler.v">
+            <File Path="rtl/ep_side/cam/csi_rx_hdr_ecc.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -211,7 +211,7 @@
                     <Attr Name="CompileOrder" Val="25"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/cam/csi_rx_word_align.v">
+            <File Path="rtl/ep_side/cam/csi_rx_packet_handler.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -219,7 +219,7 @@
                     <Attr Name="CompileOrder" Val="26"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/cam/csi_rx_word_gear_box.v">
+            <File Path="rtl/ep_side/cam/csi_rx_word_align.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -227,7 +227,7 @@
                     <Attr Name="CompileOrder" Val="27"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/cam/mipi_csi2_rx_ph1p.v">
+            <File Path="rtl/ep_side/cam/csi_rx_word_gear_box.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -235,7 +235,7 @@
                     <Attr Name="CompileOrder" Val="28"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/cam/rx_phy_ph1p.v">
+            <File Path="rtl/ep_side/cam/mipi_csi2_rx_ph1p.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -243,7 +243,7 @@
                     <Attr Name="CompileOrder" Val="29"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/cam/sfifo.v">
+            <File Path="rtl/ep_side/cam/rx_phy_ph1p.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -251,7 +251,7 @@
                     <Attr Name="CompileOrder" Val="30"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/cam/wfifo.v">
+            <File Path="rtl/ep_side/cam/sfifo.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -259,7 +259,7 @@
                     <Attr Name="CompileOrder" Val="31"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/cam/ui_cfg_imx415.v">
+            <File Path="rtl/ep_side/cam/wfifo.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -267,7 +267,7 @@
                     <Attr Name="CompileOrder" Val="32"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/cam/ui_i2c.v">
+            <File Path="rtl/ep_side/cam/ui_cfg_imx415.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -275,12 +275,20 @@
                     <Attr Name="CompileOrder" Val="33"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/cam/ui_imx415_reg.v">
+            <File Path="rtl/ep_side/cam/ui_i2c.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
                     <Attr Name="CompileOrder" Val="34"/>
+                </FileInfo>
+            </File>
+            <File Path="rtl/ep_side/cam/ui_imx415_reg.v">
+                <FileInfo>
+                    <Attr Name="UsedInSyn" Val="true"/>
+                    <Attr Name="UsedInP&R" Val="true"/>
+                    <Attr Name="BelongTo" Val="design_1"/>
+                    <Attr Name="CompileOrder" Val="35"/>
                 </FileInfo>
             </File>
         </Verilog>
@@ -310,7 +318,7 @@
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="35"/>
+                    <Attr Name="CompileOrder" Val="36"/>
                 </FileInfo>
             </File>
             <File Path="al_ip/pcie_pll_ep/pcie_pll_ep.xml">
@@ -318,7 +326,7 @@
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="36"/>
+                    <Attr Name="CompileOrder" Val="37"/>
                 </FileInfo>
             </File>
             <File Path="al_ip/ram/ram.xml">
@@ -326,7 +334,7 @@
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="37"/>
+                    <Attr Name="CompileOrder" Val="38"/>
                 </FileInfo>
             </File>
         </IP_FILE>

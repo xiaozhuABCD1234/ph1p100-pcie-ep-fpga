@@ -83,6 +83,24 @@ wire [15:0]  img_width;
 wire [15:0]  img_height;
 wire [1:0]   img_pattern;
 wire [31:0]  img_dbg_idx;
+
+// ==== 相机写帧缓存通路（cam_fb_writer，本移植新增）====
+//  CTRL[4] = 写源选择：0 = 测试图源（默认），1 = 相机。
+//  它在 ep_bar_win 里存着，但 pcie_ep_engine.v 的端口不许改，只能借
+//  ctrl_pattern[1] 这条本来没人消费的通道送到顶层（见 ep_bar_win.v 头部说明）。
+wire         img_cam_sel;
+wire         cam_fb_wr_en;
+wire [31:0]  cam_fb_wr_addr;
+wire [31:0]  cam_fb_wr_data;
+wire [31:0]  cam_fb_frame_cnt;
+wire [31:0]  cam_fb_data_len;
+wire         cam_fb_ready;
+wire         cam_fb_busy;
+wire         cam_fb_frame_done;    // 帧完成标志（EOF 置 1、下个 SOF 清 0；顶层暂无寄存器口）
+wire [31:0]  cam_fb_wr_word_cnt;   // 本帧已写字数（诊断）
+wire [15:0]  cam_fb_drop_cnt;      // FIFO 满丢掉像素组数（诊断，正常 = 0）
+wire [15:0]  cam_fb_ovf_cnt;       // FIFO 满丢掉 SOF/EOF 标记数（诊断，正常 = 0）
+assign img_cam_sel = img_pattern[1];
 wire [255:0] w_cam_stat;      // 声明必须早于例化处使用（否则 TD 造 1 位隐式网）
 wire [6:0]   cam_tap_cfg;
 wire         w_uart_rxd_unused = 1'b1;
@@ -587,7 +605,16 @@ img_frame_src #(
     .height    (img_height      ),
     .data_len  (img_data_len    ),
     .ready     (img_ready       ),
-    .busy      (img_busy        )
+    .busy      (img_busy        ),
+    // 相机写源（cam_fb_writer）
+    .cam_sel       (img_cam_sel      ),
+    .cam_wr_en     (cam_fb_wr_en     ),
+    .cam_wr_addr   (cam_fb_wr_addr   ),
+    .cam_wr_data   (cam_fb_wr_data   ),
+    .cam_frame_cnt (cam_fb_frame_cnt ),
+    .cam_data_len  (cam_fb_data_len  ),
+    .cam_ready     (cam_fb_ready     ),
+    .cam_busy      (cam_fb_busy      )
 );
 
 assign  ubus_bken_logic = ubus_bken_logic_dly ;
@@ -738,7 +765,8 @@ assign  debug_led[3] = ltssm_reg_dly[4];
 // ====================================================================
 //  摄像头通路（本移植新增）：2x IMX415 + MIPI CSI-2 软 PHY
 //  说明：本步只把“传感器是否起来”通过 PCIe 寄存器暴露出来（0x80~0x94），
-//        像素数据下一阶段再接进帧缓存。跨时钟域只搬慢变电平 + toggle 计数。
+//        像素数据由 cam_fb_writer 接进帧缓存（CTRL[4]=1 时接管写口）。
+//        跨时钟域：慢变电平 + toggle 计数（状态字），像素走 cam_fb_writer 的异步 FIFO。
 // ====================================================================
     parameter MCLK_DIV = 2;                       // 50MHz/2 = 25MHz 传感器主时钟
 
@@ -857,6 +885,49 @@ assign  debug_led[3] = ltssm_reg_dly[4];
         .O_in_line          (w_b_in_line),
         .O_pixel_data       (w_b_pixel),
         .O_pixel_valid      (w_b_pixel_valid)
+    );
+
+    // ====================================================================
+    //  相机像素 → 帧缓存写口（本移植新增）
+    //
+    //  接 A 路（本板实测锁定的就是 A 路；帧缓存只有一份，B 路 FPGA 侧未接）。
+    //  信号/时序约定逐条写在 rtl/ep_side/img/cam_fb_writer.v 头部：
+    //    w_a_pixel/w_a_pixel_valid : 1 拍 = 1 组 = RAW10 的 4 个像素
+    //    w_a_vsync                 : 1 拍脉冲 = FS  → SOF（复位写指针 + 写帧号）
+    //    w_a_in_frame              : 电平，下降沿 = FE → EOF（置帧完成）
+    //    w_a_in_line               : 每行 1 拍脉冲（长包头）→ 行号 +1 / 列归零
+    //  写口在 img_frame_src 内按 CTRL[4]（img_cam_sel）在两种写源之间 mux。
+    // ====================================================================
+    cam_fb_writer #(
+        .W       (IMG_W),
+        .H       (IMG_H),
+        .AW      (17),
+        .FIFO_AW (9)
+    ) u_cam_fb_writer (
+        .cam_clk       (w_a_byte_clk    ),
+        .cam_rst_n     (w_a_rst_out     ),
+        .cam_vsync     (w_a_vsync       ),
+        .cam_in_frame  (w_a_in_frame    ),
+        .cam_in_line   (w_a_in_line     ),
+        .cam_pix       (w_a_pixel       ),
+        .cam_pix_valid (w_a_pixel_valid ),
+
+        .clk           (tl_clk_user     ),
+        .rst           (power_on_rst_dly),
+
+        .fb_wr_en      (cam_fb_wr_en     ),
+        .fb_wr_addr    (cam_fb_wr_addr   ),
+        .fb_wr_data    (cam_fb_wr_data   ),
+
+        .frame_cnt     (cam_fb_frame_cnt ),
+        .data_len      (cam_fb_data_len  ),
+        .ready         (cam_fb_ready     ),
+        .busy          (cam_fb_busy      ),
+        .frame_done    (cam_fb_frame_done),
+
+        .wr_word_cnt   (cam_fb_wr_word_cnt),
+        .drop_cnt      (cam_fb_drop_cnt   ),
+        .ovf_cnt       (cam_fb_ovf_cnt    )
     );
 
     ui_cfg_imx415 #(.CLK_DIV(16'd624)) u_cfg_a (

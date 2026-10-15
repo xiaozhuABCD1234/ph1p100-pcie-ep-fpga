@@ -19,7 +19,13 @@
 //
 //  寄存器表（BAR0 字节偏移，4 字节对齐）：
 //    0x40 MAGIC     R    0x50434946
-//    0x44 CTRL      R/W  bit0 enable, bit1 trigger(写1出单帧), [3:2] pattern
+//    0x44 CTRL      R/W  bit0 enable, bit1 trigger(写1出单帧), [3:2] pattern,
+//                        bit4 cam_sel = 写源选择（1=相机 cam_fb_writer，0=测试图源；
+//                        默认 0，原语义不变）
+//                        ※ bit4 要送到顶层，但 pcie_ep_engine.v 的端口不许改，
+//                          只好借 ctrl_pattern[1] 这个本来没人消费的通道带着走：
+//                          端口 ctrl_pattern = {cam_sel, pattern[0]}；
+//                          寄存器读回仍然是 bit4=cam_sel、[3:2]=pattern 原值。
 //    0x48 STATUS    R    bit0 ready, bit1 busy
 //    0x4C FRAME_CNT R
 //    0x50 WIDTH     R
@@ -52,11 +58,11 @@ module ep_bar_win #(
     // 完成包 Lower Address 字段（字节地址低 7 位）
     output reg  [6:0]   memrd_addr_lo,
     output reg  [6:0]   cam_tap_cfg,     // {manual_en, tap[5:0]} 主机可写
-
     // 控制 / 状态（接 img_frame_src）
     output reg          ctrl_enable,
     output reg          ctrl_trigger,
-    output reg  [1:0]   ctrl_pattern,
+    // ctrl_pattern 端口：bit1 = CTRL[4] 相机写源选择（借道），bit0 = 原 pattern[0]
+    output wire [1:0]   ctrl_pattern,
     input  wire         st_ready,
     input  wire         st_busy,
     input  wire [31:0]  st_frame_cnt,
@@ -117,6 +123,10 @@ module ep_bar_win #(
     reg [31:0] ptr;
     reg [31:0] scratch;
     reg [31:0] last_wr;
+    reg [1:0]  ctrl_pattern_r;   // CTRL[3:2] 原样保存（读回用）
+    reg        ctrl_cam_sel;     // CTRL[4] 相机写源选择
+
+    assign ctrl_pattern = {ctrl_cam_sel, ctrl_pattern_r[0]};
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
@@ -127,7 +137,8 @@ module ep_bar_win #(
             memrd_addr_lo <= 7'd0;
             ctrl_enable   <= 1'b0;
             ctrl_trigger  <= 1'b0;
-            ctrl_pattern  <= 2'd0;
+            ctrl_pattern_r <= 2'd0;
+            ctrl_cam_sel   <= 1'b0;      // 默认走测试图源（向后兼容）
             ptr           <= 32'd0;
             scratch       <= 32'd0;
             last_wr       <= 32'd0;
@@ -146,7 +157,8 @@ module ep_bar_win #(
                     12'h44: begin
                         ctrl_enable  <= tlp_dw_s[0];
                         ctrl_trigger <= tlp_dw_s[1];     // 下一拍自动清 → 单帧脉冲
-                        ctrl_pattern <= tlp_dw_s[3:2];
+                        ctrl_pattern_r <= tlp_dw_s[3:2];
+                        ctrl_cam_sel   <= tlp_dw_s[4];   // 1 = 相机写源
                     end
                     12'h5C: ptr     <= ptr_fix(tlp_dw_s);
                     12'h9C: cam_tap_cfg <= tlp_dw_s[6:0];
@@ -202,7 +214,7 @@ module ep_bar_win #(
     always @(*) begin
         case (r_idx)
             12'h40:  rd_dw_comb = MAGIC;
-            12'h44:  rd_dw_comb = {28'd0, ctrl_pattern, ctrl_trigger, ctrl_enable};
+            12'h44:  rd_dw_comb = {27'd0, ctrl_cam_sel, ctrl_pattern_r, ctrl_trigger, ctrl_enable};
             12'h48:  rd_dw_comb = {30'd0, st_busy, st_ready};
             12'h4C:  rd_dw_comb = st_frame_cnt;
             12'h50:  rd_dw_comb = {16'd0, st_width};

@@ -74,3 +74,20 @@ UART 命令脚本：`doc/uart_cmd_file_pcie.txt`（可经板载串口下发校�
 - 驱动目录里残留了部分内核模块构建中间物（`.mod`、`Module.symvers`、`modules.order` 等），
   重新 `make` 即可覆盖。
 - 引脚约束在 `prj/*/constraints/*.adc`，时序在 `*.sdc`；引脚定义可查板卡的 `03_管脚定义表/PCIEx2-管脚定义表.xlsx`。
+
+## 相机像素 → 帧缓存（`rtl/ep_side/img/cam_fb_writer.v`）
+
+帧缓存（`img_frame_src.v` 里的 `fb[]`）此前只有测试图源能写。现在 IMX415（MIPI CSI-2，A 路）
+收到的像素也能按**同样的布局**写进去，主机侧工具不用改：
+
+- **写源选择**：BAR0 `0x44 CTRL` 新增 `bit4`（`0` = 测试图源，默认；`1` = 相机），读回同样在 `bit4`。
+  原因是 `pcie_ep_engine.v` 的端口被冻结，该位借 `ctrl_pattern[1]` 送到顶层
+  （寄存器语义不变：`[3:2]` 仍是 pattern 原值），详见 `ep_bar_win.v` 头部说明。
+- **信号/时序约定**（逐条附文件:行）：`w_a_pixel/w_a_pixel_valid` 1 拍 = 1 组 = RAW10 的 4 像素；
+  `w_a_vsync` = FS 1 拍脉冲（SOF）；`w_a_in_frame` 电平、下降沿 = FE（EOF）；
+  `w_a_in_line` = 每个长包头 1 拍脉冲（行首，不是行内电平）。
+- **数据通路**：字节时钟域（187.5MHz）按行/列裁剪左上角 640×480 并组字 →
+  异步 FIFO（34bit × 512，格雷码指针）搬到 `tl_clk_user`（62.5MHz）→ 顺序写缓存；
+  字 0 = 帧号（= 完成后的 `0x4C FRAME_CNT`），其后 4 像素/32bit 字，低字节 = 最左像素，
+  共 76800 字 = 307200 字节（末 4 像素与测试图源一样不写）。
+- 测试台 `sim_do/tb_cam_fb_writer.v`（逐字比对整帧 + 帧号 + 丢包计数）。
