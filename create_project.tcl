@@ -42,6 +42,9 @@ add_files constraints/ph1p_pcie_case_ep.sdc
 add_files al_ip/pcie_ep_core/pcie_ep_core.xml
 add_files al_ip/pcie_pll_ep/pcie_pll_ep.xml
 add_files al_ip/ram/ram.xml
+# 板载 DDR3L 控制器（IP 自带 src/adc、src/sdc，注册 xml 后由 TD 带进
+# IpADCList / IpSDCList，与 al_ip/pcie_ep_core 同一种注册方式）
+add_files al_ip/ddr3_mc_0/ddr3_mc_0.xml
 
 top_module ph1p_pcie_ep_top
 

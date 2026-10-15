@@ -46,7 +46,25 @@
     output     wire                      cam_b_scl                               ,
     inout      wire                      cam_b_sda                               ,
     output     wire                      txd                                     ,
-    output     wire     [3:0]            debug_led                               
+    output     wire     [3:0]            debug_led                               ,
+    // DDR3 颗粒（板载 DDR3L x16/2048：4 个 DQ byte + AC；球号与 IOSTANDARD 由
+    // al_ip/ddr3_mc_0 自带的 src/adc/ddr3_mc_0.adc（set_ippin_assignment）给出，
+    // 本工程的 adc 里不写任何 ddr_* 引脚，见文件末 DDR3 段说明）
+    output     wire                      ddr_ck_p                                ,
+    output     wire                      ddr_ck_n                                ,
+    output     wire                      ddr_reset_n                             ,
+    output     wire                      ddr_cke                                 ,
+    output     wire                      ddr_odt                                 ,
+    output     wire                      ddr_cs_n                                ,
+    output     wire                      ddr_ras_n                               ,
+    output     wire                      ddr_cas_n                               ,
+    output     wire                      ddr_we_n                                ,
+    output     wire  [2:0]               ddr_ba                                  ,
+    output     wire  [13:0]              ddr_addr                                ,
+    inout      wire  [3:0]               ddr_dqs_p                               ,
+    inout      wire  [3:0]               ddr_dqs_n                               ,
+    inout      wire  [31:0]              ddr_dq                                  ,
+    inout      wire  [3:0]               ddr_dm                                 
 
 );   
 
@@ -1097,5 +1115,133 @@ assign  debug_led[3] = ltssm_reg_dly[4];
 
     // 串口接收不用了（管脚让给摄像头）
 
+
+// ====================================================================
+//  DDR3 控制器（al_ip/ddr3_mc_0，本移植新增）
+//
+//  ★ 本步只接「参考时钟 + 复位 + 颗粒引脚」，用户侧（AXI / 调试 APB / 用户刷新）
+//    全部静态化，不接任何主设备。
+//
+//  (1) 参考时钟 ref_clk = sys_clk
+//      板上给 FPGA 的那颗 50MHz 单端时钟就是 H4；IP 生成时按 PH1P_REFCLK_TYPE=SINGLE、
+//      PH1P_SYSCLK_LOC=H4 配置，所以接 IP 的单端 ref_clk 一路（IP 没有差分 ref_clk 端口，
+//      wrapper 端口表见 al_ip/ddr3_mc_0/.ports_ddr3_mc_0.txt:1 `ref_clk; 1`）。
+//      H4 的引脚约束一直在本工程里（constraints/ph1p_pcie_case_ep.adc:17，SSTL135），
+//      IP 自己不给 refclk 写引脚约束（src/adc/ddr3_mc_0.adc 里没有 ref_clk / refclks 条目），
+//      所以这条网同时喂 PCIe 的 u_pcie_pll_ep 和本 IP，不冲突。
+//      IPUG034 §2.1.3 建议参考时钟与 AC 信号同 Bank：H4 在 BANK33 = 本 IP 的 AC bank。
+//
+//  (2) 复位 sys_rst_n（低有效）= pcie_power_on_rst
+//      即板上 SW7 那颗复位按钮所在的球 R14，低有效。依据：厂商 DDR 例程 example_top 的
+//      sys_rst_n 就是同一个球（09_ddr3_ddrmc_cal_x32_1066mbps/prj_src/adc/ap115v2.adc:5
+//      `sys_rst_n R14 LVCMOS33 PULLUP`，注释写着 SW7）；本工程该球已由
+//      constraints/ph1p_pcie_case_ep.adc 分配给 pcie_power_on_rst。
+//      刻意不取 power_on_rst_dly / tl_rst_user：那两条与 PCIe 链路状态耦合
+//      （pcie_mperst、pcie_pll_locked、tl_ltssm），主机每次 PERST / 重新枚举都会把
+//      DDR 拉回复位、白跑一遍初始化与训练。
+//
+//  (3) 颗粒引脚：从 IP 端口直连到顶层端口，中间不插任何逻辑（IPUG034 §3.3.1 的
+//      IO 分配规则；厂商例程同样直连）。1 位信号按厂商例程写成标量，
+//      实测该例程的 place 报告里顶层端口 `ddr_ck_p` 就落在 H3/DIFF_SSTL135
+//      （09 例程 ph1p_ddr_Runs/phy_1/ph1p_ddr_phy.area:67），说明 IP 的
+//      set_ippin_assignment 能派生出顶层管脚。
+//
+//  (4) 用户侧静态化：
+//      · AXI：本设计是主（IP 是从），aw/ar/w 的 valid 与 wlast 恒 0 → IP 收不到任何
+//        读写命令；bready/rready 取常数 1（无命令即无响应，取 1 不会产生任何事务）。
+//        axi_aclk = dhi_clk、axi_aresetn = ddrphy_rst_n：都是 IP 自己输出的用户侧
+//        总线时钟/复位（IPUG034 表 2-1：dhi_clk「DHI 总线的时钟输出」、ddrphy_rst_n
+//        「DDRPHY 复位信号输出」）。这样 DDR 用户侧自成一个时钟域，不引入新时钟、
+//        也不与 tl_clk_user 打交道。
+//      · 调试 APB：本步不读校准状态 → psel/penable/pwrite/paddr/pwdata 全置 0；
+//        apb_prst_n = cfg_rst_n（与 apb_pclk = cfg_clk 同域）。
+//      · 用户刷新：usr_ref_type = 2'b00（IPUG034 表 2-19：00 = 正常 tREFI 自动刷新），
+//        usr_ref_req = 1'b0（不请求用户刷新）。
+//      · ecc_err_*、ctl_ram_*、ddrphy_rdy 等输出本步不使用，留空（与厂商例程
+//        ddrmc_test_top 的接法一致）。
+// ====================================================================
+// 注意：IP 的 apb_pclk 与 cfg_clk 是同一个物理时钟的两个输出端口，
+//       不能同时接到一条 wire（会变成双驱动），这里只取 cfg_clk 一路。
+wire w_ddr_cfg_clk   ;   // cfg_clk = IP 的 mcu/APB 域时钟（50MHz）
+wire w_ddr_cfg_rst_n ;   // cfg_clk 域复位，用作 apb_prst_n
+wire w_ddr_dhi_clk   ;   // 用户总线时钟（= 未来的 AXI 主时钟）
+wire w_ddrphy_rst_n  ;   // IP 给用户逻辑的复位
+
+ddr3_mc_0 u_ddr3_mc_0 (
+    .ref_clk        (sys_clk             ),
+    .sys_rst_n      (pcie_power_on_rst   ),
+
+    .apb_pclk       (                    ),   // 与 cfg_clk 同源，见上方说明
+    .apb_prst_n     (w_ddr_cfg_rst_n     ),
+    .apb_pready     (                    ),
+    .apb_psel       (1'b0                ),
+    .apb_penable    (1'b0                ),
+    .apb_pwrite     (1'b0                ),
+    .apb_paddr      (16'd0               ),
+    .apb_pwdata     (32'd0               ),
+    .apb_prdata     (                    ),
+
+    .dhi_clk        (w_ddr_dhi_clk       ),
+    .cfg_clk        (w_ddr_cfg_clk       ),
+    .cfg_rst_n      (w_ddr_cfg_rst_n     ),
+    .ddrphy_rst_n   (w_ddrphy_rst_n      ),
+    .ddrphy_rdy     (                    ),
+
+    .axi_aclk       (w_ddr_dhi_clk       ),
+    .axi_aresetn    (w_ddrphy_rst_n      ),
+    .axi_awid       (4'd0                ),
+    .axi_awaddr     (29'd0               ),
+    .axi_awlen      (8'd0                ),
+    .axi_awsize     (3'd0                ),
+    .axi_awburst    (2'd0                ),
+    .axi_awvalid    (1'b0                ),
+    .axi_awready    (                    ),
+    .axi_wdata      (256'd0              ),
+    .axi_wstrb      (32'd0               ),
+    .axi_wlast      (1'b0                ),
+    .axi_wvalid     (1'b0                ),
+    .axi_wready     (                    ),
+    .axi_bid        (                    ),
+    .axi_bresp      (                    ),
+    .axi_bvalid     (                    ),
+    .axi_bready     (1'b1                ),
+    .axi_arid       (4'd0                ),
+    .axi_araddr     (29'd0               ),
+    .axi_arlen      (8'd0                ),
+    .axi_arsize     (3'd0                ),
+    .axi_arburst    (2'd0                ),
+    .axi_arvalid    (1'b0                ),
+    .axi_arready    (                    ),
+    .axi_rid        (                    ),
+    .axi_rdata      (                    ),
+    .axi_rresp      (                    ),
+    .axi_rlast      (                    ),
+    .axi_rvalid     (                    ),
+    .axi_rready     (1'b1                ),
+
+    .usr_ref_type   (2'b00               ),
+    .usr_ref_req    (1'b0                ),
+    .usr_ref_ack    (                    ),
+    .ecc_err_sig    (                    ),
+    .ecc_err_mul    (                    ),
+    .ctl_ram_rst_n  (                    ),
+    .ctl_ram_cke    (                    ),
+
+    .ddr_ck_p       (ddr_ck_p            ),
+    .ddr_ck_n       (ddr_ck_n            ),
+    .ddr_reset_n    (ddr_reset_n         ),
+    .ddr_cke        (ddr_cke             ),
+    .ddr_odt        (ddr_odt             ),
+    .ddr_cs_n       (ddr_cs_n            ),
+    .ddr_ras_n      (ddr_ras_n           ),
+    .ddr_cas_n      (ddr_cas_n           ),
+    .ddr_we_n       (ddr_we_n            ),
+    .ddr_ba         (ddr_ba              ),
+    .ddr_addr       (ddr_addr            ),
+    .ddr_dqs_p      (ddr_dqs_p           ),
+    .ddr_dqs_n      (ddr_dqs_n           ),
+    .ddr_dq         (ddr_dq              ),
+    .ddr_dm         (ddr_dm              )
+);
 
 endmodule
