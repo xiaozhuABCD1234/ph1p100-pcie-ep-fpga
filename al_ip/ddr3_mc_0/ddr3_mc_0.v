@@ -3,12 +3,12 @@
 **	All Right Reserved.
 \************************************************************/
 /************************************************************\
-**	Gen time	:	10月 15 2026 20:21:29
+**	Gen time	:	10月 15 2026 21:09:20
 **	IpTool version	:	2026.08(208212 2026/08/14)
 **	App version	:	Release_2026.2
 **	Ip Version	:	1.2
 \************************************************************/
-module MIS_DDRF6F1D0P0_0
+module ddr3_mc_0
 (
   input                         ref_clk,
   input                         sys_rst_n,
@@ -29,7 +29,7 @@ module MIS_DDRF6F1D0P0_0
   input                         axi_aclk,
   input                         axi_aresetn,
   input   [3:0]                 axi_awid,
-  input   [27:0]                axi_awaddr,
+  input   [28:0]                axi_awaddr,
   input   [7:0]                 axi_awlen,
   input   [2:0]                 axi_awsize,
   input   [1:0]                 axi_awburst,
@@ -45,7 +45,7 @@ module MIS_DDRF6F1D0P0_0
   output                        axi_bvalid,
   input                         axi_bready,
   input   [3:0]                 axi_arid,
-  input   [27:0]                axi_araddr,
+  input   [28:0]                axi_araddr,
   input   [7:0]                 axi_arlen,
   input   [2:0]                 axi_arsize,
   input   [1:0]                 axi_arburst,
@@ -74,14 +74,14 @@ module MIS_DDRF6F1D0P0_0
   output  [0:0]                 ddr_cas_n,
   output  [0:0]                 ddr_we_n,
   output  [2:0]                 ddr_ba,
-  output  [12:0]                ddr_addr,
+  output  [13:0]                ddr_addr,
   inout   [3:0]                 ddr_dqs_p,
   inout   [3:0]                 ddr_dqs_n,
   inout   [31:0]                ddr_dq,
   inout   [3:0]                 ddr_dm
 );
 
-  MIS_DDRF6F1D0P0_0_ph1p_ddrmc_wrapper
+  ddr3_mc_0_ph1p_ddrmc_wrapper
   #(
       .tCK(2500),
       .BK_NUM(2),
@@ -93,9 +93,9 @@ module MIS_DDRF6F1D0P0_0
       .ODT_WIDTH(1),
       .BG_WIDTH(0),
       .BA_WIDTH(3),
-      .ROW_WIDTH(13),
+      .ROW_WIDTH(14),
       .COL_WIDTH(10),
-      .ADR_WIDTH(13),
+      .ADR_WIDTH(14),
       .HOST_AC_DRV("40"),
       .HOST_DX_DRV("40"),
       .HOST_DX_ODT("60"),
@@ -106,10 +106,10 @@ module MIS_DDRF6F1D0P0_0
       .RDBI(0),
       .CAL_EN(1),
       .CWL(5),
-      .CL(5),
-      .PLL0_REFCLK_FREQ(100.0),
-      .PLL0_REFCLK_DIV(3),
-      .PLL0_FBKCLK_DIV(36),
+      .CL(6),
+      .PLL0_REFCLK_FREQ(50.0),
+      .PLL0_REFCLK_DIV(2),
+      .PLL0_FBKCLK_DIV(48),
       .PLL0_FRAC("DISABLE"),
       .PLL0_FRAC_SDM(0),
       .PLL0_CLK2_DIV(3),
@@ -120,11 +120,11 @@ module MIS_DDRF6F1D0P0_0
       .MC_ECC("OFF"),
       .MC_ADDR_MAP("ROW_COL_BANK"),
       .MC_REORDER("NORMAL"),
-      .MC_ADDR_WIDTH(26),
+      .MC_ADDR_WIDTH(27),
       .MC_DATA_WIDTH(256),
       .MC_MASK_WIDTH(32),
       .AXI_ID_WIDTH(4),
-      .AXI_ADDR_WIDTH(28),
+      .AXI_ADDR_WIDTH(29),
       .AXI_DATA_WIDTH(256),
       .AXI_MASK_WIDTH(32)
   )ph1p_ddrmc_wrapper

@@ -1,6 +1,6 @@
 localparam [4*13-1:0] AC0_PAD_TYPE = 52'hf_0000_00ff_ffff;
 localparam [4*13-1:0] AC1_PAD_TYPE = 52'hf_0000_000f_00ff;
-localparam [4*13-1:0] AC2_PAD_TYPE = 52'hf_f000_0000_00f0;
+localparam [4*13-1:0] AC2_PAD_TYPE = 52'hf_0000_0000_00f0;
 localparam [4*13-1:0] AC3_PAD_TYPE = 52'hf_ffff_ffff_ffff;
 localparam [4*13-1:0] DX0_PAD_TYPE = 52'hf_6666_5466_66f6;
 localparam [4*13-1:0] DX1_PAD_TYPE = 52'hf_6f66_5466_6666;

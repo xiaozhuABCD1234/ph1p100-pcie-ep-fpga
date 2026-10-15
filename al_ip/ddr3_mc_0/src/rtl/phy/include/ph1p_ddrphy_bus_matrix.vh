@@ -178,7 +178,7 @@ assign ac2_wdata[ 7*8 +: 8] = dhi_ba_x8    [2*8 +: 8];
 assign ac2_wdata[ 8*8 +: 8] = dhi_addr_x8  [0*8 +: 8];
 assign ac2_wdata[ 9*8 +: 8] = dhi_addr_x8  [2*8 +: 8];
 assign ac2_wdata[10*8 +: 8] = dhi_addr_x8  [9*8 +: 8];
-assign ac2_wdata[11*8 +: 8] = 8'hff;            
+assign ac2_wdata[11*8 +: 8] = dhi_addr_x8  [13*8 +: 8];
 assign ac2_wdata[12*8 +: 8] = 8'hff;            
 
 // IOCLK

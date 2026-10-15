@@ -1,22 +1,22 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// module : MIS_DDRF6F1D0P0_0_ph1p_ddrmc_wrapper
+// module : ddr3_mc_0_ph1p_ddrmc_wrapper
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 `timescale 1ps/1ps
 
 //`include "ph1p_mis_define.vh"
 `define MC0_DRAM_DDR3
-`define MC0_DDR3_512M
-`define MC0_DDR3_X8
-`define MC0_DDR3_800D
+`define MC0_DDR3_2G
+`define MC0_DDR3_X16
+`define MC0_DDR3_800E
 `define PH1P100
 `define MC0_MIS_AXI
-`define PH1P_VCCIO_1V50
+`define PH1P_VCCIO_1V35
 `define DHI_DATA_FORMAT_BYTE
 
 
-module MIS_DDRF6F1D0P0_0_ph1p_ddrmc_wrapper #(
+module ddr3_mc_0_ph1p_ddrmc_wrapper #(
     parameter tCK              = 1876,
     parameter BK_NUM           = 2 ,
     parameter AC_NUM           = 4 ,

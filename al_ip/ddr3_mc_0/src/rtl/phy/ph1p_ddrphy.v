@@ -105,7 +105,7 @@ module ph1p_ddrphy #(
 //`include "ph1p_ddrphy_pad_type.vh"
 localparam [4*13-1:0] AC0_PAD_TYPE = 52'hf_0000_00ff_ffff;
 localparam [4*13-1:0] AC1_PAD_TYPE = 52'hf_0000_000f_00ff;
-localparam [4*13-1:0] AC2_PAD_TYPE = 52'hf_f000_0000_00f0;
+localparam [4*13-1:0] AC2_PAD_TYPE = 52'hf_0000_0000_00f0;
 localparam [4*13-1:0] AC3_PAD_TYPE = 52'hf_ffff_ffff_ffff;
 localparam [4*13-1:0] DX0_PAD_TYPE = 52'hf_6666_5466_66f6;
 localparam [4*13-1:0] DX1_PAD_TYPE = 52'hf_6f66_5466_6666;
@@ -699,7 +699,7 @@ assign ac2_wdata[ 7*8 +: 8] = dhi_ba_x8    [2*8 +: 8];
 assign ac2_wdata[ 8*8 +: 8] = dhi_addr_x8  [0*8 +: 8];
 assign ac2_wdata[ 9*8 +: 8] = dhi_addr_x8  [2*8 +: 8];
 assign ac2_wdata[10*8 +: 8] = dhi_addr_x8  [9*8 +: 8];
-assign ac2_wdata[11*8 +: 8] = 8'hff;            
+assign ac2_wdata[11*8 +: 8] = dhi_addr_x8  [13*8 +: 8];
 assign ac2_wdata[12*8 +: 8] = 8'hff;            
 
 // IOCLK

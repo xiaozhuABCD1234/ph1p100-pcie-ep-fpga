@@ -343,7 +343,7 @@
                     <Attr Name="CompileOrder" Val="38"/>
                 </FileInfo>
             </File>
-            <File Path="al_ip/MIS_DDRF6F1D0P0_0/MIS_DDRF6F1D0P0_0.xml">
+            <File Path="al_ip/ddr3_mc_0/ddr3_mc_0.xml">
                 <FileInfo>
                     <Attr Name="AutoExcluded" Val="true"/>
                     <Attr Name="UsedInSyn" Val="true"/>
