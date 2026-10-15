@@ -100,7 +100,9 @@ wire         cam_fb_frame_done;    // 帧完成标志（EOF 置 1、下个 SOF �
 wire [31:0]  cam_fb_wr_word_cnt;   // 本帧已写字数（诊断）
 wire [15:0]  cam_fb_drop_cnt;      // FIFO 满丢掉像素组数（诊断，正常 = 0）
 wire [15:0]  cam_fb_ovf_cnt;       // FIFO 满丢掉 SOF/EOF 标记数（诊断，正常 = 0）
-assign img_cam_sel = img_pattern[1];
+assign img_cam_sel = img_pattern[1];   // = CTRL[4]（原语义不变）
+// img_pattern[0] = CTRL[2] 现在用作「传感器 MCLK 源选择」（见顶层相机段说明）；
+// CTRL[3]（原 pattern[1]）仍然无人消费。
 wire [255:0] w_cam_stat;      // 声明必须早于例化处使用（否则 TD 造 1 位隐式网）
 wire [6:0]   cam_tap_cfg;
 wire         w_uart_rxd_unused = 1'b1;
@@ -768,13 +770,49 @@ assign  debug_led[3] = ltssm_reg_dly[4];
 //        像素数据由 cam_fb_writer 接进帧缓存（CTRL[4]=1 时接管写口）。
 //        跨时钟域：慢变电平 + toggle 计数（状态字），像素走 cam_fb_writer 的异步 FIFO。
 // ====================================================================
-    parameter MCLK_DIV = 2;                       // 50MHz/2 = 25MHz 传感器主时钟
+    // ====================================================================
+    //  传感器 MCLK（12.5MHz）+ 上电 / 重触发时序
+    //
+    //  为什么是 12.5MHz（本机上板实测，见本次提交说明）：
+    //    · 25MHz（62.5MHz ÷ 2.5 分数分频）    → A 路字节时钟不跳、lane_valid=0、无帧
+    //    · 25MHz（50MHz sys_clk ÷ 2，占空 50%）→ 同样不锁（两个独立源都是 25MHz）
+    //    · 12.5MHz                                  → 字节时钟跳动、lane_valid=0xf、
+    //                                                  约 14.5fps 出帧（链路正常）
+    //  参考工程 f9p_imx415x2_top.v:92-98 用 50MHz÷2 = 25MHz，而且两边的 201 条
+    //  寄存器表逐字节相同（ui_imx415_reg.v 与参考工程 diff 为空），但本板实测
+    //  25MHz 就是不锁——所以本工程改回 12.5MHz。
+    //
+    //  CTRL[2] = 0（默认）: 62.5MHz(tl_clk_user) → 12.5MHz 旧分频器
+    //                      （半周期 2/3 拍交替 → 周期恒 80ns、占空 40/60）
+    //  CTRL[2] = 1        : 50MHz(sys_clk) ÷ 4 = 12.50MHz，占空 50%、周期零抖动
+    // ====================================================================
+    wire       w_mclk_sel_raw = img_pattern[0];          // = CTRL[2]
 
-    // 慢复位：MCLK 先跑，~168ms 后放开 XCLR 并启动 I2C
+    // CTRL 写在 ep_bar_win.v 里会被解成多拍，期间 img_pattern 会有 1~2 拍的毛刺
+    // （实测：同一笔 CTRL 写会造成 2 次模式变化）；按“连续 16 拍相同才认”去抖，
+    // 否则一次 CTRL 写会把 XCLR 反复拉低、MCLK 也会瞬时乱切。
+    reg [15:0] r_sel_sr     = 16'd0;
+    reg        r_mclk_sel_f = 1'b0;      // 去抖后的 MCLK 源选择
+    always @(posedge tl_clk_user) begin
+        r_sel_sr <= {r_sel_sr[14:0], w_mclk_sel_raw};
+        if (&r_sel_sr)       r_mclk_sel_f <= 1'b1;       // 连续 16 拍为 1
+        else if (~|r_sel_sr) r_mclk_sel_f <= 1'b0;       // 连续 16 拍为 0
+    end
+
+    // 慢复位：MCLK 先跑，~134ms 后放开 XCLR 并启动 I2C
+    //   MCLK 源一变就重走一遍（重触发配置：XCLR 再拉低 → 放开 → 重写整张 201 条表）
     reg [22:0] r_pwr_cnt2   = 23'd0;
     reg        r_rst_n_slow = 1'b0;
+    reg        r_mclk_sel_d = 1'b0;      // 上一拍的选择位（检测变化）
+    reg [3:0]  r_reinit_cnt = 4'd0;      // 重触发次数（诊断）
+    wire       w_sel_chg    = (r_mclk_sel_f != r_mclk_sel_d);
     always @(posedge tl_clk_user) begin
-        if (r_pwr_cnt2 != 23'h7FFFFF) begin
+        r_mclk_sel_d <= r_mclk_sel_f;
+        if (w_sel_chg) begin
+            r_pwr_cnt2   <= 23'd0;       // 重新计时 = XCLR 再拉低 134ms
+            r_rst_n_slow <= 1'b0;
+            if (r_reinit_cnt != 4'hF) r_reinit_cnt <= r_reinit_cnt + 1'b1;
+        end else if (r_pwr_cnt2 != 23'h7FFFFF) begin
             r_pwr_cnt2   <= r_pwr_cnt2 + 1'b1;
             r_rst_n_slow <= 1'b0;
         end else begin
@@ -786,35 +824,43 @@ assign  debug_led[3] = ltssm_reg_dly[4];
     reg        r_rst_n      = 1'b0;
     always @(posedge tl_clk_user) r_rst_n <= (r_pwr_cnt2 > 23'd1000);
 
-    // 62.5MHz → 25MHz（2.5 分频），平均占空 50%
-    //   半周期理想长度 = 2.5/2 = 1.25 拍，整数拍无法每周期都做到 50%，
-    //   于是让高、低半周期各自用一个 2 位相位累加器按“每 4 个半周期插 1 个 2 拍”逼近：
-    //     高半周期长度序列 1,1,1,2（4 个半周期 = 5 拍，均值 1.25 拍）
-    //     低半周期长度序列 1,1,1,2（同上）
-    //   4 个输出周期 = 10 拍 = 高 5 拍 + 低 5 拍 → 平均 62.5/2.5 = 25MHz，占空 5/10 = 50%
-    //   （瞬时边沿抖动 ±0.5 拍：周期在 32ns/48ns 交替，这是 62.5MHz 源时钟的量化极限）
-    reg  [1:0] r_hi_ph = 2'd0;   // 高半周期相位累加器（0~3，==3 时本半周期取 2 拍）
-    reg  [1:0] r_lo_ph = 2'd2;   // 低半周期相位累加器（错开 2，使长短周期交替）
-    reg  [1:0] r_rem   = 2'd1;   // 当前半周期剩余拍数（1 或 2）
-    reg        r_mclk  = 1'b0;
-    wire [1:0] w_hi_nxt = r_hi_ph + 2'd1;
-    wire [1:0] w_lo_nxt = r_lo_ph + 2'd1;
+    // cam_fb_writer 的复位：PCIe 上电复位 或 XCLR 拉低期间
+    //   （两者都让异步 FIFO 的写侧与读侧指针同时归零，不会只复位一半）
+    wire       w_cam_fb_rst = power_on_rst_dly | ~r_rst_n_slow;
+
+    // ---- (a) 62.5MHz → 12.5MHz（旧分频器：acc+2、>=5 时 -3 并翻转，默认）----
+    //   半周期 2/3 拍交替 → 输出周期恒 80ns、瞬时占空 40/60（无周期抖动）
+    reg [2:0] r_macc     = 3'd0;
+    reg       r_mclk_125 = 1'b0;
     always @(posedge tl_clk_user) begin
-        if (r_rem == 2'd1) begin
-            r_mclk <= ~r_mclk;                      // 当前半周期结束，翻转
-            if (r_mclk == 1'b0) begin               // 低→高：开始新的高半周期
-                r_hi_ph <= w_hi_nxt;
-                r_rem   <= (w_hi_nxt == 2'd3) ? 2'd2 : 2'd1;
-            end else begin                          // 高→低：开始新的低半周期
-                r_lo_ph <= w_lo_nxt;
-                r_rem   <= (w_lo_nxt == 2'd3) ? 2'd2 : 2'd1;
-            end
+        if (r_macc >= 3'd5) begin
+            r_macc     <= r_macc - 3'd3;      // 等价 (acc+2)-5
+            r_mclk_125 <= ~r_mclk_125;
         end else begin
-            r_rem <= r_rem - 2'd1;
+            r_macc     <= r_macc + 3'd2;
         end
     end
 
-    wire w_mclk = r_mclk;
+    // ---- (b) 50MHz sys_clk ÷ 4 = 12.50MHz（整数分频，占空 50%、周期零抖动）----
+    //   1 位计数器每拍翻转，选择位每 2 拍翻转 → 输出周期 4 拍 = 80ns
+    reg r_mdiv2     = 1'b0;
+    reg r_mclk_c125 = 1'b0;
+    always @(posedge sys_clk) begin
+        r_mdiv2 <= ~r_mdiv2;
+        if (r_mdiv2) r_mclk_c125 <= ~r_mclk_c125;
+    end
+
+    wire w_mclk = r_mclk_sel_f ? r_mclk_c125 : r_mclk_125;
+
+    // 诊断：img_pattern 历史出现过哪些取值（确认 CTRL 写的毛刺，见 0x80[15:12]）
+    reg [3:0] r_mode_hits = 4'd0;
+    always @(posedge tl_clk_user) begin
+        if (img_pattern == 2'd0) r_mode_hits[0] <= 1'b1;
+        if (img_pattern == 2'd1) r_mode_hits[1] <= 1'b1;
+        if (img_pattern == 2'd2) r_mode_hits[2] <= 1'b1;
+        if (img_pattern == 2'd3) r_mode_hits[3] <= 1'b1;
+    end
+
     assign cam_a_mclk   = w_mclk;
     assign cam_b_mclk   = w_mclk;
     assign cam_a_xclr_n = r_rst_n_slow;
@@ -913,7 +959,9 @@ assign  debug_led[3] = ltssm_reg_dly[4];
         .cam_pix_valid (w_a_pixel_valid ),
 
         .clk           (tl_clk_user     ),
-        .rst           (power_on_rst_dly),
+        // 重触发（CTRL[4:3] 变化）时 XCLR 会被拉低 134ms：让 cam_fb_writer 的
+        // tl 侧与字节侧同时复位，避免只复位一半导致异步 FIFO 写/读指针错位
+        .rst           (w_cam_fb_rst    ),
 
         .fb_wr_en      (cam_fb_wr_en     ),
         .fb_wr_addr    (cam_fb_wr_addr   ),
@@ -1027,19 +1075,20 @@ assign  debug_led[3] = ltssm_reg_dly[4];
     end
 
     // 状态字：bit0 字节时钟在跑 | [4:1] lane_valid | 5 cfg_done | 6 bus_err
-    //         7 auto_delay_done | 8 in_frame | 9 in_line | 10 收到过像素 | [21:16] tap
-    // bit0 字节时钟在跑 | [4:1] lane_valid | 5 cfg_done | 6 bus_err | 7 auto_delay_done
-    // bit8 in_frame | 9 in_line | 10 收到过像素 | [21:16] tap
-    // bit22 r_rst_n_slow 已放开 | bit23 r_rst_n | bit24/25 cam_a_scl/sda 电平
-    // bit0 字节时钟 | [4:1] lane | 5 cfg_done | 6 bus_err | 7 auto_done | 8 in_frame
-    // 9 in_line | 10 收到像素 | [21:16] tap | 22 xclr已放开 | 23 csi_rst_n | 24 SCL | 25 SDA
+    //         7 auto_delay_done | 8 in_frame | 9 in_line | 10 收到过像素
+    //         bit15 保留 0 | [14:11] img_pattern={CTRL[4]=cam_sel, CTRL[2]=MCLK源}
+    //                            历史出现过的取值（每出现一次置 1 位，只增不减，诊断 CTRL 写的毛刺）
+    //         [21:16] tap | 22 xclr 已放开 | 23 csi_rst_n | 24/25 SCL/SDA 电平 | [31:26]=110011
     wire [31:0] w_cam_a_stat = {6'b110011, s_a_sda[2], s_a_scl[2], r_rst_n, r_rst_n_slow,
-                                s_a_tap, 5'd0, r_a_pv_seen, w_a_in_line, w_a_in_frame,
+                                s_a_tap, 1'b0, r_mode_hits, r_a_pv_seen, w_a_in_line, w_a_in_frame,
                                 s_a_cfg[1], s_a_cfg[2], s_a_cfg[0], s_a_lane, r_a_bclk_seen};
     wire [31:0] w_cam_b_stat = {6'b110011, s_b_sda[2], s_b_scl[2], r_rst_n, r_rst_n_slow,
                                 s_b_tap, 5'd0, r_b_pv_seen, w_b_in_line, w_b_in_frame,
                                 s_b_cfg[1], s_b_cfg[2], s_b_cfg[0], s_b_lane, r_b_bclk_seen};
-    assign w_cam_stat = {32'd0, {r_pwr_cnt2, 8'd0, w_a_i2c_busy},
+    // 0x98 中段 8 位（由原来的 8'd0 改成诊断位）：
+    //   [8:5] r_reinit_cnt | [4] 去抖后的 MCLK 源 | [3] 0 | [2] r_rst_n_slow(XCLR)
+    //   | [1] 0
+    assign w_cam_stat = {32'd0, {r_pwr_cnt2, r_reinit_cnt, r_mclk_sel_f, 1'b0, r_rst_n_slow, 1'b0, w_a_i2c_busy},
                               r_b_pix, r_a_pix, r_b_frames, r_a_frames,
                               w_cam_b_stat, w_cam_a_stat};
 

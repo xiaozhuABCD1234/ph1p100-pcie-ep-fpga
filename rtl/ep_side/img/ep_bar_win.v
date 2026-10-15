@@ -19,13 +19,17 @@
 //
 //  寄存器表（BAR0 字节偏移，4 字节对齐）：
 //    0x40 MAGIC     R    0x50434946
-//    0x44 CTRL      R/W  bit0 enable, bit1 trigger(写1出单帧), [3:2] pattern,
+//    0x44 CTRL      R/W  bit0 enable, bit1 trigger, [3:2] pattern,
 //                        bit4 cam_sel = 写源选择（1=相机 cam_fb_writer，0=测试图源；
 //                        默认 0，原语义不变）
 //                        ※ bit4 要送到顶层，但 pcie_ep_engine.v 的端口不许改，
 //                          只好借 ctrl_pattern[1] 这个本来没人消费的通道带着走：
-//                          端口 ctrl_pattern = {cam_sel, pattern[0]}；
+//                          端口 ctrl_pattern = {cam_sel, mclk_sel}；
 //                          寄存器读回仍然是 bit4=cam_sel、[3:2]=pattern 原值。
+//                        bit2 在顶层被当成“传感器 MCLK 源选择”用（ctrl_pattern[0]，
+//                        见 ph1p_pcie_ep_top.v 相机段）：0 = 62.5MHz→12.5MHz 旧分频器
+//                        （默认，实测能锁），1 = sys_clk(50MHz)÷4 = 12.5MHz 干净。
+//                        bit3（pattern[1]）仍然无人消费。
 //    0x48 STATUS    R    bit0 ready, bit1 busy
 //    0x4C FRAME_CNT R
 //    0x50 WIDTH     R
