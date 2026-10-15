@@ -102,6 +102,18 @@ always@(posedge I_clk)
         scl_clk <= !scl_clk;
     end
 
+// ---- scl_clk 不再是时钟：两种边沿改成 I_clk 域里的使能脉冲 ----
+//   原来这个模块把 scl_clk 接到 5 处触发器的 clock 脚上（posedge/negedge scl_clk），
+//   TD 于是把它推断成一条由寄存器输出驱动的时钟网（InferredGclk；DRC RTCLK-5078；
+//   check_timing 报「clock net with no clock driven by root clock pin」），它既不受
+//   SDC 约束，又占全局时钟资源。下面三个使能与原边沿严格的同一拍：
+//     clkdiv 到顶那一拍 scl_clk 翻转 → 那一拍就是原来的 posedge/negedge scl_clk。
+//   clkdiv 计数、scl_clk 翻转、O_iic_scl 的 OFFSET 相位全部一字未改，
+//   所以 SCL 引脚波形、状态机每一步、各级延时与改前逐拍一致。
+wire scl_tick = ~(clkdiv < SCL_DIV);   // 本拍结束后 scl_clk 翻转
+wire scl_rise =  scl_tick & ~scl_clk;  // = 原来的 posedge scl_clk
+wire scl_fall =  scl_tick &  scl_clk;  // = 原来的 negedge scl_clk
+
 always @(posedge I_clk) O_iic_scl <=  scl_offset ?  scl_r : O_iic_scl; //O_iic_scl延迟scl_offset时间的scl_r
 
 //采集I2C 数据总线sda
@@ -124,32 +136,35 @@ always @(*)
     else  sda_o <= 1'b1; //否则其他状态都为1，当(IIC_S == R_ACK && (rcnt == I_rd_cnt) 产生一个NACK 
 
 //I2C数据发送模块，所有的写数据都通过此模块发送
-always @(posedge scl_clk) 
-    if(IIC_S == W_ACK || IIC_S == START)begin//IIC_S=START和W_ACK，把需要发送的数据，寄存到sda_r
-        sda_r <= I_wr_data[(wcnt*8) +: 8];//寄存需要发发送的数据到sda_r
-        if( rd_req ) sda_r <= {I_wr_data[7:1],1'b1};//对于读操作，rd_req由内部代码产生，当写完第一个数据(器件地址)，后通过判断I_rd_cnt，确认是否数据需要读
+//   （原来的 always @(posedge scl_clk) 改成 I_clk + scl_rise 使能，同一拍、波形不变）
+always @(posedge I_clk)
+    if(scl_rise) begin
+        if(IIC_S == W_ACK || IIC_S == START)begin//IIC_S=START和W_ACK，把需要发送的数据，寄存到sda_r
+            sda_r <= I_wr_data[(wcnt*8) +: 8];//寄存需要发发送的数据到sda_r
+            if( rd_req ) sda_r <= {I_wr_data[7:1],1'b1};//对于读操作，rd_req由内部代码产生，当写完第一个数据(器件地址)，后通过判断I_rd_cnt，确认是否数据需要读
+        end
+        else if(IIC_S == W_WAIT)//当W_WAT状态，通过移位操作，把数据发送到数据总线
+            sda_r <= {sda_r[6:0],1'b1};//移位操作
     end
-    else if(IIC_S == W_WAIT)//当W_WAT状态，通过移位操作，把数据发送到数据总线
-        sda_r <= {sda_r[6:0],1'b1};//移位操作
-    else 
-        sda_r <= sda_r;
 
 //sda data bus read and hold data to O_rd_data register when IIC_S=R_ACK
 //I2C数据接收模块，I2C读期间，把数据通过移位操作，移入O_rd_data
-always @(negedge scl_clk)begin
-    if(IIC_S == R_WAIT ) //当IIC_S == R_WAIT ||IIC_S == W_ACK(如果读操作，第1个BIT是W_ACK这个状态读)启动移位操作
-        sda_i_r <= {sda_i_r[6:0],sda_i};
-    else if(IIC_S == R_ACK)//当IIC_S == R_ACK,完成一个BYTE读，把数据保存到O_rd_data
-        O_rd_data[((rcnt-1'b1)*8) +: 8] <= sda_i_r[7:0];
-    else if(IIC_S == IDLE)//空闲状态，重置sda_i_r
-        sda_i_r <= 8'd0;
+always @(posedge I_clk)begin
+    if(scl_fall) begin
+        if(IIC_S == R_WAIT ) //当IIC_S == R_WAIT ||IIC_S == W_ACK(如果读操作，第1个BIT是W_ACK这个状态读)启动移位操作
+            sda_i_r <= {sda_i_r[6:0],sda_i};
+        else if(IIC_S == R_ACK)//当IIC_S == R_ACK,完成一个BYTE读，把数据保存到O_rd_data
+            O_rd_data[((rcnt-1'b1)*8) +: 8] <= sda_i_r[7:0];
+        else if(IIC_S == IDLE)//空闲状态，重置sda_i_r
+            sda_i_r <= 8'd0;
+    end
 end
 
 //总线忙状态
-always @(posedge scl_clk or negedge I_rstn )begin
+always @(posedge I_clk or negedge I_rstn )begin
 	if(I_rstn == 1'b0)
     	O_iic_busy <= 1'b0; 
-	else begin
+	else if(scl_rise) begin
     	if((I_iic_req == 1'b1 || rd_req == 1'b1 || O_iic_bus_error))//I_iic_req == 1'b1 || rd_req == 1'b1总线进入忙状态
     	    O_iic_busy <= 1'b1; 
         else if(IIC_S == IDLE)
@@ -158,10 +173,10 @@ always @(posedge scl_clk or negedge I_rstn )begin
 end
 
 //总线忙状态
-always @(negedge scl_clk or negedge I_rstn )begin
+always @(posedge I_clk or negedge I_rstn )begin
 	if(I_rstn == 1'b0)
     	O_iic_bus_error <= 1'b0;  	
-	else begin
+	else if(scl_fall) begin
     	if(IIC_S  == W_ACK && sda_i == 1'b1)//I_iic_req == 1'b1 || rd_req == 1'b1总线进入忙状态
     	    O_iic_bus_error <= 1'b1; 
         else if(I_iic_req == 0)
@@ -170,7 +185,7 @@ always @(negedge scl_clk or negedge I_rstn )begin
 end
 
 //I2C Master控制器状态机
-always @(posedge scl_clk or negedge I_rstn )begin
+always @(posedge I_clk or negedge I_rstn )begin
 		if(I_rstn == 1'b0)begin //异步复位，复位相关寄存器
            wcnt 	<= 8'd0;
            rcnt 	<= 8'd0;
@@ -178,7 +193,7 @@ always @(posedge scl_clk or negedge I_rstn )begin
            rd_req 	<= 1'b0;  
            IIC_S    <= 0; 
         end
-        else begin
+        else if(scl_rise) begin
         case(IIC_S) //sda = 1 scl =1
         IDLE:begin//在空闲状态，sda=1 scl=1 
            if(I_iic_req == 1'b1 || rd_req == 1'b1) //当I_iic_req == 1'b1代表启动传输 当 rd_req == 1'b1 代表读操作需要产生repeated start 重复启动  

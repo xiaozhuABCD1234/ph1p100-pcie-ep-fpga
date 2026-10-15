@@ -782,17 +782,19 @@ assign  debug_led[3] = ltssm_reg_dly[4];
     //  寄存器表逐字节相同（ui_imx415_reg.v 与参考工程 diff 为空），但本板实测
     //  25MHz 就是不锁——所以本工程改回 12.5MHz。
     //
-    //  CTRL[2] = 0（默认）: 62.5MHz(tl_clk_user) → 12.5MHz 旧分频器
-    //                      （半周期 2/3 拍交替 → 周期恒 80ns、占空 40/60）
-    //  CTRL[2] = 1        : 50MHz(sys_clk) ÷ 4 = 12.50MHz，占空 50%、周期零抖动
+    //  MCLK = 62.5MHz(tl_clk_user) ÷ 5 = 12.5MHz（半周期 2/3 拍交替 → 周期恒
+    //         80ns、占空 40/60）：板上实测能锁、能出帧的就是这一档。
+    //  CTRL[2] 现在只当「重触发」用：电平一变 → XCLR 再拉低 134ms → 放开后
+    //         重写整张 201 条寄存器表。它原来还兼作 MCLK 源选择（另一档是
+    //         50MHz sys_clk ÷ 4），那一档已删，原因见下面 (b) 段。
     // ====================================================================
     wire       w_mclk_sel_raw = img_pattern[0];          // = CTRL[2]
 
     // CTRL 写在 ep_bar_win.v 里会被解成多拍，期间 img_pattern 会有 1~2 拍的毛刺
     // （实测：同一笔 CTRL 写会造成 2 次模式变化）；按“连续 16 拍相同才认”去抖，
-    // 否则一次 CTRL 写会把 XCLR 反复拉低、MCLK 也会瞬时乱切。
+    // 否则一次 CTRL 写会把 XCLR 反复拉低、重触发连跑好几遍。
     reg [15:0] r_sel_sr     = 16'd0;
-    reg        r_mclk_sel_f = 1'b0;      // 去抖后的 MCLK 源选择
+    reg        r_mclk_sel_f = 1'b0;      // 去抖后的 CTRL[2]（重触发位；名字沿用旧名）
     always @(posedge tl_clk_user) begin
         r_sel_sr <= {r_sel_sr[14:0], w_mclk_sel_raw};
         if (&r_sel_sr)       r_mclk_sel_f <= 1'b1;       // 连续 16 拍为 1
@@ -800,7 +802,7 @@ assign  debug_led[3] = ltssm_reg_dly[4];
     end
 
     // 慢复位：MCLK 先跑，~134ms 后放开 XCLR 并启动 I2C
-    //   MCLK 源一变就重走一遍（重触发配置：XCLR 再拉低 → 放开 → 重写整张 201 条表）
+    //   CTRL[2] 一变就重走一遍（重触发配置：XCLR 再拉低 → 放开 → 重写整张 201 条表）
     reg [22:0] r_pwr_cnt2   = 23'd0;
     reg        r_rst_n_slow = 1'b0;
     reg        r_mclk_sel_d = 1'b0;      // 上一拍的选择位（检测变化）
@@ -841,16 +843,15 @@ assign  debug_led[3] = ltssm_reg_dly[4];
         end
     end
 
-    // ---- (b) 50MHz sys_clk ÷ 4 = 12.50MHz（整数分频，占空 50%、周期零抖动）----
-    //   1 位计数器每拍翻转，选择位每 2 拍翻转 → 输出周期 4 拍 = 80ns
-    reg r_mdiv2     = 1'b0;
-    reg r_mclk_c125 = 1'b0;
-    always @(posedge sys_clk) begin
-        r_mdiv2 <= ~r_mdiv2;
-        if (r_mdiv2) r_mclk_c125 <= ~r_mclk_c125;
-    end
-
-    wire w_mclk = r_mclk_sel_f ? r_mclk_c125 : r_mclk_125;
+    // ---- (b) 已删除：原来的「50MHz sys_clk ÷ 4 = 12.50MHz」那一档 ----
+    //   它与 (a) 同频（都是 12.5MHz），唯一区别是占空 50%、周期零抖动；板上从未
+    //   选中过（CTRL[2] 默认 0，实测靠 (a) 锁定出帧）。但它一存在，sys_clk 这个
+    //   50MHz 输入就必须进通用时钟网络：实测该网（sys_clk_dup_1）走本地绕线，
+    //   根就是 H4 那个球，扇出两只挂 r_mdiv2 与 r_mclk_c125，STA 里被算成 local
+    //   clock、也没有全局缓冲（DRC RTCLK-5079 / check_timing 的 local clock /
+    //   RTCLK-5078 那一类风险）。删掉后 sys_clk 只做 PCIe PLL 的参考时钟，
+    //   MCLK 恒等于 (a) 的 12.5MHz，即板上已验证的那一档。
+    wire w_mclk = r_mclk_125;
 
     // 诊断：img_pattern 历史出现过哪些取值（确认 CTRL 写的毛刺，见 0x80[15:12]）
     reg [3:0] r_mode_hits = 4'd0;
@@ -1006,9 +1007,11 @@ assign  debug_led[3] = ltssm_reg_dly[4];
         .O_bus_error   (w_b_bus_err   )
     );
 
-    // ---- 诊断：sys_clk 到底有没有在跳 / I2C 两根线电平 ----
-    reg  [31:0] r_syscnt = 32'd0;
-    always @(posedge sys_clk) r_syscnt <= r_syscnt + 32'd1;
+    // ---- 诊断：I2C 两根线电平 ----
+    //   （原来这里还有一个 always @(posedge sys_clk) 的 r_syscnt 计数器，用来验证
+    //     sys_clk 在不在跳；它只写不读、状态字里没有它，综合时已被优化成 0 个
+    //     触发器。这里一并删掉，免得以后有人把它接出去、又把 sys_clk 拽回通用
+    //     时钟网络。）
     reg [2:0] s_a_scl, s_a_sda, s_b_scl, s_b_sda;
     always @(posedge tl_clk_user) begin
         s_a_scl <= {s_a_scl[1:0], cam_a_scl};
@@ -1086,7 +1089,7 @@ assign  debug_led[3] = ltssm_reg_dly[4];
                                 s_b_tap, 5'd0, r_b_pv_seen, w_b_in_line, w_b_in_frame,
                                 s_b_cfg[1], s_b_cfg[2], s_b_cfg[0], s_b_lane, r_b_bclk_seen};
     // 0x98 中段 8 位（由原来的 8'd0 改成诊断位）：
-    //   [8:5] r_reinit_cnt | [4] 去抖后的 MCLK 源 | [3] 0 | [2] r_rst_n_slow(XCLR)
+    //   [8:5] r_reinit_cnt | [4] 去抖后的 CTRL[2] | [3] 0 | [2] r_rst_n_slow(XCLR)
     //   | [1] 0
     assign w_cam_stat = {32'd0, {r_pwr_cnt2, r_reinit_cnt, r_mclk_sel_f, 1'b0, r_rst_n_slow, 1'b0, w_a_i2c_busy},
                               r_b_pix, r_a_pix, r_b_frames, r_a_frames,
