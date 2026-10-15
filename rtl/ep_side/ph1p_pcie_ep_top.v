@@ -758,16 +758,31 @@ assign  debug_led[3] = ltssm_reg_dly[4];
     reg        r_rst_n      = 1'b0;
     always @(posedge tl_clk_user) r_rst_n <= (r_pwr_cnt2 > 23'd1000);
 
-    // 62.5MHz → 25MHz：每拍累加 4，>=5 时减 5 并翻转半周期（平均 2.5 分频）
-    // 62.5MHz → 25MHz（/2.5）：累加器每拍 +2，>=5 时减 5 并翻转半周期
-    reg  [2:0] r_mclk_acc = 3'd0;
-    reg        r_mclk     = 1'b0;
+    // 62.5MHz → 25MHz（2.5 分频），平均占空 50%
+    //   半周期理想长度 = 2.5/2 = 1.25 拍，整数拍无法每周期都做到 50%，
+    //   于是让高、低半周期各自用一个 2 位相位累加器按“每 4 个半周期插 1 个 2 拍”逼近：
+    //     高半周期长度序列 1,1,1,2（4 个半周期 = 5 拍，均值 1.25 拍）
+    //     低半周期长度序列 1,1,1,2（同上）
+    //   4 个输出周期 = 10 拍 = 高 5 拍 + 低 5 拍 → 平均 62.5/2.5 = 25MHz，占空 5/10 = 50%
+    //   （瞬时边沿抖动 ±0.5 拍：周期在 32ns/48ns 交替，这是 62.5MHz 源时钟的量化极限）
+    reg  [1:0] r_hi_ph = 2'd0;   // 高半周期相位累加器（0~3，==3 时本半周期取 2 拍）
+    reg  [1:0] r_lo_ph = 2'd2;   // 低半周期相位累加器（错开 2，使长短周期交替）
+    reg  [1:0] r_rem   = 2'd1;   // 当前半周期剩余拍数（1 或 2）
+    reg        r_mclk  = 1'b0;
+    wire [1:0] w_hi_nxt = r_hi_ph + 2'd1;
+    wire [1:0] w_lo_nxt = r_lo_ph + 2'd1;
     always @(posedge tl_clk_user) begin
-        if (r_mclk_acc >= 3'd5) begin
-            r_mclk_acc <= r_mclk_acc - 3'd3;   // 等价 (acc+2)-5
-            r_mclk     <= ~r_mclk;
+        if (r_rem == 2'd1) begin
+            r_mclk <= ~r_mclk;                      // 当前半周期结束，翻转
+            if (r_mclk == 1'b0) begin               // 低→高：开始新的高半周期
+                r_hi_ph <= w_hi_nxt;
+                r_rem   <= (w_hi_nxt == 2'd3) ? 2'd2 : 2'd1;
+            end else begin                          // 高→低：开始新的低半周期
+                r_lo_ph <= w_lo_nxt;
+                r_rem   <= (w_lo_nxt == 2'd3) ? 2'd2 : 2'd1;
+            end
         end else begin
-            r_mclk_acc <= r_mclk_acc + 3'd2;
+            r_rem <= r_rem - 2'd1;
         end
     end
 
