@@ -67,7 +67,21 @@ module pcie_ep_engine #(
     input       wire    [127:0]     img_ddr_ro             ,
     // fb 读口仲裁（img_frame_src ↔ ep_bar_win，两个都在外层 top 里）
     output      wire                img_host_rd_prio       ,
-    input       wire                img_host_grant         
+    input       wire                img_host_grant         ,
+    // ==== 本步新增：DDR→主机推帧（ddr_frame_pusher）寄存器面 + 用户侧 TL 发送口 ====
+    //   推帧的 TLP 不走下面那个发送状态机，而是从这里插进 TL 发送口：
+    //   TL_TX_IDLE 里给 utx_req 最低优先权，进 TL_TX_USER 态后由顶层把 tl_tx_*
+    //   换成用户侧那一组（见 ph1p_pcie_ep_top.v 的推帧段）。
+    output      wire                img_push_en            , // CTRL[6]
+    output      wire    [31:0]      img_push_dst_lo        , // 0xB0
+    output      wire    [31:0]      img_push_dst_hi        , // 0xB4
+    output      wire    [31:0]      img_push_db_lo         , // 0xB8
+    output      wire    [31:0]      img_push_db_hi         , // 0xBC
+    input       wire    [127:0]     img_push_ro            , // {tlp_cnt, status, done, err}
+    input       wire                utx_req                ,
+    input       wire                utx_eop                ,
+    input       wire    [7:0]       utx_valid              ,
+    output      wire                utx_sel
 );
 
 `include "../common/TLP_FMT_TYPE.v"
@@ -106,6 +120,11 @@ reg                  iow_flag               ;
 reg                  ior_flag               ;
 reg                  memwr_flag             ;
 reg                  memrd_flag             ;
+// 本步新增推帧后：iow/ior/memrd 三个请求标志改为「发完才清」（不再在 rx_eop 时清）。
+// 原因：推帧时 TL 发送口可能被用户侧连占好几拍，主机的 MRd 在这期间到达时，
+// 原来那个「两拍就清」的标志会在状态机回到 IDLE 之前就消失，完成包被丢，
+// 主机读到全 F。现在它们一直挂着，到下一次 TL_TX_IDLE 就一定被服务。
+// （标志仍只有一个，靠主机非投递读的「等完成再发下一笔」语义保证不会叠单。）
 reg     [6:0]        memrd_addr             ;
 
 reg     [15:0]       rc_bdf                 ;
@@ -224,17 +243,23 @@ begin
         io_addr    <= 6'd0;
         memrd_addr <= 7'd0;
     end else begin
+        // 本步新增：iow/ior/memrd 三个请求标志「服务过才清」（原因见声明处注释）。
+        // 清的条件与发送状态机自己的验收条件逐字一致；放在置位前面，
+        // 同一拍既收完上一笔又来了新请求时，优先照顾新请求。
+        if( (tl_tx_state == TL_TX_ACK_IOW)  & tl_tx_eop & tl_tx_sop      & (!tl_tx_wait) )
+            iow_flag   <= 1'b0;
+        if( (tl_tx_state == TL_TX_ACK_IOR)  & tl_tx_eop & tl_tx_sop      & (!tl_tx_wait) )
+            ior_flag   <= 1'b0;
+        if( (tl_tx_state == TL_TX_ACK_MEMR) & tl_tx_eop & tl_tx_valid[7] & (!tl_tx_wait) )
+            memrd_flag <= 1'b0;
+
         if(tl_rx_sop_ff) begin 
             if( (tl_rx_data_ff[255:253] == `MWR_FMT_3DW  || tl_rx_data_ff[255:253] == `MWR_FMT_4DW  ) & tl_rx_data_ff[252:248] == `MWR_TYPE )
                 memwr_flag <= 1'b1;
         end else if(tl_rx_eop_2ff) begin 
             memwr_flag <= 1'b0;
         end
-        if( tl_rx_eop_2ff ) begin 
-            iow_flag   <= 1'b0;
-            ior_flag   <= 1'b0;
-            memrd_flag <= 1'b0;
-        end else if( tl_rx_sop_ff ) begin 
+        if( tl_rx_sop_ff ) begin 
             if( tl_rx_data_ff[255:253] == `IOWR_FMT  & tl_rx_data_ff[252:248] == `IOWR_TYPE  ) begin 
                 iow_flag   <= 1'b1;
                 io_addr    <= tl_rx_data_ff[167:162]; // dw align
@@ -359,7 +384,14 @@ ep_bar_win #(
     .ctrl_ddr_en    (img_ctrl_ddr_en        ),
     .ddr_ro         (img_ddr_ro             ),
     .host_rd_prio   (img_host_rd_prio       ),
-    .host_grant     (img_host_grant         )
+    .host_grant     (img_host_grant         ),
+    // 推帧寄存器面（0xB0~0xCC）与用户侧 TL 发送口
+    .push_ro        (img_push_ro            ),
+    .ctrl_push_en   (img_push_en            ),
+    .push_dst_lo    (img_push_dst_lo        ),
+    .push_dst_hi    (img_push_dst_hi        ),
+    .push_db_lo     (img_push_db_lo         ),
+    .push_db_hi     (img_push_db_hi         )
 );
 
 // ====================================================================
@@ -371,8 +403,12 @@ localparam   TL_TX_IDLE     = 5'b0_0001,
              TL_TX_ACK_IOW  = 5'b0_0010,
              TL_TX_ACK_IOR  = 5'b0_0100,
              TL_TX_ACK_MEMR = 5'b0_1000,
-             TL_TX_ACK_MSIX = 5'b1_0000;
-                             
+             TL_TX_ACK_MSIX = 5'b1_0000,
+             TL_TX_USER     = 5'b10_0000;   // 本步新增：TL 发送口借给用户侧推帧
+
+// 顶层据此把 tl_tx_* 换成用户侧那一组
+assign  utx_sel = (tl_tx_state == TL_TX_USER);
+
 
 assign  tl_tx_err    = 8'b0;
 assign  tl_tx_stream = 1'b0;
@@ -395,6 +431,8 @@ always@(posedge tl_clk_user) begin
                     tl_tx_state <= TL_TX_ACK_MEMR;
                 else if(|tl_int_msix_trigger_ff)
                     tl_tx_state <= TL_TX_ACK_MSIX;
+                else if(utx_req)                      // 用户侧推帧：最低优先权
+                    tl_tx_state <= TL_TX_USER;
                 else 
                     tl_tx_state <= tl_tx_state; 
             end
@@ -558,6 +596,17 @@ always@(posedge tl_clk_user) begin
                                tl_msix_sgm_data_ff[31:0]            ,
                                96'd0
                               };
+            end
+            TL_TX_USER:begin
+                // 本步新增：TL 发送口的输出由顶层换成用户侧那一组（utx_data/sop/eop/
+                // valid），这里只把本状态机自己的寄存器清零、并在用户侧发出 eop 且
+                // 被链路收走（!tl_tx_wait）后回到 IDLE，把口子还给 CPL/CPLD。
+                tl_tx_data  <= 'd0;
+                tl_tx_eop   <= 1'b0;
+                tl_tx_sop   <= 1'b0;
+                tl_tx_valid <= 8'h0;
+                if( utx_eop & (|utx_valid) & (!tl_tx_wait) )
+                    tl_tx_state <= TL_TX_IDLE;
             end
        endcase
     end

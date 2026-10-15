@@ -156,6 +156,33 @@ wire [1:0]   w_ddr_bresp;
 wire         w_ddr_bvalid, w_ddr_bready;
 wire         w_ddrphy_rdy;       // = 1 表示 DDRPHY 校准完成（IP 的 cal_done）
 
+// ==== 【本步新增】推帧引擎（ddr_frame_pusher）====
+//  · 引擎自己的 TL 发送口先接到 e_tl_tx_*，再由顶层 mux 与用户侧那一组合并成
+//    tl_tx_*（见下面推帧段）：utx_sel = 1 时 TL 发送口归用户侧。
+wire [255:0] e_tl_tx_data;
+wire         e_tl_tx_sop, e_tl_tx_eop;
+wire [7:0]   e_tl_tx_valid;
+wire [255:0] utx_data;
+wire         utx_sop, utx_eop, utx_req, utx_sel;
+wire [7:0]   utx_valid;
+wire         img_push_en;        // CTRL[6]
+wire [31:0]  img_push_dst_lo, img_push_dst_hi, img_push_db_lo, img_push_db_hi;
+wire [31:0]  img_push_done, img_push_status, img_push_tlp;
+wire [7:0]   img_push_err;
+wire [127:0] img_push_ro;        // {tlp_cnt, status, done, err} → ep_bar_win 0xCC/0xC4/0xC0/0xC8
+assign img_push_ro = {img_push_tlp, img_push_status, img_push_done, 24'd0, img_push_err};
+// AXI4 读通道（u_ddr3_mc_0 的用户侧读口，本步从「常量 0」改成接推帧引擎）
+wire [3:0]   w_ddr_arid;
+wire [28:0]  w_ddr_araddr;
+wire [7:0]   w_ddr_arlen;
+wire [2:0]   w_ddr_arsize;
+wire [1:0]   w_ddr_arburst;
+wire         w_ddr_arvalid, w_ddr_arready;
+wire [3:0]   w_ddr_rid;
+wire [255:0] w_ddr_rdata;
+wire [1:0]   w_ddr_rresp;
+wire         w_ddr_rlast, w_ddr_rvalid, w_ddr_rready;
+
 assign {w_ddr_len, w_ddr_status, w_ddr_base, w_ddr_seq} = w_ddr_ro;
 
     // clock and reset signals
@@ -500,14 +527,25 @@ pcie_ep_engine #(
 `endif
 
     // TX interface 
-    .tl_tx_data                              (tl_tx_data                              ),
-    .tl_tx_eop                               (tl_tx_eop                               ),
-    .tl_tx_err                               (tl_tx_err                               ),
-    .tl_tx_sop                               (tl_tx_sop                               ),
-    .tl_tx_stream                            (tl_tx_stream                            ),
-    .tl_tx_valid                             (tl_tx_valid                             ),
-    .tl_tx_wait                              (tl_tx_wait                              ),
-    .tl_tx_credits                           (tl_tx_credits                           ),
+    .tl_tx_data                              (e_tl_tx_data                           ),
+    .tl_tx_eop                               (e_tl_tx_eop                            ),
+    .tl_tx_err                               (tl_tx_err                              ),
+    .tl_tx_sop                               (e_tl_tx_sop                            ),
+    .tl_tx_stream                            (tl_tx_stream                           ),
+    .tl_tx_valid                             (e_tl_tx_valid                          ),
+    .tl_tx_wait                              (tl_tx_wait                             ),
+    .tl_tx_credits                           (tl_tx_credits                          ),
+    // ==== 本步新增：推帧寄存器面 + 用户侧 TL 发送口 ====
+    .img_push_en                             (img_push_en                            ),
+    .img_push_dst_lo                         (img_push_dst_lo                        ),
+    .img_push_dst_hi                         (img_push_dst_hi                        ),
+    .img_push_db_lo                          (img_push_db_lo                         ),
+    .img_push_db_hi                          (img_push_db_hi                         ),
+    .img_push_ro                             (img_push_ro                            ),
+    .utx_req                                 (utx_req                                ),
+    .utx_eop                                 (utx_eop                                ),
+    .utx_valid                               (utx_valid                              ),
+    .utx_sel                                 (utx_sel                                ),
     // ==== 本移植新增：BAR0 真窗口 → 图像源 ====
     .img_ctrl_enable                         (img_enable                             ),
     .img_ctrl_trigger                        (img_trigger                            ),
@@ -1259,19 +1297,19 @@ ddr3_mc_0 u_ddr3_mc_0 (
     .axi_bresp      (w_ddr_bresp         ),
     .axi_bvalid     (w_ddr_bvalid        ),
     .axi_bready     (w_ddr_bready        ),
-    .axi_arid       (4'd0                ),
-    .axi_araddr     (29'd0               ),
-    .axi_arlen      (8'd0                ),
-    .axi_arsize     (3'd0                ),
-    .axi_arburst    (2'd0                ),
-    .axi_arvalid    (1'b0                ),
-    .axi_arready    (                    ),
-    .axi_rid        (                    ),
-    .axi_rdata      (                    ),
-    .axi_rresp      (                    ),
-    .axi_rlast      (                    ),
-    .axi_rvalid     (                    ),
-    .axi_rready     (1'b1                ),
+    .axi_arid       (w_ddr_arid         ),
+    .axi_araddr     (w_ddr_araddr       ),
+    .axi_arlen      (w_ddr_arlen        ),
+    .axi_arsize     (w_ddr_arsize       ),
+    .axi_arburst    (w_ddr_arburst      ),
+    .axi_arvalid    (w_ddr_arvalid      ),
+    .axi_arready    (w_ddr_arready      ),
+    .axi_rid        (w_ddr_rid          ),
+    .axi_rdata      (w_ddr_rdata        ),
+    .axi_rresp      (w_ddr_rresp        ),
+    .axi_rlast      (w_ddr_rlast        ),
+    .axi_rvalid     (w_ddr_rvalid       ),
+    .axi_rready     (w_ddr_rready       ),
 
     .usr_ref_type   (2'b00               ),
     .usr_ref_req    (1'b0                ),
@@ -1355,6 +1393,80 @@ ddr_frame_writer #(
     .wr_base       (w_ddr_base        ),
     .wr_status     (w_ddr_status      ),
     .wr_len        (w_ddr_len         )
+);
+
+// ====================================================================
+//  【本步新增】推帧引擎：DDR3 → 主机内存（MWr 主动写）
+//
+//  触发：push_en = CTRL[6] 置 1，且 ddr_frame_writer 发布了与上次不同的帧号。
+//  取数：u_ddr3_mc_0 的 AXI4 读通道（上面那个块里原来接常量 0，本步改成接这里），
+//        每 4KB 一个突发，读进 256bit×128 拍的异步 FIFO，过到 tl_clk_user 域。
+//  发数：每 128 字节数据摆成一个 4DW 头的 MWr（5 拍：4 个 dw 头 + 32 个 dw 载荷），
+//        整帧 2400 笔；每笔之间空一拍，把 TL 发送口还给引擎发完成包。
+//        帧数据全推完后再单发一笔「只写 1 个 dw」的门铃 MWr（地址由主机给）。
+//  目标地址：0xB0/0xB4 由主机写（帧内每笔 +128），不写死任何物理地址。
+//  TLP 头怎么拼、字节序依据、tag/排序推理、出错策略、已知限制：全写在
+//  rtl/ep_side/ddr/ddr_frame_pusher.v 头部。
+// ====================================================================
+// TL 发送口 mux：引擎空闲且用户侧要发时，把 tl_tx_* 换成用户侧那一组。
+//  · utx_sel = 1 期间，引擎的发送状态机停在 TL_TX_USER（它自己那几个寄存器归零），
+//    所以这里切过去不会把引擎正在发的包拦腰截断；
+//  · 引擎在 TL_TX_IDLE 时它那几根线上全是 0（每个包末拍收走时自己清），
+//    所以切回来也不会多出一拍。
+assign tl_tx_data  = utx_sel ? utx_data  : e_tl_tx_data ;
+assign tl_tx_sop   = utx_sel ? utx_sop   : e_tl_tx_sop  ;
+assign tl_tx_eop   = utx_sel ? utx_eop   : e_tl_tx_eop  ;
+assign tl_tx_valid = utx_sel ? utx_valid : e_tl_tx_valid;
+
+ddr_frame_pusher #(
+    .W           (IMG_W             ),
+    .H           (IMG_H             ),
+    .PAY_DW      (32                ),   // 128 字节 = 协商出的 MaxPayload
+    .FIFO_AW     (7                 ),   // 128 拍 × 32B = 4KB，与突发等长
+    .BURST_BEATS (128               ),   // 128 × 32B = 4KB，不跨页
+    .WAIT_LIMIT  (16'hFFFF          )
+) u_ddr_frame_pusher (
+    .clk_fb        (tl_clk_user       ),
+    .rst_fb        (power_on_rst_dly ),
+
+    .push_en       (img_push_en       ),
+    .dst_lo        (img_push_dst_lo   ),
+    .dst_hi        (img_push_dst_hi   ),
+    .db_lo         (img_push_db_lo    ),
+    .db_hi         (img_push_db_hi    ),
+    .st_done       (img_push_done    ),
+    .st_status     (img_push_status  ),
+    .st_err        (img_push_err     ),
+    .st_tlp_cnt    (img_push_tlp     ),
+
+    .ddr_seq       (w_ddr_seq         ),
+    .ddr_base      (w_ddr_base        ),
+    .ddr_status    (w_ddr_status      ),
+
+    .utx_sel       (utx_sel           ),
+    .tl_tx_wait    (tl_tx_wait        ),
+    .utx_req       (utx_req           ),
+    .utx_data      (utx_data          ),
+    .utx_sop       (utx_sop           ),
+    .utx_eop       (utx_eop           ),
+    .utx_valid     (utx_valid         ),
+
+    .clk_ddr       (w_ddr_dhi_clk     ),
+    .rst_ddr       (~w_ddrphy_rst_n   ),
+
+    .m_axi_arid    (w_ddr_arid        ),
+    .m_axi_araddr  (w_ddr_araddr      ),
+    .m_axi_arlen   (w_ddr_arlen       ),
+    .m_axi_arsize  (w_ddr_arsize      ),
+    .m_axi_arburst (w_ddr_arburst     ),
+    .m_axi_arvalid (w_ddr_arvalid     ),
+    .m_axi_arready (w_ddr_arready     ),
+    .m_axi_rid     (w_ddr_rid         ),
+    .m_axi_rdata   (w_ddr_rdata       ),
+    .m_axi_rresp   (w_ddr_rresp       ),
+    .m_axi_rlast   (w_ddr_rlast       ),
+    .m_axi_rvalid  (w_ddr_rvalid      ),
+    .m_axi_rready  (w_ddr_rready      )
 );
 
 endmodule

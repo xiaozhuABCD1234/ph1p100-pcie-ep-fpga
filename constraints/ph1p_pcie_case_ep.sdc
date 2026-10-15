@@ -28,14 +28,16 @@ create_generated_clock -name {cam_b_byte_clk} -source [get_ports {mipi_b_clk_hs_
 # （实测预算只剩 0.004ns），报出与逻辑无关的 −6.8ns 假违规（TD DRC TMST-7700/5089）。
 #
 # =============================================================================
-# DDR3 用户侧时钟（TD 报告里写作 u_ddr3_mc_0/usr_clk，100MHz）——本步新增的
-# 「整帧搬进 DDR3」通路时钟域：
+# DDR3 用户侧时钟（TD 报告里写作 u_ddr3_mc_0/usr_clk，100MHz）——「整帧搬进 DDR3」
+# 与【推帧：DDR3 → 主机内存】两条通路的时钟域：
 #   来源：al_ip/ddr3_mc_0/src/sdc/ddr3_mc_0.sdc 里
 #         rename_clock -name usr_clk [...u_pll1/u_pll_inst.clkc[0]]
-#   跨域做法（见 rtl/ep_side/ddr/ddr_frame_writer.v 头部）：
-#     · 数据：异步 FIFO（格雷码指针 + 2 级同步器）tl_clk_user → usr_clk；
+#   跨域做法（见 rtl/ep_side/ddr/ddr_frame_writer.v 与 ddr_frame_pusher.v 头部）：
+#     · 数据：异步 FIFO（格雷码指针 + 2 级同步器），tl_clk_user ↔ usr_clk 两个方向
+#       各一个（写 DDR 一个、从 DDR 读出来推帧一个）；
 #     · 请求/基址：单比特电平 2 级同步 + 数据在整个请求期间保持不动；
-#     · done/err：usr_clk 域电平 2 级同步回 tl_clk_user。
+#     · done/err：usr_clk 域电平 2 级同步回 tl_clk_user；
+#     · AXI4 读写通道都在 usr_clk 域，接口时序由 IP 自带 sdc 约束。
 #   两端时钟由各自的恢复/复位决定，没有固定相位关系，所以与相机段一样按
 #   "异步时钟域"如实声明（否则 STA 会去凑 16ns/10ns 的最近沿，报假违规）。
 #   通配写法：*usr_clk 既能匹配裸名 usr_clk，也能匹配 TD 报告里的

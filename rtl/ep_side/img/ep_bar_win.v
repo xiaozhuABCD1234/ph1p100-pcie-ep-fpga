@@ -50,6 +50,27 @@
 //    0xAC DDR_LEN       R 每帧字节数（= 0x58 DATA_LEN）
 //  另：CTRL bit5 = ddr_en（1 = 每完成一帧自动搬进 DDR3；默认 0，原语义不变）
 //    搬运通路本体在 rtl/ep_side/ddr/ddr_frame_writer.v，这里只做寄存器面。
+//
+//  另：【本步新增】CTRL bit6 = push_en（1 = 每有一帧落进 DDR3 就用 MWr 主动推给
+//    主机；默认 0，原语义不变）与下面这组「推帧」寄存器。推帧本体在
+//    rtl/ep_side/ddr/ddr_frame_pusher.v，这里同样只做寄存器面。
+//    0xB0 PUSH_DST_LO   R/W 主机内存目标地址低 32 位（0 且高也为 0 ⇒ 错误码 1、
+//                            整帧不发；地址由主机给，EP 侧不写死任何物理地址）
+//    0xB4 PUSH_DST_HI   R/W 目标地址高 32 位；帧内地址每发一个 MWr 自动 +128
+//    0xB8 PUSH_DB_LO    R/W 门铃地址低 32 位
+//    0xBC PUSH_DB_HI    R/W 门铃地址高 32 位（两个都为 0 ⇒ 不发门铃，错误码 4）
+//    0xC0 PUSH_DONE     R   已推帧数（每推完一整帧 +1；门铃里写的序号就是它，1 起）
+//    0xC4 PUSH_STATUS   R   bit0 busy / bit1 last_ok / bit2 doorbell_sent /
+//                            bit3 ddr_alive / bit4 ddr_cal_done / [31:16] 错误累计
+//    0xC8 PUSH_ERR      R   最近一次错误码：0 正常 / 1 目标地址未配置 /
+//                            2 等 tl_tx_wait 超时 / 3 AXI 读响应非 OKAY /
+//                            4 门铃地址未配置（数据推了、门铃没发）
+//    0xCC PUSH_TLP_CNT  R   最近一帧实际发出的 MWr 数（正常 2400，不含门铃那笔）
+//    · 门铃是推完一帧后单独一笔「只写一个 dw」的 MWr（本 EP 没有 MSI/MSI-X，
+//      所以除轮询 0xC0 外再给主机一个中断式通知）；写的内容是本帧序号。
+//    · 推帧与门铃都是 TC0 的 Posted 写，PCIe 排序规则不允许 Posted 互相超越，
+//      所以主机一定先看到帧数据、最后看到门铃。
+//    详细约定（TLP 头怎么拼、字节序、出错怎么办）见 ddr_frame_pusher.v 头部。
 ///////////////////////////////////////////////////////////////
 `timescale 1ns/1ps
 
@@ -79,6 +100,13 @@ module ep_bar_win #(
     // DDR3 整帧搬运（CTRL[5] + 只读握手字，字面顺序 {len, status, base, seq}）
     output reg          ctrl_ddr_en,
     input  wire [127:0] ddr_ro,
+    // 推帧（CTRL[6] + 0xB0~0xCC；字面顺序 {tlp_cnt, status, done, err}）
+    input  wire [127:0] push_ro,
+    output reg          ctrl_push_en,
+    output reg  [31:0]  push_dst_lo,
+    output reg  [31:0]  push_dst_hi,
+    output reg  [31:0]  push_db_lo,
+    output reg  [31:0]  push_db_hi,
     // 与 DDR 搬运共用 fb 唯一读口的握手指（见 img_frame_src 头部仲裁）
     output wire         host_rd_prio,
     input  wire         host_grant,
@@ -159,6 +187,11 @@ module ep_bar_win #(
             ctrl_pattern_r <= 2'd0;
             ctrl_cam_sel   <= 1'b0;      // 默认走测试图源（向后兼容）
             ctrl_ddr_en    <= 1'b0;      // 默认不往 DDR3 搬（保持原行为）
+            ctrl_push_en   <= 1'b0;      // 默认不推帧（保持原行为）
+            push_dst_lo    <= 32'd0;
+            push_dst_hi    <= 32'd0;
+            push_db_lo     <= 32'd0;
+            push_db_hi     <= 32'd0;
             ptr           <= 32'd0;
             scratch       <= 32'd0;
             last_wr       <= 32'd0;
@@ -180,9 +213,14 @@ module ep_bar_win #(
                         ctrl_pattern_r <= tlp_dw_s[3:2];
                         ctrl_cam_sel   <= tlp_dw_s[4];   // 1 = 相机写源
                         ctrl_ddr_en    <= tlp_dw_s[5];   // 1 = 每完成一帧自动搬进 DDR3
+                        ctrl_push_en   <= tlp_dw_s[6];   // 1 = 每落一帧就推给主机
                     end
                     12'h5C: ptr     <= ptr_fix(tlp_dw_s);
                     12'h9C: cam_tap_cfg <= tlp_dw_s[6:0];
+                    12'hB0: push_dst_lo <= tlp_dw_s;
+                    12'hB4: push_dst_hi <= tlp_dw_s;
+                    12'hB8: push_db_lo  <= tlp_dw_s;
+                    12'hBC: push_db_hi  <= tlp_dw_s;
                     12'h6C: scratch <= tlp_dw_s;
                     12'h74: last_wr <= tlp_dw_s;
                     default: ;
@@ -269,7 +307,7 @@ module ep_bar_win #(
     always @(*) begin
         case (r_idx)
             12'h40:  rd_dw_comb = MAGIC;
-            12'h44:  rd_dw_comb = {26'd0, ctrl_ddr_en, ctrl_cam_sel, ctrl_pattern_r, ctrl_trigger, ctrl_enable};
+            12'h44:  rd_dw_comb = {25'd0, ctrl_push_en, ctrl_ddr_en, ctrl_cam_sel, ctrl_pattern_r, ctrl_trigger, ctrl_enable};
             12'h48:  rd_dw_comb = {30'd0, st_busy, st_ready};
             12'h4C:  rd_dw_comb = st_frame_cnt;
             12'h50:  rd_dw_comb = {16'd0, st_width};
@@ -297,6 +335,15 @@ module ep_bar_win #(
             12'hA4:  rd_dw_comb = ddr_ro[63:32];          // DDR_BASE
             12'hA8:  rd_dw_comb = ddr_ro[95:64];          // DDR_STATUS
             12'hAC:  rd_dw_comb = ddr_ro[127:96];         // DDR_LEN
+            // 推帧（ddr_frame_pusher，见 rtl/ep_side/ddr/）
+            12'hB0:  rd_dw_comb = push_dst_lo;            // PUSH_DST_LO
+            12'hB4:  rd_dw_comb = push_dst_hi;            // PUSH_DST_HI
+            12'hB8:  rd_dw_comb = push_db_lo;             // PUSH_DB_LO
+            12'hBC:  rd_dw_comb = push_db_hi;             // PUSH_DB_HI
+            12'hC0:  rd_dw_comb = push_ro[31:0];          // PUSH_DONE
+            12'hC4:  rd_dw_comb = push_ro[63:32];         // PUSH_STATUS
+            12'hC8:  rd_dw_comb = push_ro[95:64];         // PUSH_ERR
+            12'hCC:  rd_dw_comb = push_ro[127:96];        // PUSH_TLP_CNT
             default: rd_dw_comb = 32'hDEAD_BEEF;
         endcase
     end
