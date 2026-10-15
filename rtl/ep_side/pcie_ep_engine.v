@@ -73,6 +73,7 @@ module pcie_ep_engine #(
     //   TL_TX_IDLE 里给 utx_req 最低优先权，进 TL_TX_USER 态后由顶层把 tl_tx_*
     //   换成用户侧那一组（见 ph1p_pcie_ep_top.v 的推帧段）。
     output      wire                img_push_en            , // CTRL[6]
+    output      wire                img_push_src           , // CTRL[7] 推帧数据源选择
     output      wire    [31:0]      img_push_dst_lo        , // 0xB0
     output      wire    [31:0]      img_push_dst_hi        , // 0xB4
     output      wire    [31:0]      img_push_db_lo         , // 0xB8
@@ -388,6 +389,7 @@ ep_bar_win #(
     // 推帧寄存器面（0xB0~0xCC）与用户侧 TL 发送口
     .push_ro        (img_push_ro            ),
     .ctrl_push_en   (img_push_en            ),
+    .ctrl_push_src  (img_push_src           ),
     .push_dst_lo    (img_push_dst_lo        ),
     .push_dst_hi    (img_push_dst_hi        ),
     .push_db_lo     (img_push_db_lo         ),

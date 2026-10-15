@@ -32,6 +32,9 @@
 //                        见 ph1p_pcie_ep_top.v 相机段）：0 = 62.5MHz→12.5MHz 旧分频器
 //                        （默认，实测能锁），1 = sys_clk(50MHz)÷4 = 12.5MHz 干净。
 //                        bit3（pattern[1]）仍然无人消费。
+//                        bit5 ddr_en（见下）、bit6 push_en（见下）、
+//                        bit7 push_src = 推帧数据源：0 = DDR3（默认），
+//                        1 = 片内 ERAM 帧缓存（绕开 DDR 直接推给主机）
 //    0x48 STATUS    R    bit0 ready, bit1 busy
 //    0x4C FRAME_CNT R
 //    0x50 WIDTH     R
@@ -43,6 +46,11 @@
 //    0x68 CLK_MHZ   R
 //    0x6C SCRATCH   R/W 读写回环自检
 //    0x70 PF0       R    PTR 处预取的 dw0（肉眼调试用）
+//    0x74 LAST_WR   R/W 主机最后写进来的值（读写回环自检）
+//    0x78 FB_RADDR  R    主机预取当前给出的帧缓存字节地址
+//    0x7C DBG_RD_IDX R   内部读口字索引（低 17 位有效）
+//    0x80..0x98     R    相机状态字 cam_stat[31:0]..cam_stat[223:192]（8 个 dw）
+//    0x9C CAM_TAP   R/W  {manual_en, tap[5:0]}（不是 cam_stat[255:224]）
 //    0xA0 DDR_FRAME_SEQ R 已整帧落 DDR3 的帧号（单调递增；= DDR 里该帧字 0 的帧号）
 //    0xA4 DDR_BASE      R 该帧在 DDR3 里的字节基址（双缓冲两块交替）
 //    0xA8 DDR_STATUS    R bit0 valid / bit1 busy / bit2 err / bit3 alive /
@@ -51,9 +59,15 @@
 //  另：CTRL bit5 = ddr_en（1 = 每完成一帧自动搬进 DDR3；默认 0，原语义不变）
 //    搬运通路本体在 rtl/ep_side/ddr/ddr_frame_writer.v，这里只做寄存器面。
 //
-//  另：【本步新增】CTRL bit6 = push_en（1 = 每有一帧落进 DDR3 就用 MWr 主动推给
-//    主机；默认 0，原语义不变）与下面这组「推帧」寄存器。推帧本体在
-//    rtl/ep_side/ddr/ddr_frame_pusher.v，这里同样只做寄存器面。
+//  另：CTRL bit6 = push_en（1 = 每有一帧就用 MWr 主动推给主机；默认 0，原语义不变）
+//    与下面这组「推帧」寄存器。推帧本体在 rtl/ep_side/ddr/ddr_frame_pusher.v，
+//    这里同样只做寄存器面。
+//    CTRL bit7 = push_src：【本步新增】推帧的数据源选择。0 = 从 DDR3 里已发布的
+//    那一帧读（默认，原语义）；1 = 直接读片内 ERAM 帧缓存（img_frame_src 的
+//    fb[]），**完全不碰 DDR 通路** —— 用来先把「EP 主动把整帧写进主机内存」
+//    这条 DMA 验通，DDR 未就绪时也能用。两条路共用 fb 的唯一读口，仲裁在顶层：
+//    push_src=1 且推帧在跑时读口归推帧引擎，DDR 搬运那一帧会被挤（会记 err_cnt）。
+//    所以两者不要同时开：验 ERAM 路时把 bit5（ddr_en）留 0。
 //    0xB0 PUSH_DST_LO   R/W 主机内存目标地址低 32 位（0 且高也为 0 ⇒ 错误码 1、
 //                            整帧不发；地址由主机给，EP 侧不写死任何物理地址）
 //    0xB4 PUSH_DST_HI   R/W 目标地址高 32 位；帧内地址每发一个 MWr 自动 +128
@@ -62,6 +76,8 @@
 //    0xC0 PUSH_DONE     R   已推帧数（每推完一整帧 +1；门铃里写的序号就是它，1 起）
 //    0xC4 PUSH_STATUS   R   bit0 busy / bit1 last_ok / bit2 doorbell_sent /
 //                            bit3 ddr_alive / bit4 ddr_cal_done / [31:16] 错误累计
+//                            （四位以下由 ph1p_pcie_ep_top.v 的 img_push_ro 拼接给出，
+//                              顺序必须与这里逐位一致；上一版拼错，曾把已推帧数读成 0）
 //    0xC8 PUSH_ERR      R   最近一次错误码：0 正常 / 1 目标地址未配置 /
 //                            2 等 tl_tx_wait 超时 / 3 AXI 读响应非 OKAY /
 //                            4 门铃地址未配置（数据推了、门铃没发）
@@ -100,9 +116,10 @@ module ep_bar_win #(
     // DDR3 整帧搬运（CTRL[5] + 只读握手字，字面顺序 {len, status, base, seq}）
     output reg          ctrl_ddr_en,
     input  wire [127:0] ddr_ro,
-    // 推帧（CTRL[6] + 0xB0~0xCC；字面顺序 {tlp_cnt, status, done, err}）
+    // 推帧（CTRL[6]/[7] + 0xB0~0xCC；字面顺序 {tlp_cnt, err, status, done}）
     input  wire [127:0] push_ro,
     output reg          ctrl_push_en,
+    output reg          ctrl_push_src,
     output reg  [31:0]  push_dst_lo,
     output reg  [31:0]  push_dst_hi,
     output reg  [31:0]  push_db_lo,
@@ -188,6 +205,7 @@ module ep_bar_win #(
             ctrl_cam_sel   <= 1'b0;      // 默认走测试图源（向后兼容）
             ctrl_ddr_en    <= 1'b0;      // 默认不往 DDR3 搬（保持原行为）
             ctrl_push_en   <= 1'b0;      // 默认不推帧（保持原行为）
+            ctrl_push_src  <= 1'b0;      // 默认推帧数据源取 DDR3（保持原行为）
             push_dst_lo    <= 32'd0;
             push_dst_hi    <= 32'd0;
             push_db_lo     <= 32'd0;
@@ -213,7 +231,8 @@ module ep_bar_win #(
                         ctrl_pattern_r <= tlp_dw_s[3:2];
                         ctrl_cam_sel   <= tlp_dw_s[4];   // 1 = 相机写源
                         ctrl_ddr_en    <= tlp_dw_s[5];   // 1 = 每完成一帧自动搬进 DDR3
-                        ctrl_push_en   <= tlp_dw_s[6];   // 1 = 每落一帧就推给主机
+                        ctrl_push_en   <= tlp_dw_s[6];   // 1 = 每有一帧就推给主机
+                        ctrl_push_src  <= tlp_dw_s[7];   // 1 = 推帧数据源取片内 ERAM 帧缓存
                     end
                     12'h5C: ptr     <= ptr_fix(tlp_dw_s);
                     12'h9C: cam_tap_cfg <= tlp_dw_s[6:0];
@@ -307,7 +326,7 @@ module ep_bar_win #(
     always @(*) begin
         case (r_idx)
             12'h40:  rd_dw_comb = MAGIC;
-            12'h44:  rd_dw_comb = {25'd0, ctrl_push_en, ctrl_ddr_en, ctrl_cam_sel, ctrl_pattern_r, ctrl_trigger, ctrl_enable};
+            12'h44:  rd_dw_comb = {24'd0, ctrl_push_src, ctrl_push_en, ctrl_ddr_en, ctrl_cam_sel, ctrl_pattern_r, ctrl_trigger, ctrl_enable};
             12'h48:  rd_dw_comb = {30'd0, st_busy, st_ready};
             12'h4C:  rd_dw_comb = st_frame_cnt;
             12'h50:  rd_dw_comb = {16'd0, st_width};
@@ -340,7 +359,7 @@ module ep_bar_win #(
             12'hB4:  rd_dw_comb = push_dst_hi;            // PUSH_DST_HI
             12'hB8:  rd_dw_comb = push_db_lo;             // PUSH_DB_LO
             12'hBC:  rd_dw_comb = push_db_hi;             // PUSH_DB_HI
-            12'hC0:  rd_dw_comb = push_ro[31:0];          // PUSH_DONE
+            12'hC0:  rd_dw_comb = push_ro[31:0];          // PUSH_DONE（已推帧数）
             12'hC4:  rd_dw_comb = push_ro[63:32];         // PUSH_STATUS
             12'hC8:  rd_dw_comb = push_ro[95:64];         // PUSH_ERR
             12'hCC:  rd_dw_comb = push_ro[127:96];        // PUSH_TLP_CNT

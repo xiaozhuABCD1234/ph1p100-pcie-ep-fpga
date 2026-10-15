@@ -109,8 +109,13 @@ module tb_ddr_frame_writer;
                 if (awburst !== 2'b01) begin
                     $display("ERROR: awburst=%b 期望 INCR", awburst); err_cnt_tb = err_cnt_tb + 1;
                 end
-                if (awaddr[11:0] !== 12'h000) begin
-                    $display("ERROR: 突发地址 %h 没 4KB 对齐", awaddr); err_cnt_tb = err_cnt_tb + 1;
+                // 真正的硬规则是「一个突发不得跨 4KB 页」+「地址按突发大小对齐」
+                // （本 TB 的 BB=16 = 512B/突发，所以 4KB 对齐这个说法对它不成立）
+                if (awaddr[8:0] !== 9'd0) begin
+                    $display("ERROR: 突发地址 %h 没按突发大小(512B)对齐", awaddr); err_cnt_tb = err_cnt_tb + 1;
+                end
+                if ((awaddr[11:0] + (BB*32) - 1) >> 12 !== awaddr[11:0] >> 12) begin
+                    $display("ERROR: 突发 %h 跨了 4KB 页", awaddr); err_cnt_tb = err_cnt_tb + 1;
                 end
                 w_active <= 1'b1;
                 w_idx    <= 8'd0;
@@ -199,6 +204,10 @@ module tb_ddr_frame_writer;
                 $display("ERROR: 等第 %0d 帧发布超时（wr_seq=%0d base=%h）", seq, wr_seq, wr_base);
                 errors = errors + 1;
             end
+            // wr_status 由组合 next 值寄存，而 next 用的是**上一拍**的 valid_r
+            // ⇒ status 比 seq/base 晚 1 拍（同域寄存器的正常现象；主机分两次读寄存器，
+            //   1 拍（16ns）偏差对轮询无影响）。所以这里多等一拍再查。
+            @(posedge clk_fb);
             if (wr_status[0] !== 1'b1) begin
                 $display("ERROR: 发布后 wr_status.bit0(valid) 不是 1"); errors = errors + 1;
             end
@@ -209,35 +218,45 @@ module tb_ddr_frame_writer;
     endtask
 
     // ---------------- 主流程 ----------------
+    // 注：帧计数器一律用**非阻塞**赋值在时钟边沿更新 —— 真实硬件里它也是同域寄存器
+    //     （cam_fb_writer 在 EOF 那拍注册输出）。用阻塞赋值会在同一个时间步里与 DUT 的
+    //     组合 `fill_req` 抢 delta，导致「计数器变了但 fill_req 那拍还是旧值」，
+    //     触发被吞掉（这就是本 TB 第一版跑不过去的原因）。
+    task set_cnt(input [31:0] v);
+        begin
+            @(posedge clk_fb); fb_frame_cnt <= v;
+        end
+    endtask
+
     initial begin
         #100 rst_fb = 0; rst_ddr = 0;
         #200 ddr_cal_done = 1;
         #200 ddr_en = 1;
 
-        // ---- 第 1 帧 → BASE0 ----
+        // ---- 第 1 帧 → BASE1（帧号奇偶：奇→BASE1，偶→BASE0，与 RTL/注释一致）----
         fill_fb(1);
-        @(posedge clk_fb); fb_frame_cnt = 1;
+        set_cnt(1);
         @(posedge clk_fb);
-        wait_publish(1, BASE0);
-        check_block(BASE0, 1);
+        wait_publish(1, BASE1);
+        check_block(BASE1, 1);
 
-        // ---- 第 2 帧 → BASE1 ----
+        // ---- 第 2 帧 → BASE0 ----
         fill_fb(2);
-        @(posedge clk_fb); fb_frame_cnt = 2;
+        set_cnt(2);
         @(posedge clk_fb);
-        wait_publish(2, BASE1);
-        check_block(BASE1, 2);
+        wait_publish(2, BASE0);
+        check_block(BASE0, 2);
 
-        // ---- 第 3 帧 → 又回 BASE0（双缓冲交替）----
+        // ---- 第 3 帧 → 又回 BASE1（双缓冲交替）----
         fill_fb(3);
-        @(posedge clk_fb); fb_frame_cnt = 3;
+        set_cnt(3);
         @(posedge clk_fb);
-        wait_publish(3, BASE0);
-        check_block(BASE0, 3);
+        wait_publish(3, BASE1);
+        check_block(BASE1, 3);
 
         // ---- 撕裂：搬运中途 fb_busy 拉高 → 本帧不发布、err_cnt +1 ----
         fill_fb(4);
-        @(posedge clk_fb); fb_frame_cnt = 4;
+        set_cnt(4);
         repeat (40) @(posedge clk_fb);
         fb_busy = 1;                        // 新一帧开始写 fb
         repeat (10) @(posedge clk_fb);

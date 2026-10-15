@@ -19,6 +19,25 @@
 //     （偏移与位定义写在 ep_bar_win.v 头部那张表里，这里不重复。）
 //
 //  ===========================================================================
+//  一之二、数据源：CTRL[7] = push_src（本步新增）
+//  ===========================================================================
+//   · 0（默认）：从 DDR3 里已发布的那一帧读 —— AXI4 读信道 + 异步 FIFO + 2 级同步器，
+//     完全按上面的写法。
+//   · 1：直接从片内 ERAM 帧缓存读（img_frame_src 的 fb[]），**不碰 DDR 任何一根线**。
+//     用途：把「EP 主动把整帧用 MWr 写进主机内存」这条 DMA 单独验通，
+//     DDR 未就绪/出问题时不被拖住。读口总线是同一个（fb[] 只允许一份读口，
+//     多一份会被 TD 落成分布式 RAM，见 ddr_frame_writer.v 头部），
+//     帧内由顶层按本模块的 src_act 选通，主机预取仍然优先（img_frame_src 的仲裁）。
+//   · 两条源在 TL 侧完全合流：都变成「一拍 256bit + 有没有」两个信号，
+//     MWr 怎么拼、字节序、门铃、错误码全都不分源。ERAM 源的拼拍与
+//     ddr_frame_writer 逐字一致（lane k 的字放 [32k +: 32]），所以 bswap256
+//     之后主机看到的字节序与 MMIO 0x60 读到的一模一样。
+//   · src_sel 在每帧开头锁存一次（src_act），帧内不再变；ERAM 源的「帧号」
+//     就是帧缓存帧计数器（img_frame_cnt，只在 EOF 递增 ⇒ 读到的必定是完整帧），
+//     门铃里写的仍是已推帧数。
+//   · 两源共用 fb 读口 ⇒ 不要同时开：验 ERAM 路时把 CTRL[5]（ddr_en）留 0。
+//
+//  ===========================================================================
 //  二、发出去的 TLP 长什么样（本模块最容易出错的地方，逐条写清依据）
 //  ===========================================================================
 //   一个 MWr：4DW 头 + 载荷 32 个 dw（128 字节 = 协商出的 MaxPayload），共 36 个 dw。
@@ -67,13 +86,14 @@
 //     iow/ior/memrd 三个请求标志改成「发完才清」——否则主机读请求在推帧 TLP 期间
 //     到达时，标志两三拍就没了、完成包被丢，主机读到全 F。
 //
-//  ===========================================================================
-//  四、数据通路与跨时钟域
-//  ===========================================================================
-//   ddr 域（usr_clk 100MHz）                       片内域（tl_clk_user 62.5MHz）
-//   ─────────────────────────                     ─────────────────────────────
+//   ===========================================================================
+//   四、数据通路与跨时钟域
+//   ===========================================================================
+//   ddr 源（usr_clk 100MHz）                     片内域（tl_clk_user 62.5MHz）
+//   ─────────────────────────                   ─────────────────────────────
 //   每 4KB 一个 AXI4 读突发 ─▶ 异步 FIFO（256bit×2**FIFO_AW 拍，格雷码指针）
 //                                        ─▶ 拆成 5 拍 1 个 MWr 交 TL 口
+//   ERAM 源（tl_clk_user）  8 个字拼一拍（fb 唯一读口，1 字/拍）─▶ 同一拆包逻辑
 //   req_level / base_lat  ◀── 2 级同步 ◀── 片内「有一帧要推」电平
 //   done_level / err_sticky ──▶ 2 级同步 ──▶ 片内收尾
 //   · 读数据不丢：m_axi_rready = FIFO 不满，FIFO 满时链路自己停（AXI 允许）。
@@ -153,6 +173,15 @@ module ddr_frame_pusher #(
     input  wire [31:0]  ddr_status,    // 0xA8 bit0 valid / bit1 busy / bit2 err /
                                        //       bit3 alive / bit4 cal_done
 
+    // ---- ERAM 帧缓存源（CTRL[7]=1；见文件头「数据源」）----
+    input  wire         src_sel,       // 1 = 数据源取片内 ERAM 帧缓存（绕开 DDR）
+    input  wire [31:0]  fb_frame_cnt,  // 帧缓存帧计数器（ERAM 源拿它当「帧号」）
+    output wire [31:0]  fb_rd_addr,    // 帧缓存读字节地址（低 2 位恒 0）
+    input  wire [31:0]  fb_rd_data,    // 该地址的数据（1 拍延迟）
+    output wire         fb_req,        // 本拍想读一个字（交给 img_frame_src 仲裁）
+    input  wire         fb_grant,      // 本拍读口给了我们
+    output wire         src_act,       // 本帧实际用的源（锁存值；顶层据此分读口）
+
     // ---- TL 用户发送口（引擎在 TL_TX_USER 态把发送口让出来）----
     input  wire         utx_sel,       // 1 = 本拍 TL 发送口归我们
     input  wire         tl_tx_wait,    // 链路本拍不收
@@ -200,6 +229,12 @@ module ddr_frame_pusher #(
 
     localparam [2:0]   AXI_SIZE     = 3'd5;    // 2**5 = 32 字节/拍
     localparam [1:0]   AXI_BURST    = 2'b01;   // INCR
+    localparam [28:0] BURST_STEP   = BURST_BEATS * BEAT_BYTES;   // 每个突发的字节数
+                                 // ★ 地址步长必须由 BURST_BEATS 推出来。原来写的
+                                 //   {a_bcnt,12'b0}（= a_bcnt×4096）只在 BURST_BEATS=128 时
+                                 //   恰好成立；参数一改（如测试台用 16 拍/突发）突发之间就
+                                 //   会空出 3.5KB，DDR 里只有每 4KB 的头 512B 被写，其余是空洞
+                                 //  （sim_do/tb_ddr_frame_pusher.v 就是这么暴露出来的）。
 
     // 错误码（见文件头）
     localparam [7:0] E_NONE    = 8'd0,
@@ -272,6 +307,7 @@ module ddr_frame_pusher #(
     reg  [15:0] err_cnt;
     reg  [15:0] wt_cnt;
     reg         rd_have;        // fifo_rdata 里有一个还没用掉的载荷拍
+    reg         src_lat;        // 本帧实际用的源（每帧开头锁存一次）
     reg         last_ok;
     reg         db_sent;
     reg  [31:0] tlp_cnt;
@@ -296,7 +332,11 @@ module ddr_frame_pusher #(
     reg         alive_s1, alive_s2;
 
     wire alive      = ~rst_ddr;
-    wire rst_all_fb = rst_fb | ~alive_s2;
+    // 片内域复位：默认（DDR 源）还叠上「ddr 侧已出复位」这个同步电平（见文件头）；
+    // 但 ERAM 源（src_sel=1）不该被 DDR 拖住 —— DDR 真死了也要能把帧推出去，
+    // 所以这一路只在 src_sel=0 时才受 alive_s2 影响。src_sel 是配置位，别在
+    // 一帧推的过程中翻它（翻了会复位本域、放弃当前帧）。
+    wire rst_all_fb = rst_fb | (~alive_s2 & ~src_sel);
 
     // TL 口本拍是否被收走（FIFO 的 pop 条件要用，所以先声明、后赋值）
     wire utx_ack;
@@ -321,20 +361,21 @@ module ddr_frame_pusher #(
     wire fifo_empty = (rptr_gray == wgray_s2);
     wire fifo_wr    = m_axi_rvalid & ~fifo_wfull;
 
-    // pop 条件（组合，见上）：
+    // pop 条件（组合，见上）：全部只对 DDR 源成立（src_lat=1 时没有任何 pop）
     //   pop_data  —— 载荷拍被收走的那一拍补下一个载荷字（本拍手上那个字正好被用掉，
     //                所以这里**不能**再判 rd_have：那一拍它一定是 1）
     //   pop_fill  —— S_FILL 里手上没字时补一个
     //   pop_tend  —— MWr 之间那一拍空档里，把下一个 MWr 的第 1 拍数据备好
     //   pop_drain —— 出错排空（拿到就丢，rd_have 无所谓）
-    wire pop_data  = (p_st == S_DATA)  && utx_ack && (k != LAST_K) && !fifo_empty;
-    wire pop_fill  = (p_st == S_FILL)  && !rd_have && !fifo_empty;
-    wire pop_tend  = (p_st == S_TEND)  && !flush && (tlp != NTLP_M1) && !rd_have && !fifo_empty;
+    wire pop_data  = ~src_lat && (p_st == S_DATA)  && utx_ack && (k != LAST_K) && !fifo_empty;
+    wire pop_fill  = ~src_lat && (p_st == S_FILL)  && !rd_have && !fifo_empty;
+    wire pop_tend  = ~src_lat && (p_st == S_TEND)  && !flush && (tlp != NTLP_M1) && !rd_have && !fifo_empty;
     wire pop_drain = (p_st == S_DRAIN) && !fifo_empty;
     wire fifo_pop  = pop_data | pop_fill | pop_tend | pop_drain;
 
-    // 本拍收走后，下一个载荷字能不能马上到位（决定要不要去 S_FILL 等）
-    wire next_ok   = (k != LAST_K) && !fifo_empty;
+    // 本拍收走后，下一个载荷字能不能马上到位（决定要不要去 S_FILL 等）。
+    // ERAM 源每拍要现读 8 个字，永远不满「下一拍就到」，所以恒为 0（走 S_FILL 等）。
+    wire next_ok   = (k != LAST_K) && !src_lat && !fifo_empty;
 
     assign m_axi_rready = ~fifo_wfull;
 
@@ -397,6 +438,85 @@ module ddr_frame_pusher #(
         else if (beat_consumed || (p_st == S_IDLE)) rd_have <= 1'b0;
     end
 
+    // 起始条件：使能 + 本源已有一帧可推 + 帧号与上次处理过的不一样。
+    //   · DDR 源（src_sel=0）：要 ddr_frame_writer 发布过一帧（ddr_status[0]）；
+    //   · ERAM 源（src_sel=1）：片内帧缓存的帧计数器一变就推（它只在 EOF 递增，
+    //     所以读到的必定是刚写完整的那一帧）。
+    // 声明放在 ERAM 打包器之前（打包器要用 start 复位字指针）。
+    wire [31:0] src_seq = src_sel ? fb_frame_cnt : ddr_seq;
+    wire        src_rdy = src_sel ? 1'b1        : ddr_status[0];
+    wire        start   = push_en && src_rdy && (src_seq != last_seq) && (p_st == S_IDLE);
+
+    // ========================================================================
+    //  ERAM 数据源（CTRL[7]=1）：直接从片内帧缓存凑「一拍 256bit」
+    //   · 与 ddr_frame_writer 的拼拍写法逐字一致：lane k 的字放 [32k +: 32]，
+    //     所以下游的 bswap256（TL 要求首字节在高位）与 DDR 模式走完全同一条路
+    //     ⇒ 主机拿到的字节序与 MMIO 0x60 读到的、以及 DDR 里的都一致。
+    //   · 读口是 img_frame_src 那唯一一份，与主机预取 / DDR 搬运共用：
+    //     用 fb_req 申请，拿到 fb_grant 那一拍才发地址（数据晚 1 拍）。
+    //   · 一帧 = FRAME_BYTES/4 = 76800 字 = 9600 拍；攒满一拍就停（e_rdy=1），
+    //     等 TL 侧把这一拍吃掉再接着攒 —— 只提前攒一拍，不预读整帧。
+    // ========================================================================
+    localparam integer EWORDS = FRAME_BYTES / 4;
+
+    reg  [2:0]   e_lane;
+    reg  [3:0]   e_rcnt;         // 本拍已发出的读次数（0..8）——一拍正好 8 个字
+    reg  [255:0] e_pack;
+    reg          e_rdy;          // 手上有一拍凑好了还没被吃掉
+    reg          e_go_d;         // 读地址发出的下一拍：fb_rd_data 有效
+    reg  [16:0]  e_req;          // 已发出的读地址数（字索引）
+                                 // ★ 两件事必须分开数：
+                                 //   ① 地址（e_req）只随 e_rd_go 前进；
+                                 //   ② lane（e_lane）只在数据回来的那一拍前进。
+                                 //   拿 lane 算地址会把同一个字读两遍（错位旋转）；
+                                 //   不给每个拍限制读次数则一拍会多发一次读，那第 9 个
+                                 //   数据会在本拍已 e_rdy=1 之后落下来，把 lane0 冲掉。
+
+    wire        e_last     = (e_lane == 3'd7);
+    wire        e_rd_go    = src_lat & ~e_rdy & (e_rcnt < 4'd8) & (e_req < EWORDS) & fb_grant;
+    wire        e_d_vld    = e_go_d;
+    wire        e_taken    = beat_consumed & src_lat;   // TL 侧把手上这一拍吃掉了
+
+    assign fb_rd_addr = {e_req, 2'b00};                 // 字索引 → 字节地址
+    assign fb_req     = src_lat & ~e_rdy & (e_rcnt < 4'd8) & (e_req < EWORDS);
+    assign src_act    = src_lat;
+
+    // DDR 源与 ERAM 源的「一拍 256bit + 有没有」在这里合流，下游只认 beat_data/beat_have
+    wire [255:0] beat_data = src_lat ? e_pack : fifo_rdata;
+    wire         beat_have = src_lat ? e_rdy  : rd_have;
+
+    always @(posedge clk_fb or posedge rst_all_fb) begin
+        if (rst_all_fb) begin
+            e_lane <= 3'd0; e_rcnt <= 4'd0; e_pack <= 256'd0; e_rdy <= 1'b0; e_go_d <= 1'b0; e_req <= 17'd0;
+        end else if (start) begin              // 本帧从字 0 重新开始
+            e_lane <= 3'd0; e_rcnt <= 4'd0; e_pack <= 256'd0; e_rdy <= 1'b0; e_go_d <= 1'b0; e_req <= 17'd0;
+        end else begin
+            e_go_d <= e_rd_go;
+            if (e_rd_go) begin                     // 地址数随请求前进
+                e_req  <= e_req + 17'd1;
+                e_rcnt <= e_rcnt + 4'd1;
+            end
+            if (e_d_vld) begin
+                e_lane <= e_last ? 3'd0 : (e_lane + 3'd1);
+                case (e_lane)
+                    3'd0: e_pack[31:0]    <= fb_rd_data;
+                    3'd1: e_pack[63:32]   <= fb_rd_data;
+                    3'd2: e_pack[95:64]   <= fb_rd_data;
+                    3'd3: e_pack[127:96]  <= fb_rd_data;
+                    3'd4: e_pack[159:128] <= fb_rd_data;
+                    3'd5: e_pack[191:160] <= fb_rd_data;
+                    3'd6: e_pack[223:192] <= fb_rd_data;
+                    3'd7: e_pack[255:224] <= fb_rd_data;
+                endcase
+                if (e_last) e_rdy <= 1'b1;         // 一拍凑齐，等 TL 侧取走
+            end
+            if (e_taken) begin
+                e_rdy  <= 1'b0;                    // 取走了，接着攒下一拍
+                e_rcnt <= 4'd0;                    // 下一拍重新数 8 个字
+            end
+        end
+    end
+
     // ========================================================================
     //  片内域：帧触发 / 拆 MWr / TL 口时序
     // ========================================================================
@@ -416,10 +536,10 @@ module ddr_frame_pusher #(
     wire [31:0] db_dw3  = {db_a_q[31:2], 2'b00};
 
     // 本拍要发的这一拍（组合）
-    wire [255:0] data_beat = bswap256(fifo_rdata);
+    wire [255:0] data_beat = bswap256(beat_data);
 
     assign beat_present = (p_st == S_HEAD) || (p_st == S_DATA);
-    assign beat_ready   = (k == 3'd0) || rd_have;   // 头/门铃那拍不要 DDR 数据
+    assign beat_ready   = (k == 3'd0) || beat_have;   // 头/门铃那拍不要帧数据
 
     assign utx_req   = beat_present;
     assign utx_valid = (beat_present && beat_ready)
@@ -436,12 +556,19 @@ module ddr_frame_pusher #(
     // 本拍被链路收走（引擎把口子给了我们、链路不反压、且这一拍确实有效）
     assign utx_ack = utx_sel && !tl_tx_wait && beat_present && beat_ready;
 
-    // 起始条件：使能 + DDR 里已发布过一帧 + 帧号与上次处理过的不一样
-    wire start = push_en && ddr_status[0] && (ddr_seq != last_seq) && (p_st == S_IDLE);
+    // 起始条件（push_en / 本源就绪 / 帧号变化）与 src_seq、src_rdy 的声明
+    // 已提到上面 ERAM 打包器之前（start 是那两个源的公共起点）。
 
     // ddr → 片内的同步器（电平，2 级）
-    always @(posedge clk_fb or posedge rst_all_fb) begin
-        if (rst_all_fb) begin
+    //  ★ 本块的复位只能用 rst_fb，**不能用 rst_all_fb**：
+    //    rst_all_fb 里含 ~alive_s2，而 alive_s2 就是本块产生的 —— 用 rst_all_fb
+    //    会形成自锁：上电时 alive_s2=0 ⇒ rst_all_fb=1 ⇒ 本块永远处于复位 ⇒
+    //    alive_s2 永远是 0 ⇒ 整个片内域（状态机 / FIFO 指针 / ERAM 打包器）
+    //    永远出不来。实测（sim_do/tb_ddr_frame_pusher.v）：推帧引擎一直是
+    //    p_st=S_IDLE、一个 TLP 都不发，与板上「0xC8 恒 0x18、已推帧数恒 0」一致。
+    //    ddr_frame_writer.v 里同名的同步块用的就是 rst_fb，这里改成一致。
+    always @(posedge clk_fb or posedge rst_fb) begin
+        if (rst_fb) begin
             done_s1 <= 1'b0; done_s2 <= 1'b0;
             derr_s1 <= 1'b0; derr_s2 <= 1'b0;
             alive_s1 <= 1'b0; alive_s2 <= 1'b0;
@@ -452,8 +579,10 @@ module ddr_frame_pusher #(
         end
     end
 
+    // 位序逐位对齐 ep_bar_win.v 头部那张表：bit0 busy / bit1 last_ok /
+    // bit2 doorbell_sent / bit3 ddr_alive / bit4 ddr_cal_done / [31:16] err_cnt
     assign st_status = {err_cnt, 11'd0, ddr_status[4], ddr_status[3],
-                        last_ok, db_sent, (p_st != S_IDLE)};
+                        db_sent, last_ok, (p_st != S_IDLE)};
 
     always @(posedge clk_fb or posedge rst_all_fb) begin
         if (rst_all_fb) begin
@@ -461,6 +590,7 @@ module ddr_frame_pusher #(
             k          <= 3'd0;
             tlp        <= 12'd0;
             last_seq   <= 32'd0;
+            src_lat    <= 1'b0;
             addr_q     <= 64'd0;
             db_a_q     <= 64'd0;
             db_val     <= 32'd0;
@@ -502,15 +632,20 @@ module ddr_frame_pusher #(
                 S_IDLE: begin
                     if (start) begin
                         if ((dst_lo == 32'd0) && (dst_hi == 32'd0)) begin
-                            err_r <= E_NO_DST;      // 目标地址没配：整帧不发
+                            // 目标地址没配：整帧不发。错误码要**当拍就写到 0xC8**，
+                            // 否则主机只看到 done 不涨、err 恒 0，跟「引擎没使能」分不清
+                            // （本 TB 的 PHASE0 就是拿这一条做判据的）。
+                            err_r  <= E_NO_DST;
+                            st_err <= E_NO_DST;
                         end else begin
-                            last_seq  <= ddr_seq;   // 这一帧只处理一次
+                            last_seq  <= src_seq;   // 这一帧只处理一次
+                            src_lat   <= src_sel;   // 本帧用哪个源（帧内不再变）
                             base_lat  <= ddr_base;
                             addr_q    <= {dst_hi, dst_lo};
                             db_a_q    <= {db_hi, db_lo};
                             db_ena    <= (db_lo != 32'd0) || (db_hi != 32'd0);
                             db_val    <= st_done + 32'd1;   // 门铃里写本帧序号
-                            req_level <= 1'b1;              // 叫 ddr 侧开始读
+                            req_level <= ~src_sel;          // ERAM 源不叫 ddr 侧读
                             flush     <= 1'b0;
                             err_r     <= ((db_lo == 32'd0) && (db_hi == 32'd0))
                                          ? E_NO_DB : E_NONE;
@@ -526,9 +661,9 @@ module ddr_frame_pusher #(
                 end
 
                 // ------------------------------------------------------------
-                // 等 FIFO 出数据：来了就装进输出寄存器（组合 pop，下一拍到位）
+                // 等本拍数据到位：DDR 源是 FIFO 出字，ERAM 源是攒满 8 个字
                 S_FILL: begin
-                    if (rd_have) p_st <= (k == 3'd0) ? S_HEAD : S_DATA;
+                    if (beat_have) p_st <= (k == 3'd0) ? S_HEAD : S_DATA;
                 end
 
                 // ------------------------------------------------------------
@@ -540,7 +675,7 @@ module ddr_frame_pusher #(
                             p_st    <= S_WAIT;
                         end else begin
                             k    <= 3'd1;
-                            p_st <= rd_have ? S_DATA : S_FILL;
+                            p_st <= beat_have ? S_DATA : S_FILL;
                         end
                     end
                 end
@@ -586,7 +721,7 @@ module ddr_frame_pusher #(
                 // 数据已从 FIFO 取空，此时 done_s2 只可能是本帧的（上一帧的 done
                 // 早在本帧开头几千拍之前就被 ddr 侧撤掉了，见 A_IDLE 的收尾）。
                 S_WAIT: begin
-                    if (done_s2) begin
+                    if (done_s2 | src_lat) begin   // ERAM 源没有 DDR 收尾，数据吃完即完成
                         st_err     <= err_r;
                         st_tlp_cnt <= tlp_cnt;
                         last_ok    <= (err_r == E_NONE);
@@ -607,7 +742,7 @@ module ddr_frame_pusher #(
                 // 永远报不出 done，本模块也就永远回不到 IDLE。
                 S_DRAIN: begin
                     // !fifo_empty 时由 pop_drain 一直 pop（拿到的字直接丢掉）
-                    if (fifo_empty && done_s2) begin
+                    if (fifo_empty && (done_s2 | src_lat)) begin
                         st_err     <= err_r;
                         st_tlp_cnt <= tlp_cnt;
                         last_ok    <= 1'b0;
@@ -659,7 +794,7 @@ module ddr_frame_pusher #(
                         // 突发地址 = 本帧基址 + 已完成突发数 × 4KB。
                         // 注意不能把基址先存进寄存器再用：base_s2 与 req_s2 是同一个
                         // 同步器的同一拍跳变的，存下来的会是上一帧的基址。
-                        m_axi_araddr  <= base_s2[28:0] + {a_bcnt, 12'b0};
+                        m_axi_araddr  <= base_s2[28:0] + a_bcnt * BURST_STEP;   // 步长=突发字节数（别写死 4KB）
                         m_axi_arlen   <= ARLEN;
                         m_axi_arvalid <= 1'b1;
                     end else if (!req_s2) begin

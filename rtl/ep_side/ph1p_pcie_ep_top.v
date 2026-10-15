@@ -139,10 +139,10 @@ wire         img_ddr_en;         // CTRL[5]
 wire [127:0] w_ddr_ro;           // {len, status, base, seq} → ep_bar_win 0xAC/0xA8/0xA4/0xA0
 wire [31:0]  w_ddr_seq, w_ddr_base, w_ddr_status, w_ddr_len;
 wire [31:0]  img_fb_rd2_addr;    // DDR 搬运的读地址（与主机预取共用 fb 唯一读口）
-wire [31:0]  img_fb_rd2_data;
+wire [31:0]  img_fb_rd2_data;    // 共用读口回来的数据（两个 DMA 消费者都看这条）
 wire         img_host_rd_prio;   // ep_bar_win 的预取还没刷完 → 读口要还给它
 wire         img_host_grant;     // 本拍读口归主机（与 img_fb_rd2_* 配套的仲裁输出）
-wire         img_dma_grant;      // 本拍读口归 DMA
+wire         img_dma_grant;      // 本拍读口归 DMA（未按源细分）
 wire         img_ddr_fb_req;     // DDR 搬运本拍想读一个字
 wire [28:0]  w_ddr_awaddr;
 wire [7:0]   w_ddr_awlen;
@@ -166,11 +166,30 @@ wire [255:0] utx_data;
 wire         utx_sop, utx_eop, utx_req, utx_sel;
 wire [7:0]   utx_valid;
 wire         img_push_en;        // CTRL[6]
+wire         img_push_src;       // CTRL[7]：1 = 推帧数据源取片内 ERAM 帧缓存
 wire [31:0]  img_push_dst_lo, img_push_dst_hi, img_push_db_lo, img_push_db_hi;
 wire [31:0]  img_push_done, img_push_status, img_push_tlp;
 wire [7:0]   img_push_err;
-wire [127:0] img_push_ro;        // {tlp_cnt, status, done, err} → ep_bar_win 0xCC/0xC4/0xC0/0xC8
-assign img_push_ro = {img_push_tlp, img_push_status, img_push_done, 24'd0, img_push_err};
+wire [127:0] img_push_ro;        // {tlp_cnt, err, status, done} → ep_bar_win 0xCC/0xC8/0xC4/0xC0
+// 字面顺序必须与 ep_bar_win.v 头部那张表逐位一致（也是主机侧唯一口径）：
+//   0xCC=[127:96] TLP 数 / 0xC8=[95:64] 错误码 / 0xC4=[63:32] 状态 / 0xC0=[31:0] 已推帧数
+assign img_push_ro = {img_push_tlp, 24'd0, img_push_err, img_push_status, img_push_done};
+// ==== 【本步新增】推帧的 ERAM 源也共用 fb 那一个读口（fb[] 只允许一份读口）====
+//  DDR 搬运与推帧的 ERAM 源不会同时要口（验 ERAM 路时 ddr_en=0），
+//  所以这里就一条地址/请求二选一 + 授权按源切开，不再加第三份读口。
+//  · src_act 由推帧引擎在每帧开头锁存（帧内不变）；
+//  · 两个消费者都看到同一条 rd2_data，不活跃的那个 grant=0，自己会忽略。
+wire [31:0]  img_push_fb_addr;   // 推帧 ERAM 源的读地址
+wire         img_push_fb_req;    // 推帧 ERAM 源本拍想读一个字
+wire         img_push_src_act;   // 推帧本帧实际用的源（推帧引擎锁存后给出）
+wire         img_ddr_fb_grant;   // 授权细分：给 DDR 搬运
+wire         img_push_fb_grant;  // 授权细分：给推帧的 ERAM 源
+wire [31:0]  img_fb_dma_addr;    // 真正送到 img_frame_src 的地址（按源二选一）
+wire         img_fb_dma_req;     // 真正送到 img_frame_src 的请求
+assign img_fb_dma_addr   = img_push_src_act ? img_push_fb_addr : img_fb_rd2_addr;
+assign img_fb_dma_req    = img_push_src_act ? img_push_fb_req  : img_ddr_fb_req;
+assign img_ddr_fb_grant  = img_dma_grant & ~img_push_src_act;
+assign img_push_fb_grant = img_dma_grant &  img_push_src_act;
 // AXI4 读通道（u_ddr3_mc_0 的用户侧读口，本步从「常量 0」改成接推帧引擎）
 wire [3:0]   w_ddr_arid;
 wire [28:0]  w_ddr_araddr;
@@ -183,7 +202,12 @@ wire [255:0] w_ddr_rdata;
 wire [1:0]   w_ddr_rresp;
 wire         w_ddr_rlast, w_ddr_rvalid, w_ddr_rready;
 
-assign {w_ddr_len, w_ddr_status, w_ddr_base, w_ddr_seq} = w_ddr_ro;
+assign w_ddr_ro = {w_ddr_len, w_ddr_status, w_ddr_base, w_ddr_seq};
+// ↑ 方向别写反：w_ddr_ro 是「汇聚到寄存器窗口的那条总线」，四个字是它的源。
+//   写反（assign {w_ddr_len,...} = w_ddr_ro;）会让这 128bit 整条悬空，
+//   TD 综合报 SYN-5013 Undriven net / SYN-5025 Using 0 for all undriven pins and nets，
+//   主机读 0xA0~0xAC 全得 0 —— 连常数 DDR_LEN(0x4B000) 也读 0（因为 0xAC 的源
+//   是这条死总线，不是 wr_len 本身）。顺序也要对：{len,status,base,seq}
 
     // clock and reset signals
     wire                          tl_clk_gate                             ;
@@ -537,6 +561,7 @@ pcie_ep_engine #(
     .tl_tx_credits                           (tl_tx_credits                          ),
     // ==== 本步新增：推帧寄存器面 + 用户侧 TL 发送口 ====
     .img_push_en                             (img_push_en                            ),
+    .img_push_src                            (img_push_src                           ),
     .img_push_dst_lo                         (img_push_dst_lo                        ),
     .img_push_dst_hi                         (img_push_dst_hi                        ),
     .img_push_db_lo                          (img_push_db_lo                         ),
@@ -695,12 +720,13 @@ img_frame_src #(
     .trigger   (img_trigger     ),
     .rd_addr   (img_fb_raddr    ),
     .rd_data   (img_fb_rdata    ),
-    // fb 唯一读口的仲裁：主机预取 vs DDR 整帧搬运（见本文件头部与 img_frame_src）
+    // fb 唯一读口的仲裁：主机预取 vs DMA（DDR 搬运 / 推帧 ERAM 源）
+    // （见本文件头部与 img_frame_src 头部；两个 DMA 消费者在这里按源二选一）
     .host_rd_prio (img_host_rd_prio ),
-    .dma_rd_req   (img_ddr_fb_req   ),
+    .dma_rd_req   (img_fb_dma_req   ),
     .host_grant   (img_host_grant   ),
     .dma_grant    (img_dma_grant    ),
-    .rd2_addr     (img_fb_rd2_addr  ),
+    .rd2_addr     (img_fb_dma_addr  ),
     .rd2_data     (img_fb_rd2_data  ),
     .dbg_rd_idx(img_dbg_idx ),
     .frame_cnt (img_frame_cnt   ),
@@ -1368,7 +1394,7 @@ ddr_frame_writer #(
     .fb_rd_addr    (img_fb_rd2_addr  ),
     .fb_rd_data    (img_fb_rd2_data  ),
     .fb_req        (img_ddr_fb_req   ),
-    .fb_grant      (img_dma_grant    ),
+    .fb_grant      (img_ddr_fb_grant ),
 
     .clk_ddr       (w_ddr_dhi_clk     ),
     .rst_ddr       (~w_ddrphy_rst_n   ),
@@ -1398,9 +1424,15 @@ ddr_frame_writer #(
 // ====================================================================
 //  【本步新增】推帧引擎：DDR3 → 主机内存（MWr 主动写）
 //
-//  触发：push_en = CTRL[6] 置 1，且 ddr_frame_writer 发布了与上次不同的帧号。
-//  取数：u_ddr3_mc_0 的 AXI4 读通道（上面那个块里原来接常量 0，本步改成接这里），
-//        每 4KB 一个突发，读进 256bit×128 拍的异步 FIFO，过到 tl_clk_user 域。
+//  触发：push_en = CTRL[6] 置 1，且「本源」发布了与上次不同的帧号。
+//  取数（两选一，CTRL[7] = push_src）：
+//    · 0（默认）：u_ddr3_mc_0 的 AXI4 读通道，每 4KB 一个突发，
+//      读进 256bit×128 拍的异步 FIFO，过到 tl_clk_user 域；
+//    · 1：【本步新增】直接读片内 ERAM 帧缓存（img_frame_src 的 fb[]），8 个字
+//      拼一拍（与 ddr_frame_writer 拼法逐字相同），完全不碰 DDR。
+//      用途：先把「EP 主动把整帧写进 RK 内存」这条 DMA 单独验通。
+//      读口就是 fb 那唯一一份（与主机预取 / DDR 搬运共用，见上面 img_frame_src
+//      例化处的源二选一）；验 ERAM 路时把 ddr_en（CTRL[5]）留 0，两边不抢口。
 //  发数：每 128 字节数据摆成一个 4DW 头的 MWr（5 拍：4 个 dw 头 + 32 个 dw 载荷），
 //        整帧 2400 笔；每笔之间空一拍，把 TL 发送口还给引擎发完成包。
 //        帧数据全推完后再单发一笔「只写 1 个 dw」的门铃 MWr（地址由主机给）。
@@ -1430,6 +1462,13 @@ ddr_frame_pusher #(
     .rst_fb        (power_on_rst_dly ),
 
     .push_en       (img_push_en       ),
+    .src_sel       (img_push_src      ),
+    .fb_frame_cnt  (img_frame_cnt     ),
+    .fb_rd_addr    (img_push_fb_addr  ),
+    .fb_rd_data    (img_fb_rd2_data   ),
+    .fb_req        (img_push_fb_req   ),
+    .fb_grant      (img_push_fb_grant ),
+    .src_act       (img_push_src_act  ),
     .dst_lo        (img_push_dst_lo   ),
     .dst_hi        (img_push_dst_hi   ),
     .db_lo         (img_push_db_lo    ),
