@@ -91,3 +91,12 @@ UART 命令脚本：`doc/uart_cmd_file_pcie.txt`（可经板载串口下发校�
   字 0 = 帧号（= 完成后的 `0x4C FRAME_CNT`），其后 4 像素/32bit 字，低字节 = 最左像素，
   共 76800 字 = 307200 字节（末 4 像素与测试图源一样不写）。
 - 测试台 `sim_do/tb_cam_fb_writer.v`（逐字比对整帧 + 帧号 + 丢包计数）。
+
+## 提交信息规范
+
+`<类型>(<范围>): <做了什么>`，首行不超过 78 字符；正文写清"为什么、怎么做的"，一行一句。
+
+- 类型：`feat` / `fix` / `refactor` / `docs` / `build` / `chore` / `test` / `perf`
+- 范围：本仓库的模块名，如 `rtl` / `constraints` / `ip` / `doc`
+- 示例：`fix(rtl): 修正 IMX415 主时钟分频，恢复相机链路锁定`
+- 由 `commit-msg` 钩子校验，不合规直接拒绝
