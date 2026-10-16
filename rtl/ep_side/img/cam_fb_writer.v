@@ -34,7 +34,10 @@
 //    * 每个像素组固定 4 像素 ⇒ 与「4 像素/32bit 字」的缓存布局一一对应，不需要再攒；
 //    * 帧内第一行 = FS 之后的第 1 个 in_line 脉冲（行号 0），
 //      行号 / 列号都只在这里维护，列号按「组」累加 4；
-//    * 取值域 = 每帧左上角 640x480（X0/Y0 参数化，默认 0,0），
+//    * **行号 0 是传感器帧头的 embedded data 行，不是图像**（板上实测：那一行是
+//      0x83/0xB2/0x01 之类的固定位模式，第 1 行起才是图像）。所以真正取图前先
+//      跳过 SKIP_ROWS 行（IMX415 = 1），窗口从「Y0 + SKIP_ROWS」那一行开始取 H 行；
+//    * 取值域 = 图像左上角 640x480（X0/Y0 参数化，默认 0,0），
 //      域外像素丢弃（不进 FIFO），因此 FIFO 只需承受每行 160 组的突发；
 //    * 10bit RAW10 → 8bit 灰度取高 8 位（等价 >>2，不四舍五入）。
 //
@@ -45,8 +48,9 @@
 //                          （帧结束时 frame_cnt 递增 ⇒ 主机读到的
 //                            0x4C FRAME_CNT == 缓存字 0，可直接对账）
 //    字节 4     .. 307199: 字 1..76799 = 像素字，低字节 = 最左像素，
-//                          1 字节 1 像素（4 像素/字），共 76799 个像素字
-//    ⇒ 76800 字 = 307200 字节（末 4 像素与测试图源一样不写，保持布局不变）
+//                          1 字节 1 像素（4 像素/字）
+//    ⇒ 76800 字 = 307200 字节，本帧把整块写满、与 0x58 DATA_LEN 一致；
+//      唯一不在缓存里的像素是被字 0 占掉的那 4 个（第 0 行最左 4 个）
 //
 //  ===========================================================================
 //  三、跨时钟域
@@ -68,8 +72,11 @@ module cam_fb_writer #(
     parameter [15:0] W       = 16'd640,   // 帧缓存宽（像素，须为 4 的倍数）
     parameter [15:0] H       = 16'd480,   // 帧缓存高（行）
     parameter        AW      = 17,        // 字地址位宽：640*480/4 = 76800 → 17
-    parameter [15:0] X0      = 16'd0,     // 裁剪窗口左上角
+    parameter [15:0] X0      = 16'd0,     // 裁剪窗口左上角（图像域内）
     parameter [15:0] Y0      = 16'd0,
+    // 帧头 embedded data 行数：IMX415 实测第 0 行是固定位模式的 embedded data，
+    // 跳过它再取 H 行，缓存第 0 行才是真正的图像行。只跳过、不搬进缓存。
+    parameter [15:0] SKIP_ROWS = 16'd1,
     parameter        FIFO_AW = 9          // 异步 FIFO 深度 = 2**FIFO_AW
 )(
     // ---------------- MIPI CSI-2 字节时钟域（w_a_byte_clk）----------------
@@ -133,8 +140,10 @@ module cam_fb_writer #(
     wire eof_evt  = ~cam_in_frame & in_frame_d;      // FE  → 帧结束
     wire line_evt = cam_in_line & ~in_line_d;        // 长包头 → 行首（1 拍）
 
+    // 图像窗口：先跳过帧头 SKIP_ROWS 行 embedded data，再从 Y0 起取 H 行
+    wire [15:0] y_img0 = Y0 + SKIP_ROWS;
     wire in_win = (x_cnt >= X0) && (x_cnt < (X0 + W)) &&
-                  (y_cnt >= Y0) && (y_cnt < (Y0 + H));
+                  (y_cnt >= y_img0) && (y_cnt < (y_img0 + H));
 
     always @(posedge cam_clk or negedge cam_rst_n) begin
         if (!cam_rst_n) begin
@@ -282,15 +291,16 @@ module cam_fb_writer #(
                     st         <= ST_WAIT;
                 end else begin                      // ---- 像素字 ----
                     if (st == ST_RUN) begin
-                        if (widx != (WORDS - 1)) begin
-                            fb_wr_en    <= 1'b1;
-                            fb_wr_addr  <= {widx, 2'b00};
-                            fb_wr_data  <= f_dout[31:0];
-                            widx        <= widx + 1'b1;
-                            wr_word_cnt <= wr_word_cnt + 32'd1;
-                        end else begin              // 已写到最后一个字 → 余下丢弃
-                            st <= ST_FULL;
-                        end
+                        // 先把这一笔写下去，再判断是不是最后一个字。
+                        // 原来写成「!= WORDS-1 才写、否则直接 ST_FULL」会把字
+                        // WORDS-1 整笔漏掉（缓存只填到 WORDS-2），文件比 0x58 声明
+                        // 少 4 字节；现在写满 0..WORDS-1 后才转 ST_FULL。
+                        fb_wr_en    <= 1'b1;
+                        fb_wr_addr  <= {widx, 2'b00};
+                        fb_wr_data  <= f_dout[31:0];
+                        wr_word_cnt <= wr_word_cnt + 32'd1;
+                        if (widx == (WORDS - 1)) st <= ST_FULL;
+                        else                     widx <= widx + 1'b1;
                     end
                     // st == ST_WAIT（还没等到 SOF）或 ST_FULL：只出队，不写
                 end
