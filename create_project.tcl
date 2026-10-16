@@ -38,6 +38,8 @@ add_files rtl/ep_side/cam/ui_i2c.v
 add_files rtl/ep_side/cam/ui_imx415_reg.v
 add_files rtl/ep_side/ddr/ddr_frame_pusher.v
 add_files rtl/ep_side/ddr/ddr_wr_arb.v
+add_files rtl/ep_side/ddr/ddr_rd_arb.v
+add_files rtl/ep_side/ddr/tl_tx_arb.v
 # 相机整帧（4K）直通 DDR3：CSI-2 → 异步 FIFO → AXI 写 DDR3，不过片内 fb[]
 add_files rtl/ep_side/ddr/cam_ddr_writer.v
 # 两条整帧写 DDR3 通路共用一个 AXI 写口，只在两边都空闲时换手

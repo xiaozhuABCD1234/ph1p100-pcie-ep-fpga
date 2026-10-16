@@ -125,7 +125,6 @@ wire [15:0]  img_width;
 wire [15:0]  img_height;
 wire [1:0]   img_pattern;   // CTRL[3:2]：测试图源图案（[0] 兼作传感器重触发）
 wire [31:0]  img_dbg_idx;
-wire         img_cam_ab_sel;   // CTRL[8]：推帧引擎取哪一路的已落 DDR 帧（0 = A，1 = B）
 
 // 相机 4K 直通使能：DDR 搬运开着（CTRL[5]）时两片 cam_ddr_writer 都 armed。
 // A/B 两路各在自己的字节时钟域收帧，只在 DDR 域用 ddr_wr_arb 分时复用 AXI 写口。
@@ -185,9 +184,7 @@ wire [31:0] w_camddr_b_seq, w_camddr_b_base, w_camddr_b_status, w_camddr_b_len;
 // 两路各自的诊断（A → cam_stat[255:224] 即 0xD0；B → 0xD8）
 wire [15:0] w_camddr_lines, w_camddr_grp, w_camddr_b_lines, w_camddr_b_grp;
 wire        w_camddr_anom, w_camddr_b_anom;
-// 推帧引擎取哪一路（CTRL[8]）
-wire [31:0] w_push_ddr_seq, w_push_ddr_base, w_push_ddr_status, w_push_ddr_len;
-// 推帧引擎的「本帧字节数」：DDR 源按选中的写者给，ERAM 源按 fb 的 DATA_LEN 给
+// 推帧引擎的「本帧字节数」：A 路 DDR 源按 A 的写者给，ERAM 源按 fb 的 DATA_LEN 给
 wire [31:0] w_push_frame_bytes;
 
 // ==== 【本步新增】推帧引擎（ddr_frame_pusher）====
@@ -208,6 +205,38 @@ wire [127:0] img_push_ro;        // {tlp_cnt, err, status, done} → ep_bar_win 
 // 字面顺序必须与 ep_bar_win.v 头部那张表逐位一致（也是主机侧唯一口径）：
 //   0xCC=[127:96] TLP 数 / 0xC8=[95:64] 错误码 / 0xC4=[63:32] 状态 / 0xC0=[31:0] 已推帧数
 assign img_push_ro = {img_push_tlp, 24'd0, img_push_err, img_push_status, img_push_done};
+// ==== B 路推帧引擎 ====
+//  两路同时推：各推各自相机那一帧到主机内存各自的目标地址（0xB0/B4 与 0x100/104）。
+//  两路共用 DDR3 的读通道与用户侧 TL 发送口，分别在 ddr_rd_arb / tl_tx_arb 里
+//  按突发 / 按 TLP 分时放行（见那两个模块的头部）。
+wire         img_push_b_en;      // CTRL[8]：B 路推帧使能（与 CTRL[6] 相与）
+wire [31:0]  img_push_dst_lo_b, img_push_dst_hi_b, img_push_db_lo_b, img_push_db_hi_b;
+wire [31:0]  img_push_done_b, img_push_status_b, img_push_tlp_b;
+wire [7:0]   img_push_err_b;
+wire [127:0] img_push_ro_b;      // → ep_bar_win 0x11C/0x118/0x114/0x110
+assign img_push_ro_b = {img_push_tlp_b, 24'd0, img_push_err_b, img_push_status_b, img_push_done_b};
+
+// 用户侧 TL 发送口的两路（客户机 A/B）与授权
+wire [255:0] utx_a_data, utx_b_data;
+wire         utx_a_sop, utx_a_eop, utx_a_req, utx_b_sop, utx_b_eop, utx_b_req;
+wire [7:0]   utx_a_valid, utx_b_valid;
+wire         utx_sel_a, utx_sel_b, utx_grant;
+wire         w_rd_grant;      // 读仲裁器当前授权（0 = A 路，1 = B 路；诊断用）
+
+// AXI4 读通道的两路客户机口 + 到 DDR 的汇聚（读口只有一份 → ddr_rd_arb）
+wire [28:0]  w_rd_a_araddr, w_rd_b_araddr, w_rd_araddr;
+wire [7:0]   w_rd_a_arlen,  w_rd_b_arlen,  w_rd_arlen;
+wire [2:0]   w_rd_a_arsize, w_rd_b_arsize, w_rd_arsize;
+wire [1:0]   w_rd_a_arburst,w_rd_b_arburst,w_rd_arburst;
+wire         w_rd_a_arvalid,w_rd_b_arvalid,w_rd_arvalid;
+wire         w_rd_a_arready,w_rd_b_arready,w_rd_arready;
+wire [255:0] w_rd_a_rdata,  w_rd_b_rdata,  w_rd_rdata;
+wire [1:0]   w_rd_a_rresp,  w_rd_b_rresp,  w_rd_rresp;
+wire         w_rd_a_rlast,  w_rd_b_rlast,  w_rd_rlast;
+wire         w_rd_a_rvalid, w_rd_b_rvalid, w_rd_rvalid;
+wire         w_rd_a_rready, w_rd_b_rready, w_rd_rready;
+wire [3:0]   w_rd_arid, w_rd_rid;
+
 // ==== 推帧的 ERAM 源与主机预取共用 fb 那一个读口（fb[] 只允许一份读口）====
 //  640x480 预览（fb[] → DDR3）从设计里移除后，fb 读口的 DMA 消费者只剩推帧的
 //  ERAM 源（CTRL[7]=1 那条调试源），所以不再需要对源做二选一。
@@ -223,16 +252,6 @@ assign img_fb_dma_addr   = img_push_fb_addr;
 assign img_fb_dma_req    = img_push_fb_req;
 assign img_push_fb_grant = img_dma_grant;
 // AXI4 读通道（u_ddr3_mc_0 的用户侧读口，本步从「常量 0」改成接推帧引擎）
-wire [3:0]   w_ddr_arid;
-wire [28:0]  w_ddr_araddr;
-wire [7:0]   w_ddr_arlen;
-wire [2:0]   w_ddr_arsize;
-wire [1:0]   w_ddr_arburst;
-wire         w_ddr_arvalid, w_ddr_arready;
-wire [3:0]   w_ddr_rid;
-wire [255:0] w_ddr_rdata;
-wire [1:0]   w_ddr_rresp;
-wire         w_ddr_rlast, w_ddr_rvalid, w_ddr_rready;
 
 //  0xA0~0xAC = A 路相机 writer 的握手字；0xE0~0xEC = B 路的（两路各一份，
 //  都有「整帧校验通过才发布」的语义，所以主机按序号变化取哪一路都安全）。
@@ -241,11 +260,6 @@ assign w_ddr_ro   = {w_camddr_len,   w_camddr_status,   w_camddr_base,   w_camdd
 assign w_ddr_ro_b = {w_camddr_b_len, w_camddr_b_status, w_camddr_b_base, w_camddr_b_seq};
 assign w_cam_diag_b = {w_camddr_b_lines, w_camddr_b_grp};
 
-// 推帧引擎的 DDR 源：按 CTRL[8] 取 A 路或 B 路那组握手字（准静态，帧内不变）
-assign w_push_ddr_seq    = img_cam_ab_sel ? w_camddr_b_seq    : w_camddr_seq;
-assign w_push_ddr_base   = img_cam_ab_sel ? w_camddr_b_base   : w_camddr_base;
-assign w_push_ddr_status = img_cam_ab_sel ? w_camddr_b_status : w_camddr_status;
-assign w_push_ddr_len    = img_cam_ab_sel ? w_camddr_b_len    : w_camddr_len;
 // ↑ 方向别写反：w_ddr_ro 是「汇聚到寄存器窗口的那条总线」，四个字是它的源。
 //   写反（assign {w_ddr_len,...} = w_ddr_ro;）会让这 128bit 整条悬空，
 //   TD 综合报 SYN-5013 Undriven net / SYN-5025 Using 0 for all undriven pins and nets，
@@ -255,7 +269,7 @@ assign w_push_ddr_len    = img_cam_ab_sel ? w_camddr_b_len    : w_camddr_len;
 // 推帧引擎的「本帧字节数」：DDR 源用选中的那组 len；ERAM 源用 fb 的 DATA_LEN。
 // 这两个数都必须是 4KB 的整数倍（640x480 = 75x4096、4K = 2025x4096），否则
 // 推帧的 MWr 数/突发数不是整数（见 ddr_frame_pusher.v 端口说明）。
-assign w_push_frame_bytes = img_push_src ? img_data_len : w_push_ddr_len;
+assign w_push_frame_bytes = img_push_src ? img_data_len : w_camddr_len;
 
     // clock and reset signals
     wire                          tl_clk_gate                             ;
@@ -615,6 +629,12 @@ pcie_ep_engine #(
     .img_push_db_lo                          (img_push_db_lo                         ),
     .img_push_db_hi                          (img_push_db_hi                         ),
     .img_push_ro                             (img_push_ro                            ),
+    .img_push_b_en                           (img_push_b_en                          ),
+    .img_push_dst_lo_b                       (img_push_dst_lo_b                      ),
+    .img_push_dst_hi_b                       (img_push_dst_hi_b                      ),
+    .img_push_db_lo_b                        (img_push_db_lo_b                       ),
+    .img_push_db_hi_b                        (img_push_db_hi_b                       ),
+    .img_push_ro_b                           (img_push_ro_b                          ),
     .utx_req                                 (utx_req                                ),
     .utx_eop                                 (utx_eop                                ),
     .utx_valid                               (utx_valid                              ),
@@ -635,7 +655,6 @@ pcie_ep_engine #(
     .cam_stat_bus                            (w_cam_stat                             ),
     .cam_tap_cfg                             (cam_tap_cfg                            ),
     .cam_tap_b_cfg                           (cam_tap_b_cfg                          ),
-    .cam_ab_sel                              (img_cam_ab_sel                         ),
     .ddr_ro_b                                (w_ddr_ro_b                             ),
     .cam_drop_a                              (w_camddr_drop_a                        ),
     .cam_diag_b                              (w_cam_diag_b                           ),
@@ -1344,19 +1363,19 @@ ddr3_mc_0 u_ddr3_mc_0 (
     .axi_bresp      (w_ddr_bresp         ),
     .axi_bvalid     (w_ddr_bvalid        ),
     .axi_bready     (w_ddr_bready        ),
-    .axi_arid       (w_ddr_arid         ),
-    .axi_araddr     (w_ddr_araddr       ),
-    .axi_arlen      (w_ddr_arlen        ),
-    .axi_arsize     (w_ddr_arsize       ),
-    .axi_arburst    (w_ddr_arburst      ),
-    .axi_arvalid    (w_ddr_arvalid      ),
-    .axi_arready    (w_ddr_arready      ),
-    .axi_rid        (w_ddr_rid          ),
-    .axi_rdata      (w_ddr_rdata        ),
-    .axi_rresp      (w_ddr_rresp        ),
-    .axi_rlast      (w_ddr_rlast        ),
-    .axi_rvalid     (w_ddr_rvalid       ),
-    .axi_rready     (w_ddr_rready       ),
+    .axi_arid       (w_rd_arid          ),
+    .axi_araddr     (w_rd_araddr        ),
+    .axi_arlen      (w_rd_arlen         ),
+    .axi_arsize     (w_rd_arsize        ),
+    .axi_arburst    (w_rd_arburst       ),
+    .axi_arvalid    (w_rd_arvalid       ),
+    .axi_arready    (w_rd_arready       ),
+    .axi_rid        (w_rd_rid           ),
+    .axi_rdata      (w_rd_rdata         ),
+    .axi_rresp      (w_rd_rresp         ),
+    .axi_rlast      (w_rd_rlast         ),
+    .axi_rvalid     (w_rd_rvalid        ),
+    .axi_rready     (w_rd_rready        ),
 
     .usr_ref_type   (2'b00               ),
     .usr_ref_req    (1'b0                ),
@@ -1554,11 +1573,27 @@ ddr_wr_arb u_ddr_wr_arb (
 //    所以这里切过去不会把引擎正在发的包拦腰截断；
 //  · 引擎在 TL_TX_IDLE 时它那几根线上全是 0（每个包末拍收走时自己清），
 //    所以切回来也不会多出一拍。
+//  用户侧那一组由 tl_tx_arb 从「A 路 / B 路」两个推帧引擎里选出**一笔 TLP**
+//  （utx_req/utx_data/utx_sop/utx_eop/utx_valid 就是它的输出）。
 assign tl_tx_data  = utx_sel ? utx_data  : e_tl_tx_data ;
 assign tl_tx_sop   = utx_sel ? utx_sop   : e_tl_tx_sop  ;
 assign tl_tx_eop   = utx_sel ? utx_eop   : e_tl_tx_eop  ;
 assign tl_tx_valid = utx_sel ? utx_valid : e_tl_tx_valid;
 
+// ====================================================================
+// 【双路同时出】推帧引擎 A 路（u_ddr_frame_pusher）与 B 路（u_ddr_frame_pusher_b）
+//  · 参数完全相同；差别只在数据来源与寄存器面：
+//      A 路：数据源 = A 路相机 writer 的握手字（0xA0~0xAC），或 ERAM 帧缓存
+//            （CTRL[7]=1，验 DMA 用）；寄存器面 0xB0~0xCC。
+//      B 路：数据源 = B 路相机 writer 的握手字（0xE0~0xEC），只走 DDR 源
+//            （片内 fb 读口只有一份，ERAM 源那条路留给 A 路验通用）；
+//            寄存器面 0x100~0x11C，使能 = CTRL[6] & CTRL[8]。
+//  · 两路共用的资源各有一份仲裁器：
+//      DDR3 的 AXI4 **读**口 → ddr_rd_arb（按突发轮流，突发中间不换手）；
+//      用户侧 TL 发送口     → tl_tx_arb（按 TLP 轮流，utx_sel=1 期间不换手）。
+//  · 两路的 TL 时序完全独立（各推各的帧、各写各的门铃），主机侧只看各自的目标
+//    地址与门铃；谁先推完谁先响，互不阻塞。
+// ====================================================================
 ddr_frame_pusher #(
     .W           (IMG_W             ),
     .H           (IMG_H             ),
@@ -1587,35 +1622,140 @@ ddr_frame_pusher #(
     .st_err        (img_push_err     ),
     .st_tlp_cnt    (img_push_tlp     ),
 
-    .frame_bytes   (w_push_frame_bytes),
-    .ddr_seq       (w_push_ddr_seq    ),
-    .ddr_base      (w_push_ddr_base   ),
-    .ddr_status    (w_push_ddr_status  ),
+    .frame_bytes   (w_push_frame_bytes),      // A 路：DDR 长度 或 ERAM 的 DATA_LEN
+    .ddr_seq       (w_camddr_seq      ),
+    .ddr_base      (w_camddr_base     ),
+    .ddr_status    (w_camddr_status   ),
 
-    .utx_sel       (utx_sel           ),
+    .utx_sel       (utx_sel_a         ),
     .tl_tx_wait    (tl_tx_wait        ),
-    .utx_req       (utx_req           ),
-    .utx_data      (utx_data          ),
-    .utx_sop       (utx_sop           ),
-    .utx_eop       (utx_eop           ),
-    .utx_valid     (utx_valid         ),
+    .utx_req       (utx_a_req         ),
+    .utx_data      (utx_a_data        ),
+    .utx_sop       (utx_a_sop         ),
+    .utx_eop       (utx_a_eop         ),
+    .utx_valid     (utx_a_valid       ),
 
     .clk_ddr       (w_ddr_dhi_clk     ),
     .rst_ddr       (~w_ddrphy_rst_n   ),
 
-    .m_axi_arid    (w_ddr_arid        ),
-    .m_axi_araddr  (w_ddr_araddr      ),
-    .m_axi_arlen   (w_ddr_arlen       ),
-    .m_axi_arsize  (w_ddr_arsize      ),
-    .m_axi_arburst (w_ddr_arburst     ),
-    .m_axi_arvalid (w_ddr_arvalid     ),
-    .m_axi_arready (w_ddr_arready     ),
-    .m_axi_rid     (w_ddr_rid         ),
-    .m_axi_rdata   (w_ddr_rdata       ),
-    .m_axi_rresp   (w_ddr_rresp       ),
-    .m_axi_rlast   (w_ddr_rlast       ),
-    .m_axi_rvalid  (w_ddr_rvalid      ),
-    .m_axi_rready  (w_ddr_rready      )
+    .m_axi_arid    (                  ),   // 读 ID 由 ddr_rd_arb 统一给（两路都是 0）
+    .m_axi_araddr  (w_rd_a_araddr     ),
+    .m_axi_arlen   (w_rd_a_arlen      ),
+    .m_axi_arsize  (w_rd_a_arsize     ),
+    .m_axi_arburst (w_rd_a_arburst    ),
+    .m_axi_arvalid (w_rd_a_arvalid    ),
+    .m_axi_arready (w_rd_a_arready    ),
+    .m_axi_rid     (                  ),   // rid 由 ddr_rd_arb 路由，客户机不需要
+    .m_axi_rdata   (w_rd_a_rdata      ),
+    .m_axi_rresp   (w_rd_a_rresp      ),
+    .m_axi_rlast   (w_rd_a_rlast      ),
+    .m_axi_rvalid  (w_rd_a_rvalid     ),
+    .m_axi_rready  (w_rd_a_rready     )
+);
+
+// ---- B 路推帧引擎（只走 DDR 源：片内 fb 读口只有一份，ERAM 源那条留给 A 路验通）----
+ddr_frame_pusher #(
+    .W           (IMG_W             ),
+    .H           (IMG_H             ),
+    .PAY_DW      (32                ),
+    .FIFO_AW     (7                 ),
+    .BURST_BEATS (128               ),
+    .WAIT_LIMIT  (16'hFFFF          )
+) u_ddr_frame_pusher_b (
+    .clk_fb        (tl_clk_user       ),
+    .rst_fb        (power_on_rst_dly ),
+
+    .push_en       (img_push_b_en     ),   // CTRL[8]：B 路自己的推帧使能（与 A 路独立）
+    .src_sel       (1'b0              ),   // 不用 ERAM 源
+    .fb_frame_cnt  (32'd0             ),
+    .fb_rd_addr    (                  ),
+    .fb_rd_data    (32'd0             ),
+    .fb_req        (                  ),
+    .fb_grant      (1'b0              ),
+    .src_act       (                  ),
+    .dst_lo        (img_push_dst_lo_b ),
+    .dst_hi        (img_push_dst_hi_b ),
+    .db_lo         (img_push_db_lo_b  ),
+    .db_hi         (img_push_db_hi_b  ),
+    .st_done       (img_push_done_b   ),
+    .st_status     (img_push_status_b ),
+    .st_err        (img_push_err_b    ),
+    .st_tlp_cnt    (img_push_tlp_b    ),
+
+    .frame_bytes   (w_camddr_b_len    ),   // B 路整帧字节数（0xEC）
+    .ddr_seq       (w_camddr_b_seq    ),
+    .ddr_base      (w_camddr_b_base   ),
+    .ddr_status    (w_camddr_b_status ),
+
+    .utx_sel       (utx_sel_b         ),
+    .tl_tx_wait    (tl_tx_wait        ),
+    .utx_req       (utx_b_req         ),
+    .utx_data      (utx_b_data        ),
+    .utx_sop       (utx_b_sop         ),
+    .utx_eop       (utx_b_eop         ),
+    .utx_valid     (utx_b_valid       ),
+
+    .clk_ddr       (w_ddr_dhi_clk     ),
+    .rst_ddr       (~w_ddrphy_rst_n   ),
+
+    .m_axi_arid    (                  ),   // 读 ID 由 ddr_rd_arb 统一给（两路都是 0）
+    .m_axi_araddr  (w_rd_b_araddr     ),
+    .m_axi_arlen   (w_rd_b_arlen      ),
+    .m_axi_arsize  (w_rd_b_arsize     ),
+    .m_axi_arburst (w_rd_b_arburst    ),
+    .m_axi_arvalid (w_rd_b_arvalid    ),
+    .m_axi_arready (w_rd_b_arready    ),
+    .m_axi_rid     (                  ),   // rid 由 ddr_rd_arb 路由，客户机不需要
+    .m_axi_rdata   (w_rd_b_rdata      ),
+    .m_axi_rresp   (w_rd_b_rresp      ),
+    .m_axi_rlast   (w_rd_b_rlast      ),
+    .m_axi_rvalid  (w_rd_b_rvalid     ),
+    .m_axi_rready  (w_rd_b_rready     )
+);
+
+// ---- DDR3 读通道：两路推帧引擎共用一个 AXI4 读口（按突发轮流，突发中间不换手）----
+ddr_rd_arb u_ddr_rd_arb (
+    .clk        (w_ddr_dhi_clk    ),
+    .rst        (~w_ddrphy_rst_n  ),
+    .grant_out  (w_rd_grant       ),
+    .a0_arid    (4'd0             ), .a0_araddr (w_rd_a_araddr ),
+    .a0_arlen   (w_rd_a_arlen     ), .a0_arsize (w_rd_a_arsize ),
+    .a0_arburst (w_rd_a_arburst   ), .a0_arvalid(w_rd_a_arvalid),
+    .a0_arready (w_rd_a_arready   ),
+    .a0_rid     (                  ), .a0_rdata  (w_rd_a_rdata  ),
+    .a0_rresp   (w_rd_a_rresp     ), .a0_rlast  (w_rd_a_rlast  ),
+    .a0_rvalid  (w_rd_a_rvalid    ), .a0_rready (w_rd_a_rready ),
+    .a1_arid    (4'd0             ), .a1_araddr (w_rd_b_araddr ),
+    .a1_arlen   (w_rd_b_arlen     ), .a1_arsize (w_rd_b_arsize ),
+    .a1_arburst (w_rd_b_arburst   ), .a1_arvalid(w_rd_b_arvalid),
+    .a1_arready (w_rd_b_arready   ),
+    .a1_rid     (                  ), .a1_rdata  (w_rd_b_rdata  ),
+    .a1_rresp   (w_rd_b_rresp     ), .a1_rlast  (w_rd_b_rlast  ),
+    .a1_rvalid  (w_rd_b_rvalid    ), .a1_rready (w_rd_b_rready ),
+    .m_arid     (w_rd_arid        ), .m_araddr  (w_rd_araddr   ),
+    .m_arlen    (w_rd_arlen       ), .m_arsize  (w_rd_arsize   ),
+    .m_arburst  (w_rd_arburst     ), .m_arvalid (w_rd_arvalid  ),
+    .m_arready  (w_rd_arready     ),
+    .m_rid      (w_rd_rid         ), .m_rdata   (w_rd_rdata    ),
+    .m_rresp    (w_rd_rresp       ), .m_rlast   (w_rd_rlast    ),
+    .m_rvalid   (w_rd_rvalid      ), .m_rready  (w_rd_rready   )
+);
+
+// ---- 用户侧 TL 发送口：两路推帧引擎共用一个口（按一笔 TLP 轮流，utx_sel 期间不换手）----
+tl_tx_arb u_tl_tx_arb (
+    .clk       (tl_clk_user       ),
+    .rst       (power_on_rst_dly  ),
+    .utx_sel   (utx_sel           ),
+    .grant_out (utx_grant         ),
+    .a_req     (utx_a_req         ), .a_data (utx_a_data ),
+    .a_sop     (utx_a_sop         ), .a_eop  (utx_a_eop  ),
+    .a_valid   (utx_a_valid       ), .a_sel  (utx_sel_a  ),
+    .b_req     (utx_b_req         ), .b_data (utx_b_data ),
+    .b_sop     (utx_b_sop         ), .b_eop  (utx_b_eop  ),
+    .b_valid   (utx_b_valid       ), .b_sel  (utx_sel_b  ),
+    .m_req     (utx_req           ), .m_data (utx_data   ),
+    .m_sop     (utx_sop           ), .m_eop  (utx_eop    ),
+    .m_valid   (utx_valid         )
 );
 
 endmodule

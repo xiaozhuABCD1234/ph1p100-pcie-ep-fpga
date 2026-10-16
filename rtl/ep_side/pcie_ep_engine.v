@@ -63,7 +63,7 @@ module pcie_ep_engine #(
     input       wire    [255:0]     cam_stat_bus           ,
     output      wire    [6:0]       cam_tap_cfg            ,
     output      wire    [6:0]       cam_tap_b_cfg          ,   // B 路 tap（0xD4，转发给 ep_bar_win）
-    output      wire                cam_ab_sel             ,   // CTRL[8] 推帧取 A/B 路
+
     input       wire [31:0]         cam_diag_b             ,   // B 路相机直通诊断（0xD8）
     input       wire [95:0]         cam_drop_a             ,   // A 路丢帧诊断（0xDC/0xF0/0xF4）
     input       wire [127:0]        ddr_ro_b               ,   // B 路整帧搬运握手字（0xE0~0xEC）
@@ -84,6 +84,13 @@ module pcie_ep_engine #(
     output      wire    [31:0]      img_push_db_lo         , // 0xB8
     output      wire    [31:0]      img_push_db_hi         , // 0xBC
     input       wire    [127:0]     img_push_ro            , // {tlp_cnt, status, done, err}
+    // B 路推帧寄存器面（0x100~0x11C；两路同时推，各推各的目标地址）
+    output      wire                img_push_b_en          , // CTRL[8] B 路推帧使能
+    output      wire    [31:0]      img_push_dst_lo_b      , // 0x100
+    output      wire    [31:0]      img_push_dst_hi_b      , // 0x104
+    output      wire    [31:0]      img_push_db_lo_b       , // 0x108
+    output      wire    [31:0]      img_push_db_hi_b       , // 0x10C
+    input       wire    [127:0]     img_push_ro_b          , // B 路 {tlp_cnt, err, status, done}
     input       wire                utx_req                ,
     input       wire                utx_eop                ,
     input       wire    [7:0]       utx_valid              ,
@@ -388,7 +395,7 @@ ep_bar_win #(
     .cam_stat       (cam_stat_bus           ),
     .cam_tap_cfg    (cam_tap_cfg            ),
     .cam_tap_b_cfg  (cam_tap_b_cfg          ),
-    .cam_ab_sel     (cam_ab_sel             ),
+
     .cam_diag_b     (cam_diag_b             ),
     .cam_drop_a     (cam_drop_a             ),
     .ddr_ro_b       (ddr_ro_b               ),
@@ -403,7 +410,13 @@ ep_bar_win #(
     .push_dst_lo    (img_push_dst_lo        ),
     .push_dst_hi    (img_push_dst_hi        ),
     .push_db_lo     (img_push_db_lo         ),
-    .push_db_hi     (img_push_db_hi         )
+    .push_db_hi     (img_push_db_hi         ),
+    .push_ro_b      (img_push_ro_b          ),
+    .ctrl_push_b_en (img_push_b_en          ),
+    .push_dst_lo_b  (img_push_dst_lo_b      ),
+    .push_dst_hi_b  (img_push_dst_hi_b      ),
+    .push_db_lo_b   (img_push_db_lo_b       ),
+    .push_db_hi_b   (img_push_db_hi_b       )
 );
 
 // ====================================================================

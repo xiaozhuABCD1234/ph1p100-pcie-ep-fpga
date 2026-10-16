@@ -31,7 +31,7 @@
 //                        bit6 push_en（1 = 每有一帧就用 MWr 主动推给主机）
 //                        bit7 push_src（推帧数据源：0 = DDR3 已发布的那一帧，
 //                              1 = 片内 ERAM 帧缓存 fb[]，绕开 DDR）
-//                        bit8 cam_ab（推帧取哪一路：0 = A 路，1 = B 路）
+//                        bit8 push_b（B 路推帧使能：0 = 只有 A 路推，1 = A/B 两路同时推）
 //    0x48 STATUS    R    bit0 ready, bit1 busy
 //    0x4C FRAME_CNT R
 //    0x50 WIDTH     R
@@ -72,6 +72,14 @@
 //  另：CTRL bit6 = push_en（1 = 每有一帧就用 MWr 主动推给主机；默认 0，原语义不变）
 //    与下面这组「推帧」寄存器。推帧本体在 rtl/ep_side/ddr/ddr_frame_pusher.v，
 //    这里同样只做寄存器面。
+//    A/B **两路各有一份推帧引擎**（顶层 u_ddr_frame_pusher / u_ddr_frame_pusher_b），
+//    同时跑、各推各自的整帧到主机内存各自的目标地址（0xB0/B4 与 0x100/104 分开配）。
+//    两路共用 DDR3 的**读**通道（ddr_rd_arb 按突发轮流放行）与用户侧 TL 发送口
+//    （tl_tx_arb 按 TLP 轮流放行），所以"同时出"是分时复用、不是双份硬件通路。
+//    CTRL bit6 = A 路推帧使能，CTRL bit8 = B 路推帧使能，**两路互相独立**
+//    （只写 bit6 的老主机行为与单路时代完全一致：只有 A 路推）。
+//    要"两路同时出"就把 bit6 与 bit8 都置 1，并分别配好 0xB0/B4 与 0x100/104
+//    两组目标地址、0xB8/BC 与 0x108/10C 两组门铃地址。
 //    CTRL bit7 = push_src：【本步新增】推帧的数据源选择。0 = 从 DDR3 里已发布的
 //    那一帧读（默认，原语义）；1 = 直接读片内 ERAM 帧缓存（img_frame_src 的
 //    fb[]），**完全不碰 DDR 通路** —— 用来先把「EP 主动把整帧写进主机内存」
@@ -91,6 +99,14 @@
 //                            2 等 tl_tx_wait 超时 / 3 AXI 读响应非 OKAY /
 //                            4 门铃地址未配置（数据推了、门铃没发）
 //    0xCC PUSH_TLP_CNT  R   最近一帧实际发出的 MWr 数（正常 2400，不含门铃那笔）
+//    0x100 PUSH_DST_LO_B  R/W B 路目标地址低 32 位（与 A 路各自独立配）
+//    0x104 PUSH_DST_HI_B  R/W B 路目标地址高 32 位
+//    0x108 PUSH_DB_LO_B   R/W B 路门铃地址低 32 位
+//    0x10C PUSH_DB_HI_B   R/W B 路门铃地址高 32 位
+//    0x110 PUSH_DONE_B    R   B 路已推帧数（门铃里写的序号就是它，1 起）
+//    0x114 PUSH_STATUS_B  R   B 路状态（位定义与 0xC4 逐位相同）
+//    0x118 PUSH_ERR_B     R   B 路最近一次错误码（码义与 0xC8 相同）
+//    0x11C PUSH_TLP_CNT_B R   B 路最近一帧实际发出的 MWr 数
 //    · 门铃是推完一帧后单独一笔「只写一个 dw」的 MWr（本 EP 没有 MSI/MSI-X，
 //      所以除轮询 0xC0 外再给主机一个中断式通知）；写的内容是本帧序号。
 //    · 推帧与门铃都是 TC0 的 Posted 写，PCIe 排序规则不允许 Posted 互相超越，
@@ -120,8 +136,14 @@ module ep_bar_win #(
     input  wire [31:0]  cam_diag_b,      // B 路相机直通诊断 {lines_per_frame, max_grp_per_line}（0xD8）
     output reg  [6:0]   cam_tap_cfg,     // A 路 {manual_en, tap[5:0]} 主机可写（0x9C）
     output reg  [6:0]   cam_tap_b_cfg,   // B 路 {manual_en, tap[5:0]} 主机可写（0xD4）
-    output wire         cam_ab_sel,      // CTRL[8]：推帧取哪一路（0 = A，默认；1 = B）
     input  wire [95:0]  cam_drop_a,      // A 路直通通路的丢帧诊断（0xDC/0xF0/0xF4）
+    // B 路推帧（0x100~0x11C；字面顺序与 A 路一致 {tlp_cnt, err, status, done}）
+    input  wire [127:0] push_ro_b,
+    output reg          ctrl_push_b_en,  // CTRL[8]：B 路推帧使能
+    output reg  [31:0]  push_dst_lo_b,
+    output reg  [31:0]  push_dst_hi_b,
+    output reg  [31:0]  push_db_lo_b,
+    output reg  [31:0]  push_db_hi_b,
     // 控制 / 状态（接 img_frame_src）
     output reg          ctrl_enable,
     output reg          ctrl_trigger,
@@ -205,12 +227,8 @@ module ep_bar_win #(
     reg [31:0] scratch;
     reg [31:0] last_wr;
     reg [1:0]  ctrl_pattern_r;   // CTRL[3:2] 原样保存（读回用）
-    reg        ctrl_cam_ab;      // CTRL[8] 推帧取哪一路的已落 DDR 帧（0 = A）
 
     assign ctrl_pattern = ctrl_pattern_r;   // CTRL[3:2] 原样送出
-    // A/B 路选择独立送出去（不塞进 ctrl_pattern：那边 [2:0] 的位义已被顶层与
-    // r_mode_hits 诊断用住，塞进去会改变既有语义）
-    assign cam_ab_sel = ctrl_cam_ab;
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
@@ -223,7 +241,7 @@ module ep_bar_win #(
             ctrl_enable   <= 1'b0;
             ctrl_trigger  <= 1'b0;
             ctrl_pattern_r <= 2'd0;
-            ctrl_cam_ab    <= 1'b0;      // 默认 A 路（老主机不写 bit8）
+            ctrl_push_b_en <= 1'b0;      // 默认只有 A 路推（老主机不写 bit8）
             ctrl_ddr_en    <= 1'b0;      // 默认不往 DDR3 搬（保持原行为）
             ctrl_push_en   <= 1'b0;      // 默认不推帧（保持原行为）
             ctrl_push_src  <= 1'b0;      // 默认推帧数据源取 DDR3（保持原行为）
@@ -231,6 +249,10 @@ module ep_bar_win #(
             push_dst_hi    <= 32'd0;
             push_db_lo     <= 32'd0;
             push_db_hi     <= 32'd0;
+            push_dst_lo_b  <= 32'd0;
+            push_dst_hi_b  <= 32'd0;
+            push_db_lo_b   <= 32'd0;
+            push_db_hi_b   <= 32'd0;
             ptr           <= 32'd0;
             scratch       <= 32'd0;
             last_wr       <= 32'd0;
@@ -250,7 +272,7 @@ module ep_bar_win #(
                         ctrl_enable  <= tlp_dw_s[0];
                         ctrl_trigger <= tlp_dw_s[1];     // 下一拍自动清 → 单帧脉冲
                         ctrl_pattern_r <= tlp_dw_s[3:2];
-                        ctrl_cam_ab    <= tlp_dw_s[8];   // 1 = B 路（0 = A 路，默认）
+                        ctrl_push_b_en <= tlp_dw_s[8];   // 1 = B 路也推（0 = 只有 A 路）
                         ctrl_ddr_en    <= tlp_dw_s[5];   // 1 = 每完成一帧自动搬进 DDR3
                         ctrl_push_en   <= tlp_dw_s[6];   // 1 = 每有一帧就推给主机
                         ctrl_push_src  <= tlp_dw_s[7];   // 1 = 推帧数据源取片内 ERAM 帧缓存
@@ -262,6 +284,10 @@ module ep_bar_win #(
                     12'hB4: push_dst_hi <= tlp_dw_s;
                     12'hB8: push_db_lo  <= tlp_dw_s;
                     12'hBC: push_db_hi  <= tlp_dw_s;
+                    12'h100: push_dst_lo_b <= tlp_dw_s;
+                    12'h104: push_dst_hi_b <= tlp_dw_s;
+                    12'h108: push_db_lo_b  <= tlp_dw_s;
+                    12'h10C: push_db_hi_b  <= tlp_dw_s;
                     12'h6C: scratch <= tlp_dw_s;
                     12'h74: last_wr <= tlp_dw_s;
                     default: ;
@@ -351,7 +377,7 @@ module ep_bar_win #(
             // 位序必须逐位对上 CTRL：bit0 enable / bit1 trigger / [3:2] pattern /
             //   bit4 保留（写 0 读 0）/ bit5 ddr_en / bit6 push_en / bit7 push_src /
             //   bit8 cam_ab —— 中间那个保留位不能省，少一位整段就整体错位。
-            12'h44:  rd_dw_comb = {23'd0, ctrl_cam_ab, ctrl_push_src, ctrl_push_en, ctrl_ddr_en,
+            12'h44:  rd_dw_comb = {23'd0, ctrl_push_b_en, ctrl_push_src, ctrl_push_en, ctrl_ddr_en,
                                     1'b0, ctrl_pattern_r, ctrl_trigger, ctrl_enable};
             12'h48:  rd_dw_comb = {30'd0, st_busy, st_ready};
             12'h4C:  rd_dw_comb = st_frame_cnt;
@@ -404,6 +430,14 @@ module ep_bar_win #(
             12'hC4:  rd_dw_comb = push_ro[63:32];         // PUSH_STATUS
             12'hC8:  rd_dw_comb = push_ro[95:64];         // PUSH_ERR
             12'hCC:  rd_dw_comb = push_ro[127:96];        // PUSH_TLP_CNT
+            12'h100: rd_dw_comb = push_dst_lo_b;          // PUSH_DST_LO_B
+            12'h104: rd_dw_comb = push_dst_hi_b;          // PUSH_DST_HI_B
+            12'h108: rd_dw_comb = push_db_lo_b;           // PUSH_DB_LO_B
+            12'h10C: rd_dw_comb = push_db_hi_b;           // PUSH_DB_HI_B
+            12'h110: rd_dw_comb = push_ro_b[31:0];        // PUSH_DONE_B
+            12'h114: rd_dw_comb = push_ro_b[63:32];       // PUSH_STATUS_B
+            12'h118: rd_dw_comb = push_ro_b[95:64];       // PUSH_ERR_B
+            12'h11C: rd_dw_comb = push_ro_b[127:96];      // PUSH_TLP_CNT_B
             default: rd_dw_comb = 32'hDEAD_BEEF;
         endcase
     end

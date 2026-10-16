@@ -1,11 +1,13 @@
 ///////////////////////////////////////////////////////////////
 //  tb_ddr_frame_pusher.v — ddr_frame_pusher 冒烟测试（iverilog）
 //
-//  ★ 本机没有仿真器：本测试台「只写不跑」，结论里必须标注“未运行”。
-//    在有 iverilog 的机器上跑：
-//      iverilog -o tb_ddr_frame_pusher tb_ddr_frame_pusher.v \
-//               ../../rtl/ep_side/ddr/ddr_frame_pusher.v
-//      ./tb_ddr_frame_pusher          # 期望输出 "ALL PASS"
+//  跑法（已实跑通过，输出见末尾 "ALL PASS"）：
+//    # ★ 必须带 -I：ddr_frame_pusher.v 里 include 的是 ../../common/TLP_FMT_TYPE.v，
+//    #   而 iverilog 的 include 是按「当前目录 + -I」找的，不看被包含文件的位置。
+//    iverilog -I ../rtl/ep_side/ddr -I ../rtl/common \
+//             -o tb_ddr_frame_pusher tb_ddr_frame_pusher.v \
+//             ../rtl/ep_side/ddr/ddr_frame_pusher.v
+//    ./tb_ddr_frame_pusher          # 期望输出 "ALL PASS"
 //
 //  测什么：
 //   1) 结构：整帧正好 NTLP 笔 MWr，每笔 5 拍（第 0 拍 valid=F0 只有 4 个 dw 头、

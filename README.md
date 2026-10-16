@@ -129,9 +129,19 @@ CSI-2 字节域 187.5MHz                       DDR 用户域 dhi_clk 100MHz
   FIFO 满导致的丢帧。
 - **IDELAY tap**：`0x9C`（A）/ `0xD4`（B）各配 `{manual_en, tap[5:0]}`，默认 46 + manual
   （自动扫描会落到 32，误码很高）。两路 PCB 走线不同，**必须分开配**。
-- **推帧取哪一路**：`0x44` 的 `bit8`（`0` = A 路默认，`1` = B 路），决定推帧引擎读哪组
-  握手字与哪个 DDR 基址（推帧引擎只有一份，所以主机侧同一时刻看到一路；两路同时推
-  需要再加一份推帧引擎与 DDR 读口仲裁）。
+- **两路推帧（同时在推）**：A/B **各有一份推帧引擎**（顶层 `u_ddr_frame_pusher` /
+  `u_ddr_frame_pusher_b`），各读自己那组握手字（A `0xA0~0xAC`、B `0xE0~0xEC`）、
+  各推到自己那组目标地址与门铃。使能是两个独立的位：`0x44` 的 `bit6` = A 路、
+  `bit8` = B 路（只写 `bit6` 的老主机行为与单路时代完全一致）。
+  两路的寄存器面：A `0xB0~0xCC`、B `0x100~0x11C`（逐项对应）。
+  共用资源各有一份仲裁器：
+    - DDR3 的 AXI4 **读**口只有一份 → `ddr_rd_arb.v`：**按一次 4KB 突发**独占，
+      AR 握手那一刻锁定、直到该突发 `rlast` 才放锁（读数据不能中途换手，会串帧）；
+      锁定期把 `m_arvalid` 关成 0（两路 arid 都是 0，不许有多个未完成突发）。
+    - 用户侧 TL 发送口只有一套 → `tl_tx_arb.v`：**按一笔 TLP** 独占，
+      `utx_sel=1` 期间绝不换手（引擎是按一个 TLP 借口的，中途换手会把两笔包拼烂）。
+  实测（Gen2 ×2）：两路各 64800 笔 MWr/帧、err=0、速率各 ≈7.85fps，
+  即同时满帧率推、互不饿死。
 - **每帧的两类诊断字**（定位「为什么这帧没发布」用，板上就是靠它们定的案）：
   `0xDC = {notack[15:0], stuck[15:0]}`、`0xF0 = {last_beats[15:0], last_wcnt[15:0]}`、
   `0xF4 = {24'd0, verdict_snap}`（bit0 p_bad / bit1 没见 EOF / bit2 字数不符 /
@@ -148,7 +158,9 @@ CSI-2 字节域 187.5MHz                       DDR 用户域 dhi_clk 100MHz
 - **测试台**：`sim_do/tb_cam_ddr_writer.v`（逐字节比对、双缓冲、AXI 规则、短板突发、
   坏帧不发布 + 恢复、诊断值；实例参数刻意取 W=20/H=44/BB=16，一次覆盖残拍与短板
   两条边角路径）、`sim_do/tb_ddr_wr_arb.v`（通道方向、未授权者被关住、busy 期间不换手、
-  让出端口、以及「等端口时换手」的死锁形态）。
+  让出端口、以及「等端口时换手」的死锁形态）、`sim_do/tb_ddr_rd_arb.v`（读数据不许
+  中途换手、锁定期不放 AR、rlast 那拍仍归原主、放锁后轮转、未锁定时 rready 恒 0）、
+  `sim_do/tb_tl_tx_arb.v`（TLP 期间不换手、空档换手、授权与数据同源、两路交替不饿死）。
 
 ### 上板步骤（双路 4K）
 
@@ -158,29 +170,38 @@ insmod anlogic_pci.ko
 #    板上 /usr/lib/modules/$(uname -r)/updates/ 那份厂商版必须被覆盖掉，见 driver/README.md
 
 # 2) 主机侧写 BAR0 寄存器（cam_grab/pci_bar 都能写；顺序无所谓，但建议一起写）
-#    0x44 = bit5(ddr_en) | bit6(push_en)          = 0x60   （推 A 路）
-#           再 | bit8 就是推 B 路                  = 0x160
-./pci_bar 0 0x44 0x60
-#    0xB0/0xB4 = 主机收帧缓冲的 DMA 地址、0xB8/0xBC = mailbox 页里的门铃字
-#    （探测时驱动已经填好）
+#    0x44 = bit5(ddr_en) | bit6(push_en_A)        = 0x60   （只推 A 路）
+#           再 | bit8(push_en_B) 两路同时推        = 0x160
+./pci_bar 0 0x44 0x160
+#    A 路：0xB0/0xB4 = 收帧缓冲路 0 的 DMA 地址、0xB8/0xBC = 它的门铃字
+#    B 路：0x100/0x104 = 收帧缓冲路 1 的 DMA 地址、0x108/0x10C = 它的门铃字
+#    （探测时驱动已经按两路填好；手动改地址用 ANLOGIC_IOCPUSHCFG / IOCPUSHCFGB）
 #    读回自检：0xA8 bit0=valid bit2=err；0xAC 与 0xEC 都应是 8294400；
-#              0xD0/0xD8 应是 {2197, 960} 附近；0x9C/0xD4 看两路的 tap
+#              0xD0/0xD8 应是 {2197, 960} 附近；0x9C/0xD4 看两路的 tap；
+#              0xC0/0x110 = 两路各自的已推帧数（都应在涨）、0xCC/0x11C = 64800
 
-# 3) 板子上取帧
-./frame_grab --info                 # 看几何：应为 3840x2160
-./frame_grab -o f.pgm               # 8.29MB PGM
+# 3) 板子上取帧（两路各一个字符节点）
+./frame_grab --info                 # A 路（老行为，默认就是它）
+./frame_grab -o a.pgm
+./frame_grab -d /dev/ANLOGIC-PCI0_frame_b -o b.pgm   # B 路
+# 两路同时显示（各起一个实例，端口分开）：
+#   ./display-stream --source device --device /dev/ANLOGIC-PCI0_frame   --bayer gbrg --auto --port 8098 &
+#   ./display-stream --source device --device /dev/ANLOGIC-PCI0_frame_b --bayer gbrg --auto --port 8099 &
 ```
 
 
 ### 已知限制 / 还没做的
 
-- **帧率仍是 ~14.5fps**：那是传感器 MCLK 12.5MHz + INCKSEL 决定的（25MHz 在本板锁不住，
-  见顶层相机段的实测记录）。要 30fps 得先把 MCLK/INCKSEL 调到 24~27MHz 那一档并重新验证
-  链路锁定，与本次改动无关。
+- **真实图像帧率是 ≈7.85fps/路**（传感器每张图前还发一小帧 embedded 数据，FS 速率
+  15.7/s 里有一半是它）：由传感器 MCLK 12.5MHz + INCKSEL 决定（25MHz 在本板锁不住，
+  见顶层相机段的实测记录）。要 30fps 得先把 MCLK/INCKSEL 调到 24~27MHz 那一档并重新
+  验证链路锁定，与本次改动无关。两路同时跑也是各 ≈7.85fps（读口/TL 口的分时复用
+  只占约 5%+10%，不是瓶颈）。
 - **只传高 8 位**（RAW10 >>2，1 字节 1 像素）。想要 RAW10/16bit 需要另开一条 16bit 通路，
   DDR/PCIe 带宽翻倍（4K 30fps 16bit ≈ 498MB/s，Gen2×2 就紧张了）。
 - **CPU 侧 JPEG 是另一个瓶颈**：`display/` 那个推流工具在 RK3588 上单线程编 4K JPEG
-  只能几 fps，`--auto --bayer gbrg` 更慢；要流畅推流得先加一级降采样。
+  只能几 fps，`--auto --bayer gbrg` 更慢；两路各起一个实例时各约 3fps（实测），
+  要流畅推流得先加一级降采样。
 
 ## 提交信息规范
 
