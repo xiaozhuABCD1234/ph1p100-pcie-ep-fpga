@@ -8,7 +8,8 @@
 //      ./tb_ddr_frame_writer          # 期望输出 "ALL PASS"
 //
 //  测什么：
-//   1) 双缓冲：帧号奇偶 → BASE0/BASE1 交替；发布的 seq 单调递增、与 fb 字 0 一致；
+//   1) 双缓冲：帧号奇偶 → BASE0/BASE1 交替；发布的 seq 单调递增、等于帧计数器
+//      （帧号不占 fb[0]，fb 整块 512 字都是像素）；
 //   2) 数据一致性：AXI 侧按 256bit 拍写进假 DDR 的字节，与 TB 里的 fb 逐字节相同
 //      （证明「lane k 的字 → [32k +: 32]」这个字节序没搞反）；
 //   3) AXI 突发切分：awlen = BURST_BEATS-1、awsize=5、INCR、地址 4KB 对齐、
@@ -172,8 +173,7 @@ module tb_ddr_frame_writer;
     task fill_fb(input integer fno);
         integer k;
         begin
-            fb_mem[0] = fno;                     // 字 0 = 帧号（与工程布局一致）
-            for (k = 1; k < FB_WORDS; k = k + 1)
+            for (k = 0; k < FB_WORDS; k = k + 1)
                 fb_mem[k] = {8'hC0 + fno[7:0], 8'hB0 + k[7:0], 8'hA0 + k[15:8], 8'h90 + fno[7:0]};
         end
     endtask

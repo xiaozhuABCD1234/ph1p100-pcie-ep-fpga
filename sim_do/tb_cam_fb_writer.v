@@ -14,9 +14,9 @@
 //        cam_in_line 每行 1 拍脉冲；cam_pix_valid 1 拍 = 1 组 = 4 像素，
 //        每行 160 组入窗（x=0..636）+ 40 组域外（x=640..796，应被丢掉）；
 //   2) 异步 FIFO 跨到 62.5MHz 后，帧缓存的布局：
-//        字 0 = 帧号（= 完成后的 FRAME_CNT），
-//        字 1+y*160+g = {p3[9:2],p2[9:2],p1[9:2],p0[9:2]}，低字节 = 最左像素；
-//   3) 两帧校验（字 0 递增）、drop/ovf 计数必须为 0；
+//        字 0..76799 全是像素，字 y*160+g = {p3[9:2],p2[9:2],p1[9:2],p0[9:2]}，
+//        低字节 = 最左像素（帧号不占缓存，它是 cam_frame_cnt / 0x4C 寄存器）；
+//   3) 两帧校验（FRAME_CNT 递增、整块缓存逐字对得上）、drop/ovf 计数必须为 0；
 //   4) cam_sel=0 时测试图源仍是原来那套（写源 mux 双向都对）。
 ///////////////////////////////////////////////////////////////
 `timescale 1ns/1ps
@@ -215,18 +215,14 @@ module tb_cam_fb_writer;
             chk("cam frame_done",{31'd0, cam_frame_done}, 32'd1);
             chk("cam ready",     {31'd0, cam_ready}, 32'd1);
             chk("cam data_len",  cam_data_len, W * H);
-            chk("cam wr_word_cnt", cam_wr_word_cnt, WORDS);      // 1 + 76799
+            chk("cam wr_word_cnt", cam_wr_word_cnt, WORDS);      // 76800 个像素字
             chk("cam drop_cnt",  {16'd0, cam_drop_cnt}, 32'd0);  // FIFO 不能满
             chk("cam ovf_cnt",   {16'd0, cam_ovf_cnt},  32'd0);
 
-            // 字 0 = 帧号
-            read_word(0, got);
-            chk("frame word0", got, f + 1);
-
-            // 全帧逐字比对（含行号 → 验证行/列计数与组序）
+            // 全帧逐字比对（含行号 → 验证行/列计数与组序；字 0 就是第 0 行最左 4 像素）
             for (y = 0; y < H; y = y + 1) begin
                 for (g = 0; g < GROUPS; g = g + 1) begin
-                    read_word(1 + y * GROUPS + g, got);
+                    read_word(y * GROUPS + g, got);
                     exp = exp_word(y, g);
                     chk("pixel word", got, exp);
                 end
@@ -243,8 +239,9 @@ module tb_cam_fb_writer;
             @(posedge clk); k = k + 1;
         end
         chk("test frame_cnt", img_frame_cnt, 32'd1);      // 测试图源已出完第 0 帧
-        read_word(0, got); chk("test word0", got, 32'd0);
-        read_word(1, got); chk("test pixel word1", got, 32'h03020100);
+        // 测试图公式 pix = x + y + FRAME_CNT（帧末才 +1 ⇒ 本帧用 0）
+        read_word(0, got); chk("test pixel word0", got, 32'h03020100);
+        read_word(1, got); chk("test pixel word1", got, 32'h07060504);
         test_en = 1'b0;
 
         if (errors == 0) $display("ALL PASS");

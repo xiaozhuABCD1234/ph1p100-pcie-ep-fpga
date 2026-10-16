@@ -11,14 +11,14 @@
 //
 //  数据布局（主机侧看到的就是一坨 8bit 灰度）：
 //    - 1 字节 1 像素，4 像素/32bit 字，小端（x 小的在低字节）
-//    - 字 0 = 帧号 frame_cnt[31:0]（小端），便于主机校验帧同步
-//    - 其余像素 pix = x[7:0] + y[7:0] + frame_cnt[7:0] + PIX_ADD
+//    - 字 0..WORDS-1 全是像素；帧号不占缓存，只在 FRAME_CNT 寄存器（0x4C）里
+//    - 像素 pix = x[7:0] + y[7:0] + frame_cnt[7:0] + PIX_ADD
 //      （主机可以按公式算任意位置的期望值，用于校验搬运正确性）
 //
 //  写源选择（本移植新增）：
 //    - cam_sel=0（默认）：测试图发生器写帧缓存，布局/时序与之前完全一样；
 //    - cam_sel=1        ：写口与状态字改由 cam_fb_writer（IMX415/CIS-2）提供，
-//                         布局不变（字 0 = 帧号 = FRAME_CNT，之后 4 像素/字）。
+//                         布局不变（整块都是像素：4 像素/字）。
 //    两种写源都只是「同一块 fb[] 的写口」在 mux，不会同时写也不会写坏地址。
 //
 //  读口：只有**一个**，由主机预取与 DDR 整帧搬运共用，就在这里仲裁：
@@ -194,40 +194,33 @@ module img_frame_src #(
                     idle <= idle + 32'd1;
                 end
             end else begin
-                if (widx == {AW{1'b0}}) begin
-                    // 字 0：帧号
+                // 字 0 也是像素（帧号不再占缓存）：从 widx=0 起逐字写满 WORDS-1
+                wr_word <= {pix_now, wr_word[31:8]};
+
+                if (lane == 2'd3) begin
                     fb_wr_en   <= 1'b1;
-                    fb_wr_addr <= {AW{1'b0}};
-                    fb_wr_data <= frame_cnt_t;
-                    widx       <= {{(AW-1){1'b0}}, 1'b1};
-                end else begin
-                    wr_word <= {pix_now, wr_word[31:8]};
+                    fb_wr_addr <= widx;
+                    fb_wr_data <= {pix_now, wr_word[31:8]};
+                    lane       <= 2'd0;
 
-                    if (lane == 2'd3) begin
-                        fb_wr_en   <= 1'b1;
-                        fb_wr_addr <= widx;
-                        fb_wr_data <= {pix_now, wr_word[31:8]};
-                        lane       <= 2'd0;
-
-                        if (widx == (WORDS - 1)) begin
-                            // 一帧结束
-                            busy_t      <= 1'b0;
-                            ready_t     <= 1'b1;
-                            frame_cnt_t <= frame_cnt_t + 32'd1;
-                            data_len_t  <= W * H;
-                        end else begin
-                            widx <= widx + 1'b1;
-                            // 一个 32bit 字含 4 个像素 → x 前进 4
-                            if (x + 16'd4 >= W) begin
-                                x <= 16'd0;
-                                y <= y + 16'd1;
-                            end else begin
-                                x <= x + 16'd4;
-                            end
-                        end
+                    if (widx == (WORDS - 1)) begin
+                        // 一帧结束
+                        busy_t      <= 1'b0;
+                        ready_t     <= 1'b1;
+                        frame_cnt_t <= frame_cnt_t + 32'd1;
+                        data_len_t  <= W * H;
                     end else begin
-                        lane <= lane + 2'd1;
+                        widx <= widx + 1'b1;
+                        // 一个 32bit 字含 4 个像素 → x 前进 4
+                        if (x + 16'd4 >= W) begin
+                            x <= 16'd0;
+                            y <= y + 16'd1;
+                        end else begin
+                            x <= x + 16'd4;
+                        end
                     end
+                end else begin
+                    lane <= lane + 2'd1;
                 end
             end
         end

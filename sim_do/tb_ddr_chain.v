@@ -13,7 +13,7 @@
 //   1) 主机能经 TLP 写 CTRL[5]=ddr_en、开测试图源；一帧写好 → DMA 搬进「DDR」；
 //   2) 主机读 0xA0/0xA4/0xA8/0xAC 拿到的帧号/基址/状态/长度与实测一致
 //      （上一版这几个字在板上全读 0，因为顶层 assign 方向写反）；
-//   3) DDR 里的字节与 img_frame_src 里 fb[] 逐字节相同（含字 0 的帧号）；
+//   3) DDR 里的字节与 img_frame_src 里 fb[] 逐字节相同（整块都是像素）；
 //   4) 搬运进行中主机仍然能读 0x60（读口仲裁不给主机饿死），且第二帧照常发布。
 //
 //  跑法（$HOME/.local/ivl/bin 已在 PATH）：
@@ -278,7 +278,7 @@ module tb_ddr_chain;
         tlp_wr(12'h5C, 32'h0000_0000);
         repeat (20) @(negedge clk_fb);
         tlp_rd(12'h5C, v); check("0x5C PTR readback", v, 32'd0);
-        tlp_rd(12'h60, v); check("0x60 di1=frame#", v, u_src.fb[0]);
+        tlp_rd(12'h60, v); check("0x60 di1=fb[0]", v, u_src.fb[0]);
         repeat (12) @(negedge clk_fb);   // RTL 约定：两次 0x60 读间隔要 ≥6 拍
         tlp_rd(12'h60, v);
         if (v !== u_src.fb[1]) begin

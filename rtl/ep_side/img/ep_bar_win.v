@@ -51,7 +51,8 @@
 //    0x7C DBG_RD_IDX R   内部读口字索引（低 17 位有效）
 //    0x80..0x98     R    相机状态字 cam_stat[31:0]..cam_stat[223:192]（8 个 dw）
 //    0x9C CAM_TAP   R/W  {manual_en, tap[5:0]}（不是 cam_stat[255:224]）
-//    0xA0 DDR_FRAME_SEQ R 已整帧落 DDR3 的帧号（单调递增；= DDR 里该帧字 0 的帧号）
+//    0xA0 DDR_FRAME_SEQ R 已整帧落 DDR3 的帧号（单调递增，取自帧计数器 fb_frame_cnt，
+//                          不是从帧数据里读的）
 //    0xA4 DDR_BASE      R 该帧在 DDR3 里的字节基址（双缓冲两块交替）
 //    0xA8 DDR_STATUS    R bit0 valid / bit1 busy / bit2 err / bit3 alive /
 //                          bit4 cal_done / [31:16] err_cnt

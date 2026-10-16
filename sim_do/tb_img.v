@@ -129,37 +129,28 @@ module tb_img;
         do_read(32'h58, v);  chk("DATA_LEN",   v, W*H);
 
         $display("--- 数据窗口 ---");
+        // 帧号不再占缓存：它就是 0x4C FRAME_CNT（上面刚读的 fc0），
+        // 缓存字 0.. 全是像素，字的顺序按公式 x+y+fc 对。
         do_write(32'h5C, 32'd0);                    // PTR = 0
-        do_read (32'h60, v);                        // 字 0 = 帧号
-        if (v !== fc0 && v !== (fc0 - 1)) begin
-            $display("  FAIL 字0: got %08x, exp 帧号 %0d", v, fc0);
-            errors = errors + 1;
-        end else begin
-            $display("  PASS 字0 = %08x（帧号）", v);
-        end
-        fc0 = v;                                    // 用缓存里那一帧的帧号做后续校验
-
-        // 字 1 = 像素 (x=0..3, y=0)：字节 = x + y + fc
-        do_write(32'h5C, 32'd4);
-        do_read (32'h60, w1);
+        do_read (32'h60, w1);                       // 字 0 = 像素 (x=0..3, y=0)
         b0 = w1[7:0]; b1 = w1[15:8]; b2 = w1[23:16]; b3 = w1[31:24];
         if (!(b0 === fc0[7:0] && b1 === (fc0[7:0] + 8'd1) &&
               b2 === (fc0[7:0] + 8'd2) && b3 === (fc0[7:0] + 8'd3))) begin
-            $display("  FAIL 字1 = %08x，期望字节 fc,fc+1,fc+2,fc+3（fc=%02x）", w1, fc0[7:0]);
+            $display("  FAIL 字0 = %08x，期望字节 fc,fc+1,fc+2,fc+3（fc=%02x）", w1, fc0[7:0]);
             errors = errors + 1;
         end else
-            $display("  PASS 字1 = %08x（字节递增且首字节=帧号）", w1);
+            $display("  PASS 字0 = %08x（字节递增且首字节=帧号 mod 256）", w1);
 
-        // 字 2 = 像素 (x=4..7, y=0)：首字节 = fc+4
-        do_read (32'h60, w2);                       // PTR 已自动 +4（=8）
+        // 字 1 = 像素 (x=4..7, y=0)：首字节 = fc+4
+        do_read (32'h60, w2);                       // PTR 已自动 +4（=4）
         if (w2[7:0] !== (fc0[7:0] + 8'd4)) begin
-            $display("  FAIL 字2 首字节 = %02x，期望 %02x", w2[7:0], fc0[7:0] + 8'd4);
+            $display("  FAIL 字1 首字节 = %02x，期望 %02x", w2[7:0], fc0[7:0] + 8'd4);
             errors = errors + 1;
         end else
-            $display("  PASS 字2 = %08x（指针自动 +4 生效）", w2);
+            $display("  PASS 字1 = %08x（指针自动 +4 生效）", w2);
 
         // 指针确实前进了 8
-        do_read (32'h5C, v);  chk("PTR 自动递增", v, 32'd12);
+        do_read (32'h5C, v);  chk("PTR 自动递增", v, 32'd8);
 
         $display("--- 越界回绕 ---");
         do_write(32'h5C, PTR_MASK);
