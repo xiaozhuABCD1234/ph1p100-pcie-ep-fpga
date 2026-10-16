@@ -171,7 +171,15 @@ module cam_ddr_writer #(
     input  wire          m_axi_wready,
     input  wire [1:0]    m_axi_bresp,
     input  wire          m_axi_bvalid,
-    output wire          m_axi_bready
+    output wire          m_axi_bready,
+
+    // ---- 诊断：本帧结果的三类计数 + 末帧字数（给主机定位「为什么这帧没发布」）----
+    //   {bad_cnt[15:0], last_wcnt[15:0], notack_cnt[15:0], stuck_cnt[15:0]}
+    //   stuck  = 等 tl 域回执超时（0.65ms）→ 本帧丢弃
+    //   notack = tl 域还没取走上一帧 → 本帧丢弃
+    //   bad    = 发布了但判定坏（字数/EOF/拍数/非 OKAY bresp）
+    //   last_wcnt = 最后一帧实际收到的像素字数（正常 = W*H/4）
+    output wire [95:0]   dbg_drop
 );
 
     // ========================================================================
@@ -387,6 +395,9 @@ module cam_ddr_writer #(
     reg  [31:0] pub_base;
     reg         pub_ok;
     reg  [15:0] pub_err;
+    // 诊断计数器（只增，复位清零）
+    reg  [15:0] c_stuck, c_notack, c_bad, wcnt_last, beats_last;
+    reg  [7:0]  verdict_snap;   // {2'b0, pub_ok, axi_err, beats_mismatch, wcnt_mismatch, no_eof, p_bad}
     reg         pub_tgl;
     reg         pub_ack_s1, pub_ack_s2;   // tl 域的 ack 同步回来
     reg  [15:0] err_cnt;                  // 坏帧累计
@@ -597,7 +608,17 @@ module cam_ddr_writer #(
     assign m_axi_wvalid  = (a_st == A_W) & send_beat;
     assign m_axi_wlast   = (a_st == A_W) & send_beat & (w_idx == burst_m1[BEAT_CW-1:0]);
     assign m_axi_bready  = (a_st == A_B);
-    assign axi_busy      = (a_st != A_IDLE) | (c_st != C_SYNC);
+    //  ★ 「busy」只报 **AXI 通道**在飞（a_st != A_IDLE），**不能**把整帧（c_st != C_SYNC）
+    //    也算进去：DDR 写口是两路相机共用的（ddr_wr_arb），按「整帧 busy」仲裁就等于
+    //    让某一路独占端口一整帧（63ms @4K），另一路的 FIFO 只有 1024 组（≈31us）缓冲，
+    //    必然大量丢组 —— 板上实测就是两路各只发布一半帧（相机 15.7fps、发布 7.9fps，
+    //    且 err_cnt 以同样速率上涨）。
+    //    改成只报在飞：突发之间（FIFO 攒数据的空档）端口就能换手，两个相机各取所需
+    //    （每帧 512 拍×2025 个突发里，一路只需要约 4% 的端口时间）。
+    assign axi_busy      = (a_st != A_IDLE);
+
+    // [31:0]={notack,stuck}  [63:32]={beats_last,wcnt_last}  [95:64]={24'd0,verdict_snap}
+    assign dbg_drop      = {24'd0, verdict_snap, beats_last, wcnt_last, c_notack, c_stuck};
 
     always @(posedge clk_ddr or posedge rst_ddr) begin
         if (rst_ddr) begin
@@ -620,6 +641,8 @@ module cam_ddr_writer #(
             pub_base      <= BASE0;
             pub_ok        <= 1'b0;
             pub_err       <= 16'd0;
+            c_stuck <= 16'd0; c_notack <= 16'd0; c_bad <= 16'd0;
+            wcnt_last <= 16'd0; beats_last <= 16'd0; verdict_snap <= 8'd0;
             pub_tgl       <= 1'b0;
             err_cnt       <= 16'd0;
         end else begin
@@ -672,21 +695,29 @@ module cam_ddr_writer #(
 
                 // 等 packer 也收口（数据侧最后一拍已交出去）再判定/发布
                 A_DONE: if ((c_st == C_END) & ~beat_vld) begin
+                    wcnt_last    <= p_wcnt[15:0];
+                    beats_last   <= p_beats[15:0];
+                    verdict_snap <= {2'b0, pub_ok, axi_err,
+                                     (p_beats != NBEATS), (p_wcnt != FRAME_WORDS),
+                                     ~p_eof_seen, p_bad};
                     if (pub_stuck) begin
                         // 回执丢了（tl 域被复位过）：把 toggle 对齐到回执值再继续，
                         // 本帧按坏帧计一次错（不发布）
                         pub_tgl <= pub_ack_s2;
                         err_cnt <= err_cnt + 16'd1;
+                        c_stuck <= c_stuck + 16'd1;
                     end else if (pub_ack_s2 == pub_tgl) begin   // 上一帧已被 tl 域取走
                         pub_base <= base_r;
                         pub_ok   <= ~verdict_bad & ~axi_err;
                         pub_err  <= err_cnt + ((~verdict_bad & ~axi_err) ? 16'd0 : 16'd1);
                         pub_tgl  <= ~pub_tgl;
                         err_cnt  <= err_cnt + ((~verdict_bad & ~axi_err) ? 16'd0 : 16'd1);
+                        if (verdict_bad | axi_err) c_bad <= c_bad + 16'd1;
                     end else begin
                         // 上一帧还没被取走（同步链慢，但没到 pub_stuck）：本帧丢弃，
                         // 不覆盖那几个字
                         err_cnt  <= err_cnt + 16'd1;
+                        c_notack <= c_notack + 16'd1;
                     end
                     frame_idx    <= frame_idx + 32'd1;
                     frame_close  <= 1'b1;                // 让 packer 回 C_SYNC

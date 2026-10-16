@@ -15,13 +15,7 @@
 //    - 像素 pix = x[7:0] + y[7:0] + frame_cnt[7:0] + PIX_ADD
 //      （主机可以按公式算任意位置的期望值，用于校验搬运正确性）
 //
-//  写源选择（本移植新增）：
-//    - cam_sel=0（默认）：测试图发生器写帧缓存，布局/时序与之前完全一样；
-//    - cam_sel=1        ：写口与状态字改由 cam_fb_writer（IMX415/CIS-2）提供，
-//                         布局不变（整块都是像素：4 像素/字）。
-//    两种写源都只是「同一块 fb[] 的写口」在 mux，不会同时写也不会写坏地址。
-//
-//  读口：只有**一个**，由主机预取与 DDR 整帧搬运共用，就在这里仲裁：
+//  读口：只有**一个**，由主机预取与 DMA 读口共用，就在这里仲裁：
 //    · host_rd_prio（来自 ep_bar_win）为 1 时读口必须给主机 —— 那是「端口刚
 //      换了 ptr（一次 0x60 读或一次 0x5C 写），4 个字还没重新预取完」的情况，
 //      这时不给主机，主机下一拍读 0x60 就会拿到过期数据；
@@ -62,17 +56,7 @@ module img_frame_src #(
     output wire [15:0] height,
     output wire [31:0] data_len,      // 每帧字节数
     output wire        ready,         // 至少出过一帧
-    output wire        busy,          // 正在写帧缓存（此间主机读会撕裂）
-
-    // ---- 外部（相机）写源：cam_sel=1 时写口由 cam_fb_writer 驱动 ----
-    input  wire        cam_sel,       // 1 = 相机写源（CTRL[4]），0 = 测试图源
-    input  wire        cam_wr_en,
-    input  wire [31:0] cam_wr_addr,   // 写字节地址（低 2 位恒 0）
-    input  wire [31:0] cam_wr_data,
-    input  wire [31:0] cam_frame_cnt, // 相机侧已完成帧数
-    input  wire [31:0] cam_data_len,
-    input  wire        cam_ready,
-    input  wire        cam_busy
+    output wire        busy           // 正在写帧缓存（此间主机读会撕裂）
 );
 
     localparam WORDS = (W * H) / 4;
@@ -97,7 +81,7 @@ module img_frame_src #(
     // ------------------------------------------------------------------
     reg [31:0] fb [0:WORDS-1];
 
-    // 内部状态（带 _t 后缀）：对外按写源 mux（声明必须早于下面的 assign）
+    // 内部状态
     reg [31:0]   frame_cnt_t, data_len_t;
     reg          ready_t, busy_t;
 
@@ -105,24 +89,16 @@ module img_frame_src #(
     reg [AW-1:0] fb_wr_addr;
     reg [31:0]   fb_wr_data;
 
-    // 相机写口：字节地址 → 字索引（截位方式与读口一致：先取[31:2]再截到 AW 位）
-    wire [AW-1:0] cam_word_idx = cam_wr_addr[31:2];
-
-    // 写源选择：0 = 测试图发生器（默认，向后兼容），1 = 相机（cam_fb_writer）
-    wire          fb_wr_en_m   = cam_sel ? cam_wr_en    : fb_wr_en;
-    wire [AW-1:0] fb_wr_addr_m = cam_sel ? cam_word_idx : fb_wr_addr;
-    wire [31:0]   fb_wr_data_m = cam_sel ? cam_wr_data  : fb_wr_data;
-
     // 保持「单条简单写语句」形式，否则 TD 会从 ERAM 落成分布式 RAM
     always @(posedge clk)
-        if (fb_wr_en_m)
-            fb[fb_wr_addr_m] <= fb_wr_data_m;
+        if (fb_wr_en)
+            fb[fb_wr_addr] <= fb_wr_data;
 
-    // 状态输出同样按写源选择（0x48 STATUS / 0x4C FRAME_CNT / 0x58 DATA_LEN）
-    assign frame_cnt = cam_sel ? cam_frame_cnt : frame_cnt_t;
-    assign data_len  = cam_sel ? cam_data_len  : data_len_t;
-    assign ready     = cam_sel ? cam_ready     : ready_t;
-    assign busy      = cam_sel ? cam_busy      : busy_t;
+    // 状态输出（0x48 STATUS / 0x4C FRAME_CNT / 0x58 DATA_LEN）
+    assign frame_cnt = frame_cnt_t;
+    assign data_len  = data_len_t;
+    assign ready     = ready_t;
+    assign busy      = busy_t;
 
     // 读口按参考工程 f9p_ph1p100_imx415x2/cam_preview.v 的写法：
     // 组合读 + 输出寄存器（TD 对这个形式必推断 ERAM20K）

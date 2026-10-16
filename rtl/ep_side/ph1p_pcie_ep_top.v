@@ -85,30 +85,10 @@
     localparam IMG_W      = 640;
     localparam IMG_H      = 480;
 
-    // ---- 相机裁剪窗（传给 cam_fb_writer，别处不再出现这几个魔数）----
-    //  传感器跑 4K 全像素（I_cam_mode = 1），读出 3840x2160；帧缓存只放 640x480，
-    //  所以 cam_fb_writer 是个**裁剪窗**，不是缩放器。取整幅的正中 640x480：
-    //      CAM_X0 = (3840 - 640)/2 = 1600
-    //      CAM_Y0 = (2160 - 480)/2 = 840
-    //  CAM_SKIP_ROWS = 37：板上实测（连抓多帧，`frame_grab` 出的 PGM 逐行统计）
-    //  帧头之后有 **36 行恒定黑电平**（值恒为 12 = 10bit pedestal 50 >> 2）的
-    //  哑行/光黑行，第 37 行才是图像第 0 行。原来的 1 是按 binning 模式标定的，
-    //  在 4K 下会把这段黑带当成图像前 36 行搬进帧缓存（就是「图很奇怪」的来源之一）。
-    //  语义：y_img0 = CAM_Y0 + CAM_SKIP_ROWS 是**第一个被搬进缓存的 y_cnt**，
-    //  所以 CAM_Y0 是「图像域里的行偏移」，CAM_SKIP_ROWS 是「帧头哑行数」。
-    localparam [15:0] CAM_X0        = 16'd1600;
-    localparam [15:0] CAM_Y0        = 16'd840;
-    localparam [15:0] CAM_SKIP_ROWS = 16'd37;
+
     localparam IMG_WORDS  = (IMG_W * IMG_H) / 4;
     localparam IMG_PTRBYTES = IMG_W * IMG_H;
     localparam IMG_PTRMSK   = (IMG_WORDS * 4) - 4;   // 保留（未用）
-
-    // ---- DDR3 整帧搬运（ddr_frame_writer，本移植新增）----
-    //  双缓冲：两块固定基址按帧号奇偶交替。两块都要 ≥ 每帧字节数（640x480=307200B）、
-    //  4KB 对齐、互不重叠；默认取 1MB / 1.5MB（间隔 512KB > 307200B）。
-    //  这两条基址只在这里定义，直接当参数传给 ddr_frame_writer，别处不写魔数。
-    localparam [31:0] DDR_FRAME_BASE0  = 32'h0010_0000;   // 双缓冲块 0
-    localparam [31:0] DDR_FRAME_BASE1  = 32'h0018_0000;   // 双缓冲块 1
 
     // ---- 相机 4K 直通 DDR3（cam_ddr_writer，本步新增）----
     //  传感器本来就跑 4K（I_cam_mode=1），MIPI/CSI-2 收到的就是整行 3840 像素；
@@ -116,15 +96,20 @@
     //  不经过 fb[]，直接「CSI-2 像素 → 异步 FIFO → AXI4 写 DDR3」。
     //  几何：W*H 必须是 4KB 的整数倍（3840x2160 = 2025 x 4096 ✓），这样帧尾不会
     //  出现半页突发、双缓冲两块基址也就永远 4KB 对齐。
-    //  帧头处理与 cam_fb_writer 同一套实测结论：跳过 1 行 embedded + 36 行哑行
+    //  帧头处理（板上实测）：跳过 1 行 embedded + 36 行哑行
     //  （SKIP_ROWS=37），从 SKIP_ROWS + Y0 那一行开始取 H 行。
     localparam integer CAMDDR_W   = 3840;
     localparam integer CAMDDR_H   = 2160;
     localparam [15:0]  CAMDDR_X0  = 16'd0;
     localparam [15:0]  CAMDDR_Y0  = 16'd0;
     localparam [15:0]  CAMDDR_SKIP_ROWS = 16'd37;
-    localparam [31:0]  DDR_CAM_BASE0 = 32'h0010_0000;   // 4K 帧双缓冲块 0（1MB）
-    localparam [31:0]  DDR_CAM_BASE1 = 32'h0090_0000;   // 块 1（9MB；一帧 7.9MB，不重叠）
+    //  两路各一对双缓冲（A/B 互不重叠；一帧 8294400B = 7.91MB，两块间隔 8MB）：
+    //    A: 块0 1MB 起、块1 9MB 起   → 占用 1MB..16.914MB
+    //    B: 块0 17MB 起、块1 25MB 起 → 占用 17MB..32.914MB
+    localparam [31:0]  DDR_CAM_BASE0   = 32'h0010_0000;   // A 路 4K 帧双缓冲块 0（1MB）
+    localparam [31:0]  DDR_CAM_BASE1   = 32'h0090_0000;   // A 路块 1（9MB；一帧 7.9MB，不重叠）
+    localparam [31:0]  DDR_CAM_B_BASE0 = 32'h0110_0000;   // B 路块 0（17MB）
+    localparam [31:0]  DDR_CAM_B_BASE1 = 32'h0190_0000;   // B 路块 1（25MB）
     localparam integer CAMDDR_BYTES  = CAMDDR_W * CAMDDR_H;   // 8294400
 
 // ==== 图像通路（本移植新增：img_regs + img_frame_src）====
@@ -138,53 +123,33 @@ wire [31:0]  img_frame_cnt;
 wire [31:0]  img_data_len;
 wire [15:0]  img_width;
 wire [15:0]  img_height;
-wire [2:0]   img_pattern;   // {CTRL[3]=cam_ddr_sel, CTRL[4]=cam_sel, CTRL[2]=重触发}
+wire [1:0]   img_pattern;   // CTRL[3:2]：测试图源图案（[0] 兼作传感器重触发）
 wire [31:0]  img_dbg_idx;
+wire         img_cam_ab_sel;   // CTRL[8]：推帧引擎取哪一路的已落 DDR 帧（0 = A，1 = B）
 
-// ==== 相机写帧缓存通路（cam_fb_writer，本移植新增）====
-//  CTRL[4] = 写源选择：0 = 测试图源（默认），1 = 相机。
-//  它在 ep_bar_win 里存着，但 pcie_ep_engine.v 的端口不许改，只能借
-//  ctrl_pattern[1] 这条本来没人消费的通道送到顶层（见 ep_bar_win.v 头部说明）。
-wire         img_cam_sel;
-wire         cam_fb_wr_en;
-wire [31:0]  cam_fb_wr_addr;
-wire [31:0]  cam_fb_wr_data;
-wire [31:0]  cam_fb_frame_cnt;
-wire [31:0]  cam_fb_data_len;
-wire         cam_fb_ready;
-wire         cam_fb_busy;
-wire         cam_fb_frame_done;    // 帧完成标志（EOF 置 1、下个 SOF 清 0；顶层暂无寄存器口）
-wire [31:0]  cam_fb_wr_word_cnt;   // 本帧已写字数（诊断）
-wire [15:0]  cam_fb_drop_cnt;      // FIFO 满丢掉像素组数（诊断，正常 = 0）
-wire [15:0]  cam_fb_ovf_cnt;       // FIFO 满丢掉 SOF/EOF 标记数（诊断，正常 = 0）
-// （这两个信号在下面「相机 4K 直通」段里还会再见到；先在这里声明，避免 TD/iverilog
-//   按「隐式 1bit 网」处理 —— 虽然它们本来就是 1bit，但先用后声明是要清掉的）
-wire                img_cam_ddr_sel;       // = img_pattern[2] = CTRL[3]
-wire                w_cam_ddr_want;        // tl 域：想用相机直通（ddr_en & cam_sel & sel）
-assign img_cam_sel     = img_pattern[1];   // = CTRL[4]（原语义不变）
-assign img_cam_ddr_sel = img_pattern[2];   // = CTRL[3]：1 = 相机 4K 直通 DDR3（本步新增）
-// 「想用相机直通」= 三件事同时成立：DDR 搬运开着、写源是相机、选择位是直通。
-// 注意这还只是**意图**：真正换手由 ddr_wr_mux 在两边都空闲时落实（见那里的说明），
-// 落实到哪个值由 w_sel_eff 给出；tl 域看的是它的同步副本 w_sel_eff_fb。
-assign w_cam_ddr_want = img_ddr_en & img_cam_sel & img_cam_ddr_sel;
-// img_pattern[0] = CTRL[2] 现在用作「传感器重触发」（见顶层相机段说明）；
-// img_pattern[2] = CTRL[3] = cam_ddr_sel：1 = 相机整帧（4K）直通 DDR3（本步新增），
-//                0 = 走 fb[] → DDR3 的老通路。见下面 DDR 段与 cam_ddr_writer.v。
+// 相机 4K 直通使能：DDR 搬运开着（CTRL[5]）时两片 cam_ddr_writer 都 armed。
+// A/B 两路各在自己的字节时钟域收帧，只在 DDR 域用 ddr_wr_arb 分时复用 AXI 写口。
+wire         w_cam_ddr_want;
+assign w_cam_ddr_want  = img_ddr_en;
+// img_pattern[0] = CTRL[2] 用作「传感器重触发」（见顶层相机段说明）。
 wire [255:0] w_cam_stat;      // 声明必须早于例化处使用（否则 TD 造 1 位隐式网）
-wire [6:0]   cam_tap_cfg;
+wire [6:0]   cam_tap_cfg;     // A 路 tap（0x9C）
+wire [6:0]   cam_tap_b_cfg;   // B 路 tap（0xD4）
+
 wire         w_uart_rxd_unused = 1'b1;
 
-// ==== DDR3 整帧搬运（ddr_frame_writer + u_ddr3_mc_0 的 AXI 写通道）====
-//  握手寄存器面在 ep_bar_win（0xA0~0xAC），经 pcie_ep_engine 的
-//  img_ctrl_ddr_en / img_ddr_ro 两个端口过一下（与 cam_stat_bus 同一种做法）。
+// ==== 相机整帧 → DDR3（A/B 两片 cam_ddr_writer + ddr_wr_arb + u_ddr3_mc_0 写口）====
+//  握手寄存器面在 ep_bar_win（A: 0xA0~0xAC，B: 0xE0~0xEC），经 pcie_ep_engine 的
+//  img_ctrl_ddr_en / img_ddr_ro / ddr_ro_b 端口过一下（与 cam_stat_bus 同一种做法）。
 wire         img_ddr_en;         // CTRL[5]
-wire [127:0] w_ddr_ro;           // {len, status, base, seq} → ep_bar_win 0xAC/0xA8/0xA4/0xA0
-wire [31:0]  img_fb_rd2_addr;    // DDR 搬运的读地址（与主机预取共用 fb 唯一读口）
-wire [31:0]  img_fb_rd2_data;    // 共用读口回来的数据（两个 DMA 消费者都看这条）
+wire [127:0] w_ddr_ro;           // A 路 {len, status, base, seq} → ep_bar_win 0xAC/0xA8/0xA4/0xA0
+wire [127:0] w_ddr_ro_b;         // B 路同样四个字 → 0xEC/0xE8/0xE4/0xE0
+wire [31:0]  w_cam_diag_b;       // B 路相机直通诊断 → 0xD8
+wire [95:0]  w_camddr_drop_a;    // A 路丢帧诊断 → 0xDC/0xF0/0xF4
+wire [31:0]  img_fb_rd2_data;    // 共用读口回来的数据（推帧的 ERAM 源用）
 wire         img_host_rd_prio;   // ep_bar_win 的预取还没刷完 → 读口要还给它
 wire         img_host_grant;     // 本拍读口归主机（与 img_fb_rd2_* 配套的仲裁输出）
 wire         img_dma_grant;      // 本拍读口归 DMA（未按源细分）
-wire         img_ddr_fb_req;     // DDR 搬运本拍想读一个字
 wire [28:0]  w_ddr_awaddr;
 wire [7:0]   w_ddr_awlen;
 wire [2:0]   w_ddr_awsize;
@@ -197,36 +162,31 @@ wire [1:0]   w_ddr_bresp;
 wire         w_ddr_bvalid, w_ddr_bready;
 wire         w_ddrphy_rdy;       // = 1 表示 DDRPHY 校准完成（IP 的 cal_done）
 
-// ==== 相机 4K 直通 DDR3（cam_ddr_writer + ddr_wr_mux，本步新增）====
-//  两条「整帧写 DDR3」通路互斥，选择位是 CTRL[3]（cam_ddr_sel，见 ep_bar_win.v）：
-//    · 0（默认）：fb[] → DDR3（ddr_frame_writer，测试图源 / 640x480 相机裁剪）
-//    · 1        ：CSI-2 → DDR3（cam_ddr_writer，4K 全幅）
-//  AXI 写口用 ddr_wr_mux 二选一（只在两边都没有突发在飞时换手）；
-//  0xA0~0xAC 那组握手字按**实际选中**的那条路（sel_eff 同步到 tl 域）二选一。
-wire                w_sel_req_d;        // ddr 域：上面那个意图同步过来
-wire                w_sel_eff;          // ddr 域：mux 实际选中的（1 = 相机直通）
-wire                w_sel_eff_fb;       // 同步回 tl 域，用来 mux 握手字
-wire                w_ddrw_busy, w_camw_busy;
+// ==== 相机 4K 直通 DDR3（A/B 各一片 cam_ddr_writer）====
+//  两片同时 armed，各自的 AXI 写口由 ddr_wr_arb 分时放行（策略见该文件头部）。
+wire                w_camw_busy, w_camw_busy_b;
+wire                w_wr_grant;         // 当前授权给哪一路的 AXI 写口（诊断）
 
-// 老通路（fb → DDR3）的 AXI 写口
-wire [28:0] w_ddrw_awaddr;   wire [7:0] w_ddrw_awlen;   wire [2:0] w_ddrw_awsize;
-wire [1:0]  w_ddrw_awburst;  wire w_ddrw_awvalid, w_ddrw_awready;
-wire [255:0] w_ddrw_wdata;   wire [31:0] w_ddrw_wstrb;
-wire        w_ddrw_wlast, w_ddrw_wvalid, w_ddrw_wready;
-wire [1:0]  w_ddrw_bresp;    wire w_ddrw_bvalid, w_ddrw_bready;
-// 相机直通（CSI-2 → DDR3）的 AXI 写口
+// A 路（CSI-2 A → DDR3）的 AXI 写口
 wire [28:0] w_camw_awaddr;   wire [7:0] w_camw_awlen;   wire [2:0] w_camw_awsize;
 wire [1:0]  w_camw_awburst;  wire w_camw_awvalid, w_camw_awready;
 wire [255:0] w_camw_wdata;   wire [31:0] w_camw_wstrb;
 wire        w_camw_wlast, w_camw_wvalid, w_camw_wready;
 wire [1:0]  w_camw_bresp;    wire w_camw_bvalid, w_camw_bready;
-// 两条通路各自的 0xA0~0xAC 握手字（{len,status,base,seq}）
-wire [31:0] w_ddr_seq, w_ddr_base, w_ddr_status, w_ddr_len;
+// B 路（CSI-2 B → DDR3）的 AXI 写口
+wire [28:0] w_camw_b_awaddr; wire [7:0] w_camw_b_awlen; wire [2:0] w_camw_b_awsize;
+wire [1:0]  w_camw_b_awburst;wire w_camw_b_awvalid, w_camw_b_awready;
+wire [255:0] w_camw_b_wdata; wire [31:0] w_camw_b_wstrb;
+wire        w_camw_b_wlast, w_camw_b_wvalid, w_camw_b_wready;
+wire [1:0]  w_camw_b_bresp;  wire w_camw_b_bvalid, w_camw_b_bready;
+// 两路各自的握手字（{len,status,base,seq}）
 wire [31:0] w_camddr_seq, w_camddr_base, w_camddr_status, w_camddr_len;
-wire [31:0] w_ddr_seq_m, w_ddr_base_m, w_ddr_status_m, w_ddr_len_m;
-// 相机直通的诊断（→ cam_stat[255:224] 与相机状态字的保留位）
-wire [15:0] w_camddr_lines, w_camddr_grp;
-wire        w_camddr_anom;
+wire [31:0] w_camddr_b_seq, w_camddr_b_base, w_camddr_b_status, w_camddr_b_len;
+// 两路各自的诊断（A → cam_stat[255:224] 即 0xD0；B → 0xD8）
+wire [15:0] w_camddr_lines, w_camddr_grp, w_camddr_b_lines, w_camddr_b_grp;
+wire        w_camddr_anom, w_camddr_b_anom;
+// 推帧引擎取哪一路（CTRL[8]）
+wire [31:0] w_push_ddr_seq, w_push_ddr_base, w_push_ddr_status, w_push_ddr_len;
 // 推帧引擎的「本帧字节数」：DDR 源按选中的写者给，ERAM 源按 fb 的 DATA_LEN 给
 wire [31:0] w_push_frame_bytes;
 
@@ -248,22 +208,20 @@ wire [127:0] img_push_ro;        // {tlp_cnt, err, status, done} → ep_bar_win 
 // 字面顺序必须与 ep_bar_win.v 头部那张表逐位一致（也是主机侧唯一口径）：
 //   0xCC=[127:96] TLP 数 / 0xC8=[95:64] 错误码 / 0xC4=[63:32] 状态 / 0xC0=[31:0] 已推帧数
 assign img_push_ro = {img_push_tlp, 24'd0, img_push_err, img_push_status, img_push_done};
-// ==== 【本步新增】推帧的 ERAM 源也共用 fb 那一个读口（fb[] 只允许一份读口）====
-//  DDR 搬运与推帧的 ERAM 源不会同时要口（验 ERAM 路时 ddr_en=0），
-//  所以这里就一条地址/请求二选一 + 授权按源切开，不再加第三份读口。
+// ==== 推帧的 ERAM 源与主机预取共用 fb 那一个读口（fb[] 只允许一份读口）====
+//  640x480 预览（fb[] → DDR3）从设计里移除后，fb 读口的 DMA 消费者只剩推帧的
+//  ERAM 源（CTRL[7]=1 那条调试源），所以不再需要对源做二选一。
 //  · src_act 由推帧引擎在每帧开头锁存（帧内不变）；
-//  · 两个消费者都看到同一条 rd2_data，不活跃的那个 grant=0，自己会忽略。
+//  · 主机预取的优先级仍由 img_frame_src 内部的仲裁给出。
 wire [31:0]  img_push_fb_addr;   // 推帧 ERAM 源的读地址
 wire         img_push_fb_req;    // 推帧 ERAM 源本拍想读一个字
 wire         img_push_src_act;   // 推帧本帧实际用的源（推帧引擎锁存后给出）
-wire         img_ddr_fb_grant;   // 授权细分：给 DDR 搬运
-wire         img_push_fb_grant;  // 授权细分：给推帧的 ERAM 源
-wire [31:0]  img_fb_dma_addr;    // 真正送到 img_frame_src 的地址（按源二选一）
-wire         img_fb_dma_req;     // 真正送到 img_frame_src 的请求
-assign img_fb_dma_addr   = img_push_src_act ? img_push_fb_addr : img_fb_rd2_addr;
-assign img_fb_dma_req    = img_push_src_act ? img_push_fb_req  : img_ddr_fb_req;
-assign img_ddr_fb_grant  = img_dma_grant & ~img_push_src_act;
-assign img_push_fb_grant = img_dma_grant &  img_push_src_act;
+wire         img_push_fb_grant;  // 读口授权（给推帧的 ERAM 源）
+wire [31:0]  img_fb_dma_addr;    // 真正送到 img_frame_src 的读地址
+wire         img_fb_dma_req;     // 真正送到 img_frame_src 的读请求
+assign img_fb_dma_addr   = img_push_fb_addr;
+assign img_fb_dma_req    = img_push_fb_req;
+assign img_push_fb_grant = img_dma_grant;
 // AXI4 读通道（u_ddr3_mc_0 的用户侧读口，本步从「常量 0」改成接推帧引擎）
 wire [3:0]   w_ddr_arid;
 wire [28:0]  w_ddr_araddr;
@@ -276,14 +234,18 @@ wire [255:0] w_ddr_rdata;
 wire [1:0]   w_ddr_rresp;
 wire         w_ddr_rlast, w_ddr_rvalid, w_ddr_rready;
 
-//  0xA0~0xAC 的源：按**实际选中**的写者二选一（sel_eff 同步到 tl 域）——
-//  两条通路各有自己的一组 seq/base/status/len，主机看到的必须与 DDR 里那一帧
-//  来自同一个写者，否则主机会拿着 A 路的序号去读 B 路的基址。
-assign w_ddr_seq_m    = w_sel_eff_fb ? w_camddr_seq    : w_ddr_seq;
-assign w_ddr_base_m   = w_sel_eff_fb ? w_camddr_base   : w_ddr_base;
-assign w_ddr_status_m = w_sel_eff_fb ? w_camddr_status : w_ddr_status;
-assign w_ddr_len_m    = w_sel_eff_fb ? w_camddr_len    : w_ddr_len;
-assign w_ddr_ro = {w_ddr_len_m, w_ddr_status_m, w_ddr_base_m, w_ddr_seq_m};
+//  0xA0~0xAC = A 路相机 writer 的握手字；0xE0~0xEC = B 路的（两路各一份，
+//  都有「整帧校验通过才发布」的语义，所以主机按序号变化取哪一路都安全）。
+//  A 路（0xA0~0xAC）、B 路（0xE0~0xEC）：同一套字序，各走一条汇聚总线给 ep_bar_win
+assign w_ddr_ro   = {w_camddr_len,   w_camddr_status,   w_camddr_base,   w_camddr_seq};
+assign w_ddr_ro_b = {w_camddr_b_len, w_camddr_b_status, w_camddr_b_base, w_camddr_b_seq};
+assign w_cam_diag_b = {w_camddr_b_lines, w_camddr_b_grp};
+
+// 推帧引擎的 DDR 源：按 CTRL[8] 取 A 路或 B 路那组握手字（准静态，帧内不变）
+assign w_push_ddr_seq    = img_cam_ab_sel ? w_camddr_b_seq    : w_camddr_seq;
+assign w_push_ddr_base   = img_cam_ab_sel ? w_camddr_b_base   : w_camddr_base;
+assign w_push_ddr_status = img_cam_ab_sel ? w_camddr_b_status : w_camddr_status;
+assign w_push_ddr_len    = img_cam_ab_sel ? w_camddr_b_len    : w_camddr_len;
 // ↑ 方向别写反：w_ddr_ro 是「汇聚到寄存器窗口的那条总线」，四个字是它的源。
 //   写反（assign {w_ddr_len,...} = w_ddr_ro;）会让这 128bit 整条悬空，
 //   TD 综合报 SYN-5013 Undriven net / SYN-5025 Using 0 for all undriven pins and nets，
@@ -293,7 +255,7 @@ assign w_ddr_ro = {w_ddr_len_m, w_ddr_status_m, w_ddr_base_m, w_ddr_seq_m};
 // 推帧引擎的「本帧字节数」：DDR 源用选中的那组 len；ERAM 源用 fb 的 DATA_LEN。
 // 这两个数都必须是 4KB 的整数倍（640x480 = 75x4096、4K = 2025x4096），否则
 // 推帧的 MWr 数/突发数不是整数（见 ddr_frame_pusher.v 端口说明）。
-assign w_push_frame_bytes = img_push_src ? img_data_len : w_ddr_len_m;
+assign w_push_frame_bytes = img_push_src ? img_data_len : w_push_ddr_len;
 
     // clock and reset signals
     wire                          tl_clk_gate                             ;
@@ -672,6 +634,11 @@ pcie_ep_engine #(
     ,.img_dbg_rd_idx                          (img_dbg_idx                            ),
     .cam_stat_bus                            (w_cam_stat                             ),
     .cam_tap_cfg                             (cam_tap_cfg                            ),
+    .cam_tap_b_cfg                           (cam_tap_b_cfg                          ),
+    .cam_ab_sel                              (img_cam_ab_sel                         ),
+    .ddr_ro_b                                (w_ddr_ro_b                             ),
+    .cam_drop_a                              (w_camddr_drop_a                        ),
+    .cam_diag_b                              (w_cam_diag_b                           ),
     // DDR3 整帧搬运（CTRL[5] + 只读握手字 + fb 读口仲裁）
     .img_ctrl_ddr_en                         (img_ddr_en                             ),
     .img_ddr_ro                              (w_ddr_ro                               ),
@@ -820,16 +787,7 @@ img_frame_src #(
     .height    (img_height      ),
     .data_len  (img_data_len    ),
     .ready     (img_ready       ),
-    .busy      (img_busy        ),
-    // 相机写源（cam_fb_writer）
-    .cam_sel       (img_cam_sel      ),
-    .cam_wr_en     (cam_fb_wr_en     ),
-    .cam_wr_addr   (cam_fb_wr_addr   ),
-    .cam_wr_data   (cam_fb_wr_data   ),
-    .cam_frame_cnt (cam_fb_frame_cnt ),
-    .cam_data_len  (cam_fb_data_len  ),
-    .cam_ready     (cam_fb_ready     ),
-    .cam_busy      (cam_fb_busy      )
+    .busy      (img_busy        )
 );
 
 assign  ubus_bken_logic = ubus_bken_logic_dly ;
@@ -980,8 +938,7 @@ assign  debug_led[3] = ltssm_reg_dly[4];
 // ====================================================================
 //  摄像头通路（本移植新增）：2x IMX415 + MIPI CSI-2 软 PHY
 //  说明：本步只把“传感器是否起来”通过 PCIe 寄存器暴露出来（0x80~0x94），
-//        像素数据由 cam_fb_writer 接进帧缓存（CTRL[4]=1 时接管写口）。
-//        跨时钟域：慢变电平 + toggle 计数（状态字），像素走 cam_fb_writer 的异步 FIFO。
+//        跨时钟域：慢变电平 + toggle 计数（状态字），像素走各 writer 内部的异步 FIFO。
 // ====================================================================
     // ====================================================================
     //  传感器 MCLK（12.5MHz）+ 上电 / 重触发时序
@@ -1038,10 +995,6 @@ assign  debug_led[3] = ltssm_reg_dly[4];
     // CSI 接收器复位：上电计数器一走就放开（原先漏声明 → TD 当悬空网络 → PHY 常复位）
     reg        r_rst_n      = 1'b0;
     always @(posedge tl_clk_user) r_rst_n <= (r_pwr_cnt2 > 23'd1000);
-
-    // cam_fb_writer 的复位：PCIe 上电复位 或 XCLR 拉低期间
-    //   （两者都让异步 FIFO 的写侧与读侧指针同时归零，不会只复位一半）
-    wire       w_cam_fb_rst = power_on_rst_dly | ~r_rst_n_slow;
 
     // ---- (a) 62.5MHz → 12.5MHz（旧分频器：acc+2、>=5 时 -3 并翻转，默认）----
     //   半周期 2/3 拍交替 → 输出周期恒 80ns、瞬时占空 40/60（无周期抖动）
@@ -1131,8 +1084,8 @@ assign  debug_led[3] = ltssm_reg_dly[4];
         .I_clk_pad_hs_n     (mipi_b_clk_hs_n ),
         .I_data_pad_hs_p    (mipi_b_data_hs_p),
         .I_data_pad_hs_n    (mipi_b_data_hs_n),
-        .I_manual_delay     (cam_tap_cfg[5:0]),
-        .I_manual_en        (cam_tap_cfg[6]),
+        .I_manual_delay     (cam_tap_b_cfg[5:0]),
+        .I_manual_en        (cam_tap_b_cfg[6]),
         .O_byte_clk         (w_b_byte_clk),
         .O_rst_out          (w_b_rst_out ),
         .O_lane_valid       (w_b_lane_valid),
@@ -1147,53 +1100,7 @@ assign  debug_led[3] = ltssm_reg_dly[4];
         .O_pixel_valid      (w_b_pixel_valid)
     );
 
-    // ====================================================================
-    //  相机像素 → 帧缓存写口（本移植新增）
-    //
-    //  接 A 路（本板实测锁定的就是 A 路；帧缓存只有一份，B 路 FPGA 侧未接）。
-    //  信号/时序约定逐条写在 rtl/ep_side/img/cam_fb_writer.v 头部：
-    //    w_a_pixel/w_a_pixel_valid : 1 拍 = 1 组 = RAW10 的 4 个像素
-    //    w_a_vsync                 : 1 拍脉冲 = FS  → SOF（复位写指针 + 写帧号）
-    //    w_a_in_frame              : 电平，下降沿 = FE → EOF（置帧完成）
-    //    w_a_in_line               : 每行 1 拍脉冲（长包头）→ 行号 +1 / 列归零
-    //  写口在 img_frame_src 内按 CTRL[4]（img_cam_sel）在两种写源之间 mux。
-    // ====================================================================
-    cam_fb_writer #(
-        .W         (IMG_W),
-        .H         (IMG_H),
-        .AW        (17),
-        .X0        (CAM_X0),
-        .Y0        (CAM_Y0),
-        .SKIP_ROWS (CAM_SKIP_ROWS),
-        .FIFO_AW   (9)
-    ) u_cam_fb_writer (
-        .cam_clk       (w_a_byte_clk    ),
-        .cam_rst_n     (w_a_rst_out     ),
-        .cam_vsync     (w_a_vsync       ),
-        .cam_in_frame  (w_a_in_frame    ),
-        .cam_in_line   (w_a_in_line     ),
-        .cam_pix       (w_a_pixel       ),
-        .cam_pix_valid (w_a_pixel_valid ),
 
-        .clk           (tl_clk_user     ),
-        // 重触发（CTRL[4:3] 变化）时 XCLR 会被拉低 134ms：让 cam_fb_writer 的
-        // tl 侧与字节侧同时复位，避免只复位一半导致异步 FIFO 写/读指针错位
-        .rst           (w_cam_fb_rst    ),
-
-        .fb_wr_en      (cam_fb_wr_en     ),
-        .fb_wr_addr    (cam_fb_wr_addr   ),
-        .fb_wr_data    (cam_fb_wr_data   ),
-
-        .frame_cnt     (cam_fb_frame_cnt ),
-        .data_len      (cam_fb_data_len  ),
-        .ready         (cam_fb_ready     ),
-        .busy          (cam_fb_busy      ),
-        .frame_done    (cam_fb_frame_done),
-
-        .wr_word_cnt   (cam_fb_wr_word_cnt),
-        .drop_cnt      (cam_fb_drop_cnt   ),
-        .ovf_cnt       (cam_fb_ovf_cnt    )
-    );
 
     ui_cfg_imx415 #(.CLK_DIV(16'd624)) u_cfg_a (
         .I_clk         (tl_clk_user   ),
@@ -1234,6 +1141,19 @@ assign  debug_led[3] = ltssm_reg_dly[4];
         s_a_sda <= {s_a_sda[1:0], cam_a_sda};
         s_b_scl <= {s_b_scl[1:0], cam_b_scl};
         s_b_sda <= {s_b_sda[1:0], cam_b_sda};
+    end
+
+    // ---- I2C 是否至少 NACK 过一次（粘滞，重触发时清零）----
+    //   ui_i2c 的 O_iic_bus_error 是「当前这笔没 ACK」的瞬时标志，iic_req 一撤就被清，
+    //   事后读它等于没读（所以 B 路状态字的 bus_err=0 证明不了 B 上有摄像头）。
+    //   这里各自粘滞一位：置上就说明这一路的 I2C 至少有一次没等到 ACK。
+    reg r_a_i2c_nack = 1'b0, r_b_i2c_nack = 1'b0;
+    always @(posedge tl_clk_user) begin
+        if (w_sel_chg) begin r_a_i2c_nack <= 1'b0; r_b_i2c_nack <= 1'b0; end
+        else begin
+            if (w_a_bus_err) r_a_i2c_nack <= 1'b1;
+            if (w_b_bus_err) r_b_i2c_nack <= 1'b1;
+        end
     end
 
     // ---- I2C 状态机进度（跨到 tl 域只做电平同步，慢变量）----
@@ -1296,8 +1216,11 @@ assign  debug_led[3] = ltssm_reg_dly[4];
     // 状态字：bit0 字节时钟在跑 | [4:1] lane_valid | 5 cfg_done | 6 bus_err
     //         7 auto_delay_done | 8 in_frame | 9 in_line | 10 收到过像素
     //         bit15 = 相机直通通路丢过组/标记（cam_ddr_writer.dbg_anomaly，只增不减）
-    //         [14:11] img_pattern={CTRL[4]=cam_sel, CTRL[2]=重触发}
+    //         [14:11] img_pattern={CTRL[3:2] 的取值历史，含 CTRL[2]=重触发}
+    //         [11]    = 当前 AXI 写口授权给哪一路（0 = A，1 = B；ddr_wr_arb 的 grant）
     //                            历史出现过的取值（每出现一次置 1 位，只增不减，诊断 CTRL 写的毛刺）
+    //         [15] = **B 路 I2C 曾经没等到 ACK**（粘滞，重触发清零）—— 用来区分
+    //                「B 口上根本没摄像头 / 地址型号不对」与「有摄像头但链路没锁」
     //         [21:16] tap | 22 xclr 已放开 | 23 csi_rst_n | 24/25 SCL/SDA 电平 | [31:26]=110011
     //  其中原来紧跟 s_a_tap 的那个保留 0（bit15）现在放「相机 4K 直通通路是否丢过
     //  像素组/标记」（cam_ddr_writer 的 dbg_anomaly，只增不减）：一眼就能看出
@@ -1306,15 +1229,16 @@ assign  debug_led[3] = ltssm_reg_dly[4];
                                 s_a_tap, w_camddr_anom, r_mode_hits, r_a_pv_seen, w_a_in_line, w_a_in_frame,
                                 s_a_cfg[1], s_a_cfg[2], s_a_cfg[0], s_a_lane, r_a_bclk_seen};
     wire [31:0] w_cam_b_stat = {6'b110011, s_b_sda[2], s_b_scl[2], r_rst_n, r_rst_n_slow,
-                                s_b_tap, 5'd0, r_b_pv_seen, w_b_in_line, w_b_in_frame,
+                                s_b_tap, 3'd0, w_wr_grant, r_b_i2c_nack, r_b_pv_seen,
+                                w_b_in_line, w_b_in_frame,
                                 s_b_cfg[1], s_b_cfg[2], s_b_cfg[0], s_b_lane, r_b_bclk_seen};
-    // 0x98 中段 8 位（由原来的 8'd0 改成诊断位）：
-    //   [8:5] r_reinit_cnt | [4] 去抖后的 CTRL[2] | [3] 0 | [2] r_rst_n_slow(XCLR)
+    //  0x98 中段 8 位（由原来的 8'd0 改成诊断位）：
+    //   [8:5] r_reinit_cnt | [4] 去抖后的 CTRL[2] | [3] A 路 I2C 曾 NACK | [2] r_rst_n_slow(XCLR)
     //   | [1] 0
     //  [255:224] 原来是保留 0，现在放相机直通通路的诊断字（0xD0 读它）：
     //    {lines_per_frame[15:0], max_grp_per_line[15:0]}
     assign w_cam_stat = {{w_camddr_lines, w_camddr_grp},
-                         {r_pwr_cnt2, r_reinit_cnt, r_mclk_sel_f, 1'b0, r_rst_n_slow, 1'b0, w_a_i2c_busy},
+                         {r_pwr_cnt2, r_reinit_cnt, r_mclk_sel_f, r_a_i2c_nack, r_rst_n_slow, 1'b0, w_a_i2c_busy},
                               r_b_pix, r_a_pix, r_b_frames, r_a_frames,
                               w_cam_b_stat, w_cam_a_stat};
 
@@ -1365,14 +1289,15 @@ assign  debug_led[3] = ltssm_reg_dly[4];
 //      · ecc_err_*、ctl_ram_* 等输出本步不使用，留空（与厂商例程
 //        ddrmc_test_top 的接法一致）。
 //
-//  (5) 【本步新增】用户侧 AXI 写通道接 ddr_frame_writer（整帧搬进 DDR3）：
-//      · 写通道（aw/w/b）从「常量 0」改成 ddr_frame_writer 的输出；
+//  (5) 【本步新增】用户侧 AXI 写通道接相机整帧搬运（整帧搬进 DDR3）：
+//      · 写通道（aw/w/b）从「常量 0」改成 ddr_wr_arb 的输出，客户机是 A/B 两片
+//        cam_ddr_writer；
 //        读通道仍完全不接（arvalid=0，rready=1）。
 //      · ddrphy_rdy 接出来当 DDR_STATUS.bit4（校准完成）—— 板子上一眼就能看出
 //        DDR 到底有没有起来，比只看握手卡住强。
-//      · ddr_frame_writer 的片内侧时钟/复位是 tl_clk_user / power_on_rst_dly，
+//      · cam_ddr_writer 的片内侧时钟/复位是 tl_clk_user / power_on_rst_dly，
 //        AXI 侧是 dhi_clk / ddrphy_rst_n，跨域全部走异步 FIFO + 2 级同步器
-//        （见 rtl/ep_side/ddr/ddr_frame_writer.v 头部）。
+//        （见 rtl/ep_side/ddr/cam_ddr_writer.v 头部）。
 // ====================================================================
 // 注意：IP 的 apb_pclk 与 cfg_clk 是同一个物理时钟的两个输出端口，
 //       不能同时接到一条 wire（会变成双驱动），这里只取 cfg_clk 一路。
@@ -1458,80 +1383,20 @@ ddr3_mc_0 u_ddr3_mc_0 (
     .ddr_dm         (ddr_dm              )
 );
 
-// ====================================================================
-//  整帧搬运到 DDR3（ddr_frame_writer，本移植新增）
-//
-//  触发：写源 mux 之后的帧计数器 img_frame_cnt 一变（= 一帧已整帧写好进 fb[]），
-//        且 CTRL[5]（img_ddr_en）为 1、DDR 用户侧已出复位。
-//  数据：img_frame_src 的帧缓存读口（img_fb_rd2_addr/data）逐字读、
-//        8 个字拼 256bit 一拍，过异步 FIFO 到 dhi_clk 域，每 4KB 一个 AXI 突发。
-//        那个读口只有一份，主机读 0x60 的预取也在用 → 仲裁在 img_frame_src 里：
-//        主机的预取一「脏」（刚换过 ptr）就把口还给主机，
-//        其余时间给本搬运。没有采用「再加一个读口」的原因见 img_frame_src 头部。
-//  双缓冲：帧号奇偶 → DDR_FRAME_BASE0 / DDR_FRAME_BASE1。
-//  握手：wr_frame_seq / wr_base / wr_status / wr_len → ep_bar_win 0xA0~0xAC。
-//        只有整帧的写响应全部收齐（且无撕裂、无非 OKAY）才发布序号，
-//        所以主机读到序号变化时，那一帧在 DDR 里一定是完整的。
-//  撕裂保护：搬运期间 fb 又被新一帧写入（img_busy）则本帧不发布、err_cnt+1。
-// ====================================================================
-ddr_frame_writer #(
-    .W           (IMG_W             ),
-    .H           (IMG_H             ),
-    .BASE0       (DDR_FRAME_BASE0   ),
-    .BASE1       (DDR_FRAME_BASE1   ),
-    .FIFO_AW     (5                 ),
-    .BURST_BEATS (128               )
-) u_ddr_frame_writer (
-    .clk_fb        (tl_clk_user       ),
-    .rst_fb        (power_on_rst_dly ),
-    // ddr_en 再叠一个「本路没被相机直通顶掉」：选中相机直通时这条通路必须停手，
-    // 否则它会去抢那个唯一的 AXI 写口（mux 只在两边空闲时换手，抢起来就是互相等）
-    .ddr_en        (img_ddr_en & ~w_sel_eff_fb),
-    .axi_busy      (w_ddrw_busy       ),
-    .fb_frame_cnt  (img_frame_cnt    ),
-    .fb_busy       (img_busy         ),
-    .fb_rd_addr    (img_fb_rd2_addr  ),
-    .fb_rd_data    (img_fb_rd2_data  ),
-    .fb_req        (img_ddr_fb_req   ),
-    .fb_grant      (img_ddr_fb_grant ),
 
-    .clk_ddr       (w_ddr_dhi_clk     ),
-    .rst_ddr       (~w_ddrphy_rst_n   ),
-    .ddr_cal_done  (w_ddrphy_rdy      ),
-
-    .m_axi_awaddr  (w_ddrw_awaddr    ),
-    .m_axi_awlen   (w_ddrw_awlen     ),
-    .m_axi_awsize  (w_ddrw_awsize    ),
-    .m_axi_awburst (w_ddrw_awburst   ),
-    .m_axi_awvalid (w_ddrw_awvalid   ),
-    .m_axi_awready (w_ddrw_awready   ),
-    .m_axi_wdata   (w_ddrw_wdata     ),
-    .m_axi_wstrb   (w_ddrw_wstrb     ),
-    .m_axi_wlast   (w_ddrw_wlast     ),
-    .m_axi_wvalid  (w_ddrw_wvalid    ),
-    .m_axi_wready  (w_ddrw_wready    ),
-    .m_axi_bresp   (w_ddrw_bresp     ),
-    .m_axi_bvalid  (w_ddrw_bvalid    ),
-    .m_axi_bready  (w_ddrw_bready    ),
-
-    .wr_frame_seq  (w_ddr_seq         ),
-    .wr_base       (w_ddr_base        ),
-    .wr_status     (w_ddr_status      ),
-    .wr_len        (w_ddr_len         )
-);
 
 // ====================================================================
-//  相机 4K 直通 DDR3（cam_ddr_writer，本步新增）
+//  相机 4K 直通 DDR3（cam_ddr_writer ×2，A/B 各一片）
 //
 //  数据：CSI-2 字节时钟域的像素（1 拍 = 4 像素）→ 窗口裁剪/组字 → 异步 FIFO
 //        → dhi_clk 域攒 256bit 拍 → 每 4KB 一个 AXI4 突发写 DDR3。
-//        与 fb[] 那条通路完全无关（片内装不下 4K，见文件头「为什么」）。
-//  触发：CTRL[3]（cam_ddr_sel）+ CTRL[4]（cam_sel）+ CTRL[5]（ddr_en）都为 1
-//        时，w_cam_ddr_want=1；真正换到本路之后 arm=1，相机的下一帧开始采集。
-//  ARM 的来路：arm 直接取 w_sel_eff（ddr 域），模块内部再同步到字节域；
-//        没被选中时它连帧都不收（不会把 FIFO 灌满、也不会去抢 AXI 写口）。
-//  握手：0xA0~0xAC 与老通路二选一（见上面的 w_ddr_*_m）。
-//  诊断：0xD0 = {lines_per_frame, max_grp_per_line}，用来上板量真实行宽/帧高。
+//        片内 fb[] 装不下 4K（300 块 ERAM20K = 768000B < 8294400B），所以相机
+//        像素不走帧缓存，直接搬进 DDR3。
+//  触发：CTRL[5]（ddr_en）为 1 时两片都 armed（w_cam_ddr_want），相机下一帧开始采集；
+//        没 armed 时连帧都不收（不会把 FIFO 灌满、也不会去抢 AXI 写口）。
+//  两路：A 用 w_a_*（MIPI A 路字节时钟/复位），B 用 w_b_*，各在自己的字节时钟域；
+//        基址、握手字、诊断各一套（A: 0xA0~0xAC / 0xD0，B: 0xE0~0xEC / 0xD8）。
+//  写口：只有一个（u_ddr3_mc_0），由 ddr_wr_arb 在两路之间按突发轮流放行。
 // ====================================================================
 cam_ddr_writer #(
     .W           (CAMDDR_W          ),
@@ -1562,11 +1427,12 @@ cam_ddr_writer #(
     .dbg_lines_per_frame  (w_camddr_lines),
     .dbg_max_grp_per_line (w_camddr_grp  ),
     .dbg_anomaly          (w_camddr_anom ),
+    .dbg_drop             (w_camddr_drop_a ),
 
     .clk_ddr       (w_ddr_dhi_clk     ),
     .rst_ddr       (~w_ddrphy_rst_n   ),
     .ddr_cal_done  (w_ddrphy_rdy      ),
-    .arm           (w_sel_eff         ),
+    .arm           (w_cam_ddr_want    ),
     .axi_busy      (w_camw_busy       ),
 
     .m_axi_awaddr  (w_camw_awaddr     ),
@@ -1585,39 +1451,77 @@ cam_ddr_writer #(
     .m_axi_bready  (w_camw_bready     )
 );
 
-// ---- AXI 写口二选一 + 选择位跨域（ddr_wr_mux 的说明见该文件头部）----
-//  意图（tl 域）→ 2 级同步 → ddr 域的 req → mux 在两边空闲时落实到 sel_eff
-//  → sel_eff 再 2 级同步回 tl 域给握手 mux / ddr_en 用。
-//  全部是准静态电平，只有换手那一次会变，延迟几个周期无所谓。
-reg w_sel_req_s1, w_sel_req_s2, w_sel_eff_s1, w_sel_eff_s2;
-always @(posedge w_ddr_dhi_clk) begin
-    w_sel_req_s1 <= w_cam_ddr_want;
-    w_sel_req_s2 <= w_sel_req_s1;
-    w_sel_eff_s1 <= w_sel_eff;
-    w_sel_eff_s2 <= w_sel_eff_s1;
-end
-assign w_sel_req_d  = w_sel_req_s2;
-assign w_sel_eff_fb = w_sel_eff_s2;
+cam_ddr_writer #(
+    .W           (CAMDDR_W          ),
+    .H           (CAMDDR_H          ),
+    .X0          (CAMDDR_X0         ),
+    .Y0          (CAMDDR_Y0         ),
+    .SKIP_ROWS   (CAMDDR_SKIP_ROWS  ),
+    .BASE0       (DDR_CAM_B_BASE0   ),
+    .BASE1       (DDR_CAM_B_BASE1   ),
+    .FIFO_AW     (10                ),
+    .BURST_BEATS (128               )
+) u_cam_ddr_writer_b (
+    .cam_clk       (w_b_byte_clk    ),
+    .cam_rst_n     (w_b_rst_out     ),
+    .cam_vsync     (w_b_vsync       ),
+    .cam_in_frame  (w_b_in_frame    ),
+    .cam_in_line   (w_b_in_line     ),
+    .cam_pix       (w_b_pixel       ),
+    .cam_pix_valid (w_b_pixel_valid ),
 
-ddr_wr_mux u_ddr_wr_mux (
+    .clk_fb        (tl_clk_user       ),
+    .rst_fb        (power_on_rst_dly ),
+    .wr_frame_seq  (w_camddr_b_seq    ),
+    .wr_base       (w_camddr_b_base   ),
+    .wr_status     (w_camddr_b_status ),
+    .wr_len        (w_camddr_b_len    ),
+
+    .dbg_lines_per_frame  (w_camddr_b_lines),
+    .dbg_max_grp_per_line (w_camddr_b_grp  ),
+    .dbg_anomaly          (w_camddr_b_anom ),
+
+    .clk_ddr       (w_ddr_dhi_clk     ),
+    .rst_ddr       (~w_ddrphy_rst_n   ),
+    .ddr_cal_done  (w_ddrphy_rdy      ),
+    .arm           (w_cam_ddr_want    ),
+    .axi_busy      (w_camw_busy_b     ),
+
+    .m_axi_awaddr  (w_camw_b_awaddr   ),
+    .m_axi_awlen   (w_camw_b_awlen    ),
+    .m_axi_awsize  (w_camw_b_awsize   ),
+    .m_axi_awburst (w_camw_b_awburst  ),
+    .m_axi_awvalid (w_camw_b_awvalid  ),
+    .m_axi_awready (w_camw_b_awready  ),
+    .m_axi_wdata   (w_camw_b_wdata    ),
+    .m_axi_wstrb   (w_camw_b_wstrb    ),
+    .m_axi_wlast   (w_camw_b_wlast    ),
+    .m_axi_wvalid  (w_camw_b_wvalid   ),
+    .m_axi_wready  (w_camw_b_wready   ),
+    .m_axi_bresp   (w_camw_b_bresp    ),
+    .m_axi_bvalid  (w_camw_b_bvalid   ),
+    .m_axi_bready  (w_camw_b_bready   )
+);
+
+// ---- A/B 两路共用一个 AXI 写口（仲裁策略与死锁分析见 ddr_wr_arb.v 头部）----
+ddr_wr_arb u_ddr_wr_arb (
     .clk       (w_ddr_dhi_clk    ),
     .rst       (~w_ddrphy_rst_n  ),
-    .sel_req   (w_sel_req_d      ),
-    .busy0     (w_ddrw_busy      ),
-    .busy1     (w_camw_busy      ),
-    .sel_out   (w_sel_eff        ),
-    .a0_awaddr (w_ddrw_awaddr    ), .a0_awlen (w_ddrw_awlen),
-    .a0_awsize (w_ddrw_awsize    ), .a0_awburst (w_ddrw_awburst),
-    .a0_awvalid(w_ddrw_awvalid   ), .a0_awready (w_ddrw_awready),
-    .a0_wdata  (w_ddrw_wdata     ), .a0_wstrb (w_ddrw_wstrb),
-    .a0_wlast  (w_ddrw_wlast     ), .a0_wvalid (w_ddrw_wvalid), .a0_wready (w_ddrw_wready),
-    .a0_bresp  (w_ddrw_bresp     ), .a0_bvalid (w_ddrw_bvalid), .a0_bready (w_ddrw_bready),
-    .a1_awaddr (w_camw_awaddr    ), .a1_awlen (w_camw_awlen),
-    .a1_awsize (w_camw_awsize    ), .a1_awburst (w_camw_awburst),
-    .a1_awvalid(w_camw_awvalid   ), .a1_awready (w_camw_awready),
-    .a1_wdata  (w_camw_wdata     ), .a1_wstrb (w_camw_wstrb),
-    .a1_wlast  (w_camw_wlast     ), .a1_wvalid (w_camw_wvalid), .a1_wready (w_camw_wready),
-    .a1_bresp  (w_camw_bresp     ), .a1_bvalid (w_camw_bvalid), .a1_bready (w_camw_bready),
+    .busy0     (w_camw_busy      ),
+    .busy1     (w_camw_busy_b    ),
+    .grant_out (w_wr_grant       ),
+    .a0_awaddr (w_camw_awaddr    ), .a0_awlen (w_camw_awlen),
+    .a0_awsize (w_camw_awsize    ), .a0_awburst (w_camw_awburst),
+    .a0_awvalid(w_camw_awvalid   ), .a0_awready (w_camw_awready),
+    .a0_wdata  (w_camw_wdata     ), .a0_wstrb (w_camw_wstrb),
+    .a0_wlast  (w_camw_wlast     ), .a0_wvalid (w_camw_wvalid), .a0_wready (w_camw_wready),
+    .a0_bresp  (w_camw_bresp     ), .a0_bvalid (w_camw_bvalid), .a0_bready (w_camw_bready),
+    .a1_awaddr (w_camw_b_awaddr  ), .a1_awlen (w_camw_b_awlen),
+    .a1_awsize (w_camw_b_awsize  ), .a1_awburst (w_camw_b_awburst),
+    .a1_awvalid(w_camw_b_awvalid ), .a1_awready (w_camw_b_awready),
+    .a1_wdata  (w_camw_b_wdata   ), .a1_wstrb (w_camw_b_wstrb),
+    .a1_wlast  (w_camw_b_wlast   ), .a1_wvalid (w_camw_b_wvalid), .a1_wready (w_camw_b_wready),
+    .a1_bresp  (w_camw_b_bresp   ), .a1_bvalid (w_camw_b_bvalid), .a1_bready (w_camw_b_bready),
     .m_awaddr  (w_ddr_awaddr     ), .m_awlen (w_ddr_awlen),
     .m_awsize  (w_ddr_awsize     ), .m_awburst (w_ddr_awburst),
     .m_awvalid (w_ddr_awvalid    ), .m_awready (w_ddr_awready),
@@ -1634,7 +1538,7 @@ ddr_wr_mux u_ddr_wr_mux (
 //    · 0（默认）：u_ddr3_mc_0 的 AXI4 读通道，每 4KB 一个突发，
 //      读进 256bit×128 拍的异步 FIFO，过到 tl_clk_user 域；
 //    · 1：【本步新增】直接读片内 ERAM 帧缓存（img_frame_src 的 fb[]），8 个字
-//      拼一拍（与 ddr_frame_writer 拼法逐字相同），完全不碰 DDR。
+//      拼一拍（8 个字拼一个 256bit 拍），完全不碰 DDR。
 //      用途：先把「EP 主动把整帧写进 RK 内存」这条 DMA 单独验通。
 //      读口就是 fb 那唯一一份（与主机预取 / DDR 搬运共用，见上面 img_frame_src
 //      例化处的源二选一）；验 ERAM 路时把 ddr_en（CTRL[5]）留 0，两边不抢口。
@@ -1684,9 +1588,9 @@ ddr_frame_pusher #(
     .st_tlp_cnt    (img_push_tlp     ),
 
     .frame_bytes   (w_push_frame_bytes),
-    .ddr_seq       (w_ddr_seq_m       ),
-    .ddr_base      (w_ddr_base_m      ),
-    .ddr_status    (w_ddr_status_m    ),
+    .ddr_seq       (w_push_ddr_seq    ),
+    .ddr_base      (w_push_ddr_base   ),
+    .ddr_status    (w_push_ddr_status  ),
 
     .utx_sel       (utx_sel           ),
     .tl_tx_wait    (tl_tx_wait        ),

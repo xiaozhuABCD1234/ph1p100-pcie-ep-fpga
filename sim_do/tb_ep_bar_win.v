@@ -37,9 +37,11 @@ module tb_ep_bar_win;
     wire [255:0] mrdata_rd_data;
     wire [6:0]   memrd_addr_lo;
     wire [6:0]   cam_tap_cfg;
+    wire [6:0]   cam_tap_b_cfg;
     wire         ctrl_enable, ctrl_trigger, ctrl_ddr_en, ctrl_push_en, ctrl_push_src;
     reg  [255:0] cam_stat_r = 256'h0;   // 相机状态字（0xD0 读它的 [255:224]）
-    wire [2:0]   ctrl_pattern;   // bit2=CTRL[3] cam_ddr_sel / bit1=CTRL[4] cam_sel / bit0=CTRL[2]
+    wire [1:0]   ctrl_pattern;   // {CTRL[3], CTRL[2]}（测试图源图案，[0] 兼作重触发）
+    wire         cam_ab_sel;      // CTRL[8]：A/B 路选择
     wire [31:0]  push_dst_lo, push_dst_hi, push_db_lo, push_db_hi;
     wire         host_rd_prio;
     wire         host_grant = 1'b1;
@@ -69,6 +71,8 @@ module tb_ep_bar_win;
         .rx_sop_ff(rx_sop_ff), .rx_data_ff(rx_data_ff),
         .mrdata_rd_data(mrdata_rd_data), .memrd_addr_lo(memrd_addr_lo),
         .cam_tap_cfg(cam_tap_cfg),
+        .cam_tap_b_cfg(cam_tap_b_cfg),
+        .cam_ab_sel(cam_ab_sel),
         .ctrl_enable(ctrl_enable), .ctrl_trigger(ctrl_trigger),
         .ctrl_pattern(ctrl_pattern),
         .ctrl_ddr_en(ctrl_ddr_en), .ddr_ro(ddr_ro),
@@ -154,26 +158,47 @@ module tb_ep_bar_win;
         cam_stat_r[255:224] = 32'h0;
 
         // ---- 0x44 CTRL：位域与读回 ----
-        tlp_wr(12'h44, 32'h0000_00D1);                  // enable|cam_sel|push_en|push_src
-        tlp_rd(12'h44, v); check("0x44 CTRL     ", v, 32'h0000_00D1);
+        //  位义（见 ep_bar_win.v 头部表）：bit0 enable / bit1 trigger(自清) /
+        //  [3:2] pattern / bit3,bit4 保留 / bit5 ddr_en / bit6 push_en /
+        //  bit7 push_src / bit8 cam_ab
+        tlp_wr(12'h44, 32'h0000_00C1);                  // enable|push_en|push_src（不含 bit5 ddr_en）
+        tlp_rd(12'h44, v); check("0x44 CTRL      ", v, 32'h0000_00C1);
         if (ctrl_enable !== 1'b1)    begin $display("ERROR: CTRL bit0 enable 没生效"); errors=errors+1; end
-        if (ctrl_pattern[1] !== 1'b1) begin $display("ERROR: CTRL bit4 cam_sel 没送到 ctrl_pattern[1]"); errors=errors+1; end
-        // CTRL[3] = cam_ddr_sel（相机 4K 直通 DDR3 的选择位）也要送到 ctrl_pattern[2]
-        if (ctrl_pattern[2] !== 1'b0) begin $display("ERROR: CTRL bit3 cam_ddr_sel 没送到 ctrl_pattern[2]（默认应为 0）"); errors=errors+1; end
         if (ctrl_push_en !== 1'b1)   begin $display("ERROR: CTRL bit6 push_en 没生效"); errors=errors+1; end
         if (ctrl_push_src !== 1'b1)  begin $display("ERROR: CTRL bit7 push_src 没生效"); errors=errors+1; end
-        // bit1 trigger 是单拍脉冲（下一拍自动清）
+        if (cam_ab_sel !== 1'b0)     begin $display("ERROR: CTRL bit8 默认应为 0（A 路）"); errors=errors+1; end
+        if (ctrl_ddr_en !== 1'b0)    begin $display("ERROR: CTRL bit5 ddr_en 应为 0"); errors=errors+1; end
+        // CTRL[3:2] 原样送出（0x1E1 的 bit3:2 = 00）
+        if (ctrl_pattern[1:0] !== 2'b00) begin $display("ERROR: CTRL bit3:2 没送到 ctrl_pattern"); errors=errors+1; end
+        tlp_wr(12'h44, 32'h0000_01ED);                  // 再加 bit5 ddr_en + bit3:2=11 + bit8 cam_ab
+        tlp_rd(12'h44, v); check("0x44 CTRL pat  ", v, 32'h0000_01ED);
+        if (ctrl_pattern[1:0] !== 2'b11) begin $display("ERROR: CTRL bit3:2=11 没送到 ctrl_pattern"); errors=errors+1; end
+        if (ctrl_ddr_en !== 1'b1)    begin $display("ERROR: CTRL bit5 ddr_en 没生效"); errors=errors+1; end
+        if (cam_ab_sel !== 1'b1)     begin $display("ERROR: CTRL bit8 cam_ab 没送到 cam_ab_sel"); errors=errors+1; end
+        tlp_wr(12'h44, 32'h0000_00ED);                  // 清 bit8（cam_ab 回 A 路）
+        tlp_rd(12'h44, v); check("0x44 CTRL clr  ", v, 32'h0000_00ED);
+        if (cam_ab_sel !== 1'b0)     begin $display("ERROR: CTRL bit8 cam_ab 清不掉"); errors=errors+1; end
+        // bit4 是保留位：写 1 不该读回 1（bit3 是 pattern 高位，读回应保留）
+        tlp_wr(12'h44, 32'h0000_0019);
+        tlp_rd(12'h44, v); check("0x44 CTRL rsvd ", v, 32'h0000_0009);
+
         tlp_wr(12'h44, 32'h0000_0042);                  // trigger + push_en
-        repeat (2) @(negedge clk);
+        tlp_rd(12'h44, v); check("0x44 CTRL trig ", v, 32'h0000_0040);
         if (ctrl_trigger !== 1'b0) begin $display("ERROR: CTRL bit1 trigger 没自动清"); errors=errors+1; end
 
-        // ---- 0x5C / 0x6C / 0x9C 读写 ----
+        // ---- 0x5C / 0x6C / 0x9C / 0xD4 读写 ----
         tlp_wr(12'h5C, 32'h0000_1000);
         tlp_rd(12'h5C, v); check("0x5C PTR      ", v, 32'h0000_1000);
         tlp_wr(12'h6C, 32'h1234_5678);
         tlp_rd(12'h6C, v); check("0x6C SCRATCH  ", v, 32'h1234_5678);
         tlp_wr(12'h9C, 32'h0000_0026);
         tlp_rd(12'h9C, v); check("0x9C CAM_TAP  ", v, 32'h0000_0026);
+        // 0xD4 = B 路 tap：与 A 路各自独立（A/B 眼图不同必须分开配）
+        tlp_wr(12'hD4, 32'h0000_0041);
+        tlp_rd(12'hD4, v); check("0xD4 CAM_B_TAP", v, 32'h0000_0041);
+        tlp_rd(12'h9C, v); check("0xD4 写后 A 路不变", v, 32'h0000_0026);
+        if (cam_tap_cfg !== 7'h26) begin $display("ERROR: cam_tap_cfg 应为 7'h26"); errors=errors+1; end
+        if (cam_tap_b_cfg !== 7'h41) begin $display("ERROR: cam_tap_b_cfg 应为 7'h41"); errors=errors+1; end
 
         // ---- DDR 握手字（0xA0~0xAC）----
         $display("---+ DDR 握手字（顶层拼 ddr_ro = {len,status,base,seq}）");

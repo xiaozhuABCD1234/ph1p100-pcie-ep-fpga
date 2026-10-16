@@ -21,26 +21,17 @@
 //
 //  寄存器表（BAR0 字节偏移，4 字节对齐）：
 //    0x40 MAGIC     R    0x50434946
-//    0x44 CTRL      R/W  bit0 enable, bit1 trigger, [3:2] pattern,
-//                        bit3 cam_ddr_sel = 相机 4K 整帧直通 DDR3 的选择位：
-//                          1 = 0xA0~0xAC 那组握手字来自 cam_ddr_writer（CSI-2 → DDR3，
-//                              4K 全幅，不走片内 fb[]），ddr_frame_writer 停用；
-//                          0 = 来自 ddr_frame_writer（fb[] → DDR3，测试图/640x480 裁剪）。
-//                          两位写者的 AXI 写口由顶层 ddr_wr_mux 二选一，
-//                          换手只在两边都空闲时发生（见该文件头部）。
-//                        bit4 cam_sel = 写源选择（1=相机 cam_fb_writer，0=测试图源；
-//                        默认 0，原语义不变）
-//                        ※ bit3/bit4 要送到顶层，这两位的**通道**是 ctrl_pattern
-//                          （pcie_ep_engine.v 只做宽度加宽，不动逻辑）：
-//                          端口 ctrl_pattern[2:0] = {CTRL[3]=cam_ddr_sel,
-//                                                    CTRL[4]=cam_sel, CTRL[2]}；
-//                          寄存器读回仍然是 CTRL 原样（bit3/bit4/[3:2] 各归各位）。
-//                        bit2 在顶层被当成“传感器重触发”用（ctrl_pattern[0]，
-//                        见 ph1p_pcie_ep_top.v 相机段）：电平一变 → XCLR 再拉低
-//                        134ms → 放开后重写整张 201 条寄存器表。
-//                        bit5 ddr_en（见下）、bit6 push_en（见下）、
-//                        bit7 push_src = 推帧数据源：0 = DDR3（默认），
-//                        1 = 片内 ERAM 帧缓存（绕开 DDR 直接推给主机）
+//    0x44 CTRL      R/W  bit0 enable（总使能）
+//                        bit1 trigger（单帧触发，自清；测试图源用）
+//                        [3:2] pattern（测试图源图案，原样送顶层 img_pattern；
+//                              bit2 在顶层还兼作「传感器重触发」：电平一变 →
+//                              XCLR 拉低 134ms → 放开后重写整张 201 条寄存器表）
+//                        bit3/bit4 保留（写 0；读回原样）
+//                        bit5 ddr_en（1 = 相机每完成一帧自动搬进 DDR3）
+//                        bit6 push_en（1 = 每有一帧就用 MWr 主动推给主机）
+//                        bit7 push_src（推帧数据源：0 = DDR3 已发布的那一帧，
+//                              1 = 片内 ERAM 帧缓存 fb[]，绕开 DDR）
+//                        bit8 cam_ab（推帧取哪一路：0 = A 路，1 = B 路）
 //    0x48 STATUS    R    bit0 ready, bit1 busy
 //    0x4C FRAME_CNT R
 //    0x50 WIDTH     R
@@ -56,17 +47,27 @@
 //    0x78 FB_RADDR  R    主机预取当前给出的帧缓存字节地址
 //    0x7C DBG_RD_IDX R   内部读口字索引（低 17 位有效）
 //    0x80..0x98     R    相机状态字 cam_stat[31:0]..cam_stat[223:192]（8 个 dw）
-//    0xD0 CAM_DDR_DIAG R {lines_per_frame[15:0], max_grp_per_line[15:0]}（相机直通通路）
-//                        借 cam_stat[255:224] 那 32bit（原为保留 0），不新增端口
-//    0x9C CAM_TAP   R/W  {manual_en, tap[5:0]}（不是 cam_stat[255:224]）
-//    0xA0 DDR_FRAME_SEQ R 已整帧落 DDR3 的帧号（单调递增，取自帧计数器 fb_frame_cnt，
-//                          不是从帧数据里读的）
-//    0xA4 DDR_BASE      R 该帧在 DDR3 里的字节基址（双缓冲两块交替）
-//    0xA8 DDR_STATUS    R bit0 valid / bit1 busy / bit2 err / bit3 alive /
+//    0x9C CAM_TAP   R/W  {manual_en, tap[5:0]} A 路 IDELAY
+//    0xD4 CAM_B_TAP R/W  {manual_en, tap[5:0]} B 路 IDELAY（两路眼图不同，必须分开配）
+//    0xD0 CAM_DDR_DIAG   R A 路相机直通诊断 {lines_per_frame[15:0],
+//                          max_grp_per_line[15:0]}（借 cam_stat[255:224]，不新增端口）
+//    0xD8 CAM_DDR_DIAG_B R B 路同理（cam_diag_b 端口，新寄存器）
+//    0xDC CAM_DROP_A     R A 路丢帧诊断 {notack[15:0], stuck[15:0]}（0xF0 给 {bad,last_wcnt}）
+//    0xF0 CAM_DROP_A2    R A 路 {last_beats[15:0], last_wcnt[15:0]}
+//    0xF4 CAM_DROP_A3    R A 路判定快照（24'd0 + verdict_snap）：
+//                          bit0 p_bad / bit1 没见 EOF / bit2 字数不符 / bit3 拍数不符 /
+//                          bit4 axi_err / bit5 该帧 pub_ok
+//    0xA0 DDR_FRAME_SEQ R A 路：已整帧落 DDR3 的帧号（单调递增）
+//    0xA4 DDR_BASE      R A 路：该帧在 DDR3 里的字节基址（双缓冲两块交替）
+//    0xA8 DDR_STATUS    R A 路：bit0 valid / bit1 busy / bit2 err / bit3 alive /
 //                          bit4 cal_done / [31:16] err_cnt
-//    0xAC DDR_LEN       R 每帧字节数（= 0x58 DATA_LEN）
-//  另：CTRL bit5 = ddr_en（1 = 每完成一帧自动搬进 DDR3；默认 0，原语义不变）
-//    搬运通路本体在 rtl/ep_side/ddr/ddr_frame_writer.v，这里只做寄存器面。
+//    0xAC DDR_LEN       R A 路：每帧字节数
+//    0xE0 DDR_FRAME_SEQ_B R B 路四项，位义与 0xA0~0xAC 逐条相同
+//    0xE4 DDR_BASE_B      R
+//    0xE8 DDR_STATUS_B    R
+//    0xEC DDR_LEN_B       R
+//  另：CTRL bit5 = ddr_en（1 = 相机每完成一帧自动搬进 DDR3；默认 0，原语义不变）
+//    搬运通路本体在 rtl/ep_side/ddr/cam_ddr_writer.v（A/B 各一片），这里只做寄存器面。
 //
 //  另：CTRL bit6 = push_en（1 = 每有一帧就用 MWr 主动推给主机；默认 0，原语义不变）
 //    与下面这组「推帧」寄存器。推帧本体在 rtl/ep_side/ddr/ddr_frame_pusher.v，
@@ -74,9 +75,8 @@
 //    CTRL bit7 = push_src：【本步新增】推帧的数据源选择。0 = 从 DDR3 里已发布的
 //    那一帧读（默认，原语义）；1 = 直接读片内 ERAM 帧缓存（img_frame_src 的
 //    fb[]），**完全不碰 DDR 通路** —— 用来先把「EP 主动把整帧写进主机内存」
-//    这条 DMA 验通，DDR 未就绪时也能用。两条路共用 fb 的唯一读口，仲裁在顶层：
-//    push_src=1 且推帧在跑时读口归推帧引擎，DDR 搬运那一帧会被挤（会记 err_cnt）。
-//    所以两者不要同时开：验 ERAM 路时把 bit5（ddr_en）留 0。
+//    这条 DMA 验通，DDR 未就绪时也能用。fb 读口只有一个，主机预取的仲裁在
+//    img_frame_src 里；推帧的 ERAM 源与主机预取按拍分时，互不饿死。
 //    0xB0 PUSH_DST_LO   R/W 主机内存目标地址低 32 位（0 且高也为 0 ⇒ 错误码 1、
 //                            整帧不发；地址由主机给，EP 侧不写死任何物理地址）
 //    0xB4 PUSH_DST_HI   R/W 目标地址高 32 位；帧内地址每发一个 MWr 自动 +128
@@ -102,7 +102,7 @@
 module ep_bar_win #(
     parameter [31:0] MAGIC    = 32'h5043_4946,   // "FICP"
     parameter [31:0] VERSION  = 32'h0002_0000,
-    parameter [31:0] PTR_BYTES = 32'h0004_B000,  // 帧缓存字节数（640x480）；用比较回绕，别用掩码
+    parameter [31:0] PTR_BYTES = 32'h0004_B000,  // 帧缓存字节数；用比较回绕，别用掩码
     parameter [8:0]  CLK_MHZ  = 9'd62            // tl_clk_user 频率，给主机算带宽
 )(
     input  wire         clk,
@@ -116,16 +116,20 @@ module ep_bar_win #(
     output wire [255:0] mrdata_rd_data,
     // 完成包 Lower Address 字段（字节地址低 7 位）
     output reg  [6:0]   memrd_addr_lo,
-    output reg  [6:0]   cam_tap_cfg,     // {manual_en, tap[5:0]} 主机可写
+    input  wire [127:0] ddr_ro_b,        // B 路整帧搬运握手字 {len,status,base,seq}（0xEC/0xE8/0xE4/0xE0）
+    input  wire [31:0]  cam_diag_b,      // B 路相机直通诊断 {lines_per_frame, max_grp_per_line}（0xD8）
+    output reg  [6:0]   cam_tap_cfg,     // A 路 {manual_en, tap[5:0]} 主机可写（0x9C）
+    output reg  [6:0]   cam_tap_b_cfg,   // B 路 {manual_en, tap[5:0]} 主机可写（0xD4）
+    output wire         cam_ab_sel,      // CTRL[8]：推帧取哪一路（0 = A，默认；1 = B）
+    input  wire [95:0]  cam_drop_a,      // A 路直通通路的丢帧诊断（0xDC/0xF0/0xF4）
     // 控制 / 状态（接 img_frame_src）
     output reg          ctrl_enable,
     output reg          ctrl_trigger,
-    // ctrl_pattern 端口（借道送顶层的控制位，寄存器的读回仍是 CTRL 原样）：
-    //   bit2 = CTRL[3] cam_ddr_sel：1 = 相机的 4K 全幅帧直通 DDR3（cam_ddr_writer），
-    //                                 0 = 老通路（fb[] → ddr_frame_writer）
-    //   bit1 = CTRL[4] cam_sel    ：1 = 相机写源（cam_fb_writer），0 = 测试图源
-    //   bit0 = CTRL[2]            ：传感器重触发（顶层按"电平一变就重配"用）
-    output wire [2:0]   ctrl_pattern,
+    // ctrl_pattern 端口（= CTRL[3:2] 原样送出，寄存器的读回也是 CTRL 原样）：
+    //   bit1 = CTRL[3] 测试图源图案高位
+    //   bit0 = CTRL[2] 测试图源图案低位，顶层还拿它当「传感器重触发」用
+    //                   （电平一变 → XCLR 拉低 134ms → 重写整张寄存器表）
+    output wire [1:0]   ctrl_pattern,
     // DDR3 整帧搬运（CTRL[5] + 只读握手字，字面顺序 {len, status, base, seq}）
     output reg          ctrl_ddr_en,
     input  wire [127:0] ddr_ro,
@@ -201,13 +205,17 @@ module ep_bar_win #(
     reg [31:0] scratch;
     reg [31:0] last_wr;
     reg [1:0]  ctrl_pattern_r;   // CTRL[3:2] 原样保存（读回用）
-    reg        ctrl_cam_sel;     // CTRL[4] 相机写源选择
+    reg        ctrl_cam_ab;      // CTRL[8] 推帧取哪一路的已落 DDR 帧（0 = A）
 
-    assign ctrl_pattern = {ctrl_pattern_r[1], ctrl_cam_sel, ctrl_pattern_r[0]};
+    assign ctrl_pattern = ctrl_pattern_r;   // CTRL[3:2] 原样送出
+    // A/B 路选择独立送出去（不塞进 ctrl_pattern：那边 [2:0] 的位义已被顶层与
+    // r_mode_hits 诊断用住，塞进去会改变既有语义）
+    assign cam_ab_sel = ctrl_cam_ab;
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
-            cam_tap_cfg <= 7'b1_101110;   // 默认 manual_en=1, tap=46
+            cam_tap_cfg <= 7'b1_101110;   // 默认 manual_en=1, tap=46（A 路）
+            cam_tap_b_cfg <= 7'b1_101110; // 默认 manual_en=1, tap=46（B 路）
             rd_addr32     <= 32'd0;
             rd_len_dw     <= 11'd1;
             rd_data_go    <= 1'b0;
@@ -215,7 +223,7 @@ module ep_bar_win #(
             ctrl_enable   <= 1'b0;
             ctrl_trigger  <= 1'b0;
             ctrl_pattern_r <= 2'd0;
-            ctrl_cam_sel   <= 1'b0;      // 默认走测试图源（向后兼容）
+            ctrl_cam_ab    <= 1'b0;      // 默认 A 路（老主机不写 bit8）
             ctrl_ddr_en    <= 1'b0;      // 默认不往 DDR3 搬（保持原行为）
             ctrl_push_en   <= 1'b0;      // 默认不推帧（保持原行为）
             ctrl_push_src  <= 1'b0;      // 默认推帧数据源取 DDR3（保持原行为）
@@ -242,13 +250,14 @@ module ep_bar_win #(
                         ctrl_enable  <= tlp_dw_s[0];
                         ctrl_trigger <= tlp_dw_s[1];     // 下一拍自动清 → 单帧脉冲
                         ctrl_pattern_r <= tlp_dw_s[3:2];
-                        ctrl_cam_sel   <= tlp_dw_s[4];   // 1 = 相机写源
+                        ctrl_cam_ab    <= tlp_dw_s[8];   // 1 = B 路（0 = A 路，默认）
                         ctrl_ddr_en    <= tlp_dw_s[5];   // 1 = 每完成一帧自动搬进 DDR3
                         ctrl_push_en   <= tlp_dw_s[6];   // 1 = 每有一帧就推给主机
                         ctrl_push_src  <= tlp_dw_s[7];   // 1 = 推帧数据源取片内 ERAM 帧缓存
                     end
                     12'h5C: ptr     <= ptr_fix(tlp_dw_s);
-                    12'h9C: cam_tap_cfg <= tlp_dw_s[6:0];
+                    12'h9C: cam_tap_cfg   <= tlp_dw_s[6:0];   // A 路 tap
+                    12'hD4: cam_tap_b_cfg <= tlp_dw_s[6:0];   // B 路 tap
                     12'hB0: push_dst_lo <= tlp_dw_s;
                     12'hB4: push_dst_hi <= tlp_dw_s;
                     12'hB8: push_db_lo  <= tlp_dw_s;
@@ -339,7 +348,11 @@ module ep_bar_win #(
     always @(*) begin
         case (r_idx)
             12'h40:  rd_dw_comb = MAGIC;
-            12'h44:  rd_dw_comb = {24'd0, ctrl_push_src, ctrl_push_en, ctrl_ddr_en, ctrl_cam_sel, ctrl_pattern_r, ctrl_trigger, ctrl_enable};
+            // 位序必须逐位对上 CTRL：bit0 enable / bit1 trigger / [3:2] pattern /
+            //   bit4 保留（写 0 读 0）/ bit5 ddr_en / bit6 push_en / bit7 push_src /
+            //   bit8 cam_ab —— 中间那个保留位不能省，少一位整段就整体错位。
+            12'h44:  rd_dw_comb = {23'd0, ctrl_cam_ab, ctrl_push_src, ctrl_push_en, ctrl_ddr_en,
+                                    1'b0, ctrl_pattern_r, ctrl_trigger, ctrl_enable};
             12'h48:  rd_dw_comb = {30'd0, st_busy, st_ready};
             12'h4C:  rd_dw_comb = st_frame_cnt;
             12'h50:  rd_dw_comb = {16'd0, st_width};
@@ -361,13 +374,23 @@ module ep_bar_win #(
             12'h90:  rd_dw_comb = cam_stat[159:128];
             12'h94:  rd_dw_comb = cam_stat[191:160];
             12'h98:  rd_dw_comb = cam_stat[223:192];
-            12'h9C:  rd_dw_comb = {25'd0, cam_tap_cfg};   // 读回 tap 配置
+            12'h9C:  rd_dw_comb = {25'd0, cam_tap_cfg};   // 读回 A 路 tap 配置
+            12'hD4:  rd_dw_comb = {25'd0, cam_tap_b_cfg}; // 读回 B 路 tap 配置
+            12'hD8:  rd_dw_comb = cam_diag_b;            // CAM_DDR_DIAG_B
+            // A 路丢帧诊断：0xDC={notack[15:0], stuck[15:0]}，0xF0={bad[15:0], last_wcnt[15:0]}
+            12'hDC:  rd_dw_comb = cam_drop_a[31:0];       // CAM_DROP_A
+            12'hF0:  rd_dw_comb = cam_drop_a[63:32];      // CAM_DROP_A2
+            12'hF4:  rd_dw_comb = cam_drop_a[95:64];      // CAM_DROP_A3 = {24'd0, verdict_snap}
+            12'hE0:  rd_dw_comb = ddr_ro_b[31:0];        // DDR_FRAME_SEQ_B
+            12'hE4:  rd_dw_comb = ddr_ro_b[63:32];       // DDR_BASE_B
+            12'hE8:  rd_dw_comb = ddr_ro_b[95:64];       // DDR_STATUS_B
+            12'hEC:  rd_dw_comb = ddr_ro_b[127:96];      // DDR_LEN_B
             // 相机 4K 直通通路的诊断字（cam_ddr_writer 的 dbg_*）：借 cam_stat 的
             // [255:224] 那一段（read 路径上方 8 个 dw 只用到 [223:0]，这段原来是 0）。
             //   [15:0]  = max_grp_per_line：一行最多收到几个组（裁剪前数）→ 量真实行宽
             //   [31:16] = lines_per_frame ：一帧多少行（含 embedded/哑行）→ 量真实帧高
             12'hD0:  rd_dw_comb = cam_stat[255:224];      // CAM_DDR_DIAG
-            // DDR3 整帧搬运握手（ddr_frame_writer，见 rtl/ep_side/ddr/）
+            // 整帧搬运握手（cam_ddr_writer，见 rtl/ep_side/ddr/）
             12'hA0:  rd_dw_comb = ddr_ro[31:0];           // DDR_FRAME_SEQ
             12'hA4:  rd_dw_comb = ddr_ro[63:32];          // DDR_BASE
             12'hA8:  rd_dw_comb = ddr_ro[95:64];          // DDR_STATUS

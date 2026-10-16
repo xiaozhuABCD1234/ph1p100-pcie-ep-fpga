@@ -5,7 +5,6 @@ create_project ph1p_pcie_ep_top ./ -family PH1 -device PH1P100SBG484 -speed 3 -f
 add_files rtl/ep_side/img/ep_bar_win.v
 add_files rtl/ep_side/img/img_regs.v
 add_files rtl/ep_side/img/img_frame_src.v
-add_files rtl/ep_side/img/cam_fb_writer.v
 add_files rtl/common/ph1p_pcie_case_param.v
 add_files rtl/common/ph1p_pcie_rst_sync.v
 add_files rtl/common/uart/bps_setting.v
@@ -37,12 +36,11 @@ add_files rtl/ep_side/cam/wfifo.v
 add_files rtl/ep_side/cam/ui_cfg_imx415.v
 add_files rtl/ep_side/cam/ui_i2c.v
 add_files rtl/ep_side/cam/ui_imx415_reg.v
-add_files rtl/ep_side/ddr/ddr_frame_writer.v
 add_files rtl/ep_side/ddr/ddr_frame_pusher.v
+add_files rtl/ep_side/ddr/ddr_wr_arb.v
 # 相机整帧（4K）直通 DDR3：CSI-2 → 异步 FIFO → AXI 写 DDR3，不过片内 fb[]
 add_files rtl/ep_side/ddr/cam_ddr_writer.v
 # 两条整帧写 DDR3 通路共用一个 AXI 写口，只在两边都空闲时换手
-add_files rtl/ep_side/ddr/ddr_wr_mux.v
 add_files constraints/ph1p_pcie_case_ep.adc
 add_files constraints/ph1p_pcie_case_ep.sdc
 add_files al_ip/pcie_ep_core/pcie_ep_core.xml

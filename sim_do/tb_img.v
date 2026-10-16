@@ -57,13 +57,10 @@ module tb_img;
         .clk (clk), .rst (rst),
         .enable (ctrl_enable), .trigger (ctrl_trigger),
         .rd_addr (fb_raddr), .rd_data (fb_rdata),
-        // 读口仲裁/相机写源/诊断这几根线必须显式给：悬空(z)会让 host_grant
-        // 变 x，rd_data/状态字跟着全 x（本 TB 原来就是栽在这上面）
+        // 读口仲裁这几根线必须显式给：悬空(z)会让 host_grant 变 x，
+        // rd_data/状态字跟着全 x（本 TB 原来就是栽在这上面）
         .host_rd_prio (1'b0), .dma_rd_req (1'b0),
         .host_grant (), .dma_grant (), .rd2_addr (32'd0), .rd2_data (),
-        .cam_sel (1'b0), .cam_wr_en (1'b0), .cam_wr_addr (32'd0),
-        .cam_wr_data (32'd0), .cam_frame_cnt (32'd0), .cam_data_len (32'd0),
-        .cam_ready (1'b0), .cam_busy (1'b0),
         .frame_cnt (st_frame_cnt), .width (st_width), .height (st_height),
         .data_len (st_data_len), .ready (st_ready), .busy (st_busy)
     );

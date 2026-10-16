@@ -35,14 +35,6 @@
                     <Attr Name="CompileOrder" Val="3"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/img/cam_fb_writer.v">
-                <FileInfo>
-                    <Attr Name="UsedInSyn" Val="true"/>
-                    <Attr Name="UsedInP&R" Val="true"/>
-                    <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="4"/>
-                </FileInfo>
-            </File>
             <File Path="rtl/common/ph1p_pcie_case_param.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
@@ -291,15 +283,15 @@
                     <Attr Name="CompileOrder" Val="35"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/ddr/ddr_frame_writer.v">
+            <File Path="rtl/ep_side/ddr/ddr_frame_pusher.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="36"/>
+                    <Attr Name="CompileOrder" Val="37"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/ddr/ddr_frame_pusher.v">
+            <File Path="rtl/ep_side/ddr/ddr_wr_arb.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
                     <Attr Name="UsedInP&R" Val="true"/>
@@ -313,14 +305,6 @@
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
                     <Attr Name="CompileOrder" Val="38"/>
-                </FileInfo>
-            </File>
-            <File Path="rtl/ep_side/ddr/ddr_wr_mux.v">
-                <FileInfo>
-                    <Attr Name="UsedInSyn" Val="true"/>
-                    <Attr Name="UsedInP&R" Val="true"/>
-                    <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="39"/>
                 </FileInfo>
             </File>
         </Verilog>

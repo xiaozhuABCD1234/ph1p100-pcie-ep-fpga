@@ -50,7 +50,7 @@ module pcie_ep_engine #(
     // ==== 本移植新增：BAR0 真窗口 → 图像源接口 ====
     output      wire                img_ctrl_enable        ,
     output      wire                img_ctrl_trigger       ,
-    output      wire    [2:0]       img_ctrl_pattern       ,
+    output      wire    [1:0]       img_ctrl_pattern       ,
     input       wire                img_st_ready           ,
     input       wire                img_st_busy            ,
     input       wire    [31:0]      img_st_frame_cnt       ,
@@ -62,6 +62,11 @@ module pcie_ep_engine #(
     output      wire    [31:0]      img_dbg_rd_idx         ,
     input       wire    [255:0]     cam_stat_bus           ,
     output      wire    [6:0]       cam_tap_cfg            ,
+    output      wire    [6:0]       cam_tap_b_cfg          ,   // B 路 tap（0xD4，转发给 ep_bar_win）
+    output      wire                cam_ab_sel             ,   // CTRL[8] 推帧取 A/B 路
+    input       wire [31:0]         cam_diag_b             ,   // B 路相机直通诊断（0xD8）
+    input       wire [95:0]         cam_drop_a             ,   // A 路丢帧诊断（0xDC/0xF0/0xF4）
+    input       wire [127:0]        ddr_ro_b               ,   // B 路整帧搬运握手字（0xE0~0xEC）
     // ==== 本移植新增：DDR3 整帧搬运（CTRL[5] + 只读握手字）====
     output      wire                img_ctrl_ddr_en        ,
     input       wire    [127:0]     img_ddr_ro             ,
@@ -382,6 +387,11 @@ ep_bar_win #(
     .dbg_rd_idx     (img_dbg_rd_idx         ),
     .cam_stat       (cam_stat_bus           ),
     .cam_tap_cfg    (cam_tap_cfg            ),
+    .cam_tap_b_cfg  (cam_tap_b_cfg          ),
+    .cam_ab_sel     (cam_ab_sel             ),
+    .cam_diag_b     (cam_diag_b             ),
+    .cam_drop_a     (cam_drop_a             ),
+    .ddr_ro_b       (ddr_ro_b               ),
     .ctrl_ddr_en    (img_ctrl_ddr_en        ),
     .ddr_ro         (img_ddr_ro             ),
     .host_rd_prio   (img_host_rd_prio       ),
