@@ -307,6 +307,22 @@
                     <Attr Name="CompileOrder" Val="37"/>
                 </FileInfo>
             </File>
+            <File Path="rtl/ep_side/ddr/cam_ddr_writer.v">
+                <FileInfo>
+                    <Attr Name="UsedInSyn" Val="true"/>
+                    <Attr Name="UsedInP&R" Val="true"/>
+                    <Attr Name="BelongTo" Val="design_1"/>
+                    <Attr Name="CompileOrder" Val="38"/>
+                </FileInfo>
+            </File>
+            <File Path="rtl/ep_side/ddr/ddr_wr_mux.v">
+                <FileInfo>
+                    <Attr Name="UsedInSyn" Val="true"/>
+                    <Attr Name="UsedInP&R" Val="true"/>
+                    <Attr Name="BelongTo" Val="design_1"/>
+                    <Attr Name="CompileOrder" Val="39"/>
+                </FileInfo>
+            </File>
         </Verilog>
         <ADC_FILE>
             <File Path="constraints/ph1p_pcie_case_ep.adc">

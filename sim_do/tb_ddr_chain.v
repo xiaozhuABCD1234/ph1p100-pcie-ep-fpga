@@ -50,7 +50,7 @@ module tb_ddr_chain;
     wire [255:0] mrdata_rd_data;
     wire [6:0]   memrd_addr_lo, cam_tap_cfg;
     wire         ctrl_enable, ctrl_trigger, ctrl_ddr_en, ctrl_push_en, ctrl_push_src;
-    wire [1:0]   ctrl_pattern;
+    wire [2:0]   ctrl_pattern;   // bit2=CTRL[3] cam_ddr_sel / bit1=CTRL[4] cam_sel / bit0=CTRL[2]
     wire [31:0]  push_dst_lo, push_dst_hi, push_db_lo, push_db_hi;
     wire         host_rd_prio, host_grant;
     wire [31:0]  fb_raddr, fb_rdata, dbg_rd_idx;

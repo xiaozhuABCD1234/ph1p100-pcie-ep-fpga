@@ -38,7 +38,8 @@ module tb_ep_bar_win;
     wire [6:0]   memrd_addr_lo;
     wire [6:0]   cam_tap_cfg;
     wire         ctrl_enable, ctrl_trigger, ctrl_ddr_en, ctrl_push_en, ctrl_push_src;
-    wire [1:0]   ctrl_pattern;
+    reg  [255:0] cam_stat_r = 256'h0;   // 相机状态字（0xD0 读它的 [255:224]）
+    wire [2:0]   ctrl_pattern;   // bit2=CTRL[3] cam_ddr_sel / bit1=CTRL[4] cam_sel / bit0=CTRL[2]
     wire [31:0]  push_dst_lo, push_dst_hi, push_db_lo, push_db_hi;
     wire         host_rd_prio;
     wire         host_grant = 1'b1;
@@ -78,7 +79,7 @@ module tb_ep_bar_win;
         .st_ready(1'b1), .st_busy(1'b0), .st_frame_cnt(32'h0000_7004),
         .st_width(16'd640), .st_height(16'd480), .st_data_len(32'h0004_B000),
         .fb_raddr(fb_raddr), .fb_rdata(fb_rdata), .dbg_rd_idx(dbg_rd_idx),
-        .cam_stat(256'h0)
+        .cam_stat(cam_stat_r)
     );
 
     function [31:0] bswap32;
@@ -146,13 +147,19 @@ module tb_ep_bar_win;
         tlp_rd(12'h58, v); check("0x58 DATA_LEN ", v, 32'h0004_B000);
         tlp_rd(12'h64, v); check("0x64 VERSION  ", v, 32'h0002_0000);
         tlp_rd(12'h68, v); check("0x68 CLK_MHZ  ", v, 32'd62);
-        tlp_rd(12'hD0, v); check("0xD0 未译码   ", v, 32'hDEAD_BEEF);
+        // 0xD0 = cam_stat[255:224]（相机 4K 直通通路的诊断字）：先灌一个值再读回
+        cam_stat_r[255:224] = 32'h1234_5678;
+        #10;
+        tlp_rd(12'hD0, v); check("0xD0 CAM_DDR_DIAG", v, 32'h1234_5678);
+        cam_stat_r[255:224] = 32'h0;
 
         // ---- 0x44 CTRL：位域与读回 ----
         tlp_wr(12'h44, 32'h0000_00D1);                  // enable|cam_sel|push_en|push_src
         tlp_rd(12'h44, v); check("0x44 CTRL     ", v, 32'h0000_00D1);
         if (ctrl_enable !== 1'b1)    begin $display("ERROR: CTRL bit0 enable 没生效"); errors=errors+1; end
         if (ctrl_pattern[1] !== 1'b1) begin $display("ERROR: CTRL bit4 cam_sel 没送到 ctrl_pattern[1]"); errors=errors+1; end
+        // CTRL[3] = cam_ddr_sel（相机 4K 直通 DDR3 的选择位）也要送到 ctrl_pattern[2]
+        if (ctrl_pattern[2] !== 1'b0) begin $display("ERROR: CTRL bit3 cam_ddr_sel 没送到 ctrl_pattern[2]（默认应为 0）"); errors=errors+1; end
         if (ctrl_push_en !== 1'b1)   begin $display("ERROR: CTRL bit6 push_en 没生效"); errors=errors+1; end
         if (ctrl_push_src !== 1'b1)  begin $display("ERROR: CTRL bit7 push_src 没生效"); errors=errors+1; end
         // bit1 trigger 是单拍脉冲（下一拍自动清）

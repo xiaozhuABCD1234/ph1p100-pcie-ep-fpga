@@ -122,6 +122,12 @@ module ddr_frame_writer #(
     input  wire         m_axi_bvalid,
     output wire         m_axi_bready,
 
+    // ---------------- 给顶层 mux 的「本路还占着写口」电平 ----------------
+    //  与 cam_ddr_writer.axi_busy 同一语义：AXI 状态机不在 IDLE 就为 1。
+    //  顶层 ddr_wr_mux 只在两路都为 0 时换手（不能用「awvalid/wvalid/bready 全 0」
+    //  去猜：等写响应那一拍这三个都是 0，但 bvalid 还没回来）。
+    output wire         axi_busy,
+
     // ---------------- 握手（fb 域，供寄存器读）----------------
     output reg  [31:0]  wr_frame_seq,  // 已整帧落 DDR3 的帧号
     output reg  [31:0]  wr_base,       // 该帧基址
@@ -436,6 +442,7 @@ module ddr_frame_writer #(
     end
 
     // ---- AXI 通道（组合输出）----
+    assign axi_busy      = (a_st != A_IDLE);
     assign m_axi_awsize  = AXI_SIZE;
     assign m_axi_awburst = AXI_BURST;
     assign m_axi_wdata   = f_dout;

@@ -64,6 +64,7 @@ module tb_ddr_frame_pusher;
     reg         src_sel = 0;      // 本 TB 只跑 DDR 源；ERAM 源未覆盖（见文件头）
     reg  [31:0] dst_lo, dst_hi, db_lo, db_hi;
     reg  [31:0] ddr_seq, ddr_base, ddr_status;
+    reg  [31:0] frame_bytes_r = FRAME_BYTES;
     // ERAM 源端口：src_sel=0 时本模块不发 fb_req，所以这里固定「不给授权、数据 0」即可
     reg  [31:0] fb_frame_cnt = 0;
     reg  [31:0] fb_rd_data  = 0;
@@ -102,6 +103,7 @@ module tb_ddr_frame_pusher;
         .fb_req(fb_req), .fb_grant(fb_grant), .src_act(fb_src_act),
         .dst_lo(dst_lo), .dst_hi(dst_hi), .db_lo(db_lo), .db_hi(db_hi),
         .st_done(st_done), .st_status(st_status), .st_err(st_err), .st_tlp_cnt(st_tlp_cnt),
+        .frame_bytes(frame_bytes_r),    // 本帧字节数（顶层按源给；本 TB 可切换）
         .ddr_seq(ddr_seq), .ddr_base(ddr_base), .ddr_status(ddr_status),
         .utx_sel(utx_sel), .tl_tx_wait(tl_tx_wait),
         .utx_req(utx_req), .utx_data(utx_data), .utx_sop(utx_sop),
@@ -307,17 +309,17 @@ module tb_ddr_frame_pusher;
                 dw0 = be32(0); dw4 = be32(4); dw8 = be32(8); dw12 = be32(12); dwle = le32(16);
                 // ---- 逐笔检查 ----
                 if (tlp_idx < NTLP) begin
-                    chk(beat_idx == 1 + PAY_BEATS, "帧 MWr 拍数不是 5");
-                    chk(dw0[31:29] == 3'b011, "Fmt 不是 4DW 带数据");
-                    chk(dw0[28:24] == 5'b0_0000, "Type 不是 MWR");
-                    chk(dw0[9:0] == 32, "Length 不是 32 个 dw");
-                    chk(dw4[31:16] == 16'h0100, "Requester ID 不是 01:00.0");
-                    chk(dw4[15:8] == 8'h00, "Tag 不是 0");
-                    chk(dw4[3:0] == 4'hf, "First DW BE 不是 F");
-                    chk(dw4[7:4] == 4'hf, "Last DW BE 不是 F（长度>1）");
+                    chk(beat_idx == 1 + PAY_BEATS, "frame MWr beats != 5");
+                    chk(dw0[31:29] == 3'b011, "Fmt != 4DW with data");
+                    chk(dw0[28:24] == 5'b0_0000, "Type != MWR");
+                    chk(dw0[9:0] == 32, "Length != 32 dw");
+                    chk(dw4[31:16] == 16'h0100, "RequesterID != 01:00.0");
+                    chk(dw4[15:8] == 8'h00, "Tag != 0");
+                    chk(dw4[3:0] == 4'hf, "FirstDWBE != F");
+                    chk(dw4[7:4] == 4'hf, "LastDWBE != F (len>1)");
                     exp_addr = DST_ADDR + tlp_idx * TLP_BYTES;
-                    chk(be32(8)  == exp_addr[63:32], "地址高 32 位（dw2）不对");
-                    chk(be32(12) == {exp_addr[31:2], 2'b00}, "地址低 30 位（dw3）不对");
+                    chk(be32(8)  == exp_addr[63:32], "addr hi32 (dw2) wrong");
+                    chk(be32(12) == {exp_addr[31:2], 2'b00}, "addr lo30 (dw3) wrong");
                     // 载荷必须与「本源」同一段逐字节相同：
                     //   DDR 源（默认）比 ddr[]，ERAM 源（src_sel=1）比 fbm[]
                     for (k = 0; k < TLP_BYTES; k = k + 1) begin
@@ -338,14 +340,15 @@ module tb_ddr_frame_pusher;
                         end
                     end
                 end else begin
-                    chk(beat_idx == 1, "门铃不是单拍 TLP");
-                    chk(dw0[31:29] == 3'b011, "门铃 Fmt 不是 4DW");
-                    chk(dw0[9:0] == 1, "门铃 Length 不是 1");
-                    chk(dw4[7:4] == 4'h0, "门铃 Last DW BE 不是 0（长度=1）");
-                    chk(dw4[3:0] == 4'hf, "门铃 First DW BE 不是 F");
-                    chk(be32(8)  == DB_ADDR[63:32], "门铃地址高 32 位不对");
-                    chk(be32(12) == {DB_ADDR[31:2], 2'b00}, "门铃地址低 30 位不对");
-                    chk(le32(16) == 32'd1, "门铃载荷不是本帧序号 1（字节序错？）");
+                    chk(beat_idx == 1, "doorbell not single-beat TLP");
+                    chk(dw0[31:29] == 3'b011, "doorbell Fmt != 4DW");
+                    chk(dw0[9:0] == 1, "doorbell Length != 1");
+                    chk(dw4[7:4] == 4'h0, "doorbell LastDWBE != 0 (len=1)");
+                    chk(dw4[3:0] == 4'hf, "doorbell FirstDWBE != F");
+                    chk(be32(8)  == DB_ADDR[63:32], "doorbell addr hi32 wrong");
+                    chk(be32(12) == {DB_ADDR[31:2], 2'b00}, "doorbell addr lo30 wrong");
+                    chk(le32(16) == db_expect, "doorbell payload != expected seq");
+                    db_expect = db_expect + 32'd1;
                 end
                 if (errs == 0) pass_tlps = pass_tlps + 1;
                 tlp_idx = tlp_idx + 1;
@@ -357,6 +360,8 @@ module tb_ddr_frame_pusher;
     //  主流程
     // ========================================================================
     integer t;
+    reg ok;
+    reg [31:0] db_expect = 32'd1;   // 下一笔门铃应当写的序号（每收到一笔 +1）
 
     initial begin
         errs = 0; pass_tlps = 0; tlp_idx = 0; nb = 0;
@@ -370,6 +375,20 @@ module tb_ddr_frame_pusher;
             $dumpvars(0, tb_ddr_frame_pusher);
         end
 
+        // ==================== 尺寸换算自检（4K vs 640x480）====================
+        //  本步把 NTLP/NBURST 从「编译期由 W*H 推」改成「由 frame_bytes 现算」，
+        //  4K 的 64800 个 MWr / 2025 个突发会把老的 12bit/8bit 计数器直接撑爆，
+        //  所以这里先把换算结果对一遍（不跑整帧，直接看内部推导）：
+        frame_bytes_r = 32'd8294400;                       // 3840x2160 灰度
+        #1; ok = (dut.ntlp_m1_w == 17'd64799);   chk(ok, "4K: ntlp_m1 != 64799");
+        ok = (dut.nburst_m1_w == ((8294400/(BB*32)) - 1)); chk(ok, "4K: nburst_m1 wrong");
+        frame_bytes_r = 32'd307200;                        // 640x480 灰度
+        #1; ok = (dut.ntlp_m1_w == 17'd2399);    chk(ok, "640x480: ntlp_m1 != 2399");
+        ok = (dut.nburst_m1_w == ((307200/(BB*32)) - 1));  chk(ok, "640x480: nburst_m1 wrong");
+        frame_bytes_r = FRAME_BYTES;                       // 回到本 TB 的小尺寸
+        #1; ok = (dut.ntlp_m1_w == (NTLP - 1));     chk(ok, "TB: ntlp_m1 wrong");
+        ok = (dut.nburst_m1_w == (NBURST - 1)); chk(ok, "TB: nburst_m1 wrong");
+
         $display("PHASE0 start @%0t", $time);
         // ---- 0) 没配地址：不发、错误码 1 ----
         push_en   = 1; dst_lo = 32'd0; dst_hi = 32'd0;
@@ -377,22 +396,29 @@ module tb_ddr_frame_pusher;
         ddr_seq   = 32'd1; ddr_base = DDR_BASE0; ddr_status = 32'b1_0001;
         tlp_idx   = 0;
         repeat (20) @(posedge clk_fb);
-        chk(st_err == 8'd1, "目标地址配 0 时错误码不是 1");
-        chk(st_done == 32'd0, "目标地址配 0 时已推帧数不该动");
-        chk(tlp_idx == 0, "目标地址配 0 时不该发 TLP");
+        chk(st_err == 8'd1, "zero dst: err != 1");
+        chk(st_done == 32'd0, "zero dst: st_done changed");
+        chk(tlp_idx == 0, "zero dst: sent TLP");
 
         $display("PHASE1 start, errs=%0d @%0t", errs, $time);
         // ---- 1) 正常推一帧 ----
-        dst_lo = DST_ADDR[31:0]; dst_hi = DST_ADDR[63:32];
+        //  ★ 顺序要紧：PHASE0 留下的是「帧号 1、目标是 0」这个待处理组合。
+        //    如果先配目标再换帧号，pusher 会在同一拍看到「帧号 1 + 目标已配」，
+        //    于是把帧号 1 也推一帧，再接帧号 2 —— 变成两帧（本 TB 原来就是这么
+        //    多出 3 笔 TLP 的）。所以先换帧号（此时目标仍是 0 → 只报 E_NO_DST、
+        //    不推），等两拍让它消化掉，再配目标。
         ddr_seq  = 32'd2;
         ddr_base = DDR_BASE0;
+        repeat (2) @(posedge clk_fb);
+        dst_lo = DST_ADDR[31:0]; dst_hi = DST_ADDR[63:32];
         tlp_idx  = 0;
         // 等到整帧 + 门铃都发完
         t = 0;
         while ((tlp_idx <= NTLP) && (t < 200000)) begin
             @(posedge clk_fb); t = t + 1;
         end
-        chk(tlp_idx == NTLP+1, "帧 TLP 数 + 门铃数 不等于 NTLP+1");
+        repeat (30) @(posedge clk_fb);     // 等收尾（S_WAIT -> S_IDLE）把状态字写完
+        chk(tlp_idx == NTLP+1, "P2: tlp count != NTLP+1");
         chk(st_done == 32'd1, "已推帧数不是 1");
         chk(st_tlp_cnt == NTLP, "0xCC 记的 MWr 数不是 NTLP");
         chk(st_err == 8'd0, "正常推帧后错误码不是 0");
@@ -409,9 +435,10 @@ module tb_ddr_frame_pusher;
         while ((tlp_idx <= NTLP) && (t < 200000)) begin
             @(posedge clk_fb); t = t + 1;
         end
-        chk(tlp_idx == NTLP, "门铃地址为 0 时不该发门铃");
-        chk(st_done == 32'd2, "门铃地址为 0 时已推帧数该 +1");
-        chk(st_err == 8'd4, "门铃地址为 0 时错误码不是 4");
+        repeat (30) @(posedge clk_fb);     // 等收尾（S_WAIT -> S_IDLE）把状态字写完
+        chk(tlp_idx == NTLP, "zero db: sent doorbell");
+        chk(st_done == 32'd2, "zero db: st_done not +1");
+        chk(st_err == 8'd4, "zero db: err != 4");
 
         $display("PHASE3(ERAM) start, errs=%0d @%0t", errs, $time);
         // ---- 3) 【本步新增】ERAM 源（CTRL[7]）：完全不碰 AXI，直接读片内 fb ----
@@ -421,20 +448,22 @@ module tb_ddr_frame_pusher;
         dst_lo = DST_ADDR[31:0]; dst_hi = DST_ADDR[63:32];
         db_lo  = DB_ADDR[31:0];  db_hi  = DB_ADDR[63:32];
         ddr_status  = 32'd0;              // 故意给 0：ERAM 源不该看 ddr_status
+        db_expect   = 32'd3;              // 本帧是第 3 帧（PHASE2 没发门铃，帧号照样 +1）
         fb_frame_cnt = 32'd1;             // 帧计数器一变 = 有一整帧
         tlp_idx = 0;
         t = 0;
         while ((tlp_idx <= NTLP) && (t < 400000)) begin
             @(posedge clk_fb); t = t + 1;
         end
-        chk(tlp_idx == NTLP+1, "ERAM 源：帧 TLP 数 + 门铃数 不等于 NTLP+1");
-        chk(st_done == 32'd3, "ERAM 源：已推帧数不是 3");
-        chk(st_tlp_cnt == NTLP, "ERAM 源：0xCC 记的 MWr 数不是 NTLP");
-        chk(st_err == 8'd0, "ERAM 源：错误码不是 0");
-        chk(st_status[1] == 1'b1, "ERAM 源：last_ok 没置起");
-        chk(st_status[2] == 1'b1, "ERAM 源：doorbell_sent 没置起");
-        chk(m_axi_arvalid == 1'b0, "ERAM 源：不该发起 AXI 读");
-        chk(fb_src_act == 1'b1, "ERAM 源：src_act 没置起");
+        repeat (30) @(posedge clk_fb);     // 同上：等状态字写完
+        chk(tlp_idx == NTLP+1, "ERAM: tlp count != NTLP+1");
+        chk(st_done == 32'd3, "ERAM: st_done != 3");
+        chk(st_tlp_cnt == NTLP, "ERAM: st_tlp_cnt != NTLP");
+        chk(st_err == 8'd0, "ERAM: err != 0");
+        chk(st_status[1] == 1'b1, "ERAM: last_ok not set");
+        chk(st_status[2] == 1'b1, "ERAM: doorbell_sent not set");
+        chk(m_axi_arvalid == 1'b0, "ERAM: arvalid not 0");
+        chk(fb_src_act == 1'b1, "ERAM: src_act not set");
 
         if (errs == 0) $display("ALL PASS (%0d TLPs checked)", pass_tlps);
         else           $display("FAIL: %0d error(s)", errs);

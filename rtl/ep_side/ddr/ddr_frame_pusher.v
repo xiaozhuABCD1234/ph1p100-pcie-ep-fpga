@@ -6,9 +6,16 @@
 //  ===========================================================================
 //   · DDR 侧：u_ddr3_mc_0 的 AXI4 **读**通道（axi_aclk = dhi_clk = IP 的 usr_clk，
 //     100MHz；axi_aresetn = ddrphy_rst_n）。数据 256bit = 32 字节/拍，地址是字节
-//     地址。每帧 307200 字节 = 9600 拍 = 75 个 4KB 突发（arlen=127、arsize=5、INCR）；
-//     两块缓冲基址都是 4KB 对齐（见 ddr_frame_writer 的参数），所以一个突发正好
-//     一个 4KB 页，不跨页。
+//     地址。每帧字节数 / 32 = 拍数，再按 4KB 切突发（arlen=127、arsize=5、INCR）：
+//     640x480 = 9600 拍 = 75 个突发，4K = 259200 拍 = 2025 个突发；
+//     两块缓冲基址都是 4KB 对齐（见 ddr_frame_writer / cam_ddr_writer 的参数），
+//     所以一个突发正好一个 4KB 页，不跨页。
+//
+//  ★ 帧字节数（端口 frame_bytes，帧开头锁存）：MWr 数 = frame_bytes/128、
+//    突发数 = frame_bytes/4096，两个除法都必须是整数 —— 顶层给的两个尺寸都满足。
+//    计数器位宽由参数 MAX_FRAME_BYTES 现推（NTLP_CW / NBURST_CW），
+//    所以换几何不会撑爆计数器（4K 的 64800 个 MWr / 2025 个突发已经超出
+//    老的 12bit/8bit 位宽，这正是本步要改的地方）。
 //   · 片内侧：DDR 搬运的握手字（wr_frame_seq / wr_base / wr_status，见
 //     ddr_frame_writer.v），以及 pcie_ep_engine 里新开的「用户侧 TL 发送口」
 //     （utx_req/utx_data/utx_sop/utx_eop/utx_valid；引擎只在自己的发送状态机
@@ -44,7 +51,9 @@
 //   TL 口一拍 256bit = 8 个 dw，所以一个 MWr 占 5 拍：
 //     第 0 拍：4 个 dw 头（valid=8'hF0，其余位无效；与厂商 IO 写完成包同形）
 //     第 1..4 拍：各 8 个 dw 载荷（valid=8'hFF）
-//   每帧 2400 个这样的 MWr；最后一个载荷拍带 eop。
+//   每帧的 MWr 数 = frame_bytes / 128（640x480 → 2400 个；4K → 64800 个），
+//   **在每帧开头按主机给的 frame_bytes 现算并锁存**（见下面「帧字节数」一段），
+//   所以同一份 RTL 既能推 640x480 也能推 4K。最后一个载荷拍带 eop。
 //
 //   头里各字段的摆法照 pcie_ep_engine.v 里 MSI-X 那一段（那段就是厂商自己的
 //   「用户逻辑拼 MWr 头」的样板），即按 PCIe 规范里**头 dword 的位序**摆：
@@ -145,6 +154,10 @@ module ddr_frame_pusher #(
     parameter integer H           = 480,
     // ---- 每个 MWr 的载荷双字数（= MaxPayload/4 = 32，即 128 字节）----
     parameter integer PAY_DW      = 32,
+    // ---- 本模块要支持的最大帧字节数（决定 MWr 数/突发数计数器的位宽）----
+    //   默认 4K 灰度 3840x2160 = 8294400；640x480 那一路只是它的子集。
+    //   计数位宽由它现算（见下面 NTLP_CW / NBURST_CW），所以换几何不会撑爆计数器。
+    parameter integer MAX_FRAME_BYTES = 3840 * 2160,
     // ---- 异步 FIFO 深度 = 2**FIFO_AW 拍（每拍 256bit = 32 字节）----
     parameter integer FIFO_AW     = 7,
     // ---- 每个 AXI4 突发的拍数（128 × 32B = 4096 = 4KB，不跨页）----
@@ -166,6 +179,13 @@ module ddr_frame_pusher #(
     output wire [31:0]  st_status,     // 0xC4 状态（位定义见文件头）
     output reg  [7:0]   st_err,        // 0xC8 最近一次错误码
     output reg  [31:0]  st_tlp_cnt,    // 0xCC 最近一帧发出的 MWr 数（不含门铃）
+
+    // ---- 本帧字节数（帧开头锁存）----
+    //   DDR 源：0xAC DDR_LEN（640x480 = 307200 / 4K = 8294400）；ERAM 源：fb 的 DATA_LEN。
+    //   ★ 必须满足：frame_bytes % TLP_BYTES == 0 且 % BURST_BYTES == 0（两个尺寸都满足：
+    //     307200 = 2400x128 = 75x4096、8294400 = 64800x128 = 2025x4096）。
+    //     否则 MWr 数/突发数不是整数，帧尾会对不上（本模块不再按 W*H 推）。
+    input  wire [31:0]  frame_bytes,
 
     // ---- DDR 搬运握手（ddr_frame_writer 的只读字）----
     input  wire [31:0]  ddr_seq,       // 0xA0 已整帧落 DDR3 的帧号
@@ -215,17 +235,21 @@ module ddr_frame_pusher #(
     //  参数推导（只在这里出现，别处不散落魔数）
     // ========================================================================
     localparam integer BEAT_BYTES   = 32;                        // 256bit / 8
-    localparam integer FRAME_BYTES  = W * H;                     // 307200
+    localparam integer FRAME_BYTES  = W * H;                     // fb 一帧字节数（ERAM 源用）
     localparam integer TLP_BYTES    = PAY_DW * 4;                // 128（每个 MWr 载荷）
-    localparam integer NTLP         = FRAME_BYTES / TLP_BYTES;   // 2400 个 MWr
     localparam integer PAY_BEATS    = PAY_DW / 8;                // 每个 MWr 载荷拍数 = 4
     localparam integer LAST_K       = PAY_BEATS;                 // 一个 MWr 的末拍下标
-    localparam integer NBEATS       = FRAME_BYTES / BEAT_BYTES;  // 9600 拍
-    localparam integer NBURST       = NBEATS / BURST_BEATS;      // 75 个 4KB 突发
     localparam [7:0]   ARLEN        = BURST_BEATS - 1;           // axi_arlen
-    localparam [7:0]   NBURST_M1    = NBURST - 1;
-    localparam [11:0]  NTLP_M1      = NTLP - 1;
     localparam [9:0]   PAY_LEN      = PAY_DW;                    // Length 字段（dw）
+    localparam integer BURST_BYTES  = BURST_BEATS * BEAT_BYTES;   // 4096
+
+    // ---- 每帧的 MWr 数 / 突发数：由 frame_bytes 现算（4K 与 640x480 共用本模块）----
+    //   640x480：2400 个 MWr / 75 个突发；4K：64800 个 MWr / 2025 个突发。
+    //   在 S_IDLE 起帧那一拍锁存（帧内不变），计数器位宽按 4K 取值。
+    localparam integer NTLP_CW   = clogb2(MAX_FRAME_BYTES / TLP_BYTES   + 1);
+    localparam integer NBURST_CW = clogb2(MAX_FRAME_BYTES / BURST_BYTES + 1);
+    wire [NTLP_CW-1:0]   ntlp_m1_w   = (frame_bytes / TLP_BYTES)   - {{(NTLP_CW-1){1'b0}}, 1'b1};
+    wire [NBURST_CW-1:0] nburst_m1_w = (frame_bytes / BURST_BYTES) - {{(NBURST_CW-1){1'b0}}, 1'b1};
 
     localparam [2:0]   AXI_SIZE     = 3'd5;    // 2**5 = 32 字节/拍
     localparam [1:0]   AXI_BURST    = 2'b01;   // INCR
@@ -280,6 +304,15 @@ module ddr_frame_pusher #(
         end
     endfunction
 
+    function integer clogb2;
+        input integer v;
+        integer i;
+        begin
+            clogb2 = 0;
+            for (i = v - 1; i > 0; i = i >> 1) clogb2 = clogb2 + 1;
+        end
+    endfunction
+
     function [FIFO_AW:0] bin2gray;
         input [FIFO_AW:0] b;
         begin
@@ -293,7 +326,8 @@ module ddr_frame_pusher #(
     // ---- 片内域：状态与握手 ----
     reg  [2:0]  p_st;
     reg  [2:0]  k;              // 本 MWr 内的拍下标：0 = 头，1..LAST_K = 载荷
-    reg  [11:0] tlp;            // 本帧第几个 MWr（0..NTLP-1）
+    reg  [NTLP_CW-1:0] tlp;            // 本帧第几个 MWr（0..ntlp_m1_lat）
+    reg  [NTLP_CW-1:0] ntlp_m1_lat;    // 本帧 MWr 数 - 1（起帧锁存；640x480=2399 / 4K=64799）
     reg  [31:0] last_seq;       // 已经处理过的帧号（含出错停发那帧）
     reg  [63:0] addr_q;         // 帧内当前目标地址（每发一个 MWr +128）
     reg  [63:0] db_a_q;         // 门铃地址（本帧固定）
@@ -322,7 +356,8 @@ module ddr_frame_pusher #(
 
     // ---- ddr 域 ----
     reg  [2:0]  a_st;
-    reg  [7:0]  a_bcnt;
+    reg  [NBURST_CW-1:0] a_bcnt;         // 已完成突发数（0..nburst_m1_lat；4K 要 2025）
+    reg  [NBURST_CW-1:0] nburst_m1_lat;  // 本帧突发数 - 1（起帧锁存；640x480=74 / 4K=2024）
     reg         done_level;
     reg         err_sticky;
     reg         req_s1, req_s2;
@@ -369,7 +404,7 @@ module ddr_frame_pusher #(
     //   pop_drain —— 出错排空（拿到就丢，rd_have 无所谓）
     wire pop_data  = ~src_lat && (p_st == S_DATA)  && utx_ack && (k != LAST_K) && !fifo_empty;
     wire pop_fill  = ~src_lat && (p_st == S_FILL)  && !rd_have && !fifo_empty;
-    wire pop_tend  = ~src_lat && (p_st == S_TEND)  && !flush && (tlp != NTLP_M1) && !rd_have && !fifo_empty;
+    wire pop_tend  = ~src_lat && (p_st == S_TEND)  && !flush && (tlp != ntlp_m1_lat) && !rd_have && !fifo_empty;
     wire pop_drain = (p_st == S_DRAIN) && !fifo_empty;
     wire fifo_pop  = pop_data | pop_fill | pop_tend | pop_drain;
 
@@ -588,7 +623,7 @@ module ddr_frame_pusher #(
         if (rst_all_fb) begin
             p_st       <= S_IDLE;
             k          <= 3'd0;
-            tlp        <= 12'd0;
+            tlp        <= {NTLP_CW{1'b0}};
             last_seq   <= 32'd0;
             src_lat    <= 1'b0;
             addr_q     <= 64'd0;
@@ -641,6 +676,8 @@ module ddr_frame_pusher #(
                             last_seq  <= src_seq;   // 这一帧只处理一次
                             src_lat   <= src_sel;   // 本帧用哪个源（帧内不再变）
                             base_lat  <= ddr_base;
+                            ntlp_m1_lat   <= ntlp_m1_w;     // 本帧的 MWr 数/突发数
+                            nburst_m1_lat <= nburst_m1_w;   // （4K/640x480 都在这儿定死）
                             addr_q    <= {dst_hi, dst_lo};
                             db_a_q    <= {db_hi, db_lo};
                             db_ena    <= (db_lo != 32'd0) || (db_hi != 32'd0);
@@ -653,7 +690,7 @@ module ddr_frame_pusher #(
                             db_sent   <= 1'b0;
                             db_phase  <= 1'b0;
                             tlp_cnt   <= 32'd0;
-                            tlp       <= 12'd0;
+                            tlp       <= {NTLP_CW{1'b0}};
                             k         <= 3'd0;
                             p_st      <= S_FILL;    // 先等第一个载荷字到位
                         end
@@ -701,7 +738,7 @@ module ddr_frame_pusher #(
                 S_TEND: begin
                     if (flush) begin
                         p_st <= S_DRAIN;
-                    end else if (tlp == NTLP_M1) begin
+                    end else if (tlp == ntlp_m1_lat) begin
                         if (db_ena) begin
                             db_phase <= 1'b1;
                             p_st     <= S_HEAD;   // 接着发门铃那一拍
@@ -709,7 +746,7 @@ module ddr_frame_pusher #(
                             p_st     <= S_WAIT;
                         end
                     end else begin
-                        tlp    <= tlp + 12'd1;
+                        tlp    <= tlp + {{(NTLP_CW-1){1'b0}}, 1'b1};
                         addr_q <= addr_q + TLP_BYTES;   // 帧内地址递增
                         p_st   <= S_HEAD;
                     end
@@ -732,7 +769,7 @@ module ddr_frame_pusher #(
                         flush     <= 1'b0;
                         db_phase  <= 1'b0;
                         k         <= 3'd0;
-                        tlp       <= 12'd0;
+                        tlp       <= {NTLP_CW{1'b0}};
                         p_st      <= S_IDLE;
                     end
                 end
@@ -750,7 +787,7 @@ module ddr_frame_pusher #(
                         req_level  <= 1'b0;
                         flush      <= 1'b0;
                         k          <= 3'd0;
-                        tlp        <= 12'd0;
+                        tlp        <= {NTLP_CW{1'b0}};
                         p_st       <= S_IDLE;
                     end
                 end
@@ -780,7 +817,7 @@ module ddr_frame_pusher #(
     always @(posedge clk_ddr or posedge rst_ddr) begin
         if (rst_ddr) begin
             a_st          <= A_IDLE;
-            a_bcnt        <= 8'd0;
+            a_bcnt        <= {NBURST_CW{1'b0}};
             m_axi_araddr  <= 29'd0;
             m_axi_arlen   <= 8'd0;
             m_axi_arvalid <= 1'b0;
@@ -799,7 +836,7 @@ module ddr_frame_pusher #(
                         m_axi_arvalid <= 1'b1;
                     end else if (!req_s2) begin
                         // 一帧收工（或还没开始）：突发计数与出错一起清
-                        a_bcnt     <= 8'd0;
+                        a_bcnt     <= {NBURST_CW{1'b0}};
                         err_sticky <= 1'b0;
                     end
                 end
@@ -815,12 +852,12 @@ module ddr_frame_pusher #(
                     if (m_axi_rvalid && !fifo_wfull) begin
                         if (m_axi_rresp != 2'b00) err_sticky <= 1'b1;
                         if (m_axi_rlast) begin
-                            if (a_bcnt == NBURST_M1) begin
-                                a_bcnt     <= 8'd0;
+                            if (a_bcnt == nburst_m1_lat) begin
+                                a_bcnt     <= {NBURST_CW{1'b0}};
                                 done_level <= 1'b1;
                                 a_st       <= A_DONE;
                             end else begin
-                                a_bcnt <= a_bcnt + 8'd1;
+                                a_bcnt <= a_bcnt + {{(NBURST_CW-1){1'b0}}, 1'b1};
                                 a_st   <= A_IDLE;
                             end
                         end
@@ -830,7 +867,7 @@ module ddr_frame_pusher #(
                 A_DONE: begin
                     if (!req_s2) begin
                         done_level <= 1'b0;
-                        a_bcnt     <= 8'd0;
+                        a_bcnt     <= {NBURST_CW{1'b0}};
                         err_sticky <= 1'b0;
                         a_st       <= A_IDLE;
                     end

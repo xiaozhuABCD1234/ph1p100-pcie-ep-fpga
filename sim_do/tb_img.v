@@ -1,5 +1,11 @@
 ///////////////////////////////////////////////////////////////
 //  tb_img.v — img_regs + img_frame_src 冒烟测试（iverilog）
+//
+//  ★ 注意：img_regs 在本工程里已经**不实例化**（顶层走 ep_bar_win 那套寄存器面，
+//    0x5C/0x60 的回绕语义是「比较回绕」）。img_regs 自己的回绕是**掩码**语义
+//    （rd_ptr & PTR_MASK），只有 PTR_MASK = 2^n-4 时才等价 —— 所以本 TB 末尾那条
+//    "PTR 回绕到 0" 对 img_regs 是**预期不符**的历史遗留（75776 vs 0），
+//    与本次 4K 直通改动无关；活的寄存器面由 tb_ep_bar_win.v 覆盖。
 //  iverilog -o tb_img tb_img.v img_regs.v img_frame_src.v && ./tb_img
 ///////////////////////////////////////////////////////////////
 `timescale 1ns/1ps
@@ -30,6 +36,7 @@ module tb_img;
     integer errors = 0;
     integer i;
     reg [31:0] v, fc0, w1, w2;
+    reg [7:0]  fcp;
     reg [7:0]  b0, b1, b2, b3;
 
     always #4 clk = ~clk;                  // 125 MHz
@@ -50,6 +57,13 @@ module tb_img;
         .clk (clk), .rst (rst),
         .enable (ctrl_enable), .trigger (ctrl_trigger),
         .rd_addr (fb_raddr), .rd_data (fb_rdata),
+        // 读口仲裁/相机写源/诊断这几根线必须显式给：悬空(z)会让 host_grant
+        // 变 x，rd_data/状态字跟着全 x（本 TB 原来就是栽在这上面）
+        .host_rd_prio (1'b0), .dma_rd_req (1'b0),
+        .host_grant (), .dma_grant (), .rd2_addr (32'd0), .rd2_data (),
+        .cam_sel (1'b0), .cam_wr_en (1'b0), .cam_wr_addr (32'd0),
+        .cam_wr_data (32'd0), .cam_frame_cnt (32'd0), .cam_data_len (32'd0),
+        .cam_ready (1'b0), .cam_busy (1'b0),
         .frame_cnt (st_frame_cnt), .width (st_width), .height (st_height),
         .data_len (st_data_len), .ready (st_ready), .busy (st_busy)
     );
@@ -125,7 +139,11 @@ module tb_img;
         chk("STATUS.ready", v[0], 1'b1);
 
         do_read(32'h4C, fc0);
-        $display("  INFO FRAME_CNT   = %0d", fc0);
+        // ★ 语义：0x4C 是「已完成帧数」，而像素公式用的是**本帧开始时的**帧号
+        //   （img_frame_src 在帧尾才 +1）→ 第 1 帧的像素用的是 0，读回却是 1。
+        //   所以期望的 fc 要减 1（原来没减，字 0/字 1 两条必然误报）。
+        fcp = fc0[7:0] - 8'd1;
+        $display("  INFO FRAME_CNT   = %0d（本帧像素用的帧号 %0d）", fc0, fcp);
         do_read(32'h58, v);  chk("DATA_LEN",   v, W*H);
 
         $display("--- 数据窗口 ---");
@@ -134,17 +152,17 @@ module tb_img;
         do_write(32'h5C, 32'd0);                    // PTR = 0
         do_read (32'h60, w1);                       // 字 0 = 像素 (x=0..3, y=0)
         b0 = w1[7:0]; b1 = w1[15:8]; b2 = w1[23:16]; b3 = w1[31:24];
-        if (!(b0 === fc0[7:0] && b1 === (fc0[7:0] + 8'd1) &&
-              b2 === (fc0[7:0] + 8'd2) && b3 === (fc0[7:0] + 8'd3))) begin
-            $display("  FAIL 字0 = %08x，期望字节 fc,fc+1,fc+2,fc+3（fc=%02x）", w1, fc0[7:0]);
+        if (!(b0 === fcp && b1 === (fcp + 8'd1) &&
+              b2 === (fcp + 8'd2) && b3 === (fcp + 8'd3))) begin
+            $display("  FAIL 字0 = %08x，期望字节 fc,fc+1,fc+2,fc+3（fc=%02x）", w1, fcp);
             errors = errors + 1;
         end else
             $display("  PASS 字0 = %08x（字节递增且首字节=帧号 mod 256）", w1);
 
         // 字 1 = 像素 (x=4..7, y=0)：首字节 = fc+4
         do_read (32'h60, w2);                       // PTR 已自动 +4（=4）
-        if (w2[7:0] !== (fc0[7:0] + 8'd4)) begin
-            $display("  FAIL 字1 首字节 = %02x，期望 %02x", w2[7:0], fc0[7:0] + 8'd4);
+        if (w2[7:0] !== (fcp + 8'd4)) begin
+            $display("  FAIL 字1 首字节 = %02x，期望 %02x", w2[7:0], fcp + 8'd4);
             errors = errors + 1;
         end else
             $display("  PASS 字1 = %08x（指针自动 +4 生效）", w2);

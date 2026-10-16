@@ -1,12 +1,11 @@
 ///////////////////////////////////////////////////////////////
 //  tb_cam_fb_writer.v — cam_fb_writer + img_frame_src 冒烟测试
 //
-//  ★ 本机没有仿真器：本测试台「只写不跑」，结论里必须标注“未运行”。
-//    在有 iverilog 的机器上跑：
+//  跑法（本机装了 iverilog，已实测通过）：
 //      iverilog -o tb_cam_fb_writer tb_cam_fb_writer.v \
-//               ../../rtl/ep_side/img/cam_fb_writer.v \
-//               ../../rtl/ep_side/img/img_frame_src.v
+//               ../rtl/ep_side/img/cam_fb_writer.v ../rtl/ep_side/img/img_frame_src.v
 //      ./tb_cam_fb_writer            # 期望输出 "ALL PASS"
+//    （注意路径是 ../rtl/... —— sim_do 在 fpga/ 下，不是仓库根）
 //
 //  测什么：
 //   1) 字节时钟域（187.5MHz）按 CSI-2 收包的真实约定造流：
@@ -81,21 +80,29 @@ module tb_cam_fb_writer;
         end
     endfunction
 
+    // 注意：每个操作数先落到 8bit 变量再拼 —— 直接写 {a>>2, b>>2, ...} 会被
+    // iverilog 判成「拼接操作数宽度不定」（error: indefinite width）而编不过
     function [31:0] exp_word;
         input integer yy;
         input integer gg;
         integer idx;
+        reg [7:0] w0, w1, w2, w3;
         begin
             idx = (yy * GROUPS + gg) * 4;
-            exp_word = {((idx + 3) & 32'd1023) >> 2,
-                        ((idx + 2) & 32'd1023) >> 2,
-                        ((idx + 1) & 32'd1023) >> 2,
-                        ((idx + 0) & 32'd1023) >> 2};
+            w0 = ((idx + 0) & 32'd1023) >> 2;
+            w1 = ((idx + 1) & 32'd1023) >> 2;
+            w2 = ((idx + 2) & 32'd1023) >> 2;
+            w3 = ((idx + 3) & 32'd1023) >> 2;
+            exp_word = {w3, w2, w1, w0};
         end
     endfunction
 
     cam_fb_writer #(
-        .W (W), .H (H), .AW (17), .FIFO_AW (9)
+        .W (W), .H (H), .AW (17), .FIFO_AW (9),
+        // ★ 必须显式给 SKIP_ROWS=0：模块默认值 1 是给 binning 模式（帧头 1 行
+        //   embedded data）用的，本 TB 的激励只发 H 行、期望逐行 1:1 对上，
+        //   不写就会被「跳 1 行」整体错位一整行（本 TB 原来就是这么全错的）。
+        .X0 (16'd0), .Y0 (16'd0), .SKIP_ROWS (16'd0)
     ) u_dut (
         .cam_clk       (cam_clk),
         .cam_rst_n     (cam_rst_n),
@@ -128,6 +135,14 @@ module tb_cam_fb_writer;
         .trigger   (1'b0),
         .rd_addr   (rd_addr),
         .rd_data   (rd_data),
+        // 读口仲裁的另外几根线必须显式给：悬空(z)会让 host_grant 变 x，
+        // 于是 rd_data 全是 x（本 TB 原来就是这么"全错"的）
+        .host_rd_prio (1'b0),
+        .dma_rd_req   (1'b0),
+        .host_grant   (),
+        .dma_grant    (),
+        .rd2_addr     (32'd0),
+        .rd2_data     (),
         .dbg_rd_idx(),
         .frame_cnt (img_frame_cnt),
         .width     (img_w),
@@ -186,7 +201,12 @@ module tb_cam_fb_writer;
                     cam_pix_valid <= 1'b1;         // 1 组/拍 = 最坏突发
                 end
                 @(posedge cam_clk); cam_pix_valid <= 1'b0;
-                repeat (4) @(posedge cam_clk);     // 行间空档（blanking）
+                // 行间空档必须给够：跨域 FIFO 的排空侧是 62.5MHz（16ns/字），
+                // 一行入窗 160 字要 2.56us 才排得完；只给 4 拍（21ns）的话
+                // FIFO 每行净涨 ~93 字，5 行就满、之后全是丢包（原来就是这么
+                // 「wr_word_cnt 只到 33617、drop_cnt 43183」的）。
+                // 400 拍 = 2.13us，与真实传感器一行的量级一致。
+                repeat (400) @(posedge cam_clk);
             end
             @(posedge cam_clk); cam_in_frame <= 1'b0;   // FE → EOF
             repeat (10) @(posedge cam_clk);

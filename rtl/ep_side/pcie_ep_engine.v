@@ -50,7 +50,7 @@ module pcie_ep_engine #(
     // ==== 本移植新增：BAR0 真窗口 → 图像源接口 ====
     output      wire                img_ctrl_enable        ,
     output      wire                img_ctrl_trigger       ,
-    output      wire    [1:0]       img_ctrl_pattern       ,
+    output      wire    [2:0]       img_ctrl_pattern       ,
     input       wire                img_st_ready           ,
     input       wire                img_st_busy            ,
     input       wire    [31:0]      img_st_frame_cnt       ,
