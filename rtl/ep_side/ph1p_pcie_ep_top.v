@@ -84,6 +84,21 @@
     // ---- 图像通路（本移植新增）----
     localparam IMG_W      = 640;
     localparam IMG_H      = 480;
+
+    // ---- 相机裁剪窗（传给 cam_fb_writer，别处不再出现这几个魔数）----
+    //  传感器跑 4K 全像素（I_cam_mode = 1），读出 3840x2160；帧缓存只放 640x480，
+    //  所以 cam_fb_writer 是个**裁剪窗**，不是缩放器。取整幅的正中 640x480：
+    //      CAM_X0 = (3840 - 640)/2 = 1600
+    //      CAM_Y0 = (2160 - 480)/2 = 840
+    //  CAM_SKIP_ROWS = 37：板上实测（连抓多帧，`frame_grab` 出的 PGM 逐行统计）
+    //  帧头之后有 **36 行恒定黑电平**（值恒为 12 = 10bit pedestal 50 >> 2）的
+    //  哑行/光黑行，第 37 行才是图像第 0 行。原来的 1 是按 binning 模式标定的，
+    //  在 4K 下会把这段黑带当成图像前 36 行搬进帧缓存（就是「图很奇怪」的来源之一）。
+    //  语义：y_img0 = CAM_Y0 + CAM_SKIP_ROWS 是**第一个被搬进缓存的 y_cnt**，
+    //  所以 CAM_Y0 是「图像域里的行偏移」，CAM_SKIP_ROWS 是「帧头哑行数」。
+    localparam [15:0] CAM_X0        = 16'd1600;
+    localparam [15:0] CAM_Y0        = 16'd840;
+    localparam [15:0] CAM_SKIP_ROWS = 16'd37;
     localparam IMG_WORDS  = (IMG_W * IMG_H) / 4;
     localparam IMG_PTRBYTES = IMG_W * IMG_H;
     localparam IMG_PTRMSK   = (IMG_WORDS * 4) - 4;   // 保留（未用）
@@ -1073,10 +1088,13 @@ assign  debug_led[3] = ltssm_reg_dly[4];
     //  写口在 img_frame_src 内按 CTRL[4]（img_cam_sel）在两种写源之间 mux。
     // ====================================================================
     cam_fb_writer #(
-        .W       (IMG_W),
-        .H       (IMG_H),
-        .AW      (17),
-        .FIFO_AW (9)
+        .W         (IMG_W),
+        .H         (IMG_H),
+        .AW        (17),
+        .X0        (CAM_X0),
+        .Y0        (CAM_Y0),
+        .SKIP_ROWS (CAM_SKIP_ROWS),
+        .FIFO_AW   (9)
     ) u_cam_fb_writer (
         .cam_clk       (w_a_byte_clk    ),
         .cam_rst_n     (w_a_rst_out     ),
