@@ -96,6 +96,32 @@
 //    · 推帧与门铃都是 TC0 的 Posted 写，PCIe 排序规则不允许 Posted 互相超越，
 //      所以主机一定先看到帧数据、最后看到门铃。
 //    详细约定（TLP 头怎么拼、字节序、出错怎么办）见 ddr_frame_pusher.v 头部。
+//
+//  ==== T07.rk-align-backend 新增：RKA1 安全扩展窗口 0x100..0x11C + CSI 诊断 0x120..0x12C ====
+//  与 contract/registers.json 逐项对应（扩展窗口默认值/reset 都在这里给）：
+//    0x100 DMA_CAP_BYTES R/W 主机分配的传输容量（字节）。默认 0；只在 IDLE 可写，
+//                             busy/held/draining 期间写会被拒（cfg_reject）。
+//    0x104 SESSION_ID    R/W 非零会话号。默认 0；同上只在 IDLE 可写。
+//    0x108 TX_CMD        W1  bit0=ARM_ONE_SHOT / bit1=ACK_RELEASE / bit2=CANCEL。
+//                             每笔写只能有 1 个 bit 置 1（多 bit / 未知 bit 全拒），
+//                             读恒 0。ARM 原子锁存 descriptor；ACK 必须匹配
+//                             held(session,seq)；CANCEL 完成后不发成功门铃。
+//    0x10C ACK_SEQ       R/W 待匹配的完成序号（门铃里写的那个值）
+//    0x110 ACK_SESSION   R/W 待匹配的会话号
+//    0x114 TX_STATUS     R   bit0 armed / bit1 busy / bit2 held / bit3 rejected|error
+//                             / bit4 draining；其余位 0
+//    0x118 EXT_MAGIC     R   0x31414B52（小端 ASCII "RKA1"）；旧 peer 这段读
+//                             DEAD_BEEF ⇒ 主机据此判断扩展不存在并 fail closed
+//    0x11C EXT_VERSION   R   0x0001_0000（major1.minor0）
+//  以上 8 个偏移严格按合同，不再占用 0xD0..0xF4 的旧诊断。
+//
+//  额外只读诊断（**不在合同里，属 T07 新增 diag，主机可忽略**）：
+//    0x120 CSI_DIAG_A  R {good[7:0], bad[7:0], hdr_err[7:0], crc_err[7:0]}（A 路低 8 位）
+//    0x124 CSI_DIAG_A2 R {last_lines[15:0], last_wc[15:0]}（A 路最近帧几何）
+//    0x128 CSI_DIAG_B  R B 路同 0x120
+//    0x12C CSI_DIAG_B2 R B 路同 0x124
+//  这些字全部来自 checked CSI 的字节时钟域，用两级采样后仅作人看诊断（不参与控制），
+//  计数器跨域瞬间可能差一拍，属可接受；板上定位坏帧用。
 ///////////////////////////////////////////////////////////////
 `timescale 1ns/1ps
 
@@ -103,7 +129,9 @@ module ep_bar_win #(
     parameter [31:0] MAGIC    = 32'h5043_4946,   // "FICP"
     parameter [31:0] VERSION  = 32'h0002_0000,
     parameter [31:0] PTR_BYTES = 32'h0004_B000,  // 帧缓存字节数；用比较回绕，别用掩码
-    parameter [8:0]  CLK_MHZ  = 9'd62            // tl_clk_user 频率，给主机算带宽
+    parameter [8:0]  CLK_MHZ  = 9'd62,           // tl_clk_user 频率，给主机算带宽
+    parameter [31:0] MAGIC_RKA1  = 32'h3141_4B52, // "RKA1" 小端
+    parameter [31:0] VERSION_RKA1= 32'h0001_0000  // 扩展接口 major1.minor0
 )(
     input  wire         clk,
     input  wire         rst,
@@ -155,7 +183,24 @@ module ep_bar_win #(
     output wire [31:0]  fb_raddr,
     input  wire [31:0]  fb_rdata,
     input  wire [31:0]  dbg_rd_idx,
-    input  wire [255:0] cam_stat
+    input  wire [255:0] cam_stat,
+
+    // ==== T07 新增：RKA1 安全扩展寄存器面（与 ddr_frame_pusher 的安全门直连）====
+    output reg  [31:0]  tx_cap_bytes,     // 0x100（暂存，ARM 时由安全门锁存并校验）
+    output reg  [31:0]  tx_session_id,    // 0x104（同上）
+    output reg          tx_cmd_arm,       // 0x108.bit0 单拍脉冲
+    output reg          tx_cmd_ack,       // 0x108.bit1 单拍脉冲
+    output reg          tx_cmd_cancel,    // 0x108.bit2 单拍脉冲
+    output reg  [31:0]  tx_ack_seq,       // 0x10C
+    output reg  [31:0]  tx_ack_session,   // 0x110
+    input  wire [31:0]  tx_status_in,     // 0x114（安全门给）
+    input  wire         tx_block_cfg,     // 1 = busy/held/draining：活动期配置写被拒
+    output reg          cfg_reject,       // 活动期写配置被拒（单拍，安全门据此记错误码 10）
+    // CSI 诊断（checked CSI 字节域两级采样后进来，仅人看）
+    input  wire [31:0]  csi_diag_a,
+    input  wire [31:0]  csi_diag_a2,
+    input  wire [31:0]  csi_diag_b,
+    input  wire [31:0]  csi_diag_b2
 );
 
     // 引擎的数据字段是“首字节在高位”，而主机按小端读 → 每个 dw 都要翻转字节序
@@ -191,6 +236,12 @@ module ep_bar_win #(
     wire        req_wr    = rx_sop_ff && is_mem &&  is_wr;
     wire        req_is_data = req_rd && (tlp_addr[11:0] == 12'h60);
 
+    // T07 仿真兼容修正：原 peer 把 rd_addr32/rd_len_dw 的声明放在下面（使用之后），
+    // TD 能过、但 ModelSim vlog 报 vlog-2730/2388（隐式网冲突）。声明挪到使用前，
+    // 行为完全不变（仅声明位置）。
+    reg [31:0] rd_addr32;
+    reg [10:0] rd_len_dw;
+
     wire [11:0] r_idx      = rd_addr32[11:0];
     wire [10:0] rd_dw_cnt  = (rd_len_dw > 11'd4) ? 11'd4 : rd_len_dw;
     wire        rd_is_data = (r_idx == 12'h60);
@@ -198,8 +249,6 @@ module ep_bar_win #(
     // ------------------------------------------------------------------
     // 请求锁存 + 寄存器写入 + 指针前进
     // ------------------------------------------------------------------
-    reg [31:0] rd_addr32;
-    reg [10:0] rd_len_dw;
     reg        rd_data_go;        // 读 DATA 的单拍脉冲（用于指针前进）
     reg [31:0] ptr;
     reg [31:0] scratch;
@@ -231,11 +280,23 @@ module ep_bar_win #(
             push_dst_hi    <= 32'd0;
             push_db_lo     <= 32'd0;
             push_db_hi     <= 32'd0;
+            tx_cap_bytes   <= 32'd0;      // 默认 cap=0（不授权）
+            tx_session_id  <= 32'd0;      // 默认 session=0（不授权）
+            tx_cmd_arm     <= 1'b0;
+            tx_cmd_ack     <= 1'b0;
+            tx_cmd_cancel  <= 1'b0;
+            tx_ack_seq     <= 32'd0;
+            tx_ack_session <= 32'd0;
+            cfg_reject     <= 1'b0;
             ptr           <= 32'd0;
             scratch       <= 32'd0;
             last_wr       <= 32'd0;
         end else begin
             rd_data_go <= 1'b0;
+            tx_cmd_arm <= 1'b0;
+            tx_cmd_ack <= 1'b0;
+            tx_cmd_cancel <= 1'b0;
+            cfg_reject <= 1'b0;
 
             if (req_rd) begin
                 rd_addr32     <= tlp_addr;
@@ -264,6 +325,30 @@ module ep_bar_win #(
                     12'hBC: push_db_hi  <= tlp_dw_s;
                     12'h6C: scratch <= tlp_dw_s;
                     12'h74: last_wr <= tlp_dw_s;
+                    // ---- RKA1 安全扩展（0x100..0x11C）----
+                    // 活动配置（cap/session）只在 IDLE 可写；busy/held/draining
+                    // 期间的写被拒并置 cfg_reject（安全门记错误码 10）。
+                    12'h100: begin
+                        if (tx_block_cfg) cfg_reject <= 1'b1;
+                        else              tx_cap_bytes <= tlp_dw_s;
+                    end
+                    12'h104: begin
+                        if (tx_block_cfg) cfg_reject <= 1'b1;
+                        else              tx_session_id <= tlp_dw_s;
+                    end
+                    // TX_CMD：每笔写必须恰好一个 bit 置位（W1，读恒 0）
+                    12'h108: begin
+                        if      ((tlp_dw_s[2:0] == 3'b001) && (tlp_dw_s[31:3] == 29'd0))
+                            tx_cmd_arm    <= 1'b1;
+                        else if ((tlp_dw_s[2:0] == 3'b010) && (tlp_dw_s[31:3] == 29'd0))
+                            tx_cmd_ack    <= 1'b1;
+                        else if ((tlp_dw_s[2:0] == 3'b100) && (tlp_dw_s[31:3] == 29'd0))
+                            tx_cmd_cancel <= 1'b1;
+                        else
+                            cfg_reject    <= 1'b1;   // 0/多 bit 或未知 bit：拒绝
+                    end
+                    12'h10C: tx_ack_seq     <= tlp_dw_s;
+                    12'h110: tx_ack_session <= tlp_dw_s;
                     default: ;
                 endcase
             end else begin
@@ -404,6 +489,20 @@ module ep_bar_win #(
             12'hC4:  rd_dw_comb = push_ro[63:32];         // PUSH_STATUS
             12'hC8:  rd_dw_comb = push_ro[95:64];         // PUSH_ERR
             12'hCC:  rd_dw_comb = push_ro[127:96];        // PUSH_TLP_CNT
+            // ---- RKA1 安全扩展（0x100..0x11C）----
+            12'h100: rd_dw_comb = tx_cap_bytes;           // DMA_CAP_BYTES
+            12'h104: rd_dw_comb = tx_session_id;          // SESSION_ID
+            12'h108: rd_dw_comb = 32'd0;                  // TX_CMD（W1，读恒 0）
+            12'h10C: rd_dw_comb = tx_ack_seq;             // ACK_SEQ
+            12'h110: rd_dw_comb = tx_ack_session;         // ACK_SESSION
+            12'h114: rd_dw_comb = tx_status_in;           // TX_STATUS
+            12'h118: rd_dw_comb = MAGIC_RKA1;             // EXT_MAGIC = "RKA1"
+            12'h11C: rd_dw_comb = VERSION_RKA1;           // EXT_VERSION
+            // ---- T07 附加只读诊断（可忽略）----
+            12'h120: rd_dw_comb = csi_diag_a;             // CSI_DIAG_A
+            12'h124: rd_dw_comb = csi_diag_a2;            // CSI_DIAG_A2
+            12'h128: rd_dw_comb = csi_diag_b;             // CSI_DIAG_B
+            12'h12C: rd_dw_comb = csi_diag_b2;            // CSI_DIAG_B2
             default: rd_dw_comb = 32'hDEAD_BEEF;
         endcase
     end

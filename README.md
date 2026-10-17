@@ -190,3 +190,24 @@ insmod anlogic_pci.ko
 - 范围：本仓库的模块名，如 `rtl` / `constraints` / `ip` / `doc`
 - 示例：`fix(rtl): 修正 IMX415 主时钟分频，恢复相机链路锁定`
 - 由 `commit-msg` 钩子校验，不合规直接拒绝
+
+
+## raw10-rka1 迁入说明（2026-10-18）
+
+本分支（`codex/raw10-rka1`）把已验收的 RAW10/R10F/DDR/PCIe（RKA1 单帧 ARM/held/ACK/CANCEL）通路
+逐文件并入本仓，保留原 PCIe 硬核、DDR AXI 接口、IP 与约束；不改时钟/SDC。
+
+- 新增目录：`rtl/checked/`（包完整性检查/解包/CRC 树）、`sim/`（8 个正式 TB + 编译清单）、
+  `tools/pcie_integration/`（仿真/TD/CRC/严格解析/清单工具）、`docs/protocol/rka1-r10f-v1/`
+  （R10F v1 合同与样例镜像，SHA256SUMS）。
+- 运行前设置：$env:MSIM_BIN=<modelsim_ase>\win32aloem；$env:TD_BIN=<TD_Release_2026.2>\bin（仅工具链安装位置；工程路径均相对检出根）。
+- 仿真（ModelSim ASE，检出根运行，单 TB 建议 5 分钟内）：
+  `powershell -ExecutionPolicy Bypass -File tools/pcie_integration/run_sim.ps1 -Tb tb_t11_r10f_e2e
+   -OutDir build/g1/e2e -TbFiles tb/tb_t11_r10f_e2e.v -Defines MIPI_PHY_SIM_STUB`
+  另外 7 个 TB：tb_cam_r10f_writer / tb_t11_csi_enable_corner / tb_ddr_frame_pusher_rka1 /
+  tb_csi_integrity_diff / tb_csi_checked / tb_ep_bar_win_rka1 / tb_ddr_wr_arb_peer。
+- 构建（TD 2026.2 单会话 syn+phy+bit，不下载/不写 Flash）：
+  `powershell -ExecutionPolicy Bypass -File tools/pcie_integration/run_td.ps1 -Stage 00_all -OutDir <构建输出目录>`
+- 离线检查：`python tools/pcie_integration/r10f_strict.py selftest`、
+  `python tools/pcie_integration/r10f_tools_consistency.py --rust-src <RK侧 rka1.rs 路径>`。
+- 几何/ROI/Bayer 相位仍为未板证占位（diagnostic）；板测与下载需另行授权。

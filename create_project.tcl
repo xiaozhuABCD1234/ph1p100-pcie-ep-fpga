@@ -1,5 +1,9 @@
-# 标准 TD 工程重建脚本（工程根 = 本目录，源码/约束/IP 都在工程内部）
-#   用法:  cd <工程根> && /opt/anlogic/TD_Release_2026.2_NL/bin/td.sh create_project.tcl </dev/null
+# 标准 TD 工程重建脚本（工程根 = 本目录，源码/约束/IP 都在仓库内部）
+#   用法（TD Release 2026.2，Windows）：
+#     cd <本仓库检出根>
+#     "%TD_BIN%/td_commands_prompt.exe" create_project.tcl
+#   （Linux 包另可用 /opt/anlogic/TD_Release_2026.2_NL/bin/td.sh create_project.tcl </dev/null）
+#   说明：只建工程 + 加源 + 综合/布线/出 bit；不下载、不写 Flash、不 reset/clean 旧工程。
 create_project ph1p_pcie_ep_top ./ -family PH1 -device PH1P100SBG484 -speed 3 -force
 
 add_files rtl/ep_side/img/ep_bar_win.v
@@ -36,18 +40,22 @@ add_files rtl/ep_side/cam/wfifo.v
 add_files rtl/ep_side/cam/ui_cfg_imx415.v
 add_files rtl/ep_side/cam/ui_i2c.v
 add_files rtl/ep_side/cam/ui_imx415_reg.v
+# ---- raw10-rka1 迁入：checked 包层（T11 冻结版）+ checked PHY wrapper ----
+add_files rtl/checked/csi_rx_packet_integrity.v
+add_files rtl/checked/csi_rx_10bit_unpack_checked.v
+add_files rtl/ep_side/cam/mipi_csi2_rx_ph1p_checked.v
+# ---- DDR 通路 ----
 add_files rtl/ep_side/ddr/ddr_frame_pusher.v
 add_files rtl/ep_side/ddr/ddr_wr_arb.v
-# 相机整帧（4K）直通 DDR3：CSI-2 → 异步 FIFO → AXI 写 DDR3，不过片内 fb[]
+# 相机整帧（4K）直写 DDR3：CSI-2 -> 异步 FIFO -> AXI -> DDR3（旧写者，诊断/备用）
 add_files rtl/ep_side/ddr/cam_ddr_writer.v
-# 两条整帧写 DDR3 通路共用一个 AXI 写口，只在两边都空闲时换手
+# T11: RAW10 -> R10F 写者（crc32_upd4.v 为其 include；crc16_upd4.v 为 checked 包层 include，不单独编译）
+add_files rtl/ep_side/ddr/cam_r10f_writer.v
 add_files constraints/ph1p_pcie_case_ep.adc
 add_files constraints/ph1p_pcie_case_ep.sdc
 add_files al_ip/pcie_ep_core/pcie_ep_core.xml
 add_files al_ip/pcie_pll_ep/pcie_pll_ep.xml
 add_files al_ip/ram/ram.xml
-# 板载 DDR3L 控制器（IP 自带 src/adc、src/sdc，注册 xml 后由 TD 带进
-# IpADCList / IpSDCList，与 al_ip/pcie_ep_core 同一种注册方式）
 add_files al_ip/ddr3_mc_0/ddr3_mc_0.xml
 
 top_module ph1p_pcie_ep_top
@@ -58,3 +66,4 @@ wait_run syn_1 -quiet
 wait_run phy_1 -quiet
 save_best_bits
 
+puts "==== CREATE+BUILD DONE (no download, no flash) ===="

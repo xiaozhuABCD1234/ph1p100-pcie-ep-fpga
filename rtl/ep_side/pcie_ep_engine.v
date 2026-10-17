@@ -84,6 +84,22 @@ module pcie_ep_engine #(
     output      wire    [31:0]      img_push_db_lo         , // 0xB8
     output      wire    [31:0]      img_push_db_hi         , // 0xBC
     input       wire    [127:0]     img_push_ro            , // {tlp_cnt, status, done, err}
+    // ==== T07 新增：RKA1 安全扩展寄存器面（0x100..0x11C）+ CSI 诊断 ====
+    //   这些只是把 ep_bar_win 的端口引到顶层的「过路」端口，逻辑都在顶层/安全门里。
+    output      wire    [31:0]      tx_cap_bytes           , // 0x100
+    output      wire    [31:0]      tx_session_id          , // 0x104
+    output      wire                tx_cmd_arm             , // 0x108.bit0 单拍
+    output      wire                tx_cmd_ack             , // 0x108.bit1 单拍
+    output      wire                tx_cmd_cancel          , // 0x108.bit2 单拍
+    output      wire    [31:0]      tx_ack_seq             , // 0x10C
+    output      wire    [31:0]      tx_ack_session         , // 0x110
+    input       wire    [31:0]      tx_status_in           , // 0x114（安全门给）
+    input       wire                tx_block_cfg           , // 1 = busy/held/draining
+    output      wire                cfg_reject             , // 活动期写配置被拒（单拍）
+    input       wire    [31:0]      csi_diag_a             , // 0x120
+    input       wire    [31:0]      csi_diag_a2            , // 0x124
+    input       wire    [31:0]      csi_diag_b             , // 0x128
+    input       wire    [31:0]      csi_diag_b2            , // 0x12C
     input       wire                utx_req                ,
     input       wire                utx_eop                ,
     input       wire    [7:0]       utx_valid              ,
@@ -96,6 +112,15 @@ module pcie_ep_engine #(
 // ====================================================================
 // Parameter|Wire|Reg
 // ====================================================================
+// T07 仿真兼容修正（行为不变）：tl_tx_state 与其状态编码原声明在下面 TX Engine
+// 段（本段先使用、后声明），TD 能过、ModelSim vlog 报 vlog-2730/2388。声明提前。
+reg   [4:0]  tl_tx_state=0;
+localparam   TL_TX_IDLE     = 5'b0_0001,
+             TL_TX_ACK_IOW  = 5'b0_0010,
+             TL_TX_ACK_IOR  = 5'b0_0100,
+             TL_TX_ACK_MEMR = 5'b0_1000,
+             TL_TX_ACK_MSIX = 5'b1_0000,
+             TL_TX_USER     = 5'b10_0000;
 
 // pipeline for input signals
 reg     [47:0]       tl_rx_bardec_ff        ;
@@ -403,20 +428,29 @@ ep_bar_win #(
     .push_dst_lo    (img_push_dst_lo        ),
     .push_dst_hi    (img_push_dst_hi        ),
     .push_db_lo     (img_push_db_lo         ),
-    .push_db_hi     (img_push_db_hi         )
+    .push_db_hi     (img_push_db_hi         ),
+    // T07：RKA1 安全扩展寄存器面 + CSI 诊断（过路，逻辑在顶层/安全门）
+    .tx_cap_bytes   (tx_cap_bytes           ),
+    .tx_session_id  (tx_session_id          ),
+    .tx_cmd_arm     (tx_cmd_arm             ),
+    .tx_cmd_ack     (tx_cmd_ack             ),
+    .tx_cmd_cancel  (tx_cmd_cancel          ),
+    .tx_ack_seq     (tx_ack_seq             ),
+    .tx_ack_session (tx_ack_session         ),
+    .tx_status_in   (tx_status_in           ),
+    .tx_block_cfg   (tx_block_cfg           ),
+    .cfg_reject     (cfg_reject             ),
+    .csi_diag_a     (csi_diag_a             ),
+    .csi_diag_a2    (csi_diag_a2            ),
+    .csi_diag_b     (csi_diag_b             ),
+    .csi_diag_b2    (csi_diag_b2            )
 );
 
 // ====================================================================
 // TX Engine
+// T07 仿真兼容修正（行为不变）：tl_tx_state / TL_TX_* 的声明已提前到文件
+// Parameter|Wire|Reg 段（本段下面第一次使用之前），这里不再重复声明。
 // ====================================================================
-
-reg   [4:0]  tl_tx_state=0;
-localparam   TL_TX_IDLE     = 5'b0_0001,
-             TL_TX_ACK_IOW  = 5'b0_0010,
-             TL_TX_ACK_IOR  = 5'b0_0100,
-             TL_TX_ACK_MEMR = 5'b0_1000,
-             TL_TX_ACK_MSIX = 5'b1_0000,
-             TL_TX_USER     = 5'b10_0000;   // 本步新增：TL 发送口借给用户侧推帧
 
 // 顶层据此把 tl_tx_* 换成用户侧那一组
 assign  utx_sel = (tl_tx_state == TL_TX_USER);

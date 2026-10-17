@@ -90,18 +90,18 @@
     localparam IMG_PTRBYTES = IMG_W * IMG_H;
     localparam IMG_PTRMSK   = (IMG_WORDS * 4) - 4;   // 保留（未用）
 
-    // ---- 相机 4K 直通 DDR3（cam_ddr_writer，本步新增）----
-    //  传感器本来就跑 4K（I_cam_mode=1），MIPI/CSI-2 收到的就是整行 3840 像素；
-    //  片内帧缓存装不下 4K（300 块 ERAM20K = 768000B < 8294400B），所以这条通路
-    //  不经过 fb[]，直接「CSI-2 像素 → 异步 FIFO → AXI4 写 DDR3」。
-    //  几何：W*H 必须是 4KB 的整数倍（3840x2160 = 2025 x 4096 ✓），这样帧尾不会
-    //  出现半页突发、双缓冲两块基址也就永远 4KB 对齐。
-    //  帧头处理（板上实测）：跳过 1 行 embedded + 36 行哑行
-    //  （SKIP_ROWS=37），从 SKIP_ROWS + Y0 那一行开始取 H 行。
-    localparam integer CAMDDR_W   = 3840;
-    localparam integer CAMDDR_H   = 2160;
-    localparam [15:0]  CAMDDR_X0  = 16'd0;
-    localparam [15:0]  CAMDDR_Y0  = 16'd0;
+    // ---- 相机正式 RAW10 通路（cam_r10f_writer，T11 新增）----
+    //  传感器跑 4K（I_cam_mode=1），MIPI/CSI-2 收到整行 3840 像素；片内帧缓存
+    //  装不下 4K，所以正式路走「CSI-2 4 像素组 → 偶数 ROI → packed RAW10 →
+    //  R10F v1 → AXI 写 DDR3」。ROI 尺寸必须使 DMA 区为 4KiB 整数倍（1920×1080
+    //  packed = 2,592,000B + 128B 头 = 2,592,128B ⇒ dma_bytes = 2,592,768B = 633×4KiB）。
+    //  几何（板证前按“未板证”对待；来自源包实际 WC/行数标定）：
+    //    3840×2160 有效图居中取 1920×1080：X0=960、有效图 Y0=540（物理行 = 37+540）；
+    //    帧头 embedded + 物理哑行 SKIP_ROWS=37（T07 实测来源，未板证）。
+    localparam integer CAMDDR_W   = 1920;
+    localparam integer CAMDDR_H   = 1080;
+    localparam [15:0]  CAMDDR_X0  = 16'd960;
+    localparam [15:0]  CAMDDR_Y0  = 16'd540;
     localparam [15:0]  CAMDDR_SKIP_ROWS = 16'd37;
     //  两路各一对双缓冲（A/B 互不重叠；一帧 8294400B = 7.91MB，两块间隔 8MB）：
     //    A: 块0 1MB 起、块1 9MB 起   → 占用 1MB..16.914MB
@@ -110,7 +110,22 @@
     localparam [31:0]  DDR_CAM_BASE1   = 32'h0090_0000;   // A 路块 1（9MB；一帧 7.9MB，不重叠）
     localparam [31:0]  DDR_CAM_B_BASE0 = 32'h0110_0000;   // B 路块 0（17MB）
     localparam [31:0]  DDR_CAM_B_BASE1 = 32'h0190_0000;   // B 路块 1（25MB）
-    localparam integer CAMDDR_BYTES  = CAMDDR_W * CAMDDR_H;   // 8294400
+    localparam integer CAMDDR_BYTES  = CAMDDR_W * CAMDDR_H;   // 2,073,600（ROI 像素数；正式路是 packed，不用这个数）
+    // T07：实际板载 DDR3L 容量（x16、2048Mb、单 CS ⇒ 256MB）。依据是本工程匹配
+    // 生成的 al_ip/ddr3_mc_0/.params_ddr3_mc_0.txt（PH1P_COMP_DENSITY=2048、
+    // PH1P_COMP_TYPE=x16、PH1P_DDR_CS=1）与板载颗粒规格；**不拿 AXI 29 位地址线
+    // 宽当容量**（那是 512MB 的地址窗口，比实际容量大）。ARM 校验源基址时用这个数。
+    localparam [31:0]  DDR_CAP_BYTES = 32'h1000_0000;
+
+// T07 仿真兼容修正（行为不变）：以下 6 个线网在 peer 原文件里「先使用、后声明」，
+// TD 能过、ModelSim vlog 报 vlog-2730/2388（隐式网冲突）。声明挪到所有使用之前，
+// 原声明位置改成注释；接线与行为完全不变。
+wire         tl_clk_user;
+wire         pcie_pll_locked;
+wire         tl_clk_locked;
+wire         tl_rst_user;
+wire         pl_link_up;
+wire         img_ddr_en;         // CTRL[5]
 
 // ==== 图像通路（本移植新增：img_regs + img_frame_src）====
 wire [31:0]  img_fb_raddr;
@@ -129,6 +144,7 @@ wire         img_cam_ab_sel;   // CTRL[8]：推帧引擎取哪一路的已落 DD
 
 // 相机 4K 直通使能：DDR 搬运开着（CTRL[5]）时两片 cam_ddr_writer 都 armed。
 // A/B 两路各在自己的字节时钟域收帧，只在 DDR 域用 ddr_wr_arb 分时复用 AXI 写口。
+// T07：img_ddr_en 的声明已提前到文件前部（见那里的说明）。
 wire         w_cam_ddr_want;
 assign w_cam_ddr_want  = img_ddr_en;
 // img_pattern[0] = CTRL[2] 用作「传感器重触发」（见顶层相机段说明）。
@@ -141,7 +157,7 @@ wire         w_uart_rxd_unused = 1'b1;
 // ==== 相机整帧 → DDR3（A/B 两片 cam_ddr_writer + ddr_wr_arb + u_ddr3_mc_0 写口）====
 //  握手寄存器面在 ep_bar_win（A: 0xA0~0xAC，B: 0xE0~0xEC），经 pcie_ep_engine 的
 //  img_ctrl_ddr_en / img_ddr_ro / ddr_ro_b 端口过一下（与 cam_stat_bus 同一种做法）。
-wire         img_ddr_en;         // CTRL[5]
+// T07：img_ddr_en 的声明已提前到文件前部（vlog-2730 兼容），此处不再声明。
 wire [127:0] w_ddr_ro;           // A 路 {len, status, base, seq} → ep_bar_win 0xAC/0xA8/0xA4/0xA0
 wire [127:0] w_ddr_ro_b;         // B 路同样四个字 → 0xEC/0xE8/0xE4/0xE0
 wire [31:0]  w_cam_diag_b;       // B 路相机直通诊断 → 0xD8
@@ -234,6 +250,47 @@ wire [255:0] w_ddr_rdata;
 wire [1:0]   w_ddr_rresp;
 wire         w_ddr_rlast, w_ddr_rvalid, w_ddr_rready;
 
+// ==== T07.rk-align-backend 新增线网 ====
+// RKA1 安全扩展（ep_bar_win ↔ 安全门，都是 tl_clk_user 域，直连）
+wire [31:0]  w_tx_cap_bytes, w_tx_session_id, w_tx_ack_seq, w_tx_ack_session;
+wire         w_tx_cmd_arm, w_tx_cmd_ack, w_tx_cmd_cancel;
+wire [31:0]  w_tx_status;
+wire         w_tx_block_cfg, w_tx_cfg_reject;
+wire         w_link_up;                       // pl_link_up & 两个锁相都就绪
+// 推帧引擎的源所有权信号
+// T07 round1：release 按相机分开（A: rel_tgl0/1 → writer A；B: rel_tgl2/3 → writer B），
+// 避免共享一对 toggle 时 A 路的 release 误清 B 路的保护位（system round0 F1）。
+wire         w_rel_tgl0, w_rel_tgl1;          // A 路块 0/1 release toggle
+wire         w_rel_tgl2, w_rel_tgl3;          // B 路块 0/1 release toggle
+wire         w_push_fb_hold;                  // ERAM 源冻结（pusher 输出）
+wire         w_push_src_lock;                 // 诊断：源被 one-shot 占着
+// checked CSI（A/B）：帧裁决 + 错误/几何计数（字节时钟域）
+wire         w_a_frame_end, w_a_frame_good, w_a_frame_abort;
+wire         w_b_frame_end, w_b_frame_good, w_b_frame_abort;
+wire [31:0]  w_a_crc_err, w_a_hdr_err, w_a_pkt_to, w_a_frm_to, w_a_good_frm, w_a_bad_frm;
+wire [31:0]  w_b_crc_err, w_b_hdr_err, w_b_pkt_to, w_b_frm_to, w_b_good_frm, w_b_bad_frm;
+wire [15:0]  w_a_last_wc, w_a_last_lines, w_b_last_wc, w_b_last_lines;
+wire [31:0]  w_a_payload, w_b_payload;
+wire [3:0]   w_a_keep, w_b_keep;
+wire         w_a_payload_v, w_b_payload_v;
+// 诊断跨域采样（字节域 → tl 域；只给人看，不参与控制，见 change-report 边界说明）
+reg  [31:0]  r_csi_a_cnt1, r_csi_a_cnt2, r_csi_a_geo1, r_csi_a_geo2;
+reg  [31:0]  r_csi_b_cnt1, r_csi_b_cnt2, r_csi_b_geo1, r_csi_b_geo2;
+wire [31:0]  w_csi_a_cnt = {w_a_good_frm[7:0], w_a_bad_frm[7:0], w_a_hdr_err[7:0], w_a_crc_err[7:0]};
+wire [31:0]  w_csi_a_geo = {w_a_last_lines, w_a_last_wc};
+wire [31:0]  w_csi_b_cnt = {w_b_good_frm[7:0], w_b_bad_frm[7:0], w_b_hdr_err[7:0], w_b_crc_err[7:0]};
+wire [31:0]  w_csi_b_geo = {w_b_last_lines, w_b_last_wc};
+
+always @(posedge tl_clk_user) begin
+    r_csi_a_cnt1 <= w_csi_a_cnt; r_csi_a_cnt2 <= r_csi_a_cnt1;
+    r_csi_a_geo1 <= w_csi_a_geo; r_csi_a_geo2 <= r_csi_a_geo1;
+    r_csi_b_cnt1 <= w_csi_b_cnt; r_csi_b_cnt2 <= r_csi_b_cnt1;
+    r_csi_b_geo1 <= w_csi_b_geo; r_csi_b_geo2 <= r_csi_b_geo1;
+end
+
+// 链路就绪（ARM 的「硬核协商能力未知时禁 formal ARM」条件）
+assign w_link_up = pl_link_up & tl_clk_locked & pcie_pll_locked;
+
 //  0xA0~0xAC = A 路相机 writer 的握手字；0xE0~0xEC = B 路的（两路各一份，
 //  都有「整帧校验通过才发布」的语义，所以主机按序号变化取哪一路都安全）。
 //  A 路（0xA0~0xAC）、B 路（0xE0~0xEC）：同一套字序，各走一条汇聚总线给 ep_bar_win
@@ -258,14 +315,13 @@ assign w_push_ddr_len    = img_cam_ab_sel ? w_camddr_b_len    : w_camddr_len;
 assign w_push_frame_bytes = img_push_src ? img_data_len : w_push_ddr_len;
 
     // clock and reset signals
+    // T07：tl_clk_user / pcie_pll_locked / tl_clk_locked / tl_rst_user / pl_link_up /
+    //      img_ddr_en 的声明已提前到文件前部（ModelSim vlog-2730 兼容），此处不再声明。
     wire                          tl_clk_gate                             ;
     wire       [8:0]              tl_clk_user_freq                        ;
-    wire                          tl_clk_user                             ;
     wire                          uart_clk                                ;
-    wire                          pcie_pll_locked                         ;
-    wire                          tl_rst_user                             ;
+    // T07：pcie_pll_locked / tl_rst_user / tl_clk_locked 声明已提前（同上）
     reg                           power_on_rst_dly                        ;
-    wire                          tl_clk_locked                           ;
     // user apb configure signals
     wire                          tl_cfg_pclk                             ;
     wire                          tl_cfg_prst                             ;
@@ -295,7 +351,7 @@ assign w_push_frame_bytes = img_push_src ? img_data_len : w_push_ddr_len;
     wire       [1:0]              pl_equ_phase                            ;
     wire       [4:0]              tl_ltssm                                ;
     wire       [4:0]              pl_ltssm                                ;
-    wire                          pl_link_up                              ;
+    // T07：pl_link_up 声明已提前（同上）
     wire                          tl_ltssm_enable                         =1'b1;
 
     // Rx interface
@@ -644,6 +700,21 @@ pcie_ep_engine #(
     .img_ddr_ro                              (w_ddr_ro                               ),
     .img_host_rd_prio                        (img_host_rd_prio                       ),
     .img_host_grant                          (img_host_grant                         )
+    ,// T07：RKA1 安全扩展寄存器面 + CSI 诊断（过路到安全门/BAR）
+    .tx_cap_bytes                            (w_tx_cap_bytes                         ),
+    .tx_session_id                           (w_tx_session_id                        ),
+    .tx_cmd_arm                              (w_tx_cmd_arm                           ),
+    .tx_cmd_ack                              (w_tx_cmd_ack                           ),
+    .tx_cmd_cancel                           (w_tx_cmd_cancel                        ),
+    .tx_ack_seq                              (w_tx_ack_seq                           ),
+    .tx_ack_session                          (w_tx_ack_session                       ),
+    .tx_status_in                            (w_tx_status                            ),
+    .tx_block_cfg                            (w_tx_block_cfg                         ),
+    .cfg_reject                              (w_tx_cfg_reject                        ),
+    .csi_diag_a                              (r_csi_a_cnt2                           ),
+    .csi_diag_a2                             (r_csi_a_geo2                           ),
+    .csi_diag_b                              (r_csi_b_cnt2                           ),
+    .csi_diag_b2                             (r_csi_b_geo2                           )
 );
 
 pcie_ep_int_handle u_pcie_ep_int_handle(
@@ -771,6 +842,8 @@ img_frame_src #(
     .rst       (power_on_rst_dly),
     .enable    (img_enable      ),
     .trigger   (img_trigger     ),
+    // T07：one-shot 捕获停止点——推帧引擎 claim 后冻结发生器，release 后放开
+    .hold      (w_push_fb_hold  ),
     .rd_addr   (img_fb_raddr    ),
     .rd_data   (img_fb_rdata    ),
     // fb 唯一读口的仲裁：主机预取 vs DMA（DDR 搬运 / 推帧 ERAM 源）
@@ -1052,7 +1125,12 @@ assign  debug_led[3] = ltssm_reg_dly[4];
     wire        w_a_ae_done, w_b_ae_done;
     wire        w_a_bclk_tgl, w_b_bclk_tgl;
 
-    mipi_csi2_rx_ph1p #(.LANE_NUM(4)) u_csi_a (
+    mipi_csi2_rx_ph1p_checked #(
+        .LANE_NUM (4),
+        // 合成/诊断几何：正式 RAW10 1080p 几何与 WC/行数约束在 T11 包按板测标定；
+        // 本包不把 0 说成「已验证几何」，只把判坏/计数接出来。
+        .IMAGE_DT (6'h2b), .IMAGE_WC (16'd0), .EXPECTED_LINES (16'd0), .VC_ID (2'd0)
+    ) u_csi_a (
         .I_ref_clk          (tl_clk_user),
         .I_rst_n            (r_rst_n    ),
         .I_rx_en            (r_rst_n    ),
@@ -1073,10 +1151,28 @@ assign  debug_led[3] = ltssm_reg_dly[4];
         .O_in_frame         (w_a_in_frame),
         .O_in_line          (w_a_in_line),
         .O_pixel_data       (w_a_pixel),
-        .O_pixel_valid      (w_a_pixel_valid)
+        .O_pixel_valid      (w_a_pixel_valid),
+        // T07：整帧裁决与诊断
+        .O_frame_end        (w_a_frame_end),
+        .O_frame_good       (w_a_frame_good),
+        .O_frame_abort      (w_a_frame_abort),
+        .O_crc_errors       (w_a_crc_err),
+        .O_header_errors    (w_a_hdr_err),
+        .O_packet_timeouts  (w_a_pkt_to),
+        .O_frame_timeouts   (w_a_frm_to),
+        .O_good_frames      (w_a_good_frm),
+        .O_bad_frames       (w_a_bad_frm),
+        .O_last_wc          (w_a_last_wc),
+        .O_last_lines       (w_a_last_lines),
+        .O_payload_out      (w_a_payload),
+        .O_payload_keep     (w_a_keep),
+        .O_payload_valid    (w_a_payload_v)
     );
 
-    mipi_csi2_rx_ph1p #(.LANE_NUM(4)) u_csi_b (
+    mipi_csi2_rx_ph1p_checked #(
+        .LANE_NUM (4),
+        .IMAGE_DT (6'h2b), .IMAGE_WC (16'd0), .EXPECTED_LINES (16'd0), .VC_ID (2'd0)
+    ) u_csi_b (
         .I_ref_clk          (tl_clk_user),
         .I_rst_n            (r_rst_n    ),
         .I_rx_en            (r_rst_n    ),
@@ -1097,7 +1193,21 @@ assign  debug_led[3] = ltssm_reg_dly[4];
         .O_in_frame         (w_b_in_frame),
         .O_in_line          (w_b_in_line),
         .O_pixel_data       (w_b_pixel),
-        .O_pixel_valid      (w_b_pixel_valid)
+        .O_pixel_valid      (w_b_pixel_valid),
+        .O_frame_end        (w_b_frame_end),
+        .O_frame_good       (w_b_frame_good),
+        .O_frame_abort      (w_b_frame_abort),
+        .O_crc_errors       (w_b_crc_err),
+        .O_header_errors    (w_b_hdr_err),
+        .O_packet_timeouts  (w_b_pkt_to),
+        .O_frame_timeouts   (w_b_frm_to),
+        .O_good_frames      (w_b_good_frm),
+        .O_bad_frames       (w_b_bad_frm),
+        .O_last_wc          (w_b_last_wc),
+        .O_last_lines       (w_b_last_lines),
+        .O_payload_out      (w_b_payload),
+        .O_payload_keep     (w_b_keep),
+        .O_payload_valid    (w_b_payload_v)
     );
 
 
@@ -1386,19 +1496,22 @@ ddr3_mc_0 u_ddr3_mc_0 (
 
 
 // ====================================================================
-//  相机 4K 直通 DDR3（cam_ddr_writer ×2，A/B 各一片）
+//  相机正式通路：RAW10 → R10F v1（cam_r10f_writer ×2，A/B 各一片）
 //
-//  数据：CSI-2 字节时钟域的像素（1 拍 = 4 像素）→ 窗口裁剪/组字 → 异步 FIFO
-//        → dhi_clk 域攒 256bit 拍 → 每 4KB 一个 AXI4 突发写 DDR3。
-//        片内 fb[] 装不下 4K（300 块 ERAM20K = 768000B < 8294400B），所以相机
-//        像素不走帧缓存，直接搬进 DDR3。
-//  触发：CTRL[5]（ddr_en）为 1 时两片都 armed（w_cam_ddr_want），相机下一帧开始采集；
-//        没 armed 时连帧都不收（不会把 FIFO 灌满、也不会去抢 AXI 写口）。
-//  两路：A 用 w_a_*（MIPI A 路字节时钟/复位），B 用 w_b_*，各在自己的字节时钟域；
-//        基址、握手字、诊断各一套（A: 0xA0~0xAC / 0xD0，B: 0xE0~0xEC / 0xD8）。
+//  数据：CSI-2 字节时钟域的 4 像素组（40bit，checked CSI 输出）→ 偶数 ROI 裁剪
+//        → 异步 FIFO → dhi_clk 域拼 packed RAW10 字节流 → R10F 内容
+//        （128B 头 + 载荷 + 4KiB 对齐尾零）→ 每 4KB 一个 AXI4 突发写 DDR3。
+//  触发：CTRL[5]（ddr_en）为 1 时两片都 armed（w_cam_ddr_want）。
+//  两路：A 用 w_a_*，B 用 w_b_*；基址、握手字、诊断各一套
+//        （A: 0xA0~0xAC / 0xD0，B: 0xE0~0xEC / 0xD8）。
 //  写口：只有一个（u_ddr3_mc_0），由 ddr_wr_arb 在两路之间按突发轮流放行。
+//  几何（板证前按“未板证”对待）：4K30 源按实际有效行取偶数 ROI：
+//        W=1920、H=1080、x=960、有效图 y=540（物理行 = SKIP_ROWS(37)+540）；
+//        Bayer 相位按物理原点奇偶推导，SRC_BAYER_PHASE 默认 0 仅占位（需板证）。
+//  T07 的 8bit 灰度写者 cam_ddr_writer.v 保留在树中（供旧 TB/诊断参照），
+//  正式顶层已改接本模块。
 // ====================================================================
-cam_ddr_writer #(
+cam_r10f_writer #(
     .W           (CAMDDR_W          ),
     .H           (CAMDDR_H          ),
     .X0          (CAMDDR_X0         ),
@@ -1407,8 +1520,11 @@ cam_ddr_writer #(
     .BASE0       (DDR_CAM_BASE0     ),
     .BASE1       (DDR_CAM_BASE1     ),
     .FIFO_AW     (10                ),
-    .BURST_BEATS (128               )
-) u_cam_ddr_writer (
+    .BURST_BEATS (128               ),
+    .CAMERA_ID   (8'd0              ),
+    .SRC_BAYER_PHASE (2'd0          ),
+    .MODE_ID     (32'd1             )
+) u_cam_r10f_writer (
     .cam_clk       (w_a_byte_clk    ),
     .cam_rst_n     (w_a_rst_out     ),
     .cam_vsync     (w_a_vsync       ),
@@ -1416,9 +1532,15 @@ cam_ddr_writer #(
     .cam_in_line   (w_a_in_line     ),
     .cam_pix       (w_a_pixel       ),
     .cam_pix_valid (w_a_pixel_valid ),
+    .cam_frame_good(w_a_frame_good  ),
+    .cam_frame_abort(w_a_frame_abort),
+    .prot_en       (img_push_en     ),
+    .rel_tgl0      (w_rel_tgl0      ),
+    .rel_tgl1      (w_rel_tgl1      ),
 
     .clk_fb        (tl_clk_user       ),
     .rst_fb        (power_on_rst_dly ),
+    .session_id    (w_tx_session_id   ),
     .wr_frame_seq  (w_camddr_seq      ),
     .wr_base       (w_camddr_base     ),
     .wr_status     (w_camddr_status   ),
@@ -1451,7 +1573,7 @@ cam_ddr_writer #(
     .m_axi_bready  (w_camw_bready     )
 );
 
-cam_ddr_writer #(
+cam_r10f_writer #(
     .W           (CAMDDR_W          ),
     .H           (CAMDDR_H          ),
     .X0          (CAMDDR_X0         ),
@@ -1460,8 +1582,11 @@ cam_ddr_writer #(
     .BASE0       (DDR_CAM_B_BASE0   ),
     .BASE1       (DDR_CAM_B_BASE1   ),
     .FIFO_AW     (10                ),
-    .BURST_BEATS (128               )
-) u_cam_ddr_writer_b (
+    .BURST_BEATS (128               ),
+    .CAMERA_ID   (8'd1              ),
+    .SRC_BAYER_PHASE (2'd0          ),
+    .MODE_ID     (32'd1             )
+) u_cam_r10f_writer_b (
     .cam_clk       (w_b_byte_clk    ),
     .cam_rst_n     (w_b_rst_out     ),
     .cam_vsync     (w_b_vsync       ),
@@ -1469,9 +1594,15 @@ cam_ddr_writer #(
     .cam_in_line   (w_b_in_line     ),
     .cam_pix       (w_b_pixel       ),
     .cam_pix_valid (w_b_pixel_valid ),
+    .cam_frame_good(w_b_frame_good  ),
+    .cam_frame_abort(w_b_frame_abort),
+    .prot_en       (img_push_en     ),
+    .rel_tgl0      (w_rel_tgl2      ),
+    .rel_tgl1      (w_rel_tgl3      ),
 
     .clk_fb        (tl_clk_user       ),
     .rst_fb        (power_on_rst_dly ),
+    .session_id    (w_tx_session_id   ),
     .wr_frame_seq  (w_camddr_b_seq    ),
     .wr_base       (w_camddr_b_base   ),
     .wr_status     (w_camddr_b_status ),
@@ -1565,7 +1696,11 @@ ddr_frame_pusher #(
     .PAY_DW      (32                ),   // 128 字节 = 协商出的 MaxPayload
     .FIFO_AW     (7                 ),   // 128 拍 × 32B = 4KB，与突发等长
     .BURST_BEATS (128               ),   // 128 × 32B = 4KB，不跨页
-    .WAIT_LIMIT  (16'hFFFF          )
+    .WAIT_LIMIT  (16'hFFFF          ),
+    .BASE0       (DDR_CAM_BASE0     ),   // DDR 源 A 路双缓冲块（与 cam_ddr_writer A 一致）
+    .BASE1       (DDR_CAM_BASE1     ),
+    .BASE0B      (DDR_CAM_B_BASE0   ),   // DDR 源 B 路双缓冲块（release 判定要按相机选对）
+    .BASE1B      (DDR_CAM_B_BASE1   )
 ) u_ddr_frame_pusher (
     .clk_fb        (tl_clk_user       ),
     .rst_fb        (power_on_rst_dly ),
@@ -1578,6 +1713,7 @@ ddr_frame_pusher #(
     .fb_req        (img_push_fb_req   ),
     .fb_grant      (img_push_fb_grant ),
     .src_act       (img_push_src_act  ),
+    .fb_hold       (w_push_fb_hold    ),
     .dst_lo        (img_push_dst_lo   ),
     .dst_hi        (img_push_dst_hi   ),
     .db_lo         (img_push_db_lo    ),
@@ -1586,6 +1722,27 @@ ddr_frame_pusher #(
     .st_status     (img_push_status  ),
     .st_err        (img_push_err     ),
     .st_tlp_cnt    (img_push_tlp     ),
+
+    // T07：RKA1 one-shot 安全门
+    .arm_pulse     (w_tx_cmd_arm     ),
+    .ack_pulse     (w_tx_cmd_ack     ),
+    .cancel_pulse  (w_tx_cmd_cancel  ),
+    .cap_bytes     (w_tx_cap_bytes   ),
+    .session_id    (w_tx_session_id  ),
+    .ack_seq_w     (w_tx_ack_seq     ),
+    .ack_session_w (w_tx_ack_session ),
+    .cfg_reject    (w_tx_cfg_reject  ),
+    .link_up       (w_link_up        ),
+    .mps_code      (tl_cfg_max_payload_size),
+    .ddr_cap_bytes (DDR_CAP_BYTES    ),
+    .cam_sel_live  (img_cam_ab_sel   ),
+    .tx_status     (w_tx_status      ),
+    .tx_block_cfg  (w_tx_block_cfg   ),
+    .rel_tgl0      (w_rel_tgl0       ),
+    .rel_tgl1      (w_rel_tgl1       ),
+    .rel_tgl2      (w_rel_tgl2       ),
+    .rel_tgl3      (w_rel_tgl3       ),
+    .tx_src_lock   (w_push_src_lock  ),
 
     .frame_bytes   (w_push_frame_bytes),
     .ddr_seq       (w_push_ddr_seq    ),
