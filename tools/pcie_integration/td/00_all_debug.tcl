@@ -79,8 +79,11 @@ add_files $PRJ_ROOT/rtl/ep_side/ddr/cam_ddr_writer.v
 # T11：正式 RAW10→R10F 写者
 add_files $PRJ_ROOT/rtl/ep_side/ddr/cam_r10f_writer.v
 # ---- 约束 ----
+# T11 P1-fix：debug 构建使用 debug SDC 变体（生产 SDC 一字不动；仅 u_top/ 前缀，
+#   由 run debug-fix/gen_validate_dbg_sdc.ps1 机械生成并 fail-closed 校验通过）。
+#   生产 SDC（ph1p_pcie_case_ep.sdc）不加入本 debug 工程，避免重复时钟定义。
 add_files $PRJ_ROOT/constraints/ph1p_pcie_case_ep.adc
-add_files $PRJ_ROOT/constraints/ph1p_pcie_case_ep.sdc
+add_files $PRJ_ROOT/constraints/ph1p_pcie_case_ep_dbg.sdc
 # ---- 匹配版本 IP ----
 add_files $PRJ_ROOT/al_ip/pcie_ep_core/pcie_ep_core.xml
 add_files $PRJ_ROOT/al_ip/pcie_pll_ep/pcie_pll_ep.xml

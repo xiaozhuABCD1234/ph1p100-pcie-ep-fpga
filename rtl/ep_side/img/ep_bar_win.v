@@ -452,6 +452,53 @@ module ep_bar_win #(
                              dbg_bank_word2, dbg_bank_word1, dbg_bank_word0};
 
     // ------------------------------------------------------------------
+    // T11 P1-fix：ChipWatcher 探针（TD 真实流程：RTL MARK_DEBUG → 流程
+    //   insert_debugger 自动建实例 → setup_debugger 产 cw/compiled.cwc|bit）
+    //   · 仅当 DBG_CTRL_DEFAULT_EN=1（只由 debug 顶层 ph1p_pcie_ep_top_dbg 覆盖）
+    //     → 生产/00_all 参数=0，generate 关闭，生产网表与行为不受影响；
+    //   · 打一拍寄存：保证是可综合、不可折叠的真实触发器（MAGIC 等常量字也保留）；
+    //     值为字库字 1 拍快照——稳定量逐位相等；计数类最多滞后 1 拍，按跨时刻记录；
+    //   · 9 个 32 bit = 288 bit，全部在 tl_clk_user（clk）域，单实例。
+    // ------------------------------------------------------------------
+    generate
+        if (DBG_CTRL_DEFAULT_EN) begin : g_dbg_mark
+            (* MARK_DEBUG="true" *) reg [31:0] dbg_mark_word0;
+            (* MARK_DEBUG="true" *) reg [31:0] dbg_mark_word1;
+            (* MARK_DEBUG="true" *) reg [31:0] dbg_mark_word2;
+            (* MARK_DEBUG="true" *) reg [31:0] dbg_mark_word3;
+            (* MARK_DEBUG="true" *) reg [31:0] dbg_mark_word4;
+            (* MARK_DEBUG="true" *) reg [31:0] dbg_mark_word5;
+            (* MARK_DEBUG="true" *) reg [31:0] dbg_mark_word6;
+            (* MARK_DEBUG="true" *) reg [31:0] dbg_mark_word7;
+            (* MARK_DEBUG="true" *) reg [31:0] dbg_mark_word8;
+
+            always @(posedge clk or posedge rst) begin
+                if (rst) begin
+                    dbg_mark_word0 <= 32'd0;
+                    dbg_mark_word1 <= 32'd0;
+                    dbg_mark_word2 <= 32'd0;
+                    dbg_mark_word3 <= 32'd0;
+                    dbg_mark_word4 <= 32'd0;
+                    dbg_mark_word5 <= 32'd0;
+                    dbg_mark_word6 <= 32'd0;
+                    dbg_mark_word7 <= 32'd0;
+                    dbg_mark_word8 <= 32'd0;
+                end else begin
+                    dbg_mark_word0 <= dbg_bank_word0;
+                    dbg_mark_word1 <= dbg_bank_word1;
+                    dbg_mark_word2 <= dbg_bank_word2;
+                    dbg_mark_word3 <= dbg_bank_word3;
+                    dbg_mark_word4 <= dbg_bank_word4;
+                    dbg_mark_word5 <= dbg_bank_word5;
+                    dbg_mark_word6 <= dbg_bank_word6;
+                    dbg_mark_word7 <= dbg_bank_word7;
+                    dbg_mark_word8 <= dbg_bank_word8;
+                end
+            end
+        end
+    endgenerate
+
+    // ------------------------------------------------------------------
     // 读数据组装（组合）
     // ------------------------------------------------------------------
 
