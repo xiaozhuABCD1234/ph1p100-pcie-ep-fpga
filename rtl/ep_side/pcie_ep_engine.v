@@ -18,6 +18,8 @@
 
 module pcie_ep_engine #(
     parameter [31:0] IMG_PTRBYTES = 32'h0004_B000,
+    // T11 debug：仅 debug 顶层包装覆盖为 1'b1（透传给 ep_bar_win）；生产默认 0
+    parameter        DBG_CTRL_DEFAULT_EN = 1'b0,
     parameter [8:0]  IMG_CLK_MHZ = 9'd62        
 )(
 
@@ -390,7 +392,8 @@ ep_bar_win #(
     .MAGIC    (32'h5043_4946   ),
     .VERSION  (32'h0002_0000   ),
     .PTR_BYTES(IMG_PTRBYTES    ),
-    .CLK_MHZ  (IMG_CLK_MHZ     )
+    .CLK_MHZ  (IMG_CLK_MHZ     ),
+    .DBG_CTRL_DEFAULT_EN(DBG_CTRL_DEFAULT_EN)
 ) u_ep_bar_win (
     .clk            (tl_clk_user            ),
     .rst            (tl_rst_user            ),

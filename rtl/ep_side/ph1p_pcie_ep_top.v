@@ -13,7 +13,10 @@
 
 `timescale 1ns/1ps
 `include "../common/ph1p_pcie_case_param.v" 
- module ph1p_pcie_ep_top(
+ module ph1p_pcie_ep_top #(
+    // T11 debug：仅 ph1p_pcie_ep_top_dbg 覆盖为 1'b1；生产/00_all 默认 0（行为不变）
+    parameter DBG_CTRL_DEFAULT_EN = 1'b0
+)(
 
     // serdes high speed pin
     input      wire                      ref_pad_clk_p                           ,
@@ -629,7 +632,8 @@ pcie_ep_core #(
 
 pcie_ep_engine #(
     .IMG_PTRBYTES                            (IMG_PTRBYTES                           ),
-    .IMG_CLK_MHZ                             (9'd62                                  )
+    .IMG_CLK_MHZ                             (9'd62                                  ),
+    .DBG_CTRL_DEFAULT_EN                     (DBG_CTRL_DEFAULT_EN                    )
 ) u_pcie_ep_engine (
 
 

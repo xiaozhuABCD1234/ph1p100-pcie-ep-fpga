@@ -69,3 +69,7 @@ tb/csi_rx_packet_integrity_ref.v
 ../rtl/common/uart/uart_rx_setting.v
 ../rtl/common/uart/uart_tx_setting.v
 ../rtl/ep_side/ddr/ddr_frame_readback_checker.v
+
+# ---- T11.runB-debug-rtl：debug 顶层包装（仅 debug 构建入口 00_all_debug 使用；
+#      此处纳入编译仅做语法检查，无 TB 例化；不改任何既有 TB 行为）----
+../rtl/ep_side/debug/ph1p_pcie_ep_top_dbg.v

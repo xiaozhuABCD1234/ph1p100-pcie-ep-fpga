@@ -131,7 +131,10 @@ module ep_bar_win #(
     parameter [31:0] PTR_BYTES = 32'h0004_B000,  // 帧缓存字节数；用比较回绕，别用掩码
     parameter [8:0]  CLK_MHZ  = 9'd62,           // tl_clk_user 频率，给主机算带宽
     parameter [31:0] MAGIC_RKA1  = 32'h3141_4B52, // "RKA1" 小端
-    parameter [31:0] VERSION_RKA1= 32'h0001_0000  // 扩展接口 major1.minor0
+    parameter [31:0] VERSION_RKA1= 32'h0001_0000, // 扩展接口 major1.minor0
+    // T11 debug：仅 debug 顶层 ph1p_pcie_ep_top_dbg 覆盖为 1'b1（依据 run
+    //   debug-spec/enable-state.md §2）；生产/00_all 保持默认 0，行为不变
+    parameter        DBG_CTRL_DEFAULT_EN = 1'b0
 )(
     input  wire         clk,
     input  wire         rst,
@@ -269,11 +272,11 @@ module ep_bar_win #(
             rd_len_dw     <= 11'd1;
             rd_data_go    <= 1'b0;
             memrd_addr_lo <= 7'd0;
-            ctrl_enable   <= 1'b0;
+            ctrl_enable   <= DBG_CTRL_DEFAULT_EN;   // T11 debug: 生产=0（原行为）；debug 顶层=1
             ctrl_trigger  <= 1'b0;
             ctrl_pattern_r <= 2'd0;
             ctrl_cam_ab    <= 1'b0;      // 默认 A 路（老主机不写 bit8）
-            ctrl_ddr_en    <= 1'b0;      // 默认不往 DDR3 搬（保持原行为）
+            ctrl_ddr_en    <= DBG_CTRL_DEFAULT_EN;  // T11 debug: 同上（仅 bit0/bit5 两行，其余位保持 0）
             ctrl_push_en   <= 1'b0;      // 默认不推帧（保持原行为）
             ctrl_push_src  <= 1'b0;      // 默认推帧数据源取 DDR3（保持原行为）
             push_dst_lo    <= 32'd0;
@@ -426,6 +429,29 @@ module ep_bar_win #(
     end
 
     // ------------------------------------------------------------------
+    // T11 debug 字库 dbg_bank：A 组 9 字只读组合镜像（288 bit，word0..word8）
+    //   · 无副作用：纯 wire 组合映像，不驱动任何控制/总线/外发路径；
+    //   · 供 ChipWatcher 探针（单实例、tl_clk_user 域）；字序冻结见 run
+    //     debug-spec/probe-map.md §2（word0..word8 ↔ 0x040/0x118/0x11C/0x0A0/
+    //     0x0A4/0x0AC/0x120/0x124/0x044）；读 mux 新增 0x140..0x160（见下），
+    //     不改任何既有偏移读值（default 保持 32'hDEAD_BEEF）。
+    // ------------------------------------------------------------------
+    wire [31:0] dbg_bank_word0 = MAGIC;                 // 0x040 MAGIC
+    wire [31:0] dbg_bank_word1 = MAGIC_RKA1;            // 0x118 EXT_MAGIC
+    wire [31:0] dbg_bank_word2 = VERSION_RKA1;          // 0x11C EXT_VERSION
+    wire [31:0] dbg_bank_word3 = ddr_ro[31:0];          // 0x0A0 DDR_SEQ_A
+    wire [31:0] dbg_bank_word4 = ddr_ro[63:32];         // 0x0A4 DDR_BASE_A
+    wire [31:0] dbg_bank_word5 = ddr_ro[127:96];        // 0x0AC DDR_LEN_A
+    wire [31:0] dbg_bank_word6 = csi_diag_a;            // 0x120 CSI_DIAG_A
+    wire [31:0] dbg_bank_word7 = csi_diag_a2;           // 0x124 CSI_DIAG_A2
+    wire [31:0] dbg_bank_word8 =                        // 0x044 CTRL 读回字（位序与 0x44 逐位一致）
+        {23'd0, ctrl_cam_ab, ctrl_push_src, ctrl_push_en, ctrl_ddr_en,
+         1'b0, ctrl_pattern_r, ctrl_trigger, ctrl_enable};
+    wire [287:0] dbg_bank = {dbg_bank_word8, dbg_bank_word7, dbg_bank_word6,
+                             dbg_bank_word5, dbg_bank_word4, dbg_bank_word3,
+                             dbg_bank_word2, dbg_bank_word1, dbg_bank_word0};
+
+    // ------------------------------------------------------------------
     // 读数据组装（组合）
     // ------------------------------------------------------------------
 
@@ -503,6 +529,16 @@ module ep_bar_win #(
             12'h124: rd_dw_comb = csi_diag_a2;            // CSI_DIAG_A2
             12'h128: rd_dw_comb = csi_diag_b;             // CSI_DIAG_B
             12'h12C: rd_dw_comb = csi_diag_b2;            // CSI_DIAG_B2
+            // ---- T11 debug 字库读回（0x140..0x160，只读镜像，字序见上）----
+            12'h140: rd_dw_comb = dbg_bank_word0;
+            12'h144: rd_dw_comb = dbg_bank_word1;
+            12'h148: rd_dw_comb = dbg_bank_word2;
+            12'h14C: rd_dw_comb = dbg_bank_word3;
+            12'h150: rd_dw_comb = dbg_bank_word4;
+            12'h154: rd_dw_comb = dbg_bank_word5;
+            12'h158: rd_dw_comb = dbg_bank_word6;
+            12'h15C: rd_dw_comb = dbg_bank_word7;
+            12'h160: rd_dw_comb = dbg_bank_word8;
             default: rd_dw_comb = 32'hDEAD_BEEF;
         endcase
     end
