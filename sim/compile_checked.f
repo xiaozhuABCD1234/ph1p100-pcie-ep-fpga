@@ -68,3 +68,4 @@ tb/csi_rx_packet_integrity_ref.v
 ../rtl/common/uart/uart_cdc.v
 ../rtl/common/uart/uart_rx_setting.v
 ../rtl/common/uart/uart_tx_setting.v
+../rtl/ep_side/ddr/ddr_frame_readback_checker.v
