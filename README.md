@@ -74,6 +74,8 @@ UART 命令脚本：`doc/uart_cmd_file_pcie.txt`（可经板载串口下发校�
 - 驱动目录里残留了部分内核模块构建中间物（`.mod`、`Module.symvers`、`modules.order` 等），
   重新 `make` 即可覆盖。
 - 引脚约束在 `prj/*/constraints/*.adc`，时序在 `*.sdc`；引脚定义可查板卡的 `03_管脚定义表/PCIEx2-管脚定义表.xlsx`。
+- `sim_do/regress.sh`：7 个 RTL 单元测试台一键回归（iverilog，**不需要板子、不需要 TD**）。
+  改完 RTL 先跑它再上板；`tb_img` 有 1 项已记录在案的历史遗留，脚本按 KNOWN-FAIL 处理。
 
 ## 相机整帧（4K）→ DDR3（`rtl/ep_side/ddr/cam_ddr_writer.v` ×2 + `ddr_wr_arb.v`）
 
