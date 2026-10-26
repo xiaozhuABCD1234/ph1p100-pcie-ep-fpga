@@ -1,0 +1,2362 @@
+{
+    "task_id":  "T10.a1-eng-freeze",
+    "round":  1,
+    "created":  "2026-10-20",
+    "status":  "blocked",
+    "verdict":  "G1 regression PASS (P2 13/13, P3 20/20); G2 FAIL: synthesized WNS -3.816 ns, Fmax 109.302 MHz; route not_run by stop condition",
+    "nature":  "synthetic offline; no board/download/bitgen; 187.5 MHz unchanged",
+    "candidate":  {
+                      "derived_from":  "T10.a1-frame-top r1",
+                      "r0_manifest":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\CANDIDATE-MANIFEST.json",
+                      "binding":  "NEW_DERIVED_CANDIDATE",
+                      "rtl":  [
+                                  {
+                                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\codec\\a1_frame_top.v",
+                                      "sha256":  "3c32803b41378629622ae3a709ab64373b2fb13286bfc7ea789e7e1dbf190961",
+                                      "r0_sha256":  "3c32803b41378629622ae3a709ab64373b2fb13286bfc7ea789e7e1dbf190961",
+                                      "changed":  false
+                                  },
+                                  {
+                                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\codec\\a1_deflate_core.v",
+                                      "sha256":  "faacdbc0e80f821ed7dfdfa099153b6475f5c05155bd34a7cad324236cc46ad5",
+                                      "r0_sha256":  "6cd35881a864faec3a7fe9f8355d71a66f775bf2c037202959f315d42a799d9f",
+                                      "changed":  true
+                                  }
+                              ],
+                      "changed_files":  [
+                                            "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v"
+                                        ]
+                  },
+    "toolchain":  {
+                      "name":  "Anlogic TD",
+                      "release":  "Release_2026.2",
+                      "build":  "6.2.3.210850",
+                      "device":  "PH1P100SBG484",
+                      "speed":  "3"
+                  },
+    "build":  {
+                  "td_sessions_this_round":  1,
+                  "td_sessions_package":  3,
+                  "td_session_limit":  3,
+                  "elapsed_s":  132.3,
+                  "production_builds":  0,
+                  "downloads":  0,
+                  "bitgen":  0,
+                  "routed":  "not_run",
+                  "route_skipped_reason":  "synthesis WNS \u003c 0 (stop condition 2)"
+              },
+    "g1":  {
+               "p2":  {
+                          "cases":  13,
+                          "verdict":  "PASS"
+                      },
+               "p3":  {
+                          "verdict":  "PASS",
+                          "cases":  20,
+                          "failures":  0
+                      },
+               "mismatch":  0,
+               "vlog":  "0 errors / 0 warnings"
+           },
+    "g2":  {
+               "status":  "FAIL",
+               "sw_wns_ns":  -3.816,
+               "sw_tns_ns":  -680.559,
+               "hw_wns_ns":  0,
+               "hw_tns_ns":  0,
+               "fmax_mhz":  109.302,
+               "target_mhz":  187.5,
+               "sta_confidence":  "Synthesized",
+               "sta_coverage_pct":  97.61,
+               "critical_path":  "u_dut/u_core/dist_r_reg[7].clk -\u003e u_dut/u_core/pos_reg[0].ce",
+               "logic_levels":  13,
+               "root_cause":  "match-length/position update arithmetic chain (pos+len_r, stored_bits compare), memory read path removed"
+           },
+    "resources":  {
+                      "lut":  11180,
+                      "slice":  10548,
+                      "slice_total":  71680,
+                      "slice_pct":  14.72,
+                      "ff":  2064,
+                      "eram":  4,
+                      "eram_total":  300,
+                      "dsp":  0,
+                      "dsp_total":  220,
+                      "dram_lut":  5240,
+                      "io":  121,
+                      "io_total":  286
+                  },
+    "cdc":  {
+                "structural":  "single clock clk; CC-From/To=no; synchronous reset",
+                "tool_report":  "not_run (route skipped before report_cdc)"
+            },
+    "throughput":  {
+                       "p1080_p1d1_cycles":  4677941,
+                       "p1080_p1d1_mb_s":  103.892,
+                       "two_frame_cycles":  9355887,
+                       "two_frame_mb_s":  103.892,
+                       "p1080_rand_mb_s":  103.879,
+                       "target_77_76":  true,
+                       "target_97_2":  true,
+                       "long_run":  "not_run"
+                   },
+    "lessons":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\lessons\\T10.a1-eng-freeze-lessons.md",
+    "file_count":  322,
+    "missing":  0,
+    "files":  [
+                  {
+                      "rel":  "r1/logs/syn_run.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\logs\\syn_run.log",
+                      "size":  51639,
+                      "sha256":  "8267922bf650978644f10e548b6902262f276be801c03c2a63f3b7ae8ea59f87",
+                      "role":  "log"
+                  },
+                  {
+                      "rel":  "r1/logs/td_stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\logs\\td_stdout.log",
+                      "size":  13190,
+                      "sha256":  "bd01349bb58f188bd323de20b80c466d962ade7d1e082d8eab79c74095c85950",
+                      "role":  "log"
+                  },
+                  {
+                      "rel":  "r1/p2/CANDIDATE-MANIFEST.json",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\CANDIDATE-MANIFEST.json",
+                      "size":  51498,
+                      "sha256":  "a9ceb50628a506e34c8f5c4a89813d97e130cf31ffe79f9fab95362b5e823455",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/index.json",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\index.json",
+                      "size":  19726,
+                      "sha256":  "34ee4422b490bc15b74ea35d8b81d805302a30c9d4dc2b596c3a632239e21bd6",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p1_p_1920x4_repeat_prep0_pred0.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p1_p_1920x4_repeat_prep0_pred0.hex",
+                      "size":  38400,
+                      "sha256":  "b20e717339f432991cac151bdfd5859c11bd2cf0e98ff07da46f2e56ac226bff",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p1_p_1920x4_repeat_prep0_pred0.meta",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p1_p_1920x4_repeat_prep0_pred0.meta",
+                      "size":  30,
+                      "sha256":  "9dc63dedab8bce8cea07a6d57978c6d0b2fdfd0c373beb0ffff321b3d7902a93",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p1_p_1920x4_repeat_prep0_pred0.xform",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p1_p_1920x4_repeat_prep0_pred0.xform",
+                      "size":  9600,
+                      "sha256":  "c3e0e465408eb118bbbabc67cc583ad1fdb894f7eb2302769dd749a5948b3fe5",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p1_p_1920x4_repeat_prep1_pred1.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p1_p_1920x4_repeat_prep1_pred1.hex",
+                      "size":  38400,
+                      "sha256":  "11ab5ad44fb3e7440f83edf2ed81c090b4ae2c47813b4703ff2b1fb646a62484",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p1_p_1920x4_repeat_prep1_pred1.meta",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p1_p_1920x4_repeat_prep1_pred1.meta",
+                      "size":  30,
+                      "sha256":  "9dc63dedab8bce8cea07a6d57978c6d0b2fdfd0c373beb0ffff321b3d7902a93",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p1_p_1920x4_repeat_prep1_pred1.xform",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p1_p_1920x4_repeat_prep1_pred1.xform",
+                      "size":  9600,
+                      "sha256":  "1da8c915ff784a49c21765058e69fcb38b2060723321793113c3e626b91056ba",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p1_p_32x5_tail_prep1_pred1.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p1_p_32x5_tail_prep1_pred1.hex",
+                      "size":  800,
+                      "sha256":  "d47bf680d634fcfed84f842a15d04bf721ab19f32f1ea8f3fca5f6138ef2140b",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p1_p_32x5_tail_prep1_pred1.meta",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p1_p_32x5_tail_prep1_pred1.meta",
+                      "size":  40,
+                      "sha256":  "869cccc67fe8f57297fc2544c6a7f01752cd89f67b50e999978d346eeb27689f",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p1_p_32x5_tail_prep1_pred1.xform",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p1_p_32x5_tail_prep1_pred1.xform",
+                      "size":  200,
+                      "sha256":  "ee18e94d2faedce795e84995bdd70b7e80c3b134ebbc5707d175f916cee03549",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p1_p_8x4_flat_prep0_pred0.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p1_p_8x4_flat_prep0_pred0.hex",
+                      "size":  160,
+                      "sha256":  "27d8bc2ee01661e6635aa83a7ae473b04c9d4e73853cde532948343485ec0043",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p1_p_8x4_flat_prep0_pred0.meta",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p1_p_8x4_flat_prep0_pred0.meta",
+                      "size":  30,
+                      "sha256":  "2b9a1fdba031fd69778a12f3ad0d04d68b414630f3bc376f067dac93b74e1976",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p1_p_8x4_flat_prep0_pred0.xform",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p1_p_8x4_flat_prep0_pred0.xform",
+                      "size":  40,
+                      "sha256":  "0e1f675105bb43e28c69ce678e0f2d300eb1ea2ce3925f1f4f09f97fc06e1b9a",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p1_p_8x4_grad_prep1_pred0.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p1_p_8x4_grad_prep1_pred0.hex",
+                      "size":  160,
+                      "sha256":  "03eddc02bb4df4ed74e63cff9dc57a860712bab11fe38243dc3ae0aa179d72fa",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p1_p_8x4_grad_prep1_pred0.meta",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p1_p_8x4_grad_prep1_pred0.meta",
+                      "size":  30,
+                      "sha256":  "2b9a1fdba031fd69778a12f3ad0d04d68b414630f3bc376f067dac93b74e1976",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p1_p_8x4_grad_prep1_pred0.xform",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p1_p_8x4_grad_prep1_pred0.xform",
+                      "size":  40,
+                      "sha256":  "fb4cd27eb92e263fe3b0c04368fc625b1963caf0c176fe4ef1bf5d761250cd02",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p1_p_8x4_grad_prep1_pred1.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p1_p_8x4_grad_prep1_pred1.hex",
+                      "size":  160,
+                      "sha256":  "6acfad74f97245404b0264e49c23567a5acea290b5a427f3974f6e6752281e5b",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p1_p_8x4_grad_prep1_pred1.meta",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p1_p_8x4_grad_prep1_pred1.meta",
+                      "size":  30,
+                      "sha256":  "2b9a1fdba031fd69778a12f3ad0d04d68b414630f3bc376f067dac93b74e1976",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p1_p_8x4_grad_prep1_pred1.xform",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p1_p_8x4_grad_prep1_pred1.xform",
+                      "size":  40,
+                      "sha256":  "e2755cce7f83061c5ab17da92632ccf5f65a6c3f8a6af65f9d71e7f60bb55cfe",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p2_dist2048_len258.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p2_dist2048_len258.hex",
+                      "size":  19200,
+                      "sha256":  "e4e0887a1208728f2f2aa8063e68e181a72b10737727b92b6009218a3e089231",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p2_dist2048_len258.meta",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p2_dist2048_len258.meta",
+                      "size":  20,
+                      "sha256":  "186ecd17da1decaa590a8d12b791f14696a66d4afa7436e8fb4b0f5693d821c5",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p2_dist2048_len258.xform",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p2_dist2048_len258.xform",
+                      "size":  4800,
+                      "sha256":  "ee7d58d296ba27bdbb6ade6365e8b668089ae6d4d2d3ce3a5edaeb4409de23f2",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p2_frame_16x8.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p2_frame_16x8.hex",
+                      "size":  640,
+                      "sha256":  "e7d97f51a220c7efb6ae688bcd14a6e3cb5872dac38e32ee47898dc5d4d030c7",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p2_frame_16x8.meta",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p2_frame_16x8.meta",
+                      "size":  50,
+                      "sha256":  "61ebd7151170d6a7cfb6c075f86d24a3f75912f8f3e5e7b8f91a6a73e01ccfdf",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p2_frame_16x8.xform",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p2_frame_16x8.xform",
+                      "size":  160,
+                      "sha256":  "f4bf63fe9d23327a59da7ebfc086b7db18af68a86e0aca54497324dd8b33dcd8",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p2_frame_8x5_tail.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p2_frame_8x5_tail.hex",
+                      "size":  200,
+                      "sha256":  "bb28919a110981576f5478bbe27eae4de4e1b3d7f1874cd6439720f2ca391e1b",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p2_frame_8x5_tail.meta",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p2_frame_8x5_tail.meta",
+                      "size":  40,
+                      "sha256":  "cff70b19e388df66cd4320de2e66f51687eef2a5e22bd9e29db9bce8e59b05c7",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p2_frame_8x5_tail.xform",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p2_frame_8x5_tail.xform",
+                      "size":  50,
+                      "sha256":  "9898428b82ee6f679753036472bedb74701161801f29526e7201e0dcc600bcdc",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p2_len3_dist4.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p2_len3_dist4.hex",
+                      "size":  19200,
+                      "sha256":  "42ad811ae2665c164758b8dd1f17de0ede1951e46acd4ccf19032d52ac8d0325",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p2_len3_dist4.meta",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p2_len3_dist4.meta",
+                      "size":  20,
+                      "sha256":  "186ecd17da1decaa590a8d12b791f14696a66d4afa7436e8fb4b0f5693d821c5",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p2_len3_dist4.xform",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p2_len3_dist4.xform",
+                      "size":  4800,
+                      "sha256":  "1f5738aca2054955892fa6a7ef05ff801397d857e1c6b57bba0f9815969766fe",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p2_perf_1920x64_comp.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p2_perf_1920x64_comp.hex",
+                      "size":  614400,
+                      "sha256":  "edbfdeaedb06824ced20ad76b260979e95e1322d6f6e3bab5e7a951a268f9849",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p2_perf_1920x64_comp.meta",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p2_perf_1920x64_comp.meta",
+                      "size":  330,
+                      "sha256":  "e98c9a1c3e0fe621c9aa65aaadbcacbef13c2437a0bbbafcde17d2ff471f80fe",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p2_perf_1920x64_comp.xform",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p2_perf_1920x64_comp.xform",
+                      "size":  153600,
+                      "sha256":  "b836b51df0bc98045f3768cf497bb5a76f88fa301e0598c63514284e2fbfba7a",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p2_perf_1920x64_rand.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p2_perf_1920x64_rand.hex",
+                      "size":  614400,
+                      "sha256":  "dcc80e7adeef41e4804390ba52dd1f6d2c12e1b99d851cccd50e246c082595bd",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p2_perf_1920x64_rand.meta",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p2_perf_1920x64_rand.meta",
+                      "size":  330,
+                      "sha256":  "e98c9a1c3e0fe621c9aa65aaadbcacbef13c2437a0bbbafcde17d2ff471f80fe",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p2_perf_1920x64_rand.xform",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p2_perf_1920x64_rand.xform",
+                      "size":  153600,
+                      "sha256":  "230204cf76298c0f0ba2cb05da3c475d6bd39b0af2ae424046d5ff878dba4586",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p2_random_4800.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p2_random_4800.hex",
+                      "size":  19200,
+                      "sha256":  "2b7480bd2cb6a7f927474f6ab172affc13a9085daf7868e1ef0e3cc9014f9824",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p2_random_4800.meta",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p2_random_4800.meta",
+                      "size":  20,
+                      "sha256":  "186ecd17da1decaa590a8d12b791f14696a66d4afa7436e8fb4b0f5693d821c5",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/cases/p2_random_4800.xform",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\cases\\p2_random_4800.xform",
+                      "size":  4800,
+                      "sha256":  "484ada0fe171a983d5b0d7b55541d6650ecda663cdd598143587fe4cfe96e218",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/logs/exitcodes.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\logs\\exitcodes.txt",
+                      "size":  8940,
+                      "sha256":  "1682e8ce86661fb4f50fdef1556d776db4463ff7ec1f07be27d3e180bc29e132",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/logs/gen.err",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\logs\\gen.err",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/logs/gen.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\logs\\gen.log",
+                      "size":  803,
+                      "sha256":  "8109cc99416530dfeb44f4d0fb9493ff7ff268cfe365296d016303283adc9871",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/logs/verify.err",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\logs\\verify.err",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/logs/verify.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\logs\\verify.log",
+                      "size":  682,
+                      "sha256":  "10c6c91e18c919f8fb15b77dcfb9c5fe3fed72de10e5d407f41ea642ca2a721c",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/logs/vlog.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\logs\\vlog.log",
+                      "size":  1134,
+                      "sha256":  "818e8f63a508269b527419b1873590c804e8ead1a57955101e4610d47e9d245e",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/result.json",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\result.json",
+                      "size":  34616,
+                      "sha256":  "5f5cbf985381abef3124261ea7d9accf16f4f96b3502c046f6d562b9e9292549",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/result.md",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\result.md",
+                      "size":  8040,
+                      "sha256":  "8e7b8032d8d37eeec5a8ca0a32233e03d637cda39dc9fedc42864d74d215fe1b",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/abort_midblock/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\abort_midblock\\out.hex",
+                      "size":  8,
+                      "sha256":  "0d4a1a995be99b6f2fef7472d3f09825541072f94820821b1c1c207fdc8432c0",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/abort_midblock/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\abort_midblock\\sim.log",
+                      "size":  2798,
+                      "sha256":  "1850ef1c04820d552f2ea765c95d730e867ffb3fc3ab3b292e00ce4b96f02c1e",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/abort_midblock/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\abort_midblock\\stats.txt",
+                      "size":  280,
+                      "sha256":  "42b4c4df74ae64653970ba8859647da4162e7db06f9d4177c2161e063b987842",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/abort_midblock/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\abort_midblock\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/abort_midblock/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\abort_midblock\\stdout.log",
+                      "size":  2869,
+                      "sha256":  "121bd8195850063affe878d18c3d31d2dfe869036d37a0ef02bf6b1cfcf407f9",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_1920x4_repeat_prep0_pred0/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_1920x4_repeat_prep0_pred0\\out.hex",
+                      "size":  688,
+                      "sha256":  "3f81916d285c5eb10cb1270e76952a852213ed2330b2d64f00da0bd3f70cd9c0",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_1920x4_repeat_prep0_pred0/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_1920x4_repeat_prep0_pred0\\sim.log",
+                      "size":  2867,
+                      "sha256":  "0a2f3b6b03d75a256e00ff3fde2a1946e38ca43bb413f9309f84e6b4da040844",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_1920x4_repeat_prep0_pred0/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_1920x4_repeat_prep0_pred0\\stats.txt",
+                      "size":  299,
+                      "sha256":  "6de7a60efed4cb060c974970bfe67faf0d820a43cecfd370309cfff86192105d",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_1920x4_repeat_prep0_pred0/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_1920x4_repeat_prep0_pred0\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_1920x4_repeat_prep0_pred0/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_1920x4_repeat_prep0_pred0\\stdout.log",
+                      "size":  2938,
+                      "sha256":  "e1d0a52f7bfcc907a9135e6d2560bfda2607861a338fd0da3378951a39e12bae",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_1920x4_repeat_prep1_pred1/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_1920x4_repeat_prep1_pred1\\out.hex",
+                      "size":  916,
+                      "sha256":  "7789591db945ffb79a3f49d6de17566df669ca79910d279b1e28f9321a1946cb",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_1920x4_repeat_prep1_pred1/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_1920x4_repeat_prep1_pred1\\sim.log",
+                      "size":  2867,
+                      "sha256":  "496befc4fa357a88d0c7e80cc036d783a49e0e77f6e3b137151fd33cf632910c",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_1920x4_repeat_prep1_pred1/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_1920x4_repeat_prep1_pred1\\stats.txt",
+                      "size":  299,
+                      "sha256":  "7db666ea541bac4c525d33bd499a1682c5a8019579eb12a573b3547dd94ff6d3",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_1920x4_repeat_prep1_pred1/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_1920x4_repeat_prep1_pred1\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_1920x4_repeat_prep1_pred1/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_1920x4_repeat_prep1_pred1\\stdout.log",
+                      "size":  2938,
+                      "sha256":  "2bffc33cf3b9b2b0a5de9d28f5db95c2192bb177b6642b5d93d563fc612bbf77",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_32x5_tail_prep1_pred1/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_32x5_tail_prep1_pred1\\out.hex",
+                      "size":  340,
+                      "sha256":  "34c21cc3c66ae2085d2fe09c8497ce5ca649e0c49e2b30a2589c1d98452e81a0",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_32x5_tail_prep1_pred1/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_32x5_tail_prep1_pred1\\sim.log",
+                      "size":  2845,
+                      "sha256":  "26777e6b5e38fe2930cbe97c7cd11de3ba151bd33984e9ca74578354c9baa9f8",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_32x5_tail_prep1_pred1/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_32x5_tail_prep1_pred1\\stats.txt",
+                      "size":  292,
+                      "sha256":  "f0e26112a2a8d3c98fe7d0578830a2227c0ba72c2bf260c42b1d5e781fa23081",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_32x5_tail_prep1_pred1/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_32x5_tail_prep1_pred1\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_32x5_tail_prep1_pred1/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_32x5_tail_prep1_pred1\\stdout.log",
+                      "size":  2916,
+                      "sha256":  "b866a6c4d5242536bb5bc1833566a2ab86341ec2d07d93483f894bf9847f6412",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_8x4_flat_prep0_pred0/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_8x4_flat_prep0_pred0\\out.hex",
+                      "size":  96,
+                      "sha256":  "983afa4bde30e00eebcad4c49fbb4f30fbe6edd6e82a5715e3a11a9d38c7b7bf",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_8x4_flat_prep0_pred0/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_8x4_flat_prep0_pred0\\sim.log",
+                      "size":  2840,
+                      "sha256":  "240a59191c7d6a519437ce0ecde97956be0971987de930e2aa42678819e68a8e",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_8x4_flat_prep0_pred0/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_8x4_flat_prep0_pred0\\stats.txt",
+                      "size":  286,
+                      "sha256":  "a2dedf6118a69a2e1c15ed38c648d77f92e5c27c80765f52f48592163bd510fd",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_8x4_flat_prep0_pred0/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_8x4_flat_prep0_pred0\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_8x4_flat_prep0_pred0/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_8x4_flat_prep0_pred0\\stdout.log",
+                      "size":  2911,
+                      "sha256":  "a6c8177051e2045e8fef396459c50e11e8171b9f035de2f644ca635cde4d44bf",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_8x4_grad_prep1_pred0/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_8x4_grad_prep1_pred0\\out.hex",
+                      "size":  188,
+                      "sha256":  "6cb60cd3cdced142a7e823d88cfa10affcf48831aad50eac7c56c3df5c00beb3",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_8x4_grad_prep1_pred0/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_8x4_grad_prep1_pred0\\sim.log",
+                      "size":  2840,
+                      "sha256":  "4d295251d5eeaee534bb89dac55eab9f827eb79bf02df095e3e5539ee56e51ee",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_8x4_grad_prep1_pred0/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_8x4_grad_prep1_pred0\\stats.txt",
+                      "size":  286,
+                      "sha256":  "5f31e6d6ef0d31b8cef4361b88f3c963cf80ce387fcc17b88c9ce7827f4a58a0",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_8x4_grad_prep1_pred0/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_8x4_grad_prep1_pred0\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_8x4_grad_prep1_pred0/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_8x4_grad_prep1_pred0\\stdout.log",
+                      "size":  2911,
+                      "sha256":  "de4568fce1f14faa0a7a9df87512906f424acc192ccffcec02b7d9365d5b171f",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_8x4_grad_prep1_pred1/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_8x4_grad_prep1_pred1\\out.hex",
+                      "size":  168,
+                      "sha256":  "3418a161ffe461b4dcece1f2b066988018650cb3d2cebc0fe716b239cd5845d2",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_8x4_grad_prep1_pred1/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_8x4_grad_prep1_pred1\\sim.log",
+                      "size":  2840,
+                      "sha256":  "03c0b58548affa3bb17cae2f01ac76fee25f6c9deeb23103a23df01e9799237d",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_8x4_grad_prep1_pred1/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_8x4_grad_prep1_pred1\\stats.txt",
+                      "size":  286,
+                      "sha256":  "9178406cc16706fa481fd37923afeed856f73d06c9f7cf1fd99c0a36d86509f8",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_8x4_grad_prep1_pred1/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_8x4_grad_prep1_pred1\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p1_p_8x4_grad_prep1_pred1/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p1_p_8x4_grad_prep1_pred1\\stdout.log",
+                      "size":  2911,
+                      "sha256":  "09ac76ee855f286fc590b9aa73ec3fbe99a31e381703985b80a941a5ac54965c",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_dist2048_len258/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_dist2048_len258\\out.hex",
+                      "size":  244,
+                      "sha256":  "a31c8f116e7c2dad727b540bb831df4cca88af3b21439ebef12a928d0aee550d",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_dist2048_len258/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_dist2048_len258\\sim.log",
+                      "size":  2806,
+                      "sha256":  "bf969a6e2d8718cbb90bc0ae356e6fae77d378ab85a84e59ee30333b6846d6d2",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_dist2048_len258/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_dist2048_len258\\stats.txt",
+                      "size":  295,
+                      "sha256":  "2c404f8bef655b4bf5d912837c96be6247c05c53fb0373ffa7532e18c55c7d64",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_dist2048_len258/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_dist2048_len258\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_dist2048_len258/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_dist2048_len258\\stdout.log",
+                      "size":  2877,
+                      "sha256":  "3dbcd7d863ea05de4cce19f60a24f6e5e9e9fc0d7347e78ae54b6a6206fa3d10",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_frame_16x8/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_frame_16x8\\out.hex",
+                      "size":  400,
+                      "sha256":  "68ebe789965eb352c4e1f21884196f493515c06fc4fba9b77170137bd41946b3",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_frame_16x8/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_frame_16x8\\sim.log",
+                      "size":  2780,
+                      "sha256":  "5bfbd95cd1787a195d04bda10d18d0592d24c0f0e404fdc583771e2d2d72e2c2",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_frame_16x8/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_frame_16x8\\stats.txt",
+                      "size":  292,
+                      "sha256":  "a7f63510a16f65b638c6d4b373dbb41a8b6dac17220a2d0fc11073091b60e906",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_frame_16x8/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_frame_16x8\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_frame_16x8/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_frame_16x8\\stdout.log",
+                      "size":  2851,
+                      "sha256":  "9458d4ba1a27bcdab7b29aefc48f533064d0476a6f35847c849e0869ec2be514",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_frame_16x8_bp/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_frame_16x8_bp\\out.hex",
+                      "size":  400,
+                      "sha256":  "68ebe789965eb352c4e1f21884196f493515c06fc4fba9b77170137bd41946b3",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_frame_16x8_bp/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_frame_16x8_bp\\sim.log",
+                      "size":  2797,
+                      "sha256":  "1c3236f5570602f1b34a8cffd05fe6f3ba4b8e66623807f9971326ddd28c9c7e",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_frame_16x8_bp/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_frame_16x8_bp\\stats.txt",
+                      "size":  292,
+                      "sha256":  "34d23e735ae746aeb82509ea61d9a05ff808f477f18e7739372342c175559119",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_frame_16x8_bp/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_frame_16x8_bp\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_frame_16x8_bp/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_frame_16x8_bp\\stdout.log",
+                      "size":  2868,
+                      "sha256":  "f51ab8b8bca8bbba3000c13698e3d582fb0dcb7e6a6ab8a536749e126029c3ce",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_frame_16x8_gapbp/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_frame_16x8_gapbp\\out.hex",
+                      "size":  400,
+                      "sha256":  "68ebe789965eb352c4e1f21884196f493515c06fc4fba9b77170137bd41946b3",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_frame_16x8_gapbp/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_frame_16x8_gapbp\\sim.log",
+                      "size":  2815,
+                      "sha256":  "952ac2b52bae2ecc572bc339efd2b6a55c4b49ac7aa24178d325379ccccecc7c",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_frame_16x8_gapbp/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_frame_16x8_gapbp\\stats.txt",
+                      "size":  291,
+                      "sha256":  "06c003d56d55fd9ab0a9a084b81255044602ea8684f5f6f96bfae11c5a42955a",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_frame_16x8_gapbp/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_frame_16x8_gapbp\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_frame_16x8_gapbp/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_frame_16x8_gapbp\\stdout.log",
+                      "size":  2886,
+                      "sha256":  "4fcbb03a5436c2379b67cf56afcc3f6d9186b793ef54705fa467be793265c158",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_frame_8x5_tail/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_frame_8x5_tail\\out.hex",
+                      "size":  248,
+                      "sha256":  "15da41cb1ad0484e68e854729e12a27f5df1117621d4d8ad2d3a67f1a0357863",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_frame_8x5_tail/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_frame_8x5_tail\\sim.log",
+                      "size":  2800,
+                      "sha256":  "979b619f3ce852979989c16dc6f789567cfac5b0903fef5bc7ff2f064b162cff",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_frame_8x5_tail/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_frame_8x5_tail\\stats.txt",
+                      "size":  287,
+                      "sha256":  "bcfaef91820c1fed5cccb7f2d38091437190a6c2b0f2ca95fa27c78aa8852ac0",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_frame_8x5_tail/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_frame_8x5_tail\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_frame_8x5_tail/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_frame_8x5_tail\\stdout.log",
+                      "size":  2871,
+                      "sha256":  "d22c65d7bd4e3534f1d488eb661f7d3310b2fe159857521150f332e182ad9e79",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_len3_dist4/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_len3_dist4\\out.hex",
+                      "size":  364,
+                      "sha256":  "b8e10410e503ac3735ecdf23f53655de9ef82ee6932cd5f8022d239e4571b296",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_len3_dist4/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_len3_dist4\\sim.log",
+                      "size":  2781,
+                      "sha256":  "c95586de86cf6d50c0940f25a915e75e904df385c1f0e744f859ae841e4e75bc",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_len3_dist4/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_len3_dist4\\stats.txt",
+                      "size":  296,
+                      "sha256":  "1cd181458d039de7f26dc3a2a9d40a266fc39a0e199466e43e971d6eebc4d08f",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_len3_dist4/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_len3_dist4\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_len3_dist4/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_len3_dist4\\stdout.log",
+                      "size":  2852,
+                      "sha256":  "c698784b0c5476a877fe91f8acd0f0a9296e0ddc32c84db88f317611049e7880",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_perf_1920x64_comp/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_perf_1920x64_comp\\out.hex",
+                      "size":  201240,
+                      "sha256":  "062826bdcabb89392415e5c27f255fa5f80f878fddf3bb0dacdef645d092a48b",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_perf_1920x64_comp/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_perf_1920x64_comp\\sim.log",
+                      "size":  2818,
+                      "sha256":  "9e47a2cb8897b7a8550ccd150a185e4bfeaa3c527a98524f54b4fa96004cf4b0",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_perf_1920x64_comp/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_perf_1920x64_comp\\stats.txt",
+                      "size":  315,
+                      "sha256":  "5413dfb226d1bdd9592accf5a04d847e9f7906d97611cc3e472e8c5bdf638db5",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_perf_1920x64_comp/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_perf_1920x64_comp\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_perf_1920x64_comp/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_perf_1920x64_comp\\stdout.log",
+                      "size":  2889,
+                      "sha256":  "241fe979b055047cdc29ce0ec38bb7d8f83f8b03dd7a3bc52514bd99915ac5a7",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_perf_1920x64_rand/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_perf_1920x64_rand\\out.hex",
+                      "size":  615064,
+                      "sha256":  "db98aba75b48ae0fe152c6a3fdf8b94b8f237a54d384cdb807523dd36537368c",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_perf_1920x64_rand/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_perf_1920x64_rand\\sim.log",
+                      "size":  2818,
+                      "sha256":  "025c17452e296a63cea3742b814b31f42337ca105a8687d464ba4313b4e820f8",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_perf_1920x64_rand/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_perf_1920x64_rand\\stats.txt",
+                      "size":  308,
+                      "sha256":  "d55e1eda706474f1aeb42fb0b4e1db1a5f79df4840ca9b1415d340d8cc85fcaf",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_perf_1920x64_rand/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_perf_1920x64_rand\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_perf_1920x64_rand/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_perf_1920x64_rand\\stdout.log",
+                      "size":  2889,
+                      "sha256":  "ac26569488c487327ecd540dac3ba909f5277196f14d7543dee32ccf9b93eb16",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_random_4800/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_random_4800\\out.hex",
+                      "size":  19244,
+                      "sha256":  "7af10ec706d98ca8ed0b94361172eb81ce2ace8490ed7ca2f9277239d569de35",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_random_4800/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_random_4800\\sim.log",
+                      "size":  2786,
+                      "sha256":  "355c902f3b9912697b459430d80b24c53f2e9581da7c6ba681921fb67fd53d47",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_random_4800/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_random_4800\\stats.txt",
+                      "size":  292,
+                      "sha256":  "33dfe11c4aea521920264a64ad2995aa659a1e41080f7b7bb53c734813b54053",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_random_4800/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_random_4800\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/p2_random_4800/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\p2_random_4800\\stdout.log",
+                      "size":  2857,
+                      "sha256":  "6712022a48b963408cec1b588db9319503d4f2d56579be64eb35b1120f249078",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/reset_midblock/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\reset_midblock\\out.hex",
+                      "size":  8,
+                      "sha256":  "0d4a1a995be99b6f2fef7472d3f09825541072f94820821b1c1c207fdc8432c0",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/reset_midblock/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\reset_midblock\\sim.log",
+                      "size":  2796,
+                      "sha256":  "6b0ec539c57bace70a41940a5ab6d51c63a49786dfeb00764a08211b8398d850",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/reset_midblock/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\reset_midblock\\stats.txt",
+                      "size":  280,
+                      "sha256":  "c6a234d46f8615e35114688f3561cb4e6c12b01c1fa30a4b2fb1b6251ad76c36",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/reset_midblock/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\reset_midblock\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/runs/reset_midblock/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\runs\\reset_midblock\\stdout.log",
+                      "size":  2867,
+                      "sha256":  "6d078ef2c16c0db35bb207ec322524c01773c0ffd49f9df86e66399e1a312ac5",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/work_p2/_info",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\work_p2\\_info",
+                      "size":  1217,
+                      "sha256":  "7a4f41fff3ecdb7fe4d20e7aafbc268e1f971845d7b91ed3486051eca6f48311",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/work_p2/_lib.qdb",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\work_p2\\_lib.qdb",
+                      "size":  49152,
+                      "sha256":  "6805953be29c2c888b4e54c052d213610f1c15ccdc9046afc2a6a297e82568af",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/work_p2/_lib1_1.qdb",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\work_p2\\_lib1_1.qdb",
+                      "size":  32768,
+                      "sha256":  "28e86cf271ca77cc1f48a5cf7e2037a7d9124b039651a628edb41d8820ca4ed3",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/work_p2/_lib1_1.qpg",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\work_p2\\_lib1_1.qpg",
+                      "size":  868352,
+                      "sha256":  "5f162aa429e82528508d10cc23d9579377f660b54fc22a3e04c90e96406d9d6d",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/work_p2/_lib1_1.qtl",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\work_p2\\_lib1_1.qtl",
+                      "size":  51278,
+                      "sha256":  "0b5423e564266f5022c652539b1faf7b37367cc6dfaec2774fcb97aad611eb97",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p2/work_p2/_vmake",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p2\\work_p2\\_vmake",
+                      "size":  29,
+                      "sha256":  "d287f8a335408d3f94fea840ad628f2cbed3775952c49131049ef8f60fd337c9",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/abort_last/raw.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\abort_last\\raw.bin",
+                      "size":  125,
+                      "sha256":  "79cab63d8104541ff3fc2dd2ca93845e3b40e0c47a35bab74f0d98fe5debb6fe",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/abort_last/raw2.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\abort_last\\raw2.bin",
+                      "size":  125,
+                      "sha256":  "e9f1d81fb0466b2082cc8d497bb326544155038f0d569472580822058c2a2a5d",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/abort_recover/raw.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\abort_recover\\raw.bin",
+                      "size":  125,
+                      "sha256":  "79cab63d8104541ff3fc2dd2ca93845e3b40e0c47a35bab74f0d98fe5debb6fe",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/abort_recover/raw2.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\abort_recover\\raw2.bin",
+                      "size":  125,
+                      "sha256":  "e9f1d81fb0466b2082cc8d497bb326544155038f0d569472580822058c2a2a5d",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/bp20x5/raw.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\bp20x5\\raw.bin",
+                      "size":  125,
+                      "sha256":  "79cab63d8104541ff3fc2dd2ca93845e3b40e0c47a35bab74f0d98fe5debb6fe",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/bypass12x6/raw.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\bypass12x6\\raw.bin",
+                      "size":  90,
+                      "sha256":  "feff247b69635aabc9cbcfbf847cdb03d93422325375bf36c1b9f6e4b3f14206",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/case_wrappers.v",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\case_wrappers.v",
+                      "size":  1632,
+                      "sha256":  "5c0cb74ff3a8554d000a1e19fef26b988bdccdd7ac7a5ed1893a84051370a182",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/f1080p_p0/raw.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\f1080p_p0\\raw.bin",
+                      "size":  2592000,
+                      "sha256":  "061b0dfce062d5cd9231e2f0eccee112c189f64487e9b928f99e1531ccf91f8d",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/f1080p_p1d0/raw.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\f1080p_p1d0\\raw.bin",
+                      "size":  2592000,
+                      "sha256":  "061b0dfce062d5cd9231e2f0eccee112c189f64487e9b928f99e1531ccf91f8d",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/f1080p_p1d1/raw.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\f1080p_p1d1\\raw.bin",
+                      "size":  2592000,
+                      "sha256":  "061b0dfce062d5cd9231e2f0eccee112c189f64487e9b928f99e1531ccf91f8d",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/f1080p_rand/raw.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\f1080p_rand\\raw.bin",
+                      "size":  2592000,
+                      "sha256":  "8fe204b715d08285b5918d7745e01195c1925b18ef0d19b9fcfb59ff06f0fad5",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/index.json",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\index.json",
+                      "size":  7555,
+                      "sha256":  "43652e8b3352078b02ad02fff82256737385dea5715ee228015075c1ec9aa425",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/mixed1920x16/raw.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\mixed1920x16\\raw.bin",
+                      "size":  38400,
+                      "sha256":  "5a3502bfb3b23d4df7c0f05e26fe086c8835709bd3c179a727c202b1804329ce",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/multi1080p/raw.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\multi1080p\\raw.bin",
+                      "size":  2592000,
+                      "sha256":  "061b0dfce062d5cd9231e2f0eccee112c189f64487e9b928f99e1531ccf91f8d",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/neg_h1/raw.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\neg_h1\\raw.bin",
+                      "size":  25,
+                      "sha256":  "971ca81ed458de32d47aac1115c5ba8d2ca273c4c64c34b58bb149adb700611f",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/neg_oversize/raw.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\neg_oversize\\raw.bin",
+                      "size":  9620,
+                      "sha256":  "89e9441de4ee943aa9667b0d2fd2387e55015590cae6a2602c8e79873f4344e7",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/neg_pred0prep0/raw.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\neg_pred0prep0\\raw.bin",
+                      "size":  125,
+                      "sha256":  "79cab63d8104541ff3fc2dd2ca93845e3b40e0c47a35bab74f0d98fe5debb6fe",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/neg_pred0prep0/raw2.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\neg_pred0prep0\\raw2.bin",
+                      "size":  125,
+                      "sha256":  "e9f1d81fb0466b2082cc8d497bb326544155038f0d569472580822058c2a2a5d",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/neg_wmod4/raw.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\neg_wmod4\\raw.bin",
+                      "size":  88,
+                      "sha256":  "8316a9415dd01ddcf4875a2445a29bac3347fa8642228e224ea7e396a576a5d3",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/odd20x5_p1d0/raw.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\odd20x5_p1d0\\raw.bin",
+                      "size":  125,
+                      "sha256":  "79cab63d8104541ff3fc2dd2ca93845e3b40e0c47a35bab74f0d98fe5debb6fe",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/odd20x5_p1d1/raw.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\odd20x5_p1d1\\raw.bin",
+                      "size":  125,
+                      "sha256":  "79cab63d8104541ff3fc2dd2ca93845e3b40e0c47a35bab74f0d98fe5debb6fe",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/proto_recover/raw.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\proto_recover\\raw.bin",
+                      "size":  125,
+                      "sha256":  "79cab63d8104541ff3fc2dd2ca93845e3b40e0c47a35bab74f0d98fe5debb6fe",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/proto_recover/raw2.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\proto_recover\\raw2.bin",
+                      "size":  125,
+                      "sha256":  "e9f1d81fb0466b2082cc8d497bb326544155038f0d569472580822058c2a2a5d",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/rand1920x16/raw.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\rand1920x16\\raw.bin",
+                      "size":  38400,
+                      "sha256":  "a3aa1af878aeb02aa9b121f595e0d397068f70a6bfe78690ac38926f5f3396e6",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/reset_recover/raw.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\reset_recover\\raw.bin",
+                      "size":  125,
+                      "sha256":  "79cab63d8104541ff3fc2dd2ca93845e3b40e0c47a35bab74f0d98fe5debb6fe",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/reset_recover/raw2.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\reset_recover\\raw2.bin",
+                      "size":  125,
+                      "sha256":  "e9f1d81fb0466b2082cc8d497bb326544155038f0d569472580822058c2a2a5d",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/stall_abort/raw.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\stall_abort\\raw.bin",
+                      "size":  38400,
+                      "sha256":  "e4540401f75550a691b0cae5be3115b6c628725ce94d2bd34d35bebeeddad80c",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/cases/stall_abort/raw2.bin",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\cases\\stall_abort\\raw2.bin",
+                      "size":  38400,
+                      "sha256":  "e6264f93d0d41257d27729a3de0d9de1161f3c2c30ab4bbd6ee538c7efd53f2b",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/logs/exitcodes.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\logs\\exitcodes.txt",
+                      "size":  9913,
+                      "sha256":  "cbbe776905bb08bb461682c85777aca1574400c815b42623acce580257f65eab",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/logs/gen.err",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\logs\\gen.err",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/logs/gen.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\logs\\gen.log",
+                      "size":  154,
+                      "sha256":  "5fb7f91198f7b037e9b65bbf2fa1d7379dabe1c77c377abc29632395a1270dda",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/logs/verify.err",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\logs\\verify.err",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/logs/verify.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\logs\\verify.log",
+                      "size":  46,
+                      "sha256":  "76c84de1bd985e2b96bcd7c2f981da5f9ade0193f3a998a2c247e866705241ce",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/logs/vlog.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\logs\\vlog.log",
+                      "size":  3752,
+                      "sha256":  "3807cf99a541ce3c7b3982a321beba6c7d3edb03bad181923c5b0d719a268d1b",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/logs/vlog-lint.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\logs\\vlog-lint.log",
+                      "size":  908,
+                      "sha256":  "674a696de522e7a9e8eab6215620c246bf1762844f2a987307b1d74785520fd4",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/result.json",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\result.json",
+                      "size":  17063,
+                      "sha256":  "086e279fe758223b35b5a413de35e2c0344f32aa85446d146bcf65678081785a",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/abort_last/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\abort_last\\out.hex",
+                      "size":  214,
+                      "sha256":  "3d01451b3ae90e24468e0405d37b43c3eb660d0e6e5f50e1b7714cf41825ebb8",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/abort_last/out2.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\abort_last\\out2.hex",
+                      "size":  196,
+                      "sha256":  "4c8da3b2e0a543a31843fabb41888e30c7d1ee6a754337ebf9c184f49a381043",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/abort_last/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\abort_last\\sim.log",
+                      "size":  5743,
+                      "sha256":  "2184932ce5cb3cb995d98856f1a787feb6cd55e26b1aa9bd6b87125a467e27b6",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/abort_last/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\abort_last\\stats.txt",
+                      "size":  771,
+                      "sha256":  "42fc4819ab4c10d411d382a610ca8d606ca35ac0c5c027e276773bbef0056ca2",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/abort_last/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\abort_last\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/abort_last/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\abort_last\\stdout.log",
+                      "size":  5814,
+                      "sha256":  "0dc8431ca54cc139b37250f7faf8fa30fdcea023d5baa3fd461c158158f3c9e0",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/abort_recover/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\abort_recover\\out.hex",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/abort_recover/out2.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\abort_recover\\out2.hex",
+                      "size":  196,
+                      "sha256":  "4c8da3b2e0a543a31843fabb41888e30c7d1ee6a754337ebf9c184f49a381043",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/abort_recover/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\abort_recover\\sim.log",
+                      "size":  5792,
+                      "sha256":  "c443512c4c6416a7d568fac958e03b075adfaa9b32272d2b655b6aacaca99944",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/abort_recover/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\abort_recover\\stats.txt",
+                      "size":  593,
+                      "sha256":  "edf405ca1cdf6c6afc00c79a919a9582a63430f060937a1ac02e713d3590351a",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/abort_recover/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\abort_recover\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/abort_recover/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\abort_recover\\stdout.log",
+                      "size":  5863,
+                      "sha256":  "8198e178b3584216469471369925b784b33d3acb16b244113df70b459b68b33b",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/bp20x5/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\bp20x5\\out.hex",
+                      "size":  214,
+                      "sha256":  "3d01451b3ae90e24468e0405d37b43c3eb660d0e6e5f50e1b7714cf41825ebb8",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/bp20x5/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\bp20x5\\sim.log",
+                      "size":  5275,
+                      "sha256":  "a6a9e28a72a67d7bfc64946eeeb5eea40e453dc62526c6610ab4e74ff61cb2ca",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/bp20x5/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\bp20x5\\stats.txt",
+                      "size":  307,
+                      "sha256":  "7b1c61196590089ffca02348243c0bd0019daa672323faf7289d67c7e34d7cc4",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/bp20x5/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\bp20x5\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/bp20x5/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\bp20x5\\stdout.log",
+                      "size":  5346,
+                      "sha256":  "0b59441ab2efa8a7e8914b6f4abd1a97d1493ecef824bad3bda87eb14af5cd30",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/bypass12x6/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\bypass12x6\\out.hex",
+                      "size":  212,
+                      "sha256":  "6ff92c7b77bd0c349bd72349717b1ca9d498a9f567254022144672ab6a8ee564",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/bypass12x6/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\bypass12x6\\sim.log",
+                      "size":  5355,
+                      "sha256":  "6511b6aa768ce197be57bf11dd2bebef51875e3ddd77fba6adbd0ca10e1af45f",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/bypass12x6/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\bypass12x6\\stats.txt",
+                      "size":  304,
+                      "sha256":  "d427b03288c11a11ca1da9462a096dd9e91549d17b878026fdb167568056012e",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/bypass12x6/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\bypass12x6\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/bypass12x6/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\bypass12x6\\stdout.log",
+                      "size":  5426,
+                      "sha256":  "f5780bbfea583494c117ee6c7b77c75cf62ede819291d1553e96a182570c99db",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/f1080p_p0/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\f1080p_p0\\out.hex",
+                      "size":  5175168,
+                      "sha256":  "1b576b2d35cfa383a5b1492f03b63bca03b885027c9b717892e17b3c202325f3",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/f1080p_p0/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\f1080p_p0\\sim.log",
+                      "size":  7405,
+                      "sha256":  "cc9f8116b1c9287ffdef0388e1b9566261c440deb443764ce2515c63fc4a1b26",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/f1080p_p0/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\f1080p_p0\\stats.txt",
+                      "size":  343,
+                      "sha256":  "f9e28e39df14b82dbdb93abaf02990548485e62f7e01efccf8a3ef342d98b13d",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/f1080p_p0/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\f1080p_p0\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/f1080p_p0/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\f1080p_p0\\stdout.log",
+                      "size":  7476,
+                      "sha256":  "2562ab44f1fe253935fba3e0a35c1391495b1696ce40bbf7320d9a9df489dfe5",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/f1080p_p1d0/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\f1080p_p1d0\\out.hex",
+                      "size":  5133938,
+                      "sha256":  "50a7c260c195b9329771f57f0543b74abba8b523bfb6bda6bd261bd4a45b07fc",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/f1080p_p1d0/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\f1080p_p1d0\\sim.log",
+                      "size":  7535,
+                      "sha256":  "ea736c96b91013430168905be6dd37e8196b2ef2df8a7a2a2f588afbbcb2857b",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/f1080p_p1d0/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\f1080p_p1d0\\stats.txt",
+                      "size":  343,
+                      "sha256":  "179f6402291e9daf994ded2f50c2a4dc8cde07de395a814b96f02b4b343dd9e7",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/f1080p_p1d0/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\f1080p_p1d0\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/f1080p_p1d0/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\f1080p_p1d0\\stdout.log",
+                      "size":  7606,
+                      "sha256":  "a15df1ef5a1468a8285886d6cd5fe613a0d8f4d9441b2628c43d45d6be241292",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/f1080p_p1d1/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\f1080p_p1d1\\out.hex",
+                      "size":  163414,
+                      "sha256":  "c6cabf73515ad895c8d986bbfb8a1f6af455a5f3eb188d54e08cebace6a0e652",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/f1080p_p1d1/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\f1080p_p1d1\\sim.log",
+                      "size":  7445,
+                      "sha256":  "da89e0da6b84888d10d5deb57414716113268e7c216bc47f097d0835de4539a1",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/f1080p_p1d1/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\f1080p_p1d1\\stats.txt",
+                      "size":  340,
+                      "sha256":  "504f0316b31abf5d62e465e1b19ebaf9a219a9a86fa5f232d5fc0873a71494c5",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/f1080p_p1d1/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\f1080p_p1d1\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/f1080p_p1d1/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\f1080p_p1d1\\stdout.log",
+                      "size":  7516,
+                      "sha256":  "4195f9826dca34fab983b4008e7dcf10d1066e44df027d80aad23928ada05431",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/f1080p_rand/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\f1080p_rand\\out.hex",
+                      "size":  5189412,
+                      "sha256":  "7fb27bf35b18be9fea359ed08cb7c77cbc74b49e624b7df91fe4a3f0399ac39e",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/f1080p_rand/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\f1080p_rand\\sim.log",
+                      "size":  7445,
+                      "sha256":  "e995ae971028807f34fdbbd270a4f904c8bbc0a7915de29452befc17858548ef",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/f1080p_rand/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\f1080p_rand\\stats.txt",
+                      "size":  343,
+                      "sha256":  "85e3f824eee320df9e0a7a1680dba3257c0a0f6ea0c727bb21a5459b6e920f2d",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/f1080p_rand/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\f1080p_rand\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/f1080p_rand/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\f1080p_rand\\stdout.log",
+                      "size":  7516,
+                      "sha256":  "10ffd43eaaee560b96c7afb971ed93ae4a6b568c7f76b857b3f67e119770d8db",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/mixed1920x16/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\mixed1920x16\\out.hex",
+                      "size":  39654,
+                      "sha256":  "29f2d2ab176ff2a93ffdb04a6d2038756124cf2b4bd98e16fb8e3ed055722a14",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/mixed1920x16/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\mixed1920x16\\sim.log",
+                      "size":  5399,
+                      "sha256":  "20f0471a8f07b4d94e1b9890a44fd075712c200ef83413ae7517faf56011350c",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/mixed1920x16/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\mixed1920x16\\stats.txt",
+                      "size":  325,
+                      "sha256":  "205d4d43e1144914fa3c90e2b492ba5315726ca16d954f74d37e8d93968c7b98",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/mixed1920x16/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\mixed1920x16\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/mixed1920x16/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\mixed1920x16\\stdout.log",
+                      "size":  5470,
+                      "sha256":  "50dcb7731dffea6fb2db8dc3c9a09684cc01c2e22fb506f76caf1c6ac966b6f2",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/multi1080p/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\multi1080p\\out.hex",
+                      "size":  326828,
+                      "sha256":  "627a6356e605b92302abc9c7f99ad5a9a159cba2a0523922eeda4470a5a5d7ac",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/multi1080p/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\multi1080p\\sim.log",
+                      "size":  9532,
+                      "sha256":  "640fb689f60944a298cdd6668177b55de637d6232d098ecd4c8a2d59a94ec231",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/multi1080p/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\multi1080p\\stats.txt",
+                      "size":  250,
+                      "sha256":  "6859894d63d5e1fd59baf0d0bf64eecb40b00d2c54b3e7804a0383dc8d9d3759",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/multi1080p/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\multi1080p\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/multi1080p/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\multi1080p\\stdout.log",
+                      "size":  9603,
+                      "sha256":  "b09935efdf37abb9ba1c1e6f820056a343fc2bf2c8f57589ae75c362f9da3428",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/neg_h1/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\neg_h1\\sim.log",
+                      "size":  5456,
+                      "sha256":  "6d8ee49f24880a50839be5ce5dca367ef83fc35e02cc6105791635fb52b81ee6",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/neg_h1/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\neg_h1\\stats.txt",
+                      "size":  115,
+                      "sha256":  "2b67b0272166d9419723a447d598bbec387e423773a3052810d00f6fa54dafb8",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/neg_h1/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\neg_h1\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/neg_h1/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\neg_h1\\stdout.log",
+                      "size":  5527,
+                      "sha256":  "9c35a836a59d87bbe537f6507ee9bb81fe972a4541181a1e7b4f0079ebf43dc3",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/neg_oversize/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\neg_oversize\\sim.log",
+                      "size":  5576,
+                      "sha256":  "a2836233aa1482f112eb5f8a7a9d95cfdd540362aaeadd5a5b65617ae5fb3e4a",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/neg_oversize/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\neg_oversize\\stats.txt",
+                      "size":  117,
+                      "sha256":  "292a6cf709d365743065e751a11135088c4ed41f5231d737451788912734d93c",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/neg_oversize/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\neg_oversize\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/neg_oversize/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\neg_oversize\\stdout.log",
+                      "size":  5647,
+                      "sha256":  "6f70dcb4d77ba54c3ab956cec6b03663544c65a04e1ac4bb02fa3aa2ac897f5b",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/neg_pred0prep0/out2.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\neg_pred0prep0\\out2.hex",
+                      "size":  284,
+                      "sha256":  "f7a636a2f14882d8b4ea882ea3330a586182a7bacd31fa7f099a338e5ad49563",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/neg_pred0prep0/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\neg_pred0prep0\\sim.log",
+                      "size":  5798,
+                      "sha256":  "7eaef1e1623e554a0d28edc6e38f34aae87ffbd3b6df712beade2e82890bc188",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/neg_pred0prep0/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\neg_pred0prep0\\stats.txt",
+                      "size":  336,
+                      "sha256":  "a7af9259c63c678d208674da970292d806976521fd81cdd7d19469a533cfa380",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/neg_pred0prep0/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\neg_pred0prep0\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/neg_pred0prep0/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\neg_pred0prep0\\stdout.log",
+                      "size":  5869,
+                      "sha256":  "a7b6e02a78e7185878a0145a79203f5c93c3ec2cdf66e45164dc0305cd2e9f48",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/neg_wmod4/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\neg_wmod4\\sim.log",
+                      "size":  5516,
+                      "sha256":  "5e11ba3861c9d20488dc94f3fc9bb9445db99c90365dca279c9ae71cae5c3834",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/neg_wmod4/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\neg_wmod4\\stats.txt",
+                      "size":  115,
+                      "sha256":  "9b736a521dee3f718c363d9c29f1e7cf35c24a6669882131689fe58d0d6e39da",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/neg_wmod4/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\neg_wmod4\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/neg_wmod4/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\neg_wmod4\\stdout.log",
+                      "size":  5587,
+                      "sha256":  "27c7c4cee98588b4aa16c1eb1613b286f54b42e781a71035d88c0e397133e381",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/odd20x5_p1d0/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\odd20x5_p1d0\\out.hex",
+                      "size":  272,
+                      "sha256":  "b6ae00067e5d0cca90919198629312599d5be4b2b2572f17a7f032f1a1763c06",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/odd20x5_p1d0/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\odd20x5_p1d0\\sim.log",
+                      "size":  5395,
+                      "sha256":  "fd720bee526ab21fc820999bb0a06316452bddd3744fc904875d80a294c8b86a",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/odd20x5_p1d0/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\odd20x5_p1d0\\stats.txt",
+                      "size":  307,
+                      "sha256":  "003e497dd3c410f14dc27e59ea2092436ff3f1b716677ecc293f554479c66838",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/odd20x5_p1d0/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\odd20x5_p1d0\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/odd20x5_p1d0/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\odd20x5_p1d0\\stdout.log",
+                      "size":  5466,
+                      "sha256":  "0f9de042e7059e3a2e0e67a3263c867a9f2be955b7ee3081737a7cf82472ccf7",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/odd20x5_p1d1/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\odd20x5_p1d1\\out.hex",
+                      "size":  214,
+                      "sha256":  "3d01451b3ae90e24468e0405d37b43c3eb660d0e6e5f50e1b7714cf41825ebb8",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/odd20x5_p1d1/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\odd20x5_p1d1\\sim.log",
+                      "size":  5395,
+                      "sha256":  "1363b2ec89817f8ba99fc84080e5123fd0a78ba249564f0c94921ab1ec1fa850",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/odd20x5_p1d1/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\odd20x5_p1d1\\stats.txt",
+                      "size":  307,
+                      "sha256":  "49fa6de04d996b3b2e222f34d9596304b2bbbac603a9c7652133d73499bb1391",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/odd20x5_p1d1/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\odd20x5_p1d1\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/odd20x5_p1d1/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\odd20x5_p1d1\\stdout.log",
+                      "size":  5466,
+                      "sha256":  "57458d146631778c545bb1717a4b3fad29e91ab568a57ea6709773d8d89796a4",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/proto_recover/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\proto_recover\\out.hex",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/proto_recover/out2.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\proto_recover\\out2.hex",
+                      "size":  196,
+                      "sha256":  "4c8da3b2e0a543a31843fabb41888e30c7d1ee6a754337ebf9c184f49a381043",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/proto_recover/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\proto_recover\\sim.log",
+                      "size":  5895,
+                      "sha256":  "2565b715e0245ed7767d4d26a844539e8df0d4f47c6cd3c4fbb7266dd02c0428",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/proto_recover/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\proto_recover\\stats.txt",
+                      "size":  591,
+                      "sha256":  "d5c78aecdb641a5b5809b92cb449ab60c3aed679f6e2d6c44d8209f144890a33",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/proto_recover/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\proto_recover\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/proto_recover/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\proto_recover\\stdout.log",
+                      "size":  5966,
+                      "sha256":  "c7e772bb3fd675c39570d71ae07839a3195f0b4562c5005e97f5caf031692d39",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/rand1920x16/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\rand1920x16\\out.hex",
+                      "size":  76892,
+                      "sha256":  "bb8792ee85d025ff55d66f865b382fde53e1c6d5744b503ac562477e398a6476",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/rand1920x16/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\rand1920x16\\sim.log",
+                      "size":  5379,
+                      "sha256":  "c4b7d7cf7092fd4424891bd00bcbd0ba566edd22ece2a32b7bca41ea436155f6",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/rand1920x16/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\rand1920x16\\stats.txt",
+                      "size":  325,
+                      "sha256":  "d59d856d19f121bf55e16dd8144adc1ec6b05c105cdf1a82323583048d863c0c",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/rand1920x16/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\rand1920x16\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/rand1920x16/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\rand1920x16\\stdout.log",
+                      "size":  5450,
+                      "sha256":  "4b63ccf6fa33e49d5b211334d8d5b5301b38f9ad16ff79c3f49b0bc9455d5e4a",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/reset_recover/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\reset_recover\\out.hex",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/reset_recover/out2.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\reset_recover\\out2.hex",
+                      "size":  196,
+                      "sha256":  "4c8da3b2e0a543a31843fabb41888e30c7d1ee6a754337ebf9c184f49a381043",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/reset_recover/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\reset_recover\\sim.log",
+                      "size":  5686,
+                      "sha256":  "2a000534dd8ee9721ddb64642582c5154f711a77c731277a384bf018e97e6c63",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/reset_recover/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\reset_recover\\stats.txt",
+                      "size":  591,
+                      "sha256":  "40960db3496cdeb5b64643ca8ab8ff050073b2d1257f8238d5da4a3507d791e4",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/reset_recover/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\reset_recover\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/reset_recover/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\reset_recover\\stdout.log",
+                      "size":  5757,
+                      "sha256":  "719a452550dcf3f1d61ecdd4095a06fe9006f7b861483ac221f5e280b19161e6",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/stall_abort/out.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\stall_abort\\out.hex",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/stall_abort/out2.hex",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\stall_abort\\out2.hex",
+                      "size":  1856,
+                      "sha256":  "358514fa9a3f665fd4e3d3ccf0d77b963fde8131c4bdf68a6c631f8beec2210b",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/stall_abort/sim.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\stall_abort\\sim.log",
+                      "size":  5765,
+                      "sha256":  "ca1aafed5c28d0942d88999a5183c8d29f2e8ee01d5338b855fca50e2383a2d1",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/stall_abort/stats.txt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\stall_abort\\stats.txt",
+                      "size":  683,
+                      "sha256":  "d0f368bcf88d2c9e0e1c4cfa5d74f37ae310075b29ebf9764bb0b552036f41ad",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/stall_abort/stderr.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\stall_abort\\stderr.log",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/runs/stall_abort/stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\runs\\stall_abort\\stdout.log",
+                      "size":  5836,
+                      "sha256":  "eb6fb2def60742600eb132fc7b6a38f48a21f28da729b5e9810641475958cd45",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/work_p3/_info",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\work_p3\\_info",
+                      "size":  5297,
+                      "sha256":  "1b5db61f459e698f76299c10bafbb9d38d6f884ea764a7e79148639198246176",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/work_p3/_lib.qdb",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\work_p3\\_lib.qdb",
+                      "size":  49152,
+                      "sha256":  "ac15b8e6375b22ddf3c2a385c76e9b7da633ef52bdbbcfd2e5a48349aa79e919",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/work_p3/_lib1_0.qdb",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\work_p3\\_lib1_0.qdb",
+                      "size":  32768,
+                      "sha256":  "d4cc84f3a25290d392ab544fff226a95afa4de222f9085fdcf4b00186865d399",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/work_p3/_lib1_0.qpg",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\work_p3\\_lib1_0.qpg",
+                      "size":  974848,
+                      "sha256":  "4ec8ef04e709f86b447d8b23f2da6e785232601591b18a55d25eeebbe69751a2",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/work_p3/_lib1_0.qtl",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\work_p3\\_lib1_0.qtl",
+                      "size":  131883,
+                      "sha256":  "af1eeca0f5f1e6dfe7dc05666621a1a09442d0f56644304c53f1c20b57e0b304",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/p3/work_p3/_vmake",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\p3\\work_p3\\_vmake",
+                      "size":  29,
+                      "sha256":  "d287f8a335408d3f94fea840ad628f2cbed3775952c49131049ef8f60fd337c9",
+                      "role":  "regression_evidence"
+                  },
+                  {
+                      "rel":  "r1/reports/syn_gate_area.rpt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\reports\\syn_gate_area.rpt",
+                      "size":  2965,
+                      "sha256":  "80755d7bd9a154ce5f8873bbe10e05e7af301a95b0c18f603205644818ecac5d",
+                      "role":  "report"
+                  },
+                  {
+                      "rel":  "r1/reports/syn_gate_timing.rpt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\reports\\syn_gate_timing.rpt",
+                      "size":  260273,
+                      "sha256":  "5e3771aa485fa1dc7a8c112883b1140191771fb1e802125abc844157051cb352",
+                      "role":  "report"
+                  },
+                  {
+                      "rel":  "r1/reports/syn_gate_timing_status.rpt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\reports\\syn_gate_timing_status.rpt",
+                      "size":  66,
+                      "sha256":  "87983f66c55ccd7f2d110d1facbd6525b36cbc4eabef1b146a2dfbb05c71547f",
+                      "role":  "report"
+                  },
+                  {
+                      "rel":  "r1/reports/syn_rtl_area.rpt",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\reports\\syn_rtl_area.rpt",
+                      "size":  1169,
+                      "sha256":  "c61ab43119e5290bcff888447c35b56cf8ae9ea873ba84f972302c60ea033450",
+                      "role":  "report"
+                  },
+                  {
+                      "rel":  "r1/td/00_all.tcl",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\00_all.tcl",
+                      "size":  1884,
+                      "sha256":  "cef255a5d2f54d27c7517ccfa29d271830899f17c92573a256e5ac0de0875a50",
+                      "role":  "build_script_or_constraint"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1.al",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1.al",
+                      "size":  3109,
+                      "sha256":  "85cebd664bbec2476bed616dd3abea4c36db35b17e584332259208483fe8d33f",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/.opt_gate.begin.f",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\.opt_gate.begin.f",
+                      "size":  158,
+                      "sha256":  "ea3eef6ba912485e680c7e803c6a4100a2a16dfcda0af79bfba45c583ecda811",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/.opt_gate.end.f",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\.opt_gate.end.f",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/.opt_rtl.begin.f",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\.opt_rtl.begin.f",
+                      "size":  158,
+                      "sha256":  "ea3eef6ba912485e680c7e803c6a4100a2a16dfcda0af79bfba45c583ecda811",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/.opt_rtl.end.f",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\.opt_rtl.end.f",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/.read_design.begin.f",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\.read_design.begin.f",
+                      "size":  158,
+                      "sha256":  "ea3eef6ba912485e680c7e803c6a4100a2a16dfcda0af79bfba45c583ecda811",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/.read_design.end.f",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\.read_design.end.f",
+                      "size":  0,
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/a1_eng_freeze_r1.prj",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\a1_eng_freeze_r1.prj",
+                      "size":  2527,
+                      "sha256":  "da09b54b50dac5f4f3e3386e2a4dc9677204d27d7b8f1e856f206b8a4b53c7fc",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/a1_eng_freeze_r1.tcl",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\a1_eng_freeze_r1.tcl",
+                      "size":  9452,
+                      "sha256":  "4fc07e5ead2bfa3f1d9d8a60b1667887ceee8f345f5a20bdf6f1ff7771ee2dc0",
+                      "role":  "build_script_or_constraint"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/a1_eng_freeze_r1_elaborate.db",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\a1_eng_freeze_r1_elaborate.db",
+                      "size":  1677550,
+                      "sha256":  "f425b75bc0f43d582eaa338cb6fb42b4a20be79ae6d25305468333461fb5576f",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/a1_eng_freeze_r1_gate.area",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\a1_eng_freeze_r1_gate.area",
+                      "size":  2965,
+                      "sha256":  "80755d7bd9a154ce5f8873bbe10e05e7af301a95b0c18f603205644818ecac5d",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/a1_eng_freeze_r1_gate.db",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\a1_eng_freeze_r1_gate.db",
+                      "size":  4884186,
+                      "sha256":  "39418efeb0c77fba95c8fb475137e1e307818ebfaaded729ce9f878da78343f6",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/a1_eng_freeze_r1_gate.timing",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\a1_eng_freeze_r1_gate.timing",
+                      "size":  260273,
+                      "sha256":  "5e3771aa485fa1dc7a8c112883b1140191771fb1e802125abc844157051cb352",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/a1_eng_freeze_r1_gate.ts",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\a1_eng_freeze_r1_gate.ts",
+                      "size":  66,
+                      "sha256":  "87983f66c55ccd7f2d110d1facbd6525b36cbc4eabef1b146a2dfbb05c71547f",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/a1_eng_freeze_r1_rtl.area",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\a1_eng_freeze_r1_rtl.area",
+                      "size":  1169,
+                      "sha256":  "c61ab43119e5290bcff888447c35b56cf8ae9ea873ba84f972302c60ea033450",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/a1_eng_freeze_r1_rtl.db",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\a1_eng_freeze_r1_rtl.db",
+                      "size":  1778508,
+                      "sha256":  "05320fdb6e6332de83e990eb6b663a64b0dc1bf647d8fca4d73f7411e1344f89",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/flow.status",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\flow.status",
+                      "size":  1426,
+                      "sha256":  "2d487b9306b887545b9af391b0ad9c7ffc61c00c27cb7f097195289c3867fff2",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/gate.params",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\gate.params",
+                      "size":  355,
+                      "sha256":  "d100dbffea2a5ec2065cd42bccbc89d29c23b0f128a85ea075a13ec397352e41",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/gate.qor",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\gate.qor",
+                      "size":  10256,
+                      "sha256":  "ba67d7648718968825abd177b2dc19f94ae83aa8882c97813c4a4fa2f012f8f0",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/gate_qor_suggestion.tcl",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\gate_qor_suggestion.tcl",
+                      "size":  143,
+                      "sha256":  "dbdb0513538e29b841a394b64c0bead288ef08e1820df3ef5510709b9d147f27",
+                      "role":  "build_script_or_constraint"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/run.bat",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\run.bat",
+                      "size":  283,
+                      "sha256":  "945a74572e9c609ac264e768d9f975b6804738b7a2602d5d25f601358df0eff2",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/run.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\run.log",
+                      "size":  51639,
+                      "sha256":  "8267922bf650978644f10e548b6902262f276be801c03c2a63f3b7ae8ea59f87",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/run.logw",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\run.logw",
+                      "size":  35059,
+                      "sha256":  "cda4d8d6423766cd380f6e33554e01189706a2af00ed68522f41ac92043678ce",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_freeze_r1_Runs/syn_1/settings.cfg",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_freeze_r1_Runs\\syn_1\\settings.cfg",
+                      "size":  337,
+                      "sha256":  "9fd8090b7470197985fe8f2906134e486f539552cc710a594c64750c768c893a",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/a1_eng_top.v",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_eng_top.v",
+                      "size":  2671,
+                      "sha256":  "544cecfc2eb34a3ab5c03ebf3965730b4ce60b2ff73ac4c2ec2d87772faaf9aa",
+                      "role":  "build_only_wrapper"
+                  },
+                  {
+                      "rel":  "r1/td/a1_small_top.sdc",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\a1_small_top.sdc",
+                      "size":  399,
+                      "sha256":  "227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311",
+                      "role":  "build_script_or_constraint"
+                  },
+                  {
+                      "rel":  "r1/td/td_20261020_064635.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\td_20261020_064635.log",
+                      "size":  6436,
+                      "sha256":  "75e793e47f1331216e269caf8c2f8ddc0868d43c992540db310c8e3f438c598f",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/td_20261020_064635.logw",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\td_20261020_064635.logw",
+                      "size":  628,
+                      "sha256":  "d1a6bf2fe6dafb9d5a2c0678a7f208780214c535e46d2422731c8046761c2fbb",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "r1/td/td_stdout.log",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\r1\\td\\td_stdout.log",
+                      "size":  13190,
+                      "sha256":  "bd01349bb58f188bd323de20b80c466d962ade7d1e082d8eab79c74095c85950",
+                      "role":  "other"
+                  },
+                  {
+                      "rel":  "p4\\result-r1.md",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\p4\\result-r1.md",
+                      "size":  6470,
+                      "sha256":  "453d73143eb931e8712bcb5fe559bb58aa15a3e2ddff0cae5f651212a57405e2",
+                      "role":  "doc_or_lessons"
+                  },
+                  {
+                      "rel":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\lessons\\T10.a1-eng-freeze-lessons.md",
+                      "path":  "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\lessons\\T10.a1-eng-freeze-lessons.md",
+                      "size":  3818,
+                      "sha256":  "81fd43b7a68e53b6fcbf2b7161e4d3c7bcee204b96d346709e6727b4ac13cfc1",
+                      "role":  "doc_or_lessons"
+                  }
+              ]
+}

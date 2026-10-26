@@ -1,0 +1,504 @@
+{
+  "checks": [
+    {
+      "name": "r3_frozen same-run frame1 bad=0 checked=518400 drv=518400",
+      "ok": true,
+      "detail": "[(0, 518400, 518400), (0, 518400, 2073600)]"
+    },
+    {
+      "name": "r3_frozen same-run final bad=0 checked=518400 drv=2073600",
+      "ok": true,
+      "detail": "[(0, 518400, 518400), (0, 518400, 2073600)]"
+    },
+    {
+      "name": "r3_frozen no bad counter",
+      "ok": true,
+      "detail": "{\"cap\": 4, \"enc\": 4, \"exported\": 4, \"exp_bytes\": 3395456, \"raw_pub\": 4, \"raw_drop\": 0, \"cmp_drop\": 0, \"geom\": 0, \"err\": 0, \"read\": 518400, \"dup\": 0, \"cap_bytes\": 3395632, \"cycles\": 27020950, \"wd\": 0, \"ar\": 624508, \"r\": 624508, \"frames\": 4, \"ss_pass\": 1, \"content\": 1, \"pacing\": 0, \"sink\": 1, \"capture\": 0, \"vec_bad\": 0, \"vec_checked\": 518400, \"drv_groups\": 2073600}"
+    },
+    {
+      "name": "r3_frozen S_ss = 5,928,286 (zero or +/-0.5%)",
+      "ok": true,
+      "detail": "5928286.0"
+    },
+    {
+      "name": "r3_frozen band [5928283,5928289]",
+      "ok": true,
+      "detail": "[5928283, 5928289]"
+    },
+    {
+      "name": "r3_frozen spread <=2%",
+      "ok": true,
+      "detail": "0.00010121"
+    },
+    {
+      "name": "r3_frozen counters complete/no drop",
+      "ok": true,
+      "detail": "{\"cap\": 4, \"enc\": 4, \"exported\": 4, \"exp_bytes\": 3395456, \"raw_pub\": 4, \"raw_drop\": 0, \"cmp_drop\": 0, \"geom\": 0, \"err\": 0, \"read\": 518400, \"dup\": 0, \"cap_bytes\": 3395632, \"cycles\": 27020950, \"wd\": 0, \"ar\": 624508, \"r\": 624508, \"frames\": 4, \"ss_pass\": 1, \"content\": 1, \"pacing\": 0, \"sink\": 1, \"capture\": 0, \"vec_bad\": 0, \"vec_checked\": 518400, \"drv_groups\": 2073600}"
+    },
+    {
+      "name": "r3_frozen exp/cap bytes",
+      "ok": true,
+      "detail": "3395456 3395632 27020950"
+    },
+    {
+      "name": "r3_frozen tail 1,697,820",
+      "ok": true,
+      "detail": "{1: 1697820, 2: 1697820, 3: 1697820, 4: 1697820}"
+    },
+    {
+      "name": "r3_frozen sink_limited=false",
+      "ok": true,
+      "detail": "tail/S=0.286"
+    },
+    {
+      "name": "r3_frozen L_cold 9,234,076",
+      "ok": true,
+      "detail": "9234076"
+    },
+    {
+      "name": "r3_frozen event timestamps identical to legacy r3",
+      "ok": true,
+      "detail": "old/new events compared"
+    },
+    {
+      "name": "r3_frozen frame interval S_2/S_23/S_34",
+      "ok": true,
+      "detail": "5928283 5928283 5928289"
+    },
+    {
+      "name": "r3_frozen capacity/G0 margin",
+      "ok": true,
+      "detail": "81.979850 / 5.426762"
+    },
+    {
+      "name": "r3_frozen header raw/xform len+crc",
+      "ok": true,
+      "detail": "{}"
+    },
+    {
+      "name": "r3_frozen header CRC",
+      "ok": true,
+      "detail": "79c1e4bc/79c1e4bc"
+    },
+    {
+      "name": "r3_frozen stream_len == exp_bytes/4",
+      "ok": true,
+      "detail": "848864/848864.0"
+    },
+    {
+      "name": "r3_frozen header identical to legacy r3.hdr",
+      "ok": true,
+      "detail": "3fa9bd96b7e937039314d0d7aa170b0e317083c9f9dd77ab0d4d1e25d099a461"
+    },
+    {
+      "name": "manifest-r1 80 artifacts",
+      "ok": true,
+      "detail": "count=80"
+    },
+    {
+      "name": "manifest-r1 artifact hashes all match",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "manifest-r1 previous_manifest = a4391c0c...",
+      "ok": true,
+      "detail": "a4391c0c740c24c1ef7fa9ae2984b2013bbf489e476bf80c88ebde722c0bdef8"
+    },
+    {
+      "name": "manifest-r1 includes manifest-r0 artifact",
+      "ok": true,
+      "detail": "manifest-r0 artifact"
+    },
+    {
+      "name": "manifest-r1 frozen TB a565c6f2",
+      "ok": true,
+      "detail": "a565c6f25f5d8ac16ce8dd8042f35395c6018a23d1093448077b0e90b79bd3d0"
+    },
+    {
+      "name": "manifest-r1 legacy TB archived 89948303",
+      "ok": true,
+      "detail": "89948303be78da2b4e2cbccbb70935d26825b518620c679ba9d959d3c950008e"
+    },
+    {
+      "name": "manifest-r1 no TEMP-only TB path",
+      "ok": true,
+      "detail": "artifact paths clean"
+    },
+    {
+      "name": "manifest-r1 notes r3_frozen_tb a565c6f2",
+      "ok": true,
+      "detail": "a565c6f25f5d8ac16ce8dd8042f35395c6018a23d1093448077b0e90b79bd3d0"
+    },
+    {
+      "name": "manifest-r1 r3_frozen command uses frozen TB rc0",
+      "ok": true,
+      "detail": "{\"vsim\": {\"argv\": [\"D:\\\\intelFPGA\\\\18.1\\\\modelsim_ase\\\\win32aloem\\\\vsim.exe\", \"-c\", \"-lib\", \"work\", \"-l\", \"D:\\\\fpga\\\\ph1p100\\\\workflow\\\\runs\\\\20261025-233401_fpga-steady-state-reverdict\\\\T10.ss-g0-closure\\\\r0\\\\sim\\\\logs\\\\r3_frozen.log\", \"tb_ss_g0\", \"+STAT=D:\\\\fpga\\\\ph1p100\\\\workflow\\\\runs\\\\20261025-233401_fpga-steady-state-reverdict\\\\T10.ss-g0-closure\\\\r0\\\\sim\\\\caps\\\\r3_frozen.stats\", \"+EVT=D:\\\\fpga\\\\ph1p100\\\\workflow\\\\runs\\\\20261025-233401_fpga-steady-state-reverdict\\\\T10.ss-g0-closure\\\\r0\\\\sim\\\\caps\\\\r3_frozen.evt\", \"-gFRAMES=4\", \"-gCONTENT=1\", \"-gPACING=0\", \"-gSINK=1\", \"+HDR=D:\\\\fpga\\\\ph1p100\\\\workflow\\\\runs\\\\20261025-233401_fpga-steady-state-reverdict\\\\T10.ss-g0-closure\\\\r0\\\\sim\\\\caps\\\\r3_frozen.hdr\", \"+RAW=D:\\\\fpga\\\\ph1p100\\\\workflow\\\\runs\\\\20261025-233401_fpga-steady-state-reverdict\\\\T10.ss-g0-closure\\\\r0\\\\sim\\\\caps\\\\comp_raw.hex\", \"+VEC=D:\\\\fpga\\\\ph1p100\\\\workflow\\\\runs\\\\20261025-233401_fpga-steady-state-reverdict\\\\T10.ss-g0-closure\\\\r0\\\\sim\\\\caps\\\\comp_vec.hex\", \"-gCAPTURE=0\", \"-do\", \"run -all; quit -f\"], \"cwd\": \"C:\\\\Users\\\\czz\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\ss-g0\\\\work\", \"rc\": 0, \"timed_out\": false, \"seconds\": 1326.1, \"timeout_s\": 2700, \"log\": \"D:\\\\fpga\\\\ph1p100\\\\workflow\\\\runs\\\\20261025-233401_fpga-steady-state-reverdict\\\\T10.ss-g0-closure\\\\r0\\\\sim\\\\logs\\\\r3_frozen.log\"}, \"compile_has_frozen\": true, \"compile_has_legacy\": false}"
+    },
+    {
+      "name": "manifest-r1 stopped/active",
+      "ok": true,
+      "detail": "{\"stopped_modifying\": true, \"active_commands\": 0}"
+    },
+    {
+      "name": "manifest-r1 no forbidden actions",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "manifest-r1 full-frame count 5/5",
+      "ok": true,
+      "detail": "{\"runs\": 5, \"limit\": 5}"
+    },
+    {
+      "name": "manifest-r1 verdict value G0_feasible_for_scope",
+      "ok": true,
+      "detail": "G0_feasible_for_scope"
+    },
+    {
+      "name": "manifest-r1 R3 value present in why",
+      "ok": true,
+      "detail": "R3 S_ss 5928286.0 <= 6,250,000 cycles (measured, comp proxy content, slot-free)"
+    },
+    {
+      "name": "manifest-r1 verdict.r3_S_ss numeric",
+      "ok": false,
+      "detail": "value=None"
+    },
+    {
+      "name": "manifest-r1 sim wall limit reflects round1 override (112 min)",
+      "ok": false,
+      "detail": "limit=90 actual_s=6532.4 note='sum of every vsim invocation in commands.jsonl, including two aborted v1 check-only attempts (258.3 s + 434.9 s) and the final 91.0 s v1; 5206.3 s = 86.8 min'"
+    },
+    {
+      "name": "manifest-r1 sim wall actual <=112 min",
+      "ok": true,
+      "detail": "6532.4"
+    },
+    {
+      "name": "manifest-r1 sim wall actual 6532.4",
+      "ok": true,
+      "detail": "6532.4"
+    },
+    {
+      "name": "DIFF includes D2 whitelist items",
+      "ok": true,
+      "detail": "D2 markers"
+    },
+    {
+      "name": "DIFF says 2 clk_a1/B 93.75",
+      "ok": true,
+      "detail": "sink text"
+    },
+    {
+      "name": "DIFF old->frozen diff",
+      "ok": true,
+      "detail": "legacy/frozen"
+    },
+    {
+      "name": "DIFF no force/deposit",
+      "ok": true,
+      "detail": "no force"
+    },
+    {
+      "name": "DIFF p2_a1_board_top claim remains (F8 incomplete)",
+      "ok": true,
+      "detail": "claim present"
+    },
+    {
+      "name": "frozen TB no force/deposit",
+      "ok": true,
+      "detail": "no force"
+    },
+    {
+      "name": "frozen TB DUT port map only clk_uart",
+      "ok": true,
+      "detail": "clk_uart net"
+    },
+    {
+      "name": "frozen TB geometry/GAP unchanged",
+      "ok": true,
+      "detail": "geometry"
+    },
+    {
+      "name": "frozen TB WD_LIMIT 12M",
+      "ok": true,
+      "detail": "12M"
+    },
+    {
+      "name": "legacy TB hash 89948303",
+      "ok": true,
+      "detail": "89948303be78da2b4e2cbccbb70935d26825b518620c679ba9d959d3c950008e"
+    },
+    {
+      "name": "content-proxy in.meta 330 B e98c9a1c",
+      "ok": true,
+      "detail": "330/e98c9a1c3e0fe621c9aa65aaadbcacbef13c2437a0bbbafcde17d2ff471f80fe"
+    },
+    {
+      "name": "content-proxy in.hex/in.xform hashes",
+      "ok": true,
+      "detail": "hashes"
+    },
+    {
+      "name": "content-proxy raw/tiled hashes/crcs",
+      "ok": true,
+      "detail": "outputs"
+    },
+    {
+      "name": "g0-verdict r3f S_ss 5928286",
+      "ok": true,
+      "detail": "5928286.0"
+    },
+    {
+      "name": "g0-verdict same-run bad=0",
+      "ok": true,
+      "detail": "{'bad': 0, 'checked': 518400, 'drv_groups': 518400}"
+    },
+    {
+      "name": "g0-verdict header CRC ok",
+      "ok": true,
+      "detail": "True"
+    },
+    {
+      "name": "scope 93.75/proxy/slot-free/behavioral/per-stream",
+      "ok": true,
+      "detail": "per-stream 1080p30; content = comp-vector proxy (transform-domain 1920x64 vector tiled b mod 32 over 1080p; proxy_not_worst, not all-content); pacing/sink = slo"
+    },
+    {
+      "name": "scope raw band 77.84/103.79 not_proven",
+      "ok": true,
+      "detail": "per-stream 1080p30; content = comp-vector proxy (transform-domain 1920x64 vector tiled b mod 32 over 1080p; proxy_not_worst, not all-content); pacing/sink = slot-free (overlapped) + measured 93.75 MB/"
+    },
+    {
+      "name": "verdict not downgraded / G25 ref",
+      "ok": true,
+      "detail": "{\"not_downgraded\": true, \"g25_used\": false}"
+    },
+    {
+      "name": "R4 not_run / assumed 7,616,377.5",
+      "ok": true,
+      "detail": "not_run_budget_cap; comp strict-serial view is assumed = R3 + (R2-R1)"
+    },
+    {
+      "name": "A1 -4 note",
+      "ok": true,
+      "detail": "R1 4,677,531 is 4 cycles below P1 A1 4,677,535 (0.0001%)"
+    },
+    {
+      "name": "g0-verdict r3_vs_r0 field present (result-r1 claim)",
+      "ok": false,
+      "detail": "missing"
+    },
+    {
+      "name": "g0-table 32 rows",
+      "ok": true,
+      "detail": "rows=32"
+    },
+    {
+      "name": "g0-table A1 overlapped 4,677,531 with -4 note",
+      "ok": true,
+      "detail": "R1 fast-sink S_ss (P1 4,677,535 -4 cycles)"
+    },
+    {
+      "name": "g0-table A1 serial source says R2 (not R1)",
+      "ok": false,
+      "detail": "R1 fast-sink S_ss (P1 4,677,535 -4 cycles)"
+    },
+    {
+      "name": "g0-table P proxy source r3_frozen",
+      "ok": true,
+      "detail": "r3_frozen S_ss (frozen TB a565c6f2)"
+    },
+    {
+      "name": "g0-table P serial assumed",
+      "ok": true,
+      "detail": "measured_proxy_not_worst+assumed_serial_delta"
+    },
+    {
+      "name": "g0-table c2s2=C / c1s2=C/2",
+      "ok": true,
+      "detail": "per-stream"
+    },
+    {
+      "name": "g0-table G25 ref only",
+      "ok": true,
+      "detail": "header"
+    },
+    {
+      "name": "g0-table no L_cold as S_ss",
+      "ok": true,
+      "detail": "no 6766434"
+    },
+    {
+      "name": "closure 93.75/scope/R4/A1/G25",
+      "ok": true,
+      "detail": "report markers"
+    },
+    {
+      "name": "closure stale 86.8 min <=90 (round1 total 108.9)",
+      "ok": false,
+      "detail": "stale budget text present"
+    },
+    {
+      "name": "result-r1 r3_vs_r0 claim matches g0-verdict",
+      "ok": false,
+      "detail": "result=True verdict=False"
+    },
+    {
+      "name": "P1/P2/comp 8 inputs 0 drift",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "P2 34 artifacts 0 drift",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "P1 artifacts 0 drift",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "12 DUT copies == P1 manifest",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "no TD/board/COM/JTAG commands",
+      "ok": true,
+      "detail": "n=16"
+    },
+    {
+      "name": "r3_frozen vsim timeout 2700 rc0",
+      "ok": true,
+      "detail": "{\"argv\": [\"D:\\\\intelFPGA\\\\18.1\\\\modelsim_ase\\\\win32aloem\\\\vsim.exe\", \"-c\", \"-lib\", \"work\", \"-l\", \"D:\\\\fpga\\\\ph1p100\\\\workflow\\\\runs\\\\20261025-233401_fpga-steady-state-reverdict\\\\T10.ss-g0-closure\\\\r0\\\\sim\\\\logs\\\\r3_frozen.log\", \"tb_ss_g0\", \"+STAT=D:\\\\fpga\\\\ph1p100\\\\workflow\\\\runs\\\\20261025-233401_fpga-steady-state-reverdict\\\\T10.ss-g0-closure\\\\r0\\\\sim\\\\caps\\\\r3_frozen.stats\", \"+EVT=D:\\\\fpga\\\\ph1p100\\\\workflow\\\\runs\\\\20261025-233401_fpga-steady-state-reverdict\\\\T10.ss-g0-closure\\\\r0\\\\sim\\\\caps\\\\r3_frozen.evt\", \"-gFRAMES=4\", \"-gCONTENT=1\", \"-gPACING=0\", \"-gSINK=1\", \"+HDR=D:\\\\fpga\\\\ph1p100\\\\workflow\\\\runs\\\\20261025-233401_fpga-steady-state-reverdict\\\\T10.ss-g0-closure\\\\r0\\\\sim\\\\caps\\\\r3_frozen.hdr\", \"+RAW=D:\\\\fpga\\\\ph1p100\\\\workflow\\\\runs\\\\20261025-233401_fpga-steady-state-reverdict\\\\T10.ss-g0-closure\\\\r0\\\\sim\\\\caps\\\\comp_raw.hex\", \"+VEC=D:\\\\fpga\\\\ph1p100\\\\workflow\\\\runs\\\\20261025-233401_fpga-steady-state-reverdict\\\\T10.ss-g0-closure\\\\r0\\\\sim\\\\caps\\\\comp_vec.hex\", \"-gCAPTURE=0\", \"-do\", \"run -all; quit -f\"], \"cwd\": \"C:\\\\Users\\\\czz\\\\AppData\\\\Local\\\\Temp\\\\opencode\\\\ss-g0\\\\work\", \"rc\": 0, \"timed_out\": false, \"seconds\": 1326.1, \"timeout_s\": 2700, \"log\": \"D:\\\\fpga\\\\ph1p100\\\\workflow\\\\runs\\\\20261025-233401_fpga-steady-state-reverdict\\\\T10.ss-g0-closure\\\\r0\\\\sim\\\\logs\\\\r3_frozen.log\"}"
+    },
+    {
+      "name": "commands vsim wall sum 6532.4",
+      "ok": true,
+      "detail": "sum=6532.4"
+    },
+    {
+      "name": "all artifacts inside task dir",
+      "ok": true,
+      "detail": "paths"
+    },
+    {
+      "name": "tester short v1 bad=0 checked=518400",
+      "ok": true,
+      "detail": "[(0, 518400, 518400)]"
+    },
+    {
+      "name": "tester short v1 duration <=300 s",
+      "ok": true,
+      "detail": "89.7 s"
+    },
+    {
+      "name": "tester short v1 log exists",
+      "ok": true,
+      "detail": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-233401_fpga-steady-state-reverdict\\test-reports\\T10.ss-g0-closure\\r1-v1\\v1_r1.log"
+    }
+  ],
+  "computed": {
+    "manifest_r1_sha256": "d700fe9a95597424055ed88120a8ee3db3cb4b06838ba99997a4a64f78e7aa9b",
+    "manifest_r0_sha256": "a4391c0c740c24c1ef7fa9ae2984b2013bbf489e476bf80c88ebde722c0bdef8",
+    "r3f": {
+      "t_exp": {
+        "1": 9234096,
+        "2": 15162379,
+        "3": 21090662,
+        "4": 27018951
+      },
+      "t_enc": {
+        "1": 7536276,
+        "2": 13464559,
+        "3": 19392842,
+        "4": 25321131
+      },
+      "t_sof": {
+        "1": 61,
+        "2": 1608650,
+        "3": 7536277,
+        "4": 13464560
+      },
+      "frames": 4,
+      "L_cold": 9234076,
+      "L_frame": 9234035,
+      "S_2": 5928283,
+      "S_23": 5928283,
+      "S_34": 5928289,
+      "band": [
+        5928283,
+        5928289
+      ],
+      "S_ss": 5928286.0,
+      "spread_pct": 0.00010120969197504978,
+      "capacity_MBps": 81.97985049979033,
+      "fps": 31.628028742203057,
+      "margin_0_pct": 5.426762474010194,
+      "margin_25_pct": -15.658590020791841,
+      "f_req_0_mhz": 177.84858,
+      "tail": {
+        "1": 1697820,
+        "2": 1697820,
+        "3": 1697820,
+        "4": 1697820
+      }
+    },
+    "r3f_stats": {
+      "cap": 4,
+      "enc": 4,
+      "exported": 4,
+      "exp_bytes": 3395456,
+      "raw_pub": 4,
+      "raw_drop": 0,
+      "cmp_drop": 0,
+      "geom": 0,
+      "err": 0,
+      "read": 518400,
+      "dup": 0,
+      "cap_bytes": 3395632,
+      "cycles": 27020950,
+      "wd": 0,
+      "ar": 624508,
+      "r": 624508,
+      "frames": 4,
+      "ss_pass": 1,
+      "content": 1,
+      "pacing": 0,
+      "sink": 1,
+      "capture": 0,
+      "vec_bad": 0,
+      "vec_checked": 518400,
+      "drv_groups": 2073600
+    },
+    "r3f_header": {
+      "got": {
+        "raw_len": 2592000,
+        "xform_len": 2592000,
+        "stream_len": 848864,
+        "raw_crc": 3613527589,
+        "xform_crc": 3038348232,
+        "stream_crc": 222982917,
+        "header_crc": 2042750140
+      },
+      "expected": {
+        "raw_len": 2592000,
+        "xform_len": 2592000,
+        "raw_crc": 3613527589,
+        "xform_crc": 3038348232
+      },
+      "header_crc_calc": 2042750140
+    }
+  },
+  "findings": [
+    "manifest-r1 verdict.r3_S_ss is null; the numeric value is only in verdict.why and out/g0-verdict.json runs.r3f.S_ss",
+    "manifest-r1 budget.sim_wall_seconds=6532.4 but sim_wall_limit_min=90 and sim_wall_note still says 5206.3 s/86.8 min; round1 override is 112 min, actual 108.9 min (within override)",
+    "g0-closure.md section 2 still says cumulative 86.8 min <=90 and omits the r3_frozen 1326.1 s (actual cumulative 108.9 min, within round1 112-min override)",
+    "result-r1.md refers to out/g0-verdict.json r3_vs_r0 field, but that field is absent",
+    "DIFF.md section 8/9 still claims p2_a1_board_top.v copied/hashed/not compiled, but neither manifest-r1 artifacts nor input-verified.json list it",
+    "g0-table.csv A1 serial rows' source column says R1 (and the -4 note) although serial values are R2; only A1 overlapped should carry the R1 -4 note"
+  ]
+}

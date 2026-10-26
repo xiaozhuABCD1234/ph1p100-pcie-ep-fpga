@@ -1,0 +1,10 @@
+- 261016 1855 用户批准模板设为项目默认；仅同步已批准逻辑，禁止重新调研/运行试任务；主仅传输与留档。
+- 261016 1857 已将用户批准模板的同步请求转交原PLANNER_ID=/root/relay_v2_planner；本轮不重新设计，不执行旧试任务；等待仅配置同步派发单。
+- 261016 1859 PLANNER返回：DEFAULT-RELAY-V2 ready；无需用户输入；下一角色fpga-dev；dispatch.json与dev-plan.md路径已返回。
+- 261016 1900 已按dispatch派发fpga-dev；DEV_ID=/root/relay_default_dev_t1；task_id=DEFAULT-RELAY-V2；只同步配置。
+- 261016 1919 DEV_ID=/root/relay_default_dev_t1 返回ready_for_test，blocked=false，已停止修改；candidate-manifest.json和test-dispatch.json已返回。
+- 261016 1919 按test-dispatch并行派发三项配置静态复核；round=0；TEST_FUNCTIONAL_ID=/root/relay_default_test_functional；TEST_ENGINEERING_ID=/root/relay_default_test_engineering；TEST_SYSTEM_ID=/root/relay_default_test_system。
+- 261016 1925 functional返回PASS；round=0；报告=test-reports/DEFAULT-RELAY-V2-r0-functional.md；manifest=candidate-manifest.json；等待engineering/system。
+- 261016 1925 system返回PASS；round=0；报告=test-reports/DEFAULT-RELAY-V2-r0-system.md；manifest=candidate-manifest.json；等待engineering。
+- 261016 1926 engineering返回PASS；round=0；报告=test-reports/DEFAULT-RELAY-V2-r0-engineering.md；manifest=candidate-manifest.json；三个维度均PASS，将判定及路径转回原规划者收尾。
+- 261016 1929 原PLANNER_ID=/root/relay_v2_planner 返回complete；round0三维PASS，修正0轮，无blocked；handoff/final-summary/user-summary已返回；主原样转交用户短消息。

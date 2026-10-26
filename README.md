@@ -1,3 +1,10 @@
+> **当前项目入口（2026-10-27）**：先读 [当前代码、队友材料与活动 run](docs/PROJECT_SYNC_20261027.md)。
+> FPGA：[本原仓 main](https://github.com/xiaozhuABCD1234/ph1p100-pcie-ep-fpga/tree/main)；RK：[驱动与应用原仓 main](https://github.com/xiaozhuABCD1234/ph1p100-pcie-ep-driver/tree/main)。
+> 当前代码在 [rtl/](rtl/)；父工作区源码、文档、工作流与候选快照在 [workspace/ph1p100/](workspace/ph1p100/)，同名文件须按 SHA 区分。
+> 队友从 [B 路真帧交接包](handoff/rk-a1u1-b18-20261026/README.md) 开始；配套 bit/CWC/BID 在 [artifacts/](artifacts/)。
+> 集成进展看 [活动 run 快照](workspace/ph1p100/workflow/runs/20261026-2138_fpga-integrated-delivery/dispatch.json)；原 `D:\fpga\ph1p100` 活动 run 继续原地推进。
+> 本次同步不代表整机验收通过；下方保留原工程说明，历史路径与结论请结合当前入口核对。
+
 # 2026-embedded-chip-fpga-ph1p100
 
 米联客 **MLK-F9P**（安路 Anlogic **PH1P100SBG484**）**PCIe Gen2×2 例程**。

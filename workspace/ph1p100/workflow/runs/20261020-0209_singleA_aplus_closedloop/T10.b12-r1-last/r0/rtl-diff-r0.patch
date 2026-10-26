@@ -1,0 +1,143 @@
+﻿diff --git a/T10.b11-aplus-read/r0/changed-src/a1_ddr_slot_store.v b/T10.b12-r1-last/r0/changed-src/a1_ddr_slot_store.v
+index 7ee7513..8905712 100644
+--- a/T10.b11-aplus-read/r0/changed-src/a1_ddr_slot_store.v
++++ b/T10.b12-r1-last/r0/changed-src/a1_ddr_slot_store.v
+@@ -140,10 +140,22 @@ module a1_ddr_slot_store #(
+     wire [255:0] pack_n = pack_r | wsh[255:0];
+     wire [31:0]  add_bytes = (MODE == 0) ? 32'd5 : {29'd0, keep_cnt};
+     wire flush   = (wcnt == FLUSH_CNT) || wr_last;
+-    wire accept  = wr_active && ddr_ready && wr_valid;
++    // ------------------------------------------------------------------
++    // T10.b12 R1 (c): abort wins over a same-cycle write and over a same-cycle
++    // begin.  A beat that arrives together with wr_abort is *not* consumed
++    // (wr_ready = 0) and a flush word is not pushed, so a same-cycle
++    // wr_last + wr_abort can never publish a damaged frame.  Because the slot
++    // that the abort frees is about to become free, a wr_begin in that same
++    // cycle is accepted when the *other* slot is FREE: the old slot is
++    // released and the new frame starts, so no begin is lost and there are
++    // never two WRITE slots.
++    wire abort_now = wr_abort && wr_active;
++    wire begin_now = wr_begin && wr_begin_ready;
++    wire accept  = wr_active && ddr_ready && wr_valid && !wr_abort;
+ 
+     assign wr_ready      = accept && (!flush || ddr_wready);
+-    assign wr_begin_ready = rst_n && ddr_ready && !wr_active && free_valid;
++    assign wr_begin_ready = rst_n && ddr_ready && free_valid &&
++                            (!wr_active || abort_now);
+     assign ddr_wvalid    = accept && flush;
+     assign ddr_awvalid   = ddr_wvalid;
+     assign ddr_wdata     = pack_n;
+@@ -200,26 +212,42 @@ module a1_ddr_slot_store #(
+             if (ar_hs)         st_ar_hs    <= st_ar_hs    + 32'd1;
+             if (ddr_rvalid)    st_rv_cnt   <= st_rv_cnt   + 32'd1;
+ 
+-            // -------------------------------------------------------- begin
+-            if (wr_begin && wr_begin_ready) begin
+-                wr_active <= 1'b1;
+-                wr_slot   <= free_slot;
++            // -------------------------------------- begin / abort (R1 order)
++            // 1) abort + begin in the same cycle: release the aborted slot and
++            //    start the new frame in the other (FREE) slot.  Counters follow
++            //    the abort.  The two slot_st writes target different slots.
++            // 2) abort alone: the WRITING slot is freed, nothing is published.
++            // 3) begin alone: unchanged b9 semantics.
++            if (abort_now && begin_now) begin
++                slot_st[wr_slot]   <= S_FREE;
+                 slot_st[free_slot] <= S_WRITE;
+                 slot_id[free_slot] <= wr_id;
+                 slot_seq[free_slot] <= pub_tgl;
+                 pub_tgl   <= ~pub_tgl;
++                wr_slot   <= free_slot;
++                wr_active <= 1'b1;
+                 wcnt      <= 3'd0;
+                 pack_r    <= 256'd0;
+                 nbytes    <= 32'd0;
+                 waddr     <= {AWB{1'b0}};
+-            end
+-
+-            // ------------------------------------------------------- abort
+-            if (wr_abort && wr_active) begin
++                st_dropped   <= st_dropped + 32'd1;
++                st_abort_cnt <= st_abort_cnt + 32'd1;
++            end else if (abort_now) begin
+                 slot_st[wr_slot] <= S_FREE;
+                 wr_active <= 1'b0;
+-                st_dropped <= st_dropped + 32'd1;
++                st_dropped   <= st_dropped + 32'd1;
+                 st_abort_cnt <= st_abort_cnt + 32'd1;
++            end else if (begin_now) begin
++                wr_active <= 1'b1;
++                wr_slot   <= free_slot;
++                slot_st[free_slot] <= S_WRITE;
++                slot_id[free_slot] <= wr_id;
++                slot_seq[free_slot] <= pub_tgl;
++                pub_tgl   <= ~pub_tgl;
++                wcnt      <= 3'd0;
++                pack_r    <= 256'd0;
++                nbytes    <= 32'd0;
++                waddr     <= {AWB{1'b0}};
+             end
+ 
+             // -------------------------------------------------------- write
+diff --git a/T10.b11-aplus-read/r0/changed-src/camera_a1_uart_top.v b/T10.b12-r1-last/r0/changed-src/camera_a1_uart_top.v
+index b11931d..8e67aaf 100644
+--- a/T10.b11-aplus-read/r0/changed-src/camera_a1_uart_top.v
++++ b/T10.b12-r1-last/r0/changed-src/camera_a1_uart_top.v
+@@ -322,14 +322,20 @@ module camera_a1_uart_top #(
+         end else begin
+             if (fifo_wvalid && fifo_wready && fifo_wabort) abort_hold <= 1'b0;
+             else if (crop_abort)                          abort_hold <= 1'b1;
+-            // T10.b10 R1: a beat that the CDC FIFO cannot take (SOF, LAST or a
+-            // middle beat) is data loss for the frame that is currently being
+-            // written.  b9 only counted it, so a dropped LAST left the store's
+-            // writer open forever and every later frame was denied ("orphan
+-            // writer").  Reuse the existing sticky abort request: the abort
+-            // beat is pushed as soon as the FIFO has room, which frees the
+-            // half-written slot and makes the rest of the frame skipped.
+-            if (fifo_wvalid && !fifo_wready) fifo_ovf_cnt <= fifo_ovf_cnt + 32'd1;
++            // T10.b12 R1 (a): a beat that the CDC FIFO cannot take (SOF, LAST
++            // or a middle beat) is data loss for the frame that is currently
++            // being written.  Incrementing fifo_ovf_cnt alone left the store's
++            // writer open forever when the lost beat was the LAST (the store
++            // never sees wr_last), so every later frame was denied ("orphan
++            // writer").  Raise the *sticky* loss-abort request here: the abort
++            // beat is offered behind the already-queued data beats and pushed
++            // as soon as the FIFO has room, which frees the half-written slot
++            // and makes the rest of the damaged frame discarded.  abort_hold is
++            // held until the FIFO really accepts the abort beat, so a full FIFO
++            // can no longer swallow it.
++            else if (fifo_wvalid && !fifo_wready)          abort_hold <= 1'b1;
++            // Count only real data loss: a retried abort beat is not data.
++            if (crop_valid && !fifo_wready) fifo_ovf_cnt <= fifo_ovf_cnt + 32'd1;
+         end
+     end
+ 
+@@ -381,16 +387,15 @@ module camera_a1_uart_top #(
+     wire skid_free = !skid_valid || skid_take;
+     wire begin_hs  = begin_pend && raw_begin_ready;
+ 
+-    // T10.b9 F2: the old form held fifo_ready = 0 forever when the store could
+-    // not accept the SOF, so the 512-deep CDC FIFO filled up and every beat of
+-    // the frame was dropped silently with raw_drop still 0.  Now a rejected
+-    // SOF latches skip_frame and the *whole* frame is consumed (and counted)
+-    // instead of clogging the FIFO; nothing is ever half-written.
+     // T10.b10 R1: a data beat with no active frame (its SOF was denied, lost,
+     // or the frame was aborted) is consumed and discarded.  Leaving fifo_ready
+     // at 0 there was a hard FIFO deadlock: the head beat could never leave, so
+     // the sticky loss-abort behind it could never be pushed and the store
+     // stayed a permanent orphan writer.
++    // T10.b12 R1 (b): the final else is that missing consume path.  It only
++    // affects an *unowned* data beat (no SOF, no owner, not skipping, not an
++    // abort beat); every beat of a normal frame still takes the raw_active ->
++    // skid_free path, so the frozen P1 byte streams are unchanged.
+     always @(*) begin
+         fifo_ready = 1'b0;
+         if (fifo_valid) begin
+@@ -398,6 +403,7 @@ module camera_a1_uart_top #(
+             else if (skip_frame) fifo_ready = 1'b1;
+             else if (e_abort)    fifo_ready = 1'b1;
+             else if (raw_active) fifo_ready = skid_free;
++            else                 fifo_ready = 1'b1;   // R1: stray beat, consume only
+         end
+     end
+ 

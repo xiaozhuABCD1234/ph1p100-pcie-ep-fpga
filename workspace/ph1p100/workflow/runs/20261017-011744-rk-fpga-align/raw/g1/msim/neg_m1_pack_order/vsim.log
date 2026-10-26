@@ -1,0 +1,62 @@
+# vsim -c -l vsim.log -do "run.do" tb_t11_r10f_e2e 
+# Start time: 09:30:00 on Oct 17,2026
+# Loading work.tb_t11_r10f_e2e
+# Loading work.mipi_csi2_rx_ph1p_checked
+# Loading work.csi_rx_packet_integrity
+# Loading work.csi_rx_hdr_ecc
+# Loading work.csi_rx_10bit_unpack_checked
+# Loading work.cam_r10f_writer
+# Loading work.ddr_frame_pusher
+# do run.do
+# === E0 未 ARM：出帧 → 无 TLP + E_NOT_ARM + release ===
+# === E1 ARM → 帧2（block1）→ 32 MWr + 1 门铃 → held → ACK ===
+#   [model] seq=2 sess=20261017 hdrcrc=fff22667 paycrc=97e69de2
+#   HOSTMIS[E1] k=80 got=9d exp=e2
+#   HOSTMIS[E1] k=81 got=b1 exp=9d
+#   HOSTMIS[E1] k=82 got=ab exp=e6
+#   HOSTMIS[E1] k=83 got=06 exp=97
+#   HOSTMIS[E1] k=84 got=9d exp=e2
+#   HOSTMIS[E1] k=85 got=b1 exp=9d
+#   ERROR #1 @48152000 :                                                                        E1: host content != model
+# === E2 再 ARM → 帧3（block0，seq=3）→ 发送 → ACK ===
+#   [model] seq=3 sess=20261017 hdrcrc=39b8e6df paycrc=97e69de2
+#   HOSTMIS[E2] k=80 got=9d exp=e2
+#   HOSTMIS[E2] k=81 got=b1 exp=9d
+#   HOSTMIS[E2] k=82 got=ab exp=e6
+#   HOSTMIS[E2] k=83 got=06 exp=97
+#   HOSTMIS[E2] k=84 got=9d exp=e2
+#   HOSTMIS[E2] k=85 got=b1 exp=9d
+#   ERROR #2 @75672000 :                                                                        E2: host content != model
+#   E2 RELDBG rel0=2 rel1=1
+# === E3 慢消费长 wait → held 保护 → 新帧拒绝(8) → ACK ===
+#   [model] seq=4 sess=20261017 hdrcrc=07dfaf34 paycrc=97e69de2
+#   HOSTMIS[E3] k=80 got=9d exp=e2
+#   HOSTMIS[E3] k=81 got=b1 exp=9d
+#   HOSTMIS[E3] k=82 got=ab exp=e6
+#   HOSTMIS[E3] k=83 got=06 exp=97
+#   HOSTMIS[E3] k=84 got=9d exp=e2
+#   HOSTMIS[E3] k=85 got=b1 exp=9d
+#   ERROR #3 @101864000 :                                                                        E3: host content != model
+#   E3 RELDBG rel0=3 rel1=2
+# === E4 reset 隔离 + 新 session 全流程 ===
+#   [model] seq=6 sess=20261017 hdrcrc=503b2805 paycrc=97e69de2
+#   HOSTMIS[E4a] k=80 got=9d exp=e2
+#   HOSTMIS[E4a] k=81 got=b1 exp=9d
+#   HOSTMIS[E4a] k=82 got=ab exp=e6
+#   HOSTMIS[E4a] k=83 got=06 exp=97
+#   HOSTMIS[E4a] k=84 got=9d exp=e2
+#   HOSTMIS[E4a] k=85 got=b1 exp=9d
+#   ERROR #4 @149992000 :                                                                       E4a: host content != model
+#   [model] seq=2 sess=20261018 hdrcrc=3eaa3163 paycrc=97e69de2
+#   HOSTMIS[E4b] k=80 got=9d exp=e2
+#   HOSTMIS[E4b] k=81 got=b1 exp=9d
+#   HOSTMIS[E4b] k=82 got=ab exp=e6
+#   HOSTMIS[E4b] k=83 got=06 exp=97
+#   HOSTMIS[E4b] k=84 got=9d exp=e2
+#   HOSTMIS[E4b] k=85 got=b1 exp=9d
+#   ERROR #5 @200296000 :                                                                       E4b: host content != model
+# FAIL: 5 errors
+# ** Note: $finish    : C:/Users/czz/AppData/Local/Temp/opencode/t11neg_1968226492/fpga/csi2/pcie_integration/sim/tb/tb_t11_r10f_e2e.v(775)
+#    Time: 202552 ns  Iteration: 1  Instance: /tb_t11_r10f_e2e
+# End time: 09:30:02 on Oct 17,2026, Elapsed time: 0:00:02
+# Errors: 0, Warnings: 0

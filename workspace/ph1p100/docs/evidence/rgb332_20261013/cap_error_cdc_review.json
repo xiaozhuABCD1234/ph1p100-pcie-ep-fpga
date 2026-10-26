@@ -1,0 +1,58 @@
+{
+  "netlist_sha256": "c273ec0fdd003213d29ae0a5fc1a7d9aed49869a5a5748f36d2563f829c214fd",
+  "rows": [
+    {
+      "net": "u_ddrmc_test_top/cap_error_seen",
+      "cell": "\\u_ddrmc_test_top/cap_error_seen_reg_syn_21",
+      "q": "oqa",
+      "clock": "u_camera/u_csi_a/u_packet/I_clock",
+      "reset_n": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_fiu_wrapper/rst_n",
+      "select": "OFA",
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_fiu_wrapper/rst_n",
+        "clk": "u_camera/u_csi_a/u_rx_phy/u_hs_byte_clk_bufg_auto_created_sclk_s_1_l_bk1_sclk_outnet",
+        "ia": "u_ddrmc_test_top/cap_error_seen_reg_syn_17",
+        "ib": "u_ddrmc_test_top/capture_drops[0]",
+        "ic": "u_ddrmc_test_top/capture_drops[1]",
+        "id": "u_ddrmc_test_top/capture_drops[2]",
+        "ie": "u_ddrmc_test_top/cap_error_seen_reg_syn_11",
+        "imf": "u_ddrmc_test_top/cap_error_seen_reg_syn_7",
+        "oqa": "u_ddrmc_test_top/cap_error_seen"
+      }
+    },
+    {
+      "net": "u_ddrmc_test_top/cap_error_sync[0]",
+      "cell": "\\u_ddrmc_test_top/cap_error_sync_reg[1]_syn_2",
+      "q": "oqb",
+      "clock": "u_ddrmc_test_top/u_capture/clk",
+      "reset_n": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_fiu_wrapper/rst_n",
+      "select": "IMB",
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_fiu_wrapper/rst_n",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ima": "u_ddrmc_test_top/cap_error_sync[0]",
+        "imb": "u_ddrmc_test_top/cap_error_seen",
+        "oqa": "u_ddrmc_test_top/cap_error_sync[1]",
+        "oqb": "u_ddrmc_test_top/cap_error_sync[0]"
+      }
+    },
+    {
+      "net": "u_ddrmc_test_top/cap_error_sync[1]",
+      "cell": "\\u_ddrmc_test_top/cap_error_sync_reg[1]_syn_2",
+      "q": "oqa",
+      "clock": "u_ddrmc_test_top/u_capture/clk",
+      "reset_n": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_fiu_wrapper/rst_n",
+      "select": "IMA",
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_fiu_wrapper/rst_n",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ima": "u_ddrmc_test_top/cap_error_sync[0]",
+        "imb": "u_ddrmc_test_top/cap_error_seen",
+        "oqa": "u_ddrmc_test_top/cap_error_sync[1]",
+        "oqb": "u_ddrmc_test_top/cap_error_sync[0]"
+      }
+    }
+  ],
+  "result": "Registered source, direct stage0/stage1, expected clocks and common active-low async reset.",
+  "limits": "Does not prove MTBF, reset recovery/removal, analog behavior or whole-design CDC."
+}

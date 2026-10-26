@@ -1,0 +1,59 @@
+# Byte-level note: copied text was normalized from LF to CRLF by the Windows text writer.
+# tb_recovery.sv and ddr_recovery_model.sv normalized bytes are identical to their frozen sources;
+# no stimulus, assertion or model-content change. Exact source/copy SHA and newline counts are separately bound.
+
+
+--- D:\fpga\ph1p100\workflow\runs\20261024-221529_fpga-sim-integration-recovery\T10.a1-abort-cdc-fix\check_recovery.py
++++ D:\fpga\ph1p100\workflow\runs\20261024-221529_fpga-sim-integration-recovery\T10.a1-recovery-sim\resume02\check_recovery.py
+@@ -2,7 +2,7 @@
+ import hashlib, json, pathlib, re, struct, sys, zlib
+ sys.dont_write_bytecode = True
+ HERE = pathlib.Path(__file__).resolve().parent
+-FROZEN = HERE.parent / 'inputs/a1-r5'
++FROZEN = HERE.parents[1] / 'inputs/a1-r5'
+ sys.path.insert(0, str(FROZEN / 'checker'))
+ from a1_pattern import inverse_xform
+ 
+
+--- D:\fpga\ph1p100\workflow\runs\20261024-221529_fpga-sim-integration-recovery\T10.a1-abort-cdc-fix\run_abort.py
++++ D:\fpga\ph1p100\workflow\runs\20261024-221529_fpga-sim-integration-recovery\T10.a1-recovery-sim\resume02\run_abort.py
+@@ -1,9 +1,9 @@
+ """Bounded ModelSim reproduction: corrected eight RTL and effective original-top negative."""
+ import pathlib,json,hashlib,subprocess,sys,time,os,re
+ sys.dont_write_bytecode=True
+-HERE=pathlib.Path(__file__).resolve().parent; RUN=HERE.parent
++HERE=pathlib.Path(__file__).resolve().parent; RUN=HERE.parents[1]
+ MS=pathlib.Path(r'D:\intelFPGA\18.1\modelsim_ase\win32aloem')
+-BIND=json.loads((RUN/'recovery-dut-binding-resume01.json').read_text(encoding='utf-8-sig'))
++BIND=json.loads((RUN/'recovery-dut-binding-resume02.json').read_text(encoding='utf-8-sig'))
+ RTL=list(BIND['rtl_paths']); TIMEOUT=300
+ CASES={'clean':(0,8),'clean32':(0,32),'raw-midwrite-reset':(1,32),'encoded-midwrite-reset':(2,32),'bad-frame':(3,8),'overflow':(4,8),'full-abort':(5,8),'pending-reset':(6,8),'sof-abort':(7,8),'last-skid-abort':(8,8)}
+ def sha(p):return hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()
+@@ -36,7 +36,7 @@
+  (HERE/'run.do').write_text('onerror {quit -code 2 -f}\nrun -all\nquit -f\n')
+  a=execute([MS/'vlib.exe',d/'lib'],d,'vlib');assert a['returncode']==0
+  paths=dict(BIND['rtl_paths'])
+- if mode=='corrected': paths['camera_a1_uart_top.v']=str(HERE/'candidate/camera_a1_uart_top.v')
++ if mode=='old': paths['camera_a1_uart_top.v']=str(RUN/'inputs/a1-r5/src/camera_a1_uart_top.v')
+  cmd=[MS/'vlog.exe','-sv','-modelsimini',ini,'-work','work']
+  if mode=='corrected':cmd+=['+define+CORRECTED']
+  b=execute(cmd+[pathlib.Path(paths[n]) for n in RTL]+[HERE/'ddr_recovery_model.sv',HERE/'tb_recovery.sv'],d,'vlog')
+
+--- D:\fpga\ph1p100\workflow\runs\20261024-221529_fpga-sim-integration-recovery\T10.a1-abort-cdc-fix\run_final_matrix.py
++++ D:\fpga\ph1p100\workflow\runs\20261024-221529_fpga-sim-integration-recovery\T10.a1-recovery-sim\resume02\run_final_matrix.py
+@@ -1,10 +1,10 @@
+ import sys,pathlib,concurrent.futures,json
+ sys.dont_write_bytecode=True
+-p=pathlib.Path(r'D:\fpga\ph1p100\workflow\runs\20261024-221529_fpga-sim-integration-recovery\T10.a1-abort-cdc-fix');sys.path.insert(0,str(p));import run_abort
+-jobs=[(n,r+'-final') for r in ('slow','fast') for n in run_abort.CASES if (n,r)!=('sof-abort','fast')]
++p=pathlib.Path(__file__).resolve().parent;sys.path.insert(0,str(p));import run_abort
++jobs=[(n,r+'-final') for r in ('slow','fast') for n in run_abort.CASES]
+ with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
+  futures=[pool.submit(run_abort.run,'corrected',n,r) for n,r in jobs]
+  results=[f.result() for f in futures]
+-assert len(results)==19 and all(r['status']=='PASS' for r in results)
+-(p/'final-matrix-results.json').write_text(json.dumps(dict(status='LOCAL_PASS',final_TB_results=results,fast_sof_final_equivalence=str(p/'corrected/sof-abort-fast-retry/result.json')),indent=2))
+-print('FINAL_MATRIX_19_PASS + fast SOF corrected retry PASS',flush=True)
++assert len(results)==20 and all(r['status']=='PASS' for r in results)
++(p/'matrix-results-resume02.json').write_text(json.dumps(dict(status='LOCAL_PASS',final_TB_results=results),indent=2))
++print('RESUME02_MATRIX_20_FRESH_PASS',flush=True)

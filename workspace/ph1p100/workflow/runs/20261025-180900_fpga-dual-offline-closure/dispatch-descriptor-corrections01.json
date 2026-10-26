@@ -1,0 +1,194 @@
+{
+  "run_id": "20261025-180900_fpga-dual-offline-closure",
+  "project_root": "D:/fpga/ph1p100",
+  "output_dir": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure",
+  "task_ids": [
+    "T08.dual-local-closure",
+    "T10.dual-aplus-scheduler"
+  ],
+  "batch_size": 1,
+  "status": "ready",
+  "needs_user_input": false,
+  "question_path": null,
+  "user_summary_path": null,
+  "input_paths": [
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\request.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\fpga-design-guide.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\dev-plan.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\descriptor-corrections01-plan.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T08.dual-local-closure\\r1\\static-closeout01\\manifest-r1.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10.dual-aplus-scheduler\\static-closeout01\\manifest-resume01.json"
+  ],
+  "write_scope": {
+    "T08.dual-local-closure": [
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T08.dual-local-closure\\r1\\mode-fix02/**"
+    ],
+    "T10.dual-aplus-scheduler": [
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10.dual-aplus-scheduler\\cmp-stall-fix01/**"
+    ]
+  },
+  "protected": [
+    "All previously frozen task sources/TB/models/runners/manifests/evidence and static-closeout folders",
+    "Sibling task files and original planning controls",
+    "Production/OpenCode/TD/hardware/OneDrive docs/other worktrees/global configuration/tasks.json"
+  ],
+  "next_action": [
+    {
+      "operation": "followup_task",
+      "role": "fpga-dev",
+      "task_id": "T08.dual-local-closure",
+      "target": "/root/fpga_dev_dual_local_180900",
+      "prompt_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\descriptor-corrections01-plan.md",
+      "input_paths": [
+        "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\request.md",
+        "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\fpga-design-guide.md",
+        "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\dev-plan.md",
+        "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\descriptor-corrections01-plan.md",
+        "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T08.dual-local-closure\\r1\\static-closeout01\\manifest-r1.json",
+        "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T08.dual-local-closure\\r1\\static-closeout01\\mode-publication-risk.md"
+      ],
+      "write_scope": [
+        "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T08.dual-local-closure\\r1\\mode-fix02/**"
+      ],
+      "instruction": "Execute only your task section as real RTL correction, not within the completed static window. Verify frozen baseline first, preserve old inputs and all counters, record new actual start/deadline and bounded counts. No developer T10 faults suite fourth attempt. Return to original planner after frozen ready_for_test or blocked.",
+      "execution_limits": {
+        "actual_tool_calls": 30,
+        "minutes": 60,
+        "absolute_deadline": "actual followup receipt start+60min; record before execution; never change old deadlines",
+        "compiles": 2,
+        "case_processes": 12,
+        "read_seconds": 60,
+        "compile_static_small_case_seconds": 300,
+        "full_case_seconds": 300,
+        "same_failed_command_total_attempts": 2,
+        "search_rounds_per_problem": 3,
+        "no_progress_stop_cycles": 2
+      },
+      "stage": "T08 existing repair r1 pre-submission mode correction; no r2 integrated or fabricated verdict"
+    },
+    {
+      "operation": "followup_task",
+      "role": "fpga-dev",
+      "task_id": "T10.dual-aplus-scheduler",
+      "target": "/root/fpga_dev_dual_scheduler_180900",
+      "prompt_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\descriptor-corrections01-plan.md",
+      "input_paths": [
+        "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\request.md",
+        "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\fpga-design-guide.md",
+        "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\dev-plan.md",
+        "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\descriptor-corrections01-plan.md",
+        "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10.dual-aplus-scheduler\\static-closeout01\\manifest-resume01.json",
+        "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10.dual-aplus-scheduler\\static-closeout01\\source-map.json"
+      ],
+      "write_scope": [
+        "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10.dual-aplus-scheduler\\cmp-stall-fix01/**"
+      ],
+      "instruction": "Execute only your task section as real RTL correction, not within the completed static window. Verify frozen baseline first, preserve old inputs and all counters, record new actual start/deadline and bounded counts. No developer T10 faults suite fourth attempt. Return to original planner after frozen ready_for_test or blocked.",
+      "execution_limits": {
+        "actual_tool_calls": 30,
+        "minutes": 60,
+        "absolute_deadline": "actual followup receipt start+60min; record before execution; never change old deadlines",
+        "compiles": 2,
+        "case_processes": 5,
+        "read_seconds": 60,
+        "compile_static_small_case_seconds": 300,
+        "full_case_seconds": 600,
+        "same_failed_command_total_attempts": 2,
+        "search_rounds_per_problem": 3,
+        "no_progress_stop_cycles": 2
+      },
+      "stage": "T10 pre-first-acceptance CMP correction; integrated round0 not started"
+    }
+  ],
+  "parallelism": "Two independent single-task original developers, disjoint overlay directories; not batch2",
+  "after_each_development": {
+    "operation": "return_to_planner",
+    "target": "/root/fpga_plan_dual_offline",
+    "payload": "Actual task/status/new manifest/artifacts/stop flags/retest/current+historical counters. Planner confirms implementation closure before independent test dispatch."
+  },
+  "on_native_role_ID_error": {
+    "operation": "return_to_planner",
+    "target": "/root/fpga_plan_dual_offline",
+    "replacement_before_actual_error": false,
+    "preserve_current_window_remaining_budget": true
+  },
+  "scope_limits": {
+    "primary_goals": 1,
+    "formal_packages": 2,
+    "max_packages": 4,
+    "levels": 2,
+    "steps_per_task": 5,
+    "no_new_function_or_hardware_permission": true
+  },
+  "strict_history_constraints": {
+    "static_windows_finished_no_experimental_reuse": true,
+    "no_deadline_backdating": true,
+    "T08_r0_integrated": "FAIL",
+    "T08_existing_actual_implementation_repair_round": 1,
+    "T08_r1_integrated_started": false,
+    "T08_tester_edges_attempts_used": 1,
+    "T08_tester_edges_remaining": 1,
+    "T08_historical_developer_calls": 125,
+    "T08_historical_overrun_retained": true,
+    "T08_historical_compiles": 6,
+    "T08_historical_cases": 32,
+    "T10_integrated_round0_started": false,
+    "T10_post_acceptance_repair_rounds": 0,
+    "T10_historical_compile_used": 4,
+    "T10_old_compile_limit": 4,
+    "T10_historical_cases": 11,
+    "T10_historical_calls": "unknown complete total; preserve all known original/resume/static records",
+    "T10_developer_faults_used": 3,
+    "T10_developer_faults_limit": 3,
+    "T10_developer_faults_suite_or_renamed_equivalent_allowed": false,
+    "T10_new_cases": "only new CMP nominal ready/valid/ACK defect, small nominal regression, full AB nominal and new effective targeted negative control",
+    "T08_stable_problem_id": "T08.dual-local-closure:PERMISSION_MISSING:mode-publication-stale-offer",
+    "T10_stable_problem_id": "T10.dual-aplus-scheduler:INPUT_CONFLICT:cmp-descriptor-stall"
+  },
+  "new_budget_basis": "Original scope necessary reversible RTL completion; newly identified distinct source defects justify finite actual modification dispatch below initial per-dispatch caps. Not static-window experimentation, not old faults retry, not a fabricated integrated repair round.",
+  "new_hardware_TD_download_Flash_Git_message_mapping_permission": false,
+  "future_existing_independent_test_budgets": {
+    "T08": {
+      "target": "/root/fpga_tester_dual_local_180900",
+      "integrated_round": 1,
+      "calls": 30,
+      "minutes": 45,
+      "compiles": 2,
+      "cases": 14,
+      "original_edges_remaining_attempts": 1,
+      "unused": true
+    },
+    "T10": {
+      "one_first_new_integrated_tester": true,
+      "integrated_round": 0,
+      "calls": 45,
+      "minutes": 60,
+      "compiles": 2,
+      "cases": 20,
+      "unused": true,
+      "fault_checks_are_independent_first_acceptance_executions_not_developer_retry_allowance": true
+    }
+  },
+  "frozen_basis": [
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\descriptor-corrections01-plan.md",
+      "sha256": "cf5e1208f375a04b52fc2eeaf995e2fccc1cb885911d75ce2390e08d26d88273"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T08.dual-local-closure\\r1\\static-closeout01\\manifest-r1.json",
+      "sha256": "1b14a2201403389d4ae085e3c5f3141e382d600c9d3d50988527ad5eb617f544"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T08.dual-local-closure\\r1\\static-closeout01\\mode-publication-risk.md",
+      "sha256": "a9eb2c75f28b679e3bb5931d222452e0fed41e9646a327e2635febbfd79b7efd"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10.dual-aplus-scheduler\\static-closeout01\\manifest-resume01.json",
+      "sha256": "524b53c20fdbb31a7ee13aa5bfb3164ba06123352e64903edb7993199285435b"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10.dual-aplus-scheduler\\static-closeout01\\source-map.json",
+      "sha256": "e08b04060641aa6c2e6e2323b68ead8318261a470cab11a2be03d28bc72eebd6"
+    }
+  ]
+}

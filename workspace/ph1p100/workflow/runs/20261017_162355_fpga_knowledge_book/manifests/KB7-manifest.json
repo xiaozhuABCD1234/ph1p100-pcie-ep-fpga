@@ -1,0 +1,100 @@
+{
+  "run_id": "20261017_162355_fpga_knowledge_book",
+  "task_id": "KB7",
+  "role": "fpga-dev",
+  "round": 0,
+  "created_at": "2026-10-18",
+  "project_root": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道",
+  "status": "ready_for_test",
+  "hash_algorithm": "SHA256",
+  "freeze_note": "KB7 收束包冻结快照（27 章＋附录 90/91/92＋README 终版＋全书一致性检查；收敛第 3 包）：以下读入与产出在生成本清单后停止修改；任一输入变化则本清单及其对应结果失效。本清单不含自身哈希（自引用），由测试者现场重算核对。本包无修复轮（round0 首测）；冻结前修正 2 项（PFC-KB7-1/2，见 pre_freeze_corrections）。README 为本包唯一被授权的既有文件改动（改动面 8 处，基线=KB4 冻结值 ee5e93e3…）；01–26 章与 _写作规范.md/_全书大纲.md 零触碰（冻结链复算全 MATCH）。tasks.json、decision-register、main-log、parallel 线文件属并行线滚动文件，以本清单快照为准；main-log 按 R1 滚动语义（测试仅核存在性/追加型新增，不以其漂移否定本清单）。92 资源核验状态为各章写作时点快照（01–26＝2026-10-17；27＝2026-10-18），不承诺此后链接存活。",
+  "inputs": {
+    "dispatch_required": [
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/requirement.md", "sha256": "b54f51cd79c65e5b9703627855dce2b91b356a55528f68c1d6a09287b5e0fdab", "bytes": 1200, "note": "用户原话（含 2026-10-17 收敛指令登记）"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/dev-plan.md", "sha256": "dceb4956a1bafd80534835e3108f4f1c1db80b858c6411ad6c36b78e66585112", "bytes": 60632, "note": "含 §13 收敛规则（KB7=27＋附录＋README 终版＋全书检查）、§8/§11 收束历史、R30 预冻结预算；SHA(前16)=DCEB4956A1BAFD80 与 closeout-KB6 登记一致"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/input-index.md", "sha256": "3cc56be44d4ef65ad955070c0949c5151b50ecc50eee2832987ef3c1e80450c4", "bytes": 8836, "note": "方案事实基线（§3 第 1–11 项）"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/fpga-design-guide.md", "sha256": "d2e56be01086eb4afb0437f95a1f34f5581dc9be3469a45633b665e4797689b1", "bytes": 8897, "note": "内容/格式冻结约定（§1–§5 核读）"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/closeout-KB5.md", "sha256": "08b4eb6ef5ce9a2fa1fdecd34afc45fd05483533f0f700b3febcf81fd1a5581e", "bytes": 3723, "note": "收敛链上游收束（R25–R27）"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/closeout-KB6.md", "sha256": "f221c7f87339e936cb9f5b41767a8773387666d7d7f38a65596c7c1720021745", "bytes": 4495, "note": "KB7 派发依据（R28–R31、预冻结扩展预算、KB7 边界要点）"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/dispatch.json", "sha256": "c01a261fb5d71a49c22625e9cd2713863ce2d7ffbc31ce9f64449c411e3220f2", "bytes": 4882, "note": "KB7 派发元数据（write_scope/protected/execution_limits）"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/manifests/KB6-manifest.json", "sha256": "c76a6f9308b79d3fcda70ea7e6251a2287054274fa14234963f22f3b853c9439", "bytes": 16110, "note": "上游冻结对照（清单 schema 参照；SHA(前16)=c76a6f93 与 closeout-KB6 登记一致）"},
+      {"path": "docs/知识书/README.md", "sha256": "ee5e93e3218751eba268d4e955a56a0bf514069ca933778e80674f4c381b837d", "bytes": 7384, "note": "本包读取的基线版本=KB4 冻结值（ee5e93e3…，7384B）；本包按授权完成终版刷新（终版值见 outputs）"}
+    ],
+    "materials_read": [
+      {"path": "workflow/runs/20261017_161109_decisions_compare_freeze/decision-register.md", "sha256": "b38776fd776007a5b7b4803fde39be469471f7d25db0ed1e4264b80243166936", "bytes": 39086, "note": "全文核读：M1a–M5.8、§1.4/§1.5/§3.4/§5/§6（第 27 章演算与 90 的权威来源；并行线在途版本，快照）"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/link-check-KB6.json", "sha256": "dfe6af490dfdbfae9c3cc97e0b39615a8a5b5413e701f54dcd6e6448a62bc9ff", "bytes": 10272, "note": "链接记录 schema 参照（字段与状态口径）"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/manifests/KB5-manifest.json", "sha256": "19a3cd574cb8340ae835ea8378a2bf59f00fe7e3c2e6374e3b0e265a7f9234a9", "bytes": 12995, "note": "上游冻结链核对用（16–20 章最新冻结值）"},
+      {"path": "docs/知识书/_写作规范.md", "sha256": "d66e99ca604b359bb05e3cdae8adde68056107ed6187ea40c3a97ad68bc38fad", "bytes": 8906, "note": "模板 10 节、核验操作规程、禁止写法、附录体例；未触碰（SHA=KB2 冻结值）"},
+      {"path": "docs/知识书/_全书大纲.md", "sha256": "bd266a6cafd0fa2153463ed509483eea96f327d557e5bc0645b6aaca2dfcd0e4", "bytes": 15857, "note": "27 章＋附录边界与要点；未触碰（SHA=KB1 冻结值）"},
+      {"path": "docs/知识书/01_从代码到电路.md … 26_工程方法与证据判读.md（26 章全文的三节提取）", "sha256": "逐章见 [F] 冻结链复算（与 KB0–KB6 manifests 全 MATCH）", "bytes": null, "note": "对每章『决策点与判决框架/术语增量/延伸资源』三节做全文提取与结构核对；内容未被修改"}
+    ],
+    "referenced_project_paths": [
+      {"path": "parallel/frame/frame_contract.py", "sha256": "cbf0ba87248818e86647e2bac4be881b8227fcf3fc1d7a90607e14c8e81cf4db", "bytes": 16721, "note": "27 章/23 章引注（值引自 KB6 冻结时点；平行线文件，本包未重算）"},
+      {"path": "workflow/runs/20261017_153201_T01_ddr1333_integration/dev-plan.md", "sha256": "A103D135112FA860（前16，引自 decision-register §7 观测；本包未复算）", "bytes": null, "note": "第 02/10 章既有引注来源（滚动线）"},
+      {"path": "docs/evidence/ddr1333_build_sta_20261017.json", "sha256": "7C633508480A886E（前16，引自 decision-register §7）", "bytes": 81640, "note": "E2 对比表（0.230/0.128）引注来源（滚动线，快照）"}
+    ],
+    "run_state": [
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/main-log.md", "sha256": "0f300743475c7e9797645e9bec3d3be50baf5eaf22a384cad1a6a6a4269d54a9", "bytes": 28767, "semantics": "主代理滚动日志（R1）：本条为 KB7 冻结时点快照；冻结后继续追加属流程固有行为，复测仅核存在性/追加型新增；本包未读取其内容。"}
+    ],
+    "skill_and_contracts": [
+      {"path": ".agents/skills/fpga-dev/SKILL.md", "sha256": "da644fd482c90642a4a1f353e0b19538cd528e934f9353bac8daa30c4bf8fdb9", "bytes": 5085},
+      {"path": ".agents/skills/fpga-orchestrator/references/work-limits.md", "sha256": "dad3cf3c6cf6ff0e4eec7dc4677e773840366311615a9fe84262387bcc1096b2", "bytes": 8676},
+      {"path": ".agents/skills/fpga-orchestrator/references/report-contract.md", "sha256": "85248a9e4d1f75de88ad22516b823307206c98dc3a01148b1f1155f4a136d28c", "bytes": 3187},
+      {"path": ".agents/skills/fpga-orchestrator/references/relay-contract.md", "sha256": "78e31fb075f9de3591021e3e7719902036b796660aaa6ac8f2f8526c56e6c3e0", "bytes": 6111}
+    ]
+  },
+  "outputs": [
+    {"path": "docs/知识书/27_如何做出自己的判决.md", "sha256": "fd377f6919f51613f346c63de4b3306ca2d3a0602ece7a6bedab7a9acc18af21", "bytes": 20357, "lines": 200, "kind": "new_chapter"},
+    {"path": "docs/知识书/90_决策索引.md", "sha256": "2b50c5c4b965ec260564da3506cb3aebbad5c38f27783d46d4e740cff127158c", "bytes": 14695, "lines": 72, "kind": "new_appendix"},
+    {"path": "docs/知识书/91_术语表.md", "sha256": "38b2938ceb979613c8d3a3288020528012d61e68e85166eb2c907327255ad0eb", "bytes": 25447, "lines": 306, "kind": "new_appendix"},
+    {"path": "docs/知识书/92_延伸资源总表.md", "sha256": "51e33600ee4e5cd489ad3ad4bc0460fe6fc5ce85accf2f648802683c56005436", "bytes": 32639, "lines": 183, "kind": "new_appendix"},
+    {"path": "docs/知识书/README.md", "sha256": "dd18fd66058ce5d0dd9187ddce2922301f32e819938af566ea63948b67783ce6", "bytes": 8250, "lines": 115, "kind": "modified_existing", "note": "唯一被授权的既有文件改动（终版刷新）：建书任务行、首页角色行、判决速查句、当前快照句、Part4/5/6＋附录进度行、维护规则 2 句，共 8 处；基线=KB4 冻结值 ee5e93e3218751eba268d4e955a56a0bf514069ca933778e80674f4c381b837d（7384B）"},
+    {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/link-check-KB7.json", "sha256": "47419b0fddae5392d0e10d7378652de8ac61c87cb2b6b68a67cdb493588eca4b", "bytes": 3952, "lines": 31, "kind": "link_check"},
+    {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/dev-notes-KB7.md", "sha256": "5994935e3649e1be352964d10a1195ea91bf9ce4da5281638ae75b7385bba1a7", "bytes": 7423, "lines": 61, "kind": "dev_notes"},
+    {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/book-check-KB7.md", "sha256": "235777f0b8d7e3630ff4b9c1ae00c4b659790ec35279236397e429a6723bede9", "bytes": 7027, "lines": 62, "kind": "book_check"}
+  ],
+  "pre_freeze_corrections": [
+    {"file": "docs/知识书/92_延伸资源总表.md", "item": "PFC-KB7-1", "before": "初版标题列有 7 处与章表存在附加注记/大小写差（如『静态时序分析（维基百科；第 01 章已有，本章复用）』、JEDEC JESD79-3D vs 章表 JESD79-3F、第 15 章 B 站条目标题缩写等）", "after": "标题列逐字=章表（机器复检差异=0）；URL 序列逐章 1:1 核对通过；计数 137=137", "basis": "以章表为权威的定位重写（逐章先核 URL 序列再按行位序整格回填）。过程登记：首次『标题同步脚本』因 PowerShell 单元素数组退化缺陷发生批量误写，随即完全修复；详见 dev-notes-KB7 §3。属冻结前自检修正，非修复轮。"},
+    {"file": "workflow/runs/20261017_162355_fpga_knowledge_book/book-check-KB7.md", "item": "PFC-KB7-2", "before": "§6 一处文件名笔误『kb4-manifest.json』（小写/连字符）", "after": "『KB4-manifest.json』（与实际文件名一致）", "basis": "收口脚本 1 处替换（计数=1）"}
+  ],
+  "link_check": {
+    "path": "workflow/runs/20261017_162355_fpga_knowledge_book/link-check-KB7.json",
+    "sha256": "47419b0fddae5392d0e10d7378652de8ac61c87cb2b6b68a67cdb493588eca4b",
+    "summary": {"attempted": 5, "verified_pass": 5, "degraded": 0, "not_used": 0, "entries_by_chapter": {"27": 5}, "distinct_urls_used_in_tables": 5, "table_rows_by_chapter": {"27": 5, "total_rows": 5}},
+    "notes": "第 27 章 5 条新资源单批核验全部通过（无重试、无降级；工具逐条返回 Valid 且主题一致，登记照实——未返回逐字页面标题字符串）。第 01–26 章链接状态沿各章表与既有 link-check-KB0…KB6 记录（时点快照），本包不重验。"
+  },
+  "self_check": {
+    "template_10_sections": "27 章含 10 节全部节名（速读卡/问题/正文/方案对应/决策卡/误区 5/自测 6＋折叠答案/资源 5/术语增量 7/版本记录）；90/91/92 为附录体例（说明＋表）。",
+    "length_lines": "27=200 / 90=72 / 91=306 / 92=183 行（LF 计数口径；27 在轻量档 120–220 内；其余为附录汇总体量）。",
+    "encoding": "27/90/91/92/README 均 UTF-8（无 BOM）、CR=0（纯 LF）；收口脚本复算通过。",
+    "union_checks": "91=260 条（01–26 章表 261 行 − 合并 8 项 ＋ 第 27 章 7 条），逐章配平全部相等、未覆盖=0；92=137 条（132＋5），逐章计数相等、标题差异=0、URL 序列 1:1；90=项目级 18 行＋章级 27 行，含决策卡章节=27/27。",
+    "cross_refs": "全库『见第 N 章』distinct N∈{1–20,22,23,26,27}、越界=0、总次数=99；『（待写）』=0（规范文件规则示例除外）。",
+    "readme_consistency": "README 已交付进度行=30/30（含文件名链接）、相对链接缺失=0、快照句与磁盘一致；改动面 DIFF 仅授权 8 处（与 KB4 冻结值比对），其余文件 MATCH。",
+    "freeze_chain": "01–26 章＋_写作规范.md＋_全书大纲.md 与 KB0–KB6 各 manifest outputs 最新值复算：全部 MATCH；唯一 DIFF=README（本包授权改动）。",
+    "path_scan": "27/90/91/92 全部相对链接（../ 与 ../../）逐条 Test-Path 通过，缺失=0；README 缺失=0。",
+    "no_forbidden_wording": "未把候选/登记写成已实测；未宣布资格/口径通过；无绝对化保证；项目文档改路径引用；外部引用单处≤2 句。",
+    "bounded_writes": "仅新建 27/90/91/92＋本 run 四记录（下含 manifest）并更新 README（授权面内）；未触碰 01–26、_写作规范、_全书大纲与任何其他文件；未删除任何文件。",
+    "budget": "工具调用=44 次（预冻结 ≤45；含联网核验 1 次、92 标题修复脚本 3 次）；自我停止预算 ≤60 分钟未触发；未派生代理；未用 DeepSeek。",
+    "self_check_ref": "workflow/runs/20261017_162355_fpga_knowledge_book/dev-notes-KB7.md §4；book-check-KB7.md §1–§9"
+  },
+  "retest": {
+    "round": 0,
+    "required_dimensions": ["functional", "engineering", "system"],
+    "input_status": "new（KB7 首轮清单；相对 KB6 冻结：新增 27/90/91/92＋README 终版＋本 run 四记录；01–26 与中央两文件零变化——冻结链交叉复核）",
+    "expected_focus": [
+      "functional（必测）：27 章决策流程与四例演算数字对核（0.230/0.128/+0.102、0.300 gate accepted=false、2,592,768=633×4096/640B、4Kp30≈297MHz/2.97Gbps、~128 vs 155.520/194.400）；90 与各章决策卡及 register M1–M5 一致（DDR/压缩/显示/R10F 四组）；91 覆盖抽样（逐章 ≥1 条）与合并政策；92=并集（计数/链接/状态字段）。",
+      "engineering（必测）：27 章模板 10 节与篇幅；编码 UTF-8 无 BOM/LF；README 有界改动面（DIFF 仅授权 8 处）；manifest 输出哈希现场复算一致；**特别关注 92 标题列**（PFC-KB7-1 修复轨迹见 dev-notes §3 / book-check §4）。",
+      "system（必测）：README 导航（30 行链接＋快照句）与磁盘一致；用户示例 DDR1600/1333/800E 从 90 §三 直达；与 decision-register/第 24 章 T08/第 20 章 M5.4 表述无冲突。"
+    ],
+    "environment_note": "tasks.json/decision-register/main-log/parallel 线文件为滚动文件；测试以本清单快照为准。92 核验状态为时点快照（01–26＝2026-10-17；27＝2026-10-18），不承诺此后链接存活。"
+  },
+  "compliance": {
+    "write_scope": "仅新建 docs/知识书/27_如何做出自己的判决.md、90_决策索引.md、91_术语表.md、92_延伸资源总表.md 与本 run 目录下 link-check-KB7.json、dev-notes-KB7.md、book-check-KB7.md、manifests/KB7-manifest.json；仅更新 docs/知识书/README.md（授权终版面）；未覆盖/修改/删除其他任何文件（含 01–26 章、_写作规范.md、_全书大纲.md、当前必读/、docs/ 旧文档、workflow/tasks.json、fpga/、tools/、parallel/、其它 run、D 盘、main-log 内容）。",
+    "zero_hardware": "无 TD/构建/下载/Flash/GUI/板卡/外部消息动作；联网仅第 27 章 5 条资源核验；未使用 DeepSeek 委派；未派生任何代理。",
+    "notes": [
+      "本包为收敛第 3 包（收束）；按 §13：不新增 F 类修订项，非阻断观察仅记录（book-check §8）。",
+      "PFC-KB7-1 含一次冻结前脚本误写与完全复原（92 标题列）；全部复检 0 差异，登记于 dev-notes §3 与 pre_freeze_corrections。",
+      "92 标题列=章表逐字（无注记）；跨章共用链接按章分别成行（并集口径）。"
+    ]
+  }
+}

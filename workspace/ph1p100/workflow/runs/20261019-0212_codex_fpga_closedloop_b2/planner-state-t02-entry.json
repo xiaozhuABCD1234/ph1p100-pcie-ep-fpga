@@ -1,0 +1,70 @@
+{
+  "schema": "fpga-planner-t02-entry-v1",
+  "run_id": "20261019-0212_codex_fpga_closedloop_b2",
+  "updated": "2026-10-19T20:47:16.671006+08:00",
+  "formal_work_packages": 4,
+  "tasks": {
+    "T06.codex-ddr-readback-int": {
+      "status": "done_within_offline_scope",
+      "round0": "PASS",
+      "repairs": 0,
+      "G0": "pass",
+      "G1": "pass",
+      "G2": "pass",
+      "G3": "separate_T02_pending",
+      "G4": "not_run_deferred"
+    },
+    "T09.codex-production-int": {
+      "status": "done_within_production_integration_scope",
+      "round0": "PASS",
+      "repairs": 0,
+      "G0": "pass",
+      "G1": "pass",
+      "G2": "pass",
+      "G3": "not_run_separate_T02",
+      "G4": "not_run_deferred"
+    },
+    "T02.codex-singleA-board": {
+      "status": "awaiting_current_hardware_facts",
+      "development": "dispatch_preflight_ready",
+      "G3": "not_run",
+      "round0": "not_started",
+      "repairs": 0
+    },
+    "T08.codex-sync-offline": {
+      "status": "queued_original_recovery_authorized",
+      "G1": "not_passed",
+      "G2": "not_run",
+      "compile_used": 2,
+      "compile_max": 8,
+      "round0": "not_started",
+      "repairs": 0
+    }
+  },
+  "production": {
+    "used": 6,
+    "max": 6,
+    "no_seventh": true
+  },
+  "B01_manifest": {
+    "manifest_path": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/recovery01/B01/timing-continuation01/remaining-attempts01/candidate/manifest.json",
+    "sha256": "c7a40897166467f2beafb096701dba9cf836e1007d77ae03d90009d06f80d757",
+    "entries": 699,
+    "B01_verdicts": {
+      "T06": "PASS_r0",
+      "T09": "PASS_r0"
+    },
+    "G2": {
+      "SWNS": 0.1,
+      "HWNS": 0.02,
+      "STNS": 0,
+      "HTNS": 0
+    }
+  },
+  "developer_b01": "/root/fpga_dev_closedloop_b01",
+  "tester_b01": "/root/fpga_test_closedloop_b01",
+  "counters_source": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/test-reports/independent-b01/attempt-ledger.json",
+  "parent_T06": "active_pending_board",
+  "parent_T11": "active",
+  "next_dispatch": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/dispatch-t02-board-entry.json"
+}

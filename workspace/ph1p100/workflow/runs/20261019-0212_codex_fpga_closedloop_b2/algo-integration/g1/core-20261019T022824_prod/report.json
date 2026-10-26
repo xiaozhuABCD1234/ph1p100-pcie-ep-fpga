@@ -1,0 +1,148 @@
+{
+  "case": "core",
+  "mutation": "none",
+  "sim_dir": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\workflow\\runs\\20261019-0212_codex_fpga_closedloop_b2\\algo-integration\\g1\\core-20261019T022824_prod",
+  "stamp": "20261019T022824_prod",
+  "sources": {
+    "algo_rowwin_reader.v": {
+      "origin": "upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\img\\algo\\algo_rowwin_reader.v",
+      "sha256": "bbd3f9d3e2e231b7ead693df0b3b74440d7baafc352e2f243fa887b6ac666da2"
+    },
+    "algo_rowwin3.v": {
+      "origin": "upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\img\\algo\\algo_rowwin3.v",
+      "sha256": "46a6ceb10844b9ccb2054b8b2a911624dc04db0ca167ef72b8b86c9e08571384"
+    },
+    "algo_obuf.v": {
+      "origin": "upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\img\\algo\\algo_obuf.v",
+      "sha256": "07404282d02256541cabf282087499e2540ef800580387de29e3871515c8de81"
+    },
+    "bayer_raw10_demosaic4.v": {
+      "origin": "upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\img\\algo\\bayer_raw10_demosaic4.v",
+      "sha256": "138e7124de1f57bd199c9f6ea340ed9da8fbb4355326f74c15ef6c85795fdbef"
+    },
+    "gray8_gaussian3x3_stream.v": {
+      "origin": "upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\img\\algo\\gray8_gaussian3x3_stream.v",
+      "sha256": "c358174f56aeb2d4a64a2b7484c53ea9feed2f6cd857ac06c315250110a55dd6"
+    },
+    "gray8_he_cdfmin_frame.v": {
+      "origin": "upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\img\\algo\\gray8_he_cdfmin_frame.v",
+      "sha256": "df84b8a49c95bd784e6dd618a5dbc5772200df70f83d35784c381db35629034b"
+    },
+    "rgb8_gray_stream.v": {
+      "origin": "upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\img\\algo\\rgb8_gray_stream.v",
+      "sha256": "1a64fa21339a25a9f34ca8206c0fd643b5232baed26028d8d337144374be928e"
+    },
+    "gray8_gaussian3x3_frame.v": {
+      "origin": "upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\img\\algo\\gray8_gaussian3x3_frame.v",
+      "sha256": "d5b14c597401313d25d9096a59f94d101e97fcf090198d04c5b0ef2dccbd86ee"
+    },
+    "img_algo_parallel_top.v": {
+      "origin": "upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\img\\algo\\img_algo_parallel_top.v",
+      "sha256": "7f1e05443e7432df0069297f515bf96b293022c957f7f05ceda2452f60101811"
+    },
+    "tb_img_algo_core.sv": {
+      "origin": "tools\\algo\\tb\\tb_img_algo_core.sv",
+      "sha256": "b2f7a449c9478cc9cb9564d26e29f7461c177a8f5e40fbadd79348943d4415c5"
+    },
+    "algo_core.vec": {
+      "origin": "workflow\\runs\\20261017-011744-rk-fpga-align\\algo\\vectors\\algo_core.vec",
+      "sha256": "1926e49e2b19ea3f7ca6e43186df327092d897f2708d25dc675bccb241b159bc"
+    },
+    "algo_core.lut.hex": {
+      "origin": "workflow\\runs\\20261017-011744-rk-fpga-align\\algo\\vectors\\algo_core.lut.hex",
+      "sha256": "ca09b37712996c7fcac74d1bbb626addfb040470d0a09359bdb881aaab4c7f51"
+    }
+  },
+  "mutations": [],
+  "commands": [
+    {
+      "cmd": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlib.exe",
+        "work"
+      ],
+      "cwd": "U:\\workflow\\runs\\20261019-0212_codex_fpga_closedloop_b2\\algo-integration\\g1\\core-20261019T022824_prod",
+      "exit": 0,
+      "seconds": 0.1
+    },
+    {
+      "cmd": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlog.exe",
+        "-sv",
+        "algo_rowwin_reader.v",
+        "algo_rowwin3.v",
+        "algo_obuf.v",
+        "bayer_raw10_demosaic4.v",
+        "gray8_gaussian3x3_stream.v",
+        "gray8_he_cdfmin_frame.v",
+        "rgb8_gray_stream.v",
+        "gray8_gaussian3x3_frame.v",
+        "img_algo_parallel_top.v",
+        "tb_img_algo_core.sv"
+      ],
+      "cwd": "U:\\workflow\\runs\\20261019-0212_codex_fpga_closedloop_b2\\algo-integration\\g1\\core-20261019T022824_prod",
+      "exit": 0,
+      "seconds": 0.4
+    },
+    {
+      "cmd": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vsim.exe",
+        "-c",
+        "-l",
+        "vsim.log",
+        "-do",
+        "run.do",
+        "work.tb_img_algo_core",
+        "+VECTORS=algo_core.vec"
+      ],
+      "cwd": "U:\\workflow\\runs\\20261019-0212_codex_fpga_closedloop_b2\\algo-integration\\g1\\core-20261019T022824_prod",
+      "exit": 0,
+      "seconds": 3.1
+    }
+  ],
+  "logs": {
+    "vlib": {
+      "exit": 0,
+      "seconds": 0.1,
+      "log": "vlib.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "vlog": {
+      "exit": 0,
+      "seconds": 0.4,
+      "log": "vlog.log",
+      "log_sha256": "52ec2b9c67a5718402b9ba87fc387d65a1260d90fc9770203b00ec21653fca8f"
+    },
+    "vsim": {
+      "exit": 0,
+      "seconds": 3.1,
+      "log": "vsim.log",
+      "log_sha256": "f9f9175161a66f57176074b8fdcaf7c164c449eb33280e358c02cc388c4d7b2b"
+    }
+  },
+  "simulator_errors": false,
+  "pass_marker": true,
+  "fail_marker": false,
+  "mismatch_sample": [],
+  "coverage": {
+    "cycles": "52840",
+    "all3": "53",
+    "ge2": "132",
+    "beats": "200/188/200",
+    "markers": "6/6/6",
+    "hold": "1",
+    "stalls": "28",
+    "gaps": "10",
+    "frames": "2/1"
+  },
+  "lut_check": {
+    "match": true,
+    "entries": 256,
+    "dump_sha256": "ca09b37712996c7fcac74d1bbb626addfb040470d0a09359bdb881aaab4c7f51",
+    "expected_sha256": "ca09b37712996c7fcac74d1bbb626addfb040470d0a09359bdb881aaab4c7f51"
+  },
+  "verdict": "PASS",
+  "limitations": [
+    "RTL simulation only; no synthesis, timing, resource or board evidence in this runner",
+    "Finite directed coverage, not exhaustive or formal"
+  ]
+}

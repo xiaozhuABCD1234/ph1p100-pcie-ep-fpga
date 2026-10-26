@@ -1,0 +1,50 @@
+# vsim -c -l probe-vsim.log -do "probe_run.do" tb_t07_src_release_probe_r2 
+# Start time: 07:21:44 on Oct 17,2026
+# Loading work.tb_t07_src_release_probe_r2
+# Loading work.ddr_frame_pusher
+# do probe_run.do
+# === T07 r2 system probe: camera-aware source-block release ===
+# ok
+#    check: 0=0x00100000 : no TLP before ARM
+# ok
+#    check: 100000 : pass-release on A0 only
+# ok
+#    check: SE0=0x00100000 : armed after ARM
+# ok
+#    check: x00100000 : ARM accepted (err=0)
+# ok
+#    check:  frame claimed+completed -> HELD
+# ok
+#    check: 100000 : TLP count = 64 data MWr
+# ok
+#    check: release during claim/TX/HELD (A)
+# ok
+#    check: =0x00100000 : released from HELD
+# ok
+#    check: l=2 (pass+ACK), B pair untouched
+# CASE 0 : rel0=2 rel1=0 rel2=0 rel3=0 held_wait=461 st_err=0 done=1
+# ok
+#    check: B=0x01100000 : no TLP before ARM
+# ok
+#    check: 100000 : pass-release on B0 only
+# ok
+#    check: E0B=0x01100000 : armed after ARM
+# ok
+#    check: x01100000 : ARM accepted (err=0)
+# ok
+#    check:  frame claimed+completed -> HELD
+# ok
+#    check: 100000 : TLP count = 64 data MWr
+# ok
+#    check: release during claim/TX/HELD (B)
+# ok
+#    check: =0x01100000 : released from HELD
+# ok
+#    check: l=2 (pass+ACK), A pair untouched
+# CASE 1 : rel0=0 rel1=0 rel2=2 rel3=0 held_wait=461 st_err=0 done=1
+# PROBE_RESULT: ALL PASS
+# PROBE_DONE
+# ** Note: $finish    : S://workflow/runs/20261017-011744-rk-fpga-align/test-reports/system-r3-evidence-t07/tb_t07_src_release_probe_r2.v(267)
+#    Time: 18168 ns  Iteration: 1  Instance: /tb_t07_src_release_probe_r2
+# End time: 07:21:45 on Oct 17,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0

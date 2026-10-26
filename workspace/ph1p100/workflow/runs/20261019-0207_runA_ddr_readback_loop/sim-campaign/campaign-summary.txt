@@ -1,0 +1,7 @@
+sim-campaign 总结（2026-10-19T19:00:57.7164455+08:00）
+entry: tools\pcie_integration\run_sim.ps1  cwd=wt0207  -Defines MIPI_PHY_SIM_STUB
+TB1  tb_ddr_readback_campaign: A)100 帧 0 误判/0 覆盖(含 busy 中幽灵发布丢弃) B)坏帧 8 检查(magic raw/iso, hdr, pay, trunc, length, axi SLVERR, recovery)  ALLPASS=1 vlogErr0=1 wall~5s
+TB2  tb_ddr_readback_1080p: 集成级 1080p 满帧 status=3E words=0x9E400 runs=1  ALLPASS=1 vlogErr0=1 wall~24s
+TB1 # End time: 18:57:44 on Oct 19,2026, Elapsed time: 0:00:02
+TB2 # End time: 18:58:25 on Oct 19,2026, Elapsed time: 0:00:21
+limits: 单 TB ≤5min、整组 ≤15min -> 实测 5.0s+24.2s≈29s OK

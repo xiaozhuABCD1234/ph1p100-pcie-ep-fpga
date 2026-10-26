@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261017-011744-rk-fpga-align\evidence\build_package.py", line 83, in <module>
+    write('contract/compatibility.md',render('''# T03.rk-align-freeze：接口裁决与证据
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261017-011744-rk-fpga-align\evidence\build_package.py", line 12, in render
+    return re.sub(r'\{(loc\(.*?\))\}',lambda found:str(eval(found.group(1),globals())),text)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\re\__init__.py", line 185, in sub
+    return _compile(pattern, flags).sub(repl, string, count)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261017-011744-rk-fpga-align\evidence\build_package.py", line 12, in <lambda>
+    return re.sub(r'\{(loc\(.*?\))\}',lambda found:str(eval(found.group(1),globals())),text)
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 1, in <module>
+  File "C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261017-011744-rk-fpga-align\evidence\build_package.py", line 33, in loc
+    raise RuntimeError('source evidence not found '+name+' '+pattern)
+RuntimeError: source evidence not found references/peer-fpga-2a4b253/rtl/ep_side/ddr/ddr_frame_pusher.v addr_q\s+<= \{{dst_hi, dst_lo\}}

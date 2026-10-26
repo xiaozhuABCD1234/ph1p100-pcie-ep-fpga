@@ -1,0 +1,191 @@
+diff --git "a/D:\\fpga\\ph1p100\\upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\codec\\a1_deflate_core.v" "b/changed-src\\a1_deflate_core.v"
+index 79fa67f..12ee93b 100644
+--- "a/D:\\fpga\\ph1p100\\upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\codec\\a1_deflate_core.v"
++++ "b/changed-src\\a1_deflate_core.v"
+@@ -14,6 +14,11 @@
+ // longer beat stored -- this is the "candidate overflow" guard.
+ //
+ // No dynamic Huffman.  No cross-block references.  Synthesizable style.
++//
++// T10.b5-a1-htab-pipe r0: one local change only -- the bm_b speculative
++// address is registered (bm_b_spec_q) so the htab ERAM clk2q output never
++// drives the bm_b ERAM address in the same cycle.  htab encoding, block
++// format, CRCs and the emitted byte stream are unchanged.
+ // =============================================================================
+ `timescale 1ns / 1ps
+ 
+@@ -266,6 +271,13 @@ module a1_deflate_core (
+     // x1_r window shift comes from bm_a_rd2 instead of the ERAM output register.
+     reg  [7:0] bm_a_rd2;
+     reg  [7:0] bm_b_rd;
++    // r0 (htab-pipe): registered speculative bm_b address.  The htab read data
++    // (candidate pos+3 field) is captured here one cycle before the bm_b port
++    // needs it, so no htab ERAM clk2q output ever drives the bm_b ERAM address
++    // in the same cycle.  The first extension compare is therefore registered
++    // one cycle after the hit (one S_EXT wait cycle); the emitted bytes, the
++    // match lengths and the positions are unchanged.
++    reg  [12:0] bm_b_spec_q;
+ 
+     // Registered two-stage prefetch: x1_r = bm[pos+3]; bm_a_rd itself is the
+     // bm[pos+4] stage, so the htab read address still uses registered bytes
+@@ -288,8 +300,10 @@ module a1_deflate_core (
+     reg [12:0] s1_pos_r;        // stage-1 position
+     reg [12:0] hp_r;            // stage-1 hent_pos (feeds cand_pos / hdist)
+     reg [12:0] hf_r;            // stage-1 hent pos+3 field (feeds faddr)
+-    reg [12:0] hf1_r;           // r0 (bm-addr): hf_r + 1, precomputed in the
+-                                // same s1_en cycle (hit-cycle bm_b address)
++    reg [12:0] hf1_r;           // r0 (htab-pipe): hf_r + 1 = ref+4, precomputed
++                                // in the same s1_en cycle (first S_EXT-cycle
++                                // bm_b reference address; was the pre-r0
++                                // hit-cycle bm_b address)
+     reg        hb_r;            // stage-1 tag/byte/valid compare
+     reg        rng1_r;          // stage-1 distance/range test (registered with hb_r)
+     reg        s1_ok_r;         // stage-1 (s1_pos_r < lim2) (registered with hb_r)
+@@ -723,35 +737,40 @@ module a1_deflate_core (
+     end
+ 
+     // Read port: one registered address and one registered data word per array.
+-    // r0 (hit-pipe): the extension byte pair is prefetched one cycle earlier so
+-    // the mismatch flag can be registered without losing a cycle.  On the hit
+-    // cycle the bm_a port therefore issues pos+4 (not pos+3) and the bm_b port
+-    // issues ref+4 (not ref+3), so the first S_EXT cycle already sees the
+-    // second extension byte; the first extension byte is the already-registered
+-    // x1_r (bm[pos+3]).  During S_SCAN the bm_b port is otherwise idle (the
+-    // window comes from the w0..w2/x1_r shift chain), so it speculatively reads
+-    // the candidate entry's pos+3 byte: that is the reference byte of the first
+-    // extension byte, available exactly on the hit cycle.
++    // r0 (hit-pipe): the extension byte pair is prefetched so the mismatch flag
++    // can be registered without losing a cycle.  On the hit cycle the bm_a port
++    // issues pos+4, and from the first S_EXT cycle on the bm_b port issues
++    // ref+4; the first extension byte pair is the already-registered
++    // cq_r = bm[pos+3] against the bm_b data returned by the speculative read
++    // that was issued on the hit cycle.  During S_SCAN the bm_b port is
++    // otherwise idle (the window comes from the w0..w2/x1_r shift chain), so it
++    // speculatively reads the candidate entry's pos+3 byte.
+     wire        bm_hit_a   = (state == S_SCAN) && hit2;
+-    // Forward byte of the registered extension compare: the hit cycle uses the
+-    // already-registered x1_r, every S_EXT cycle the current bm_a read data.
+-    wire [7:0]  ext_fw_byte = (state == S_EXT) ? bm_a_rd : x1_r;
++    // Forward byte of the registered extension compare: the first S_EXT cycle
++    // uses the byte registered on the hit cycle (cq_r = bm[pos+3]), every later
++    // S_EXT cycle the current bm_a read data.
++    // r0 (htab-pipe): the hit cycle no longer compares (its bm_b data is only
++    // the previous entry's speculation), so ext_first selects cq_r.
++    wire [7:0]  ext_fw_byte = (state == S_EXT)
++                              ? (ext_first ? cq_r : bm_a_rd) : x1_r;
+     wire [12:0] bm_raddr_a = (state == S_EXT) ? ext_raddr
+                            : bm_hit_a ? (p3_r + 13'd1)
+                            : ((state == S_SLEN) || (state == S_SDATA_R)) ? raddr
+                            : praddr;
+-    // r0 (bm-addr): the bm_b speculative address is the last ERAM-clk2q ->
+-    // address path in the scan loop.  Keep the RAM value on a single 2:1 mux
+-    // level: every other source of this port address is a flop (hf1_r /
+-    // ext_faddr / raddr), including the same-address write-first bypass data,
+-    // so one registered-data select decides "ERAM read data" vs "flop value".
+-    // Priority is unchanged: hit > S_EXT > s1_en (bypass value or raddr).
+-    wire        bm_b_from_ram  = s1_en && !htab_byp && !bm_hit_a;
+-    wire [12:0] bm_b_flop_addr = bm_hit_a            ? hf1_r
+-                               : (state == S_EXT)    ? ext_faddr
+-                               : (s1_en && htab_byp) ? htab_byp_data[49:37]
+-                               : raddr;
+-    wire [12:0] bm_raddr_b = bm_b_from_ram ? htab_q[49:37] : bm_b_flop_addr;
++    // r0 (htab-pipe): the bm_b speculative address is the last ERAM-clk2q ->
++    // address path in the scan loop.  It is now taken from bm_b_spec_q, a
++    // fabric flop loaded one cycle earlier from the htab read data (or from the
++    // same-address write-first bypass data, also a flop), so the RAM output
++    // register only ever drives a plain flop.  Every other source of this port
++    // address is a flop as well (hf1_r / ext_faddr / raddr).  Priority is
++    // unchanged: s1 entry speculation > S_EXT reference byte > window read.
++    wire [12:0] bm_raddr_b = s1_en                ? bm_b_spec_q
++                           : (state == S_EXT)     ? ext_faddr
++                           :                        raddr;
++    always @(posedge clk) begin
++        if (s1_en)
++            bm_b_spec_q <= htab_byp ? htab_byp_data[49:37] : htab_q[49:37];
++    end
+     always @(posedge clk) begin
+         bm_a_rd  <= bm_a[{enc_bank, bm_raddr_a}];
+         bm_b_rd  <= bm_b[{enc_bank, bm_raddr_b}];
+@@ -1429,16 +1448,18 @@ module a1_deflate_core (
+                         end else begin
+                             raddr     <= p3_r;
+                             faddr     <= hf_r;
+-                            // bm[pos+3] is already registered (x1_r) and the
+-                            // hit-cycle bm_b read (hf_r = ref+3) returns its
+-                            // reference byte, so the first compare is available
+-                            // on the hit cycle.  The ports are then shifted one
+-                            // byte ahead (pos+4 / ref+4) so every later compare
+-                            // is registered one cycle before it is consumed.
++                            // r0 (htab-pipe): the speculative bm_b read issued
++                            // one cycle before this hit (address bm_b_spec_q =
++                            // ref+3) returns bm[ref+3] on the next cycle, so the
++                            // first extension compare is cq_r = bm[pos+3] versus
++                            // that registered byte.  S_EXT waits one cycle for it,
++                            // then the ports run one byte ahead (pos+4 / ref+4) as
++                            // before: one registered compare per cycle, one
++                            // matching byte per cycle.
+                             cq_r      <= x1_r;
+                             ext_first <= 1'b1;
+-                            ext_raddr <= p3_r + 13'd2;
+-                            ext_faddr <= hf_r + 13'd2;
++                            ext_raddr <= p3_r + 13'd1;
++                            ext_faddr <= hf1_r;
+                             ext_rem   <= ext_rem_new;
+                             ext_zero_r<= (ext_rem_new == 13'd0);
+                             len_cap_r <= 1'b0;
+@@ -1468,28 +1489,35 @@ module a1_deflate_core (
+                 end
+ 
+                 S_EXT: begin
+-                    // The forward/reference byte pair for extension byte k was
+-                    // compared during cycle k-1 and lives in ext_mis_r, so the
+-                    // state enable is driven by a flop, not by ERAM clk2q.
+-                    ext_first <= 1'b0;
+-                    // ext_raddr/ext_faddr run one byte ahead of the compare
+-                    // (pos+4+k / ref+4+k); the flag itself is exact: registered
+-                    // at cycle k-1, consumed at cycle k, same cycle count as
+-                    // the combinational compare it replaces.
+-                    // r2: the loop-stop flags track ext_rem/len_r on every
+-                    // S_EXT cycle, independent of the byte compare.
+-                    ext_zero_r <= (ext_rem == 13'd1);
+-                    len_cap_r  <= (len_r == 9'd256);
+-                    if (ext_mis_r) begin
+-                        state <= S_MLEN;
+-                    end else if (ext_zero_r || len_cap_r) begin
+-                        len_r <= len_r + 9'd1;
+-                        state <= S_MLEN;
+-                    end else begin
+-                        len_r     <= len_r + 9'd1;
+-                        ext_rem   <= ext_rem - 13'd1;
++                    // r0 (htab-pipe): the first S_EXT cycle only waits for the
++                    // registered first-extension compare (cq_r vs the bm_b data
++                    // of the speculative read issued on the hit cycle).  The
++                    // addresses loaded on the hit cycle already point at the
++                    // k=1 pair and the loop-stop flags keep the values loaded by
++                    // the hit, so the decision sequence (and therefore len_r and
++                    // every emitted byte) is identical, shifted by one cycle.
++                    if (ext_first) begin
++                        ext_first <= 1'b0;
++                        // The pair loaded on the hit cycle is consumed by the
++                        // first registered compare; advance the ports to the
++                        // k=1 pair now so the decision cycles below see exactly
++                        // the same one-byte-per-cycle stream as before.
+                         ext_raddr <= ext_raddr + 13'd1;
+                         ext_faddr <= ext_faddr + 13'd1;
++                    end else begin
++                        ext_zero_r <= (ext_rem == 13'd1);
++                        len_cap_r  <= (len_r == 9'd256);
++                        if (ext_mis_r) begin
++                            state <= S_MLEN;
++                        end else if (ext_zero_r || len_cap_r) begin
++                            len_r <= len_r + 9'd1;
++                            state <= S_MLEN;
++                        end else begin
++                            len_r     <= len_r + 9'd1;
++                            ext_rem   <= ext_rem - 13'd1;
++                            ext_raddr <= ext_raddr + 13'd1;
++                            ext_faddr <= ext_faddr + 13'd1;
++                        end
+                     end
+                 end
+ 

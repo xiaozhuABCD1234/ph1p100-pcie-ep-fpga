@@ -1,0 +1,127 @@
+{
+  "case": "core",
+  "mutation": "none",
+  "sim_dir": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\workflow\\runs\\20261017-011744-rk-fpga-align\\algo\\g1\\msim\\core-20261017T184416_dbg14",
+  "stamp": "20261017T184416_dbg14",
+  "sources": {
+    "algo_rowwin_reader.v": {
+      "origin": "fpga\\csi2\\src\\img\\algo_rowwin_reader.v",
+      "sha256": "bbd3f9d3e2e231b7ead693df0b3b74440d7baafc352e2f243fa887b6ac666da2"
+    },
+    "algo_rowwin3.v": {
+      "origin": "fpga\\csi2\\src\\img\\algo_rowwin3.v",
+      "sha256": "2bf29a0f58b7c9ecb5e30fe9b985cec4f2dedde0e40476d6018256fbdd0e0418"
+    },
+    "bayer_raw10_demosaic4.v": {
+      "origin": "fpga\\csi2\\src\\img\\bayer_raw10_demosaic4.v",
+      "sha256": "04bab04252740a79fc42e2c83785247a357cc2e8c79974882e2538d8c2fe0fdb"
+    },
+    "gray8_gaussian3x3_stream.v": {
+      "origin": "fpga\\csi2\\src\\img\\gray8_gaussian3x3_stream.v",
+      "sha256": "b8e9f996a1f4adc19741d4a2cd34a43c828333a417a6e5a84f4f3e603d09383a"
+    },
+    "gray8_he_cdfmin_frame.v": {
+      "origin": "fpga\\csi2\\src\\img\\gray8_he_cdfmin_frame.v",
+      "sha256": "9cbdc1b99055e8e1bd246921887d8d24b07191478cbbed3e774cc9e1de6d23c4"
+    },
+    "rgb8_gray_stream.v": {
+      "origin": "fpga\\csi2\\src\\img\\rgb8_gray_stream.v",
+      "sha256": "e16095a0e71528008b269653f3e15d38c1d88b479abe49d2eb44f694421d8c81"
+    },
+    "img_algo_parallel_top.v": {
+      "origin": "fpga\\csi2\\src\\img\\img_algo_parallel_top.v",
+      "sha256": "6d077e042517313f555b698f4ccb96e7b533b19bc84baedde7c1479c3c9a09d7"
+    },
+    "tb_img_algo_core.sv": {
+      "origin": "tools\\algo\\tb\\tb_img_algo_core.sv",
+      "sha256": "e9e03b6b4a7d52c884eb4059cc67ad2d6d1152d1d14f0423a592328afdf10d21"
+    },
+    "algo_core.vec": {
+      "origin": "workflow\\runs\\20261017-011744-rk-fpga-align\\algo\\vectors\\algo_core.vec",
+      "sha256": "c908c9912b697a2697d45eb821d22504a71c48558ad13601f92f144ac80dc8af"
+    },
+    "algo_core.lut.hex": {
+      "origin": "workflow\\runs\\20261017-011744-rk-fpga-align\\algo\\vectors\\algo_core.lut.hex",
+      "sha256": "ca09b37712996c7fcac74d1bbb626addfb040470d0a09359bdb881aaab4c7f51"
+    }
+  },
+  "mutations": [],
+  "commands": [
+    {
+      "cmd": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlib.exe",
+        "work"
+      ],
+      "cwd": "S:\\workflow\\runs\\20261017-011744-rk-fpga-align\\algo\\g1\\msim\\core-20261017T184416_dbg14",
+      "exit": 0,
+      "seconds": 0.2
+    },
+    {
+      "cmd": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlog.exe",
+        "-sv",
+        "algo_rowwin_reader.v",
+        "algo_rowwin3.v",
+        "bayer_raw10_demosaic4.v",
+        "gray8_gaussian3x3_stream.v",
+        "gray8_he_cdfmin_frame.v",
+        "rgb8_gray_stream.v",
+        "img_algo_parallel_top.v",
+        "tb_img_algo_core.sv"
+      ],
+      "cwd": "S:\\workflow\\runs\\20261017-011744-rk-fpga-align\\algo\\g1\\msim\\core-20261017T184416_dbg14",
+      "exit": 2,
+      "seconds": 0.4
+    },
+    {
+      "cmd": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vsim.exe",
+        "-c",
+        "-l",
+        "vsim.log",
+        "-do",
+        "run.do",
+        "work.tb_img_algo_core",
+        "+VECTORS=algo_core.vec"
+      ],
+      "cwd": "S:\\workflow\\runs\\20261017-011744-rk-fpga-align\\algo\\g1\\msim\\core-20261017T184416_dbg14",
+      "exit": 12,
+      "seconds": 2.9
+    }
+  ],
+  "logs": {
+    "vlib": {
+      "exit": 0,
+      "seconds": 0.2,
+      "log": "vlib.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "vlog": {
+      "exit": 2,
+      "seconds": 0.4,
+      "log": "vlog.log",
+      "log_sha256": "0e53c5d87baadc75d7e201d733bbcc4b09b24fc893cf3a2c164a56df7a16fe0a"
+    },
+    "vsim": {
+      "exit": 12,
+      "seconds": 2.9,
+      "log": "vsim.log",
+      "log_sha256": "64e0541870fcc33180a95467ddbdb92bfb70c8a2aeffb84b2a250fb5eaf483db"
+    }
+  },
+  "simulator_errors": true,
+  "pass_marker": false,
+  "fail_marker": false,
+  "mismatch_sample": [],
+  "coverage": {},
+  "lut_check": {
+    "match": false,
+    "entries": 0,
+    "note": "no dump"
+  },
+  "verdict": "FAIL",
+  "limitations": [
+    "RTL simulation only; no synthesis, timing, resource or board evidence in this runner",
+    "Finite directed coverage, not exhaustive or formal"
+  ]
+}

@@ -1,0 +1,184 @@
+{
+  "task": "T10.ss-g0-prod-content",
+  "run": "r0",
+  "created": "2026-10-26",
+  "geometry": {
+    "width": 1920,
+    "height": 1080,
+    "pixels": 2073600,
+    "stride_bytes": 2400,
+    "groups_per_row": 480,
+    "groups_per_frame": 518400,
+    "bytes_per_frame": 2592000,
+    "bytes_per_px": 1.25
+  },
+  "packing": {
+    "rule": "5 B / 4 px: b0..b3 = p0..p3[9:2]; b4 = {p3[1:0],p2[1:0],p1[1:0],p0[1:0]}",
+    "group_bit_order": "40-bit group = {b4,b3,b2,b1,b0}; bytes on the wire are b0,b1,b2,b3,b4 (b0 first)",
+    "hex_line": "one 10-digit hex group per line, 518400 lines, leftmost digit = b4 (frozen P4 raw40 convention)",
+    "reference": "fpga-design-guide.md section 1; P4 prep_content.py roundtrip"
+  },
+  "cfa": {
+    "pattern": "RGGB",
+    "phase": "row0/col0 = R",
+    "note": "description only; the DUT predicts same-colour neighbours and is not modified"
+  },
+  "bit_depth": {
+    "bits": 10,
+    "range": [
+      0,
+      1023
+    ],
+    "saturation": "clip to 1023, no dither",
+    "encode": "code = round(sRGB8 * 1023 / 255)  (display-referred, sRGB transfer kept as declared gamma; no de-gamma/linearisation). Declared choice: keeping the sRGB-encoded value preserves full spatial detail and contrast (higher entropy, harder for the codec) instead of crushing mid-tones into low linear codes."
+  },
+  "labels_rule": "every derived class carries proxy_not_natural_raw + not_sensor_raw + proxy_not_worst; none of them is a sensor RAW or a worst-case proof",
+  "frames": {
+    "count": 4,
+    "repeat": "same derived frame driven 4 times (steady-state window)",
+    "note": "no temporal variation; a real 30 fps stream would differ per frame, which this proxy does not model"
+  },
+  "content": {
+    "N": {
+      "id": "N",
+      "labels": [
+        "natural_scene_image",
+        "proxy_not_natural_raw",
+        "not_sensor_raw",
+        "proxy_not_worst",
+        "display_referred"
+      ],
+      "source": {
+        "path": "C:\\Windows\\Web\\Screen\\img102.jpg",
+        "bytes": 1389605,
+        "sha256": "0e3c9c1712f8b20d21130714d0a6659ee83821386caad5fbb2af7b930d7da512",
+        "description": "dusk lake / snow slope treeline / sun / water reflection (Windows sample asset)",
+        "provenance": "Microsoft Windows local sample asset under C:/Windows/Web/Screen (read-only, copied parameters only into this run)"
+      },
+      "derive": {
+        "source_size": [
+          6400,
+          4000
+        ],
+        "source_mode": "RGB",
+        "crop": {
+          "box": [
+            0,
+            200,
+            6400,
+            3800
+          ],
+          "size": [
+            6400,
+            3600
+          ],
+          "rule": "centre crop to 16:9"
+        },
+        "resize": {
+          "to": [
+            1920,
+            1080
+          ],
+          "filter": "PIL LANCZOS"
+        },
+        "cfa": "RGGB",
+        "bits": 10,
+        "quantisation": "round(sRGB8*1023/255), clip 1023, no dither"
+      },
+      "raw_bin": {
+        "path": "content/raw_n.bin",
+        "bytes": 2592000,
+        "sha256": "18a12ecb1af0acb9578b8323d3d7124c52a836763060bf09da13cae00e9f2504",
+        "crc32": "da799650"
+      },
+      "raw40_hex": {
+        "path": "content/raw40_n.hex",
+        "bytes": 5702400,
+        "lines": 518400,
+        "sha256": "e44fe7bc89aaa3ada2422a41fcfb8e283d5f66cdffda29b2caf4da10d2cd7b53"
+      },
+      "frames": 4,
+      "frame_sha256": [
+        "18a12ecb1af0acb9578b8323d3d7124c52a836763060bf09da13cae00e9f2504",
+        "18a12ecb1af0acb9578b8323d3d7124c52a836763060bf09da13cae00e9f2504",
+        "18a12ecb1af0acb9578b8323d3d7124c52a836763060bf09da13cae00e9f2504",
+        "18a12ecb1af0acb9578b8323d3d7124c52a836763060bf09da13cae00e9f2504"
+      ],
+      "stats": {
+        "min": 0,
+        "max": 975,
+        "mean": 318.092,
+        "std": 183.009,
+        "dark_frac_lt_5pct": 0.028642,
+        "dark_frac_lt_10pct": 0.145525,
+        "sat_frac_eq_1023": 0.0,
+        "nonzero_frac": 0.999994
+      },
+      "noise_injection": "none (deterministic derivation from the image; a real sensor frame would carry shot/read noise, so this proxy is NOT a low-light worst-case proof)"
+    },
+    "L": {
+      "id": "L",
+      "labels": [
+        "low_light_natural_scene",
+        "proxy_not_natural_raw",
+        "not_sensor_raw",
+        "proxy_not_worst",
+        "display_referred"
+      ],
+      "source": {
+        "path": "C:\\Windows\\Web\\Screen\\img105.jpg",
+        "bytes": 976946,
+        "sha256": "bf83916bf3b3d76cb8752aa745070335532221fddd4622daba8687316c587ec3",
+        "description": "night long-exposure star trails over pier + lake (Windows sample asset)",
+        "provenance": "Microsoft Windows local sample asset under C:/Windows/Web/Screen (read-only, copied parameters only into this run)"
+      },
+      "derive": {
+        "source_size": [
+          1920,
+          1080
+        ],
+        "source_mode": "RGB",
+        "crop": null,
+        "resize": null,
+        "note": "native 1920x1080, no crop and no rescale",
+        "cfa": "RGGB",
+        "bits": 10,
+        "quantisation": "round(sRGB8*1023/255), clip 1023, no dither"
+      },
+      "raw_bin": {
+        "path": "content/raw_l.bin",
+        "bytes": 2592000,
+        "sha256": "8c9c02b9121ddeaf3600b9b8c0ab726c38bc2416866bc85948f3c746c9383720",
+        "crc32": "2a321e2a"
+      },
+      "raw40_hex": {
+        "path": "content/raw40_l.hex",
+        "bytes": 5702400,
+        "lines": 518400,
+        "sha256": "e7e3c21cd2e4cc18e115b4cf18692596450cfcfc7605297046e3840c67deefa2"
+      },
+      "frames": 4,
+      "frame_sha256": [
+        "8c9c02b9121ddeaf3600b9b8c0ab726c38bc2416866bc85948f3c746c9383720",
+        "8c9c02b9121ddeaf3600b9b8c0ab726c38bc2416866bc85948f3c746c9383720",
+        "8c9c02b9121ddeaf3600b9b8c0ab726c38bc2416866bc85948f3c746c9383720",
+        "8c9c02b9121ddeaf3600b9b8c0ab726c38bc2416866bc85948f3c746c9383720"
+      ],
+      "stats": {
+        "min": 0,
+        "max": 1023,
+        "mean": 268.565,
+        "std": 197.233,
+        "dark_frac_lt_5pct": 0.057528,
+        "dark_frac_lt_10pct": 0.190815,
+        "sat_frac_eq_1023": 0.002941,
+        "nonzero_frac": 0.997179
+      },
+      "noise_injection": "none (deterministic derivation from the image; a real sensor frame would carry shot/read noise, so this proxy is NOT a low-light worst-case proof)"
+    }
+  },
+  "raw_band_bytes": {
+    "bytes": 2594706,
+    "note": "2592000 raw + 2700 (540 groups x 5) + 6 + 44 header; per input-index erratum (P4 wrote 2594750)"
+  }
+}

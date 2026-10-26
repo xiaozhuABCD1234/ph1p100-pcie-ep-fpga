@@ -1,0 +1,92 @@
+{
+  "task_id": "T11.rk-align-base",
+  "task_ids": ["T11.rk-align-base"],
+  "round": 2,
+  "role": "developer",
+  "status": "ready_for_test",
+  "batch_size": 1,
+  "actual_repair_rounds": 2,
+  "fixed_in_this_round": [
+    "F1-r1（functional FAIL 驱动）：handbook §2 的无范围绝对断言『既有 G1 证据的 TB 命令全部带 -Defines MIPI_PHY_SIM_STUB』改为分范围准确表述——本 run/raw G1 22/22 均带；T07 backend G1 仅 tb_csi_checked 各轮带（5/31），其余 26 条未带；明确『不是项目级所有 TB 必带的要求』（本包独立统计复现：raw 递归 22/22；backend 递归 31→5/26）",
+    "举一反三（绝对断言/指代全量复核，6 处）：survey §0『唯一结构性靶点』→『本次勘察发现的唯一时序/资源类靶点』；S1-1 登记指代 →『T11.rk-align-raw-r0-engineering.md §6 观察第 4 条』；S1-2『当前 T07 唯一有效清单』→『T07 r3 最终清单』；survey §3『全树实例化扫描』→『集成树 fpga/csi2/pcie_integration/（排除 peer-ref-2a4b253/）』；survey §6『rc_side 未进本工程』→『未进 TD 工程清单（00_all.tcl）』；handbook『唯一可跑入口』→『CLI 脚本唯一可跑入口』",
+    "engineering 观察 1 / system 观察 2：manifest round 字段 0→2（同步 frozen_at/notes）",
+    "functional 观察 / engineering 观察 3：r1 证据目录 3 个 TB 输出 .bin 入清单；ModelSim work/（6 个库文件）在清单 logs_note 登记为『工具运行库、未入清单』",
+    "round2 未跑仿真/TD；受保护树 0 写入；env_check.ps1/environment-inventory.json/board-env-checklist.md/env/logs/env/verify 内容未变"
+  ],
+  "artifact_paths": [
+    "tools/env/env_check.ps1",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/environment-inventory.json",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/environment-handbook.md",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/board-env-checklist.md",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/optimization-survey.md",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/input-snapshot.json",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/change-report.md",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/logs/",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/verify/",
+    "workflow/runs/20261017-011744-rk-fpga-align/test-reports/T11.rk-align-base-r1-doc-example-evidence/"
+  ],
+  "manifest_path": "workflow/runs/20261017-011744-rk-fpga-align/env/artifacts-manifest.json",
+  "manifest_sha256": "FF079FFAC43BC7007DA9C3BF8D92CDD6ECF5749C46EBE44A4BC091B6A38FC069",
+  "manifest_selfcheck": "26 entries / 0 mismatches（本包自检：SHA+size 全对）",
+  "test_input_paths": [
+    "tools/env/env_check.ps1",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/environment-inventory.json",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/environment-handbook.md",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/board-env-checklist.md",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/optimization-survey.md",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/input-snapshot.json",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/change-report.md",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/logs/env_check_20261017-151126.json",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/logs/env_check_20261017-151126.log",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/logs/td_probe_stdout.log",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/verify/gen_selfcheck.txt",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/verify/crc16_upd4.regen.v",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/verify/crc32_upd4.regen.v",
+    "workflow/runs/20261017-011744-rk-fpga-align/test-reports/T11.rk-align-base-r1-doc-example-evidence/msim_writer_demo/commands.log",
+    "workflow/runs/20261017-011744-rk-fpga-align/test-reports/T11.rk-align-base-r1-doc-example-evidence/msim_writer_demo/vlog.log",
+    "workflow/runs/20261017-011744-rk-fpga-align/test-reports/T11.rk-align-base-r1-doc-example-evidence/msim_writer_demo/vsim.log",
+    "workflow/runs/20261017-011744-rk-fpga-align/test-reports/T11.rk-align-base-r1-doc-example-evidence/msim_writer_demo/t11_writer_1080p_header.bin",
+    "workflow/runs/20261017-011744-rk-fpga-align/test-reports/T11.rk-align-base-r1-doc-example-evidence/msim_writer_demo/t11_writer_1080p_tail.bin",
+    "workflow/runs/20261017-011744-rk-fpga-align/test-reports/T11.rk-align-base-r1-doc-example-evidence/msim_writer_demo/t11_writer_small_content.bin",
+    "（只读复核用）fpga/csi2/pcie_integration/rtl/checked/csi_rx_packet_integrity.v",
+    "（只读复核用）fpga/csi2/pcie_integration/rtl/ep_side/ddr/cam_r10f_writer.v",
+    "（只读复核用）fpga/csi2/pcie_integration/rtl/ep_side/ph1p_pcie_ep_top.v",
+    "（只读复核用）fpga/csi2/pcie_integration/rtl/ep_side/cam/mipi_csi2_rx_ph1p_checked.v",
+    "（只读复核用）workflow/runs/20261017-011744-rk-fpga-align/raw/g2/README.md",
+    "（只读复核用）workflow/runs/20261017-011744-rk-fpga-align/backend/g2/README.md",
+    "（只读复核用）workflow/runs/20261017-011744-rk-fpga-align/backend/g1/README.md",
+    "（只读复核用）workflow/runs/20261017-011744-rk-fpga-align/backend/g1/crc16_upd4.generated.v",
+    "（只读复核用）workflow/runs/20261017-011744-rk-fpga-align/raw/candidate/prj/ph1p_pcie_integration_Runs/phy_1/final_timing.rpt",
+    "（只读复核用）workflow/runs/20261017-011744-rk-fpga-align/raw/candidate-manifest.json",
+    "（只读复核用）workflow/runs/20261017-011744-rk-fpga-align/backend/candidate-manifest.json",
+    "（只读复核用）workflow/runs/20261017-011744-rk-fpga-align/test-reports/T11.rk-align-raw-r0-engineering.md"
+  ],
+  "lessons_path": "workflow/runs/20261017-011744-rk-fpga-align/env/lessons-learned.md",
+  "blocked": [],
+  "retest": {
+    "required_dimensions": ["functional"],
+    "input_status": "changed",
+    "input_changes": [
+      "env/environment-handbook.md：§2 MIPI_PHY_SIM_STUB 断言加范围（本 run/raw G1 22/22；T07 backend 5/31）+ 修订说明；§0/§3『唯一入口』→『CLI 脚本唯一…』",
+      "env/optimization-survey.md：round2 修订说明 + 6 处绝对断言/指代修正（§0 唯一、S1-1 登记指代、S1-2 清单措辞、§3 全树范围、§6 rc_side 范围、§6 round2 边界）",
+      "env/change-report.md：新增 §R2 修复记录；env/input-snapshot.json：新增 round2_reads（6 条只读引用）+ dev-plan 复查；env/lessons-learned.md：新增 L12-L14",
+      "env/artifacts-manifest.json 重冻：round=2、26 条（新增 3 条 TB 输出 .bin；logs_note 登记 work/）",
+      "内容未变：env_check.ps1（72C85986…）、environment-inventory.json（5605550E…）、board-env-checklist.md（E0CD478A…）、env/logs/、env/verify/、doc-example 证据 6 件（SHA 同）",
+      "受保护树（fpga/csi2/pcie_integration/、tools/pcie_integration/、raw/、backend/）round2 零写入"
+    ],
+    "reuse_decision_paths": [
+      "functional r1 报告（FAIL）：F1-r1 修复后必复测（functional）——按修正后的范围表述核对 22/22 与 5/31 两组统计，并复核 6 处措辞/指代",
+      "engineering r1 报告（PASS，绑定 C9431175…）：复用判断归 engineering 测试者；round2 未改任何工程输入（env_check.ps1/清单/受保护树零变化）",
+      "system r1 报告（PASS，绑定 C9431175…）：system 判据对象中 handbook 被改（§2 断言加范围；§0/§3 措辞），SYS-D1/D2 相关示例与 OutDir 扫描结论不受影响；是否复用由其测试者按新 manifest 出具"
+    ],
+    "blocked_dimension": null
+  },
+  "notices": [
+    "本包不操作硬件：不下载位流、不写 Flash、不发外部消息；板测程序文件（board-env-checklist.md）不是板测结论",
+    "G2—G5 事前不适用：无生产构建、无候选位流、不操作硬件、不发布",
+    "机器上既有 R: subst 遗留映射（T07 functional r2 neg-shadow）未动，属用户/后续处置",
+    "round2 未运行任何仿真/TD；r1 的文档示例验证证据（test-reports/T11.rk-align-base-r1-doc-example-evidence/）SHA 未变，继续有效",
+    "传播提示（供规划者，非本包文件）：同一『全库检索无 +5.058 来源』绝对句亦出现在 test-reports/T11.rk-align-raw-r0-engineering.md §6 与 verify_supplement.txt（T11.rk-align-raw 产物，r0 已收束），是否更正由规划者/该任务后续处置",
+    "env/logs/ 保留首轮/次轮日志与 TD 自身 td_*.log（失败留痕，未删）；round1/round2 未向 env/logs 追加"
+  ]
+}

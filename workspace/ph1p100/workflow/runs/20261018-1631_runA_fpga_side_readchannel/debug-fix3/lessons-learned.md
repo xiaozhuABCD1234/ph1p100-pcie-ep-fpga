@@ -1,0 +1,8 @@
+# lessons-learned — T11.runB-debug-rtl r3 (issue-02 reset domain)
+
+1. Root cause class: a MARK_DEBUG snapshot block placed under the PCIe link-gated reset (tl_rst_user, released only at pl_link_up && LTSSM==L0) reads all-zero on a hostless board, even for constant words. Signal: every snapshot word (including constants) is zero while Triggered=1.
+2. Fix pattern: keep the snapshot clock (tl_clk_user, same net as the CWC probe clock) but decouple ONLY the reset - dbg_por_rst = board POR or PLL-unlocked, synchronized async-assert/sync-release in-domain; gate everything with the existing debug-only parameter so production stays inert and the generate block disappears when DBG=0.
+3. Debug-only wiring is safe when it adds a port/wire that has no consumer in the production build (generate disabled) - verify with 8 TB regression and a production-equivalence TB instance.
+4. TB must cover the failure mode explicitly: hold rst=1 (no link), release only dbg_por_rst, then read the marked regs hierarchically (constants non-zero, CTRL=0x21, counters movable by driving sources); then release rst for the full existing test set.
+5. The TD CWC clock field resolves to u_top/u_uart/u_uart_cdc/core_clk, which the top wires to tl_clk_user - same physical net as the snapshot clock (H2 satisfied; document, do not "fix").
+6. Budget: 692.6 s build inside a 30-min hard wrapper; one build only (budget), G2 unchanged; git commit still permission-denied -> freeze by hashes with commit_status=BLOCKED_PENDING.

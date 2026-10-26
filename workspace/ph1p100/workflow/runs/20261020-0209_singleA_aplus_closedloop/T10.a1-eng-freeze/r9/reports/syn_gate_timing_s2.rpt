@@ -1,0 +1,1995 @@
+Created by          : Tang Dynasty Release_2026.2
+                    : Copyright (c) 2012-2026 Anlogic Inc.
+Generated           : Wed Oct 21 19:31:11 2026
+
+Top Model           : a1_eng_top
+Device              : PH1P100SBG484
+Speed               : 3
+STA coverage        : 99.74%
+Constraint File     : X:/a1_small_top.sdc;
+Confidence          : Synthesized
+Check Corner        : Both (Slow and Fast)
+CRPR Enabled        : Yes
+Report Scheme       : 10 end point(s) per path group, 1 path(s) per end point
+
+
+Check Status
+-------------
+
+Corner   | Max      Min     
+------------------------------------
+Slow     | yes      yes     
+Fast     | yes      yes     
+
+
+Timing Status
+--------------------
+	SWNS: -0.434ns, STNS: -45.639ns
+	HWNS: 0.000ns, HTNS: 0.000ns
+	Period Check WNS: 2.533ns
+
+
+Clock Summary
+--------------------
+
+       Clock-Id:       C-Freq       Fanout   Clock-Name
+--------------------------------------------------------------------------------
+           clk0:      187.512        78297   clk
+--------------------------------------------------------------------------------
+
+       Name            Type         Rise(ns)   Fall(ns)          C-Period(ns)     C-Freq(MHz)          R-Period(ns)     R-Freq(MHz)         SWNS(ns)   STNS(ns)         HWNS(ns)   HTNS(ns)         Skew(ns)           Fanout        Max-Level        CC-From    CC-To
+       clk0           local            0.000      2.667                 5.333         187.512                 5.767         173.400           -0.434    -45.639            0.000      0.000            0.000            78297                8             no       no
+
+Notes
+----------
+C-Period  :  constraint period
+C-Freq    :  constraint freq
+R-Period  :  report min period
+R-Freq    :  report fmax
+CC-From   :  has path(s) from cross-domain clock
+CC-To     :  has path(s) to cross-domain clock
+
+
+*   Clock R-Period data only takes intra-clock timing. SWNS/STNS/HWNS/HTNS take both intra-clock and inter-clock timing.
+*   If there is mismatch between R-Period and SWNS, check inter-clock timing of this clock as capture clock.
+*   SWNS/STNS/HWNS/HTNS of timing exception (SMCP/SMD) only counted in global Timing Status, not counted in Clock Summary.
+
+Intra clock domain timing
+--------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+Path Group     :     clk -> clk
+Type           :     Self
+From Clock     :     clk
+To Clock       :     clk
+Min Period     :     5.767ns
+Fmax           :     173.400MHz
+
+Statistics:
+Max            : SWNS     -0.434ns, STNS    -45.639ns,       144 Viol Endpoints,    147235 Total Endpoints
+Min            : HWNS      0.000ns, HTNS      0.000ns,         0 Viol Endpoints,         0 Total Endpoints
+----------------------------------------------------------------------------------------------------
+
+Max Paths
+----------------------------------------------------------------------------------------------------
+Slack               : -0.434ns
+Begin Point         : u_dut/u_core/pos_reg[2].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/raddr_reg[1].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.703ns (cell 2.603ns (45%), net 3.100ns (55%))
+Clock Skew          : 0.000ns
+Logic Level         : 8 ( LUT6=2  LUT3=2  ADDER=2  LUT5=1  LUT4=1 )
+Max Fanout          : 53
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=69153)                          0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/pos_reg[2].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_core/pos_reg[2].q
+net (fo=53)                             0.547          0.623          net: u_dut/u_core/pos[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(96)
+                                                                      pin: u_dut/u_core/htab_p3[12]_syn_30.b
+LUT3                                    0.273    f     0.896       1  pin: u_dut/u_core/htab_p3[12]_syn_30.o
+net (fo=6)                              0.404          1.300          net: u_dut/u_core/htab_p3[12]_syn_31,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(400)
+                                                                      pin: u_dut/u_core/htab_p3[12]_syn_32.a
+LUT5                                    0.273    f     1.573       2  pin: u_dut/u_core/htab_p3[12]_syn_32.o
+net (fo=1)                              0.304          1.877          net: u_dut/u_core/htab_p3[12]_syn_33,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(400)
+                                                                      pin: u_dut/u_core/htab_p3[12]_syn_34.a
+LUT3                                    0.273    f     2.150       3  pin: u_dut/u_core/htab_p3[12]_syn_34.o
+net (fo=20)                             0.471          2.621          net: u_dut/u_core/htab_p3[12],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(400)
+                                                                      pin: u_dut/u_core/lt32_syn_68.ib
+ADDER                                   0.544    f     3.165       4  pin: u_dut/u_core/lt32_syn_68.fco
+net (fo=1)                              0.000          3.165          net: u_dut/u_core/lt32_syn_57,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1081)
+                                                                      pin: u_dut/u_core/lt32_syn_69.fci
+ADDER                                   0.220    r     3.385       5  pin: u_dut/u_core/lt32_syn_69.ofb
+net (fo=17)                             0.462          3.847          net: u_dut/u_core/cq_r_b7_n,  NOFILE(0)
+                                                                      pin: u_dut/u_core/raddr_b2[1]_syn_238.a
+LUT4                                    0.273    f     4.120       6  pin: u_dut/u_core/raddr_b2[1]_syn_238.o
+net (fo=1)                              0.304          4.424          net: u_dut/u_core/raddr_b2[1]_syn_239,  NOFILE(0)
+                                                                      pin: u_dut/u_core/raddr_b2[1]_syn_240.b
+LUT6                                    0.315    f     4.739       7  pin: u_dut/u_core/raddr_b2[1]_syn_240.o
+net (fo=1)                              0.304          5.043          net: u_dut/u_core/raddr_b2[1]_syn_9,  NOFILE(0)
+                                                                      pin: u_dut/u_core/raddr_b2[1]_syn_16.b
+LUT6                                    0.315    f     5.358       8  pin: u_dut/u_core/raddr_b2[1]_syn_16.o
+net (fo=1)                              0.304          5.662          net: u_dut/u_core/raddr_b2[1],  NOFILE(0)
+                                                                      pin: u_dut/u_core/raddr_reg[1].d
+SEQ (reg)                               0.041    f     5.703               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.703               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=69153)                          0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/raddr_reg[1].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.434               
+
+Slack               : -0.383ns
+Begin Point         : u_dut/u_core/pos_reg[2].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/raddr_reg[0].ce (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.649ns (cell 2.411ns (42%), net 3.238ns (58%))
+Clock Skew          : 0.000ns
+Logic Level         : 7 ( LUT6=4  ADDER=2  LUT2=1 )
+Max Fanout          : 1125
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=69153)                          0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/pos_reg[2].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_core/pos_reg[2].q
+net (fo=53)                             0.547          0.623          net: u_dut/u_core/pos[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(96)
+                                                                      pin: u_dut/u_core/raddr_b2[12]_syn_152.b
+LUT2                                    0.273    f     0.896       1  pin: u_dut/u_core/raddr_b2[12]_syn_152.o
+net (fo=6)                              0.404          1.300          net: u_dut/u_core/raddr_b2[12]_syn_153,  NOFILE(0)
+                                                                      pin: u_dut/u_core/raddr_b2[7]_syn_95.a
+LUT6                                    0.315    f     1.615       2  pin: u_dut/u_core/raddr_b2[7]_syn_95.o
+net (fo=2)                              0.342          1.957          net: u_dut/u_core/hash_ok_b[6],  NOFILE(0)
+                                                                      pin: u_dut/u_core/lt4_syn_65.id
+ADDER                                   0.426    r     2.383       3  pin: u_dut/u_core/lt4_syn_65.fco
+net (fo=1)                              0.000          2.383          net: u_dut/u_core/lt4_syn_52,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_66.fci
+ADDER                                   0.052    r     2.435          pin: u_dut/u_core/lt4_syn_66.fco
+net (fo=1)                              0.000          2.435          net: u_dut/u_core/lt4_syn_54,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_67.fci
+ADDER                                   0.052    r     2.487          pin: u_dut/u_core/lt4_syn_67.fco
+net (fo=1)                              0.000          2.487          net: u_dut/u_core/lt4_syn_56,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_68.fci
+ADDER                                   0.052    r     2.539          pin: u_dut/u_core/lt4_syn_68.fco
+net (fo=1)                              0.000          2.539          net: u_dut/u_core/lt4_syn_57,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_69.fci
+ADDER                                   0.220    r     2.759       4  pin: u_dut/u_core/lt4_syn_69.ofb
+net (fo=1125)                           0.697          3.456          net: u_dut/u_core/hash_ok,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/sel0_syn_26.a
+LUT6                                    0.315    f     3.771       5  pin: u_dut/u_core/sel0_syn_26.o
+net (fo=16)                             0.459          4.230          net: u_dut/u_core/sel0_syn_27,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(499)
+                                                                      pin: u_dut/u_core/mux398_syn_33.a
+LUT6                                    0.315    f     4.545       6  pin: u_dut/u_core/mux398_syn_33.o
+net (fo=2)                              0.342          4.887          net: u_dut/u_core/mux285_syn_2562,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(989)
+                                                                      pin: u_dut/u_core/mux398_syn_36.c
+LUT6                                    0.315    f     5.202       7  pin: u_dut/u_core/mux398_syn_36.o
+net (fo=13)                             0.447          5.649          net: u_dut/u_core/mux398_syn_2[0],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(709)
+                                                                      pin: u_dut/u_core/raddr_reg[0].ce
+SEQ (reg)                               0.000    f     5.649               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.649               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=69153)                          0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/raddr_reg[0].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.067          5.266               
+clock uncertainty                       0.000          5.266               
+clock pessimism                         0.000          5.266               
+--------------------------------------------------------------------  ---------------
+Required                                               5.266               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.383               
+
+Slack               : -0.383ns
+Begin Point         : u_dut/u_core/pos_reg[2].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/raddr_reg[1].ce (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.649ns (cell 2.411ns (42%), net 3.238ns (58%))
+Clock Skew          : 0.000ns
+Logic Level         : 7 ( LUT6=4  ADDER=2  LUT2=1 )
+Max Fanout          : 1125
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=69153)                          0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/pos_reg[2].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_core/pos_reg[2].q
+net (fo=53)                             0.547          0.623          net: u_dut/u_core/pos[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(96)
+                                                                      pin: u_dut/u_core/raddr_b2[12]_syn_152.b
+LUT2                                    0.273    f     0.896       1  pin: u_dut/u_core/raddr_b2[12]_syn_152.o
+net (fo=6)                              0.404          1.300          net: u_dut/u_core/raddr_b2[12]_syn_153,  NOFILE(0)
+                                                                      pin: u_dut/u_core/raddr_b2[7]_syn_95.a
+LUT6                                    0.315    f     1.615       2  pin: u_dut/u_core/raddr_b2[7]_syn_95.o
+net (fo=2)                              0.342          1.957          net: u_dut/u_core/hash_ok_b[6],  NOFILE(0)
+                                                                      pin: u_dut/u_core/lt4_syn_65.id
+ADDER                                   0.426    r     2.383       3  pin: u_dut/u_core/lt4_syn_65.fco
+net (fo=1)                              0.000          2.383          net: u_dut/u_core/lt4_syn_52,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_66.fci
+ADDER                                   0.052    r     2.435          pin: u_dut/u_core/lt4_syn_66.fco
+net (fo=1)                              0.000          2.435          net: u_dut/u_core/lt4_syn_54,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_67.fci
+ADDER                                   0.052    r     2.487          pin: u_dut/u_core/lt4_syn_67.fco
+net (fo=1)                              0.000          2.487          net: u_dut/u_core/lt4_syn_56,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_68.fci
+ADDER                                   0.052    r     2.539          pin: u_dut/u_core/lt4_syn_68.fco
+net (fo=1)                              0.000          2.539          net: u_dut/u_core/lt4_syn_57,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_69.fci
+ADDER                                   0.220    r     2.759       4  pin: u_dut/u_core/lt4_syn_69.ofb
+net (fo=1125)                           0.697          3.456          net: u_dut/u_core/hash_ok,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/sel0_syn_26.a
+LUT6                                    0.315    f     3.771       5  pin: u_dut/u_core/sel0_syn_26.o
+net (fo=16)                             0.459          4.230          net: u_dut/u_core/sel0_syn_27,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(499)
+                                                                      pin: u_dut/u_core/mux398_syn_33.a
+LUT6                                    0.315    f     4.545       6  pin: u_dut/u_core/mux398_syn_33.o
+net (fo=2)                              0.342          4.887          net: u_dut/u_core/mux285_syn_2562,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(989)
+                                                                      pin: u_dut/u_core/mux398_syn_36.c
+LUT6                                    0.315    f     5.202       7  pin: u_dut/u_core/mux398_syn_36.o
+net (fo=13)                             0.447          5.649          net: u_dut/u_core/mux398_syn_2[0],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(709)
+                                                                      pin: u_dut/u_core/raddr_reg[1].ce
+SEQ (reg)                               0.000    f     5.649               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.649               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=69153)                          0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/raddr_reg[1].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.067          5.266               
+clock uncertainty                       0.000          5.266               
+clock pessimism                         0.000          5.266               
+--------------------------------------------------------------------  ---------------
+Required                                               5.266               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.383               
+
+Slack               : -0.383ns
+Begin Point         : u_dut/u_core/pos_reg[2].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/raddr_reg[2].ce (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.649ns (cell 2.411ns (42%), net 3.238ns (58%))
+Clock Skew          : 0.000ns
+Logic Level         : 7 ( LUT6=4  ADDER=2  LUT2=1 )
+Max Fanout          : 1125
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=69153)                          0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/pos_reg[2].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_core/pos_reg[2].q
+net (fo=53)                             0.547          0.623          net: u_dut/u_core/pos[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(96)
+                                                                      pin: u_dut/u_core/raddr_b2[12]_syn_152.b
+LUT2                                    0.273    f     0.896       1  pin: u_dut/u_core/raddr_b2[12]_syn_152.o
+net (fo=6)                              0.404          1.300          net: u_dut/u_core/raddr_b2[12]_syn_153,  NOFILE(0)
+                                                                      pin: u_dut/u_core/raddr_b2[7]_syn_95.a
+LUT6                                    0.315    f     1.615       2  pin: u_dut/u_core/raddr_b2[7]_syn_95.o
+net (fo=2)                              0.342          1.957          net: u_dut/u_core/hash_ok_b[6],  NOFILE(0)
+                                                                      pin: u_dut/u_core/lt4_syn_65.id
+ADDER                                   0.426    r     2.383       3  pin: u_dut/u_core/lt4_syn_65.fco
+net (fo=1)                              0.000          2.383          net: u_dut/u_core/lt4_syn_52,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_66.fci
+ADDER                                   0.052    r     2.435          pin: u_dut/u_core/lt4_syn_66.fco
+net (fo=1)                              0.000          2.435          net: u_dut/u_core/lt4_syn_54,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_67.fci
+ADDER                                   0.052    r     2.487          pin: u_dut/u_core/lt4_syn_67.fco
+net (fo=1)                              0.000          2.487          net: u_dut/u_core/lt4_syn_56,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_68.fci
+ADDER                                   0.052    r     2.539          pin: u_dut/u_core/lt4_syn_68.fco
+net (fo=1)                              0.000          2.539          net: u_dut/u_core/lt4_syn_57,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_69.fci
+ADDER                                   0.220    r     2.759       4  pin: u_dut/u_core/lt4_syn_69.ofb
+net (fo=1125)                           0.697          3.456          net: u_dut/u_core/hash_ok,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/sel0_syn_26.a
+LUT6                                    0.315    f     3.771       5  pin: u_dut/u_core/sel0_syn_26.o
+net (fo=16)                             0.459          4.230          net: u_dut/u_core/sel0_syn_27,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(499)
+                                                                      pin: u_dut/u_core/mux398_syn_33.a
+LUT6                                    0.315    f     4.545       6  pin: u_dut/u_core/mux398_syn_33.o
+net (fo=2)                              0.342          4.887          net: u_dut/u_core/mux285_syn_2562,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(989)
+                                                                      pin: u_dut/u_core/mux398_syn_36.c
+LUT6                                    0.315    f     5.202       7  pin: u_dut/u_core/mux398_syn_36.o
+net (fo=13)                             0.447          5.649          net: u_dut/u_core/mux398_syn_2[0],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(709)
+                                                                      pin: u_dut/u_core/raddr_reg[2].ce
+SEQ (reg)                               0.000    f     5.649               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.649               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=69153)                          0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/raddr_reg[2].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.067          5.266               
+clock uncertainty                       0.000          5.266               
+clock pessimism                         0.000          5.266               
+--------------------------------------------------------------------  ---------------
+Required                                               5.266               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.383               
+
+Slack               : -0.383ns
+Begin Point         : u_dut/u_core/pos_reg[2].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/raddr_reg[3].ce (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.649ns (cell 2.411ns (42%), net 3.238ns (58%))
+Clock Skew          : 0.000ns
+Logic Level         : 7 ( LUT6=4  ADDER=2  LUT2=1 )
+Max Fanout          : 1125
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=69153)                          0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/pos_reg[2].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_core/pos_reg[2].q
+net (fo=53)                             0.547          0.623          net: u_dut/u_core/pos[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(96)
+                                                                      pin: u_dut/u_core/raddr_b2[12]_syn_152.b
+LUT2                                    0.273    f     0.896       1  pin: u_dut/u_core/raddr_b2[12]_syn_152.o
+net (fo=6)                              0.404          1.300          net: u_dut/u_core/raddr_b2[12]_syn_153,  NOFILE(0)
+                                                                      pin: u_dut/u_core/raddr_b2[7]_syn_95.a
+LUT6                                    0.315    f     1.615       2  pin: u_dut/u_core/raddr_b2[7]_syn_95.o
+net (fo=2)                              0.342          1.957          net: u_dut/u_core/hash_ok_b[6],  NOFILE(0)
+                                                                      pin: u_dut/u_core/lt4_syn_65.id
+ADDER                                   0.426    r     2.383       3  pin: u_dut/u_core/lt4_syn_65.fco
+net (fo=1)                              0.000          2.383          net: u_dut/u_core/lt4_syn_52,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_66.fci
+ADDER                                   0.052    r     2.435          pin: u_dut/u_core/lt4_syn_66.fco
+net (fo=1)                              0.000          2.435          net: u_dut/u_core/lt4_syn_54,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_67.fci
+ADDER                                   0.052    r     2.487          pin: u_dut/u_core/lt4_syn_67.fco
+net (fo=1)                              0.000          2.487          net: u_dut/u_core/lt4_syn_56,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_68.fci
+ADDER                                   0.052    r     2.539          pin: u_dut/u_core/lt4_syn_68.fco
+net (fo=1)                              0.000          2.539          net: u_dut/u_core/lt4_syn_57,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_69.fci
+ADDER                                   0.220    r     2.759       4  pin: u_dut/u_core/lt4_syn_69.ofb
+net (fo=1125)                           0.697          3.456          net: u_dut/u_core/hash_ok,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/sel0_syn_26.a
+LUT6                                    0.315    f     3.771       5  pin: u_dut/u_core/sel0_syn_26.o
+net (fo=16)                             0.459          4.230          net: u_dut/u_core/sel0_syn_27,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(499)
+                                                                      pin: u_dut/u_core/mux398_syn_33.a
+LUT6                                    0.315    f     4.545       6  pin: u_dut/u_core/mux398_syn_33.o
+net (fo=2)                              0.342          4.887          net: u_dut/u_core/mux285_syn_2562,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(989)
+                                                                      pin: u_dut/u_core/mux398_syn_36.c
+LUT6                                    0.315    f     5.202       7  pin: u_dut/u_core/mux398_syn_36.o
+net (fo=13)                             0.447          5.649          net: u_dut/u_core/mux398_syn_2[0],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(709)
+                                                                      pin: u_dut/u_core/raddr_reg[3].ce
+SEQ (reg)                               0.000    f     5.649               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.649               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=69153)                          0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/raddr_reg[3].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.067          5.266               
+clock uncertainty                       0.000          5.266               
+clock pessimism                         0.000          5.266               
+--------------------------------------------------------------------  ---------------
+Required                                               5.266               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.383               
+
+Slack               : -0.383ns
+Begin Point         : u_dut/u_core/pos_reg[2].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/raddr_reg[4].ce (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.649ns (cell 2.411ns (42%), net 3.238ns (58%))
+Clock Skew          : 0.000ns
+Logic Level         : 7 ( LUT6=4  ADDER=2  LUT2=1 )
+Max Fanout          : 1125
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=69153)                          0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/pos_reg[2].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_core/pos_reg[2].q
+net (fo=53)                             0.547          0.623          net: u_dut/u_core/pos[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(96)
+                                                                      pin: u_dut/u_core/raddr_b2[12]_syn_152.b
+LUT2                                    0.273    f     0.896       1  pin: u_dut/u_core/raddr_b2[12]_syn_152.o
+net (fo=6)                              0.404          1.300          net: u_dut/u_core/raddr_b2[12]_syn_153,  NOFILE(0)
+                                                                      pin: u_dut/u_core/raddr_b2[7]_syn_95.a
+LUT6                                    0.315    f     1.615       2  pin: u_dut/u_core/raddr_b2[7]_syn_95.o
+net (fo=2)                              0.342          1.957          net: u_dut/u_core/hash_ok_b[6],  NOFILE(0)
+                                                                      pin: u_dut/u_core/lt4_syn_65.id
+ADDER                                   0.426    r     2.383       3  pin: u_dut/u_core/lt4_syn_65.fco
+net (fo=1)                              0.000          2.383          net: u_dut/u_core/lt4_syn_52,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_66.fci
+ADDER                                   0.052    r     2.435          pin: u_dut/u_core/lt4_syn_66.fco
+net (fo=1)                              0.000          2.435          net: u_dut/u_core/lt4_syn_54,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_67.fci
+ADDER                                   0.052    r     2.487          pin: u_dut/u_core/lt4_syn_67.fco
+net (fo=1)                              0.000          2.487          net: u_dut/u_core/lt4_syn_56,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_68.fci
+ADDER                                   0.052    r     2.539          pin: u_dut/u_core/lt4_syn_68.fco
+net (fo=1)                              0.000          2.539          net: u_dut/u_core/lt4_syn_57,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_69.fci
+ADDER                                   0.220    r     2.759       4  pin: u_dut/u_core/lt4_syn_69.ofb
+net (fo=1125)                           0.697          3.456          net: u_dut/u_core/hash_ok,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/sel0_syn_26.a
+LUT6                                    0.315    f     3.771       5  pin: u_dut/u_core/sel0_syn_26.o
+net (fo=16)                             0.459          4.230          net: u_dut/u_core/sel0_syn_27,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(499)
+                                                                      pin: u_dut/u_core/mux398_syn_33.a
+LUT6                                    0.315    f     4.545       6  pin: u_dut/u_core/mux398_syn_33.o
+net (fo=2)                              0.342          4.887          net: u_dut/u_core/mux285_syn_2562,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(989)
+                                                                      pin: u_dut/u_core/mux398_syn_36.c
+LUT6                                    0.315    f     5.202       7  pin: u_dut/u_core/mux398_syn_36.o
+net (fo=13)                             0.447          5.649          net: u_dut/u_core/mux398_syn_2[0],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(709)
+                                                                      pin: u_dut/u_core/raddr_reg[4].ce
+SEQ (reg)                               0.000    f     5.649               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.649               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=69153)                          0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/raddr_reg[4].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.067          5.266               
+clock uncertainty                       0.000          5.266               
+clock pessimism                         0.000          5.266               
+--------------------------------------------------------------------  ---------------
+Required                                               5.266               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.383               
+
+Slack               : -0.383ns
+Begin Point         : u_dut/u_core/pos_reg[2].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/raddr_reg[5].ce (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.649ns (cell 2.411ns (42%), net 3.238ns (58%))
+Clock Skew          : 0.000ns
+Logic Level         : 7 ( LUT6=4  ADDER=2  LUT2=1 )
+Max Fanout          : 1125
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=69153)                          0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/pos_reg[2].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_core/pos_reg[2].q
+net (fo=53)                             0.547          0.623          net: u_dut/u_core/pos[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(96)
+                                                                      pin: u_dut/u_core/raddr_b2[12]_syn_152.b
+LUT2                                    0.273    f     0.896       1  pin: u_dut/u_core/raddr_b2[12]_syn_152.o
+net (fo=6)                              0.404          1.300          net: u_dut/u_core/raddr_b2[12]_syn_153,  NOFILE(0)
+                                                                      pin: u_dut/u_core/raddr_b2[7]_syn_95.a
+LUT6                                    0.315    f     1.615       2  pin: u_dut/u_core/raddr_b2[7]_syn_95.o
+net (fo=2)                              0.342          1.957          net: u_dut/u_core/hash_ok_b[6],  NOFILE(0)
+                                                                      pin: u_dut/u_core/lt4_syn_65.id
+ADDER                                   0.426    r     2.383       3  pin: u_dut/u_core/lt4_syn_65.fco
+net (fo=1)                              0.000          2.383          net: u_dut/u_core/lt4_syn_52,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_66.fci
+ADDER                                   0.052    r     2.435          pin: u_dut/u_core/lt4_syn_66.fco
+net (fo=1)                              0.000          2.435          net: u_dut/u_core/lt4_syn_54,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_67.fci
+ADDER                                   0.052    r     2.487          pin: u_dut/u_core/lt4_syn_67.fco
+net (fo=1)                              0.000          2.487          net: u_dut/u_core/lt4_syn_56,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_68.fci
+ADDER                                   0.052    r     2.539          pin: u_dut/u_core/lt4_syn_68.fco
+net (fo=1)                              0.000          2.539          net: u_dut/u_core/lt4_syn_57,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_69.fci
+ADDER                                   0.220    r     2.759       4  pin: u_dut/u_core/lt4_syn_69.ofb
+net (fo=1125)                           0.697          3.456          net: u_dut/u_core/hash_ok,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/sel0_syn_26.a
+LUT6                                    0.315    f     3.771       5  pin: u_dut/u_core/sel0_syn_26.o
+net (fo=16)                             0.459          4.230          net: u_dut/u_core/sel0_syn_27,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(499)
+                                                                      pin: u_dut/u_core/mux398_syn_33.a
+LUT6                                    0.315    f     4.545       6  pin: u_dut/u_core/mux398_syn_33.o
+net (fo=2)                              0.342          4.887          net: u_dut/u_core/mux285_syn_2562,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(989)
+                                                                      pin: u_dut/u_core/mux398_syn_36.c
+LUT6                                    0.315    f     5.202       7  pin: u_dut/u_core/mux398_syn_36.o
+net (fo=13)                             0.447          5.649          net: u_dut/u_core/mux398_syn_2[0],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(709)
+                                                                      pin: u_dut/u_core/raddr_reg[5].ce
+SEQ (reg)                               0.000    f     5.649               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.649               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=69153)                          0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/raddr_reg[5].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.067          5.266               
+clock uncertainty                       0.000          5.266               
+clock pessimism                         0.000          5.266               
+--------------------------------------------------------------------  ---------------
+Required                                               5.266               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.383               
+
+Slack               : -0.383ns
+Begin Point         : u_dut/u_core/pos_reg[2].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/raddr_reg[6].ce (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.649ns (cell 2.411ns (42%), net 3.238ns (58%))
+Clock Skew          : 0.000ns
+Logic Level         : 7 ( LUT6=4  ADDER=2  LUT2=1 )
+Max Fanout          : 1125
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=69153)                          0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/pos_reg[2].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_core/pos_reg[2].q
+net (fo=53)                             0.547          0.623          net: u_dut/u_core/pos[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(96)
+                                                                      pin: u_dut/u_core/raddr_b2[12]_syn_152.b
+LUT2                                    0.273    f     0.896       1  pin: u_dut/u_core/raddr_b2[12]_syn_152.o
+net (fo=6)                              0.404          1.300          net: u_dut/u_core/raddr_b2[12]_syn_153,  NOFILE(0)
+                                                                      pin: u_dut/u_core/raddr_b2[7]_syn_95.a
+LUT6                                    0.315    f     1.615       2  pin: u_dut/u_core/raddr_b2[7]_syn_95.o
+net (fo=2)                              0.342          1.957          net: u_dut/u_core/hash_ok_b[6],  NOFILE(0)
+                                                                      pin: u_dut/u_core/lt4_syn_65.id
+ADDER                                   0.426    r     2.383       3  pin: u_dut/u_core/lt4_syn_65.fco
+net (fo=1)                              0.000          2.383          net: u_dut/u_core/lt4_syn_52,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_66.fci
+ADDER                                   0.052    r     2.435          pin: u_dut/u_core/lt4_syn_66.fco
+net (fo=1)                              0.000          2.435          net: u_dut/u_core/lt4_syn_54,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_67.fci
+ADDER                                   0.052    r     2.487          pin: u_dut/u_core/lt4_syn_67.fco
+net (fo=1)                              0.000          2.487          net: u_dut/u_core/lt4_syn_56,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_68.fci
+ADDER                                   0.052    r     2.539          pin: u_dut/u_core/lt4_syn_68.fco
+net (fo=1)                              0.000          2.539          net: u_dut/u_core/lt4_syn_57,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_69.fci
+ADDER                                   0.220    r     2.759       4  pin: u_dut/u_core/lt4_syn_69.ofb
+net (fo=1125)                           0.697          3.456          net: u_dut/u_core/hash_ok,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/sel0_syn_26.a
+LUT6                                    0.315    f     3.771       5  pin: u_dut/u_core/sel0_syn_26.o
+net (fo=16)                             0.459          4.230          net: u_dut/u_core/sel0_syn_27,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(499)
+                                                                      pin: u_dut/u_core/mux398_syn_33.a
+LUT6                                    0.315    f     4.545       6  pin: u_dut/u_core/mux398_syn_33.o
+net (fo=2)                              0.342          4.887          net: u_dut/u_core/mux285_syn_2562,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(989)
+                                                                      pin: u_dut/u_core/mux398_syn_36.c
+LUT6                                    0.315    f     5.202       7  pin: u_dut/u_core/mux398_syn_36.o
+net (fo=13)                             0.447          5.649          net: u_dut/u_core/mux398_syn_2[0],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(709)
+                                                                      pin: u_dut/u_core/raddr_reg[6].ce
+SEQ (reg)                               0.000    f     5.649               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.649               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=69153)                          0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/raddr_reg[6].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.067          5.266               
+clock uncertainty                       0.000          5.266               
+clock pessimism                         0.000          5.266               
+--------------------------------------------------------------------  ---------------
+Required                                               5.266               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.383               
+
+Slack               : -0.383ns
+Begin Point         : u_dut/u_core/pos_reg[2].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/raddr_reg[7].ce (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.649ns (cell 2.411ns (42%), net 3.238ns (58%))
+Clock Skew          : 0.000ns
+Logic Level         : 7 ( LUT6=4  ADDER=2  LUT2=1 )
+Max Fanout          : 1125
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=69153)                          0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/pos_reg[2].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_core/pos_reg[2].q
+net (fo=53)                             0.547          0.623          net: u_dut/u_core/pos[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(96)
+                                                                      pin: u_dut/u_core/raddr_b2[12]_syn_152.b
+LUT2                                    0.273    f     0.896       1  pin: u_dut/u_core/raddr_b2[12]_syn_152.o
+net (fo=6)                              0.404          1.300          net: u_dut/u_core/raddr_b2[12]_syn_153,  NOFILE(0)
+                                                                      pin: u_dut/u_core/raddr_b2[7]_syn_95.a
+LUT6                                    0.315    f     1.615       2  pin: u_dut/u_core/raddr_b2[7]_syn_95.o
+net (fo=2)                              0.342          1.957          net: u_dut/u_core/hash_ok_b[6],  NOFILE(0)
+                                                                      pin: u_dut/u_core/lt4_syn_65.id
+ADDER                                   0.426    r     2.383       3  pin: u_dut/u_core/lt4_syn_65.fco
+net (fo=1)                              0.000          2.383          net: u_dut/u_core/lt4_syn_52,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_66.fci
+ADDER                                   0.052    r     2.435          pin: u_dut/u_core/lt4_syn_66.fco
+net (fo=1)                              0.000          2.435          net: u_dut/u_core/lt4_syn_54,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_67.fci
+ADDER                                   0.052    r     2.487          pin: u_dut/u_core/lt4_syn_67.fco
+net (fo=1)                              0.000          2.487          net: u_dut/u_core/lt4_syn_56,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_68.fci
+ADDER                                   0.052    r     2.539          pin: u_dut/u_core/lt4_syn_68.fco
+net (fo=1)                              0.000          2.539          net: u_dut/u_core/lt4_syn_57,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_69.fci
+ADDER                                   0.220    r     2.759       4  pin: u_dut/u_core/lt4_syn_69.ofb
+net (fo=1125)                           0.697          3.456          net: u_dut/u_core/hash_ok,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/sel0_syn_26.a
+LUT6                                    0.315    f     3.771       5  pin: u_dut/u_core/sel0_syn_26.o
+net (fo=16)                             0.459          4.230          net: u_dut/u_core/sel0_syn_27,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(499)
+                                                                      pin: u_dut/u_core/mux398_syn_33.a
+LUT6                                    0.315    f     4.545       6  pin: u_dut/u_core/mux398_syn_33.o
+net (fo=2)                              0.342          4.887          net: u_dut/u_core/mux285_syn_2562,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(989)
+                                                                      pin: u_dut/u_core/mux398_syn_36.c
+LUT6                                    0.315    f     5.202       7  pin: u_dut/u_core/mux398_syn_36.o
+net (fo=13)                             0.447          5.649          net: u_dut/u_core/mux398_syn_2[0],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(709)
+                                                                      pin: u_dut/u_core/raddr_reg[7].ce
+SEQ (reg)                               0.000    f     5.649               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.649               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=69153)                          0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/raddr_reg[7].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.067          5.266               
+clock uncertainty                       0.000          5.266               
+clock pessimism                         0.000          5.266               
+--------------------------------------------------------------------  ---------------
+Required                                               5.266               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.383               
+
+Slack               : -0.383ns
+Begin Point         : u_dut/u_core/pos_reg[2].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/raddr_reg[8].ce (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.649ns (cell 2.411ns (42%), net 3.238ns (58%))
+Clock Skew          : 0.000ns
+Logic Level         : 7 ( LUT6=4  ADDER=2  LUT2=1 )
+Max Fanout          : 1125
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=69153)                          0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/pos_reg[2].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_core/pos_reg[2].q
+net (fo=53)                             0.547          0.623          net: u_dut/u_core/pos[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(96)
+                                                                      pin: u_dut/u_core/raddr_b2[12]_syn_152.b
+LUT2                                    0.273    f     0.896       1  pin: u_dut/u_core/raddr_b2[12]_syn_152.o
+net (fo=6)                              0.404          1.300          net: u_dut/u_core/raddr_b2[12]_syn_153,  NOFILE(0)
+                                                                      pin: u_dut/u_core/raddr_b2[7]_syn_95.a
+LUT6                                    0.315    f     1.615       2  pin: u_dut/u_core/raddr_b2[7]_syn_95.o
+net (fo=2)                              0.342          1.957          net: u_dut/u_core/hash_ok_b[6],  NOFILE(0)
+                                                                      pin: u_dut/u_core/lt4_syn_65.id
+ADDER                                   0.426    r     2.383       3  pin: u_dut/u_core/lt4_syn_65.fco
+net (fo=1)                              0.000          2.383          net: u_dut/u_core/lt4_syn_52,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_66.fci
+ADDER                                   0.052    r     2.435          pin: u_dut/u_core/lt4_syn_66.fco
+net (fo=1)                              0.000          2.435          net: u_dut/u_core/lt4_syn_54,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_67.fci
+ADDER                                   0.052    r     2.487          pin: u_dut/u_core/lt4_syn_67.fco
+net (fo=1)                              0.000          2.487          net: u_dut/u_core/lt4_syn_56,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_68.fci
+ADDER                                   0.052    r     2.539          pin: u_dut/u_core/lt4_syn_68.fco
+net (fo=1)                              0.000          2.539          net: u_dut/u_core/lt4_syn_57,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/lt4_syn_69.fci
+ADDER                                   0.220    r     2.759       4  pin: u_dut/u_core/lt4_syn_69.ofb
+net (fo=1125)                           0.697          3.456          net: u_dut/u_core/hash_ok,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(383)
+                                                                      pin: u_dut/u_core/sel0_syn_26.a
+LUT6                                    0.315    f     3.771       5  pin: u_dut/u_core/sel0_syn_26.o
+net (fo=16)                             0.459          4.230          net: u_dut/u_core/sel0_syn_27,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(499)
+                                                                      pin: u_dut/u_core/mux398_syn_33.a
+LUT6                                    0.315    f     4.545       6  pin: u_dut/u_core/mux398_syn_33.o
+net (fo=2)                              0.342          4.887          net: u_dut/u_core/mux285_syn_2562,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(989)
+                                                                      pin: u_dut/u_core/mux398_syn_36.c
+LUT6                                    0.315    f     5.202       7  pin: u_dut/u_core/mux398_syn_36.o
+net (fo=13)                             0.447          5.649          net: u_dut/u_core/mux398_syn_2[0],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(709)
+                                                                      pin: u_dut/u_core/raddr_reg[8].ce
+SEQ (reg)                               0.000    f     5.649               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.649               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=69153)                          0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/raddr_reg[8].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.067          5.266               
+clock uncertainty                       0.000          5.266               
+clock pessimism                         0.000          5.266               
+--------------------------------------------------------------------  ---------------
+Required                                               5.266               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.383               
+
+
+Period Check
+----------------------------------------------------------------------------------------------------
+    Type       Setting(ns)      Required(ns)         Slack(ns)   Point
+--------------------------------------------------------------------------------
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15594.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5111.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/opq_mem_syn_40.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5271.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/fifo_mem_syn_129.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3191.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14834.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4691.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11374.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/wq_mem_syn_44.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5459.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5479.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5499.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5519.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5539.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5559.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5579.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5599.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5619.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5639.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5659.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5679.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5699.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5719.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5739.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5759.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5779.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5799.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5819.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5839.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5859.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5879.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5899.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5919.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5939.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5959.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5979.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_5999.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6019.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6039.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6059.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6079.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6099.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6119.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6139.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6159.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6179.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6199.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6219.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6239.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6259.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6279.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6299.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6319.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6339.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6359.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6379.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6399.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6419.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6439.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6459.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6479.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6499.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6519.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6539.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6559.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6579.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6599.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6619.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6639.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6659.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6679.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6699.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6719.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6739.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6759.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6779.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6799.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6819.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6839.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6859.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6879.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6899.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6919.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6939.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6959.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6979.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_6999.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7019.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7039.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7059.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7079.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7099.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7119.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7139.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7159.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7179.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7199.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7219.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7239.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7259.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7279.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7299.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7319.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7339.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7359.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7379.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7399.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7419.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7439.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7459.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7479.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7499.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7519.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7539.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7559.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7579.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7599.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7619.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7639.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7659.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7679.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7699.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7719.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7739.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7759.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7779.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7799.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7819.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7839.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7859.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7879.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7899.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7919.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7939.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7959.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7979.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_7999.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8019.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8039.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8059.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8079.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8099.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8119.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8139.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8159.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8179.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8199.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8219.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8239.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8259.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8279.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8299.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8319.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8339.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8359.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8379.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8399.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8419.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8439.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8459.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8479.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8499.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8519.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8539.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8559.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8579.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8599.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8619.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8639.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8659.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8679.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8699.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8719.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8739.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8759.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8779.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8799.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8819.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8839.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8859.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8879.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8899.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8919.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8939.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8959.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8979.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_8999.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9019.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9039.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9059.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9079.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9099.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9119.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9139.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9159.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9179.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9199.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9219.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9239.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9259.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9279.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9299.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9319.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9339.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9359.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9379.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9399.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9419.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9439.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9459.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9479.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9499.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9519.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9539.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9559.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9579.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9599.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9619.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9639.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9659.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9679.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9699.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9719.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9739.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9759.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9779.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9799.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9819.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9839.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9859.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9879.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9899.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9919.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9939.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9959.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9979.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_9999.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_10019.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_10039.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_10059.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_10079.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_10099.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_10119.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_10139.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_10159.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_10179.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_10199.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_10219.wclk
+    DRAM             5.333             2.800             2.533   u_dut/smem_syn_10239.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11354.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14554.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14574.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14594.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14614.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14634.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14654.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14674.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14694.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14714.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14734.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14754.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14774.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14794.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14814.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15567.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15587.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15607.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15627.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15647.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15667.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15687.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15707.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15727.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15747.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15767.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15787.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15807.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15827.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15847.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15867.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15887.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15907.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15927.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15947.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15967.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_15987.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16007.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16027.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16047.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16067.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16087.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16107.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16127.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16147.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16167.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16187.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16207.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16227.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16247.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16267.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16287.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16307.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16327.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16347.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16367.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16387.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16407.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16427.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16447.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16467.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16487.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16507.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16527.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16547.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16567.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16587.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16607.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16627.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16647.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16667.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16687.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16707.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16727.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16747.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16767.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16787.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16807.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16827.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16847.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16867.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16887.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16907.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16927.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16947.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16967.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_16987.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17007.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17027.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17047.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5131.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5151.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5171.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5191.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5211.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5231.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5251.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17067.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/wq_mem_syn_24.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14354.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14334.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14314.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14294.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14274.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14254.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14234.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14214.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14194.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14174.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14154.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14134.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14114.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14094.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14074.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14054.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14034.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14014.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13994.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13974.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13954.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13934.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13914.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13894.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13874.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13854.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13834.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13814.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13794.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13774.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13754.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13734.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13714.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13694.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13674.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13654.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13634.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13614.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13594.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13574.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13554.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13534.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13514.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13494.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17087.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17107.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17127.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17147.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17167.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17187.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17207.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17227.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17247.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17267.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17287.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17307.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17327.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17347.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17367.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17387.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17407.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17427.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17447.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17467.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17487.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17507.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17527.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17547.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17567.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17587.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17607.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17627.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17647.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17667.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17687.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17707.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17727.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17747.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17767.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17787.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17807.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17827.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17847.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17867.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17887.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17907.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17927.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17947.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17967.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_17987.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18007.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18027.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18047.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18067.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18087.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18107.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18127.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18147.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18167.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18187.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18207.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18227.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18247.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18267.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18287.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18307.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18327.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18347.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18367.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18387.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18407.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18427.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18447.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18467.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18487.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18507.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18527.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18547.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18567.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13474.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13454.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13434.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13414.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13394.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13374.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13354.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13334.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13314.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13294.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13274.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13254.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13234.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13214.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13194.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13174.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13154.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13134.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13114.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13094.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13074.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13054.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13034.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_13014.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12994.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12974.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12954.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12934.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12914.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12894.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12874.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12854.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5091.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5071.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5051.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5031.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5011.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4991.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4971.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4951.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4931.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4911.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4891.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4871.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4851.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4831.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4811.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4791.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4771.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4751.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4731.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4711.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18587.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18607.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18627.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18647.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18667.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18687.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18707.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18727.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18747.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18767.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18787.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18807.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18827.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18847.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18867.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18887.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18907.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18927.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18947.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18967.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_18987.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19007.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19027.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19047.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19067.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19087.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19107.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19127.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19147.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19167.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19187.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19207.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19227.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19247.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19267.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19287.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19307.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19327.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19347.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19367.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19387.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19407.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19427.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19447.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19467.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19487.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19507.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19527.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19547.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19567.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19587.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19607.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19627.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19647.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19667.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19687.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19707.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19727.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19747.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19767.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19787.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19807.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19827.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19847.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19867.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19887.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19907.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19927.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19947.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19967.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_19987.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20007.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20027.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20047.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20067.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20087.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3171.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3151.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3131.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3111.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3091.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3071.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3051.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3031.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3011.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2991.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2971.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2951.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2931.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2911.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2891.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2871.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2851.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2831.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2811.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2791.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2771.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2751.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2731.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2711.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2691.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2671.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2651.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2631.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2611.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2591.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2571.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2551.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2531.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2511.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2491.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2471.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2451.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2431.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2411.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3211.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3231.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3251.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3271.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3291.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3311.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3331.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3351.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3371.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3391.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3411.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3431.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3451.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20107.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20127.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20147.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20167.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20187.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20207.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20227.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20247.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20267.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20287.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20307.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20327.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20347.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20367.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20387.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20407.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20427.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20447.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20467.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20487.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20507.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20527.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20547.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20567.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20587.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20607.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20627.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20647.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20667.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20687.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20707.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20727.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20747.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20767.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20787.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20807.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20827.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20847.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20867.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20887.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20907.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20927.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20947.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20967.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_20987.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21007.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21027.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21047.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21067.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21087.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21107.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21127.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21147.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21167.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21187.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21207.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21227.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21247.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21267.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21287.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21307.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21327.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21347.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21367.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21387.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21407.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21427.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21447.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21467.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21487.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21507.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21527.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21547.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21567.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21587.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3471.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3491.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3511.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3531.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3551.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3571.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3591.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3611.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3631.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3651.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3671.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3691.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3711.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3731.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3751.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3771.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3791.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3811.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3831.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3851.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3871.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3891.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3911.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3931.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3951.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3971.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3991.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4011.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4031.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4051.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4071.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4091.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4111.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4131.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4151.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4171.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4191.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4211.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4231.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15854.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15834.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15814.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15794.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15774.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15754.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15734.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15714.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15694.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15674.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15654.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15634.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15614.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21607.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21627.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21647.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21667.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21687.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21707.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21727.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21747.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21767.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21787.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21807.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21827.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21847.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21867.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21887.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21907.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21927.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21947.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21967.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_21987.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22007.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22027.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22047.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22067.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22087.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22107.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22127.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22147.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22167.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22187.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22207.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22227.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22247.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22267.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22287.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22307.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22327.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22347.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22367.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22387.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22407.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22427.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22447.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22467.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22487.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22507.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22527.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22547.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22567.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22587.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22607.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22627.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22647.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22667.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22687.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22707.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22727.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22747.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22767.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22787.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22807.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22827.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22847.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22867.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22887.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22907.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22927.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22947.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22967.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_22987.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23007.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23027.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23047.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23067.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23087.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23107.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4671.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4651.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4631.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4611.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4591.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4571.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4551.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4531.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4511.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4491.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4471.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4451.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4431.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4411.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4391.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4371.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4351.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4331.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4311.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4291.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4271.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4251.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14374.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14394.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14414.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14434.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14454.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14474.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14494.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14514.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14534.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12834.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12814.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12794.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12774.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12754.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12734.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12714.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12694.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12674.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12654.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12634.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12614.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12594.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12574.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12554.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12534.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12514.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12494.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12474.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12454.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12434.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23127.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23147.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23167.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23187.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23207.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23227.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23247.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23267.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23287.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23307.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23327.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23347.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23367.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23387.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23407.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23427.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23447.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23467.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23487.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23507.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23527.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23547.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23567.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23587.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23607.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23627.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23647.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23667.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23687.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23707.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23727.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23747.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23767.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23787.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23807.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23827.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23847.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23867.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23887.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23907.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23927.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23947.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23967.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_23987.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24007.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24027.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24047.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24067.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24087.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24107.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24127.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24147.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24167.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24187.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24207.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24227.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24247.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24267.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24287.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24307.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24327.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24347.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24367.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24387.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24407.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24427.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24447.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24467.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24487.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24507.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24527.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24547.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24567.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24587.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_a_syn_24607.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12414.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12394.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12374.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12354.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12334.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12314.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12294.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12274.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12254.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12234.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12214.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12194.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12174.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12154.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12134.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12114.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12094.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12074.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12054.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12034.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_12014.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11994.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11974.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11954.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11934.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11914.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11894.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11874.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11854.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11834.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11814.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11794.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11774.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11754.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11734.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11714.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11694.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11674.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11654.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11634.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11614.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11594.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11574.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11554.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11534.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11514.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11494.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11474.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11454.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11434.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11414.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11394.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_9834.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_9854.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_9874.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_9894.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_9914.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_9934.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_9954.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_9974.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_9994.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10014.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10034.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10054.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10074.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10094.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10114.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10134.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10154.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10174.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10194.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10214.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10234.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10254.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10274.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10294.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10314.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10334.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10354.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10374.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10394.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10414.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10434.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10454.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10474.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10494.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10514.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10534.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10554.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10574.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10594.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10614.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10634.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10654.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10674.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10694.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10714.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10734.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10754.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10774.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10794.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10814.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10834.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10854.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10874.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10894.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10914.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10934.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10954.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10974.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_10994.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11014.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11034.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11054.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11074.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11094.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11114.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11134.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11154.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11174.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11194.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11214.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11234.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11254.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11274.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11294.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11314.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15574.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15554.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15534.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15514.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15494.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15474.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15454.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15434.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15414.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_11334.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15394.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15374.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15354.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15334.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15314.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15294.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15274.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15254.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15234.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15214.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15194.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15174.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15154.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15134.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15114.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15094.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15074.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15054.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15034.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_15014.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14994.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14974.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14954.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14934.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14914.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14894.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14874.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/bm_b_syn_14854.wclk
+
+Min Paths
+----------------------------------------------------------------------------------------------------
+
+Inter clock domain timing
+--------------------------------------------------
+
+IP timing
+--------------------------------------------------

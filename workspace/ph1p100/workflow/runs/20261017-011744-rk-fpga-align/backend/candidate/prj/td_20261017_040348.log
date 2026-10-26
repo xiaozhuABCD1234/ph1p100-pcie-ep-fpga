@@ -1,0 +1,184 @@
+============================================================
+   TD Release_2026.2
+   Copyright (c) 2012-2026 Anlogic Inc.
+   Executable = D:/anlogic/TD_Release_2026.2/bin/td_commands_prompt.exe
+   Build number = 6.2.3.210850
+   Built at =   11:35:58 Aug 19 2026
+   Run by =     czz
+   Run Date =   Sat Oct 17 04:03:48 2026
+
+   Run on =     LAPTOP-HE7N8DN4
+============================================================
+RUN-1002 : start command "create_project ph1p_pcie_integration ./ -family PH1 -device PH1P100SBG484 -speed 3 -force"
+PRJ-1005 : Command create_project success.
+RUN-1002 : start command "import_device ph1_100p.db -package PH1P100SBG484"
+RUN-1001 : Using default speed grade: 3
+ARC-1001 : Device Initialization.
+ARC-1001 : -------------------------------------------------------------
+ARC-1001 :           OPTION          |         IO         |   SETTING   
+ARC-1001 : -------------------------------------------------------------
+ARC-1001 :   non_jtag_persist(none)  |       35 IOs       |    gpio    
+ARC-1001 :            jtag           |  /V12/T13/R13/U13  |  dedicate  
+ARC-1001 : -------------------------------------------------------------
+RUN-1003 : finish command "import_device ph1_100p.db -package PH1P100SBG484" in  2.026415s wall, 1.578125s user + 0.171875s system = 1.750000s CPU (86.4%)
+
+RUN-1004 : used memory is 346 MB, reserved memory is 326 MB, peak memory is 380 MB
+RUN-1002 : start command "open_project ph1p_pcie_integration.al"
+PRJ-7003 CRITICAL-WARNING: Device speed "3" is invalid for PH1P100SBG484, auto change to default speed "-3".
+RUN-1002 : start command "commit_param -step design"
+RUN-1001 : Print Global Property
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :     Parameters    |   Settings   |  Default Values  |  Note  
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :    enable_seed    |     off      |       off        |        
+RUN-1001 :    hfn_to_clock   |  1000000000  |    1000000000    |        
+RUN-1001 :      message      |   standard   |     standard     |        
+RUN-1001 :    qor_monitor    |      on      |        on        |        
+RUN-1001 :   speedup_effort  |      0       |        0         |        
+RUN-1001 :    syn_ip_flow    |     off      |       off        |        
+RUN-1001 :       thread      |     auto     |       auto       |        
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 : Print Design Property
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :       Parameters       |  Settings  |  Default Values  |  Note  
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :   default_reg_initial  |    auto    |       auto       |        
+RUN-1001 :    hdl_warning_level   |   normal   |      normal      |        
+RUN-1001 :      tcl_afterstep     |            |                  |        
+RUN-1001 :     tcl_beforestep     |            |                  |        
+RUN-1001 : ----------------------------------------------------------------
+RUN-1002 : start command "commit_param -step design"
+RUN-1001 : Print Global Property
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :     Parameters    |   Settings   |  Default Values  |  Note  
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :    enable_seed    |     off      |       off        |        
+RUN-1001 :    hfn_to_clock   |  1000000000  |    1000000000    |        
+RUN-1001 :      message      |   standard   |     standard     |        
+RUN-1001 :    qor_monitor    |      on      |        on        |        
+RUN-1001 :   speedup_effort  |      0       |        0         |        
+RUN-1001 :    syn_ip_flow    |     off      |       off        |        
+RUN-1001 :       thread      |     auto     |       auto       |        
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 : Print Design Property
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :       Parameters       |  Settings  |  Default Values  |  Note  
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :   default_reg_initial  |    auto    |       auto       |        
+RUN-1001 :    hdl_warning_level   |   normal   |      normal      |        
+RUN-1001 :      tcl_afterstep     |            |                  |        
+RUN-1001 :     tcl_beforestep     |            |                  |        
+RUN-1001 : ----------------------------------------------------------------
+HDL-5007 WARNING: could not find top-level module/unit; aborting hierarchy tree creation
+PRJ-1401 : Successfully analyzed 0 source files.
+RUN-1003 : finish command "create_project ph1p_pcie_integration ./ -family PH1 -device PH1P100SBG484 -speed 3 -force" in  2.056939s wall, 1.593750s user + 0.171875s system = 1.765625s CPU (85.8%)
+
+RUN-1004 : used memory is 346 MB, reserved memory is 326 MB, peak memory is 380 MB
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/img/ep_bar_win.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/img/img_regs.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/img/img_frame_src.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/common/ph1p_pcie_case_param.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/common/ph1p_pcie_rst_sync.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/common/uart/bps_setting.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/common/uart/pcie_uart.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/common/uart/pcie_uprotocol.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/common/uart/uart_cdc.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/common/uart/uart_rx_setting.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/common/uart/uart_tx_setting.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/common/ubus2hxt_apb.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/common/ubus2pcie_apb.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/pcie_ep_engine.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/pcie_ep_int_handle.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/ph1p_pcie_ep_top.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/ubus_bridge/ep_ubus_bridge.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/cam/clk_activity.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/cam/pulse2toggle.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/cam/auto_delay_ctl.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/cam/csi_rx_10bit_unpack.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/cam/csi_rx_byte_align.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/cam/csi_rx_clock_det.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/cam/csi_rx_hdr_ecc.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/cam/csi_rx_packet_handler.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/cam/csi_rx_word_align.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/cam/csi_rx_word_gear_box.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/cam/mipi_csi2_rx_ph1p.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/cam/rx_phy_ph1p.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/cam/sfifo.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/cam/wfifo.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/cam/ui_cfg_imx415.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/cam/ui_i2c.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/cam/ui_imx415_reg.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/checked/csi_rx_packet_integrity.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/checked/csi_rx_10bit_unpack_checked.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/cam/mipi_csi2_rx_ph1p_checked.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/ddr/ddr_frame_pusher.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/ddr/ddr_wr_arb.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/rtl/ep_side/ddr/cam_ddr_writer.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/constraints/ph1p_pcie_case_ep.adc"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/constraints/ph1p_pcie_case_ep.sdc"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/al_ip/pcie_ep_core/pcie_ep_core.xml"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/al_ip/pcie_pll_ep/pcie_pll_ep.xml"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/al_ip/ram/ram.xml"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files T:/fpga/csi2/pcie_integration/al_ip/ddr3_mc_0/ddr3_mc_0.xml"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "top_module ph1p_pcie_ep_top"
+PRJ-1501 : Current top model is ph1p_pcie_ep_top.
+RUN-1002 : start command "launch_runs  syn_1  -jobs 4"
+PRJ-1403 : syn_1 is launched.
+PRJ-1404 : Run log file is T:/workflow/runs/20261017-011744-rk-fpga-align/backend/candidate/prj/ph1p_pcie_integration_Runs/syn_1/run.log.
+RUN-1002 : start command "wait_run syn_1 -quiet"
+PRJ-1405 : Waiting for run syn_1 to finish.
+PRJ-1409 : launch_runs syn_1  -jobs 4.
+PRJ-1009 : If you need the best result of runs copied into "T:/workflow/runs/20261017-011744-rk-fpga-align/backend/candidate/prj/ph1p_pcie_integration_Runs/best_result" , please execute "save_best_bits" in the Tcl console after all runs complete, or add "save_best_bits" in tcl script after "wait_run" command.
+PRJ-1406 : Run syn_1 finished.
+RUN-1003 : finish command "wait_run syn_1 -quiet" in  260.976581s wall, 0.468750s user + 5.640625s system = 6.109375s CPU (2.3%)
+
+RUN-1004 : used memory is 346 MB, reserved memory is 326 MB, peak memory is 380 MB
+RUN-1002 : start command "report_area -file syn_area.rpt"
+USR-8122 CRITICAL-WARNING: Design is unavailable. Please import a netlist first.
+

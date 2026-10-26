@@ -1,0 +1,65 @@
+{
+  "base": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_20261014_140836",
+  "input_count": 218,
+  "phase": 3,
+  "R_gain_Q10": 2400,
+  "B_gain_Q10": 2062,
+  "black_level": 50,
+  "changes": {
+    "camera_ddr_capture_top.v": {
+      "before_sha256": "c72086ac7fbeae226a2ae16445fc7e658770b9c42cb9b0264ed8f83424a36716",
+      "sha256": "d577c4160fddc21ee7e661b3b089bfb867146fdbfc2692a1d7e7aeb833ba18dc",
+      "reason": "Relocate ROM initialization path; contents unchanged"
+    },
+    "f9p_camera_display_core.v": {
+      "before_sha256": "ddfde0474f2cc99f746753910232fad6931de7433ca9a73d400d895ac0fc6524",
+      "sha256": "abcab0625d7be3f668fea12bd79d2eb72fae6c30a11a15fa76c4ef65c6ef2385",
+      "reason": "Measured phase3 and nominal-black-aware fixed white balance"
+    },
+    "bayer565_capture.v": {
+      "before_sha256": "2eac92c39064ebeb4d0bae77b59b1809e72be0d8a226ebac503393b2f5d14ea4",
+      "sha256": "362509c9b56113a64685b5d7059c89c284891dcbce7f8265b8f022f8aa620586",
+      "reason": "Parameterized saturating R/B Q10 balance; original stats/control preserved"
+    },
+    "frozen_tb_bayer565_white_balance.sv": {
+      "before_sha256": null,
+      "sha256": "6eecf2ac73f1ed377bbfd9d5c062affa9691dbb77ef8dea28ba320be608fbcbf",
+      "reason": "Independent arithmetic/framing/statistics tests"
+    },
+    "frozen_white_balance_stats.json": {
+      "before_sha256": null,
+      "sha256": "b55ba316d7cd2d949ec0ac29fbca9322a2dd4b6c6722b9a26d06f19fbdc303f4",
+      "reason": "Actual user measurements and calibration boundaries"
+    },
+    "frozen_prepare_rgb565_white_balance.py": {
+      "before_sha256": null,
+      "sha256": "4151df6e5f5f0c52407c73500e9f711bc5ed9592b7b9c6a29bf39dc94fd47fa9",
+      "reason": "Derivation identity"
+    }
+  },
+  "unchanged_hashes": {
+    "rgb565_frame_pack_guarded.v": "313832ed6acaa83a8393b5818bc7b2cd46bb6467c873b0792ba18600668d272b",
+    "rgb565_display_read.v": "5d4b12d1b3934dec7b391471aa3c97f3e5a6237698a33b3ec97f6bbd9b9a3f66",
+    "rgb565_display_pixels.v": "8b2c528a25222d5632906e8be154656a99031ccec0117aabe411259f7cfc18e9",
+    "camera_rgb565_display_guarded.v": "36b87f471faabaf2801a44245a1c9c4af4e0f57767cb1da8d176c1a9d964c1bf",
+    "camera_ddr_display_top.v": "738e199f303bfdb9d18dbff78f0affcd8a03041d1bd0ca738f2f1d57ebd5eb35",
+    "ddrmc_display_top.v": "b75ddd3b13b478b857ed18049b2eed399e7702eca88807319a7b3424dea274d5",
+    "ddr_frame_store.v": "c600420683a607a486661a678655a6fd23f13f29e1ae652fe1af8befe23a879a",
+    "capture_async_fifo.v": "59dd6dcb5b7e7774f7d6518f50f56cafbc8be6b70e8ae1508236bac2b5af531d",
+    "board.adc": "1cb30346fa17da6bb0e77802ca72c4b4bb4aecc1445711e19391cf4ee2271580",
+    "timing.sdc": "0c32c5f7a536bbc811901d5af254a4fddc270dcdd2b59c16caeb006ef0f7fe1c",
+    "camera/uisrc/03_ip/ui_imx415_cfg/ui_imx415_reg.v": "60f1ac9a0b8cb0a542312d27ee43bd8d0fbbc29f333f61638907b0739651a843",
+    "camera/uisrc/03_ip/mipi_csi_2/csi_rx_10bit_unpack_checked.v": "9b5421c55b0f09871f8a939fb3381d4c7d5726286b30f9d5450cc09404065a12",
+    "camera/uisrc/03_ip/alip/ui_HDMI_TX/lane_lvds_10_1.v": "de9185d9ae02c42b870901e120737d1c102c9d52b6668458a32390339ddf2e17",
+    "camera/uisrc/01_rtl/raw10_display60_clocks.v": "bd13daae6829ea26f1c3f3b561207c67134d281ab6d75ef494f329113fe8b9a1"
+  },
+  "measurement_sha256": "b55ba316d7cd2d949ec0ac29fbca9322a2dd4b6c6722b9a26d06f19fbdc303f4",
+  "hardware_verified": false,
+  "limits": [
+    "Fixed illumination calibration, not automatic white balance.",
+    "Sums do not reveal clipped pixel fraction or actual dark offsets.",
+    "Gamma, color matrix and display tone mapping remain uncalibrated.",
+    "Activity sparkles remain deferred.",
+    "No corrected-color board acceptance yet."
+  ]
+}

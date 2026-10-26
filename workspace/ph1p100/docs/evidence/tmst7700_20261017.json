@@ -1,0 +1,371 @@
+{
+  "meta": {
+    "id": "tmst7700_20261017",
+    "title": "TMST-7700 minimal investigation (TD 6.2.3 route DRC: check_timing HIGH-severity count)",
+    "date": "2026-10-17",
+    "role": "fpga-dev (work package G)",
+    "run": "workflow/runs/20261017_182621_T01_board_and_tmst7700/",
+    "report": "docs/TMST-7700\u6700\u5c0f\u8c03\u67e5_2026-10-17.md",
+    "status": "complete (read-only investigation; no candidate/evidence/script modification; no rebuild; no hardware; TD installs read-only)",
+    "objective": "Classify TMST-7700 (noise / new stricter check / real constraint gap), assess impact on STA results and bit validity, recommend action"
+  },
+  "verdict": {
+    "classification": "new-stricter-check (tool-version behavior)",
+    "one_liner": "TMST-7700 = TD 6.2.3 phy flow's new 'Run Timing Status Checker' stage (Tcl check_timing, SDC health/completeness) surface as a CRITICAL-WARNING DRC; the number is the count of severity=HIGH items in the check_timing report. Same SDC (byte-identical across 1333/1600ctl/002820) produced 0 on 6.2.2 logs and 1/4/4 on both 6.2.3 candidates => tool-version behavior, not a new-IP defect and not an SDC syntax error.",
+    "detail_items_enumerated": true,
+    "detail_items_summary": "flow count 4 = 3 local clocks (clock definition: config_inst.cwc_tck_o / mclk27 / mipi_a_byte_clk) + 1 PLL frequency rounding mismatch (pclkx5 742.400024 vs 742.500000 MHz); additional HIGH findings not counted by the flow counter: dummy_node=3 groups (DDR PHY bankref / MIPI rdiff_enb pads / CWC watch_pipe+debug residue); substantive classes (no_clock / combinational loops / invalid constraint / generated-clock-disconnected) all 0",
+    "detail_items_reason": "enumerated in the 2026-10-17 evening G-2 follow-up (see detail_enumeration): check_timing -file executed on a private copy of the routed/place db; candidate byte-identical before/after (zero-write proof)",
+    "bit_validity_impact": "none direct (CRITICAL-WARNING did not block flow; route/bitgen exit 0; bitgen preconditions met; message does not alter bit content)",
+    "sta_impact": "does not overturn zero-violation results; leaves a small completeness caveat only if any of the 4 HIGH items marks a truly unconstrained path (to be excluded by the follow-up enumeration); FOLLOW-UP DONE: enumeration found no substantive class (no_clock/loops/invalid all 0) -> caveat closed; recommend closing M5.7"
+  },
+  "extraction": {
+    "method": "Select-String -SimpleMatch 'TMST' per file; counts and line numbers independently re-verified in this package; identical line numbers in native_route.txt and td_*.log",
+    "message_full_text": "DRC TMST-7700 CRITICAL-WARNING: {N} SEVERE timing constraint issue(s) detected. Please refer to check_timing report for details and resolve the issue(s).",
+    "ddr1333": {
+      "candidate": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_ddr1333_20261017_160741",
+      "route_log": {
+        "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_ddr1333_20261017_160741\\native_route.txt",
+        "bytes": 221216,
+        "sha256": "342B55AE008EBF6DBE1DC8DA0DB671401E39BF699729061D77EF4ACF0DE82074",
+        "mtime": "2026-10-17 16:54:01"
+      },
+      "td_log": {
+        "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_ddr1333_20261017_160741\\td_20261017_164118.log",
+        "bytes": 221172,
+        "sha256": "FCC9DE3F726A8C26466D4C03F994E87015BA34CF597F6265770441B5B002929B"
+      },
+      "messages": [
+        {
+          "line": 1371,
+          "severe_count": 1,
+          "stage": "Stage 8.10 | Report DRC (place/DrcCheck block; PHY Stage 8)",
+          "context_before": ["L1367 RUN-1001 : Stage 8.9 | Run Timing Status Checker", "L1368 RUN-1001 : End Stage 8.9 | Run Timing Status Checker"],
+          "context_after": ["L1372 RUN-1001 : End Stage 8.10 | Report DRC", "L1374 PHY-1001 : End Stage 8 | DRC Check"],
+          "text": "DRC TMST-7700 CRITICAL-WARNING: 1 SEVERE timing constraint issue(s) detected. Please refer to check_timing report for details and resolve the issue(s)."
+        },
+        {
+          "line": 2068,
+          "severe_count": 4,
+          "stage": "Stage 6.10 | Report DRC (route block; PHY Stage 6 DRC Check)",
+          "context_before": ["L2055 RUN-1001 : Stage 6.8 | Run Timing Status Checker", "L2056 End Stage 6.8", "L2058 Stage 6.9 | Run Route Region Checker", "L2061 Stage 6.10 | Report DRC", "L2062-L2067 DRC RTCLK-5078 WARNING block (cwc_jtck)"],
+          "context_after": ["L2069 RUN-1001 : End Stage 6.10 | Report DRC", "L2071 PHY-1001 : End Stage 6 | Design Rule Check"],
+          "text": "DRC TMST-7700 CRITICAL-WARNING: 4 SEVERE timing constraint issue(s) detected. Please refer to check_timing report for details and resolve the issue(s)."
+        },
+        {
+          "line": 2177,
+          "severe_count": 4,
+          "stage": "Stage 14 | Report DRC (final block)",
+          "context_before": ["L2167 RUN-1001 : Stage 13 | Run Timing Status Checker", "L2168 End Stage 13", "L2170 Stage 14 | Report DRC", "L2171-L2176 DRC RTCLK-5078 WARNING block"],
+          "context_after": ["L2178 RUN-1001 : End Stage 14 | Report DRC", "L2180 finish command \"report_route_status -drc -file ./capture_route_drc.rpt\""],
+          "text": "DRC TMST-7700 CRITICAL-WARNING: 4 SEVERE timing constraint issue(s) detected. Please refer to check_timing report for details and resolve the issue(s)."
+        }
+      ],
+      "other_drc_lines": [
+        "L566 DRC CLKST-8015 CRITICAL-WARNING: Clock placement DRC: Potential local routing between IO PAD and PLL, which can result in poor timing performance.",
+        "L2062/L2171 DRC RTCLK-5078 WARNING (cwc_jtck)"
+      ]
+    },
+    "ddr1600ctl": {
+      "candidate": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_ddr1600ctl_20261017_160741",
+      "route_log": {
+        "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_ddr1600ctl_20261017_160741\\native_route.txt",
+        "bytes": 244416,
+        "sha256": "BAE17EE6AA8F8C8C385ED2D1D19A4E2404694BAF8199E09BF25F3B4C2C9FFDA9",
+        "mtime": "2026-10-17 17:13:44"
+      },
+      "td_log": {
+        "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_ddr1600ctl_20261017_160741\\td_20261017_165852.log",
+        "bytes": 244372,
+        "sha256": "ED75593866DE60CE7BE3F14F4C254BDC6B78072155B2FCC77892C741F0AA841E"
+      },
+      "messages": [
+        {"line": 1498, "severe_count": 1, "stage": "Stage 8.10 | Report DRC", "context_before": ["L1494 Stage 8.9 | Run Timing Status Checker", "L1495 End Stage 8.9"], "context_after": ["L1499 End Stage 8.10", "L1501 End Stage 8 | DRC Check"], "text": "same as ddr1333 message_full_text with N=1"},
+        {"line": 2230, "severe_count": 4, "stage": "Stage 6.10 | Report DRC", "context_before": ["L2217 Stage 6.8 | Run Timing Status Checker", "L2218 End Stage 6.8", "L2223 Stage 6.10 | Report DRC"], "context_after": ["L2231 End Stage 6.10"], "text": "same as ddr1333 message_full_text with N=4"},
+        {"line": 2339, "severe_count": 4, "stage": "Stage 14 | Report DRC", "context_before": ["L2329 Stage 13 | Run Timing Status Checker", "L2330 End Stage 13", "L2332 Stage 14 | Report DRC"], "context_after": ["L2340 End Stage 14", "L2342 report_route_status -drc finish"], "text": "same as ddr1333 message_full_text with N=4"}
+      ],
+      "other_drc_lines": ["L587 DRC CLKST-8015 CRITICAL-WARNING", "L2224/L2333 DRC RTCLK-5078 WARNING"]
+    },
+    "tee_logs_tail_only": [
+      {"path": "workflow/runs/20261017_153201_T01_ddr1333_integration/dev-notes-E2-run-ddr1333-route.log", "line": 123, "sha256": "96A8F9A30B87960502B4E08E2ED6380CD27ED47FA017020CB0AEF510229568CE", "note": "tail capture, 1 line (4 SEVERE)"},
+      {"path": "workflow/runs/20261017_153201_T01_ddr1333_integration/dev-notes-E2-run-ctl-route.log", "line": 123, "sha256": "3FAB2DFFFB5CA35E01A5EAA1231EDD5093F9F0D4A32BC7C03CE94EAC0668B39D", "note": "tail capture, 1 line (4 SEVERE)"}
+    ],
+    "completeness": "exactly 3 lines per candidate route log (1/4/4); pattern identical to E2/E3 independent counts"
+  },
+  "provenance": {
+    "rule_definition": [
+      {
+        "doc": "TD 6.2.3 doc/SWUG/SWUG117_Analysis_Tools_User_Guide.pdf",
+        "pdf_page": 43,
+        "section": "appendix DRC ERROR/CRITICAL-WARNING \u8bf4\u660e",
+        "quote": "TMST-7700 \uff5c check_timing report \u4e2d\u53d1\u73b0 severity \u4e3a HIGH \u7684\u95ee\u9898 \uff5c \u8bf7\u5206\u6790 check_timing report \u76f8\u5173\u5185\u5bb9\u5e76\u89e3\u51b3\u95ee\u9898",
+        "sha256": "CDE7F7B0E7A2D04294534191D158A6BE6F5D2BC4E84C25F645502021A2F19A82"
+      },
+      {
+        "doc": "TD 6.2.3 doc/TD_User_Guide_V6.2.pdf",
+        "pdf_page": 214,
+        "section": "9.3.7.2 TMR CRITICAL-WARNING Message",
+        "quote": "TMST-7700 \uff5c check_timing report \u91cc\u9762\u6709 severity \u4e3a HIGH \u7684\u95ee\u9898 \uff5c \u8bf7\u5206\u6790 timing report \u76f8\u5173\u5185\u5bb9",
+        "sha256": "7597B4805D8F1113A1E0013B9284B2C350AA62B2C45FE05F1933C9559B17CB24"
+      },
+      {
+        "doc": "6.2.2 install D:\\downlaod\\Doc\\TD_User_Guide_V6.2.pdf",
+        "pdf_page": 206,
+        "section": "TMR CRITICAL-WARNING Message table (same entry present in 6.2.2-era docs)",
+        "quote": "TMST-7700 \uff5c check_timing report \u91cc\u9762\u6709 severity \u4e3a HIGH \u7684\u95ee\u9898 \uff5c \u8bf7\u5206\u6790 timing report \u76f8\u5173\u5185\u5bb9",
+        "sha256": "AF52F6BB91C94A066F5FAE6F305FDC66D46FDE08F355F69484594C822D6427EA",
+        "mtime": "2026-05-15 17:30:08"
+      }
+    ],
+    "check_body": [
+      {
+        "doc": "TD 6.2.3 doc/SWUG/SWUG201_Timing_Tools_User_Guide.pdf",
+        "pdf_pages": "112-117",
+        "section": "3.3 Check Timing Report",
+        "quotes": [
+          "\u68c0\u67e5\u8bbe\u8ba1\u4e2d\u7ea6\u675f\u4e0d\u5b8c\u5584\u4ee5\u53ca\u4e0d\u5408\u7406\u7684\u95ee\u9898\uff0c\u4ece\u800c\u63d0\u9192\u7528\u6237\u8fdb\u884c\u7ea6\u675f\u4ee5\u63d0\u9ad8\u7ea6\u675f\u7684\u5b8c\u6574\u6027",
+          "Severity\uff1a\u65f6\u5e8f\u7ea6\u675f\u4e0d\u89c4\u8303\u7684\u5f71\u54cd\u7b49\u7ea7\uff0c\u56fe\u4e2d\u663e\u793a\u7684 HIGH \u7b49\u7ea7\uff0c\u5373\u8868\u793a\u5bf9\u65f6\u5e8f\u5206\u6790\u5f71\u54cd\u8f83\u5927"
+        ],
+        "sha256": "4E06359F9A6B29A6A6EAC77C1CAB2D82CC06BA323C7D150888C095E8286D1BC7"
+      },
+      {
+        "doc": "TD 6.2.3 doc/SWUG/SWUG105_TCL_Command_User_Guide.pdf",
+        "pdf_pages": "116-117",
+        "section": "4.10.8 check_timing",
+        "quotes": [
+          "check_timing = \u68c0\u67e5SDC \u5065\u5eb7\u7a0b\u5ea6",
+          "check_timing [-name <GUI_report_name>] [-file <file_path_name>] [-nofile] [-exclude <check_items>] [-override_defaults <check_items>] [-verbose]",
+          "default check items: no_clock, clock_check, dummy_node, invalid_constraint, pll_check, combinational_loops, soft_fifo_constr_check, no_path, path_exception_check, no_input_delay, no_output_delay, partial_input_delay, partial_output_delay, abnormal_input_delay"
+        ],
+        "sha256": "729CD49F60CA625725EB5B4A2C3B6C1E0901EA16A0C857443F6036E85FB19857",
+        "revision_note": "2026/08/11 revision list includes: \u66f4\u65b04.10.8 check_timing \u4e00\u8282\u7684\u9ed8\u8ba4\u68c0\u67e5\u9879\u5185\u5bb9"
+      },
+      {
+        "doc": "6.2.2 install D:\\downlaod\\Doc\\SWUG\\SWUG201_Timing_Tools_User_Guide.pdf",
+        "pdf_page": 107,
+        "section": "Check Timing Report severity wording (2026.01 revision)",
+        "quote": "Severity \u2026 HIGH \u7b49\u7ea7\uff0c\u5373\u8868\u793a\u5bf9\u65f6\u5e8f\u5206\u6790\u5f71\u54cd\u8f83\u5927",
+        "sha256": "9E5638DD300CDB0E837D5262FEE73569B122800302484CD1897D3363615C56DA"
+      }
+    ],
+    "binaries": {
+      "td_6_2_3_run_exe": {
+        "path": "D:\\anlogic\\TD_Release_2026.2\\bin\\run.exe",
+        "bytes": 84676368,
+        "sha256": "DFB1FE1B0EDCBE7713222015A0E30574EBE927811CE4662F01F2FF6AADA9A195",
+        "findings": {
+          "drc_family_table_contains_TMST": true,
+          "drc_family_region_offset": 64071836,
+          "severe_template_offsets": [64118067, 64118195],
+          "timing_status_checker_offset": 64077064,
+          "check_timing_offsets": [62751976, 63190951, 63191576, 64118127, 64118241]
+        }
+      },
+      "td_6_2_3_td_exe": {
+        "path": "D:\\anlogic\\TD_Release_2026.2\\bin\\td.exe",
+        "bytes": 123372304,
+        "sha256_recorded_in_E2_evidence_anchor": "FA2A5AC6\u2026 (prefix, per E2 dev-notes)",
+        "findings": {
+          "drc_rule_name_table_with_TMST_offset": 95952852,
+          "severe_template_offsets": [95997475, 95997603],
+          "timing_constraints_check_title_offset": "~95997400 (region 'Timing constraints check')",
+          "check_item_names_region": "96155600..96166200 (no_input_delay/partial_input_delay/no_clock/clock_check/dummy_node/.../no_output_delay/partial_output_delay)",
+          "no_input_delay_offset": 96155720,
+          "dummy_node_offset": 96155792,
+          "partial_output_delay_offset": 96165872
+        }
+      },
+      "td_6_2_2_run_exe": {
+        "path": "D:\\downlaod\\bin\\run.exe",
+        "bytes": 81656080,
+        "sha256": "BFE702E31EAF2E90AC62AE97BB384689B8F24EC70EEBECC54341CC51D1E06411",
+        "findings": {
+          "drc_family_table_contains_TMST": false,
+          "drc_family_region_offset": 61509836,
+          "drc_family_list": "PLBD|CLKBD|CLKST|FRST|SLATR|SIGMAP|DUPLOOP|RTST|RTCLK|RTRGN",
+          "severe_template_hits": 0,
+          "timing_status_checker_hits": 0,
+          "check_timing_hits": "present (command layer)",
+          "report_drc_offset": 61510240
+        }
+      },
+      "install_text_scan": "literal 'TMST-7700' does not occur in any 6.2.3 install resource file (rule id composed at runtime from family 'TMST' + number); the only doc hits are TD_User_Guide_V6.2.pdf and SWUG117_Analysis_Tools_User_Guide.pdf"
+    }
+  },
+  "design_objects": {
+    "message_points_to": "check_timing report items with severity=HIGH (SDC completeness/reasonableness findings), NOT a specific timing failure of a path",
+    "sdc": {
+      "paths": [
+        "D:\\TD\\work\\csi2\\prj\\camera_rgb565_ddr1333_20261017_160741\\timing.sdc",
+        "D:\\TD\\work\\csi2\\prj\\camera_rgb565_ddr1600ctl_20261017_160741\\timing.sdc",
+        "D:\\TD\\work\\csi2\\prj\\camera_rgb565_wb_20261015_002820\\timing.sdc"
+      ],
+      "bytes": 2350,
+      "sha256_all_identical": "0C32C5F7A536BBC811901D5AF254A4FDDC270DCDD2B59C16CAEB006EF0F7FE1C",
+      "content_summary": "clock create/rename (sys_clk50m, mipi_a/b_clk_hs, generated mipi_a_byte_clk, pclkx1/pclkx5/mclk27, ddr_user) + set_clock_groups -asynchronous + 1 set_false_path (startup enable) + derive_clocks + 4 set_path_skew; NO set_input_delay / set_output_delay anywhere",
+      "implication": "byte-identical SDC across the 6.2.2 baseline and both 6.2.3 candidates => TMST-7700 appearance cannot be attributed to SDC changes; expected HIGH categories (if any) most plausibly in no_input_delay/no_output_delay/dummy_node/clock_check type items (inferred, not enumerated)"
+    },
+    "sta_context_from_E2_evidence": {
+      "setup1333": "0.230, STNS 0; setup1600ctl: 0.128, STNS 0; 66/68 endpoint groups; 0 violations both; TNS 0 both",
+      "sta_coverage": {"ddr1333": "96.49%", "ddr1600ctl": "96.43%", "002820_6_2_2": "97.99%"},
+      "route_exit_code": "0 for both candidates; bitgen executed and passed preconditions; bits not downloaded"
+    }
+  },
+  "comparison_6_2_2": {
+    "native_route_logs": [
+      {"candidate": "camera_rgb565_wb_20261015_002820", "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_wb_20261015_002820\\native_route.txt", "sha256": "A6F4FBA6689512DC7AE785F10F1D3DCEA9CF13A2910C28DC6141EA7CC57A8909", "tmst_count": 0, "timing_status_checker_stage_lines": 0, "drc_line_count": 16, "drc_detail": "SLATR-1038 x10 (place 8.10), RTCLK-5078 WARNING + RTCLK-5079 CRITICAL-WARNING at route 4.8 / 8.9 / 15"},
+      {"candidate": "camera_rgb565_timing_20261015_103222", "tmst_count": 0, "timing_status_checker_stage_lines": 0, "drc_line_count": 16},
+      {"candidate": "camera_rgb565_timing_20261015_111134", "tmst_count": 0, "timing_status_checker_stage_lines": 0, "drc_line_count": 16},
+      {"candidate": "camera_rgb565_timing_20261015_114913", "tmst_count": 0, "timing_status_checker_stage_lines": 0, "drc_line_count": 16}
+    ],
+    "td_session_logs_002820": {
+      "files_checked": ["td_20261015_002851.log", "td_20261015_003810.log", "td_20261015_005614.log", "td_20261015_005651.log", "td_20261015_005923.log", "td_20261015_010031.log"],
+      "tmst_count_all": 0,
+      "timing_status_string_count_all": 0
+    },
+    "engine_symbol_diff": "6.2.2 run.exe DRC family table lacks TMST; no 'SEVERE timing constraint' template; no 'Timing Status Checker' stage name (0 hits). 6.2.3 run.exe has all three.",
+    "silence_or_other_code": "6.2.2 same stages are silent w.r.t. timing-constraint items (no equivalent code); the checker stage simply did not run"
+  },
+  "detail_enumeration": {
+    "run_date": "2026-10-17 evening (G-2 follow-up)",
+    "object": {
+      "routed_db": {
+        "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_ddr1333_20261017_160741\\csi_checked_debug_pr.db",
+        "why": "post-route checkpoint exported by route_rgb565.tcl after route + update_timing -mode final + reports; also the frozen bitgen display_checkpoint, i.e. the state the flow's 'refer to check_timing report' points to"
+      },
+      "place_db_comparator": {
+        "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_ddr1333_20261017_160741\\csi_checked_place.db",
+        "why": "place-stage checkpoint; comparator for the flow's 1 SEVERE at the place-stage checker"
+      }
+    },
+    "method": {
+      "write_isolation": "full project copied to C:\\Users\\czz\\AppData\\Local\\Temp\\opencode\\tmst7700_detail_20261017\\prj_1333_copy (312 files / 123,527,950 B); only the COPY's .al Path attribute was normalized to the copy; TD sessions ran with cwd = copy; original candidate never opened by the tool",
+      "session_recipe": [
+        "import_device ph1_100p.db -package PH1P100SBG484 -speed 3",
+        "open_project ./camera_ddr_display.al",
+        "import_db ./csi_checked_debug_pr.db   (place comparator: ./csi_checked_place.db)",
+        "update_timing -mode final             (place comparator: refused TMR-8029, caught, non-fatal)",
+        "check_timing -file ./tmst7700_detail_1333.rpt -verbose",
+        "report_drc -file ./tmst7700_drc_1333.txt   (routed session only)",
+        "close_project"
+      ],
+      "cli": "D:/anlogic/TD_Release_2026.2/bin/td_commands_prompt.exe ./<script>.tcl (SHA 2629E474... matches frozen anchor)",
+      "exit_codes": {"routed": 0, "place": 0},
+      "markers": ["TMST7700_CHECKTIMING_RETURNED", "TMST7700_REPORT_DRC_RETURNED", "TMST7700_DETAIL_DONE", "TMST7700_PLACE_CHECKTIMING_RETURNED", "TMST7700_PLACE_DONE"],
+      "durations": {"routed_s": 32.3, "place_s": 16.7},
+      "zero_write_proof": {
+        "pre_snapshot": "tmst7700_detail_1333_candidate_pre.sha256.txt",
+        "post_snapshot": "tmst7700_detail_1333_candidate_post.sha256.txt",
+        "both_sha256": "016D89C932DBDE0A2BAF77007FF591155E657895CE017B2E19E1AE5A11BF618F",
+        "result": "byte-identical (312 files / 123,527,950 B); candidate untouched"
+      }
+    },
+    "reproduction_fidelity": {
+      "report_drc_on_scratch_copy": [
+        "TMST-7700#1 CRITICAL-WARNING - Timing constraints check - 4 SEVERE timing constraint issue(s) detected... (matches candidate route log L2068/L2177 text and count)",
+        "CLKST-8015#1 CRITICAL-WARNING - Clock placement check - sys_clk50m_syn_2.di (H4 GCLK IO) vs camera PLL refclk local routing (matches candidate L566)",
+        "RTCLK-5078#1 WARNING - cwc_jtck local routing (matches candidate L2062/L2171)"
+      ]
+    },
+    "routed_db_findings": {
+      "toc_severity": {
+        "no_clock": {"count": 0, "severity": "HIGH"},
+        "clock_definition": {"count": 3, "severity": "HIGH"},
+        "dummy_node": {"count": 3, "severity": "HIGH"},
+        "invalid_constraint": {"count": 0, "severity": "HIGH"},
+        "pll_clock_constraints": {"count": 1, "severity": "HIGH"},
+        "combinational_loops": {"count": 0, "severity": "HIGH"},
+        "soft_fifo_constraints": {"count": 0, "severity": "HIGH"},
+        "no_path_constraints": {"count": 0, "severity": "MEDIUM"},
+        "shadowed_ignored_exceptions": {"count": 0, "severity": "MEDIUM"},
+        "no_input_delay": {"count": 66, "severity": "MEDIUM"},
+        "no_output_delay": {"count": 85, "severity": "MEDIUM"},
+        "partial_input_delay": {"count": 0, "severity": "MEDIUM"},
+        "partial_output_delay": {"count": 0, "severity": "MEDIUM"},
+        "abnormal_input_delay": {"count": 0, "severity": "MEDIUM"}
+      },
+      "high_items": [
+        {"class": "clock definition / local clocks (3)", "objects": ["config_inst.cwc_tck_o (CWC wrapper auto-created JTAG TCK net; same source family as RTCLK-5078; config/debug infrastructure)", "mclk27 (camera PHY PLL clkc[2], 27 MHz; startup enable sync / camera master clock)", "mipi_a_byte_clk (generated clock = MIPI HS clock / 4; thinnest-margin domain of the design at 0.230 ns, per E2)"]},
+        {"class": "pll clock constraints (1)", "object": "pclkx5 (u_camera/X_ui_pll/.../u_PH1P_PHY_PLL.clkc[1]); Constraint 742.400024 MHz vs PLL Setting 742.500000 MHz (0.099976 MHz = 0.0135% rounding; companion USR-6144 warning; pclkx1 148.48 vs 148.5 MHz same origin)"},
+        {"class": "dummy node (3 groups; NOT counted by flow TMST counter)", "objects": ["PH1P_PHY_HR_BANKREF: DDR PHY vref1/2_rank0/1_ctrl pins (~64 rows; hard-IP internals)", "PH1P_PHY_HR_PAD: mipi_a/b_*_rdiff_enb (~20 rows; differential enables)", "PH1P_PHY_LSLICE: CWC watch_pipe/bus_det + debug/APB residue (~26 rows; debug/CWC infrastructure)"]}
+      ],
+      "notes": "no_clock=0, invalid_constraint=0, combinational_loops=0, generated-clock-disconnected=0, multiple_clock=0, unexpandable=0 -> no substantive class; I/O-delay items (66/85) are MEDIUM, not part of the SEVERE count"
+    },
+    "place_db_findings": {
+      "toc_nonzero_high": {"clock_definition": {"count": 0}, "dummy_node": {"count": 3}, "pll_clock_constraints": {"count": 1}},
+      "notes": "same 3 dummy-node model groups; local clocks = 0 before routing; USR-6144 pclkx5 mismatch already present"
+    },
+    "count_reconciliation": {
+      "formula_observed": "flow TMST-7700 count = clock_definition + pll_clock_constraints findings (dummy_node excluded from the flow counter)",
+      "place": "flow 1 = pll(1); dummy(3) not counted",
+      "route_final": "flow 4 = clock(3) + pll(1); dummy(3) not counted",
+      "conclusion": "all three frozen counts 1/4/4 reconcile exactly on both checkpoints"
+    },
+    "classification": {
+      "verdict": "new-stricter-check confirmed; details are existing completeness/structure style (CWC/debug infrastructure, MIPI/DDR hard-IP internals, PLL request-frequency rounding); no substantive constraint gap",
+      "escalation_triggered": false,
+      "m5_7_recommendation": "CLOSE (recommend closing M5.7 as 'expected manifestation of the TD 6.2.3 Timing Status Checker/TMST-7700 on this design; no substantive constraint gap'); no SDC change, no waiver, no RTL/IP change -> no retest impact list",
+      "side_notes": [
+        "mipi_a_byte_clk local-clock property is consistent with its 0.230 ns thinnest margin already priced in final-mode STA (0 violations); optimization belongs to the 0.300 ns exploration window M5.5, not to M5.7",
+        "pclkx5 742.4/742.5 (0.0135%) is a request-frequency rounding; actual hardware rate equals the constraint value; no action now (a future pixel-PLL regeneration may align the requested frequency to 742.4 MHz)"
+      ]
+    },
+    "artifacts": [
+      {"path": "workflow/runs/20261017_182621_T01_board_and_tmst7700/tmst7700_detail_1333.rpt", "bytes": 20408, "sha256": "4710AA0146EFBEE2042846F97F709AE4C1029D6CEECF72BC3900A74671E203DA"},
+      {"path": "workflow/runs/20261017_182621_T01_board_and_tmst7700/tmst7700_detail_1333_place.rpt", "bytes": 20357, "sha256": "99C7FC5B6B7D32A076976F4FE670B6FFD1D54403884BE9D449FD6C2B76A4304D"},
+      {"path": "workflow/runs/20261017_182621_T01_board_and_tmst7700/tmst7700_drc_1333.txt", "bytes": 2900, "sha256": "9649D296C795C3CA70AB84CB8B7F3FE1147966F9DFA862AC86E54F6259A89FA7"},
+      {"path": "workflow/runs/20261017_182621_T01_board_and_tmst7700/tmst7700_detail_1333_run.txt", "bytes": 22795, "sha256": "C70B8841FEBFF7060500EC6CD160F40C7383FDA1F881BB76D7F6F8EE679A9FBC"},
+      {"path": "workflow/runs/20261017_182621_T01_board_and_tmst7700/tmst7700_detail_1333_place_run.txt", "bytes": 22240, "sha256": "EECF586C3103F794478691E175FE646AEF8408011A78F1098F53FC6AA7F63A93"},
+      {"path": "workflow/runs/20261017_182621_T01_board_and_tmst7700/tmst7700_check_timing_1333.tcl", "bytes": 964, "sha256": "B625262F75A5CEF7AF6ACADD02FB46AD1DDDCC40BA15A37E25194AA71F98719C"},
+      {"path": "workflow/runs/20261017_182621_T01_board_and_tmst7700/tmst7700_check_timing_1333_place.tcl", "bytes": 745, "sha256": "A591573035C2B01F65D50F03C9B45A04BB0A8312DB4DBB66AB2294DCCF80365B"},
+      {"path": "workflow/runs/20261017_182621_T01_board_and_tmst7700/tmst7700_detail_1333_candidate_pre.sha256.txt", "bytes": 34551, "sha256": "016D89C932DBDE0A2BAF77007FF591155E657895CE017B2E19E1AE5A11BF618F"},
+      {"path": "workflow/runs/20261017_182621_T01_board_and_tmst7700/tmst7700_detail_1333_candidate_post.sha256.txt", "bytes": 34551, "sha256": "016D89C932DBDE0A2BAF77007FF591155E657895CE017B2E19E1AE5A11BF618F"}
+    ],
+    "constraints_respected": "read-only; no rebuild; candidates/evidence/scripts unmodified (zero-write proof); no write to D:\\downlaod; no batch deletes; check_timing run on a private copy outside the candidate tree; outputs kept in the run directory"
+  },
+  "analysis": {
+    "rationale": [
+      "Message semantics: count of check_timing severity=HIGH items (SWUG117 appendix definition) - a constraint-completeness report surfaced as DRC CRITICAL-WARNING; not a timing violation",
+      "Appears identically on new-IP (1333) and old-IP (1600ctl) candidates under 6.2.3 => not a new-IP defect",
+      "SDC byte-identical across 6.2.2 baseline and both 6.2.3 candidates => not caused by constraint edits; no SDC syntax error (no USR-8001/Tcl errors)",
+      "6.2.3 flow engine adds 'Run Timing Status Checker' stage (runs 3x per route) and the TMST DRC family + message template; 6.2.2 engine has none of these and its logs are silent",
+      "Rule already documented in 6.2.2-era docs (User Guide 2026-05) but not wired into the 6.2.2 flow => documentation-first, flow-enabled-in-6.2.3",
+      "Count changes 1 (place) -> 4 (route/final) => some checks become evaluable/added after routing; consistent with a post-route completeness report"
+    ],
+    "confidence": "high for classification (new stricter check); detail of the 4 items unknown (not enumerated)"
+  },
+  "recommendations": [
+    {"id": "A", "priority": "adopt-now", "action": "No design/SDC/bit action in this batch; keep M1a (1333 mainline / 1600 fallback) and bit candidates unchanged; M5.7 open item is minimized (meaning + impact boundary) and does not block board phases"},
+    {"id": "B", "priority": "recommended-follow-up (separate approved task, read-only)", "action": "Enumerate the 4 HIGH items: import_db of the routed pr db then 'check_timing -file <repo scratch>\\tmst7700_detail_<cand>.rpt' (or GUI Check Timing Report export). Direct output to a repo-side scratch path to avoid writing into candidates (writing into candidates requires planner approval). If all items are existing-style (no_input_delay/no_output_delay/dummy_node/clock_check) -> close M5.7 as 'existing constraint style + new check'. If no_clock/unexpandable/combinational_loops classes appear -> escalate to real constraint gap and plan fixes with the corresponding retest impact list"},
+    {"id": "C", "priority": "optional", "action": "Low-priority vendor/FAE ticket only if confirmation of the 6.2.2(docs only)->6.2.3(flow-enabled) behavior change or asking for TMST detail auto-dump capability is desired; non-blocking"},
+    {"id": "D", "priority": "do-not", "action": "Do NOT add create_waiver for TMST-7700 or exclude check items (would hide completeness info and require touching frozen ADC/SDC); do NOT add set_input_delay/set_output_delay in-place (would change frozen comparison baseline; must be a new task with retest)"}
+  ],
+  "methods": {
+    "text_extraction": "Select-String -SimpleMatch on native_route.txt / td_*.log; Tee logs inspected and recorded",
+    "binary_scan": "byte-exact multi-pattern scan (ASCII/UTF-16LE/UTF-16BE) via tools_g_scan_bytes.ps1 + fast Latin1 index search; files: run.exe/td.exe/bw.exe/IpTool.exe/design_integrator.exe/mpro.exe (6.2.3) and td.exe/run.exe (6.2.2)",
+    "pdf_extraction": "PyMuPDF text-layer search (tools_g_pdf_search.py, tools_g_pdf_pages.py); all 48 PDFs of 6.2.3 doc tree and all 50 PDFs of D:\\downlaod\\Doc scanned for 'TMST-7700'/'TMST'",
+    "install_text_scan": "ripgrep pattern search over D:\\anlogic\\TD_Release_2026.2 (literal 'TMST-7700' absent; 'TMST' only in encrypted-RTL base64 blobs)",
+    "limits": [
+      "Exact 4 HIGH items not enumerated (no check_timing execution; out of this package's scope)",
+      "Binary coverage targeted to flow-relevant executables (not every DLL exhaustively)",
+      "No writes to candidates/evidence/scripts; helper scripts live in the new run directory only"
+    ],
+    "read_only_statement": "no candidate, evidence, or script file was modified; TD installs and D:\\downlaod were only read; no rebuild, no hardware, no GUI"
+  },
+  "revision_history": [
+    {"rev": "G.1", "date": "2026-10-17", "change": "initial minimal investigation (extraction, provenance, classification new-stricter-check; details not enumerated)"},
+    {"rev": "G.2", "date": "2026-10-17", "change": "detail enumeration executed read-only on a private copy (check_timing -file on routed+place db; report_drc reproduction; zero-write proof); added detail_enumeration section; verdict updated to detail_items_enumerated=true; M5.7 closure recommended"}
+  ],
+  "artifact": {
+    "report_path": "docs\\TMST-7700\u6700\u5c0f\u8c03\u67e5_2026-10-17.md",
+    "evidence_path": "docs\\evidence\\tmst7700_20261017.json",
+    "helper_scripts_in_run_dir": [
+      "workflow\\runs\\20261017_182621_T01_board_and_tmst7700\\tools_g_scan_bytes.ps1",
+      "workflow\\runs\\20261017_182621_T01_board_and_tmst7700\\tools_g_pdf_search.py",
+      "workflow\\runs\\20261017_182621_T01_board_and_tmst7700\\tools_g_pdf_pages.py",
+      "workflow\\runs\\20261017_182621_T01_board_and_tmst7700\\tools_g_run_checktiming.py",
+      "workflow\\runs\\20261017_182621_T01_board_and_tmst7700\\tools_g_snapshot_hash.py",
+      "workflow\\runs\\20261017_182621_T01_board_and_tmst7700\\tools_g_patch_al.py"
+    ],
+    "detail_enumeration_artifacts_dir": "workflow\\runs\\20261017_182621_T01_board_and_tmst7700\\ (tmst7700_detail_1333.rpt / tmst7700_detail_1333_place.rpt / tmst7700_drc_1333.txt / run logs / candidate pre+post snapshots)"
+  }
+}

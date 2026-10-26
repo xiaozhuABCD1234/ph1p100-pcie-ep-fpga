@@ -1,0 +1,207 @@
+{
+  "syn_sws": 0.204,
+  "syn_tns": 0.0,
+  "syn_slices": 18766,
+  "syn_eram": 72,
+  "syn_reg": 20090,
+  "routed_sws": 0.012,
+  "routed_tns": 0.0,
+  "routed_hws": 0.02,
+  "routed_hts": 0.0,
+  "viol_s_ep": 0,
+  "viol_h_ep": 0,
+  "slices": 25061,
+  "rams": 102,
+  "dsps": 0,
+  "dramhardcon": 84,
+  "groups": {
+    "clk_a1->clk_a1": {
+      "wns": 0.012,
+      "tns": 0.0,
+      "viol_ep": 0,
+      "sections": 1
+    },
+    "ddr_user->ddr_user": {
+      "wns": 0.012,
+      "tns": 0.0,
+      "viol_ep": 0,
+      "sections": 12
+    },
+    "mipi_a_byte_clk->mipi_a_byte_clk": {
+      "wns": 0.625,
+      "tns": 0.0,
+      "viol_ep": 0,
+      "sections": 1
+    },
+    "config_inst.cwc_tck_o->config_inst.cwc_tck_o": {
+      "wns": 48.307,
+      "tns": 0.0,
+      "viol_ep": 0,
+      "sections": 1
+    },
+    "u_ddrmc_test_top/u_ddrmc_x32/mcu_clk->u_ddrmc_test_top/u_ddrmc_x32/mcu_clk": {
+      "wns": 0.0,
+      "tns": 0.0,
+      "viol_ep": 0,
+      "sections": 15
+    },
+    "sys_clk50m->sys_clk50m": {
+      "wns": 7.809,
+      "tns": 0.0,
+      "viol_ep": 0,
+      "sections": 1
+    },
+    "pclkx1->pclkx1": {
+      "wns": 2.086,
+      "tns": 0.0,
+      "viol_ep": 0,
+      "sections": 1
+    },
+    "mclk27->mclk27": {
+      "wns": 36.416,
+      "tns": 0.0,
+      "viol_ep": 0,
+      "sections": 1
+    },
+    "config_inst.cwc_tck_o->config_inst.tck_i": {
+      "wns": 43.285,
+      "tns": 0.0,
+      "viol_ep": 0,
+      "sections": 1
+    },
+    "config_inst.tck_i->config_inst.cwc_tck_o": {
+      "wns": 44.52,
+      "tns": 0.0,
+      "viol_ep": 0,
+      "sections": 1
+    }
+  },
+  "group_viol_sum": 0,
+  "worst_paths": [
+    {
+      "slack": 0.012,
+      "begin": "u_a1/u_a1/u_core/sdata_ptr_reg[1]_syn_2.clk",
+      "end": "u_a1/u_a1/u_core/state_reg[4]_syn_102.imb"
+    },
+    {
+      "slack": 0.018,
+      "begin": "u_a1/u_a1/u_core/sdata_ptr_reg[1]_syn_2.clk",
+      "end": "u_a1/u_a1/u_core/state_reg[0]_syn_93.ima"
+    },
+    {
+      "slack": 0.033,
+      "begin": "u_a1/u_a1/u_core/p3_r_reg[0]_syn_2.clk",
+      "end": "u_a1/u_a1/u_core/state_reg[0]_syn_93.ia"
+    },
+    {
+      "slack": 0.056,
+      "begin": "u_a1/u_a1/add19_syn_104.clk",
+      "end": "u_a1/u_a1/smem_syn_29.addrb[12]"
+    },
+    {
+      "slack": 0.063,
+      "begin": "u_a1/u_a1/u_core/rng1_r_reg_syn_17.clk",
+      "end": "u_a1/u_a1/u_core/bm_b_syn_47.addrb[10]"
+    },
+    {
+      "slack": 0.079,
+      "begin": "u_a1/u_a1/add19_syn_100.clk",
+      "end": "u_a1/u_a1/smem_syn_41.addrb[13]"
+    },
+    {
+      "slack": 0.092,
+      "begin": "u_a1/u_a1/add19_syn_100.clk",
+      "end": "u_a1/u_a1/smem_syn_41.addrb[10]"
+    },
+    {
+      "slack": 0.099,
+      "begin": "u_a1/u_a1/u_core/rng1_r_reg_syn_17.clk",
+      "end": "u_a1/u_a1/u_core/bm_b_syn_29.addrb[12]"
+    },
+    {
+      "slack": 0.101,
+      "begin": "u_a1/u_a1/u_core/rng1_r_reg_syn_17.clk",
+      "end": "u_a1/u_a1/u_core/bm_b_syn_49.addrb[10]"
+    },
+    {
+      "slack": 0.105,
+      "begin": "u_a1/u_a1/u_core/sdata_ptr_reg[1]_syn_2.clk",
+      "end": "u_a1/u_a1/u_core/add44_syn_266.imb"
+    },
+    {
+      "slack": 0.02,
+      "begin": "a1_rst_sync_reg[2]_syn_3.clk",
+      "end": "u_a1/u_export/dq_syn_240.ssr"
+    },
+    {
+      "slack": 0.02,
+      "begin": "a1_rst_sync_reg[2]_syn_3.clk",
+      "end": "u_a1/u_export/dq_syn_241.ssr"
+    },
+    {
+      "slack": 0.02,
+      "begin": "a1_rst_sync_reg[2]_syn_3.clk",
+      "end": "u_a1/u_export/dq_syn_242.ssr"
+    },
+    {
+      "slack": 0.02,
+      "begin": "a1_rst_sync_reg[2]_syn_3.clk",
+      "end": "u_a1/u_export/dq_syn_243.ssr"
+    },
+    {
+      "slack": 0.02,
+      "begin": "a1_rst_sync_reg[2]_syn_3.clk",
+      "end": "u_a1/u_export/dq_syn_244.ssr"
+    },
+    {
+      "slack": 0.02,
+      "begin": "a1_rst_sync_reg[2]_syn_3.clk",
+      "end": "u_a1/u_export/dq_syn_245.ssr"
+    },
+    {
+      "slack": 0.02,
+      "begin": "a1_rst_sync_reg[2]_syn_3.clk",
+      "end": "u_a1/u_export/dq_syn_246.ssr"
+    },
+    {
+      "slack": 0.02,
+      "begin": "a1_rst_sync_reg[2]_syn_3.clk",
+      "end": "u_a1/u_export/dq_syn_247.ssr"
+    },
+    {
+      "slack": 0.02,
+      "begin": "auto_created_cwc2/wrapper_cwc_top/CAPTURE_CTRL_NOT_EXIST$watch_pipe/data_din_pipe_reg[70]_syn_2.clk",
+      "end": "auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/mem_syn_74.dia[8]"
+    },
+    {
+      "slack": 0.02,
+      "begin": "auto_created_cwc2/wrapper_cwc_top/CAPTURE_CTRL_NOT_EXIST$watch_pipe/data_din_pipe_reg[247]_syn_2.clk",
+      "end": "auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/mem_syn_263.dia_extra[2]"
+    }
+  ],
+  "abort_to_addrb_paths": [],
+  "worst_clk_a1_path": {
+    "slack": 0.012,
+    "begin": "u_a1/u_a1/u_core/sdata_ptr_reg[1]_syn_2.clk",
+    "end": "u_a1/u_a1/u_core/state_reg[4]_syn_102.imb"
+  },
+  "gates": {
+    "syn_gate": true,
+    "syn_precondition_0p127": true,
+    "route_zero_viol": true,
+    "route_hold_pos": true,
+    "route_wnS_ge_0p003": true,
+    "route_wnS_ge_0p05": false,
+    "cone_break": true,
+    "res_slices": true,
+    "res_eram": true,
+    "res_dsp": true,
+    "group_clk_a1": false,
+    "group_ddr_user": true,
+    "group_mipi_a": true,
+    "group_sys50m": true,
+    "group_pclkx1": true,
+    "group_others_zero": true
+  },
+  "verdict": "CAVEAT_thin_margin"
+}

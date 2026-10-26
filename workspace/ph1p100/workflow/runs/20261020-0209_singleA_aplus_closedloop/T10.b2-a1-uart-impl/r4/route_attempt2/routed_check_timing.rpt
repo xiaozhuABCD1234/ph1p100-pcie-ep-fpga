@@ -1,0 +1,394 @@
+Table of Contents
+-----------------
+1. checking no clock(0) (HIGH)
+2. checking clock definition(4) (HIGH)
+3. checking dummy node(3) (HIGH)
+4. checking invalid constraint(0) (HIGH)
+5. checking pll clock constraints(1) (HIGH)
+6. checking combinational loops(0) (HIGH)
+7. checking soft fifo timing exception constraints(0) (HIGH)
+8. checking no path constraints(0) (MEDIUM)
+9. checking shadowed/ignored timing exception constraints(0) (MEDIUM)
+10. checking no input delay(66) (MEDIUM)
+11. checking no output delay(85) (MEDIUM)
+12. checking partial input delay(0) (MEDIUM)
+13. checking partial output delay(0) (MEDIUM)
+14. checking abnormal input delay(0) (MEDIUM)
+
+
+1. checking nets with no clock driven. (HIGH)
+---------------------------------------------
+2. checking clock definition problems. (HIGH)
+---------------------------------------------
+2.1 There are 0 leaf clock pins driven by multiple clocks. (HIGH)
+
+
+2.2 There are 0 clocks created on internal clock network. (HIGH)
+
+
+2.3 There are 0 unexpandable clock sets. (HIGH)
+
+
+2.4 There are 4 local clocks. (HIGH)
+
+	config_inst.cwc_tck_o
+	mclk27
+	mipi_a_byte_clk
+	sys_clk50m
+
+2.5 There are 0 generated clocks that are not connected to their master clocks. (HIGH)
+
+
+3. checking dummy nodes. (HIGH)
+---------------------------------------------
+There are 3 nodes are dangling. (HIGH)
+
+DummyNode in Model: PH1P_PHY_HR_BANKREF
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref1_rank0_ctrl[7]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref1_rank1_ctrl[7]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref1_rank0_ctrl[6]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref1_rank1_ctrl[6]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref1_rank0_ctrl[5]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref1_rank1_ctrl[5]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref1_rank0_ctrl[4]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref1_rank1_ctrl[4]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref1_rank0_ctrl[3]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref1_rank1_ctrl[3]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref1_rank0_ctrl[2]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref1_rank1_ctrl[2]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref1_rank0_ctrl[1]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref1_rank1_ctrl[1]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref1_rank0_ctrl[0]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref1_rank1_ctrl[0]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref1_rank0_ctrl[7]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref1_rank1_ctrl[7]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref1_rank0_ctrl[6]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref1_rank1_ctrl[6]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref1_rank0_ctrl[5]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref1_rank1_ctrl[5]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref1_rank0_ctrl[4]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref1_rank1_ctrl[4]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref1_rank0_ctrl[3]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref1_rank1_ctrl[3]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref1_rank0_ctrl[2]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref1_rank1_ctrl[2]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref1_rank0_ctrl[1]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref1_rank1_ctrl[1]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref1_rank0_ctrl[0]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref1_rank1_ctrl[0]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref2_rank0_ctrl[7]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref2_rank1_ctrl[7]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref2_rank0_ctrl[6]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref2_rank1_ctrl[6]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref2_rank0_ctrl[5]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref2_rank1_ctrl[5]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref2_rank0_ctrl[4]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref2_rank1_ctrl[4]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref2_rank0_ctrl[3]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref2_rank1_ctrl[3]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref2_rank0_ctrl[2]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref2_rank1_ctrl[2]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref2_rank0_ctrl[1]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref2_rank1_ctrl[1]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref2_rank0_ctrl[0]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[1]$u_ddrphy_bankref.vref2_rank1_ctrl[0]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref2_rank0_ctrl[7]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref2_rank1_ctrl[7]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref2_rank0_ctrl[6]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref2_rank1_ctrl[6]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref2_rank0_ctrl[5]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref2_rank1_ctrl[5]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref2_rank0_ctrl[4]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref2_rank1_ctrl[4]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref2_rank0_ctrl[3]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref2_rank1_ctrl[3]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref2_rank0_ctrl[2]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref2_rank1_ctrl[2]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref2_rank0_ctrl[1]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref2_rank1_ctrl[1]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref2_rank0_ctrl[0]
+	u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/bkref[0]$u_ddrphy_bankref.vref2_rank1_ctrl[0]
+
+DummyNode in Model: PH1P_PHY_HR_PAD
+	mipi_a_clk_hs_n_syn_2.rdiff_enb
+	mipi_a_clk_hs_p_syn_2.rdiff_enb
+	mipi_a_data_hs_n[3]_syn_2.rdiff_enb
+	mipi_a_data_hs_n[2]_syn_2.rdiff_enb
+	mipi_a_data_hs_n[1]_syn_2.rdiff_enb
+	mipi_a_data_hs_n[0]_syn_2.rdiff_enb
+	mipi_a_data_hs_p[3]_syn_2.rdiff_enb
+	mipi_a_data_hs_p[2]_syn_2.rdiff_enb
+	mipi_a_data_hs_p[1]_syn_2.rdiff_enb
+	mipi_a_data_hs_p[0]_syn_2.rdiff_enb
+	mipi_b_clk_hs_n_syn_2.rdiff_enb
+	mipi_b_clk_hs_p_syn_2.rdiff_enb
+	mipi_b_data_hs_n[3]_syn_2.rdiff_enb
+	mipi_b_data_hs_n[2]_syn_2.rdiff_enb
+	mipi_b_data_hs_n[1]_syn_2.rdiff_enb
+	mipi_b_data_hs_n[0]_syn_2.rdiff_enb
+	mipi_b_data_hs_p[3]_syn_2.rdiff_enb
+	mipi_b_data_hs_p[2]_syn_2.rdiff_enb
+	mipi_b_data_hs_p[1]_syn_2.rdiff_enb
+	mipi_b_data_hs_p[0]_syn_2.rdiff_enb
+
+DummyNode in Model: PH1P_PHY_LSLICE
+	u_usr_mcu_wrapper/u_mcu_apb_gpio/i_reg_r_2c[2]_syn_3755.ofb
+	debug_hub_top/u_debughub/slave_gen[0]$U_handshake_sync_ctrl_k/bus_data_r_aclk_reg[68]_syn_2.ofa
+
+4. checking invalid constraints. (HIGH)
+---------------------------------------------
+There are 0 invalid constraints. (HIGH)
+
+
+5. checking PLL clocks. (HIGH)
+---------------------------------------------
+PLL inst: u_a1_pll/u_pll/u_PH1P_PHY_PLL
+{
+	There are 0 clock pins that have no clock constraints. (HIGH)
+
+
+	There are 0 clocks whose clock frequency do not match the PLL setting. (HIGH)
+
+
+}
+
+PLL inst: u_camera/X_ui_pll/ph1p_phy_pll_wrapper_Inst/u_PH1P_PHY_PLL
+{
+	There are 0 clock pins that have no clock constraints. (HIGH)
+
+
+	There is 1 clock whose clock frequency does not match the PLL setting. (HIGH)
+
+		Clock Name: pclkx5, Pin Name: u_camera/X_ui_pll/ph1p_phy_pll_wrapper_Inst/u_PH1P_PHY_PLL.clkc[1], Constraint Frequency(MHz): 742.400024, PLL Setting Frequency(MHz): 742.500000
+
+}
+
+PLL inst: u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll0/u_pll_inst
+{
+	There are 0 clock pins that have no clock constraints. (HIGH)
+
+
+	There are 0 clocks whose clock frequency do not match the PLL setting. (HIGH)
+
+
+}
+
+PLL inst: u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_pll_inst
+{
+	There are 0 clock pins that have no clock constraints. (HIGH)
+
+
+	There are 0 clocks whose clock frequency do not match the PLL setting. (HIGH)
+
+
+}
+
+6. checking combinational loops. (HIGH)
+---------------------------------------------
+There are 0 combinational loops. (HIGH)
+
+
+7. checking soft fifo set_max_delay constraints. (HIGH)
+---------------------------------------------
+There are 0 max-delay datapath-only paths that are part of the provided async clock paths, whereas the timing between other registers is not relaxed or ignored. (HIGH)
+
+
+8. checking no path constraints. (MEDIUM)
+---------------------------------------------
+There are 0 constraints that have no timing paths. (MEDIUM)
+
+
+9. checking path exception constraints shadowed/ignored by other constraints. (MEDIUM)
+---------------------------------------------
+
+MCP/SMD Summary
+--------------------
+
+		Max Check
+		--------------------
+		     Total    Dominated     Shadowed      Ignored   Constraint
+		      1296         1296            0            0   set_max_delay -nowarn -from [get_regs {debug_hub_top/u_debughub/slave_gen[*]$U_handshake_sync_ctrl_k/bus_data_r_aclk[*]}] -to [get_regs {debug_hub_top/u_debughub/slave_gen[*]$U_handshake_sync_ctrl_k/bus_data_r_bclk[*]}] -datapath_only 2
+		        48           48            0            0   set_max_delay -nowarn -from [get_regs {debug_hub_top/u_debughub/slave_gen[*]$U_handshake_sync_stat_k/bus_data_r_bclk[*]}] -to [get_regs {debug_hub_top/u_debughub/slave_gen[*]$U_handshake_sync_stat_k/bus_data_r_aclk[*]}] -datapath_only 2
+		         4            4            0            0   set_max_delay -nowarn -from [get_regs {debug_hub_top/u_debughub/slave_gen[*]$U_handshake_sync_*/U_handshake_sync/req_aclk*}] -to [get_regs {debug_hub_top/u_debughub/slave_gen[*]$U_handshake_sync_*/U_handshake_sync/req_sync1_bclk*}] -datapath_only 2
+		         4            4            0            0   set_max_delay -nowarn -from [get_regs {debug_hub_top/u_debughub/slave_gen[*]$U_handshake_sync_*/U_handshake_sync/ack_bclk*}] -to [get_regs {debug_hub_top/u_debughub/slave_gen[*]$U_handshake_sync_*/U_handshake_sync/ack_sync1_aclk*}] -datapath_only 2
+
+		Min Check
+		--------------------
+		     Total    Dominated     Shadowed      Ignored   Constraint
+
+10. checking no input delay (MEDIUM)
+--------------------------
+There are 66 input ports that with no input delay specified. (MEDIUM)
+
+	cam_a_sda
+	cam_b_sda
+	ddr_dm[3]
+	ddr_dm[2]
+	ddr_dm[1]
+	ddr_dm[0]
+	ddr_dq[31]
+	ddr_dq[30]
+	ddr_dq[29]
+	ddr_dq[28]
+	ddr_dq[27]
+	ddr_dq[26]
+	ddr_dq[25]
+	ddr_dq[24]
+	ddr_dq[23]
+	ddr_dq[22]
+	ddr_dq[21]
+	ddr_dq[20]
+	ddr_dq[19]
+	ddr_dq[18]
+	ddr_dq[17]
+	ddr_dq[16]
+	ddr_dq[15]
+	ddr_dq[14]
+	ddr_dq[13]
+	ddr_dq[12]
+	ddr_dq[11]
+	ddr_dq[10]
+	ddr_dq[9]
+	ddr_dq[8]
+	ddr_dq[7]
+	ddr_dq[6]
+	ddr_dq[5]
+	ddr_dq[4]
+	ddr_dq[3]
+	ddr_dq[2]
+	ddr_dq[1]
+	ddr_dq[0]
+	ddr_dqs_n[3]
+	ddr_dqs_n[2]
+	ddr_dqs_n[1]
+	ddr_dqs_n[0]
+	ddr_dqs_p[3]
+	ddr_dqs_p[2]
+	ddr_dqs_p[1]
+	ddr_dqs_p[0]
+	mipi_a_clk_hs_n
+	mipi_a_data_hs_n[3]
+	mipi_a_data_hs_n[2]
+	mipi_a_data_hs_n[1]
+	mipi_a_data_hs_n[0]
+	mipi_a_data_hs_p[3]
+	mipi_a_data_hs_p[2]
+	mipi_a_data_hs_p[1]
+	mipi_a_data_hs_p[0]
+	mipi_b_clk_hs_n
+	mipi_b_data_hs_n[3]
+	mipi_b_data_hs_n[2]
+	mipi_b_data_hs_n[1]
+	mipi_b_data_hs_n[0]
+	mipi_b_data_hs_p[3]
+	mipi_b_data_hs_p[2]
+	mipi_b_data_hs_p[1]
+	mipi_b_data_hs_p[0]
+	sys_rst_n
+	usr_uart_rxd
+
+11. checking no output delay (MEDIUM)
+--------------------------
+There are 85 output ports that with no output delay specified. (MEDIUM)
+
+	O_hdmi_clk_p
+	O_hdmi_tx_p[2]
+	O_hdmi_tx_p[1]
+	O_hdmi_tx_p[0]
+	O_led[3]
+	O_led[2]
+	O_led[1]
+	O_led[0]
+	O_uart_txd
+	cam_a_scl
+	cam_a_sda
+	cam_a_xclr_n
+	cam_b_scl
+	cam_b_sda
+	cam_b_xclr_n
+	ddr_addr[13]
+	ddr_addr[12]
+	ddr_addr[11]
+	ddr_addr[10]
+	ddr_addr[9]
+	ddr_addr[8]
+	ddr_addr[7]
+	ddr_addr[6]
+	ddr_addr[5]
+	ddr_addr[4]
+	ddr_addr[3]
+	ddr_addr[2]
+	ddr_addr[1]
+	ddr_addr[0]
+	ddr_ba[2]
+	ddr_ba[1]
+	ddr_ba[0]
+	ddr_cas_n
+	ddr_ck_n
+	ddr_ck_p
+	ddr_cke
+	ddr_cs_n
+	ddr_dm[3]
+	ddr_dm[2]
+	ddr_dm[1]
+	ddr_dm[0]
+	ddr_dq[31]
+	ddr_dq[30]
+	ddr_dq[29]
+	ddr_dq[28]
+	ddr_dq[27]
+	ddr_dq[26]
+	ddr_dq[25]
+	ddr_dq[24]
+	ddr_dq[23]
+	ddr_dq[22]
+	ddr_dq[21]
+	ddr_dq[20]
+	ddr_dq[19]
+	ddr_dq[18]
+	ddr_dq[17]
+	ddr_dq[16]
+	ddr_dq[15]
+	ddr_dq[14]
+	ddr_dq[13]
+	ddr_dq[12]
+	ddr_dq[11]
+	ddr_dq[10]
+	ddr_dq[9]
+	ddr_dq[8]
+	ddr_dq[7]
+	ddr_dq[6]
+	ddr_dq[5]
+	ddr_dq[4]
+	ddr_dq[3]
+	ddr_dq[2]
+	ddr_dq[1]
+	ddr_dq[0]
+	ddr_dqs_n[3]
+	ddr_dqs_n[2]
+	ddr_dqs_n[1]
+	ddr_dqs_n[0]
+	ddr_dqs_p[3]
+	ddr_dqs_p[2]
+	ddr_dqs_p[1]
+	ddr_dqs_p[0]
+	ddr_odt
+	ddr_ras_n
+	ddr_reset_n
+	ddr_we_n
+
+12. checking partial input delay (MEDIUM)
+--------------------------
+There are 0 input ports with partial input delay specified. (MEDIUM)
+
+
+13. checking partial output delay (MEDIUM)
+--------------------------
+There are 0 output ports with partial output delay specified. (MEDIUM)
+
+
+14. checking abnormal set_input_delay constraints. (MEDIUM)
+---------------------------------------------
+There are 0 abnormal set_input_delay constraints. (MEDIUM)
+
+

@@ -1,0 +1,87 @@
+[
+  {
+    "name": "fault-matrix",
+    "process_exit": 0,
+    "status": "pass",
+    "expected_frames": 4,
+    "log": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\fault-matrix\\console.log",
+    "decoded_frames": 4,
+    "hits": [
+      "HIT FAULT_1",
+      "HIT FAULT_2",
+      "HIT FAULT_3",
+      "HIT FAULT_4",
+      "HIT FAULT_5",
+      "HIT FAULT_6",
+      "HIT FAULT_7",
+      "HIT FAULT_8",
+      "HIT PERMANENT_R_LOCK",
+      "HIT FAULT_9",
+      "HIT FAULT_10",
+      "HIT PROTOCOL_LOCK_14",
+      "HIT PROTOCOL_LOCK_15",
+      "HIT ISOLATED_HEADER_ID_22",
+      "HIT ISOLATED_HEADER_ID_23",
+      "HIT ISOLATED_HEADER_ID_24",
+      "HIT ISOLATED_HEADER_ID_25",
+      "HIT OLD_EPOCH_REJECT",
+      "HIT STALE_DUPLICATE_ACK_REJECT RECOVERY_GOOD4"
+    ]
+  },
+  {
+    "name": "cmp-matrix",
+    "process_exit": 0,
+    "status": "pass",
+    "expected_frames": 8,
+    "log": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\cmp-matrix\\console.log",
+    "decoded_frames": 8,
+    "hits": [
+      "HIT SLOT1_STALL_SLOT0_ACK_RECOMMIT",
+      "HIT CMP_TWO_HELD_RAW_BACKPRESSURE",
+      "HIT REVERSE_STALL_TAKE_COMMIT_PREMATURE_ACK",
+      "HIT CMP_TAKE_REFILL_ACK_COMMIT_REAL_CORE GOOD8"
+    ]
+  },
+  {
+    "name": "old-counterexample",
+    "process_exit": 0,
+    "status": "expected_rejection",
+    "expected_frames": 0,
+    "log": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\old-counterexample\\console.log",
+    "reason": "CMP descriptor changed under stall",
+    "hits": []
+  },
+  {
+    "name": "camera-swap-mutant",
+    "process_exit": 0,
+    "status": "expected_rejection",
+    "expected_frames": 2,
+    "log": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\camera-swap-mutant\\console.log",
+    "reason": "INDEPENDENT_CAMERA_PATTERN_MISMATCH",
+    "hits": [
+      "HIT FULL1920X1080_AB"
+    ]
+  },
+  {
+    "name": "interface-matrix",
+    "process_exit": 0,
+    "status": "fail",
+    "expected_frames": 4,
+    "log": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\interface-matrix\\console.log",
+    "reason": "",
+    "traceback": "Traceback (most recent call last):\n  File \"D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\runner.py\", line 140, in case\n    result['decoded_frames']=oracle(c,w,h,expect);result['status']='pass'\n                             ^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\runner.py\", line 100, in oracle\n    assert len(stats)==count\n           ^^^^^^^^^^^^^^^^^\nAssertionError\n",
+    "hits": [
+      "HIT RELEASE_STALL_DUP_DESC_ACK_SOURCE_SESSION_DUP_RESET_PENDING_GOOD2"
+    ]
+  },
+  {
+    "name": "continuous-fairness",
+    "process_exit": 0,
+    "status": "fail",
+    "expected_frames": 16,
+    "log": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\continuous-fairness\\console.log",
+    "reason": "simulation completion/assertions",
+    "traceback": "Traceback (most recent call last):\n  File \"D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\runner.py\", line 133, in case\n    assert rec['exit_code']==0 and 'TB_DONE' in msg and 'ASSERT_FAIL' not in msg and '** Fatal' not in msg,'simulation completion/assertions'\n                                                                                     ^^^^^^^^^^^^^^^^^^^^^\nAssertionError: simulation completion/assertions\n",
+    "hits": []
+  }
+]

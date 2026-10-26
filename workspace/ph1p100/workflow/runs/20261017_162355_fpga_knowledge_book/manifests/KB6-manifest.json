@@ -1,0 +1,107 @@
+{
+  "run_id": "20261017_162355_fpga_knowledge_book",
+  "task_id": "KB6",
+  "role": "fpga-dev",
+  "round": 0,
+  "created_at": "2026-10-17",
+  "project_root": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道",
+  "status": "ready_for_test",
+  "hash_algorithm": "SHA256",
+  "freeze_note": "KB6 首轮冻结快照（收敛第 2 包·传输与系统篇第 21–26 章，轻量档）：以下读入与产出在生成本清单后停止修改；任一输入变化则本清单及其对应结果失效。本清单不含自身哈希（自引用），由测试者现场重算核对。本包无修复轮、未使用 pre-rev/；冻结前完成 5 处定点修正（见 pre_freeze_corrections），全部哈希均为修正后复算值。tasks.json、decision-register、main-log 属并行线滚动文件，以本清单快照为准；main-log 按 R1 滚动语义（测试仅核存在性/追加型新增，不以其漂移否定本清单）。",
+  "inputs": {
+    "dispatch_required": [
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/requirement.md", "sha256": "b54f51cd79c65e5b9703627855dce2b91b356a55528f68c1d6a09287b5e0fdab", "bytes": 1200, "note": "用户原话（含 2026-10-17 收敛指令登记）"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/dev-plan.md", "sha256": "bd0175a9fcbdfc86afa61a897507426e7e6990712a8a5966cc4e8cbbb9a231ef", "bytes": 57732, "note": "含 §13 收敛规则（KB6=21–26、轻量档、语义步骤 5）、§3 章边界、§5.2、§11 KB5 收束；与 closeout-KB5 登记值（BD0175A9FCBDFC86）一致"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/input-index.md", "sha256": "3cc56be44d4ef65ad955070c0949c5151b50ecc50eee2832987ef3c1e80450c4", "bytes": 8836, "note": "方案事实基线（§3 第 3/7/8 项等）"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/fpga-design-guide.md", "sha256": "d2e56be01086eb4afb0437f95a1f34f5581dc9be3469a45633b665e4797689b1", "bytes": 8897, "note": "内容/格式冻结约定"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/closeout-KB5.md", "sha256": "08b4eb6ef5ce9a2fa1fdecd34afc45fd05483533f0f700b3febcf81fd1a5581e", "bytes": 3723, "note": "KB6 派发依据（R25–R27、边界要点、输入漂移登记）"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/closeout-KB4.md", "sha256": "13a2f1470f2dfdf992dca1bea72933cb2c477ff4eb00b04b6104b3b763fd65e5", "bytes": 6402, "note": "历史上下文（F9 取消来源；范围上限与暂停段）"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/dispatch.json", "sha256": "0e6855fc45f2cd9ee893acfc457a06accc0c2162d049c82d9d734e5f2a38fa31", "bytes": 3859, "note": "KB6 派发元数据；本包按任务提示与 §13 执行（未逐字通读）"},
+      {"path": "docs/知识书/README.md", "sha256": "ee5e93e3218751eba268d4e955a56a0bf514069ca933778e80674f4c381b837d", "bytes": 7384, "note": "未触碰（§13：KB5/KB6 不改中央三文件；KB7 统一刷新）"},
+      {"path": "docs/知识书/_写作规范.md", "sha256": "d66e99ca604b359bb05e3cdae8adde68056107ed6187ea40c3a97ad68bc38fad", "bytes": 8906, "note": "未触碰；模板 10 节与核验操作规程核读"},
+      {"path": "docs/知识书/_全书大纲.md", "sha256": "bd266a6cafd0fa2153463ed509483eea96f327d557e5bc0645b6aaca2dfcd0e4", "bytes": 15857, "note": "未触碰；Part 5/6（21–26 章边界）核读"}
+    ],
+    "materials_read": [
+      {"path": "workflow/runs/20261017_161109_decisions_compare_freeze/decision-register.md", "sha256": "b38776fd776007a5b7b4803fde39be469471f7d25db0ed1e4264b80243166936", "bytes": 39086, "note": "M2a–M2e/M3/M4/M5.3/M5.5/M5.7/M5.8 现值核对（rev5；并行线在途版本，快照）"},
+      {"path": "workflow/runs/20261016_2110_pcie_unified_path/pcie-unified-path-assessment.md", "sha256": "1402a7c595f22effdf700013ace874a7ee18a5acc62aa0a90851e06bed7146f5", "bytes": 31378, "note": "21/22/23 章主体事实（RC/EP、BAR、MWr、4KiB、DW-valid、L0–L6）"},
+      {"path": "workflow/runs/20261017-011744-rk-fpga-align/backend/rk-change-list.md", "sha256": "3c48a1876240187c4e431234e1e2f8ac0fde3e469400c20d331c1f2c5b5f88e6", "bytes": 5142, "note": "22/23 章 one-shot/held/ACK/CANCEL、CTRL 0x61/0x161、槽头 128B"},
+      {"path": "parallel/docs/帧与元数据接口合同_2026-10-15.md", "sha256": "9d1d29880338554c244a8a15377567ede5ee15b1ff56b19501d0a6de29988c7f", "bytes": 9726, "note": "23 章 R10F 字段/三层 CRC/向量锚点（该文件 CRLF=152，引用不改动）"},
+      {"path": "workflow/README.md", "sha256": "ac0b5d48517f3bc5bf2657d94ae9020c2b29850c88d60deb9f0a4291bf2a89b0", "bytes": 18885, "note": "26 章 G0–G5、§5/§5.1 依据"},
+      {"path": "docs/HDMI彩点_换线换屏后与速率规格核对_2026-10-13.md", "sha256": "e8e0e70d3057f166fa014bddbc447efc50d1ebb635748aac8ea45c028aef9f7d", "bytes": 8020, "note": "25 章数字与审计结论"},
+      {"path": "docs/当前硬件_引脚电气与同步证据.md", "sha256": "341d1269adf90c9eacb452bddcd980bde75d05a6ca865c960e1219fe7ef3dab4", "bytes": 12111, "note": "24 章共享 XHS/XVS/寄存器/时序/最小证据（该文件 CRLF=161，引用不改动）"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/manifests/KB5-manifest.json", "sha256": "19a3cd574cb8340ae835ea8378a2bf59f00fe7e3c2e6374e3b0e265a7f9234a9", "bytes": 12995, "note": "上游冻结值对照与清单 schema 参照"},
+      {"path": "docs/知识书/20_压缩路线裁决.md", "sha256": "93b62d89735b7be7ec3e492c5db4d392bec85621035b99eca0eab86885ea1dc4", "bytes": 18845, "note": "风格基准核读；未触碰（KB5 冻结值一致）"}
+    ],
+    "referenced_project_paths": [
+      {"path": "workflow/tasks.json", "sha256": "b10a42d4484bebd61c43fe7b79828258ea1246ef3d918e41ae1d6b2ff189bf77", "bytes": 30152, "note": "T02/T08/T10 状态引注（第 23/24 章）；并行线快照"},
+      {"path": "parallel/frame/frame_contract.py", "sha256": "cbf0ba87248818e86647e2bac4be881b8227fcf3fc1d7a90607e14c8e81cf4db", "bytes": 16721, "note": "23 章参考实现引注；存在性+哈希核验（未逐行通读）"},
+      {"path": "docs/HDMI黑屏与频率超范围排查_2026-10-11.md", "sha256": "51825231b164b340e6ef69bb7b4dc121f7c3193307dc8e9cab988ca5cadc8d64", "bytes": 8270, "note": "25 章历史排查引注；存在性+哈希核验"},
+      {"path": "docs/evidence/hdmi_routed_audit_20261013.json", "sha256": "cf21a884f03e69513e5c727b0c846264e3bef20ade5a20978f22e33918fc8724", "bytes": 5417, "note": "25 章结构化证据引注；存在性+哈希核验"},
+      {"path": "docs/DeepSeek独立检测与现行方案整合_2026-10-16.md", "sha256": "96da69508e9caf965d408f869d1960f608f5d2bc6e3f39acdceb3b0e1a5fa397", "bytes": 15255, "note": "23 章 adapter/整合 §3.1/§3.2 引注；与 input-index 基线一致"},
+      {"path": "workflow/runs/20261017-011744-rk-fpga-align/closeout-T03-r0.md", "sha256": "14b85f8be555eb4fd92d70decf1409a259b1171de5ee2b430c3492e1d684f46d", "bytes": 1622, "note": "22 章合同引注（T03 收束）；与 decision-register §7 登记一致"}
+    ],
+    "run_state": [
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/main-log.md", "sha256": "afcf91dcb20b753bacd1888e1a450c5b8507074abbd608cfcdc5b45819fd833a", "bytes": 26484, "semantics": "主代理滚动日志（R1）：本条为 KB6 冻结时点快照；冻结后继续追加属流程固有行为，复测仅核存在性/追加型新增；本包未读取其内容。"}
+    ],
+    "skill_and_contracts": [
+      {"path": ".agents/skills/fpga-dev/SKILL.md", "sha256": "da644fd482c90642a4a1f353e0b19538cd528e934f9353bac8daa30c4bf8fdb9", "bytes": 5085},
+      {"path": ".agents/skills/fpga-orchestrator/references/work-limits.md", "sha256": "dad3cf3c6cf6ff0e4eec7dc4677e773840366311615a9fe84262387bcc1096b2", "bytes": 8676},
+      {"path": ".agents/skills/fpga-orchestrator/references/report-contract.md", "sha256": "85248a9e4d1f75de88ad22516b823307206c98dc3a01148b1f1155f4a136d28c", "bytes": 3187},
+      {"path": ".agents/skills/fpga-orchestrator/references/relay-contract.md", "sha256": "78e31fb075f9de3591021e3e7719902036b796660aaa6ac8f2f8526c56e6c3e0", "bytes": 6111}
+    ]
+  },
+  "outputs": [
+    {"path": "docs/知识书/21_PCIe基础.md", "sha256": "1a7c42c0da3dd9adf6d7220627c4428c5c732dfd6b170f4183d24395e19cae76", "bytes": 17094, "lines": 184, "kind": "new_chapter"},
+    {"path": "docs/知识书/22_DMA与完成语义.md", "sha256": "02d13371b1038aa9d5a68080b5ecd24f819340ef4abb640828368a860088a781", "bytes": 15514, "lines": 173, "kind": "new_chapter"},
+    {"path": "docs/知识书/23_R10F帧协议.md", "sha256": "bec6afbbf6e771c3cdc7bdf178e1664081681dc984e07b0b73e9d95119fd84f5", "bytes": 15317, "lines": 194, "kind": "new_chapter"},
+    {"path": "docs/知识书/24_双路与同步.md", "sha256": "951017b19d2950b57ea28e6b5b54590c067613100e293521323d21b4b2185c07", "bytes": 14871, "lines": 186, "kind": "new_chapter"},
+    {"path": "docs/知识书/25_HDMI调试出口.md", "sha256": "6cfa7d9de04953918c4cccfbfe2d622ff8a396cf9dfb00852a6482df10f8a323", "bytes": 15461, "lines": 185, "kind": "new_chapter"},
+    {"path": "docs/知识书/26_工程方法与证据判读.md", "sha256": "96575c91f2d1314ad1005d1099e8a6055eb27460979e8ca8e00dc66125bd3771", "bytes": 17469, "lines": 195, "kind": "new_chapter"},
+    {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/link-check-KB6.json", "sha256": "dfe6af490dfdbfae9c3cc97e0b39615a8a5b5413e701f54dcd6e6448a62bc9ff", "bytes": 10272, "lines": 55, "kind": "link_check"},
+    {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/dev-notes-KB6.md", "sha256": "cc994bbc100beb0d8e0eaebe67efa10a053ddf35a63231cb1e00ddabde2df85a", "bytes": 12226, "lines": 107, "kind": "dev_notes"}
+  ],
+  "pre_freeze_corrections": [
+    {"file": "docs/知识书/22_DMA与完成语义.md", "item": "PFC-1", "before": "版本记录…CANcel 三不…", "after": "CANCEL 三不", "basis": "打字残留；替换计数=1，残留检查=0"},
+    {"file": "docs/知识书/25_HDMI调试出口.md", "item": "PFC-2", "before": "自测题 6 答案残留片段…不可行-space…", "after": "规范表述（官方澄清→评估降档；实现链证据→按需处置）", "basis": "替换计数=1，残留检查=0"},
+    {"file": "docs/知识书/21_PCIe基础.md", "item": "PFC-3", "before": "引注 `../PCIe固定块C2H_接口核对与下一步_2026-10-15.md`（Test-Path=False，docs 目录核对未检出）", "after": "改引 `../../workflow/runs/20261016_2110_pcie_unified_path/pcie-unified-path-assessment.md` §1.3 引注的接口核对记录", "basis": "不引用不存在路径；替换计数=2"},
+    {"file": "docs/知识书/22_DMA与完成语义.md", "item": "PFC-4", "before": "决策卡裸文件名 `closeout-T03-r0.md`", "after": "`../../workflow/runs/20261017-011744-rk-fpga-align/closeout-T03-r0.md`", "basis": "完整项目相对路径；替换计数=1"},
+    {"file": "docs/知识书/22_DMA与完成语义.md", "item": "PFC-5", "before": "误区 5 条；数字速查块无门铃行", "after": "误区＋1 条（错误码用途）；数字速查块＋门铃行（目标=phys+mb_off+32，LastDWBE=0）", "basis": "轻量档下限校准与判读价值；替换计数=2"}
+  ],
+  "link_check": {
+    "path": "workflow/runs/20261017_162355_fpga_knowledge_book/link-check-KB6.json",
+    "sha256": "dfe6af490dfdbfae9c3cc97e0b39615a8a5b5413e701f54dcd6e6448a62bc9ff",
+    "summary": {"attempted": 24, "verified_pass": 24, "degraded": 0, "not_used": 0, "entries_by_chapter": {"21": 4, "22": 4, "23": 4, "24": 4, "25": 4, "26": 4}, "distinct_urls_used_in_tables": 24, "table_rows_by_chapter": {"21": 4, "22": 4, "23": 4, "24": 4, "25": 4, "26": 4, "total_rows": 24}},
+    "notes": "入表 24 行＝24 在线核验通过；首轮批量请求遇间歇性网络错误（非链接失效），12 条按'首次＋1 次有据重试'重验通过；3 条落地标题注记（MMIO 全名、TMDS 重定向、zh DMA 消歧义页）；B 站视频检索仅返回关键词建议、无可提取视频 URL，未虚构视频链接，相关行以精确检索词列入各章『备用检索词』。"
+  },
+  "self_check": {
+    "template_10_sections": "六章均含 10 节全部节名；自测题各 6 条（含 details 折叠答案）；常见误区 5–6 条/章。",
+    "length_lines": "21=184 / 22=173 / 23=194 / 24=186 / 25=185 / 26=195 行（LF 计数口径；轻量档目标约 120–220 行；规范上限 350）。",
+    "encoding": "六章与 link-check、dev-notes 均为 UTF-8（无 BOM）、CR=0（纯 LF）；脚本复算通过。",
+    "path_scan": "六章全部 ../ 相对链接（16 个唯一值）逐条 Test-Path 通过；无断链；1 条无效引注已按 PFC-3 修正。",
+    "cross_refs": "引用 N∈{01,02,03,04,07,12,18,21–27} 均在全书规划内；全库无（待写）串（复算=0）。",
+    "project_fact_crosscheck": "项目事实 ≥8 处/包（dev-notes-KB6 §5 列 20 条），关键数字与来源逐条对应（20,256、2,592,768=633×4096、640B、0xCBF43926、24ms/8 帧/≥4 INCK/≤5ns、148.5/742.5/1485、297MHz/2.97Gbps、14.2%）。",
+    "no_forbidden_wording": "未把候选/登记写成已实测；组织方口径未写已批准；无绝对化保证；外部引用单处≤2 句；项目文档改路径引用。",
+    "bounded_writes": "仅新建 6 章＋本 run 三记录；未触碰 README/写作规范/全书大纲/01–20 章与任何既有文件；未删除任何文件。",
+    "self_check_ref": "workflow/runs/20261017_162355_fpga_knowledge_book/dev-notes-KB6.md §6"
+  },
+  "retest": {
+    "round": 0,
+    "required_dimensions": ["functional", "engineering", "system"],
+    "input_status": "new（KB6 首轮清单；相对 KB5 冻结：新增 6 章与三个 run 文件；未变更任何既有文件——与 KB5 冻结链交叉复核）",
+    "expected_focus": [
+      "functional（必测）：六章要点覆盖与递进顺序（直觉→原理→数字→硬件→实例）；关键数字对核（20,256、2,592,768=633×4096、640B、0xCBF43926、24ms/8 帧/≥4 INCK/≤5ns、148.5/742.5/1485、297MHz/2.97Gbps、14.2%）；22/23 章语义（one-shot/ACK/CANCEL、三层 CRC、四长度）；24 章『SOF≠曝光、同帧号不成立』推理链；26 章 G0–G5 与边界引述一致性。",
+      "engineering（必测）：模板 10 节与篇幅；UTF-8 无 BOM/CR=0；资源表核验状态与字段；manifest 输出哈希一致性；PFC-1…5 替换与残留检查；路径扫描零断链；无（待写）。",
+      "system（必测）：引用路径存在性抽样；与 README 进度表关系（16 起『未写』由 KB7 刷新，本包不触碰）；与 decision-register M2/M3/M5.3/M5.5、workflow/README、两条 contracts 无冲突表述。"
+    ],
+    "environment_note": "tasks.json/decision-register/main-log 为并行线滚动文件；测试以本清单快照为准。外部链接为 2026-10-17 时点快照（24/24 通过；3 条落地标题注记）。"
+  },
+  "compliance": {
+    "write_scope": "仅新建 docs/知识书/21–26 六章与本 run 目录下 dev-notes-KB6.md、manifests/KB6-manifest.json、link-check-KB6.json；未覆盖/修改/删除其他文件（含 README/写作规范/全书大纲、01–20 章、当前必读/、docs/ 旧文档、workflow/tasks.json、fpga/、tools/、parallel/、其它 run、D 盘、main-log 内容）。",
+    "zero_hardware": "无 TD/构建/下载/Flash/GUI/板卡/外部消息动作；联网仅资源链接核验；未使用 DeepSeek 委派；未派生任何代理。",
+    "notes": [
+      "本包为收敛轻量档：不触碰中央三文件（§13 规定 KB7 统一刷新进度/链接）。",
+      "PFC-1…5 为冻结前定点修正（非修复轮、非外部修订）；详见 pre_freeze_corrections 与 dev-notes-KB6 §3。",
+      "链接核验：首轮批量请求遇间歇性网络错误（非链接失效），按『首次＋1 次有据重试』串行重验后 24/24 通过；B 站视频检索未返回可提取链接，按规范以精确检索词替代。"
+    ]
+  }
+}

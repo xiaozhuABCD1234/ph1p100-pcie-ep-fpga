@@ -1,0 +1,70 @@
+{
+  "test": "probe",
+  "baseline": true,
+  "production": true,
+  "high_alias": false,
+  "scope": "Offline native-PAXI backend; no real camera, DDR PHY, display or performance acceptance.",
+  "inputs": {
+    "tb_ddr_frame_probe.sv": "4b5484fdd709df38352492cbad8922d556badb23862ff45cf41780ead94975a1",
+    "ddr_frame_store.v": "c600420683a607a486661a678655a6fd23f13f29e1ae652fe1af8befe23a879a",
+    "ddr_frame_probe.v": "0bf95205a221945a02104aba4731c7fe80197fc5fca6e03341b7aa733750c8c3"
+  },
+  "source_paths": {
+    "tb_ddr_frame_probe.sv": "fpga/csi2/tb/tb_ddr_frame_probe.sv",
+    "ddr_frame_store.v": "fpga/csi2/src/mem/ddr_frame_store.v",
+    "ddr_frame_probe.v": "fpga/csi2/src/mem/ddr_frame_probe.v"
+  },
+  "commands": [
+    {
+      "command": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlib.exe",
+        "work"
+      ],
+      "cwd": "D:\\TD\\work\\csi2\\_validation\\raw10_frame_20261013_234241_737630",
+      "log": "0.log",
+      "exit_code": 0,
+      "reported_errors": [],
+      "reported_warnings": []
+    },
+    {
+      "command": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlog.exe",
+        "-sv",
+        "tb_ddr_frame_probe.sv",
+        "ddr_frame_store.v",
+        "ddr_frame_probe.v"
+      ],
+      "cwd": "D:\\TD\\work\\csi2\\_validation\\raw10_frame_20261013_234241_737630",
+      "log": "1.log",
+      "exit_code": 0,
+      "reported_errors": [
+        0
+      ],
+      "reported_warnings": [
+        0
+      ]
+    },
+    {
+      "command": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vsim.exe",
+        "-c",
+        "-gFRAME_WORDS=81001",
+        "-gHIGH_ADDRESS_ALIAS=0",
+        "work.tb_ddr_frame_probe",
+        "-do",
+        "run -all; quit -f"
+      ],
+      "cwd": "D:\\TD\\work\\csi2\\_validation\\raw10_frame_20261013_234241_737630",
+      "log": "2.log",
+      "exit_code": 0,
+      "reported_errors": [
+        0
+      ],
+      "reported_warnings": [
+        0
+      ]
+    }
+  ],
+  "accepted": true,
+  "expected_marker": "DDR_PROBE_FAIL write offset wrapped/truncated expected=65536 actual=0"
+}

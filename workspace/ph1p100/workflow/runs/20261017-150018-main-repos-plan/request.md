@@ -1,0 +1,1 @@
+目前的想法是直接以我队友这里的作为主仓库，我后续的修改直接在[https://github.com/xiaozhuABCD1234/ph1p100-pcie-ep-fpga](https://github.com/xiaozhuABCD1234/ph1p100-pcie-ep-fpga)和[https://github.com/xiaozhuABCD1234/ph1p100-pcie-ep-driver](https://github.com/xiaozhuABCD1234/ph1p100-pcie-ep-driver) 上面直接修改而不是分叉出来，如果是以这种方式你规划下我该改哪些，把哪些并入

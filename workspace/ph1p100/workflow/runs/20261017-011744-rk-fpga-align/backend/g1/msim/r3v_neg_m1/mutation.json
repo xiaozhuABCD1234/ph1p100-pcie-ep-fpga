@@ -1,0 +1,10 @@
+{
+  "task": "T07.rk-align-backend round3 oracle negative control re-run (r3v; new repair instance)",
+  "method": "copy frozen rtl/+sim/ to isolated tree outside project; inject M1; run frozen documented run_sim.ps1 (-Root shadow); differential TB expected FAIL",
+  "frozen_file": "fpga/csi2/pcie_integration/rtl/checked/csi_rx_packet_integrity.v",
+  "frozen_sha256": "50b4c77be684f078bdf6dca93848e9298e3cbd8010e45eab4b0ecfb2debdc6c0",
+  "shadow_sha256_after_mutation": "e0e08a86a556765f4d899bc007927dd56edfd9d9d98b82f011ec5c74404e7d57",
+  "mutation": "crc_next = crc_u4 (fixed 4-byte advance; ref change-report 8.2 defect-1)",
+  "shadow_tree": "C:\\Users\\czz\\AppData\\Local\\Temp\\opencode\\r3negv",
+  "frozen_untouched": true
+}

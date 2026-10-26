@@ -1,0 +1,113 @@
+{
+  "run_id": "20261024-221529_fpga-sim-integration-recovery",
+  "runtime": "Codex",
+  "project_root": "D:\\fpga\\ph1p100",
+  "output_dir": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery",
+  "batch_size": 1,
+  "task_ids": [
+    "T10.a1-recovery-sim"
+  ],
+  "run_task_ids": [
+    "T08.sync-production-sim",
+    "T10.a1-recovery-sim",
+    "T10.a1-uart-descriptor-fix"
+  ],
+  "status": "needs_user_input",
+  "needs_user_input": true,
+  "input_paths": [
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\request.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\user-feedback-01-continue.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\dev-plan.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\fpga-design-guide.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\repair-scope-proposal.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\final-summary.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\handoff.md"
+  ],
+  "write_scope": [],
+  "protected": [
+    "all paths outside developer write_scope",
+    "planning inputs and control files",
+    "production RTL/upstream/fpga/tools",
+    "old runs/work",
+    "docs junction",
+    "D:\\TD",
+    "D:\\fpga_work",
+    "board/TD/bit/CWC/DB/shared drive mappings",
+    "other worktrees",
+    "all eight fixed DUT RTL and all tested candidate/control inputs"
+  ],
+  "next_action": {
+    "operation": "relay_to_user",
+    "text_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\user-summary.md",
+    "instruction": "原样转发user-summary.md；该文件已含唯一具体确认问题及冻结计划来源，不重复追加问答。当前不派开发/测试，不自动解除DUT保护。实际用户确认后续原规划，不从提案自行派发。"
+  },
+  "after_development": {
+    "operation": "return_to_planner",
+    "instruction": "No development currently eligible. After actual new user scope input, resume original planner /root/fpga_planner_sim_221529 once; preserve original task IDs, manifests, counters and real role IDs."
+  },
+  "scope_limits": {
+    "major_goals": 1,
+    "formal_packages_including_blocked_proposal": 3,
+    "maximum_packages": 4,
+    "levels": 2,
+    "max_semantic_steps_per_package": 5,
+    "batch_size": 1,
+    "max_actual_repair_rounds": 3,
+    "td_current_authorized": 0,
+    "download": 0,
+    "flash": 0,
+    "proposed_repair_execution_authorized": false
+  },
+  "execution_limits": {
+    "planner_tool_calls": 30,
+    "planner_minutes": 15,
+    "read_search_seconds": 60,
+    "proposed_development_limits_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\repair-scope-proposal.md",
+    "automatic_retry_or_scope_expansion": false
+  },
+  "question_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\question-recovery-dut-scope.md",
+  "user_summary_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\user-summary.md",
+  "problem": {
+    "problem_id": "T10.a1-recovery-sim:SCOPE_CLARIFICATION:fixed-r5-descriptor-index",
+    "reason_code": "SCOPE_CLARIFICATION",
+    "new_information": true,
+    "evidence_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T10.a1-recovery-sim\\defect-evidence.json",
+    "requested_action": "用户确认是否授权 repair-scope-proposal.md 中的单文件隔离DUT队列修复；当前仅备条件、不修RTL。确认后原规划冻结新包并续原恢复任务，保留计数。",
+    "resume_input_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\repair-scope-proposal.md"
+  },
+  "package_states": {
+    "T08.sync-production-sim": {
+      "status": "PASS",
+      "round": 0,
+      "actual_repair_rounds": 0,
+      "G0": "pass",
+      "G1": "pass",
+      "G2": "not_run",
+      "G3_G4_G5": "not_applicable"
+    },
+    "T10.a1-recovery-sim": {
+      "status": "blocked",
+      "developer_return": "protected_fixed_DUT_defect",
+      "integrated_test_started": false,
+      "actual_repair_rounds": 0,
+      "problem_supplement_opportunities": 0,
+      "compile_count": 1,
+      "clean_actual_simulations": 1,
+      "pre_elaboration_launch_failures": 1,
+      "fault_case_simulations": 0
+    },
+    "T10.a1-uart-descriptor-fix": {
+      "status": "blocked_scope_authorization",
+      "developer_id": null,
+      "tester_id": null,
+      "actual_repair_rounds": 0
+    }
+  },
+  "original_role_ids": {
+    "planner": "/root/fpga_planner_sim_221529",
+    "T08_developer": "/root/fpga_dev_sync_221529",
+    "T08_tester": "/root/fpga_tester_sync_221529",
+    "T10_developer": "/root/fpga_dev_recovery_221529",
+    "T10_tester": null
+  }
+}

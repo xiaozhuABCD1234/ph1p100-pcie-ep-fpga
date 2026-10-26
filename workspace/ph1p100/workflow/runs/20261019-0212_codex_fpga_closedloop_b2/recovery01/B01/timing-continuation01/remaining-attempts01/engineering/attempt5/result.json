@@ -1,0 +1,407 @@
+{
+  "attempt": 5,
+  "metrics": {
+    "SWNS": -0.472,
+    "STNS": -17.246,
+    "HWNS": 0.02,
+    "HTNS": 0.0
+  },
+  "routed": true,
+  "resources": [
+    {
+      "name": "IO",
+      "used": 107,
+      "capacity": 286
+    },
+    {
+      "name": "lut6",
+      "used": 28554,
+      "capacity": 71680
+    },
+    {
+      "name": "slice reg",
+      "used": 40346,
+      "capacity": 143360
+    },
+    {
+      "name": "slice",
+      "used": 35740,
+      "capacity": 71680
+    },
+    {
+      "name": "f7mux",
+      "used": 464,
+      "capacity": 35840
+    },
+    {
+      "name": "f8mux",
+      "used": 75,
+      "capacity": 17920
+    },
+    {
+      "name": "eram",
+      "used": 200,
+      "capacity": 300
+    },
+    {
+      "name": "dsp",
+      "used": 14,
+      "capacity": 220
+    },
+    {
+      "name": "pcie",
+      "used": 1,
+      "capacity": 1
+    },
+    {
+      "name": "hxt quad",
+      "used": 1,
+      "capacity": 1
+    },
+    {
+      "name": "ddr_byte",
+      "used": 7,
+      "capacity": 24
+    },
+    {
+      "name": "pad",
+      "used": 107,
+      "capacity": 286
+    },
+    {
+      "name": "pll",
+      "used": 3,
+      "capacity": 12
+    },
+    {
+      "name": "gclk",
+      "used": 6,
+      "capacity": 32
+    },
+    {
+      "name": "lclk",
+      "used": 2,
+      "capacity": 24
+    },
+    {
+      "name": "sclk",
+      "used": 34,
+      "capacity": 96
+    },
+    {
+      "name": "mlclk",
+      "used": 2,
+      "capacity": 24
+    },
+    {
+      "name": "ioclk",
+      "used": 4,
+      "capacity": 24
+    }
+  ],
+  "resources_within_capacity": true,
+  "cwc_check_command": [
+    "C:/Program Files/Python311/python.exe",
+    "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\tools\\td\\check_chipwatcher_readback.py",
+    "--multipiece",
+    "--map-out",
+    "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\workflow\\runs\\20261019-0212_codex_fpga_closedloop_b2\\recovery01\\B01\\timing-continuation01\\remaining-attempts01\\engineering\\attempt5\\cwc-map.json",
+    "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\workflow\\runs\\20261019-0212_codex_fpga_closedloop_b2\\recovery01\\B01\\timing-continuation01\\remaining-attempts01\\build\\attempt5\\prj\\ph1p_pcie_integration_Runs\\phy_1\\cw\\compiled.cwc",
+    "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\workflow\\runs\\20261019-0212_codex_fpga_closedloop_b2\\recovery01\\B01\\timing-continuation01\\remaining-attempts01\\build\\attempt5\\prj\\ph1p_pcie_integration_Runs\\phy_1\\ph1p_pcie_integration_inst.bid"
+  ],
+  "cwc_check_exit": 0,
+  "probes": [
+    {
+      "name": "u_top/g_closedloop$source_bad[31:0]",
+      "clock": "u_top/g_closedloop$u_algo/clk",
+      "instance": "auto_created_cwc1",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$source_crc[31:0]",
+      "clock": "u_top/g_closedloop$u_algo/clk",
+      "instance": "auto_created_cwc1",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$source_geometry[31:0]",
+      "clock": "u_top/g_closedloop$u_algo/clk",
+      "instance": "auto_created_cwc1",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$source_good[31:0]",
+      "clock": "u_top/g_closedloop$u_algo/clk",
+      "instance": "auto_created_cwc1",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$source_header[31:0]",
+      "clock": "u_top/g_closedloop$u_algo/clk",
+      "instance": "auto_created_cwc1",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$source_injected[31:0]",
+      "clock": "u_top/g_closedloop$u_algo/clk",
+      "instance": "auto_created_cwc1",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_algo/algo_gau_complete[31:0]",
+      "clock": "u_top/g_closedloop$u_algo/clk",
+      "instance": "auto_created_cwc1",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_algo/algo_gau_crc[31:0]",
+      "clock": "u_top/g_closedloop$u_algo/clk",
+      "instance": "auto_created_cwc1",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_algo/algo_he_complete[31:0]",
+      "clock": "u_top/g_closedloop$u_algo/clk",
+      "instance": "auto_created_cwc1",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_algo/algo_he_crc[31:0]",
+      "clock": "u_top/g_closedloop$u_algo/clk",
+      "instance": "auto_created_cwc1",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_algo/algo_identity[31:0]",
+      "clock": "u_top/g_closedloop$u_algo/clk",
+      "instance": "auto_created_cwc1",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_algo/algo_inbeats[31:0]",
+      "clock": "u_top/g_closedloop$u_algo/clk",
+      "instance": "auto_created_cwc1",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_algo/algo_overflow[31:0]",
+      "clock": "u_top/g_closedloop$u_algo/clk",
+      "instance": "auto_created_cwc1",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_algo/algo_rejected[31:0]",
+      "clock": "u_top/g_closedloop$u_algo/clk",
+      "instance": "auto_created_cwc1",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_algo/algo_y8_complete[31:0]",
+      "clock": "u_top/g_closedloop$u_algo/clk",
+      "instance": "auto_created_cwc1",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_algo/algo_y8_crc[31:0]",
+      "clock": "u_top/g_closedloop$u_algo/clk",
+      "instance": "auto_created_cwc1",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_readback/cl_base[31:0]",
+      "clock": "u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/dhi_clk",
+      "instance": "auto_created_cwc2",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_readback/cl_fail_count[31:0]",
+      "clock": "u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/dhi_clk",
+      "instance": "auto_created_cwc2",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_readback/cl_fault[31:0]",
+      "clock": "u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/dhi_clk",
+      "instance": "auto_created_cwc2",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_readback/cl_flags[31:0]",
+      "clock": "u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/dhi_clk",
+      "instance": "auto_created_cwc2",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_readback/cl_header_crc[31:0]",
+      "clock": "u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/dhi_clk",
+      "instance": "auto_created_cwc2",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_readback/cl_identity[31:0]",
+      "clock": "u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/dhi_clk",
+      "instance": "auto_created_cwc2",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_readback/cl_len[31:0]",
+      "clock": "u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/dhi_clk",
+      "instance": "auto_created_cwc2",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_readback/cl_pass_count[31:0]",
+      "clock": "u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/dhi_clk",
+      "instance": "auto_created_cwc2",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_readback/cl_payload_crc[31:0]",
+      "clock": "u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/dhi_clk",
+      "instance": "auto_created_cwc2",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_readback/cl_recovery_count[31:0]",
+      "clock": "u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/dhi_clk",
+      "instance": "auto_created_cwc2",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_readback/cl_seq[31:0]",
+      "clock": "u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/dhi_clk",
+      "instance": "auto_created_cwc2",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_readback/cl_session[31:0]",
+      "clock": "u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/dhi_clk",
+      "instance": "auto_created_cwc2",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_readback/cl_words[31:0]",
+      "clock": "u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/dhi_clk",
+      "instance": "auto_created_cwc2",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_readback/cl_writer_bad[31:0]",
+      "clock": "u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/dhi_clk",
+      "instance": "auto_created_cwc2",
+      "width": 32
+    },
+    {
+      "name": "u_top/g_closedloop$u_readback/cl_writer_good[31:0]",
+      "clock": "u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/dhi_clk",
+      "instance": "auto_created_cwc2",
+      "width": 32
+    },
+    {
+      "name": "u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word0[31:0]",
+      "clock": "u_top/u_uart/u_uart_cdc/core_clk",
+      "instance": "auto_created_cwc3",
+      "width": 32
+    },
+    {
+      "name": "u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word1[31:0]",
+      "clock": "u_top/u_uart/u_uart_cdc/core_clk",
+      "instance": "auto_created_cwc3",
+      "width": 32
+    },
+    {
+      "name": "u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word2[31:0]",
+      "clock": "u_top/u_uart/u_uart_cdc/core_clk",
+      "instance": "auto_created_cwc3",
+      "width": 32
+    },
+    {
+      "name": "u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word3[31:0]",
+      "clock": "u_top/u_uart/u_uart_cdc/core_clk",
+      "instance": "auto_created_cwc3",
+      "width": 32
+    },
+    {
+      "name": "u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word4[31:0]",
+      "clock": "u_top/u_uart/u_uart_cdc/core_clk",
+      "instance": "auto_created_cwc3",
+      "width": 32
+    },
+    {
+      "name": "u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word5[31:0]",
+      "clock": "u_top/u_uart/u_uart_cdc/core_clk",
+      "instance": "auto_created_cwc3",
+      "width": 32
+    },
+    {
+      "name": "u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word6[31:0]",
+      "clock": "u_top/u_uart/u_uart_cdc/core_clk",
+      "instance": "auto_created_cwc3",
+      "width": 32
+    },
+    {
+      "name": "u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word7[31:0]",
+      "clock": "u_top/u_uart/u_uart_cdc/core_clk",
+      "instance": "auto_created_cwc3",
+      "width": 32
+    },
+    {
+      "name": "u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word8[31:0]",
+      "clock": "u_top/u_uart/u_uart_cdc/core_clk",
+      "instance": "auto_created_cwc3",
+      "width": 32
+    }
+  ],
+  "probe_clock_domains": [
+    "u_top/g_closedloop$u_algo/clk",
+    "u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/dhi_clk",
+    "u_top/u_uart/u_uart_cdc/core_clk"
+  ],
+  "retention_tokens": {
+    "u_algorithms": true,
+    "u_gau": true,
+    "u_he": true,
+    "u_g0": true
+  },
+  "bit_pair_equal": true,
+  "source_drift": [],
+  "completion_marker": true,
+  "artifacts": [
+    {
+      "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\workflow\\runs\\20261019-0212_codex_fpga_closedloop_b2\\recovery01\\B01\\timing-continuation01\\remaining-attempts01\\build\\attempt5\\prj\\ph1p_pcie_integration_Runs\\phy_1\\ph1p_pcie_integration_pr.timing",
+      "size": 5357370,
+      "sha256": "62ee2a078c7937cc90883fdcb2a68d371e19534c381a96d4b6a4d4e6e7f3358d"
+    },
+    {
+      "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\workflow\\runs\\20261019-0212_codex_fpga_closedloop_b2\\recovery01\\B01\\timing-continuation01\\remaining-attempts01\\build\\attempt5\\prj\\ph1p_pcie_integration_Runs\\phy_1\\ph1p_pcie_integration_phy.area",
+      "size": 93895,
+      "sha256": "6bfdf6495a66c6c6ecb45931a3e42396358a3f942dcb028bb9560a35bfe33519"
+    },
+    {
+      "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\workflow\\runs\\20261019-0212_codex_fpga_closedloop_b2\\recovery01\\B01\\timing-continuation01\\remaining-attempts01\\build\\attempt5\\prj\\ph1p_pcie_integration_Runs\\phy_1\\cw\\compiled.cwc",
+      "size": 312109,
+      "sha256": "1d6d422afee4888f123e0eaff86b59eabaade2bb3dab3202aed993e50028a4f5"
+    },
+    {
+      "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\workflow\\runs\\20261019-0212_codex_fpga_closedloop_b2\\recovery01\\B01\\timing-continuation01\\remaining-attempts01\\build\\attempt5\\prj\\ph1p_pcie_integration_Runs\\phy_1\\ph1p_pcie_integration.bit",
+      "size": 5224034,
+      "sha256": "4544edcbdee9f9cbcfc2daed9667c7e95aba659b28847ce4c3dba85957627903"
+    },
+    {
+      "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\workflow\\runs\\20261019-0212_codex_fpga_closedloop_b2\\recovery01\\B01\\timing-continuation01\\remaining-attempts01\\build\\attempt5\\prj\\ph1p_pcie_integration_Runs\\phy_1\\cw\\compiled.bit",
+      "size": 5224034,
+      "sha256": "4544edcbdee9f9cbcfc2daed9667c7e95aba659b28847ce4c3dba85957627903"
+    },
+    {
+      "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\workflow\\runs\\20261019-0212_codex_fpga_closedloop_b2\\recovery01\\B01\\timing-continuation01\\remaining-attempts01\\build\\attempt5\\prj\\ph1p_pcie_integration_Runs\\phy_1\\ph1p_pcie_integration_inst.bid",
+      "size": 188792,
+      "sha256": "c4f5ce61f83aae6e300363232b1d982fcd3493f174bc7a57c6e79c2cfbad9c5a"
+    },
+    {
+      "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\workflow\\runs\\20261019-0212_codex_fpga_closedloop_b2\\recovery01\\B01\\timing-continuation01\\remaining-attempts01\\build\\attempt5\\prj\\ph1p_pcie_integration_Runs\\phy_1\\ph1p_pcie_integration_pr.db",
+      "size": 43071492,
+      "sha256": "34dc0a6b22eb2f0d1cc4a5640026bfa7a69ccf0ddcdae982bf661934be1491cc"
+    }
+  ],
+  "pass": false
+}

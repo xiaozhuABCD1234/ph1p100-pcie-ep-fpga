@@ -1,0 +1,121 @@
+{
+ "task_id": "T10.a1-g2-2cyc",
+ "run_id": "20261020-0209_singleA_aplus_closedloop",
+ "round": "r0",
+ "revision": "r0-c (frame_top dq_r read-address retiming; supersedes r0-b on frame_top)",
+ "package_type": "new architecture/throughput package under T10 (C-lite), not r11",
+ "frozen_at": "2026-10-22T01:40:05",
+ "verdict": "blocked",
+ "scope": "offline synthetic; no bitgen/download/Flash/board",
+ "base": {
+  "r10_core": "7a10917d1f698c6dd408c14a19a4779ddf11ac85c68d937b6cdaee3aa4a5aed8",
+  "r10_frame": "fa64cb487b4241241516183e7b8bfd71f96b30e54f5ed3d53ac239a2771e1ba2",
+  "r10_sdc": "227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311"
+ },
+ "changed_vs_r10": [
+  "rtl/ep_side/codec/a1_deflate_core.v (r0-b two-cycle hdist/hit/threshold + x1/x2 register-only htab address)",
+  "rtl/ep_side/codec/a1_frame_top.v (r0-c: smem read address rd_addr registered; dq_r unchanged latency)"
+ ],
+ "locks_kept": [
+  "a1_small_top.sdc 227dd39e (byte copy)",
+  "a1_deflate_core.v e3484a60 unchanged in r0-c"
+ ],
+ "sha256": {
+  "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v": "e3484a6072bd0fd9a3f82e15920b203f880363348436a0bcf257ede96f960aee",
+  "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v": "18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-g2-2cyc/r0/td/a1_small_top.sdc": "227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311",
+  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-g2-2cyc/r0/td/a1_eng_top.v": "544cecfc2eb34a3ab5c03ebf3965730b4ce60b2ff73ac4c2ec2d87772faaf9aa",
+  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-g2-2cyc/r0/td/00_all.tcl": "faa1f6929376200cd62e0dec0fcc746d8e8117e0f2d549ec6df84cfce5ff5147",
+  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-g2-2cyc/r0/td/syn_gate_timing_s1_prev_pcq2.rpt": "5b4fce1fd626ee593e8e3dd1f1fa7362d04d1ea70de2b506b03f553b302f5b92",
+  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-g2-2cyc/r0/td/syn_gate_timing_s2.rpt": "ab9603ded5f64d43a26e073df8281f362769c7ccc4e47dcae4df43e0b45453ee",
+  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-g2-2cyc/r0/td/syn_gate_timing_s3.rpt": "b99f5d246c99179485ee18118e5f6928525b7bd1a5c5a36bf2c4f1cc619d27f2",
+  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-g2-2cyc/r0/td/td_stdout_s2.log": "161aac75d93c492774592f44190b10c1086cb970b5ab2611e2bc834d1b49ec3b",
+  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-g2-2cyc/r0/td/td_stdout_s3.log": "b76e0fc5d0e1dd64dc484b04ce17ca9d69d1ddf3ee7846fcbe4267361f496414",
+  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-g2-2cyc/r0/p2/result.json": "6ab4d14892a2c25f717e3c7046a58f9f7b2b5d3f68453dad276d12a790ded130",
+  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-g2-2cyc/r0/p2/logs/vlog.log": "a9735346565d11b2baf3ddde84188705e099a0d4e045171d4618694a1ecf6888",
+  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-g2-2cyc/r0/p3/result.json": "c7c0045e2c39e107c43ffb48cfac50cb076e471ffdc1d61cfb618fab6f2db2a4",
+  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-g2-2cyc/r0/p3/logs/vlog.log": "9a62a0e0a7d794de798dce5404d701ad469f021440193d1827c3c63e0cf0297a",
+  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-g2-2cyc/r0/p3/runs/f1080p_p1d1/stats.txt": "db1d130bc5d9220f6b4d60693d2c868d8e04c2af3d6a62e4bf7d78bf763bead4",
+  "upstream/ph1p100-pcie-ep-fpga/tools/codec/run_p2_g2r0.ps1": "02769583537ae874cae7bb14fbfeda2c586906ecd98aef12b87729ccd6247e11",
+  "upstream/ph1p100-pcie-ep-fpga/tools/codec/run_p3_g2r0.ps1": "5680660a44049c31f226b1d5c2bc5719b24462822592bb57bec7ba1623f5b22b"
+ },
+ "r0c_change": {
+  "file": "a1_frame_top.v",
+  "what": "added raddr_of() + reg rd_addr; dq_r <= smem[rd_addr]; rd_addr seeded/updated at the 4 rd_issue sites",
+  "semantics": "identical read address and identical read latency (no valid/ready or frame timing change); only retimed one cycle earlier into a register",
+  "effect": "S3 report contains zero dq_r_reg/rd_issue_reg endpoints (was the top-10 WNS in S2)"
+ },
+ "g1": {
+  "p2": "13/13 PASS (incl. bp/gapbp/abort/reset)",
+  "p3": "20/20 PASS",
+  "mismatch": 0,
+  "vlog": "Errors 0 / Warnings 0",
+  "p2_comp_mbps": 81.06715907459585,
+  "p2_rand_mbps": 178.35136457372164,
+  "cycles_1080p_p1d1": 4677945,
+  "mbps_187p5": 103.89177299006293,
+  "stream_sha_1080p_p1d1": "b769cc666b33db310532ec980809f5decbbff197f0ff29eb10045f442beb08ff",
+  "p2_p3_all_sha_and_cycles_identical_to_r10": true,
+  "measured_after_r0c_frame_top_change": true,
+  "gate_6_25M": true,
+  "target_5_0M": true,
+  "gate_77p76": true
+ },
+ "g2": {
+  "status": "blocked_at_synthesis_budget_exhausted",
+  "top": "a1_eng_top",
+  "device": "PH1P100SBG484 -3",
+  "clock_MHz": 187.5,
+  "period_ns": 5.333,
+  "sdc_changed": false,
+  "false_path_or_multicycle": false,
+  "attempts": [
+   {
+    "id": "S1",
+    "revision": "r0-a",
+    "WNS_ns": -2.424,
+    "endpoint": "u_core/htab_rvalid_reg.d (bm async read in htab address)",
+    "routed": false
+   },
+   {
+    "id": "S2",
+    "revision": "r0-b",
+    "WNS_ns": -0.092,
+    "TNS_ns": -3.07,
+    "violating_endpoints": 35,
+    "endpoint": "a1_frame_top.v dq_r_reg[0..9].d (rd_issue -> fanout 1920 -> smem DRAM)",
+    "routed": false
+   },
+   {
+    "id": "S3",
+    "revision": "r0-c",
+    "WNS_ns": -0.156,
+    "TNS_ns": -10.977,
+    "violating_endpoints": 92,
+    "endpoint": "u_core/htab_rvalid_reg.d + htab_rdata_reg[0..8].d",
+    "path": "s1_pos_r[4] -> s1_pos_r+2<blk_n (s1_ok, line 424) -> bypass select -> htab_rd_addr (fanout 1042) -> memory -> htab_rdata/rvalid",
+    "frame_top_endpoints": 0,
+    "routed": false
+   }
+  ],
+  "route": "not_run (WNS/TNS<0 in all attempts)",
+  "routed_reports": "not_run",
+  "cdc": "not_run",
+  "bitgen": "not_run",
+  "note": "core RTL identical in S2 and S3 (e3484a60); the -0.092 -> -0.156 shift of the core stage-1 path is synthesis-solution variance (S3 ran 24 min vs 8 min), not a core RTL change"
+ },
+ "td_budget": {
+  "sessions_used": 3,
+  "sessions_max": 3,
+  "synth_used": 3,
+  "synth_max": 3,
+  "route_used": 0,
+  "route_max": 1,
+  "wall_min": 38.8
+ },
+ "deviations": [
+  "r0-a: a1_p2_gen_r3.py with an extra '..' wrote cases to workflow/runs/T10.a1-g2-2cyc/r0/p2; moved (not deleted) to C:\\Users\\czz\\AppData\\Local\\Temp\\opencode\\stray-T10.a1-g2-2cyc-r0-p2-cases."
+ ],
+ "rollback": "r10 core 7a10917d/r10 frame fa64cb48 (r10 p2/p3 + manifest untouched); r0-c candidate = core e3484a60 + frame 18d51b1b.",
+ "next_step": "synthesis budget exhausted -> planner decision. Residual is a CORE stage-1 path: s1_pos_r -> (s1_pos_r+2 < blk_n) -> s1_ok -> write-first bypass select -> htab_rd_addr (5.425 ns/7 levels). Smallest concrete fix for a new round: precompute lim2 = blk_n - 2 at block load (register in S_WAIT) and use s1_ok = (s1_pos_r <= lim2), removing the 13-bit adder (~1.6 ns) from that path; optionally also move the s1_ok term out of the bypass select by registering hins_ok. frame_top dq_r path is already fixed (absent from S3)."
+}

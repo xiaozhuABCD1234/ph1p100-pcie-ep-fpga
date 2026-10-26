@@ -1,0 +1,215 @@
+============================================================
+   TD Release_2026.1_SP2
+   Copyright (c) 2012-2026 Anlogic Inc.
+   Executable = D:/downlaod/bin/td_commands_prompt.exe
+   Build number = 6.2.2.200067
+   Built at =   16:15:53 Apr 23 2026
+   Run by =     czz
+   Run Date =   Thu Oct 15 11:51:09 2026
+
+   Run on =     LAPTOP-HE7N8DN4
+============================================================
+RUN-1002 : start command "import_device ph1_100p.db -package PH1P100SBG484 -speed 3"
+ARC-1001 : Device Initialization.
+ARC-1001 : -------------------------------------------------------------
+ARC-1001 :           OPTION          |         IO         |   SETTING   
+ARC-1001 : -------------------------------------------------------------
+ARC-1001 :   non_jtag_persist(none)  |       35 IOs       |    gpio    
+ARC-1001 :            jtag           |  /V12/T13/R13/U13  |  dedicate  
+ARC-1001 : -------------------------------------------------------------
+RUN-1003 : finish command "import_device ph1_100p.db -package PH1P100SBG484 -speed 3" in  1.976918s wall, 1.546875s user + 0.109375s system = 1.656250s CPU (83.8%)
+
+RUN-1004 : used memory is 336 MB, reserved memory is 323 MB, peak memory is 370 MB
+RUN-1002 : start command "create_project camera_ddr_display ./ -family ph1 -device PH1P100SBG484 -speed -3"
+PRJ-1005 : Command create_project success.
+RUN-1002 : start command "import_device ph1_100p.db -package PH1P100SBG484"
+RUN-1001 : Using default speed grade: 3
+ARC-1001 : Device Initialization.
+ARC-1001 : -------------------------------------------------------------
+ARC-1001 :           OPTION          |         IO         |   SETTING   
+ARC-1001 : -------------------------------------------------------------
+ARC-1001 :   non_jtag_persist(none)  |       35 IOs       |    gpio    
+ARC-1001 :            jtag           |  /V12/T13/R13/U13  |  dedicate  
+ARC-1001 : -------------------------------------------------------------
+RUN-1003 : finish command "import_device ph1_100p.db -package PH1P100SBG484" in  2.173838s wall, 1.796875s user + 0.109375s system = 1.906250s CPU (87.7%)
+
+RUN-1004 : used memory is 340 MB, reserved memory is 328 MB, peak memory is 374 MB
+RUN-1002 : start command "open_project camera_ddr_display.al"
+RUN-1002 : start command "commit_param -step design"
+RUN-1001 : Print Global Property
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :     Parameters    |   Settings   |  Default Values  |  Note  
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :    enable_seed    |     off      |       off        |        
+RUN-1001 :    hfn_to_clock   |  1000000000  |    1000000000    |        
+RUN-1001 :      message      |   standard   |     standard     |        
+RUN-1001 :    qor_monitor    |      on      |        on        |        
+RUN-1001 :   speedup_effort  |      0       |        0         |        
+RUN-1001 :    syn_ip_flow    |     off      |       off        |        
+RUN-1001 :       thread      |     auto     |       auto       |        
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 : Print Design Property
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :       Parameters       |  Settings  |  Default Values  |  Note  
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :   default_reg_initial  |    auto    |       auto       |        
+RUN-1001 :    hdl_warning_level   |   normal   |      normal      |        
+RUN-1001 : ----------------------------------------------------------------
+RUN-1002 : start command "commit_param -step design"
+RUN-1001 : Print Global Property
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :     Parameters    |   Settings   |  Default Values  |  Note  
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :    enable_seed    |     off      |       off        |        
+RUN-1001 :    hfn_to_clock   |  1000000000  |    1000000000    |        
+RUN-1001 :      message      |   standard   |     standard     |        
+RUN-1001 :    qor_monitor    |      on      |        on        |        
+RUN-1001 :   speedup_effort  |      0       |        0         |        
+RUN-1001 :    syn_ip_flow    |     off      |       off        |        
+RUN-1001 :       thread      |     auto     |       auto       |        
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 : Print Design Property
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :       Parameters       |  Settings  |  Default Values  |  Note  
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :   default_reg_initial  |    auto    |       auto       |        
+RUN-1001 :    hdl_warning_level   |   normal   |      normal      |        
+RUN-1001 : ----------------------------------------------------------------
+WARNING: could not find top-level module/unit; aborting hierarchy tree creation (HIER-1013)
+HDL-5007 WARNING: could not find top-level module/unit; aborting hierarchy tree creation
+PRJ-1401 : Successfully analyzed 0 source files.
+RUN-1003 : finish command "create_project camera_ddr_display ./ -family ph1 -device PH1P100SBG484 -speed -3" in  2.199774s wall, 1.812500s user + 0.109375s system = 1.921875s CPU (87.4%)
+
+RUN-1004 : used memory is 341 MB, reserved memory is 328 MB, peak memory is 374 MB
+RUN-1002 : start command "add_files ./capture_async_fifo.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./rgb565_frame_pack_guarded.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera_rgb565_display_guarded.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./ddr_capture_check.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./ddr_frame_store.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./ddrmc_display_top.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./cam_preview_capture.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./f9p_camera_display_core.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./bayer565_capture.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./rgb565_display_pixels.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera_ddr_display_top.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/mipi_phy_ph1p/rx_phy_ph1p.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/mipi_csi_2/csi_rx_hdr_ecc.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/mipi_csi_2/csi_rx_byte_align.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/mipi_csi_2/csi_rx_clock_det.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/mipi_csi_2/auto_delay_ctl.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/mipi_csi_2/csi_rx_word_align.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/mipi_csi_2/csi_rx_word_gear_box.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/mipi_csi_2/csi_rx_packet_integrity.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/mipi_csi_2/csi_rx_10bit_unpack_checked.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/mipi_csi_2/sfifo.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/mipi_csi_2/wfifo.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/mipi_csi_2/mipi_csi2_rx_ph1p.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/ui_imx415_cfg/ui_i2c.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/ui_imx415_cfg/ui_imx415_reg.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/ui_imx415_cfg/ui_cfg_imx415.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/01_rtl/uart_tx.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/01_rtl/pulse2toggle.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/01_rtl/clk_activity.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/01_rtl/dbg_uart.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/vtc/uivtc.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/tpg/uitpg.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/alip/ui_HDMI_TX/ui_HDMI_TX.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/alip/ui_HDMI_TX/hdmi_phy_warpper.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/alip/ui_HDMI_TX/lane_lvds_10_1.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/alip/ui_HDMI_TX/hdmi_tx_controller_wrapper.enc.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/01_rtl/raw10_display60_clocks.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/01_rtl/camera_startup.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/raw10_clocks/raw10_clocks.xml"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./camera/uisrc/03_ip/ui_pll/ui_pll.xml"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./vendor/rtl/usr_mcu_srcs/usr_mcu_apb_decoder.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./vendor/rtl/usr_mcu_srcs/usr_mcu_apb_gpio.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./vendor/rtl/usr_mcu_srcs/usr_mcu_apb_uart.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./vendor/rtl/usr_mcu_srcs/usr_mcu_core/usr_mcu_core.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./vendor/rtl/usr_mcu_srcs/usr_mcu_core/usr_mcu_core_alu.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./vendor/rtl/usr_mcu_srcs/usr_mcu_core/usr_mcu_core_csr.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./vendor/rtl/usr_mcu_srcs/usr_mcu_core/usr_mcu_core_decoder.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./vendor/rtl/usr_mcu_srcs/usr_mcu_core/usr_mcu_core_mem2apb.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./vendor/rtl/usr_mcu_srcs/usr_mcu_core/usr_mcu_core_reg2mem.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./vendor/rtl/usr_mcu_srcs/usr_mcu_core/usr_mcu_core_regfile_dram.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./vendor/rtl/usr_mcu_srcs/usr_mcu_core/usr_mcu_core_tcm.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./vendor/rtl/usr_mcu_srcs/usr_mcu_wrapper.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./vendor/ip/ddrmc_x32/ddrmc_x32.xml"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./board.adc"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./timing.sdc"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./rgb565_display_read.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./gray_display_pixels.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "top_module camera_ddr_display_top"
+PRJ-1501 : Current top model is camera_ddr_display_top.
+RUN-1002 : start command "set_strategy -run phy_1 TimingUltra"
+PRJ-1421 : set_run_property phy_1 -strategy TimingUltra 
+RUN-1002 : start command "launch_runs syn_1"
+PRJ-1403 : syn_1 is launched.
+PRJ-1404 : Run log file is D:/TD/work/csi2/prj/camera_rgb565_timing_20261015_114913/camera_ddr_display_Runs/syn_1/run.log.
+RUN-1002 : start command "wait_run syn_1 -quiet"
+PRJ-1405 : Waiting for run syn_1 to finish.
+PRJ-1409 : launch_runs syn_1  -jobs 1.
+PRJ-1009 : If you need the best result of runs copied into "D:/TD/work/csi2/prj/camera_rgb565_timing_20261015_114913/camera_ddr_display_Runs/best_result" , please execute "save_best_bits" in the Tcl console after all runs complete, or add "save_best_bits" in tcl script after "wait_run" command.
+
+PRJ-1406 : Run syn_1 finished.
+RUN-1003 : finish command "wait_run syn_1 -quiet" in  116.095430s wall, 0.343750s user + 1.671875s system = 2.015625s CPU (1.7%)
+
+RUN-1004 : used memory is 342 MB, reserved memory is 328 MB, peak memory is 374 MB
+RUN-1002 : start command "close_project"
+RGB565_SYNTHESIS_RETURNED

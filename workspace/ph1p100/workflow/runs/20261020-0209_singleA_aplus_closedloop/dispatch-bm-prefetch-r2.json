@@ -1,0 +1,204 @@
+{
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "project_root": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+  "output_dir": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop",
+  "task_ids": [
+    "T10.a1-bm-prefetch"
+  ],
+  "package_id": "T10.a1-bm-prefetch",
+  "round": "r2",
+  "continuation_of": "T10.a1-bm-prefetch r1 candidate 3cfdda78 (G1 P2 green, P3 small-block/tail clamp fail)",
+  "batch_size": 1,
+  "status": "finished",
+  "needs_user_input": false,
+  "result": {
+    "verdict": "blocked",
+    "g1": "PASS: P2 13/13, P3 20/20, 0 mismatch, 0 X, vlog 0/0; comp 355,261; f1080p 81,707 B; 33 cases bit-identical",
+    "synth": "+0.021 / TNS 0; slice 3,080; ERAM 26; reg 1,633; DRAM LUT 32",
+    "worst": "frame_top smem_waddr +0.021/+0.063; no bm/htab ERAM clk2q in report set (10 endpoints/group, not exhaustive)",
+    "route": "0/1; +0.5 gate missed",
+    "decision": "one-time +0.5 waiver + route-only approved"
+  },
+  "operation": "followup_task",
+  "authorization": {
+    "quote": "是否授权 r2（同包，仅重推 PRE/REPOS 种子与 clk/lim/last_a 钳位...）",
+    "date": "2026-10-22",
+    "type": "one_time_exception_to_r1_g1_stop_rule",
+    "basis": "r1 的 G1 失败已收敛为新的局部模式：P2 13/13、comp 355,261、out.hex 与基准逐字节相同；仅 3 个 100 B P3 用例（同一错误）和 f1080p 编码不同。根因是 PRE/REPOS 钳位仍按 1 拍读延迟推导，属本包 bm 预取区。用户要求一次同包 r2 例外；若 G1 仍失败立即停止、不自动扩轮。",
+    "round_accounting": "r1 G1 fail; r2 is a one-time functional exception, not a new package/reset. No r3.",
+    "limits_frozen_here": {
+      "td_sessions_max": 1,
+      "td_session_minutes_max": 60,
+      "td_total_minutes_max": 60,
+      "td_synth_attempts_max": 1,
+      "td_route_attempts_max": 1
+    },
+    "not_authorized": [
+      "A route (150 MHz + CDC/PLL/async FIFO)",
+      "larger device or board change",
+      "QoR strategy changes",
+      "lowering 187.5 MHz or relaxing 5.333 ns",
+      "false path / multicycle / clock-group exceptions",
+      "seed sweep or blind re-run",
+      "bitgen / download / Flash / production integration",
+      "C / RK / PCIe / dual-camera / G4",
+      "protocol/port/frame semantics/CRC/length/abort/Bayer/SDC changes",
+      "changes outside PRE/REPOS seeds and clamp",
+      "r3"
+    ]
+  },
+  "r1_state": {
+    "candidate": "3cfdda78a23465a7…1adcf (r1/candidate-r1-blockprime.a1_deflate_core.v; worktree reverted to 587ef708)",
+    "p2": "PASS 13/13; comp 355,261; out.hex byte-identical to baseline; hit2=x=0",
+    "p3": "4 red: odd20x5_p1d1/bp20x5/abort_last invalid (len 108 vs 107, cycles 1,462 vs 1,459, E_BAD_ADLER); f1080p_p1d1 decodes but len 86,481 vs 81,707 (sha differs)",
+    "root": "PRE/REPOS prefetch clamp (clamp_addr/lim*/last_a) still assumes 1-cycle read latency; small block/block tail off by one cycle",
+    "td": "0 synth, 0 route, 0 CDC; no bitgen",
+    "baseline": "core 587ef708…2f16, frame 18d51b1b…1cbe, SDC 227dd39e…6311",
+    "best_fallback": "r2 0b084317 (routed -0.436, not G2 PASS)"
+  },
+  "r2_scope": {
+    "primary": "Replay 3cfdda78; re-derive S_PRE/S_REPOS prefetch seeds and clamp/lim*/last_a/x1_r cycle alignment for the 2-cycle bm read; keep block-start fix, bm prefetch, ext_mis_r.",
+    "allowed": [
+      "S_PRE/S_REPOS praddr seeds",
+      "clamp_addr/lim1/lim2/lim3/last_a alignment with x1_r and bm_a_rd2",
+      "block-tail/small-block window byte alignment"
+    ],
+    "frozen": [
+      "S_WAIT praddr<=1 block-start fix",
+      "bm read-data stage 2, praddr=raddr+5, ext_mis_r unconditional",
+      "all other core logic, htab/bm storage, thresh_lit8/9",
+      "frame 18d51b1b, SDC 227dd39e, protocol/ports/frame/CRC/length/abort/Bayer"
+    ],
+    "throughput": "P2 comp exactly 355,261; hard 370,370; 1080p p1d1 must be 81,707 bytes / sha b769cc66…08ff; all 33 cases bit-identical to r2 0b084317."
+  },
+  "gates": {
+    "g1": {
+      "p2": "13/13 PASS, 0 mismatch, 0 X, vlog 0/0",
+      "p3": "20/20 PASS, 0 mismatch, 0 X, vlog 0/0",
+      "decode": "independent zlib 1.2.13 + self strict decoder; negative cases correct",
+      "comp_cycles_exact": 355261,
+      "comp_hard_max": 370370,
+      "comp_min_MBps": 77.76,
+      "1080p_cycles_max": 6250000,
+      "sha_len_cycles": "all 33 cases identical to r2 0b084317; f1080p p1d1 81,707 B / b769cc66…08ff"
+    },
+    "g2_synth": {
+      "all_eram_clk2q_startpoints_slack_ns_min": 0.9,
+      "global_wns_ns_min": 0.5,
+      "tns_ns_min": 0.0,
+      "slice_max": 71680,
+      "eram": "26 consistent"
+    },
+    "g2_routed": {
+      "status": "Routed",
+      "wns_ns_min": 0.0,
+      "tns_ns_min": 0.0,
+      "hwns_ns_min": 0.0,
+      "htns_ns_min": 0.0,
+      "violating_endpoints": 0,
+      "resources": "within PH1P100SBG484",
+      "cdc_static": "static single-clock evidence + report_clock_utilization/check_timing; cdc-static.md",
+      "reports": "direct -file; no post-run copy",
+      "bitgen": "not_run; no .bit/download"
+    }
+  },
+  "td_budget": {
+    "sessions_max": 1,
+    "session_minutes_max": 60,
+    "total_minutes_max": 60,
+    "synth_attempts_max": 1,
+    "route_attempts_max": 1,
+    "route_minutes_max": 45,
+    "dev_minutes_max": 60,
+    "dev_tool_calls_max": 40,
+    "tester_minutes_max": 45,
+    "tester_tool_calls_max": 30,
+    "why": "One clamp/seed re-derivation + G1 + one synth + one route. 1/60 per user.",
+    "no_qor_strategy_change": true,
+    "no_clock_change": true
+  },
+  "stop_conditions": [
+    "P2/P3 any mismatch, X, illegal BTYPE, or vlog warning -> stop immediately; r2 G1 fail -> no r3; keep r2 0b084317; close/switch.",
+    "P2 comp !=355,261 or >370,370 or <77.76 -> stop.",
+    "1080p any mode >6,250,000 or f1080p not 81,707 B/sha b769cc66… -> stop.",
+    "Any ERAM clk2q-start endpoint slack < +0.9 -> do not route.",
+    "Global synth WNS < +0.5 or TNS<0 -> do not route.",
+    "slice >71,680 or ERAM not consistent -> do not route.",
+    "Route not Routed, routed WNS/TNS<0, any violating endpoint, resource overflow -> stop; one route used.",
+    "Static CDC/check_timing not actually executed -> G2 cannot PASS.",
+    "1 session/60 min or 1 synth attempt exhausted -> stop; no r3.",
+    "Any needed change outside PRE/REPOS seeds/clamp -> stop and return to planner.",
+    "Any request for larger device/QoR/clock change/false path/multicycle/seed sweep/bitgen/download -> stop and return to planner."
+  ],
+  "after_development": {
+    "sequence": [
+      "dev ready_for_test + frozen r2 manifest -> spawn_single_tester (this package's tester; not hit-pipe)",
+      "tester integrated verdict -> return_to_planner",
+      "dev blocked at G1/synth/route/CDC -> return_to_planner, no tester",
+      "r2 G1 fail -> stop; keep r2 0b084317; no r3"
+    ],
+    "rules": [
+      "Tester must independently implement/repair strict decoder; verify P3 per-case cycles and per-cycle table; reports direct -file.",
+      "Tester writes test-reports/T10.a1-bm-prefetch-r2-integrated.md with one unique verdict heading.",
+      "G2 PASS requires Routed WNS/TNS>=0, 0 violations, slice<=71,680, static CDC evidence; do not claim report_cdc."
+    ]
+  },
+  "write_scope": {
+    "modify_existing_run_owned": [
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v (PRE/REPOS seeds/clamp only)"
+    ],
+    "must_not_modify": [
+      "a1_frame_top.v (18d51b1b)",
+      "a1_small_top.sdc (227dd39e)",
+      "S_WAIT praddr fix, bm prefetch/ext_mis_r, htab/bm storage, thresh_lit8/9, protocol/frame/CRC/abort/Bayer"
+    ],
+    "create_new": [
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/** (new helper files only, if strictly needed)",
+      "upstream/ph1p100-pcie-ep-fpga/sim/tb/codec/**",
+      "upstream/ph1p100-pcie-ep-fpga/tools/codec/**",
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-bm-prefetch/r2/**"
+    ],
+    "td_project_dir": "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-bm-prefetch/r2/td/**",
+    "path_contract": {
+      "td": "T: = current run td, Y: = project root; run tools/td/td_env.ps1; never map X: to project root",
+      "sim": "P: = project root, W: = current sim run",
+      "doc": "tools/td/PATH_CONTRACT.md"
+    },
+    "rules": [
+      "Only PRE/REPOS seeds/clamp may change; other logic frozen.",
+      "No cycle increase: P2 comp exactly 355,261; hard 370,370.",
+      "G1 all 33 cases bit-identical to r2 0b084317; f1080p 81,707 B / b769cc66.",
+      "G1 before TD; then all ERAM clk2q slack>=+0.9 and global WNS>=+0.5; one route.",
+      "Static CDC; reports direct -file; bitgen not_run.",
+      "TD artifacts stay under r2; never overwrite r0/r1 manifests.",
+      "Follow T:/Y: TD and P:/W: simulation."
+    ]
+  },
+  "protected": [
+    "all files outside a1_deflate_core.v and allowed new directories",
+    "a1_frame_top.v and a1_small_top.sdc (locked)",
+    "S_WAIT praddr fix, bm prefetch/ext_mis_r, htab/bm storage, thresh_lit8/9",
+    "workflow/tasks.json",
+    "old runs/manifests/bit/CWC, production candidate b68c6e18…f9bf",
+    "board, Flash, PCIe/RK, camera configuration"
+  ],
+  "next_action": "followup_task",
+  "next_action_detail": {
+    "role": "fpga-dev",
+    "skill_path": ".agents/skills/fpga-dev/SKILL.md",
+    "task": "T10.a1-bm-prefetch r2：重放 3cfdda78，只重推 S_PRE/S_REPOS 种子与 clamp/lim*/last_a/x1_r 拍对齐；保留 S_WAIT praddr<=1、bm 预取、ext_mis_r；G1 33 例逐位同 r2、comp 355,261；再综合（ERAM clk2q>=+0.9、WNS>=+0.5）→ route 1 次；静态 CDC；bitgen not_run。",
+    "must_read": [
+      "dev-plan.md §34",
+      "r1/result-r1.md §2/§4",
+      "r1/p3/result.json",
+      "r1/dbg_fix/stdout.log"
+    ],
+    "first_checks": [
+      "replay r1/candidate-r1-blockprime.a1_deflate_core.v (3cfdda78)",
+      "confirm frame 18d51b1b / SDC 227dd39e",
+      "confirm P2 13/13 and comp 355,261 before P3"
+    ]
+  },
+  "question_path": null,
+  "user_summary_path": "workflow/runs/20261020-0209_singleA_aplus_closedloop/user-summary.md"
+}

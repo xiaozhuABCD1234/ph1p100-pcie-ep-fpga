@@ -1,0 +1,158 @@
+{
+  "recorded_at": "2026-10-17T07:03:10.224396+00:00",
+  "online_remote_heads": {
+    "fpga": {
+      "default_branch": "main",
+      "commit": "2a4b253d9f2e56a943f1667b2a7a366824dcba34"
+    },
+    "driver": {
+      "default_branch": "main",
+      "commit": "a0215c5a2fcb95bfc867a4768d4831d68edf64a2"
+    }
+  },
+  "access_notes": "GitHub connector and anonymous web both 404. Native git ls-remote --symref succeeded for both; no credentials inspected, no remote mutation. Branch list returned only main. Write/admin permission unverified.",
+  "archive_proof": [
+    {
+      "name": "peer-fpga-2a4b253",
+      "commit": "2a4b253d9f2e56a943f1667b2a7a366824dcba34",
+      "archive_sha256": "e129cb6e72cae3d0147e0794e243a31448b1c02cac3990374ff4ed4337b8d504",
+      "archive_matches_record": true
+    },
+    {
+      "name": "peer-driver-a0215c5",
+      "commit": "a0215c5a2fcb95bfc867a4768d4831d68edf64a2",
+      "archive_sha256": "011aaa339bc572c636b8bc44acb40ef106dc0aaa3112f4b78e0253796a58d61e",
+      "archive_matches_record": true
+    }
+  ],
+  "fpga_delta": {
+    "same_count": 142,
+    "modified": [
+      {
+        "path": "rtl/ep_side/cam/ui_cfg_imx415.v",
+        "old_sha256": "6bffc905be9756418f5dc9061b957baa1385395ef34b0143e3e677a50bdcd0d0",
+        "new_sha256": "f91f263bc9927755dc1475390cb805881227f0f21e893968e858d1caa210af8c"
+      },
+      {
+        "path": "rtl/ep_side/ddr/cam_ddr_writer.v",
+        "old_sha256": "7bb43a31a6a30539e743b13f9b07461084ed384ed9d8c1b5b152876a3abd9ab9",
+        "new_sha256": "0207c111e4022e6a6d53d4d3594260c617ff054f8664297ac02cc4f6e51d5f37"
+      },
+      {
+        "path": "rtl/ep_side/ddr/ddr_frame_pusher.v",
+        "old_sha256": "397fc5f645ce42384e5bde419242e2356b1c48e6e079d615553e617d258bcd7c",
+        "new_sha256": "e0dd673cd19dd09c0343dd5811a6bc4efbfab48ece2ab5e59396a17ef6f57a5b"
+      },
+      {
+        "path": "rtl/ep_side/img/ep_bar_win.v",
+        "old_sha256": "885f95e7e8faf8ffe3c378bd1e18ee586c65234185144241d40d7c293fca36a8",
+        "new_sha256": "a3b6b57d60124409dcc1b3b9ce0afb122c3ac4d6aa89d583e19738f9dfd0cf30"
+      },
+      {
+        "path": "rtl/ep_side/img/img_frame_src.v",
+        "old_sha256": "ddc837ad458df1c1b08ebf06597d252aef1c178563ac28ffcc0a6014a73e35cf",
+        "new_sha256": "12eafda259d8f6ed216c44ef1c3f7d5b9de8e2e2c33da89d74efa0be71cddd84"
+      },
+      {
+        "path": "rtl/ep_side/pcie_ep_engine.v",
+        "old_sha256": "fcb70389b6a3af9e401aab2f270f30531ef1bc8bc39153fd32b17bfc362fde13",
+        "new_sha256": "bf59991a8bca3f8b030c47369930be2580db380e185a47dadc0ec68dda006401"
+      },
+      {
+        "path": "rtl/ep_side/ph1p_pcie_ep_top.v",
+        "old_sha256": "909858ccd71b49acb7b2e2fcbfe00c5b0e1f8e98069dfa5848eeaddd23d97e7a",
+        "new_sha256": "817d1949134479de6429ba514a493e8df49300f25a5d5d37c335864d5cfac7ce"
+      }
+    ],
+    "added": [
+      {
+        "path": "rtl/checked/crc16_upd4.v",
+        "sha256": "20520d044773247bdd6469c3fd04efcf1ea4c31366abf41f7fde3ea27e98841f"
+      },
+      {
+        "path": "rtl/checked/csi_rx_10bit_unpack_checked.v",
+        "sha256": "9b5421c55b0f09871f8a939fb3381d4c7d5726286b30f9d5450cc09404065a12"
+      },
+      {
+        "path": "rtl/checked/csi_rx_packet_integrity.v",
+        "sha256": "50b4c77be684f078bdf6dca93848e9298e3cbd8010e45eab4b0ecfb2debdc6c0"
+      },
+      {
+        "path": "rtl/ep_side/cam/mipi_csi2_rx_ph1p_checked.v",
+        "sha256": "60ed7770442e159f02b5b1ba51ea70e9048e3ea4fc5330e0d345e5369745f9ab"
+      },
+      {
+        "path": "rtl/ep_side/ddr/cam_r10f_writer.v",
+        "sha256": "d79f912a9e1fe37c34501bcebf49af4285046ba46e5674fec83a4d4c1c8c8328"
+      },
+      {
+        "path": "rtl/ep_side/ddr/crc32_upd4.v",
+        "sha256": "89b04f7559c20ceda6267e408021772d65dc864d445a8c9fb503be722f9469d3"
+      }
+    ],
+    "absent_in_deliver": []
+  },
+  "driver_delta": {
+    "same_count": 16,
+    "modified": [
+      {
+        "path": "Makefile",
+        "old_sha256": "9d3dcc00a065614260d43e60e7f94652215016defd456929544f0948c2a153ce",
+        "new_sha256": "08d4a055960137dc5d5a35230c2bf0f1abc0c5e104189a58ef63def202ebd22a"
+      },
+      {
+        "path": "app/rs/src/bin/frame_grab.rs",
+        "old_sha256": "9b57e132213f173926962e9333291d7eebf4d2ca2a0a47479cdfa35af9a39fca",
+        "new_sha256": "d301052571f7541aeee0b646f4a59fb641bd86f80b4237c6e16fe8727f32d27b"
+      },
+      {
+        "path": "app/rs/src/lib.rs",
+        "old_sha256": "36919408e040a9118cc83ab422aeb5bf21ef393bd3f0258f9abb5a91267f1c7b",
+        "new_sha256": "2c38fd8a65ec0b9d78ffc0eabfc3547aa231634766f7f0dae5c2c1a11a178cf3"
+      },
+      {
+        "path": "include/anlogic_pci_ioctl.h",
+        "old_sha256": "a9c00ae1e3d692561fa5538741c695d0a54da731266a2e735752be89171b7468",
+        "new_sha256": "f43f637c27d7d805d3146e96a7364280986d80b3e7e26e78a8c6fc322d148246"
+      },
+      {
+        "path": "src/anlogic_pci.h",
+        "old_sha256": "d4dda38bb14561daedc51b236e3bc4324f67bf148eeeb5ad1e17b3770a549a3a",
+        "new_sha256": "6af3a2a732b62ebb5664f7a53ac9d45c48d4dd457dd6bab2bf3e004826ded9fb"
+      },
+      {
+        "path": "src/anlogic_pci_ctrl.c",
+        "old_sha256": "e6a37650ab4206e54327aa7f40a6849b06a774f4a33fd79ed0dbf965522207c2",
+        "new_sha256": "f6962abbb411f21e433861f35ded2f8630861d566027a0c00401c2bbcd167d89"
+      },
+      {
+        "path": "src/anlogic_pci_frame.c",
+        "old_sha256": "57c24bf87d75624ffec6155a0a385097dd3da393b1178c4ae97e31f45d58d76b",
+        "new_sha256": "f48757a5291df1280040803febc4876d203f83f44e4b0df14faac9265329cd8a"
+      },
+      {
+        "path": "src/anlogic_pci_link.c",
+        "old_sha256": "6fadc165ed232e3cc00e60e830bce27551ad4da0b94a19cbdb5493209df1c79b",
+        "new_sha256": "9b35da75debe5687722ff963b2f8ee817fd881926e1c6b3df7b0c3a5081bfc77"
+      }
+    ],
+    "added": [
+      {
+        "path": "app/rs/src/bin/r10f_check.rs",
+        "sha256": "a8e127282ea8049d9fce13f457b0adfffe504b2167fdef56cec183c5c3e84a4b"
+      },
+      {
+        "path": "app/rs/src/rka1.rs",
+        "sha256": "1e0872331bd997a5b0116724d339626991db0aa6db82a39cf554c924c957b84a"
+      },
+      {
+        "path": "src/anlogic_pci_rka1.c",
+        "sha256": "105791ecf34a47c4b0c7478fde7e9ac0d2d712a12b235eb14cf82994a23f1e7a"
+      }
+    ],
+    "absent_in_deliver": []
+  },
+  "t11_manifest_sha256": "aab0cc08ef0134d5fcb18b25e0b70c43e9af1d577513ca2996dc46f22de76975",
+  "t11_production_entries": 155,
+  "t11_production_drift": []
+}

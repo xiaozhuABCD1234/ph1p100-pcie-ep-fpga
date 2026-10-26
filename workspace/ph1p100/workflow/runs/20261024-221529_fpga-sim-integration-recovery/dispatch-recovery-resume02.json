@@ -1,0 +1,148 @@
+{
+  "run_id": "20261024-221529_fpga-sim-integration-recovery",
+  "runtime": "Codex",
+  "project_root": "D:\\fpga\\ph1p100",
+  "output_dir": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery",
+  "task_ids": [
+    "T10.a1-recovery-sim"
+  ],
+  "run_task_ids": [
+    "T08.sync-production-sim",
+    "T10.a1-recovery-sim",
+    "T10.a1-uart-descriptor-fix",
+    "T10.a1-abort-cdc-fix"
+  ],
+  "batch_size": 1,
+  "status": "ready",
+  "needs_user_input": false,
+  "input_paths": [
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\request.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\user-feedback-01-continue.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\dev-plan.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\fpga-design-guide.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\planner-abort-cdc-fix.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\planner-resume02-recovery.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\recovery-dut-binding-resume02.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T10.a1-recovery-sim\\resume01\\relay-metadata-resume01.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T10.a1-recovery-sim\\resume01\\execution-ledger-resume01.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T10.a1-abort-cdc-fix\\corrected-dut-index.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T10.a1-abort-cdc-fix\\relay-metadata.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\test-reports\\T10.a1-abort-cdc-fix-r0-integrated.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\dispatch-recovery-resume02.json"
+  ],
+  "write_scope": [
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T10.a1-recovery-sim\\resume02"
+  ],
+  "protected": [
+    "all prior r0/resume01 artifacts and manifests",
+    "all eight immutable combined DUT files and passed fix/T08 candidates",
+    "all paths outside current resume02 write_scope",
+    "production/upstream/fpga/tools/old runs/work/docs junction",
+    "D:\\TD",
+    "D:\\fpga_work",
+    "board bit/CWC/DB, shared drive mappings and other worktrees"
+  ],
+  "next_action": {
+    "operation": "followup_task",
+    "target_agent_id": "/root/fpga_dev_recovery_221529",
+    "role": "fpga-dev",
+    "skill_path": "D:\\fpga\\ph1p100\\.agents\\skills\\fpga-dev\\SKILL.md",
+    "task_ids": [
+      "T10.a1-recovery-sim"
+    ],
+    "round": 0,
+    "instruction": "Resume original recovery task into resume02 only. Read planner-resume02-recovery.md and all input_paths. Exact corrected immutable eight RTL are frozen by recovery-dut-binding-resume02.json (new top+passed exporter+six originals); do not modify DUT or old artifacts. Prefer copying the passed fourth-package test assets into resume02 with before/after source mapping and path-only adapter diffs, then real rebuild/re-run all twenty prescribed cases across both asynchronous ratios, full strict recovery/source/zlib/four-CRC/epoch/slot/stall checks and effective negatives. No old success logs reused as current PASS. Preserve original 42 calls/compile2/clean3/fault3/pre-elaboration failure1/actual repairs0 and problem opportunities1/0. First integrated test still round0. No fifth package, production/TD/hardware. Freeze resume02/manifest-resume02.json, stopped_modifying=true, active_commands=0, cumulative ledger and changed-input retest; return relay-contract metadata only. No child agents."
+  },
+  "after_development": {
+    "operation": "spawn_single_tester",
+    "role": "fpga-tester",
+    "skill_path": "D:\\fpga\\ph1p100\\.agents\\skills\\fpga-tester\\SKILL.md",
+    "when": "New resume02 manifest ready_for_test, stopped_modifying=true, active_commands=0; old blocked/fix manifests alone not sufficient",
+    "dimension": "integrated",
+    "write_scope": [
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\test-reports\\T10.a1-recovery-sim",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\test-reports\\T10.a1-recovery-sim-r0-integrated.md"
+    ],
+    "instruction": "One new independent integrated tester for original recovery task (never previously tested). Read current resume02 plan/binding/dispatch and new unique manifest. Independently rebuild exact combined eight RTL and rerun twenty-case recovery matrix across both asynchronous ratios, plus effective old-top/checker negatives and a different source/byte/slot criterion. Do not inherit dependency task PASS or resume01 partial results. Check all input/protected hashes before/after. One T10.a1-recovery-sim-r0-integrated.md, three dimensions; G0/G1 required, G2 not_run and G3/4/5 N/A. Report outstanding old-AR-at-reset boundary as not covered if not hit, rather than claiming it. No candidate edits/TD/hardware.",
+    "round": 0
+  },
+  "after_test": {
+    "operation": "return_to_planner",
+    "instruction": "Return to original planner /root/fpga_planner_sim_221529 with actual tester ID, verdict/report/manifest/retest and full original/resume01/resume02 counts for four-package closeout. True unblocked FAIL follows original developer/new tester for actual repair rounds1-3 within allowed test scope. Missing conditions or required extra RTL/fifth package return planner for bounded closeout; never reset counters or create new task."
+  },
+  "scope_limits": {
+    "major_goals": 1,
+    "formal_packages": 4,
+    "maximum_packages": 4,
+    "levels": 2,
+    "max_semantic_steps_per_package": 5,
+    "max_actual_repair_rounds": 3,
+    "batch_size": 1,
+    "download": 0,
+    "flash": 0,
+    "td": 0,
+    "synthesis": 0,
+    "route": 0,
+    "bitgen": 0,
+    "cwc": 0,
+    "production_writeback": false
+  },
+  "execution_limits": {
+    "developer_tool_calls": 45,
+    "developer_minutes": 60,
+    "tester_tool_calls": 45,
+    "tester_minutes": 60,
+    "reason": "Final combined changed DUT plus twenty affected recovery/CDC cases; bounded tester coverage extended for independent source/slot checks without extra roles or tasks.",
+    "read_search_seconds": 60,
+    "local_compile_or_single_sim_seconds": 300,
+    "same_failed_command_max_attempts": 2,
+    "same_issue_search_rounds": 3,
+    "consecutive_no_progress_cycles": 2,
+    "full_compiles_this_dispatch": 2,
+    "historical_full_compiles": 2,
+    "maximum_cumulative_full_compiles_after_this_dispatch": 4
+  },
+  "question_path": null,
+  "user_summary_path": null,
+  "completed_tasks": [
+    {
+      "task_id": "T08.sync-production-sim",
+      "verdict": "PASS",
+      "round": 0
+    },
+    {
+      "task_id": "T10.a1-uart-descriptor-fix",
+      "verdict": "PASS",
+      "round": 0
+    },
+    {
+      "task_id": "T10.a1-abort-cdc-fix",
+      "verdict": "PASS",
+      "round": 0,
+      "manifest_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T10.a1-abort-cdc-fix\\manifest-r0.json",
+      "manifest_sha256": "db84411dfdcf979b1fc5f6a25e11812f90f0834896a8b76787b85cd434fa5dcd"
+    }
+  ],
+  "original_role_ids": {
+    "planner": "/root/fpga_planner_sim_221529",
+    "T08_developer": "/root/fpga_dev_sync_221529",
+    "T08_tester": "/root/fpga_tester_sync_221529"
+  },
+  "resume_sequence": 2,
+  "input_status": "changed",
+  "preserved_counters": {
+    "T08_actual_repair_rounds": 0,
+    "descriptor_fix_actual_repair_rounds": 0,
+    "abort_fix_actual_repair_rounds": 0,
+    "recovery_actual_repair_rounds": 0,
+    "recovery_historical_tool_calls": 42,
+    "recovery_historical_compile_count": 2,
+    "recovery_historical_clean_simulations": 3,
+    "recovery_historical_fault_simulations": 3,
+    "recovery_historical_pre_elaboration_launch_failures": 1
+  },
+  "problem_opportunities": {
+    "T10.a1-recovery-sim:SCOPE_CLARIFICATION:fixed-r5-descriptor-index": 1,
+    "T10.a1-recovery-sim:SCOPE_CLARIFICATION:crop-abort-cdc-loss": 0
+  }
+}

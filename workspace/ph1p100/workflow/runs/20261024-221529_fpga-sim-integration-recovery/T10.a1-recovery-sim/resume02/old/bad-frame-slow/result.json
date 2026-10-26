@@ -1,0 +1,48 @@
+{
+  "case_id": 3,
+  "status": "EXPECTED_REJECTION",
+  "errors": [
+    "KeyError('good_sent')"
+  ],
+  "effective_negative": true,
+  "name": "bad-frame",
+  "ratio": "slow",
+  "command": {
+    "argv": [
+      "D:/intelFPGA/18.1/modelsim_ase/win32aloem/vsim.exe",
+      "-c",
+      "-modelsimini",
+      "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T10.a1-recovery-sim/resume02/old/modelsim.ini",
+      "-wlf",
+      "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T10.a1-recovery-sim/resume02/old/bad-frame-slow/case.wlf",
+      "-l",
+      "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T10.a1-recovery-sim/resume02/old/bad-frame-slow/transcript.log",
+      "work.tb_recovery",
+      "-gW=8",
+      "-gH=2",
+      "-gFIFO_AW=2",
+      "-gCAM_HALF=7.0",
+      "-gA1_PHASE=1.7",
+      "-gMAX_CYCLES=1500000",
+      "+CASE=3",
+      "+OUT=D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T10.a1-recovery-sim/resume02/old/bad-frame-slow/capture.dec",
+      "+TRACE=D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T10.a1-recovery-sim/resume02/old/bad-frame-slow/trace.txt",
+      "+STAT=D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T10.a1-recovery-sim/resume02/old/bad-frame-slow/stats.txt",
+      "-do",
+      "do D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T10.a1-recovery-sim/resume02/run.do"
+    ],
+    "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T10.a1-recovery-sim\\resume02",
+    "timeout_seconds": 300,
+    "owned_pid": 46440,
+    "returncode": 0,
+    "elapsed_seconds": 2.234
+  },
+  "protection_before": {
+    "checked": 729,
+    "drift": 0
+  },
+  "protection_after": {
+    "checked": 729,
+    "drift": 0
+  }
+}

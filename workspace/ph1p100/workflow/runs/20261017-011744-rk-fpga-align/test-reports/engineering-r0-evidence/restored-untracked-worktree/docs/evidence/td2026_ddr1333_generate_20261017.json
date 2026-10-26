@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "kind": "td2026_ddr1333_generate_retry",
+  "workpackage": "T01.tool-D-A-retry (GUI OK step executed by user; CLI retry and closure)",
+  "recorded_at": "2026-10-17T01:1x+08:00",
+  "bootstrap_dir": "D:\\TD\\work\\csi2\\_validation\\td2026_gui_bootstrap_20261017_000935",
+  "gui_session_result": {
+    "session_window": "user session ~00:57-01:04; td.exe (pid 55680, 'ddr1333_proj_boot - [...] - Anlogic TD Release_2026.2') still open and idle at record time",
+    "diff_vs_pre_gui_manifest": {
+      "gui_created": [
+        {"rel": ".lock.f", "bytes": 103, "sha256": "729F3814D4D2FBCEF4EDFA2941CFF93096FF6BEA54267454A5B6906E3A3FB45C", "note": "project lock owned by td.exe 55680"},
+        {"rel": "run.bat", "bytes": 236, "sha256": "54B343807747894C1EA8506CDF568E26F7B9F6ED8AE8C1CA361B6007F7D9D7B5", "note": "project-build launcher (td_commands_prompt ./multirun_script.tcl)"},
+        {"rel": "multirun_script.tcl", "bytes": 485, "sha256": "175E18F510CFDA11469E0F1BD790F594FEF130EF1D3AFE4010A0EA96126C7042", "note": "runs syn_1+phy_1; import_device line has empty db/package (GUI-generated, broken) - build produced nothing"},
+        {"rel": "log/ipgen.log", "bytes": 1889, "sha256": "BE040B8AF278C49C67821F37BADC516726AF4EB7E13F5C2AD3254BD9B7B460F1"},
+        {"rel": "log/td_2026-10-17_00-57-35.log + .logw", "bytes": 0},
+        {"rel": "log/td_2026-10-17_01-04-35.log + .logw", "bytes": 0, "note": "locked during first diff; 0 bytes"}
+      ],
+      "developer_files_written_after_manifest": ["open_ddr1333_gui_6.2.3.cmd", "open_bootstrap_folder.cmd", "boot_retry_generate.tcl", "pre_gui_manifest.json"],
+      "changed": [
+        {"rel": "ddr1333_proj_boot.al", "before": "9878F37C681DDF5E1DD9322386EF517F17EF8E064A5DE3F7D87EE79BE8DEBCAA (1966 B, pre-GUI)", "after_gui": "EF721C4DC9F3DE2038D50203046E6D5EEBA41703DFCA55B46400EB8838DB7210 (2026 B)", "after_cli_retries": "716627FAAA43734386ABC68E5DE1A8361C2DC15C0957CE12D3F12149864F3B92 (2028 B)", "note": "GUI added the IP_FILE entry (design_1, UsedInSyn/P&R, AutoExcluded) and runs syn_1/phy_1; CLI retries rewrote it afterwards"}
+      ],
+      "removed": ["ip_out/.IpToolIpDataBackupDir_ddrmc_x32/ (staging dir and its 235B drc log were deleted by the GUI flow; no staging present at record time)"],
+      "unchanged": ["ip_out/ddrmc_x32/* (all six instance files, mtimes still 00:10 pre-GUI)", "input_pins.adc"]
+    },
+    "ipgen_log_analysis": {
+      "tool": "IpTool V2026.08 (Build 208212 2026/08/14) driven by the TD GUI",
+      "flow": ["load instance xml + depot (MIS_DDRF6F1D0P0_1.2)", "report_ip_status ret 4 2 0 0 (= no upgrade action)", "StandardProgressDialog '#IP Generater'", "spin boxes set: PH1P_REF_CLK 100.00 -> 50.0000, PH1P_DDR_SPEED 800.00 -> 1333.00", "ADC check outputs: 'used bank 4 5', 'ac {5 1} {5 2} {5 3}', 'dx {4 0} {4 1} {4 2} {4 3}' (consistent with the golden ADC pin map, matching the expected adc.log content class)", "IP_Generator OK clicked", "IP_Generating_Options dialog CLOSED (no Generate)", "IP_Generator window closed"],
+      "conclusion": "the ADC check ran correctly but wrote only into ipgen.log/transient state; ddrmc_x32_adc.log was NOT materialized anywhere"
+    },
+    "adc_log_materialization": {
+      "root": {"path": "ip_out/ddrmc_x32_adc.log", "exists": false},
+      "staging": {"path": "ip_out/.IpToolIpDataBackupDir_ddrmc_x32/ddrmc_x32_adc.log", "exists": false},
+      "full_tree_search": "no *adc* file under the bootstrap dir except the input input_pins.adc"
+    },
+    "install_dir_writes": ["D:\\anlogic\\TD_Release_2026.2\\bin\\.setup.ini (21 B, 01:04:40) - window-position cache, same behavior class as the 6.2.2 .setup.ini note; non-destructive, recorded only"],
+    "extra_effects": ["project .al gained runs syn_1/phy_1 and an IP_FILE entry", "a project build was attempted via run.bat/multirun_script.tcl; it produced no _Runs dir and no artifacts (its import_device line is empty-package), so no side effects beyond the files above"]
+  },
+  "cli_retry": {
+    "script": {"path": "boot_retry_generate.tcl", "sha256": "7BF78F31B553CAB6E017EBBAE5EEB66A12B79E2293546EA1436E44BF4A038D4F"},
+    "runs": [
+      {"run": 1, "argv": "D:\\anlogic\\TD_Release_2026.2\\bin\\td_commands_prompt.exe ./boot_retry_generate.tcl", "cwd": "D:\\TD\\work\\csi2\\_validation\\td2026_gui_bootstrap_20261017_000935", "exit_code": 0, "wall_seconds": 5.8, "timed_out": false, "stdout_file": {"path": "boot_retry_out.txt", "bytes": 6369, "sha256": "62239E93DF6AE675FE8FAD111F14C02E5D8237C0E1683D11F1CD66AFDB99C075"}, "pre_checks": {"root_adc": false, "staging_adc": false, "staging_drc": true}, "sysclk_set": "rejected (IPT-1002 range list is empty)", "generate_target_rc": 1},
+      {"run": 2, "wall_seconds": 5.9, "stdout_file": {"path": "boot_retry_out2.txt", "bytes": 6369, "sha256": "08989FDFCD868633F7DA072E92A8A1C9C9A3CB2B377DDE93065BC79722B52FE2"}, "pre_checks": {"root_adc": false, "staging_adc": false}, "generate_target_rc": 1}
+    ],
+    "td_logs": [
+      {"file": "td_20261017_010837.log", "bytes": 5972, "sha256": "05AE0668361E77C5CCC31780D78CBFDB9683FFF1FEC91C40EF103E4D3C8176F6"},
+      {"file": "td_20261017_010916.log", "bytes": 5972, "sha256": "45D52BA6DF70E9CE18F4393345F6B747C31BEFF7F2979258A5607000FCAB468F"}
+    ],
+    "error_text_verbatim": "IPT-1002 ERROR: Generate target failed. Reason: [Error-TclFile] couldn't open \"D:/TD/work/csi2/_validation/td2026_gui_bootstrap_20261017_000935/ip_out/.IpToolIpDataBackupDir_ddrmc_x32/ddrmc_x32_adc.log\": no such file or directory"
+  },
+  "verdict": {
+    "premise_a": "REFUTED (empirically tested): the GUI OK/apply step WITHOUT proceeding into Generate does not materialize ddrmc_x32_adc.log; the subsequent CLI generate_target retry fails deterministically with the identical error (2/2 post-GUI runs, plus the identical pre-GUI failure family).",
+    "why": "In the GUI(IpTool-based) flow the ADC check data is computed in-memory/into ipgen.log; the <comp>_adc.log file is produced only as part of the full generation steps (cf. 002820 proc.log 'generate adc file success'). The TD-CLI Tcl pipeline expects that file in its staging dir before its own scripts write it - a tool-side gap with no known CLI equivalent.",
+    "not_claimed": ["no headless DDR1333 generation success", "no candidate frozen from this subpackage"]
+  },
+  "option_b_entry": {
+    "description": "full GUI generation using the same dialog the user already reached (do NOT close the Generating Options dialog this time)",
+    "steps": [
+      "close the currently open TD session (see housekeeping) and reopen the bootstrap project (open_ddr1333_gui_6.2.3.cmd)",
+      "double-click the ddrmc_x32 IP -> review the 1333 values (same field table as gui-bootstrap-A_instructions.md) -> OK",
+      "in 'IP Generating Options': Binary Path = D:/anlogic/TD_Release_2026.2/bin/td.exe ; Synthesis Options = Behavior ; Export to = D:/TD/work/csi2/_validation/td2026_gui_bootstrap_20261017_000935/ip_out",
+      "click Generate and wait for completion",
+      "expected closure (reference 002820): ip_out/ddrmc_x32/ (+src) + ip_out/RTL/ + ddrmc_x32_adc.log + ddrmc_x32_drc_check.log + ddrmc_x32_proc.log"
+    ],
+    "parameter_reference": ["ip_out/ddrmc_x32/.params_ddrmc_x32.txt (sha256 BD1D8E13EE29001ABB1F497792C797ED49501D986EA606253EACC510A92D9008) with 1333.00 / DDR3-1333J / CL10 / CWL7", "workflow/runs/20261016_185639_td_cli_iptool/gui-bootstrap-A_instructions.md field table", "docs/DDR1333_IPTool再次尝试与人工操作_2026-10-15.md §5 parameter table"],
+    "verification_after_b": "developer re-runs the T01.tool-A success-branch checks on the produced closure (product closure; derived values incl. actual PLL CK <= 666.667 MHz; 70 pins vs golden input_pins.adc sha F0904238...; ADC pointing at the local file) and freezes a candidate manifest; a second independent reproduction (another GUI Generate in a fresh dir with the same frozen inputs) is still required before declaring the candidate reproducible, and any GUI step is never recorded as headless success"
+  },
+  "housekeeping": {
+    "gui_still_open": "td.exe pid 55680 with the bootstrap project is still open (idle); close it before option-B steps; closing does not affect the recorded artifacts",
+    "developer_never_started_gui": true,
+    "no_batch_deletes": true,
+    "no_hardware": true,
+    "no_downlaod_writes": "three 6.2.2 anchors remain unchanged; only D:\\anlogic\\...\\bin\\.setup.ini updated by the tool itself"
+  },
+  "limits": [
+    "Option A is closed as refuted; option B or a tool-vendor question remains.",
+    "The broken GUI-generated multirun_script.tcl (empty import_device fields) is recorded as a GUI quirk observation; no build artifacts were produced."
+  ]
+}

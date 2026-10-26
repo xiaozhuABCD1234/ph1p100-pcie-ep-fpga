@@ -1,0 +1,73 @@
+{
+  "task_id": "T10.dual-aplus-scheduler",
+  "dimension": "integrated",
+  "dimension_results": {
+    "functional": {
+      "applicability": "applicable",
+      "result": "blocked",
+      "G0": "pass",
+      "G1": "blocked"
+    },
+    "engineering": {
+      "applicability": "applicable",
+      "result": "blocked",
+      "G0": "pass",
+      "G1": "blocked",
+      "G2": "not_run"
+    },
+    "system": {
+      "applicability": "applicable",
+      "result": "blocked",
+      "G1": "blocked",
+      "G3": "not_run-awaiting_hardware",
+      "G4": "not_run-awaiting_hardware"
+    }
+  },
+  "verdict": "FAIL",
+  "report_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler-r0-integrated.md",
+  "manifest_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10.dual-aplus-scheduler\\cmp-stall-fix01\\static-closeout02\\manifest-cmp-stall-fix01.json",
+  "blocked": {
+    "reason_code": "LIMIT_REACHED",
+    "state": "blocked",
+    "missing": [
+      "Explicit observed hit for descriptor acceptance and RAW release handshake on the same rising edge, with full identity/ownership scoreboard; current supplementary matrix checks them separately."
+    ],
+    "resume_input_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10-integrated-r0-input.md"
+  },
+  "retest": {
+    "required_dimensions": [
+      "functional",
+      "engineering",
+      "system"
+    ],
+    "required_checks": [
+      "Explicit observed hit for descriptor acceptance and RAW release handshake on the same rising edge, with full identity/ownership scoreboard; current supplementary matrix checks them separately."
+    ],
+    "report_paths": [
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler-r0-integrated.md"
+    ],
+    "input_status": "same",
+    "reuse_decision_paths": [
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\reuse-decision.json"
+    ]
+  },
+  "counts": {
+    "conservative_tool_calls": 45,
+    "wrapper_calls": 22,
+    "nested_native_calls": 23,
+    "compile_processes": 2,
+    "case_processes": 19,
+    "limits": {
+      "tool_calls": 45,
+      "compiles": 2,
+      "cases": 20,
+      "minutes": 60
+    },
+    "stopped_modifying": true,
+    "active_commands": 0,
+    "post_acceptance_repair_rounds": 0,
+    "developer_faults_unchanged": "3/3"
+  },
+  "stopped_modifying": true,
+  "active_commands": 0
+}

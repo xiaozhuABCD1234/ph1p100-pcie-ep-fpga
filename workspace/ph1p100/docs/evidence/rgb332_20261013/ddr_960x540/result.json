@@ -1,0 +1,54 @@
+{
+  "test": "ddr_display",
+  "baseline": false,
+  "production": true,
+  "address_fault": false,
+  "accepted": true,
+  "commands": [
+    {
+      "command": [
+        "vlib.exe",
+        "work"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "vlog.exe",
+        "-sv",
+        "+define+GUARDED",
+        "tb_ddr_display.sv",
+        "capture_async_fifo.v",
+        "gray_frame_pack_guarded.v",
+        "ddr_frame_store.v",
+        "ddr_display_read.v",
+        "rgb332_display_pixels.v",
+        "camera_ddr_display_guarded.v"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "vsim.exe",
+        "-c",
+        "-gSW=960",
+        "-gSH=540",
+        "-gPRODUCTION=1",
+        "work.tb_ddr_display",
+        "-do",
+        "run -all; quit -f"
+      ],
+      "returncode": 0
+    }
+  ],
+  "inputs": {
+    "tb_ddr_display.sv": "d39f2e686d306175b5c8712009314c6324c6ae612ba4e664822445adc743eca4",
+    "capture_async_fifo.v": "59dd6dcb5b7e7774f7d6518f50f56cafbc8be6b70e8ae1508236bac2b5af531d",
+    "gray_frame_pack_guarded.v": "ce365e1d09133a1346ba13987df8122619e54a3cf0a08bc7eefc19659bc46e92",
+    "ddr_frame_store.v": "c600420683a607a486661a678655a6fd23f13f29e1ae652fe1af8befe23a879a",
+    "ddr_display_read.v": "fe53f761c49c374bee931f742e101dac63739b24f748ca3d1287e463a62d40b0",
+    "rgb332_display_pixels.v": "1893ff8242af8b04e725e0be3a9d281f53a9968bd8860524c3f40ccc08a79280",
+    "camera_ddr_display_guarded.v": "9f3677a2c4d00ba6b0023b3f41230c186458a2b05e15f9ad60b2a0bf002041a3"
+  },
+  "snapshot_transform": "Substitute exact RGB332 consumer; independent arithmetic color oracle; production=960x540 complete payload and 1920x1080 active pixels with compact blanking"
+}

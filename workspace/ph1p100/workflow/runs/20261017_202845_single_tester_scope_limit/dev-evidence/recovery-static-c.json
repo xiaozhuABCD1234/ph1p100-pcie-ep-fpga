@@ -1,0 +1,275 @@
+{
+  "task_id": "CFG-SINGLE-TESTER-LIMITS",
+  "plan_revision": 2,
+  "recovery_revision": 1,
+  "stage": "C",
+  "started_utc": "2026-10-17T12:56:08.182178+00:00",
+  "last_result_utc": "2026-10-17T12:56:08.791223+00:00",
+  "verdict": "FAIL",
+  "checks": [
+    {
+      "name": "STAGES_A_B_PASSED",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "GIT_01_EXIT",
+      "pass": true,
+      "detail": {
+        "argv": [
+          "git",
+          "-c",
+          "core.fsmonitor=false",
+          "-c",
+          "core.quotepath=false",
+          "--no-pager",
+          "rev-parse",
+          "HEAD"
+        ],
+        "cwd": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+        "started_utc": "2026-10-17T12:56:08.212740+00:00",
+        "deadline_seconds": 60.0,
+        "stdout_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261017_202845_single_tester_scope_limit\\dev-evidence\\recovery-git-01.stdout.txt",
+        "stderr_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261017_202845_single_tester_scope_limit\\dev-evidence\\recovery-git-01.stderr.txt",
+        "exit_code": 0,
+        "timed_out": false,
+        "owned_pid": 65864,
+        "ended_utc": "2026-10-17T12:56:08.332609+00:00"
+      }
+    },
+    {
+      "name": "HEAD_MATCH",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "GIT_02_EXIT",
+      "pass": true,
+      "detail": {
+        "argv": [
+          "git",
+          "-c",
+          "core.fsmonitor=false",
+          "-c",
+          "core.quotepath=false",
+          "--no-pager",
+          "symbolic-ref",
+          "--short",
+          "HEAD"
+        ],
+        "cwd": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+        "started_utc": "2026-10-17T12:56:08.345921+00:00",
+        "deadline_seconds": 60.0,
+        "stdout_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261017_202845_single_tester_scope_limit\\dev-evidence\\recovery-git-02.stdout.txt",
+        "stderr_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261017_202845_single_tester_scope_limit\\dev-evidence\\recovery-git-02.stderr.txt",
+        "exit_code": 0,
+        "timed_out": false,
+        "owned_pid": 73508,
+        "ended_utc": "2026-10-17T12:56:08.468804+00:00"
+      }
+    },
+    {
+      "name": "BRANCH_MATCH",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "GIT_03_EXIT",
+      "pass": true,
+      "detail": {
+        "argv": [
+          "git",
+          "-c",
+          "core.fsmonitor=false",
+          "-c",
+          "core.quotepath=false",
+          "--no-pager",
+          "diff",
+          "--no-ext-diff",
+          "--check",
+          "--",
+          "AGENTS.md",
+          ".gitignore",
+          ".agents/skills/fpga-orchestrator/SKILL.md",
+          ".agents/skills/fpga-orchestrator/references/relay-contract.md",
+          ".agents/skills/fpga-orchestrator/references/report-contract.md",
+          ".agents/skills/fpga-orchestrator/references/codex-calls.md",
+          ".agents/skills/fpga-planner/SKILL.md",
+          ".agents/skills/fpga-design-guide/SKILL.md",
+          ".agents/skills/fpga-dev/SKILL.md",
+          ".agents/skills/fpga-tester-functional/SKILL.md",
+          ".agents/skills/fpga-tester-engineering/SKILL.md",
+          ".agents/skills/fpga-tester-system/SKILL.md",
+          "workflow/FPGA多智能体工作流_使用说明.md",
+          "workflow/README.md",
+          "workflow/AI协作与工具接入.md",
+          "workflow/AGENTS接入片段.md",
+          ".agents/skills/fpga-tester/SKILL.md",
+          ".agents/skills/fpga-orchestrator/references/work-limits.md",
+          ".agents/skills/fpga-orchestrator/agents/openai.yaml"
+        ],
+        "cwd": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+        "started_utc": "2026-10-17T12:56:08.484770+00:00",
+        "deadline_seconds": 60.0,
+        "stdout_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261017_202845_single_tester_scope_limit\\dev-evidence\\recovery-git-03.stdout.txt",
+        "stderr_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261017_202845_single_tester_scope_limit\\dev-evidence\\recovery-git-03.stderr.txt",
+        "exit_code": 0,
+        "timed_out": false,
+        "owned_pid": 54216,
+        "ended_utc": "2026-10-17T12:56:08.652115+00:00"
+      }
+    },
+    {
+      "name": "GIT_04_EXIT",
+      "pass": true,
+      "detail": {
+        "argv": [
+          "git",
+          "-c",
+          "core.fsmonitor=false",
+          "-c",
+          "core.quotepath=false",
+          "--no-pager",
+          "check-ignore",
+          "-v",
+          "--no-index",
+          ".agents/skills/fpga-tester/SKILL.md",
+          ".agents/skills/fpga-orchestrator/references/work-limits.md",
+          ".agents/skills/fpga-orchestrator/agents/openai.yaml"
+        ],
+        "cwd": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+        "started_utc": "2026-10-17T12:56:08.657692+00:00",
+        "deadline_seconds": 60.0,
+        "stdout_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261017_202845_single_tester_scope_limit\\dev-evidence\\recovery-git-04.stdout.txt",
+        "stderr_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261017_202845_single_tester_scope_limit\\dev-evidence\\recovery-git-04.stderr.txt",
+        "exit_code": 1,
+        "timed_out": false,
+        "owned_pid": 69716,
+        "ended_utc": "2026-10-17T12:56:08.781234+00:00"
+      }
+    },
+    {
+      "name": "NEW_TESTER_EXACT_NEGATED_WHITELIST",
+      "pass": false,
+      "detail": null
+    },
+    {
+      "name": "UNHANDLED_OR_STOP_CONDITION",
+      "pass": false,
+      "detail": "AssertionError('NEW_TESTER_EXACT_NEGATED_WHITELIST')"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.fsmonitor=false",
+        "-c",
+        "core.quotepath=false",
+        "--no-pager",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+      "started_utc": "2026-10-17T12:56:08.212740+00:00",
+      "deadline_seconds": 60.0,
+      "stdout_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261017_202845_single_tester_scope_limit\\dev-evidence\\recovery-git-01.stdout.txt",
+      "stderr_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261017_202845_single_tester_scope_limit\\dev-evidence\\recovery-git-01.stderr.txt",
+      "exit_code": 0,
+      "timed_out": false,
+      "owned_pid": 65864,
+      "ended_utc": "2026-10-17T12:56:08.332609+00:00"
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.fsmonitor=false",
+        "-c",
+        "core.quotepath=false",
+        "--no-pager",
+        "symbolic-ref",
+        "--short",
+        "HEAD"
+      ],
+      "cwd": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+      "started_utc": "2026-10-17T12:56:08.345921+00:00",
+      "deadline_seconds": 60.0,
+      "stdout_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261017_202845_single_tester_scope_limit\\dev-evidence\\recovery-git-02.stdout.txt",
+      "stderr_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261017_202845_single_tester_scope_limit\\dev-evidence\\recovery-git-02.stderr.txt",
+      "exit_code": 0,
+      "timed_out": false,
+      "owned_pid": 73508,
+      "ended_utc": "2026-10-17T12:56:08.468804+00:00"
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.fsmonitor=false",
+        "-c",
+        "core.quotepath=false",
+        "--no-pager",
+        "diff",
+        "--no-ext-diff",
+        "--check",
+        "--",
+        "AGENTS.md",
+        ".gitignore",
+        ".agents/skills/fpga-orchestrator/SKILL.md",
+        ".agents/skills/fpga-orchestrator/references/relay-contract.md",
+        ".agents/skills/fpga-orchestrator/references/report-contract.md",
+        ".agents/skills/fpga-orchestrator/references/codex-calls.md",
+        ".agents/skills/fpga-planner/SKILL.md",
+        ".agents/skills/fpga-design-guide/SKILL.md",
+        ".agents/skills/fpga-dev/SKILL.md",
+        ".agents/skills/fpga-tester-functional/SKILL.md",
+        ".agents/skills/fpga-tester-engineering/SKILL.md",
+        ".agents/skills/fpga-tester-system/SKILL.md",
+        "workflow/FPGA多智能体工作流_使用说明.md",
+        "workflow/README.md",
+        "workflow/AI协作与工具接入.md",
+        "workflow/AGENTS接入片段.md",
+        ".agents/skills/fpga-tester/SKILL.md",
+        ".agents/skills/fpga-orchestrator/references/work-limits.md",
+        ".agents/skills/fpga-orchestrator/agents/openai.yaml"
+      ],
+      "cwd": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+      "started_utc": "2026-10-17T12:56:08.484770+00:00",
+      "deadline_seconds": 60.0,
+      "stdout_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261017_202845_single_tester_scope_limit\\dev-evidence\\recovery-git-03.stdout.txt",
+      "stderr_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261017_202845_single_tester_scope_limit\\dev-evidence\\recovery-git-03.stderr.txt",
+      "exit_code": 0,
+      "timed_out": false,
+      "owned_pid": 54216,
+      "ended_utc": "2026-10-17T12:56:08.652115+00:00"
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.fsmonitor=false",
+        "-c",
+        "core.quotepath=false",
+        "--no-pager",
+        "check-ignore",
+        "-v",
+        "--no-index",
+        ".agents/skills/fpga-tester/SKILL.md",
+        ".agents/skills/fpga-orchestrator/references/work-limits.md",
+        ".agents/skills/fpga-orchestrator/agents/openai.yaml"
+      ],
+      "cwd": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+      "started_utc": "2026-10-17T12:56:08.657692+00:00",
+      "deadline_seconds": 60.0,
+      "stdout_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261017_202845_single_tester_scope_limit\\dev-evidence\\recovery-git-04.stdout.txt",
+      "stderr_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261017_202845_single_tester_scope_limit\\dev-evidence\\recovery-git-04.stderr.txt",
+      "exit_code": 1,
+      "timed_out": false,
+      "owned_pid": 69716,
+      "ended_utc": "2026-10-17T12:56:08.781234+00:00"
+    }
+  ],
+  "remaining_seconds": 290.07977652549744
+}

@@ -1,0 +1,45 @@
+{
+  "status": "static_source_inspection",
+  "core": [
+    {
+      "file": "a1_frame_top.v",
+      "sha256": "c8b24775fa70793f682f1a640be175ec53f304722539cbd89550e0d4aefca65b",
+      "unchanged": true
+    },
+    {
+      "file": "a1_deflate_core.v",
+      "sha256": "6797db053cfc47497540d6345e3a46b7e79cc1d34fa25da5a4c501505fbf35bb",
+      "unchanged": true
+    }
+  ],
+  "checks": {
+    "single_clock": true,
+    "ar_held_until_handshake": true,
+    "one_outstanding": true,
+    "address_high_bits_rejected": true,
+    "exact_slot_base": true,
+    "addition_33bit": true,
+    "cmp_write_guard": true,
+    "source_owned_until_release": true,
+    "last_word_gated": true,
+    "crc_completion_checked": true,
+    "synth_not_run": true
+  },
+  "default": {
+    "raw": 2592000,
+    "content": 2592128,
+    "dma": 2592768,
+    "words": 81024,
+    "groups": 518400,
+    "worst_stored": 2594706,
+    "cmp_capacity": 8388608
+  },
+  "cdc": "single common DHI domain; no CDC added",
+  "reset": "common reset cancels reader and ownership; separate core-only cleanup only after safe drain or while LOCK",
+  "limitations": [
+    "No synthesis/STA/physical CDC/resource results",
+    "Per-camera physical-slot priority is not a per-camera arrival-order FIFO",
+    "Capture-sequence uniqueness is an upstream publisher precondition; full descriptor/header identity is checked, no unbounded history is stored",
+    "RAW release is an output ready/valid record; source adapter must match it before writer release"
+  ]
+}

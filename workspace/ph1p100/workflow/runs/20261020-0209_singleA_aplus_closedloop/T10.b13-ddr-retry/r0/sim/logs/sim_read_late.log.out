@@ -1,0 +1,40 @@
+Reading D:/intelFPGA/18.1/modelsim_ase/tcl/vsim/pref.tcl
+
+# 10.5b
+
+# vsim -c -modelsimini C:/Users/czz/AppData/Local/Temp/opencode/b12/main/modelsim.ini -lib work -voptargs="+acc" -l D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b13-ddr-retry/r0/sim/logs/sim_read_late.log tb_b11_read "+NAME=late" -do "run -all; quit -f" -gR_GAP=40 -gNWRITE=2000 
+# Start time: 22:17:53 on Oct 25,2026
+# Loading sv_std.std
+# Loading work.tb_b11_read
+# Loading work.a1_ddr_slot_store
+# Loading work.a1_ddr_arb2
+# Loading work.p2_ddr_bridge
+# Loading work.capture_async_fifo
+# Loading work.cam_diag_mailbox
+# Loading work.p2_paxi_model_b11
+# ** Warning: (vsim-3017) D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b13-ddr-retry/r0/sim/tb_b11_read.sv(84): [TFMPC] - Too few port connections. Expected 61, found 56.
+#    Time: 0 ps  Iteration: 0  Instance: /tb_b11_read/u_store File: D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b13-ddr-retry/r0/changed-src/a1_ddr_slot_store.v
+# ** Warning: (vsim-3722) D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b13-ddr-retry/r0/sim/tb_b11_read.sv(84): [TFMPC] - Missing connection for port 'rd_timeout'.
+# ** Warning: (vsim-3722) D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b13-ddr-retry/r0/sim/tb_b11_read.sv(84): [TFMPC] - Missing connection for port 'rd_retry_ready'.
+# ** Warning: (vsim-3722) D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b13-ddr-retry/r0/sim/tb_b11_read.sv(84): [TFMPC] - Missing connection for port 'st_timeout_cnt'.
+# ** Warning: (vsim-3722) D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b13-ddr-retry/r0/sim/tb_b11_read.sv(84): [TFMPC] - Missing connection for port 'st_retry_cnt'.
+# ** Warning: (vsim-3722) D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b13-ddr-retry/r0/sim/tb_b11_read.sv(84): [TFMPC] - Missing connection for port 'st_retry_giveup'.
+# ** Warning: (vsim-3017) D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b13-ddr-retry/r0/sim/tb_b11_read.sv(110): [TFMPC] - Too few port connections. Expected 39, found 38.
+#    Time: 0 ps  Iteration: 0  Instance: /tb_b11_read/u_arb File: D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b13-ddr-retry/r0/changed-src/a1_ddr_arb2.v
+# ** Warning: (vsim-3722) D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b13-ddr-retry/r0/sim/tb_b11_read.sv(110): [TFMPC] - Missing connection for port 'm0_rd_abort'.
+# ** Warning: (vsim-3017) D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b13-ddr-retry/r0/sim/tb_b11_read.sv(133): [TFMPC] - Too few port connections. Expected 33, found 32.
+#    Time: 0 ps  Iteration: 0  Instance: /tb_b11_read/u_bridge File: D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b13-ddr-retry/r0/changed-src/p2_ddr_bridge.v
+# ** Warning: (vsim-3015) D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b13-ddr-retry/r0/sim/tb_b11_read.sv(133): [PCDPC] - Port size (256) does not match connection size (192) for port 'dbg_a1'. The port definition is at: D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b13-ddr-retry/r0/changed-src/p2_ddr_bridge.v(75).
+#    Time: 0 ps  Iteration: 0  Instance: /tb_b11_read/u_bridge File: D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b13-ddr-retry/r0/changed-src/p2_ddr_bridge.v
+# ** Warning: (vsim-3722) D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b13-ddr-retry/r0/sim/tb_b11_read.sv(133): [TFMPC] - Missing connection for port 'rd_abort'.
+# run -all
+# B11_READ_WR_DONE words=2000 pub=1 wr_words=2000 bytes=40000
+# B11_READ_STATE case=late cyc=109172 ar_hs=2000 rv=2000 rd_idx=2000 rd_words=2000 dup=0 rd_state=0 slot=00000000
+# B11_READ_BRIDGE ar_cnt=1998 ar_block=0 r_cnt=1997 rlast=1997 stale=0 br0=0000002b
+# B11_READ_MODEL ar=2000 r=2000 aw=2000 w=2000
+# B11_READ_DATA ok=2000 bad=0 beats=2000
+# B11_READ_RESULT case=late pass=1 words=2000 bad=0 why=ok
+# ** Note: $finish    : D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b13-ddr-retry/r0/sim/tb_b11_read.sv(306)
+#    Time: 582322481 ps  Iteration: 1  Instance: /tb_b11_read
+# End time: 22:17:54 on Oct 25,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 11

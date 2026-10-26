@@ -1,0 +1,60 @@
+# vsim -c -l vsim.log -do "r.do" tb_ddr_frame_pusher_rka1 
+# Start time: 03:16:39 on Oct 17,2026
+# Loading work.tb_ddr_frame_pusher_rka1
+# Loading work.ddr_frame_pusher
+# do r.do
+# === PHASE0 reset defaults @400000
+# === PHASE1 legacy negative (no ARM) @712000
+# === PHASE2 ARM validation negatives @3912000
+# === PHASE3 one-shot + held + ACK @4512000
+#   ERROR #1 @16976000 :                                                                PHASE3: block released before ACK
+# === PHASE4 cancel paths @20184000
+#   DBG mismatch pkt=0 k=2 got=35 exp=b5 (frame_addr=00100002 try=x)
+#   DBG mismatch pkt=0 k=6 got=35 exp=b5 (frame_addr=00100006 try=x)
+#   DBG mismatch pkt=0 k=10 got=35 exp=b5 (frame_addr=0010000a try=x)
+#   DBG mismatch pkt=0 k=14 got=35 exp=b5 (frame_addr=0010000e try=x)
+#   DBG mismatch pkt=0 k=18 got=35 exp=b5 (frame_addr=00100012 try=x)
+#   DBG mismatch pkt=0 k=22 got=35 exp=b5 (frame_addr=00100016 try=x)
+#   DBG pkt=0 pay0..7 = 00 3c 35 5a 04 3c 35 5a
+#   ERROR #2 @20616000 :                                                                  payload byte mismatch vs source
+#   DBG pkt=1 pay0..7 = 80 3c 35 5a 84 3c 35 5a
+#   ERROR #3 @20728000 :                                                                  payload byte mismatch vs source
+#   DBG pkt=2 pay0..7 = 00 3d 35 5a 04 3d 35 5a
+#   ERROR #4 @20888000 :                                                                  payload byte mismatch vs source
+#   DBG pkt=3 pay0..7 = 80 3d 35 5a 84 3d 35 5a
+#   ERROR #5 @21064000 :                                                                  payload byte mismatch vs source
+#   DBG pkt=4 pay0..7 = 00 3e 35 5a 04 3e 35 5a
+#   ERROR #6 @21240000 :                                                                  payload byte mismatch vs source
+#   DBG pkt=5 pay0..7 = 80 3e 35 5a 84 3e 35 5a
+#   ERROR #7 @21368000 :                                                                  payload byte mismatch vs source
+#   ERROR #8 @34936000 :                                                                          doorbell payload != seq
+# === PHASE5 release protocol counting @35816000
+# === PHASE6 long TL stall + multi-frame production @39016000
+#   ERROR #9 @111752000 :                                                                          doorbell payload != seq
+#   ERROR #10 @111800000 :                                                    PHASE6: block released during in-flight frame
+# === PHASE7 timeout (open packet completed, no doorbell) @111840000
+#   DBG pkt=0 pay0..7 = 00 3c 35 5a 04 3c 35 5a
+#   ERROR #11 @112456000 :                                                                  payload byte mismatch vs source
+#   DBG pkt=1 pay0..7 = 80 3c 35 5a 84 3c 35 5a
+#   ERROR #12 @112568000 :                                                                  payload byte mismatch vs source
+#   ERROR #13 @374744000 :                                                                    TL beat changed while waiting
+# === PHASE8 timeout before packet start (abandon) @407528000
+#   ERROR #14 @669864000 :                                                                    TL beat changed while waiting
+# === PHASE9 ERAM source (src_sel=1) + fb_hold @702568000
+#   ERROR #15 @703384000 :                                                                  payload byte mismatch vs source
+#   ERROR #16 @704152000 :                                                                  payload byte mismatch vs source
+#   ERROR #17 @704872000 :                                                                  payload byte mismatch vs source
+#   ERROR #18 @705576000 :                                                                  payload byte mismatch vs source
+#   ERROR #19 @706360000 :                                                                  payload byte mismatch vs source
+#   ERROR #20 @707112000 :                                                                  payload byte mismatch vs source
+#   ERROR #21 @707848000 :                                                                  payload byte mismatch vs source
+#   ERROR #22 @708552000 :                                                                  payload byte mismatch vs source
+#   ERROR #23 @709304000 :                                                                  payload byte mismatch vs source
+#   ERROR #24 @710088000 :                                                                  payload byte mismatch vs source
+#   ERROR #25 @710808000 :                                                                  payload byte mismatch vs source
+# === PHASE10 full 1080p dma_bytes length boundary @750528000
+# FAIL: 81 error(s)
+# ** Note: $finish    : R:/fpga/csi2/pcie_integration/sim/tb/tb_ddr_frame_pusher_rka1.v(713)
+#    Time: 3583976 ns  Iteration: 1  Instance: /tb_ddr_frame_pusher_rka1
+# End time: 03:16:43 on Oct 17,2026, Elapsed time: 0:00:04
+# Errors: 0, Warnings: 0

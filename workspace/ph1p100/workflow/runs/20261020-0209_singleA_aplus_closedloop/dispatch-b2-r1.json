@@ -1,0 +1,152 @@
+{
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "project_root": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+  "output_dir": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop",
+  "task_ids": [
+    "T10.b2-a1-uart-impl"
+  ],
+  "package_id": "T10.b2-a1-uart-impl",
+  "revision": "r1",
+  "package_type": "P2 r1: 3-line duplicate-driver cleanup in camera_a1_uart_top.v + P1 key regression/refreeze + resume P2 build with 2 synth/2 route/1 bitgen/1 CWC; no download",
+  "same_run": true,
+  "new_run": false,
+  "batch_size": 1,
+  "status": "finished",
+  "needs_user_input": false,
+  "round": "r1",
+  "result": {
+    "verdict": "P1 cleanup+regression PASS; P2 synth resource/timing blocked; r2 dispatched",
+    "p1": "new hash 17793341...baac88; 8x2/64x8/full 1080p 0 mismatch, four CRCs, dup=0, raw_len 2,592,000, stream_len 40,032, raw_sha256 unchanged; P1 r5 manifest",
+    "p2": "elaboration PASS; LUT 23,342 / reg 15,960 / ERAM 296/300 / IO 110; clk_a1 187.5 synth WNS -0.060/32 endpoints (overall -0.137/STNS -12.058); cam_preview_capture 224 ERAM; CWC 30 -> 326>300; phy aborted before place",
+    "open": "remove preview/HDMI TPG; reduce CWC probes; locate board-level 187.5 degradation; retiming+phys_opt + minimal pipeline adaptation; routed zero violations/WNS>0",
+    "budget": "dev 90 min exhausted; TD 1 session, synth 1/2, route 0, bitgen 0/1, CWC 0/1; no download",
+    "decision": "r2: dev 120/60; TD 2 sessions/120 min, synth <=2, route <=2, bitgen 1, CWC 1; fail stop, no r3"
+  },
+  "operation": "spawn_agent",
+  "next_role": "fpga-dev",
+  "authorization": {
+    "quote": "请裁决 P2 r1：1. 授权修改 `camera_a1_uart_top.v` 的重复驱动（只删重复赋值，不改逻辑）；2. 修后重跑 P1 关键回归（8×2 + 64×8 + 整帧 1080p：0 mismatch/四 CRC/dup=0）并重新冻结 P1 哈希；3. 继续 P2 构建（剩余 2 综合/2 布线/1 bitgen/1 CWC），门槛不变；4. 核对并更正 r4 hash 记录；5. 预算：开发 90 min/50 calls；TD 2 会话/120 min；失败即停，不自动 r2。",
+    "date": "2026-10-23",
+    "type": "explicit_user_authorization_for_p2_r1",
+    "basis": "P2 r0 blocked at TD elaboration: camera_a1_uart_top.v has multiple drivers on raw_rd_close_r/raw_rd_open/raw_rd_take; ModelSim tolerated it. User authorizes a 3-line cleanup, P1 regression/refreeze, and P2 resume.",
+    "round_accounting": "P2 r0 BLOCKED (67/60 calls; TD 1/3 sessions, synth 1/3 failed, route 0/2, bitgen 0/1, CWC 0/1). r1 is the final bounded P2 attempt; failure stops; no automatic r2.",
+    "not_authorized": [
+      "logic changes beyond deleting duplicate assignments",
+      "A+ core/frame/DEFLATE/CRC/SDC changes",
+      "download/Flash/PCIe/RK/dual/G4",
+      "bitgen/CWC before routed/CDC/resource pass",
+      "extra synth/route beyond 2/2",
+      "automatic P2 r2"
+    ]
+  },
+  "r0_facts": {
+    "result": "T10.b2-a1-uart-impl/r0/result-r0.md",
+    "failure": "HDL-8007 raw_rd_close_r multiple drivers in camera_a1_uart_top.v (r3 hash 873cb98c...); duplicate raw_rd_open/raw_rd_take as well; TD elaboration failed in 5.05 s; module black-boxed",
+    "fixed_inputs": "all 8 P1 inputs byte-identical to r3 full hashes; core bf6af390/frame 18d51b1b/SDC 227dd39e unchanged",
+    "hash_conflict": "r4 manifest listed e88de0910ff0 (camera_a1_uart_top.v) and 5196c07aed52 (a1_ddr_slot_store.v); actual r3 hashes are 873cb98c7c79 and 8bab440d528a; no file with stale digests exists; documentation conflict, not drift; r4 manifest corrected",
+    "budget": "dev 67/60 calls; TD 1/3 sessions; synth 1/3 failed; route 0/2; bitgen 0/1; CWC 0/1; download 0"
+  },
+  "r1_scope": [
+    {
+      "step": 1,
+      "name": "3-line duplicate-driver cleanup",
+      "content": "In fpga/csi2/src/a1/camera_a1_uart_top.v, delete the duplicate assignments at line 162 (raw_rd_open/raw_rd_close_r/raw_rd_take reset) and lines 166-167 (raw_rd_open/raw_rd_take defaults) from the skid always block; the sequencer block already owns them. No other logic change. Verify ModelSim vlog 0/0 and TD elaboration passes.",
+      "timebox_min": 10
+    },
+    {
+      "step": 2,
+      "name": "P1 key regression + refreeze",
+      "content": "Rerun P1 8x2 and 64x8 and the full 1920x1080 MODE=0 frame with the fixed file. Require per-sample 0 mismatch, header/stream/xform/raw all true, zlib_ok, dup=0, raw_len=2,592,000, stream_len <=2,594,706. Refreeze a new P1 manifest (e.g., CANDIDATE-MANIFEST-b1-a1-uart-integ-r5.json) with the new camera_a1_uart_top.v hash; keep the P1 boundary (MODE=2/3/4, store-only max-length, shortened MODE=1, tail) unchanged.",
+      "timebox_min": 25
+    },
+    {
+      "step": 3,
+      "name": "Correct r4 hash record + verification",
+      "content": "Confirm the corrected r4 manifest: a1_ddr_slot_store.v=8bab440d528a, camera_a1_uart_top.v=873cb98c7c79, stale 5196c07aed52/e88de0910ff0 marked as documentation conflict; no RTL drift. Do not change the r4 evidence.",
+      "timebox_min": 3
+    },
+    {
+      "step": 4,
+      "name": "Resume P2 build (remaining 2 synth / 2 route / 1 bitgen / 1 CWC)",
+      "content": "Resume r0/td/01_build.tcl with the new P1 hash. Routed zero violations; setup WNS >0 (target >= +0.2; record margin); hold >=0; resources in PH1P100SBG484; CDC/reset/no comb loops; I/O constrained; reports -file. After pass, run exactly 1 bitgen and 1 CWC; record bit/CWC SHA256/BID; freeze P2 manifest.",
+      "timebox_min": "remaining TD budget"
+    }
+  ],
+  "gates": {
+    "p1_regression": "8x2/64x8/full 1080p 0 mismatch; four CRCs true; zlib_ok; dup=0; raw_len 2,592,000; stream_len <=2,594,706; new P1 hash frozen",
+    "p2_routed": "Routed zero violations; WNS >0; target >=+0.2 (thin margin caveat); hold >=0; STNS=0; resources in device; static CDC/reset/no comb loops; I/O constrained",
+    "p2_artifacts": "1 bitgen + 1 CWC; bit/CWC SHA256/BID recorded; no download/Flash",
+    "hash_records": "r4 manifest corrected; new P1 manifest binds the post-fix hash; P2 uses the new P1 hash",
+    "forbidden": "logic changes beyond the 3-line cleanup; A+ core/frame/DEFLATE/CRC/SDC changes; seed sweep/false path/multicycle; download/Flash/PCIe/RK/dual/G4"
+  },
+  "budget": {
+    "dev_minutes_max": 90,
+    "dev_calls_max": 50,
+    "td_sessions_max": 2,
+    "td_session_minutes_max": 75,
+    "td_total_minutes_max": 120,
+    "synth_attempts_max": 2,
+    "route_attempts_max": 2,
+    "bitgen": 1,
+    "cwc": 1,
+    "download": 0,
+    "note": "r0 used 1 TD session, 1 failed synth, 0 route, 0 bitgen, 0 CWC. Remaining: 2 sessions/120 min, 2 synth, 2 route, 1 bitgen, 1 CWC."
+  },
+  "stop_conditions": [
+    "P1 regression not 0 mismatch/four CRCs/dup=0 -> stop; no P2 bitgen.",
+    "TD elaboration still fails or any RTL hash mismatch -> stop.",
+    "Routed negative slack / hold violation / resource overflow / CDC or reset failure after 2 synth/2 route -> stop; no bitgen.",
+    "Setup WNS >0 but <+0.2 -> record thin-margin caveat; planner decides; no silent robust claim.",
+    "bitgen/CWC fail or bit/CWC pair mismatches -> stop BLOCKED; do not skip CWC.",
+    "Any download/Flash/PCIe/RK/dual/G4, seed sweep, false path/multicycle, or logic change beyond the 3-line cleanup -> stop.",
+    "90 min/50 calls or TD 2 sessions/120 min exhausted -> stop; no automatic r2."
+  ],
+  "write_scope": {
+    "modify_existing": [
+      "fpga/csi2/src/a1/camera_a1_uart_top.v (delete duplicate assignments at 162/166-167 only)",
+      "workflow/runs/.../T10.b1-a1-uart-integ/r4/CANDIDATE-MANIFEST-b1-a1-uart-integ-r4.json (hash record correction only; already applied)",
+      "T10.b2-a1-uart-impl/r1/td/** (copy of r0 project; new P1 hash)"
+    ],
+    "create_new": [
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r1/**",
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/CANDIDATE-MANIFEST-b1-a1-uart-integ-r5.json"
+    ],
+    "must_not_modify": [
+      "a1_deflate_core.v (bf6af390)",
+      "a1_frame_top.v (18d51b1b)",
+      "a1_ddr_slot_store.v / a1_ddr_arb2.v / a1_uart_export.v / a1_raw_crop.v logic",
+      "SDC 227dd39e",
+      "r4 evidence/result/captures",
+      "old runs/manifests",
+      "board/Flash/PCIe/RK"
+    ]
+  },
+  "path_contract": {
+    "td": "T: = current run td, Y: = project root; run tools/td/td_env.ps1; never map X: to project root",
+    "sim": "P: = project root, W: = current sim run",
+    "doc": "tools/td/PATH_CONTRACT.md"
+  },
+  "next_action": "spawn_agent",
+  "next_action_detail": {
+    "role": "fpga-dev",
+    "skill_path": ".agents/skills/fpga-dev/SKILL.md",
+    "task": "T10.b2-a1-uart-impl r1: delete the duplicate raw_rd_open/raw_rd_close_r/raw_rd_take assignments at camera_a1_uart_top.v lines 162/166-167; rerun P1 8x2/64x8/full 1080p and refreeze P1 hash; resume P2 build with 2 synth/2 route/1 bitgen/1 CWC. Dev 90/50; TD 2 sessions/120 min; no download; fail -> stop, no automatic r2.",
+    "must_read": [
+      "dev-plan.md §53",
+      "T10.b2-a1-uart-impl/r0/result-r0.md",
+      "T10.b2-a1-uart-impl/r0/td/syn_failure_excerpt.txt",
+      "T10.b2-a1-uart-impl/r0/td/run.log",
+      "T10.b1-a1-uart-integ/r3/CANDIDATE-MANIFEST-b1-a1-uart-integ-r3.json",
+      "T10.b1-a1-uart-integ/r4/CANDIDATE-MANIFEST-b1-a1-uart-integ-r4.json",
+      "fpga/csi2/src/a1/camera_a1_uart_top.v",
+      "tools/td/PATH_CONTRACT.md"
+    ],
+    "first_checks": [
+      "confirm only the three duplicate assignments are removed; sequencer still resets/defaults the signals",
+      "vlog 0/0 and TD elaboration passes before any route",
+      "rerun P1 8x2/64x8/full 1080p before P2 bitgen",
+      "corrected r4 hashes 873cb98c7c79 / 8bab440d528a; stale e88de0910ff0/5196c07aed52 are documentation-only"
+    ]
+  },
+  "user_summary_path": "workflow/runs/20261020-0209_singleA_aplus_closedloop/user-summary.md"
+}

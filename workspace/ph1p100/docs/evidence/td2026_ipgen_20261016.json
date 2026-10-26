@@ -1,0 +1,141 @@
+{
+  "schema": 1,
+  "kind": "td2026_ipgen_and_regression",
+  "workpackage": "T01.tool-D four-step minimal validation on TD 2026.2",
+  "recorded_at": "2026-10-16T23:3x+08:00",
+  "environment": {
+    "td_cli": "D:\\anlogic\\TD_Release_2026.2\\bin\\td_commands_prompt.exe",
+    "td_cli_sha256": "2629E474DF036A871807E564190FEBFBBD9780A09365F600C10463911C8C1223",
+    "td_version": "TD Release_2026.2 / 6.2.3.210850",
+    "tcl_version": "8.6.17",
+    "db_version": "46207",
+    "experiment_root": "D:\\TD\\work\\csi2\\_validation\\td2026_20261016_214505",
+    "no_hardware_actions": true
+  },
+  "step0_command_family": {
+    "method": "fresh session, cwd=<root>/anchor, ./probe1.tcl + ./probe2_import.tcl via D:\\anlogic\\TD_Release_2026.2\\bin\\td_commands_prompt.exe",
+    "probe_outputs": {
+      "probe1_out.txt": {"path": "td2026_20261016_214505/anchor/probe1_out.txt", "bytes": 178289, "note": "raw stdout incl. full USR-1002 command registry (help <cmd> prints whole registry) + PRESENT/ABSENT markers"},
+      "probe2_out.txt": {"path": "td2026_20261016_214505/anchor/probe2_out.txt", "bytes": 1300, "note": "import_device ph1_100p.db -package PH1P100SBG484 -speed 3 -> RC 0, ARC-1001 device init, 2.01s"}
+    },
+    "present": ["create_ip", "get_ipdefs", "get_ips", "set_property", "get_property", "load_project_ips", "close_project_ips", "generate_target", "set_ip_property", "print_ip_config", "read_ip_adc", "xmlipgen", "create_syn_ip", "ipgen_synip"],
+    "absent": ["report_ip_status", "generate_ipinst", "create_ipinst", "delete_ipinst", "list_ipinst"],
+    "info_commands_ip_raw": "close_project_ips config_chipwatcher create_ip create_syn_ip export_chipprobe_config export_chipwatcher export_flow_script export_ip_lib export_ip_max_hold export_ip_pins export_ip_sdc ext_qor_script get_ipdefs get_ips import_chipprobe_config import_ip2pid_lib import_ip_pin_list ipgen_synip load_project_ips open_chip_viewer print_ip_channel print_ip_config read_ip_adc read_ipc_file report_ip_tree set_ip_property set_ipinst_assignment set_ippin_assignment set_sippin_assignment xmlipgen zip_project",
+    "help_texts": "help <cmd> / <cmd> -help return empty text and dump the registry to stdout (raw captured in probe1_out.txt)",
+    "conclusion": "6.2.3 registers the Tcl IP flow family that 6.2.2 lacked (create_ip/get_ips/set_property/generate_target/load_project_ips/close_project_ips)"
+  },
+  "step1_smoke_simple_ip": {
+    "status": "pass",
+    "ip": "anlogic.com:ip:APB_GPIO:1.0 comp=apb_gpio_0",
+    "flow": "import_device -> create_project -> create_ip(-export_path must be an existing dir) -> (load_project_ips re-registers from xml in later sessions) -> set_property CONFIG.AL_GPIO_WD 8 -> generate_target [get_ips apb_gpio_0]",
+    "result_line": "IPT-1001 : The target has been generated successfully.",
+    "artifacts": {
+      "apb_gpio_0/.params_apb_gpio_0.txt": "0728459C31695E46244DA5602C983C57E7FAEC256304D3735C8EECF8219D79B7 (946 B; AL_GPIO_WD:8 confirmed)",
+      "apb_gpio_0/Design.xml": "79D56BF4C3F86253FCC95F7D8F2AE0C8F369C291AC35235C9F1E6D5A7DC4B3DB (8829 B)",
+      "apb_gpio_0/apb_gpio_0.v": "D64F3EDA3261EB19AF142FF8E982F0398F2BE1FEF6FD3E16EF94FBC1A395833C (1982 B)",
+      "apb_gpio_0/RTL/apb_gpio_0_apb_gpio_top.v": "749A1362020CA5D36D2B6F77F661D81FEA0D4D7E1D7092BC45E87C534152A9DB (79151 B)",
+      "apb_gpio_0/RTL/include/define.v": "DD320FA8061324FBB8D8AD077E01A1CFB2441BCFD522AD196AB841BBE7797B53 (34 B)"
+    },
+    "scripts": "td2026_20261016_214505/smoke/smoke1/smoke_a..d.tcl (all stdout captured smoke_*_out.txt)",
+    "notes": "set_property verified by re-reading .params; generate_target <obj> works; create_ip creates a ToolIpDataBackupDir_* staging that the successful generate cleans"
+  },
+  "step2_ddr1333_headless": {
+    "status": "boundary_failed_deterministically (GUI fallback decision point)",
+    "instance": "anlogic.com:ip:MIS_DDRF6F1D0P0:1.2 comp=ddrmc_x32 (device PH1P100SBG484)",
+    "create": {
+      "create_ip_rc": 0,
+      "files": "ip_out/ddrmc_x32/{.m_params,.params,.ports,ddrmc_x32.xml,Design.xml,DesignConfiguration.xml}",
+      "list_property": "54 CONFIG.* properties enumerated (CWL/HOST_*/DRAM_* without PH1P prefix; PH1P_PINGPONG_PHY all-caps)"
+    },
+    "parameter_injection": {
+      "set_ok": ["PH1P_DDR_TYPE=DDR3","PH1P_SINGLE_PLL=0","PH1P_REF_CLK=50.0000","PH1P_DDR_SPEED=1333.00","PH1P_DQ_BYTE=4","PH1P_IO_VOL=1.35","PH1P_VREF=Internal","PH1P_COMP_TYPE=x16","PH1P_COMP_DENSITY=2048","PH1P_SPEED_BIN=DDR3-1333J","PH1P_AXI_CTRL=0","PH1P_ECC_EN=0","PH1P_WDM_WDBI=WDM","PH1P_AXI_ADDR_MAP=ROW_COL_BANK","PH1P_MC_REORDER=NORMAL","PH1P_DDR_CS/CK/RESET/CKE/ODT=1","HOST_AC_DRV=40","HOST_DX_DRV=40","HOST_DX_ODT=60","DRAM_DRV=40","DRAM_ODT=60","CWL=7","PH1P_REFCLK_TYPE=SINGLE","PH1P_IO_ASSIGN=<local input_pins.adc>"],
+      "readonly_warnings_not_fatal": ["PH1P_PINGPONG_PHY","PH1P_PZQ_CAL","PH1P_PZQ_SHARE","PH1P_RDBI","PH1P_DDR_PARITY (all 'is ReadOnly, can't set')"],
+      "failed": ["PH1P_SYSCLK_LOC=H4 -> IPT-1002 ERROR 'Validation failed for parameter PH1P_SYSCLK_LOC. The range list is empty' (stays empty; related to PLL_LOC which requires the missing adc.log)"],
+      "derived_values_verified_in_params_before_generate": {"tCK": 1500, "PH1P_DDR_CL": 10, "CL": 10, "CWL": 7, "PH1P_ACTUAL_FREQ": 666.7, "PH1P_DDR_SPEED": 1333.00, "PH1P_SPEED_BIN": "DDR3-1333J"},
+      "injected_params_file": {"path": "td2026_20261016_214505/ddr1333_r1/ip_out/ddrmc_x32/.params_ddrmc_x32.txt", "bytes": 5954, "sha256": "EEFBC9BC2F66E5A1252B8B90AA3F2291A814845BA039DD154A7AFDED7F409552"},
+      "design_xml_after_set": {"path": "td2026_20261016_214505/ddr1333_r1/ip_out/ddrmc_x32/Design.xml", "bytes": 33881, "sha256": "E210C40B3F2EA88A1ABBE1285291BF2527C47D77D9454683537287D0BA9A212B"}
+    },
+    "generate_target": {
+      "attempts_same_cause": 8,
+      "attempt_list": "r1: ddr_c (first), ddr_e (plain), ddr_e2 (staging pre-created empty), ddr_e3 (adc.log seeded at export root), ddr_e4 (adc.log seeded inside instance dir), ddr_g (same-session re-set ADC+type then generate); race injection run (5 injections into staging, all wiped by tool); r2: all-in-one (create+set+generate single session), generate_target all <ip>, and again with staging pre-seeded",
+      "error_text_verbatim": "IPT-1002 ERROR: Generate target failed. Reason: [Error-TclFile] couldn't open \"D:/TD/work/csi2/_validation/td2026_20261016_214505/ddr1333_r1/ip_out/.IpToolIpDataBackupDir_ddrmc_x32/ddrmc_x32_adc.log\": no such file or directory",
+      "live_trace_observations": [
+        "during generate the tool creates <export>/.IpToolIpDataBackupDir_ddrmc_x32/ (staging), WRITES staging/ddrmc_x32_drc_check.log (dependency drc_check run; content stops at 'Start the check of the banks used for pins !'), then copies instance dir + writes proc.log, then fails and rolls the staging dir back (deleted)",
+        "pre-seeded staging content is deleted by the tool before its own steps (race injections all wiped; 5 injections between t=2.1s..3.3s did not survive)",
+        "failure is deterministic (same error text, ~1.6-4s per attempt, both fresh r1/r2 projects, same-session and cross-session orderings)"
+      ],
+      "root_cause_analysis": {
+        "mechanism": "The generate pipeline (Dependency.tcl callbacks such as update_gui_pll->cal_onlyacbkby and update_sysclk_loc) reads <IP_EXPORT_PATH>/<comp>_adc.log, where IP_EXPORT_PATH is the generation staging dir. That file is an INPUT produced normally by the GUI's ADC 'check/apply' step (the GUI writes <export>/<comp>_adc.log; reference artifact closure seen in 002820 vendor/ip).",
+        "missing_cli_equivalent": "no registered CLI command materializes <comp>_adc.log for this flow: read_adc / read_ip_adc both fail 'USR-8321 Read IP adc error, cannot find ip model according to IP name ddrmc_x32'; export_ip_pins/probe attempts no-op; setting CONFIG.PH1P_IO_ASSIGN does not trigger the drc_check pass (PH1P_IO_ASSIGN has no dependency callback; the callbacks hang off PH1P_AC_BYTE/PH1P_DRC_CHECK which are computed params)",
+        "tool_ordering_issue": "at generate the tool cleans the staging dir and then reads the adc.log from it before anything recreates it (first-time generate on a fresh project cannot pass; a previously GUI-checked instance has the file only in the export root which does not get copied into staging)",
+        "reference_evidence": {
+          "gui_made_reference_adc_log": {"path": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_wb_20261015_002820\\vendor\\ip\\ddrmc_x32_adc.log", "bytes": 1387, "sha256": "CAB90FE023B9D2B8C1B5B126C5A88DF431E82D6801FF33EDD4775483F0DCE5C4", "note": "tool-produced artifact showing the expected root-level location/format (sig,bank,byte,pin)"},
+          "copy_in_r1_for_test": "td2026_20261016_214505/ddr1333_r1/ip_out/ddrmc_x32_adc.log (same bytes/sha; did not unblock headless generate because staging is cleaned)",
+          "depot_scripts": ["MIS_DDRF6F1D0P0_1.2/Dependency.tcl L1122 drc_check (writes adc.log at L2228; reads in cal_onlyacbkby L2273/update_gui_pll L2353/update_sysclk_loc L2404)", "PH1P_DDRMC_IP/Other/plugin_end.tcl sources gen_adc.tcl during generate"]
+        }
+      },
+      "failure_logs": {
+        "ddr_c_out.txt": "7FBDFEDF81A3C3CCAA03F3E1B2869C1A1A053813859913BB3266CC62906DC06B (5604 B)",
+        "ddr_e_out.txt": "9DDE8E049090CB6A32F679548E17D22973B44637C33898AB76BE6D8D1A32F442 (5535 B)",
+        "r2_allinone_out.txt": "23D42E360F75DA5272AD2DB59A8499D3545501FC3277867F8F90E692960D7DD4 (13512 B)",
+        "ddr_h_out.txt": "4DED2A77F0A746DE36197437DC8EFD045AA46D41E9278B6D48E6704D88601599 (5104 B)"
+      }
+    },
+    "verification_vs_acceptance_criteria": {
+      "product_closure": "not achieved (no src/rtl, src/adc, src/sdc, wrapper, proc/drc/adc logs produced)",
+      "derived_parameters": "PASS at the parameter level: tCK=1500 (>=1.5ns), CL=10, CWL=7, PH1P_ACTUAL_FREQ=666.7 MHz (<=666.667), speed 1333.00, speed bin DDR3-1333J (see .params SHA above)",
+      "pin_70_check": "not run (requires generated artifacts); input_pins.adc reused read-only: SHA F09042381856BF55DE58F89DEBF70167A2956904528D92FD71C6993C08DB33DA (identical golden baseline) copied locally into ddr1333_r1/ and ddr1333_r2/ (copy SHAs identical)",
+      "two_independent_reproductions": "not achieved (both r1 and r2 blocked by the same tool issue before artifacts); candidate NOT frozen",
+      "gui_fallback_decision_point": "YES - per user instruction, if headless fails -> GUI path. Recommended user-present options (not executed by agent): (A) open the project in TD 2026.2 GUI and press OK/apply in the IP dialog once (this runs the ADC check and materializes <comp>_adc.log), then the CLI generate may complete; (B) full GUI generation as already documented for 190248. Any GUI session must be re-verified; it does NOT count as headless success."
+    }
+  },
+  "step3_cli_regression": {
+    "status": "pass",
+    "harness": {
+      "copy_of": "tools/td/verify_cli_e2e.py (frozen, untouched)",
+      "copy_path": "td2026_20261016_214505/cli_regress/verify_cli_e2e.py",
+      "copy_sha256": "F916DDA1403E1C6F3243E24FC355FAFDA63E52A6BB46A4D06CF0FF857296B2B1",
+      "diff_vs_frozen": "only TD_EXE and PH1_DB constants retargeted to D:/anlogic/TD_Release_2026.2 (byte-verified via Compare-Object)",
+      "frozen_originals_sha256": {"verify_cli_e2e.py": "D59D349F88F9CBD22A565BB92F52B7DFB989090A5CF6E96328DEBC731D8F139B", "verify_cli.tcl": "B3269486062C83F0329B4335BA7E5EDA8754026D1F1FE028A412221735BB22F2", "verify_cli_e2e.tcl": "440785F3EC2E2FBBBE74E872DEC5EB101E7B857E936BE390486A1492E1AFA0C4"},
+      "roots": {"license_missing_run": "cli_regress/td_cli_td2026_1 (s1 failed RUN-8008; kept as evidence)", "final_run": "cli_regress/td_cli_td2026_2"},
+      "evidence_json": {"path": "td2026_20261016_214505/cli_regress/td2026_regress_evidence.json", "bytes": 59238, "sha256": "ADCC42F583DAEF7E63A5B3ABDB3F7040B3435087EEDEA8F3AD70E5B638FD1531"}
+    },
+    "stages": {
+      "p1_verify_cli": {"verdict": "pass", "note": "six commands registered; Tcl 8.6.17"},
+      "s1_syn": {"verdict": "pass", "marker": "TD_CLI_E2E_SYN_RETURNED", "artifact_gate_db": "4665BF81255AAD41913CC8685D1C2B424056161895776DC86E29C246E458D767 (144432 B)"},
+      "s2_route": {"verdict": "pass", "marker": "TD_CLI_E2E_ROUTE_RETURNED", "artifact_pr_db": "CD620226D3654B1FDD44EEE9A235B5AA9161101CD8608EEA326175012D776540 (211380 B)", "millisecond": "route 19.18s wall"},
+      "s3_timing": {"verdict": "pass", "marker": "TD_CLI_E2E_TIMING_RETURNED", "SWNS_ns": 14.983, "HWNS_ns": 0.278, "PERIOD_ns": 0.0, "rpt": {"sha256": "319548F794B959D675C766BABCD9F4126A5E735740A8533FE7C92F03C4E3EC7D", "bytes": 194707}, "note": "DB_VERSION=46207 captured here"},
+      "s4_bitgen": {"verdict": "pass", "marker": "TD_CLI_E2E_BITGEN_NO_DOWNLOAD", "bit": {"sha256": "CFE811992E0E58D0CE93105D73A89CB6C6D95C0DE25C1BAA6B13F3FFA4048CFC", "bytes": 5223979}, "note": "BIT-1003 complete; 4 bytes larger than the 6.2.2 scratch bit (5223983) - expected version/date field delta; not downloaded"},
+      "quirk_checks": {
+        "q1_forward_slash": "pass (as 6.2.2)",
+        "q2_backslash": "fail as expected - same TD string-escape mechanism (couldn't read '.q2_backslash.tcl', exit 0)",
+        "q3b_help_marker": "fail as expected - '-help' treated as script name (couldn't read file '-help')",
+        "q7a_open_cwd_ok": "pass",
+        "save_best_bits": "call accepted + marker, still NO best_result artifact (same behavior as 6.2.2; best_result dir absent)"
+      }
+    },
+    "license_incident": {
+      "first_run_failure": "s1_syn in td_cli_td2026_1 failed: PRJ-5303 'Run syn_e2e_1 failed' + PRJ-8806 'Run syn_e2e_1 has exited unexpectedly'; run.log root cause: 'RUN-1001 : Open license file D:\\anlogic\\TD_Release_2026.2\\license/Anlogic.lic' -> 'RUN-8008 ERROR: Cannot find license file' (synthesis worker needs it at optimize_rtl)",
+      "fix": "copied Anlogic.lic from D:\\downlaod\\license (SHA DC19FEE6...; recorded in td2026_install_20261016.json) into the new install; subsequent full chain passes",
+      "lesson": "on a fresh TD install a PRJ-8806-style 'run exited unexpectedly' can be a missing-license symptom; check run.log's RUN-8008 lines"
+    }
+  },
+  "step4_gui_fallback": {
+    "status": "decision_point_recorded_not_executed",
+    "description": "DDR1333 headless generation is blocked by the tool-side adc.log/staging precondition (see step2). Per workpackage rule the GUI fallback is offered to the user (user present on the machine); this record does NOT claim any GUI success.",
+    "options": ["A) user opens the r1/r2 project in the 6.2.3 GUI and applies the ADC once (materializes <comp>_adc.log), after which the CLI generate path should be retried and re-verified", "B) user performs the full GUI IP generation (as also prepared for the 190248 package)"]
+  },
+  "outside_writes_scan": {
+    "downlaod_622": "three key binaries re-hashed unchanged (see install evidence json)",
+    "frozen_projects": "002820 and other frozen dirs untouched; the only 002820 interaction was a read + one read-only copy of its ddrmc_x32_adc.log into our experiment dir for the boundary test",
+    "existing_validation_dirs": "none written; all new writes under td2026_20261016_214505/*",
+    "no_batch_deletes": true,
+    "installer_own_writes_recorded": ["user PATH append", ".al ProgID", "public desktop shortcut", "%APPDATA%\\Anlogic extraction (self-cleaned by installer)"]
+  },
+  "limits": [
+    "Scratch regression is G2-lite (command proof only, no production candidate; bit not downloaded).",
+    "DDR1333 headless generation NOT achieved in this round: boundary evidence recorded; candidate not frozen.",
+    "All DDR generate attempts bounded <900s; true process-tree kill not needed this round (all attempts exited on their own).",
+    "BW tool not installed; no driver/hardware actions."
+  ]
+}

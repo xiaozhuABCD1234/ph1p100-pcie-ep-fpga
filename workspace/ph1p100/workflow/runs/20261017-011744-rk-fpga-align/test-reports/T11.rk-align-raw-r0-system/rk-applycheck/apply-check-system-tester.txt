@@ -1,0 +1,19 @@
+﻿T11.rk-align-raw r0 / system tester — independent RK incremental patch apply-check
+Date: 2026-10-17T14:28:00.8964957+08:00
+Environment: isolated copy of backend/rk-driver-src (T07 delivered tree) at test-reports/T11.rk-align-raw-r0-system/rk-applycheck/baseline
+System git config core.autocrlf=true (D:/downlaod/Git/etc/gitconfig)
+
+git init -q; git add -A; git commit => exit 0
+git apply --check raw/patches/t11-rka1-r10f-fix.patch  (default config) => exit 0
+git apply       raw/patches/t11-rka1-r10f-fix.patch  (default config) => exit 0
+git diff --stat => frame_grab.rs +36, rka1.rs 178 changed (r10f_check.rs is a new untracked file)
+
+Post-apply comparison vs delivered raw/rk-driver-src (Python SHA256):
+  app/rs/src/rka1.rs            raw-differ (CRLF vs LF), CRLF-normalized EQUAL
+  app/rs/src/bin/frame_grab.rs  raw-equal, CRLF-normalized EQUAL
+  app/rs/src/bin/r10f_check.rs  raw-differ (CRLF vs LF), CRLF-normalized EQUAL
+
+Negative control (setup correctness): forcing -c core.autocrlf=false makes --check fail on
+  frame_grab.rs:43 because the T07 baseline tree is mixed LF/CRLF (frame_grab.rs CRLF, rka1.rs LF)
+  and the patch body is LF. => apply-check is reproducible under the machine's system config;
+  the documented CRLF-normalization note in raw/patches/apply-check-stat.txt is confirmed.

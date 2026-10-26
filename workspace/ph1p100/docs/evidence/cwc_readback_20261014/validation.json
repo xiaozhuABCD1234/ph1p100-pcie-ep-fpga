@@ -1,0 +1,111 @@
+{
+  "instances": [
+    {
+      "name": "auto_created_cwc1",
+      "width": 449,
+      "depth": 1024,
+      "physical_pieces": 23
+    },
+    {
+      "name": "auto_created_cwc2",
+      "width": 128,
+      "depth": 1024,
+      "physical_pieces": 7
+    },
+    {
+      "name": "auto_created_cwc3",
+      "width": 64,
+      "depth": 1024,
+      "physical_pieces": 4
+    }
+  ],
+  "original_cwc_rejected": "auto_created_cwc1: missing physical ERAM readback mapping",
+  "faults_rejected": [
+    {
+      "case": "missing_piece",
+      "reason": "auto_created_cwc1: data coverage has gaps/overlap"
+    },
+    {
+      "case": "wrong_rid",
+      "reason": "auto_created_cwc1: wrong/duplicate BID identity (4294967295, 'auto_created_cwc1/wrapper_cwc_top/U_cwc_ram/ramread0_syn_471')"
+    },
+    {
+      "case": "wrong_offset",
+      "reason": "auto_created_cwc1: data_offset mismatch"
+    },
+    {
+      "case": "missing_logical_ram",
+      "reason": "auto_created_cwc1: missing/unsupported logical ERAM"
+    },
+    {
+      "case": "partial_depth",
+      "reason": "auto_created_cwc1: depth mismatch"
+    },
+    {
+      "case": "wrong_working_depth",
+      "reason": "auto_created_cwc1: working depth mismatch"
+    }
+  ],
+  "frozen_inputs_verified": 215,
+  "project_file_change_only_path_dot": true,
+  "native_setup_exit": 0,
+  "native_fixed_template_exit": 0,
+  "hardware_capture_verified": false,
+  "board_bit_changed": false,
+  "root_cwc": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_20261014_140836\\camera_ddr_display.cwc",
+  "legacy_cwc": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_20261014_140836\\_chipwatcher_legacy_20261014\\camera_ddr_display.cwc",
+  "compiled_bit_identical": true,
+  "artifact_hashes": {
+    "camera_ddr_display_inst.bid": {
+      "sha256": "9922b550d9b084bead48c374bd887f5df2a08b616bdceccb11be299522f98673",
+      "bytes": 104896
+    },
+    "complete.cwc": {
+      "sha256": "4ea1869249877ee245f4ae517bedcf0ac67cb13e9c0e5a0b697e0276b87c300e",
+      "bytes": 134611
+    },
+    "export_fixed_template.tcl": {
+      "sha256": "fff5d49f33d08e4bfef5fa6fb3aa88488b0ff0ce9b99919017e13aacf0162d62",
+      "bytes": 1723
+    },
+    "failed_export_after_bid.log": {
+      "sha256": "b9fb9a631e11ad77cce5688d53f659c966f120f286fd7dc6021158e2de5115bc",
+      "bytes": 17253
+    },
+    "failed_export_with_bid.log": {
+      "sha256": "32e7afccf39d93da16e5dbe32a829e0c4a3083f933cc481a172dd2c41800367f",
+      "bytes": 17122
+    },
+    "fixed_export_ascii_result.json": {
+      "sha256": "8708340408677830365397a83697fa834251fce9f1a557a89b171062e9b78af0",
+      "bytes": 312
+    },
+    "fixed_export_ascii_stdout.log": {
+      "sha256": "d6ae34efecf6d1536ec0489a430c48c6ffad28eac60dd4439b4212ca56ab55bc",
+      "bytes": 95902
+    },
+    "legacy.cwc": {
+      "sha256": "36c11df5aa8d8f24cbb64c856433383998ec9d319ee6f82221276c7c9a1b3dcf",
+      "bytes": 117338
+    },
+    "not_executed_unicode_path.log": {
+      "sha256": "7e3412a3087052d43474c8eb01f133cda88e106410b9846bf1258593a318efa5",
+      "bytes": 566
+    },
+    "setup_existing.tcl": {
+      "sha256": "4105233ef4beb7fe00387766154adf07f14ee0da6eda722b3b8466186772d772",
+      "bytes": 833
+    },
+    "setup_existing_stdout.log": {
+      "sha256": "389d034827fe21a3803675d13ad4a823805e531a212db74f757b6b960743aa89",
+      "bytes": 17404
+    }
+  },
+  "native_validation_directory": "D:\\TD\\work\\csi2\\_validation\\cwc_readback_20261014_212251",
+  "notes": [
+    "Two export_chipwatcher -add_bid attempts crashed; native logs retained, not accepted.",
+    "A Unicode/backslash Tcl pathname invocation returned0 but did not execute; marker check rejected it.",
+    "The final native template executed from an ASCII copy; marker and files verified. Its protected-file wrapper returned1 because close_project appended /. to Project Path; later byte normalization proves this sole change. Bit, BID, routed DB and215inputs unchanged."
+  ],
+  "validator_sha256": "4dc05deb7a2e5c32f78d323e4b3ba841d78af53628b0df00e100d3af7ce4e3a3"
+}

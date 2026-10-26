@@ -1,0 +1,54 @@
+﻿Reading D:/intelFPGA/18.1/modelsim_ase/tcl/vsim/pref.tcl
+
+# 10.5b
+
+# vsim -c -l vsim.log -do "run.do" tb_cam_r10f_writer 
+# Start time: 14:32:28 on Oct 17,2026
+# Loading work.tb_cam_r10f_writer
+# Loading work.cam_r10f_writer
+# do run.do
+# === P0 ?¤????é??è?¤????????????/??? AXI ===
+# === P1 ?????§#1???4096B é?????è?? + ??? CRC + ?????? ===
+#   ERROR #1 @22696000 :                                                                        P1: header bytes mismatch
+#   ERROR #2 @22696000 :                                                                       P1: payload bytes mismatch
+#   ERROR #3 @22696000 :                                                     P1: payload CRC != 0x97E69DE2 (TB recompute)
+#   ERROR #4 @22696000 :                                                      P1: header CRC != 0x6E5C61EE (TB recompute)
+#   P1 DBG beats=129 bursts=2 seq=1 base=100000 status=00000019
+# === P2 ?????§#2????????? + è??è?·é?????è?? + seq=2 ===
+#   P2 PAYMIS k=4 got=1b exp=e4
+#   P2 PAYMIS k=9 got=1b exp=e4
+#   P2 PAYMIS k=14 got=1b exp=e4
+#   P2 PAYMIS k=19 got=1b exp=e4
+#   ERROR #5 @44568000 :                                                                       P2: payload bytes mismatch
+#   P2 HDRDBG w4=20261017 w5=00000002 w20=06abb19d w21=06abb19d w22=927aac02
+# === P3 ?????§?????§??? abort ????????? ===
+# === P4 ?????§???FE ??? good ????????? ===
+# === P5 ?????§??????è??????????? ===
+# === P6 ??? FE???TMO ??????????????? ===
+# === P7 ?????????????????????é????? / è·?è?? / release ===
+# === P8 ?¤????é?????????????§????????????????¤??????°??§?????? ===
+# === P9 FIFO ??????????????? AXI + è????? ??? ????????? ===
+#   P9 DBG1 s=0 gcnt=63 pbad=1 eof=0 bc=128 payw=315 drop=65 status=0001001c
+#   P9 DBG2 s=0 gcnt=128 pbad=1 eof=1 bc=128 payw=640 seq=1 status=0001001d
+# === P10 1080p???81,024 ??? / 633+1 ?????? / ?°?é?? / ?¤???????+CRC / ?????? ===
+#   P10 HDRPASS crc=58208e86 pay=eeda6f96 @21587125000
+#   P10 RW wdata=00000000_58208e86_eeda6f96_eeda6f96_00000000_00000000_00000000_00000000 strb=0fff0000
+#   P10 HDRMIS k=80 got=96 exp=e1
+#   P10 HDRMIS k=82 got=da exp=1b
+#   P10 HDRMIS k=83 got=ee exp=ac
+#   P10 HDRMIS k=84 got=96 exp=e1
+#   P10 HDRMIS k=86 got=da exp=1b
+#   P10 HDRMIS k=87 got=ee exp=ac
+#   ERROR #6 @21593272000 :                                                                       P10: header bytes mismatch
+#   ERROR #7 @21593272000 :                                                            P10: spot beat #1000 payload mismatch
+#   ERROR #8 @21593272000 :                                                           P10: spot beat #50000 payload mismatch
+#   ERROR #9 @21593272000 :                                        P10: header CRC != EXP_HDRCRC3 (0x56BA381A, TB recompute)
+#   ERROR #10 @21593272000 :                                                             P10: payload CRC field != 0xAC1B6FE1
+#   P10 PAYDBG got a3a2a2a1 a5a5a44e a8a74ea6 aa4ea9a8
+#   P10 PAYEXP exp a3a2a2a1 a5a5a4b1 a8a7b1a6 aab1a9a8
+#   P10 DBG beats=81025 bursts=634 seq=1 base=100000
+# FAIL: 10 errors
+# ** Note: $finish    : S:/fpga/csi2/pcie_integration/sim/tb/tb_cam_r10f_writer.v(782)
+#    Time: 21594872 ns  Iteration: 1  Instance: /tb_cam_r10f_writer
+# End time: 14:33:41 on Oct 17,2026, Elapsed time: 0:01:13
+# Errors: 0, Warnings: 0

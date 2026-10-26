@@ -1,0 +1,9 @@
+# T06 — DDR writer/readback
+
+Development status: ready_for_test
+
+Writer/checker/controller implementation unchanged in this continuation. Full1080p648192word CRC/header/length and ownership/drain/error20-case tests reuse actual unchanged elaborated dependencies (11-test reuse-evidence.json); RAW+algo overflow/recovery and one-shot injection were rerun on current top. Independent tester must decide reuse against this new manifest. No partial prefix is claimed full-frame readback.
+
+Production variants additionally include a documented bram(fast) row-bank inference request and unreset data-only read registers. Valid/state/config/sideband resets and synchronous read latency stay unchanged. Actual inference/resource/timing findings are in manual-engineering-review.md. One own parallel subst race caused RAW and HE-negative launch failures; both are preserved/count against old cases and corrected by serial execution. No RTL assertion/oracle was weakened. See g1-mapping-failure.md.
+
+Actual candidate: C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\upstream\ph1p100-pcie-ep-fpga, top ph1p_pcie_ep_top_closedloop, PH1P100SBG484 speed3. Original camera5.332ns/DHI10ns/TL16ns constraints and vendor IP remain unchanged. Production cumulative6/6; historical two1800s timeouts and checkpoint completion remain archived. This continuation uses actual3600s deadlines; CWC600s. Final routed metrics {'SWNS': 0.1, 'STNS': 0.0, 'HWNS': 0.02, 'HTNS': 0.0}; resource capacity=True, CWC physical checker exit=0, bit-pair equality=True, source drift=[]. See engineering/attempt6/result.json and manual-engineering-review.md. Independent integrated round0 has not occurred; actual repair rounds0. No download, Flash, PCIe/RK, commit or push occurred. G3/G4 remain unmeasured. Source prechange SHA/diff, old415/527 manifests and all old failures are preserved. Root one-file deletion rule respected; no files deleted.

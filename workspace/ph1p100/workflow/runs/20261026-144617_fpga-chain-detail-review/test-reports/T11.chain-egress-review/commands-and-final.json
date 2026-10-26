@@ -1,0 +1,64 @@
+{
+  "timestamp": "2026-10-26T20:58:23.970214+08:00",
+  "git": {
+    "head": "27c596b01cd961dfa9d0850e4fbf879fe249de90",
+    "branch": "codex/ddr-timing-margin",
+    "version": "git version 2.54.0.windows.1",
+    "tracked_status": {
+      "entries": 801,
+      "sha256_utf8": "3946b97e03a38510dbdbf7de623f4191dae76ff4946d8b846367fdf448ca8f8e"
+    }
+  },
+  "python": "3.11.5 (tags/v3.11.5:cce6ba9, Aug 24 2023, 14:38:34) [MSC v.1936 64 bit (AMD64)]",
+  "powershell": "7.6.5",
+  "manifest_sha256": "77c67efbcf3dd623c6d97611b8f21a1eb64784a95667be0dba2c14671ae41b92",
+  "manifest_entries": 490,
+  "dependency_entry_checks": 1137,
+  "frozen_drift": [],
+  "test_scope": "independent read-only document/source/contract audit G0/G1",
+  "TD_RTL_sim_hardware_deletions_production_writes": 0,
+  "deepseek": "not delegated: the separable hash/arithmetic tasks did not justify dispatch/review overhead; no worker output used as independent verification",
+  "commands": [
+    {
+      "command": "python -X utf8 independent_audit.py initial",
+      "exit_code": 0,
+      "stdout": "integrity-initial-stdout.txt",
+      "stderr": "integrity-initial-stderr.txt"
+    },
+    {
+      "command": "python -B -X utf8 validate_structure.py (first run)",
+      "exit_code": 1,
+      "stdout": "validate_structure-stdout.txt",
+      "stderr": "validate_structure-stderr.txt",
+      "cause": "tester UTF-8 assumption for legacy HDL comment bytes"
+    },
+    {
+      "command": "python -B -X utf8 independent_semantics.py",
+      "exit_code": 0,
+      "stdout": "independent_semantics-stdout.txt",
+      "stderr": "independent_semantics-stderr.txt",
+      "completion": "T11_INDEPENDENT_SEMANTICS_COMPLETE"
+    },
+    {
+      "command": "python -B -X utf8 validate_structure.py (one corrected retry)",
+      "exit_code": 1,
+      "stdout": "validate_structure-attempt2-stdout.txt",
+      "stderr": "validate_structure-attempt2-stderr.txt",
+      "cause": "tester assumed an original_findings field; actual format stores original_finding_ids + claims; script stopped and was not rerun"
+    },
+    {
+      "command": "Start-Job -FilePath manual-structure.ps1; Wait-Job -Timeout 60; Receive-Job or Stop-Job only own job",
+      "exit_code": 0,
+      "completion": "manual-structure-and-reuse.json status=pass errors=[]",
+      "note": "native PowerShell job completed; exit_code denotes successful shell wrapper, not a third Python retry"
+    },
+    {
+      "command": "python -B -X utf8 final_evidence.py (runpy independent_audit.py final plus bounded read-only git)",
+      "exit_code": 0,
+      "completion": "T11_FINAL_EVIDENCE_COMPLETE",
+      "stdout": "final-evidence-stdout.txt",
+      "stderr": "final-evidence-stderr.txt"
+    }
+  ],
+  "deadline": "Python: own hidden Process WaitForExit(240000); initial/semantic/failed aggregate scripts had no subprocess active and timeout Kill() targets own process only. Final wrapper uses Kill(true) for own tree, git child timeout60. Later reads use own Job timeout60. First AGENTS/skill read completed in1.1s but lacked explicit deadline."
+}

@@ -1,0 +1,69 @@
+{
+  "task_id": "T10.a1-uart-descriptor-fix",
+  "round": 0,
+  "status": "LOCAL_PASS_PENDING_INDEPENDENT_TEST",
+  "cases": [
+    {
+      "case": "boundaries",
+      "packet_count": 6,
+      "status": "PASS",
+      "mismatch": 0,
+      "evidence_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T10.a1-uart-descriptor-fix\\corrected\\boundaries\\result.json"
+    },
+    {
+      "case": "wrap",
+      "packet_count": 14,
+      "status": "PASS",
+      "mismatch": 0,
+      "evidence_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T10.a1-uart-descriptor-fix\\corrected\\wrap\\result.json"
+    },
+    {
+      "case": "full-clean",
+      "packet_count": 4,
+      "status": "PASS",
+      "mismatch": 0,
+      "evidence_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T10.a1-uart-descriptor-fix\\corrected\\full-clean\\result.json"
+    }
+  ],
+  "negative_controls": [
+    {
+      "case": "boundaries",
+      "compiled": true,
+      "rejected": true,
+      "target": "QUEUE_COUNT_MISMATCH old=1 push=1 pop=1 expected=1 actual=0",
+      "evidence_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T10.a1-uart-descriptor-fix\\old\\boundaries\\console.log"
+    },
+    {
+      "case": "wrap",
+      "compiled": true,
+      "rejected": true,
+      "target": "DESCRIPTOR_ORDER_OR_X pop=3 expected_id=1003 actual_id=xxxxxxxx",
+      "evidence_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T10.a1-uart-descriptor-fix\\old\\wrap\\console.log"
+    }
+  ],
+  "legal_transition_bins": {
+    "0": 9397,
+    "1": 0,
+    "2": 4,
+    "3": 0,
+    "4": 3066,
+    "5": 3,
+    "6": 3,
+    "7": 2,
+    "8": 6049,
+    "9": 1,
+    "10": 1,
+    "11": 1
+  },
+  "protected_inputs": {
+    "checked": 108,
+    "drift": []
+  },
+  "G0": "local_pass",
+  "G1": "local_pass",
+  "G2": "not_run",
+  "G3": "not_applicable",
+  "G4": "not_applicable",
+  "G5": "not_applicable",
+  "active_commands": 0
+}

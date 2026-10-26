@@ -1,0 +1,23 @@
+# gen_crc16_flat.py 复算（写入 env/verify/crc16_upd4.regen.v）
+cmd: python tools/pcie_integration/gen_crc16_flat.py --out env/verify/crc16_upd4.regen.v
+verify k=1: 20030 cases, 0 mismatches
+verify k=2: 20030 cases, 0 mismatches
+verify k=3: 20030 cases, 0 mismatches
+verify k=4: 20030 cases, 0 mismatches
+wrote workflow\runs\20261017-011744-rk-fpga-align\env\verify\crc16_upd4.regen.v
+
+# gen_crc32_flat.py 复算（写入 env/verify/crc32_upd4.regen.v）
+cmd: python tools/pcie_integration/gen_crc32_flat.py --out env/verify/crc32_upd4.regen.v
+verify k=1: 20040 cases, 0 mismatches
+verify k=2: 20040 cases, 0 mismatches
+verify k=3: 20040 cases, 0 mismatches
+verify k=4: 20040 cases, 0 mismatches
+wrote workflow\runs\20261017-011744-rk-fpga-align\env\verify\crc32_upd4.regen.v
+// 与合同 frame_contract.py 的逐位定义逐位等价（脚本 4 个变体各 2 万+ 自检）。
+
+crc16 production sha256 = 20520D044773247BDD6469C3FD04EFCF1EA4C31366ABF41F7FDE3EA27E98841F
+crc16 regen      sha256 = 20520D044773247BDD6469C3FD04EFCF1EA4C31366ABF41F7FDE3EA27E98841F
+crc32 production sha256 = 89B04F7559C20CEDA6267E408021772D65DC864D445A8C9FB503BE722F9469D3
+crc32 regen      sha256 = 89B04F7559C20CEDA6267E408021772D65DC864D445A8C9FB503BE722F9469D3
+backend/g1/crc16_upd4.generated.v sha256 = 82551E0250DB379E8F89C48E89008CDB3AC00CA348D10641AA38AE15E6559218
+backend/g1/crc16_upd4.generated.v bytes = 3475

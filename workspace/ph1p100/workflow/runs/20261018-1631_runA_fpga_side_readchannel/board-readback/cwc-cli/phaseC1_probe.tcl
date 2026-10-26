@@ -1,0 +1,7 @@
+puts "C1_START t=[clock format [clock seconds] -format %H:%M:%S]"
+puts "C1_HELP=[catch {download -help} m] -> $m"
+puts "C1_INFOARGS=[catch {info args download} a] -> $a"
+puts "C1_INFOARGS_RDBK=[catch {info args rdbk_cwc_data} a2] -> $a2"
+puts "C1_INFOARGS_RUNHW=[catch {info args run_hw_cw} a3] -> $a3"
+puts "C1_WRITECWC=[catch {info args write_hw_cw_data} a4] -> $a4"
+puts "C1_END t=[clock format [clock seconds] -format %H:%M:%S]"

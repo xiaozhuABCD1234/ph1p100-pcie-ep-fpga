@@ -1,0 +1,207 @@
+﻿{
+    "task_id":  "T10.b1-a1-uart-integ",
+    "run_id":  "20261020-0209_singleA_aplus_closedloop",
+    "revision":  "r0",
+    "date":  "2026-10-23",
+    "status":  "blocked",
+    "ready_for_test":  false,
+    "tester":  null,
+    "package_type":  "P1 offline single-A board-chain integration (raw crop -\u003e raw DDR slot -\u003e A+ -\u003e compressed DDR slot -\u003e UART export) + PC decoder + simulation; no TD/bitgen/download",
+    "status_reason":  "All new RTL compiles clean (vlog 0/0) and the chain demonstrably flows (st_raw_pub=1, xlen/slen advancing, no abort after 4 bug fixes), but the MODE=2 fault run did not finish within 400 s and produced no captured bytes; no 1080p full-frame case has been run. No PASS is claimed.",
+    "authorization":  {
+                          "scope":  "P1 offline integration only; no TD, no bitgen, no .bit, no download, no Flash",
+                          "user_quote":  "接着推进板级链路推进",
+                          "source":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/dispatch-board-chain.json"
+                      },
+    "frozen_inputs":  {
+                          "core":  {
+                                       "expected":  "bf6af3903f123d753391358ab003cd6ae4ec4a6a281a09dfa6e33b67798b1080",
+                                       "path":  "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v",
+                                       "sha256":  "bf6af3903f123d753391358ab003cd6ae4ec4a6a281a09dfa6e33b67798b1080",
+                                       "match":  true
+                                   },
+                          "frame":  {
+                                        "expected":  "18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+                                        "path":  "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v",
+                                        "sha256":  "18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+                                        "match":  true
+                                    },
+                          "sdc":  {
+                                      "note":  "P1 does not touch SDC; P2 owns constraints (expected 227dd39e...)"
+                                  },
+                          "camera_tap":  {
+                                             "changed":  false,
+                                             "path":  "fpga/csi2/src/cam/f9p_camera_display_core.v",
+                                             "note":  "w_a_pixel[39:0]/valid/line/in_frame already exist; used as observation only"
+                                         }
+                      },
+    "contract":  {
+                     "geometry":  {
+                                      "raw_len":  2592000,
+                                      "h":  1080,
+                                      "groups":  518400,
+                                      "xform_len":  2592000,
+                                      "cam_h":  2160,
+                                      "w":  1920,
+                                      "cam_w":  3840,
+                                      "roi_y":  540,
+                                      "roi_x":  960
+                                  },
+                     "profile":  {
+                                     "pred":  1,
+                                     "prep":  1
+                                 },
+                     "header_bytes":  44,
+                     "magic":  "0x31553141",
+                     "version":  1,
+                     "worst_case_stream":  2594706,
+                     "ddr":  {
+                                 "port":  "native 256-bit (P2 -\u003e PAXI)",
+                                 "raw_words_per_frame":  129600,
+                                 "cmp_slot_words":  81085,
+                                 "slots":  2
+                             },
+                     "clocks":  "clk_cam (byte) / clk_a1 (187.5 MHz + DDR user) / clk_uart (baud)"
+                 },
+    "local_checks":  {
+                         "vlog":  {
+                                      "command":  "vlog -work \u003cr0\u003e/work \u003c10 files\u003e",
+                                      "errors":  0,
+                                      "warnings":  0,
+                                      "exit":  0
+                                  },
+                         "probe":  {
+                                       "observed":  "st_raw_pub=1, raw slot_len=640, xlen_r=81, slen_r=2, no abort, 14 handshakes with sof=0 after the first",
+                                       "script":  "probe.do"
+                                   },
+                         "not_obtained":  [
+                                              "st_enc\u003e=1",
+                                              "any captured UART byte",
+                                              "result.json",
+                                              "1080p full-frame cases"
+                                          ]
+                     },
+    "throughput_estimate":  {
+                                "basis":  "187.5 MHz, T10 P3 measured 2.31 cycles/byte",
+                                "a1_encode_ms":  31.9,
+                                "frame_period_ms":  33.3,
+                                "raw_ddr_write_ms":  0.69,
+                                "cmp_ddr_write_ms":  0.43,
+                                "uart_115200_s":  {
+                                                      "benchmark_81707B":  7.1,
+                                                      "worst_2594706B":  225.2
+                                                  },
+                                "conclusion":  "UART is the binding bottleneck (~200x); 2-slot store + drop-on-full is mandatory"
+                            },
+    "artifacts":  [
+                      {
+                          "path":  "fpga/csi2/src/a1/a1_raw_crop.v",
+                          "sha256":  "c187d2c2d500329ed31829198da331e46a21aec6c3440bc7a8c0580e6b2da2ca",
+                          "bytes":  5140
+                      },
+                      {
+                          "path":  "fpga/csi2/src/a1/a1_ddr_slot_store.v",
+                          "sha256":  "81e5869277b73f5241aff0be1fac3a659bb8734db018a277f733dc5141b719d8",
+                          "bytes":  9662
+                      },
+                      {
+                          "path":  "fpga/csi2/src/a1/a1_ddr_arb2.v",
+                          "sha256":  "6513ad839dee02e932c49bdfd5afa3d62c382d4a144b8e74d5574273804afdc6",
+                          "bytes":  3739
+                      },
+                      {
+                          "path":  "fpga/csi2/src/a1/a1_uart_export.v",
+                          "sha256":  "c50f1aa77415488a77aa169ee822baa90e23a908f7e1e56fd413d7a73733466d",
+                          "bytes":  11859
+                      },
+                      {
+                          "path":  "fpga/csi2/src/a1/camera_a1_uart_top.v",
+                          "sha256":  "78f896d7ad4b0d3c2e87ee3ddd82396720700ad9749b58b3d31da0a8498caf45",
+                          "bytes":  18856
+                      },
+                      {
+                          "path":  "tools/a1/a1_pattern.py",
+                          "sha256":  "7d1df4ed32fd95476dda5de26179969374b4c24baa61e639b0551ac8d6fd2713",
+                          "bytes":  6022
+                      },
+                      {
+                          "path":  "tools/a1/pc_decode.py",
+                          "sha256":  "4df8eccf84da446066cdb09fb60b18fc13ce3dff803f96edfb33c3c66818f096",
+                          "bytes":  5161
+                      },
+                      {
+                          "path":  "tools/a1/verify_p1.py",
+                          "sha256":  "943dfcf31155b6da5c5b779ed3d8240bb1b8b3e567ab6bd783a22243578e3c15",
+                          "bytes":  6710
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r0/sim/tb_camera_a1_uart_top.v",
+                          "sha256":  "7d2ce779a194471b050a5c7ce37e1e5b77e76c4ff7cece3b41630586192c50ce",
+                          "bytes":  10642
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r0/sim/a1_ddr_model.v",
+                          "sha256":  "bbb41b89361d5235b11718a245443cd5ddd6dbe025a9f5eee70a5ad1205dc8b9",
+                          "bytes":  2509
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r0/run_p1.ps1",
+                          "sha256":  "7eaa6c0a12546f7f17cd2a5c33cf3f598ab72219ef6f8d99352341e2cead51cb",
+                          "bytes":  4975
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r0/probe.do",
+                          "sha256":  "08258f655ce01e9971431998fb636943c32b12e1e049d3d60be68233450a032e",
+                          "bytes":  515
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r0/result-r0.md",
+                          "sha256":  "5958c1985ed058ba1b1d713a56f50f6436c036d54d38bf1ed7e8edbf0e3ff808",
+                          "bytes":  7592
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r0/lessons-r0.md",
+                          "sha256":  "8e2c90e583cfcb63a1171766aa6cdfd43a1a669d7aee74cdb05ba22c6aa5eded",
+                          "bytes":  2151
+                      },
+                      {
+                          "path":  "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v",
+                          "sha256":  "bf6af3903f123d753391358ab003cd6ae4ec4a6a281a09dfa6e33b67798b1080",
+                          "bytes":  78627
+                      },
+                      {
+                          "path":  "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v",
+                          "sha256":  "18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+                          "bytes":  23675
+                      },
+                      {
+                          "path":  "fpga/csi2/src/mem/capture_async_fifo.v",
+                          "sha256":  "59dd6dcb5b7e7774f7d6518f50f56cafbc8be6b70e8ae1508236bac2b5af531d",
+                          "bytes":  2044
+                      }
+                  ],
+    "result":  "result-r0.md",
+    "lessons":  "lessons-r0.md",
+    "open_issue":  {
+                       "symptom":  "MODE=2 faults run exceeds 400 s and writes no capture bytes",
+                       "known":  "chain progresses at 4 us; export never reaches E_PAY completion in the observed window",
+                       "next_step":  "200 us probe of st_enc/st_exp/fstate/u_export{estate,dq_cnt,pstate,sent,wbuf_valid}/u_cmp_store/rd_state to decide (a) exporter stuck vs (b) TB wait too long"
+                   },
+    "blocked":  {
+                    "detail":  "development call budget (60) and wall budget (120 min) exhausted before a passing simulation",
+                    "minimal_next_step":  "resume r0 with the 200 us exporter probe (see open_issue) and then run the three cases",
+                    "reason_code":  "LIMIT_REACHED",
+                    "last_evidence":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r0/logs/probe.log"
+                },
+    "retest":  {
+                   "tester_required":  false,
+                   "required_dimensions":  [
+                                               "integrated"
+                                           ],
+                   "note":  "blocked at round0; no PASS to verify",
+                   "required_checks":  [
+                                           "rerun run_p1.ps1 after the fix: 3 cases, 0 per-sample mismatch, CRC/length, worst case 2,594,706 exact, geom/drop counters, no TD/bitgen/download"
+                                       ],
+                   "input_status":  "new files only; core/frame/SDC unchanged"
+               }
+}

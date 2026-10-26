@@ -1,0 +1,5 @@
+- 261016 1306 初始化；用户要求主对话仅转发，调整工作流；BATCH_SIZE=1；主仅记录路径/ID/状态。
+- 261016 1306 Phase1已派发；PLANNER_ID=/root/relay_v2_planner；需求和原图路径已转交。
+- 261016 1307 用户补充原话已保存并转交PLANNER_ID=/root/relay_v2_planner。
+- 261016 1312 PLANNER状态转发：图像对照完成，正在落规划文件；ready；完整图与16张截图均可读取；无需补输入。
+- 261016 1323 原规划角色已报告核对完成但尚无派发产物；interrupt后followup_task续接同一PLANNER_ID=/root/relay_v2_planner收束落档，不更换角色或接管分析。

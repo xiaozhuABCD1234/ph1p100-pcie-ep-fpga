@@ -1,0 +1,23 @@
+ROUTED_GATE verdict=FAIL_route_timing
+syn SWNS=0.127 STNS=0.0 slice=18718 eram=72 reg=20086
+routed SWNS=-0.098 STNS=-0.518 HWNS=0.02 HTNS=0.0 viol_s=11 viol_h=0
+resources slices=24989 rams=102 dsp=0 dramhardcon=84
+abort_to_addrb_paths=3
+worst_clk_a1={"slack": -0.098, "begin": "u_a1/a1_abort_reg_syn_6.clk", "end": "u_a1/u_a1/smem_syn_29.addrb[10]"}
+groups={"clk_a1->clk_a1": {"wns": -0.098, "tns": -0.51, "viol_ep": 10, "sections": 1}, "ddr_user->ddr_user": {"wns": -0.008, "tns": -0.008, "viol_ep": 1, "sections": 12}, "mipi_a_byte_clk->mipi_a_byte_clk": {"wns": 0.266, "tns": 0.0, "viol_ep": 0, "sections": 1}, "config_inst.cwc_tck_o->config_inst.cwc_tck_o": {"wns": 47.477, "tns": 0.0, "viol_ep": 0, "sections": 1}, "u_ddrmc_test_top/u_ddrmc_x32/mcu_clk->u_ddrmc_test_top/u_ddrmc_x32/mcu_clk": {"wns": 0.0, "tns": 0.0, "viol_ep": 0, "sections": 15}, "sys_clk50m->sys_clk50m": {"wns": 8.994, "tns": 0.0, "viol_ep": 0, "sections": 1}, "pclkx1->pclkx1": {"wns": 2.564, "tns": 0.0, "viol_ep": 0, "sections": 1}, "mclk27->mclk27": {"wns": 36.649, "tns": 0.0, "viol_ep": 0, "sections": 1}, "config_inst.cwc_tck_o->config_inst.tck_i": {"wns": 43.618, "tns": 0.0, "viol_ep": 0, "sections": 1}, "config_inst.tck_i->config_inst.cwc_tck_o": {"wns": 45.287, "tns": 0.0, "viol_ep": 0, "sections": 1}}
+gate syn_gate=True
+gate syn_precondition_0p127=True
+gate route_zero_viol=False
+gate route_hold_pos=True
+gate route_wnS_ge_0p003=False
+gate route_wnS_ge_0p05=False
+gate cone_break=False
+gate res_slices=True
+gate res_eram=True
+gate res_dsp=True
+gate group_clk_a1=False
+gate group_ddr_user=False
+gate group_mipi_a=True
+gate group_sys50m=True
+gate group_pclkx1=True
+gate group_others_zero=True

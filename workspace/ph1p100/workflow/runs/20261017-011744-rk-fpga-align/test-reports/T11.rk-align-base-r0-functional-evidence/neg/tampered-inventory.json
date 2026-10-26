@@ -1,0 +1,189 @@
+{
+  "inventory_version": 1,
+  "task_id": "T11.rk-align-base",
+  "run_id": "20261017-011744-rk-fpga-align",
+  "generated_at": "2026-10-17T15:05:00+08:00",
+  "generator": "tools/env/env_check.ps1",
+  "generator_sha256": "72C8598685D8ECC6753E8574569B1B41E04651A5A9C878ACED336001EE25074F",
+  "source_logs": [
+    "workflow/runs/20261017-011744-rk-fpga-align/env/logs/env_check_20261017-150458.json（首轮：记录事实）",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/logs/env_check_20261017-151126.json（终轮：清单一致性 PASS，PASS=12/FAIL=0/WARN=0）",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/logs/env_check_20261017-151126.log",
+    "workflow/runs/20261017-011744-rk-fpga-align/env/logs/td_probe_stdout.log"
+  ],
+  "note": "本清单只记录事实，不修改任何环境。逐项含获取命令与原始输出摘要；SHA 为本次实查值。复跑自检：tools/env/env_check.ps1（默认只读静态检查；-TdProbe 才跑 TD 版本探针）。",
+
+  "host": {
+    "computer": "LAPTOP-HE7N8DN4",
+    "user": "czz",
+    "os": "Microsoft Windows NT 10.0.26200.0",
+    "powershell": {
+      "version": "5.1.26100.9711",
+      "edition": "Desktop",
+      "acquisition": "powershell -Command \"$PSVersionTable\"",
+      "raw": "PSVersion=5.1.26100.9711 PSEdition=Desktop Build=10.0.26100.9711"
+    },
+    "code_page": {
+      "acp": 936,
+      "oemcp": 936,
+      "culture": "zh-CN",
+      "console_output_encoding": "gb2312",
+      "acquisition": "Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Nls\\CodePage'",
+      "raw": "ACP=936 OEMCP=936; [Console]::OutputEncoding=gb2312"
+    }
+  },
+
+  "tools_td": {
+    "bin_dir": "D:\\anlogic\\TD_Release_2026.2\\bin",
+    "acquisition": "Test-Path + Get-FileHash -Algorithm SHA256",
+    "raw_summary": "5 个二进制齐备；SHA 见下（与 evidence/tool-inventory.json 的 2026-10-17 01:32 记录一致）",
+    "td_commands_prompt.exe": {
+      "path": "D:\\anlogic\\TD_Release_2026.2\\bin\\td_commands_prompt.exe",
+      "sha256": "2629E474DF036A871807E564190FEBFBBD9780A09365F600C10463911C8C1223",
+      "bytes": 123372304
+    },
+    "td.exe": {
+      "path": "D:\\anlogic\\TD_Release_2026.2\\bin\\td.exe",
+      "sha256": "FA2A5AC6E5342B2F801EFA7A6AA345A5FD02D6F25FFA0D1E6380FF0EBD306A88",
+      "bytes": 123372304
+    },
+    "IpTool.exe": {
+      "path": "D:\\anlogic\\TD_Release_2026.2\\bin\\IpTool.exe",
+      "sha256": "5B0654AAA44AE9340EEFCDC8CAC54FAED7490B0643F3FA53908C5706DB175CEC",
+      "bytes": 24507392
+    },
+    "bw.exe": {
+      "path": "D:\\anlogic\\TD_Release_2026.2\\bin\\bw.exe",
+      "sha256": "89501B2D05CF842E38599F83CC71A982856F4FDEF74BC2CA09DB1FA75D422008",
+      "bytes": 18968840
+    },
+    "bw_commands_prompt.exe": {
+      "path": "D:\\anlogic\\TD_Release_2026.2\\bin\\bw_commands_prompt.exe",
+      "sha256": "E528A62CAD13764D73A49281EE9CF9B9D81C337509B478489E9361856C381EA7",
+      "bytes": 16517392
+    }
+  },
+
+  "td_cli_probe": {
+    "acquisition": "临时 subst S: → env/logs；cwd=S:\\ 运行 td_commands_prompt.exe td_probe.tcl（只读探针，finally 撤销映射）",
+    "raw_summary": "banner: TD Release_2026.2 / Build number = 6.2.3.210850 / Built at 11:35:58 Aug 19 2026; 11 项命令 REGISTERED；TCL_VERSION 8.6.17；READ_ONLY_CLI_PROBE_OK；exit 0",
+    "td_version": "TD Release_2026.2",
+    "build": "6.2.3.210850",
+    "tcl_version": "8.6.17",
+    "registered_commands": ["open_project", "import_device", "launch_runs", "wait_run", "bitgen", "report_timing_summary", "create_ip", "get_ips", "get_property", "set_property", "generate_target"],
+    "evidence_log": "workflow/runs/20261017-011744-rk-fpga-align/env/logs/td_probe_stdout.log"
+  },
+
+  "td_license": {
+    "path": "D:\\anlogic\\TD_Release_2026.2\\license\\Anlogic.lic",
+    "sha256": "DC19FEE62EFF532D4C6A84C04CE34267B03190B753A3198A6788C3EC9E45C1A6",
+    "note": "fresh install 缺此文件会在 optimize_rtl 报 RUN-8008（PRJ-8806 的根因之一）；只读记录"
+  },
+
+  "tools_modelsim": {
+    "bin_dir": "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem",
+    "acquisition": "vsim.exe -version; vlog.exe -version（cwd=bin_dir）",
+    "vsim": "Model Technology ModelSim ALTERA STARTER EDITION vsim 10.5b Simulator 2016.10 Oct  5 2016",
+    "vlog": "Model Technology ModelSim ALTERA vlog 10.5b Compiler 2016.10 Oct  5 2016",
+    "exit_code": 0,
+    "note": "经 tools/pcie_integration/run_sim.ps1 调用；中文路径由 run_sim.ps1 自动临时 subst"
+  },
+
+  "tools_compilers": {
+    "acquisition": "python --version; gcc --version; git --version; tclsh <probe.tcl>",
+    "python": { "path": "C:\\Program Files\\Python311\\python.exe", "version": "Python 3.11.5" },
+    "gcc": { "path": "D:\\MSYS2\\mingw64\\bin\\gcc.exe", "version": "gcc.exe (Rev3, Built by MSYS2 project) 13.2.0" },
+    "git": { "path": "D:\\downlaod\\Git\\cmd\\git.exe", "version": "git version 2.54.0.windows.1" },
+    "tclsh": { "path": "D:\\MSYS2\\mingw64\\bin\\tclsh.exe", "version": "8.6.12 (info patchlevel)" },
+    "verilator": {
+      "path": "D:\\MSYS2\\mingw64\\bin\\verilator",
+      "status": "not usable as RTL simulator on this machine (verilator_bin.exe -version → -1073741511; Perl/MSYS wrapper → 127)",
+      "source": "evidence/tool-inventory.json simulator_observations（本包未重试）"
+    }
+  },
+
+  "git_state": {
+    "acquisition": "git -C <root> rev-parse HEAD; git status --porcelain",
+    "head": "ba0fca5f2c397db88059040b2ffe55c76867da31",
+    "dirty_count": 36,
+    "note": "dirty 归属见 T03 备份/冻结记录；本包不提交、不清理。dirty 条目会随其它任务变化，仅作事实记录"
+  },
+
+  "subst": {
+    "acquisition": "subst（只报告，不建/不删）",
+    "mappings_at_check": [
+      "R:\\: => C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261017-011744-rk-fpga-align\\test-reports\\T07-functional-r2\\neg-shadow"
+    ],
+    "note": "R: 是 T07 functional r2 负对照遗留映射（dev-plan 已登记，由用户/后续处置）；run_sim.ps1/run_td.ps1 只用完撤自己的临时映射；env_check 默认不建映射（-TdProbe 例外，finally 撤销）"
+  },
+
+  "temp_reference_libs": {
+    "root": "C:\\Users\\czz\\AppData\\Local\\Temp\\opencode",
+    "dirs": ["ref_ph1p100_fpga", "ref_ph1p100_driver"],
+    "acquisition": "Get-ChildItem $env:LOCALAPPDATA\\Temp\\opencode -Directory -Filter ref_*",
+    "note": "peer 仓库临时参考库；只读参考，不作为本工程输入"
+  },
+
+  "path_and_encoding_rules": {
+    "project_path_contains_chinese": true,
+    "workarounds": [
+      "ModelSim/TD 无法直接使用中文 cwd → run_sim.ps1/run_td.ps1 自动建临时 subst（只建自用、用完撤销）",
+      "TD 在 cwd 写 td_<时间戳>.log / .logw → 探针/构建 cwd 一律用 subst 映射到 run 目录内",
+      "*.ps1 含中文必须 UTF-8 BOM（PS5.1+ACP936 会把无 BOM UTF-8 按 GBK 解码吞换行）",
+      "TD 的 Tcl 按字节解析、Python 3 源码默认 UTF-8 → .tcl/.py 不受该缺陷影响"
+    ],
+    "bom_verified_scripts": {
+      "tools/pcie_integration/run_sim.ps1": { "bom": true, "bytes": 6439, "sha256": "204D17067989C1AF3D1D522FB469B97B85D5646379304068D9C99A93C580A6BB" },
+      "tools/pcie_integration/run_td.ps1": { "bom": true, "bytes": 3449, "sha256": "9B8492FCAE97A563D99EBD430E4B650B66D0B32AA408218C800C1DD0C0EBC02C" },
+      "tools/env/env_check.ps1": { "bom": true, "bytes": 28144, "sha256": "72C8598685D8ECC6753E8574569B1B41E04651A5A9C878ACED336001EE25074F" }
+    }
+  },
+
+  "d_readonly_convention": {
+    "statement": "本工程工具对 D: 只读：不安装、不改 PATH/环境变量/注册表、不写 D 盘工程；TD/ModelSim 运行产物经 subst 限定在项目/run 内",
+    "readonly_paths": [
+      "D:\\anlogic\\TD_Release_2026.2\\bin",
+      "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem",
+      "D:\\TD（旧工程，回退用）"
+    ]
+  },
+
+  "sim_and_build_entries": {
+    "sim": {
+      "runner": "tools/pcie_integration/run_sim.ps1",
+      "tool": "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\{vlib,vlog,vsim}.exe",
+      "compile_list": "fpga/csi2/pcie_integration/sim/compile_checked.f",
+      "usage": "powershell -ExecutionPolicy Bypass -File tools/pcie_integration/run_sim.ps1 -Tb <tb> -OutDir <run>/<dir> -TbFiles <file> [-Defines MIPI_PHY_SIM_STUB]"
+    },
+    "td": {
+      "runner": "tools/pcie_integration/run_td.ps1",
+      "tool": "D:\\anlogic\\TD_Release_2026.2\\bin\\td_commands_prompt.exe",
+      "entry_tcl": "tools/pcie_integration/td/00_all.tcl（单会话 create→syn_1→phy_1→save_best_bits；01/02/03 仅参考）",
+      "usage": "powershell -ExecutionPolicy Bypass -File tools/pcie_integration/run_td.ps1 -Stage 00_all -OutDir <run>/candidate/prj"
+    }
+  },
+
+  "artifact_and_completion_criteria": {
+    "td": [
+      "td_commands_prompt.exe exit 0",
+      "日志含 PRJ-1406（Run phy_1 finished）与 PRJ-1424（implemented result saved as best result）",
+      "控制台完成标记 T07_ALL_DONE（共享入口脚本文本，T11 沿用）",
+      "非空产物：final_timing.rpt / *.area / *.chk.timing / pr.db / place.db / *.bit"
+    ],
+    "modelsim": [
+      "vlog.log 末行 Errors: 0",
+      "run.do 与 vsim.log 齐备（run_sim.ps1 写入）",
+      "vsim.log 含 ALL PASS 标记（TB 自检）"
+    ],
+    "general": "判据看产物与标记，不看退出码（-File 下失败也可能 exit 0）"
+  },
+
+  "known_traps": [
+    "PS5.1+ACP936：UTF-8 无 BOM 的 .ps1 中文注释会吞换行 → 脚本必须带 BOM（run_sim/run_td 已修复，SHA 见上）",
+    "TD 分阶段（01/02/03 另开会话）会丢 device_name/package_name → 唯一可跑入口是单会话 00_all.tcl",
+    "TD 在 cwd 写 td_*.log/.logw → 用 subst 把 cwd 限定在 run 目录",
+    "fresh TD install 缺 license → optimize_rtl 报 RUN-8008/PRJ-8806",
+    "ModelSim 打不开中文路径 → 由 run_sim.ps1 的临时 subst 解决",
+    "verilator 在本机不可用（见 tools_compilers.verilator）"
+  ]
+}

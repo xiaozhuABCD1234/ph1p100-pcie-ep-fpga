@@ -1,0 +1,315 @@
+# candidate.diff - T11.runB-debug-spec (docs-only; upstream zero-write)
+# generated: 2026-10-18T17:01:39+08:00
+# scope: new files under workflow/runs/20261018-1631_runA_fpga_side_readchannel/debug-spec/ (5 candidate docs)
+# supporting records dev-notes.md / lessons-learned.md are hashed in candidate-manifest.json (full content in place)
+diff --git a/debug-spec/cwc-flow.md b/debug-spec/cwc-flow.md
+new file mode 100644
+--- /dev/null
++++ b/debug-spec/cwc-flow.md
+@@ -0,0 +1,52 @@
++# cwc-flow.md — A0 手段核实 + CWC 读回工具链可行性（T11.runB-debug-spec）
++
++- run: `20261018-1631_runA_fpga_side_readchannel`；任务: `T11.runB-debug-spec`（离线方案冻结包）。
++- 编写: fpga-dev 子会话（opencode），2026-10-18，上海时区；宿主 PC（用户 czz）。
++- 范围与安全: **只读**本地文件/安装目录；**未启动 TD、未调用 bw/hwserver、未连板、未启仿真、未用网络**；上游仓零写入。
++- 本文件冻结“路径与判定条件”，不替代 P1 的 RTL/TB 证据或 P2 的 G2 实测；文中事实均给只读出处。
++
++## 1. A0 手段核实：是否存在“无调试核的 JTAG 只读用户寄存器”路径
++
++检索（2026-10-18，全部只读、单步 ≤60 s）：
++
++| # | 对象 | 方式 | 结果 |
++|---|---|---|---|
++| 1 | 上游 KIT 既有文档级初核 | `upstream/ph1p100-pcie-ep-fpga/tools/bringup/registers-plan.md` §2.3 | 结论 = unavailable：`JTAG_REG_ACCESS`/`JTAG_REG_ACCESS_VEC`/`JTAG_AXIS_APB_ACCESS` 仅命令名，无参数/读写语义文档；本候选位流无 CWC/调试核；写入副作用未知；**禁止盲试** |
++| 2 | TD 6.2.2 安装文本（`D:/downlaod`） | grep `*.{tcl,txt,md}`，模式 `(?i)(setup_debugger|JTAG_REG_ACCESS|JTAG_AXIS_APB_ACCESS)` | 4 处命中，全部是 `setup_debugger`（`scripts/MultiSeed.tcl` L138/139、`scripts/DefaultFlow.tcl` L228/229）；**无任何 JTAG_REG_ACCESS 文档** |
++| 3 | TD 2026.2 安装文本（`D:/anlogic/TD_Release_2026.2`） | grep `*.{tcl,txt,md}`，模式 `(?i)(setup_debugger|JTAG_REG_ACCESS|chipwatcher)` | 命中 `setup_debugger`（`scripts/DefaultFlow.tcl` L265/266、`scripts/MultiSeed.tcl` L138/139）与 ChipWatcher IP（`ip/depot/ChipWatcher_1.0/ChipWatcher/Other/plugin_end.tcl` L41–59）；**无任何 JTAG_REG_ACCESS 文档** |
++| 4 | B1 命令表证据（引用既有结论，本包未重读日志） | `workflow/runs/20261018-1347_runA_offline_sim/board-selfcheck/logs/03-bw-command-list.txt` | 只有命令名；语义无文档（见 registers-plan §2.3；channel-notes §4） |
++
++限制（必须随结论一并报告）：
++- 检索覆盖 tcl/txt/md 文本与既有项目文档；**未检索 PDF/二进制/在线手册**。因此本核实**不是**对厂商语义的全量否定，只是“当前可用的文本层证据不支持存在该路径”。
++- 不下结论于未证实语义：不推断 `JTAG_REG_ACCESS` 的潜在只读/只写行为，不试命令、不测试副作用。
++
++结论（冻结）：
++- **无文档证据支持“无调试核的 JTAG 只读用户寄存器”路径**；维持 registers-plan §2.3/§4 状态：**unavailable、禁止盲试**。
++- 仅当后续出现厂商文档明确“只读语义 + 可复核读回机制”时，才交原规划评估一次性只读检查；本包不派发、不执行。
++- 本 run 沿用唯一已证 FPGA 侧机读读通道：**ChipWatcher（CWC）调试核 + JTAG**（见 §2）。
++
++## 2. ChipWatcher（CWC）工具链可行性（TD 2026.2，只读核实）
++
++已核实事实：
++
++1. **TD 2026.2 安装含 ChipWatcher IP**：`D:/anlogic/TD_Release_2026.2/ip/depot/ChipWatcher_1.0/ChipWatcher/Other/plugin_end.tcl`（L41–59 生成 `${IP_COMPONENT_NAME}_ChipWatcher.sv` 导出文件）。
++2. **构建流末端存在 `setup_debugger` 调用**（调试后处理入口）：
++   - `D:/anlogic/TD_Release_2026.2/scripts/DefaultFlow.tcl` L265–266：`setup_debugger -prj $prj_name` / `setup_debugger $chipDebugger -prj $prj_name`（条件分支）；
++   - `D:/downlaod/scripts/DefaultFlow.tcl` L228–229：同构（6.2.2 备用）。
++3. **官方例程存在**：`D:/TD/03_F9P_CA05_PH1P50_PH1P100/V2026/HW-MLK-F9P-CA05-PH1P100/01_start/00_for_starter/04_use_ChipWatcher/`（glob 只读确认：含 `fpga_prj.al`、`uisrc/`、`log/td_2026-05-27_*.log(.logw)`、`al_ip/ui_cwc/ui_cwc.xml`；未逐项哈希）。
++4. **`cw/compiled.cwc`/`cw/compiled.bit` 生成条件（项目历史证据）**：必须经 TD `setup_debugger -prj <prj>` 后处理生成；单独 `export_chipwatcher` 缺物理 ERAM 读回映射 → **空白波形**（来源：`docs/ChipWatcher空白波形_读回映射修复_2026-10-14.md` L11、L17–L31；该修复已获实际读回反馈）。例程 `fpga_prj_Runs/phy_1/cw/compiled.cwc` L82–85 含物理 ERAM 的 RID/WID/数据位置/工作模式（同文档 L11 记录）。
++5. **映射校验器**：`tools/td/check_chipwatcher_readback.py` 逐项比对 RID/WID、实例名、逻辑/物理尺寸、数据偏移、工作模式，缺块/错 RID/错偏移/缺逻辑 RAM/部分深度/错误物理工作深度六类故障被拒；**仅支持单段/全深几何**，多段需另证或改单段（来源：`docs/ChipWatcher空白波形_读回映射修复_2026-10-14.md` L31；guide §2）。
++6. **位宽先例（规模参照，非保证）**：历史单实例 449×1024（`auto_created_cwc1`，同文档 L27）；本包 A 组探针 9 字=288 bit 在同类量级内；最终容量以 P1 elaboration / P2 构建为准。
++
++### 2.1 判定条件（冻结）
++
++- **主路径**：P2 用 TD 2026.2 构建并执行 `setup_debugger` 生成配对 `compiled.cwc` + `compiled.bit`；随后 `check_chipwatcher_readback.py` 校验 **0 失败**；bit 与 CWC 同一构建来源（SHA 记录；若两者 SHA 不同需说明，历史例中曾逐字节相同）→ 进入 P3。
++- **回退触发条件**（任一命中，先记录实际报错证据再交原规划裁决）：① TD 2026.2 `setup_debugger` 缺失/报错不可修；② CWC IP 不可用；③ 校验器因几何（多段）判不可用且改单段不可行。
++- **备用工具顺序**（仅原规划批准后执行，本文件不预授权换版）：TD 6.2.2（`D:/downlaod`，`DefaultFlow.tcl` L228–229）→ 6.2.3 系；guide §4 冻结构建工具 = TD 2026.2。
++- **禁止**：把单独 `export_chipwatcher` 当成功；CWC 与 bit 混拼不同构建；在 2026.2 下静默换工具不记录。
++
++## 3. 与后续包的绑定
++
++- P1（`T11.runB-debug-rtl`）：按 `probe-map.md` 实现字库/探针；新 TB 证明镜像值 = 寄存器原值（含边界帧）且无副作用。
++- P2（`T11.runB-debug-build`）：产物齐 + 校验 0 失败 + CWC/bit 配对 SHA 记录；`hardware-ready.md` 引用本文件与 `board-runbook.md`。
++- P3（`T11.runB-board-readback`）：按 `board-runbook.md` 操作，按 `readback-criteria.md` 判定（G3 partial→pass 按 tier）。
+diff --git a/debug-spec/probe-map.md b/debug-spec/probe-map.md
+new file mode 100644
+--- /dev/null
++++ b/debug-spec/probe-map.md
+@@ -0,0 +1,75 @@
++# probe-map.md — 读回字 ↔ 探针/调试字库映射（冻结，T11.runB-debug-spec）
++
++- 依据：`fpga-design-guide.md` §1/§2；`upstream/ph1p100-pcie-ep-fpga/tools/bringup/registers-plan.md` 表；`rtl/ep_side/img/ep_bar_win.v`（2026-10-18 检出工作树；行号=该版本）；`rtl/ep_side/ph1p_pcie_ep_top.v`、`rtl/ep_side/pcie_ep_engine.v` 只读核对。
++- 本表**不新造寄存器语义**：期望值/解码全部来自 registers-plan / expected_rules.json；探针名是层次路径，P1 以 elaboration/仿真复核后回写（guide §2）。
++
++## 1. 冻结决策
++
++1. **CWC 实例**：1 个；时钟域 = `tl_clk_user`（ep_bar_win 所在域；`ph1p_pcie_ep_top.v` L254 注释“ep_bar_win ↔ 安全门，都是 tl_clk_user 域，直连”）。同实例内信号视为同时采样。
++2. **载体**：采用**调试字库** `dbg_bank`（只读）承载 A 组 9 字（§2）；位宽 9×32 = **288 bit**；历史单实例 449 bit 为规模参照（≠保证）。
++3. **降级路径**（P1 判定触发，须记 candidate diff）：① 单实例容量/位宽不足 → 同域**第二实例**拆分（B 组默认方式）；② 字库方案不可行 → 直探 §4 信号清单。**降级不得改变 A 组判据**。
++4. **B 组加装条件**：A 组读回稳定后，或现场需定位丢帧/推帧/状态位图问题时，按需加第二同域实例（默认候选：`cam_drop_a` 丢弃计数）；**B 组不并入 A 组样本，跨实例分开记录**。
++
++## 2. 调试字库（dbg_bank）冻结契约
++
++- 形式：只读组合镜像；源 = ep_bar_win 内部信号/编译期常量；**无副作用**（不驱动任何控制/总线/外发路径，不改变既有复位、计数、仲裁行为）。
++- **BAR0 读地址表**（dword 偏移；属非合同 diag，先例 = 0x120..0x12C 同类“不在合同里”；按 `docs/protocol/rka1-r10f-v1/contract/registers.json` 十进制偏移只读检索，无 ≥320（0x140）占用）：
++
++| 字库偏移 | 字序 | 镜像原偏移 | 名称 | 源（ep_bar_win.v） |
++|---|---|---|---|---|
++| 0x140 | word0 | 0x040 | MAGIC | 参数 `MAGIC=32'h5043_4946`（L129；读 mux L435） |
++| 0x144 | word1 | 0x118 | EXT_MAGIC | 参数 `MAGIC_RKA1=32'h3141_4B52`（L133；L499） |
++| 0x148 | word2 | 0x11C | EXT_VERSION | 参数 `VERSION_RKA1=32'h0001_0000`（L134；L500） |
++| 0x14C | word3 | 0x0A0 | DDR_SEQ_A | `ddr_ro[31:0]`（端口 L163；L479） |
++| 0x150 | word4 | 0x0A4 | DDR_BASE_A | `ddr_ro[63:32]`（L480） |
++| 0x154 | word5 | 0x0AC | DDR_LEN_A | `ddr_ro[127:96]`（L482） |
++| 0x158 | word6 | 0x120 | CSI_DIAG_A | `csi_diag_a`（端口 L200；L502） |
++| 0x15C | word7 | 0x124 | CSI_DIAG_A2 | `csi_diag_a2`（端口 L201；L503） |
++| 0x160 | word8 | 0x044 | CTRL（读回字） | `{23'd0, ctrl_cam_ab, ctrl_push_src, ctrl_push_en, ctrl_ddr_en, 1'b0, ctrl_pattern_r, ctrl_trigger, ctrl_enable}`（L439-440） |
++
++- 契约：
++  1. 每 word 值必须**逐位等于**对应原偏移的读回复现值（P1 用 TB 证明，覆盖正常帧与边界帧）；
++  2. 字序固定，不得重排；只读，禁止可写别名；
++  3. 插入新 case 不得改变任何既有偏移读值（`default: 32'hDEAD_BEEF`，L506）；
++  4. 选址顺延规则：若 P1 以 elaboration/顶层解码复核发现 0x140..0x160 冲突（合同未来偏移/保留区），顺延到下一连续未占用 dword 段，并记 candidate diff；字序与判据不变。
++  5. `csi_diag_a/a2` 系 checked CSI 字节域经两级同步后的同域快照（ep_bar_win.v L123-124），跨域瞬间可能差一拍；允许解释性差异，原文记录（guide §6）。
++
++## 3. CWC 探针表（主选：字库载体，1 实例）
++
++- 层次链（只读推导，**P1 必须用 elaboration/仿真复核并回写**）：`<工程顶层>/…/pcie_ep_engine（实例名待 P1 确认；例化见 `pcie_ep_engine.v` L389/L394：`ep_bar_win #(…) u_ep_bar_win (…)`）/u_ep_bar_win/dbg_bank[...]`。
++- 探针信号（建议名；以 TD 生成为准）：
++
++| CWC 信号（建议） | 位宽 | 覆盖字 |
++|---|---|---|
++| dbg_bank_word0[31:0] | 32 | 0x040 MAGIC |
++| dbg_bank_word1[31:0] | 32 | 0x118 EXT_MAGIC |
++| dbg_bank_word2[31:0] | 32 | 0x11C EXT_VERSION |
++| dbg_bank_word3[31:0] | 32 | 0x0A0 DDR_SEQ_A |
++| dbg_bank_word4[31:0] | 32 | 0x0A4 DDR_BASE_A |
++| dbg_bank_word5[31:0] | 32 | 0x0AC DDR_LEN_A |
++| dbg_bank_word6[31:0] | 32 | 0x120 CSI_DIAG_A |
++| dbg_bank_word7[31:0] | 32 | 0x124 CSI_DIAG_A2 |
++| dbg_bank_word8[31:0] | 32 | 0x044 CTRL 读回字（使能核验） |
++
++合计 288 bit；单实例建议名 `cwc_a`（或 `auto_created_cwc`，以 TD 生成为准）；触发方式：**Instant Trigger**（异步观察，不设复杂条件；与 10-14 文档流程一致）。
++- 记录要求：每样本记录实例名 + TD 版本 + `compiled.cwc` SHA；同实例内 9 字视为同时；跨实例/跨时刻分开记录，禁止拼成“原子快照”（guide §6）。
++
++## 4. 降级直探清单（仅当 P1 判定字库不可行）
++
++| 内部信号 | 位宽 | 覆盖字 |
++|---|---|---|
++| `ddr_ro[127:0]` | 128 | 0x0AC/0x0A8/0x0A4/0x0A0（字序 `{len,status,base,seq}`，top.v L161；L479-482） |
++| `csi_diag_a[31:0]`、`csi_diag_a2[31:0]` | 64 | 0x120 / 0x124（L200-201） |
++| `ctrl_*` 位集合（9 位，L439-440） | 9 | 0x044 |
++| `cam_drop_a[95:0]` | 96 | 0x0DC/0xF0/0xF4（B 组，L152、L466-468） |
++| `push_ro[127:0]` | 128 | 0xCC/0xC8/0xC4/0xC0（B 组，L165、L488-491） |
++| `ddr_ro_b[127:0]` | 128 | 0xEC/0xE8/0xE4/0xE0（B 组，L147、L469-472） |
++
++- 直探模式下 MAGIC/EXT_MAGIC/EXT_VERSION 为编译期常量，无稳定信号可探：需 P1 增加只读常量线，或明确由 G1/G2 的 RTL 复核承担；**不得以未证实读数代替**。该取舍记 candidate diff。
++- B 组直探默认第二同域实例：优先 `cam_drop_a`（丢弃计数）；其余按现场需要。
++
++## 5. 名字来源复核（只读，2026-10-18）
++
++- 端口/内部名：`ddr_ro`（L163）、`ddr_ro_b`（L147）、`csi_diag_a/a2`（L200-201）、`cam_drop_a`（L152）、`push_ro`（L165）、`ctrl_enable/ctrl_trigger/ctrl_pattern_r/ctrl_cam_ab/ctrl_ddr_en/ctrl_push_en/ctrl_push_src`（L154-167 端口、L272-278 复位、L310-317 写入）。
++- 例化：`pcie_ep_engine.v` L389-394 `ep_bar_win #(…) u_ep_bar_win (…)`；域注释 `ph1p_pcie_ep_top.v` L254。
++- 注意：registers-plan 引用的 `ep_bar_win.v:350` 等行号与本工作树版本不一致（本工作树 MAGIC 读 case 在 L435）；**以偏移/期望值为权威**，行号只作定位线索。
+diff --git a/debug-spec/enable-state.md b/debug-spec/enable-state.md
+new file mode 100644
+--- /dev/null
++++ b/debug-spec/enable-state.md
+@@ -0,0 +1,46 @@
++# enable-state.md — CTRL(0x44) 复位默认与调试版最小使能（冻结，T11.runB-debug-spec）
++
++- 依据：`rtl/ep_side/img/ep_bar_win.v` 只读复核（2026-10-18 工作树；行号 = 该版本）；使能策略按 `fpga-design-guide.md` §3；CTRL 位义与规则 R02（`expected_rules.json`）。
++- 本文件只冻结“默认值与最小 debug-only 改动草案”，不实现、不构建。
++
++## 1. RTL 复位默认（ep_bar_win.v L264-293，冻结引用）
++
++| 位/信号 | 复位值 | 含义 | 本轮读回影响 |
++|---|---|---|---|
++| ctrl_enable（bit0） | 0 | 总使能 | **默认关**；未开则采集/写存链不活 |
++| ctrl_trigger（bit1） | 0 | 单帧触发（下一拍自清） | 保持 0（测试图源用） |
++| ctrl_pattern_r（bit3:2） | 0 | pattern；bit2 在顶层兼“传感器重触发”（电平变→XCLR 134 ms→重写寄存器表，头部 L26-28） | 保持 0（避免重触发抖动） |
++| bit4 | 0 | 保留，读 0 | R02 mask `0xFFFFFE10` 必须命中 |
++| ctrl_ddr_en（bit5） | 0 | 每帧自动搬 DDR3 | **默认关**；写者 seq/base/len 不会更新 |
++| ctrl_push_en（bit6） | 0 | 推帧（主机面外发） | **必须保持 0** |
++| ctrl_push_src（bit7） | 0 | 推帧源 | **必须保持 0** |
++| ctrl_cam_ab（bit8） | 0 | 0=A 路（相机单 A） | 保持 0 |
++| cam_tap_cfg / cam_tap_b_cfg | `7'b1_101110`（manual_en=1, tap=46） | A/B 路 IDELAY | 不变（沿用既有默认） |
++| tx_cap_bytes / tx_session_id | 0 | 安全扩展授权 | 保持 0（不 arm TX） |
++| tx_cmd_arm/ack/cancel | 0 | 单拍命令 | 保持 0 |
++| push_dst/db、tx_ack_*、cfg_reject | 0 | 主机面 staging | 保持 0 |
++| ptr / scratch / last_wr | 0 | 调试指针/回环 | 不变 |
++
++## 2. 结论与最小 debug-only 改动草案
++
++**结论：默认未开采集/写存**（`ctrl_enable=0`、`ctrl_ddr_en=0`）。若板上维持默认，读回将看到 0x0A0=0、0x0A4=0、0x0AC=0，无法取得写者基线 → 按 guide §3 走“最小 debug-only 默认开启”。
++
++- 允许范围：**只动采集/DDR 使能域**；**禁止** TX arm、push/doorbell、任何面向主机外发的开启（bit1/2/3/6/7/8 与 TX 域全部保持 0）。
++- 草案（P1 实施前先只读复核 `img_frame_src`/顶层是否确以 `ctrl_enable`/`ctrl_ddr_en` 门控；是→实施；否→不改默认并记 candidate diff 理由）：
++
++```
++// 仅 debug 构建入口置 1；生产 00_all 保持 0（默认行为不变）
++localparam DEBUG_DEFAULT_EN = 1'b1;   // 命名 P1 自定，须记 candidate diff
++...
++// 复位分支仅 2 行（其余位保持 §1 的 0）：
++ctrl_enable <= DEBUG_DEFAULT_EN;
++ctrl_ddr_en <= DEBUG_DEFAULT_EN;
++```
++
++- 等效替代（若更小改动）：顶层 wrapper 复位后单拍写 CTRL 等效值（bit0+bit5）。**等效约束**：效果在复位后立即稳定；不引入主机面动作；同样记 candidate diff。
++- 生产与旧候选不受影响：改动仅存在于 debug 构建入口（guide §4：不得改动 `00_all` 默认行为，保证旧 bit `e81d353b…` 可复现）。
++
++## 3. 板上核验（P3 用）
++
++- 字库 word8（BAR0 0x160，见 `probe-map.md` §2）= CTRL 读回字；用于核验使能实际值。
++- 判据：若已实施 debug-only 默认开启 → 期望 bit0=1、bit5=1、bit4=0、bit6=0、bit7=0、[31:9]=0（R02 mask）；若未实施（P1 复核认定无需改）→ 按实际记录并在报告注明依据，不按“应为 1”判故障。
+diff --git a/debug-spec/readback-criteria.md b/debug-spec/readback-criteria.md
+new file mode 100644
+--- /dev/null
++++ b/debug-spec/readback-criteria.md
+@@ -0,0 +1,53 @@
++# readback-criteria.md — 读回判据绑定与记录模板（冻结，T11.runB-debug-spec）
++
++- 权威来源：`upstream/ph1p100-pcie-ep-fpga/tools/bringup/registers-plan.md`（表 + §5 hand-off 规则）与 `expected_rules.json`（R 规则）；阈值 = 本 run `dev-plan.md` §3.4/§5。**本文件不改判据、不新造语义**。
++- 适用范围：P3 上板读回判定；P1/P2 只复用其中的字表/映射，不产生板测结论。
++- G 层影响（冻结）：本包纯文档 = **G0**；G1/G2/G3 **not_run**（不适用理由：不涉 RTL/构建/硬件）。本判据在 P3 前不构成任何 PASS。旧 bit `e81d353b…2b9a` 与新 debug 位流**并列不混拼**：回退 = 重下旧 bit；不得以旧证据充新候选。
++
++## 1. 规则绑定（A 组必读字 + 本轮相关规则）
++
++| 偏移 | 名称 | 期望/解码 | 规则 id |
++|---|---|---|---|
++| 0x040 | MAGIC | == `0x50434946`（不符 → 停） | R01_MAGIC |
++| 0x118 | EXT_MAGIC | == `0x31414B52`；`0xDEADBEEF` = 扩展缺失 → 停 | R03_EXT_MAGIC |
++| 0x11C | EXT_VERSION | == `0x00010000` | R04_EXT_VERSION |
++| 0x0A0 | DDR_SEQ_A | 单调不减；采集活时样本间增长（R05/R07/R16 的 when 前提） | —（precondition） |
++| 0x0A4 | DDR_BASE_A | seq>0 时非零，且 **128 B 对齐**（低 7 位=0） | R16 / R07 |
++| 0x0AC | DDR_LEN_A | seq>0 时 == **2,592,768** | R05 |
++| 0x120 | CSI_DIAG_A | 原文 + 解码 `{good[31:24], bad[23:16], hdr_err[15:8], crc_err[7:0]}`（人工诊断，无规则） | — |
++| 0x124 | CSI_DIAG_A2 | `{last_lines[31:16], last_wc[15:0]}`（人工诊断） | — |
++| 0x044 | CTRL | bit4=0 且 [31:9]=0（mask `0xFFFFFE10`）；调试版另行核验 bit0/bit5/bit6/bit7（`enable-state.md` §3） | R02_CTRL_RESERVED |
++| 0x0A8 / 0x0E8 | DDR_STATUS_A/B | mask `0x0000FFE0` == 0 | R09 / R10 |
++| 0x0C0 / 0x0C4 / 0x0CC | PUSH_DONE/STATUS/TLP_CNT | 见 R11/R15 | R11 / R15 |
++| 0x0C8 | PUSH_ERR | 0..4 | R12 |
++| 0x0F4 | CAM_DROP_A3 | mask `0xFFFFFFC0` == 0 | R14 |
++| 0x108 | TX_CMD | 读恒 0 | R17 |
++
++- 未列 R06/R08/R13 属 B 路/扩展窗口，非本轮 Tier-1；如现场读回可附注，不升级为门槛。
++- 字段字节序 = **左高右低**（与 RTL 拼接一致，registers-plan Notes）；解码前以 `ep_bar_win.v` header 复核（P1/P3 各一次）。
++- 偏移为 **dword 偏移**，不传字节地址。
++
++## 2. 板测判定（Tier 划分，与 dev-plan §3.4/§5 一致）
++
++- **Tier-1（硬门槛）**：0x040=`0x50434946`、0x118=`0x31414B52`、0x11C=`0x00010000` **三字全中** + ≥1 组计数可复读（两样本一致或可解释）。任一不符 = Tier-1 FAIL。
++- **Tier-2（基线/采集）**：0x0A0 单调且 ≥1；0x0A4 非零且 128 B 对齐；0x0AC=`2,592,768`；CSI 解码原始值 + good 增长（相机活，单 A）。
++- Tier-1 过而 Tier-2 为 0/静止：**记录原值**并按“使能默认/采集状态”（`enable-state.md`）归因，交原规划判定；不得改判据求 PASS，不得以目视替代读数。
++- 采样要求：**≥2 样本、间隔 ≥10 s**；每样本 9 字原文（十六进制原样）。
++- 非原子告示：同一 CWC 实例内信号视为同时；跨实例/跨时刻分开记录，禁止合并成一次“原子快照”（guide §5/§6）。
++- 跨域说明：0x120/0x124 经两级同步进入 `tl_clk_user`，跨域瞬间可能差一拍（ep_bar_win.v L123-124）—— 属可解释差异，须原文记录。
++- 不适用/禁止（本轮）：PCIe/BAR0 主机读（用户已排除）；`JTAG_REG_ACCESS` 盲试（A0 结论：无文档语义，`cwc-flow.md` §1）；UART（架构不可用）；Flash/efuse/SPI/SVF（禁止，命令审计零命中）。
++
++## 3. 记录模板（复用 `run_record.schema.json` 字段 + 已声明扩展）
++
++- 每条记录字段（字段名沿用 schema）：
++  - `schema_version`=1；`run_id`=`20261018-1631_runA_fpga_side_readchannel`；
++  - `timestamp`（`YYYY-MM-DDThh:mm:ss` + 时区，pattern 兼容 schema）；
++  - `operator`（真实操作者）；
++  - `channel`：**扩展值**。原 enum（offline-register-dump / bw-jtag-session-log / pcie-host-bar0 / uart-command / synthetic）无 CWC 值，本 run 内声明扩展值 **`chipwatcher-jtag`** 并保留兼容字段（guide §6 允许“扩展须在 run 内声明”）；如后续要求严格原 schema，可另存并行“原文表”并在 notes 注明映射。
++  - `tool`={name:"TD ChipWatcher", version:"2026.2"}；`input`={path:`compiled.cwc`, sha256}；
++  - `readings[]`：每字 `{offset, offset_hex, name, value, value_hex, raw:"CWC 原文"}`（offset 为十进制 dword，offset_hex 形如 `0x040`→schema 允许 `0x[0-9A-F]{3}`）；
++  - `verdicts[]`：`{rule_id, offset, name, verdict(pass|fail|blocked|not_applicable), detail, source}`；
++  - `summary`（pass/fail/blocked/not_applicable 计数 + verdict）；`notes[]`。
++- 每条读数必须绑定：通道（CWC 实例名）、bit SHA256 + BID、命令与退出码、输入哈希；目视现象不得单独作判据（guide §6）。
++- 失败保留：Idle/Triggered=0/无波形等界面原文原样入 `notes`，不判硬件故障（guide §5）。
++- 板测记录必须含：操作者、时间（含时区）、bit/DB 身份、命令与退出码、读数原文、恢复/回退记录（guide §6）。
+diff --git a/debug-spec/board-runbook.md b/debug-spec/board-runbook.md
+new file mode 100644
+--- /dev/null
++++ b/debug-spec/board-runbook.md
+@@ -0,0 +1,60 @@
++# board-runbook.md — 上板下载/读回操作清单 + 读数记录表（P3 用，冻结，T11.runB-debug-spec）
++
++- 触发：P3（`T11.runB-board-readback`）派发 + 用户在场 + P2 `hardware-ready.md` 齐备；相机已接（单 A）。
++- 预算：读回 15–30 min（上板窗口 ≤35 min）；单次下载 ≤5 min。执行者：开发子会话 + 用户（物理操作）。
++- 安全：**仅 SRAM**（`-mode jtag`）；**绝不写 Flash/efuse/SPI**；不改线/电源/相机；物理断电由用户执行；命令审计零命中（§5）。
++- GUI 步骤若无法脚本化，由用户按本清单操作并原样回报；执行者记录在案（**不预设** CLI `rdbk_cwc_data` 可行）。
++
++## 0. 前置检查（下载前）
++
++1. **bit/CWC 配对**：使用 P2 manifest 指定的 debug `compiled.bit`（或 best_result bit）与同源 `compiled.cwc`；两者 SHA256 记录；bit 先复核 SHA 与 P2 manifest 一致（不一致 → 停）。
++2. **ASCII 暂存**：把 bit 复制到纯 ASCII 路径（例：`C:\Users\czz\AppData\Local\Temp\opencode\runa_b2\ph1p_pcie_integration_debug.bit`；中文路径 → PRG-8000）；脚本一律**相对路径**调用（先 `Push-Location` 到脚本目录），参数经**环境变量**传入（B1 口径，channel-notes §3.1）。
++3. **旧 bit 原位保留**（回退用）：记录旧 bit SHA256（`E81D353B…2B9A` 完整值从 P2/P3 manifest 引用；不移动、不覆盖）。
++
++## 1. SRAM 下载（bw；只写 SRAM）
++
++```
++hwserver.exe -r -s 5555 -f 12 -v -w 5556 -i 0          (先启动并保持；D:/downlaod/bin/hwserver.exe)
++connect_cable -host_name 127.0.0.1:5555 -open
++read_device_id                                          (期望 PH1P100)
++download -bit <ASCII_PATH> -mode jtag -spd 7 -cable 0
++connect_cable -close
++```
++
++- 成功判据：`PRG-2014 : Chip validation success: PH1P100` + 进度 100% + `download` rc=0 + 时长 ≈28–40 s；旁路 `usb_open() failed` 提示**不单独判败**（bw 自动拉起的第二实例提示）。
++- 记录：操作者、时间（含时区）、命令、rc、时长、日志路径（`<脚本cwd>\log\bw_*.log`）、bit SHA。
++- 命中 flash 命令或未知提示 → **立即停止**，记录原文，交原规划。
++
++## 2. CWC 读回（≥2 样本，间隔 ≥10 s）
++
++1. 打开 TD（2026.2）→ ChipWatcher → 选择与下载 bit **同源**的 `compiled.cwc` → Watch。
++2. 确认 Bit File 指向同目录配对 bit；如 GUI 要求在本窗口下载：允许，但必须记录（同一 `compiled.bit`、SHA 复核，不得换成其他 bit）。
++3. Add Signals：`probe-map.md` §3 的 9 个 dbg_bank 字；触发列表留空；Instant Trigger 一次。
++4. 从波形/Value 列表读取 9 字**原文**（十六进制原样）→ 填 §4 记录表；间隔 ≥10 s 再采第 2 个样本。
++5. **相机采集统计**（相机已接单 A）：同一读法在 ≥10 s 间隔下复读 0x120/0x124（+B 组按条件），记录原文与时间。
++6. 失败保留：Idle/Triggered=0/无波形 → 保留界面原文入记录，**不判硬件故障**；可按限次（≤2）重试 Instant Trigger；仍无 → 记录并交原规划 blocked（不盲改、不盲试命令）。
++- 非原子告示：同实例内信号视为同时；跨实例/跨时刻分开记录，禁止合并为“原子快照”。
++
++## 3. 异常与回退
++
++- **DDR 校准异常**（黑屏四灯齐报、**D37 灭**）→ **用户物理断电 10 s** → 上电 → 重下同 bit（≤5 min/次）；记录时间与结果。
++- 正常结束：保持 SRAM 调试位流（掉电即失）；不写 Flash。
++- **回退**（需恢复原状时）：重下旧 bit `E81D353B…2B9A`（SRAM，≈30–40 s；旧文件原位保留）；记录命令/rc/时长/SHA。
++- 任何一步失败：保留界面与日志原文，停止修改，交原规划。
++
++## 4. 读数记录表（每样本一行；原文十六进制）
++
++| # | 时间(时区) | 操作者 | CWC 实例 | 0x040 | 0x118 | 0x11C | 0x0A0 | 0x0A4 | 0x0AC | 0x120 | 0x124 | 0x044 | 备注 |
++|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
++| 1 |  |  |  |  |  |  |  |  |  |  |  |  |  |
++| 2 |  |  |  |  |  |  |  |  |  |  |  |  |  |
++
++附注行：下载 rc / 时长 / PRG-2014；bit SHA256；`compiled.cwc` SHA256；CWC 实例名；日志路径；失败界面原文。
++
++## 5. 审计清单（P3 收尾逐条勾选）
++
++- [ ] 命令审计：零 flash/efuse/SPI/svf（bw 会话日志逐条核对）
++- [ ] 未改线/电源/相机；物理操作均由用户执行并记录
++- [ ] bit/CWC 配对与 SHA 记录完整；每条读数绑定通道/时间/操作者/输入哈希
++- [ ] ≥2 样本、间隔 ≥10 s；非原子告示在案
++- [ ] 回退路径已记录（或已执行重下旧 bit）

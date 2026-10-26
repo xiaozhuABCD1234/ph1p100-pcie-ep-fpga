@@ -1,0 +1,43 @@
+--- D:\fpga\ph1p100\workflow\runs\20261024-221529_fpga-sim-integration-recovery\inputs\production-raw\rtl\ep_side\cam\ui_cfg_imx415.v
++++ D:\fpga\ph1p100\workflow\runs\20261024-221529_fpga-sim-integration-recovery\T08.sync-production-sim\candidate\rtl\ep_side\cam\ui_cfg_imx415.v
+@@ -33,6 +33,7 @@
+ 
+ module ui_cfg_imx415#
+ (
++parameter SYNC_ENABLE = 1'b0,
+ parameter	 CLK_DIV  = 16'd999
+ )
+ (
+@@ -47,9 +48,25 @@
+ output reg              O_ae_cfg_done,
+ output wire             O_bus_error,
+ output wire [8:0]       O_dbg_idx,
+-output wire             O_dbg_busy
++output wire             O_dbg_busy,
++input wire I_sync_req,
++input wire [15:0] I_sync_addr,
++input wire [7:0] I_sync_data,
++output wire O_sync_ready, O_sync_rsp_valid, O_sync_rsp_ok
+ );	
+ 
++generate if (SYNC_ENABLE) begin : g_sync
++ sync_i2c_config #(.CLK_DIV(CLK_DIV)) transport(
++ .clk(I_clk),.rst_n(I_rst_n),.cam_mode(I_cam_mode),
++ .scl(O_cam_scl),.sda(IO_cam_sda),.cfg_done(O_cfg_done),
++ .bus_error(O_bus_error),.dbg_idx(O_dbg_idx),.dbg_busy(O_dbg_busy),
++ .req_valid(I_sync_req),.req_addr(I_sync_addr),.req_data(I_sync_data),
++ .req_ready(O_sync_ready),.rsp_valid(O_sync_rsp_valid),.rsp_ok(O_sync_rsp_ok));
++ always @* O_ae_cfg_done = 1'b1;
++end else begin : g_legacy
++ assign O_sync_ready=1'b0;
++ assign O_sync_rsp_valid=1'b0;
++ assign O_sync_rsp_ok=1'b0;
+ localparam CAM_ID = 8'h34;		//器件地址 
+ 
+ wire 		ic_busy			; 	//I2C控制器忙信号 
+@@ -248,4 +265,5 @@
+ 		default:REG_DATA_AE = {16'h0000, 8'h00};
+    endcase
+ 
++end endgenerate
+ endmodule

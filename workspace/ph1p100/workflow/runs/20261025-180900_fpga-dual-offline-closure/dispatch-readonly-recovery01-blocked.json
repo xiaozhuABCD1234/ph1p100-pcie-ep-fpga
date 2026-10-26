@@ -1,0 +1,85 @@
+{
+  "run_id": "20261025-180900_fpga-dual-offline-closure",
+  "project_root": "D:/fpga/ph1p100",
+  "output_dir": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure",
+  "task_ids": [
+    "T08.dual-local-closure",
+    "T10.dual-aplus-scheduler"
+  ],
+  "batch_size": 1,
+  "status": "blocked",
+  "needs_user_input": true,
+  "input_paths": [
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\user-feedback-readonly-recovery01.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\readonly-recovery01\\audit.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\readonly-recovery01\\native-role-snapshot.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\readonly-recovery01\\process-snapshot.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\readonly-recovery01\\decision.md"
+  ],
+  "write_scope": [],
+  "next_action": {
+    "operation": "relay_to_user",
+    "user_summary_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\readonly-recovery01\\user-summary.md",
+    "question_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\readonly-recovery01\\question-static-closeout01.md",
+    "do_not_continue_empty_wait": true
+  },
+  "question_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\readonly-recovery01\\question-static-closeout01.md",
+  "user_summary_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\readonly-recovery01\\user-summary.md",
+  "problem": {
+    "problem_id": "20261025-180900_fpga-dual-offline-closure:LIMIT_REACHED:post-interruption-static-freeze",
+    "reason_code": "LIMIT_REACHED",
+    "new_information": true,
+    "evidence_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\readonly-recovery01\\audit.json",
+    "requested_action": "Authorize one static-only closeout window per package, at most10 actual calls/15min each; preserve all old counters/deadlines, no RTL/TB edits and no simulation/compile/build/download. Try original IDs for concrete closeout; file recovery only after an actual native ID failure.",
+    "resume_input_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\readonly-recovery01\\decision.md"
+  },
+  "actual_audit": {
+    "role_snapshot_calls": 1,
+    "original_roles_listed_live": false,
+    "actual_native_ID_failure_observed": false,
+    "run_process_snapshot_calls": 1,
+    "matched_run_processes": 0,
+    "new_simulations": 0,
+    "new_compiles": 0,
+    "new_hardware_actions": 0,
+    "new_role_or_followup_calls": 0
+  },
+  "preserved": {
+    "T08_original_developer": "/root/fpga_dev_dual_local_180900",
+    "T08_original_tester": "/root/fpga_tester_dual_local_180900",
+    "T08_r0_integrated": "FAIL",
+    "T08_r1_developer_deadline": "2026-10-25T21:02:49.045073+08:00",
+    "T08_r1_manifest_exists": false,
+    "T08_r1_compile_receipts": 2,
+    "T08_r1_case_receipts": 13,
+    "T08_r0_developer_historical_conservative_calls": 101,
+    "T08_r0_historical_call_overrun_disclosed": true,
+    "T08_r1_actual_implementation_repair_started": 1,
+    "T08_r1_independent_acceptance_started": false,
+    "T10_original_developer": "/root/fpga_dev_dual_scheduler_180900",
+    "T10_developer_deadline": "2026-10-25T19:55:19.126669+08:00",
+    "T10_faults_attempts_used": 3,
+    "T10_faults_attempt_limit": 3,
+    "T10_compile_receipts_total": 4,
+    "T10_compile_limit": 4,
+    "T10_case_receipts_total": 11,
+    "T10_case_limit": 20,
+    "T10_manifest_r0_drift_files": 8,
+    "T10_resume_manifest_exists": false,
+    "T10_independent_acceptance_started": false,
+    "remaining_unknown_call_counts": "Must be disclosed/recovered, never set to0 or silently reset"
+  },
+  "static_closeout_proposal_only": {
+    "authorized_now": false,
+    "per_package_calls_max": 10,
+    "per_package_minutes_max": 15,
+    "new_simulation_compile_build_download_budget": 0,
+    "old_faults_limit_unchanged": 3,
+    "no_preemptive_replacement": true
+  },
+  "after_user_answer": {
+    "operation": "return_to_planner",
+    "target": "/root/fpga_plan_dual_offline",
+    "input": "Exact user answer saved to a new feedback file; no automatic scope or budget interpretation."
+  }
+}

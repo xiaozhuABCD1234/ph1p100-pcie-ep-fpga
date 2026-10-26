@@ -1,0 +1,592 @@
+[
+  {
+    "case": 5,
+    "name": "pending-reset",
+    "simulation": {
+      "exit_code": 0,
+      "timeout": false,
+      "owned_pid": 41916,
+      "elapsed_seconds": 44.17926025390625,
+      "log": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T08.sync-production-sim\\local\\pending-reset\\vsim.log",
+      "command": [
+        "D:/intelFPGA/18.1/modelsim_ase/win32aloem/vsim.exe",
+        "-c",
+        "-modelsimini",
+        "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T08.sync-production-sim/local/build2/modelsim.ini",
+        "-lib",
+        "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T08.sync-production-sim/local/build2/work",
+        "-voptargs=+acc",
+        "tb_production_sync",
+        "+CASE=5",
+        "-do",
+        "onerror {quit -code 2}; onbreak {quit -code 3}; run -all; quit -code 0"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T08.sync-production-sim\\local\\pending-reset",
+      "sim_pass": true
+    },
+    "oracle": {
+      "pass": true,
+      "mismatch": 0,
+      "case": 5,
+      "pin_transactions": 818,
+      "accepted_requests": 15,
+      "responses": 14,
+      "frames": [
+        {
+          "camera": 0,
+          "seq": 1,
+          "source_frame": 10,
+          "base": "00100000",
+          "bytes": 4096,
+          "crc32": "11ba3520"
+        },
+        {
+          "camera": 1,
+          "seq": 1,
+          "source_frame": 10,
+          "base": "01100000",
+          "bytes": 4096,
+          "crc32": "46b7037e"
+        },
+        {
+          "camera": 0,
+          "seq": 2,
+          "source_frame": 11,
+          "base": "00900000",
+          "bytes": 4096,
+          "crc32": "f737ee9f"
+        },
+        {
+          "camera": 1,
+          "seq": 2,
+          "source_frame": 11,
+          "base": "01900000",
+          "bytes": 4096,
+          "crc32": "bb72d640"
+        },
+        {
+          "camera": 0,
+          "seq": 3,
+          "source_frame": 12,
+          "base": "00100000",
+          "bytes": 4096,
+          "crc32": "35ac7cff"
+        },
+        {
+          "camera": 1,
+          "seq": 3,
+          "source_frame": 12,
+          "base": "01100000",
+          "bytes": 4096,
+          "crc32": "08e1b5d1"
+        }
+      ]
+    },
+    "input_build": "build2"
+  },
+  {
+    "case": 0,
+    "name": "clean",
+    "simulation": {
+      "exit_code": 0,
+      "timeout": false,
+      "owned_pid": 17476,
+      "elapsed_seconds": 28.43447232246399,
+      "log": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T08.sync-production-sim\\local\\final\\clean\\vsim.log",
+      "command": [
+        "D:/intelFPGA/18.1/modelsim_ase/win32aloem/vsim.exe",
+        "-c",
+        "-modelsimini",
+        "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T08.sync-production-sim/local/build2/modelsim.ini",
+        "-lib",
+        "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T08.sync-production-sim/local/build2/work",
+        "-voptargs=+acc",
+        "tb_production_sync",
+        "+CASE=0",
+        "-do",
+        "onerror {quit -code 2}; onbreak {quit -code 3}; run -all; quit -code 0"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T08.sync-production-sim\\local\\final\\clean",
+      "sim_pass": true
+    },
+    "oracle": {
+      "pass": true,
+      "mismatch": 0,
+      "case": 0,
+      "pin_transactions": 416,
+      "accepted_requests": 14,
+      "responses": 14,
+      "frames": [
+        {
+          "camera": 0,
+          "seq": 1,
+          "source_frame": 10,
+          "base": "00100000",
+          "bytes": 4096,
+          "crc32": "11ba3520"
+        },
+        {
+          "camera": 1,
+          "seq": 1,
+          "source_frame": 10,
+          "base": "01100000",
+          "bytes": 4096,
+          "crc32": "46b7037e"
+        },
+        {
+          "camera": 0,
+          "seq": 2,
+          "source_frame": 11,
+          "base": "00900000",
+          "bytes": 4096,
+          "crc32": "f737ee9f"
+        },
+        {
+          "camera": 1,
+          "seq": 2,
+          "source_frame": 11,
+          "base": "01900000",
+          "bytes": 4096,
+          "crc32": "bb72d640"
+        },
+        {
+          "camera": 0,
+          "seq": 3,
+          "source_frame": 12,
+          "base": "00100000",
+          "bytes": 4096,
+          "crc32": "35ac7cff"
+        },
+        {
+          "camera": 1,
+          "seq": 3,
+          "source_frame": 12,
+          "base": "01100000",
+          "bytes": 4096,
+          "crc32": "08e1b5d1"
+        }
+      ]
+    },
+    "input_build": "build2"
+  },
+  {
+    "case": 1,
+    "name": "nack",
+    "simulation": {
+      "exit_code": 0,
+      "timeout": false,
+      "owned_pid": 63892,
+      "elapsed_seconds": 30.094123125076294,
+      "log": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T08.sync-production-sim\\local\\final\\nack\\vsim.log",
+      "command": [
+        "D:/intelFPGA/18.1/modelsim_ase/win32aloem/vsim.exe",
+        "-c",
+        "-modelsimini",
+        "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T08.sync-production-sim/local/build2/modelsim.ini",
+        "-lib",
+        "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T08.sync-production-sim/local/build2/work",
+        "-voptargs=+acc",
+        "tb_production_sync",
+        "+CASE=1",
+        "-do",
+        "onerror {quit -code 2}; onbreak {quit -code 3}; run -all; quit -code 0"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T08.sync-production-sim\\local\\final\\nack",
+      "sim_pass": true
+    },
+    "oracle": {
+      "pass": true,
+      "mismatch": 0,
+      "case": 1,
+      "pin_transactions": 429,
+      "accepted_requests": 27,
+      "responses": 27,
+      "frames": [
+        {
+          "camera": 0,
+          "seq": 1,
+          "source_frame": 10,
+          "base": "00100000",
+          "bytes": 4096,
+          "crc32": "11ba3520"
+        },
+        {
+          "camera": 1,
+          "seq": 1,
+          "source_frame": 10,
+          "base": "01100000",
+          "bytes": 4096,
+          "crc32": "46b7037e"
+        },
+        {
+          "camera": 1,
+          "seq": 2,
+          "source_frame": 11,
+          "base": "01900000",
+          "bytes": 4096,
+          "crc32": "bb72d640"
+        },
+        {
+          "camera": 0,
+          "seq": 2,
+          "source_frame": 11,
+          "base": "00900000",
+          "bytes": 4096,
+          "crc32": "f737ee9f"
+        },
+        {
+          "camera": 0,
+          "seq": 3,
+          "source_frame": 12,
+          "base": "00100000",
+          "bytes": 4096,
+          "crc32": "35ac7cff"
+        },
+        {
+          "camera": 1,
+          "seq": 3,
+          "source_frame": 12,
+          "base": "01100000",
+          "bytes": 4096,
+          "crc32": "08e1b5d1"
+        }
+      ]
+    },
+    "input_build": "build2"
+  },
+  {
+    "case": 2,
+    "name": "missing",
+    "simulation": {
+      "exit_code": 0,
+      "timeout": false,
+      "owned_pid": 54520,
+      "elapsed_seconds": 38.07628059387207,
+      "log": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T08.sync-production-sim\\local\\final\\missing\\vsim.log",
+      "command": [
+        "D:/intelFPGA/18.1/modelsim_ase/win32aloem/vsim.exe",
+        "-c",
+        "-modelsimini",
+        "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T08.sync-production-sim/local/build2/modelsim.ini",
+        "-lib",
+        "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T08.sync-production-sim/local/build2/work",
+        "-voptargs=+acc",
+        "tb_production_sync",
+        "+CASE=2",
+        "-do",
+        "onerror {quit -code 2}; onbreak {quit -code 3}; run -all; quit -code 0"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T08.sync-production-sim\\local\\final\\missing",
+      "sim_pass": true
+    },
+    "oracle": {
+      "pass": true,
+      "mismatch": 0,
+      "case": 2,
+      "pin_transactions": 436,
+      "accepted_requests": 34,
+      "responses": 34,
+      "frames": [
+        {
+          "camera": 0,
+          "seq": 1,
+          "source_frame": 10,
+          "base": "00900000",
+          "bytes": 4096,
+          "crc32": "11ba3520"
+        },
+        {
+          "camera": 1,
+          "seq": 1,
+          "source_frame": 10,
+          "base": "01100000",
+          "bytes": 4096,
+          "crc32": "46b7037e"
+        },
+        {
+          "camera": 1,
+          "seq": 2,
+          "source_frame": 11,
+          "base": "01900000",
+          "bytes": 4096,
+          "crc32": "bb72d640"
+        },
+        {
+          "camera": 0,
+          "seq": 2,
+          "source_frame": 11,
+          "base": "00100000",
+          "bytes": 4096,
+          "crc32": "f737ee9f"
+        },
+        {
+          "camera": 0,
+          "seq": 3,
+          "source_frame": 12,
+          "base": "00900000",
+          "bytes": 4096,
+          "crc32": "35ac7cff"
+        },
+        {
+          "camera": 1,
+          "seq": 3,
+          "source_frame": 12,
+          "base": "01100000",
+          "bytes": 4096,
+          "crc32": "08e1b5d1"
+        }
+      ]
+    },
+    "input_build": "build2"
+  },
+  {
+    "case": 3,
+    "name": "global-reset",
+    "simulation": {
+      "exit_code": 0,
+      "timeout": false,
+      "owned_pid": 47824,
+      "elapsed_seconds": 55.08591866493225,
+      "log": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T08.sync-production-sim\\local\\final\\global-reset\\vsim.log",
+      "command": [
+        "D:/intelFPGA/18.1/modelsim_ase/win32aloem/vsim.exe",
+        "-c",
+        "-modelsimini",
+        "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T08.sync-production-sim/local/build2/modelsim.ini",
+        "-lib",
+        "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T08.sync-production-sim/local/build2/work",
+        "-voptargs=+acc",
+        "tb_production_sync",
+        "+CASE=3",
+        "-do",
+        "onerror {quit -code 2}; onbreak {quit -code 3}; run -all; quit -code 0"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T08.sync-production-sim\\local\\final\\global-reset",
+      "sim_pass": true
+    },
+    "oracle": {
+      "pass": true,
+      "mismatch": 0,
+      "case": 3,
+      "pin_transactions": 832,
+      "accepted_requests": 28,
+      "responses": 28,
+      "frames": [
+        {
+          "camera": 0,
+          "seq": 1,
+          "source_frame": 10,
+          "base": "00100000",
+          "bytes": 4096,
+          "crc32": "11ba3520"
+        },
+        {
+          "camera": 1,
+          "seq": 1,
+          "source_frame": 10,
+          "base": "01100000",
+          "bytes": 4096,
+          "crc32": "46b7037e"
+        },
+        {
+          "camera": 0,
+          "seq": 2,
+          "source_frame": 11,
+          "base": "00900000",
+          "bytes": 4096,
+          "crc32": "f737ee9f"
+        },
+        {
+          "camera": 1,
+          "seq": 2,
+          "source_frame": 11,
+          "base": "01900000",
+          "bytes": 4096,
+          "crc32": "bb72d640"
+        },
+        {
+          "camera": 1,
+          "seq": 3,
+          "source_frame": 12,
+          "base": "01100000",
+          "bytes": 4096,
+          "crc32": "08e1b5d1"
+        },
+        {
+          "camera": 0,
+          "seq": 3,
+          "source_frame": 12,
+          "base": "00100000",
+          "bytes": 4096,
+          "crc32": "35ac7cff"
+        }
+      ]
+    },
+    "input_build": "build2"
+  },
+  {
+    "case": 4,
+    "name": "restart",
+    "simulation": {
+      "exit_code": 0,
+      "timeout": false,
+      "owned_pid": 67280,
+      "elapsed_seconds": 38.3632116317749,
+      "log": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T08.sync-production-sim\\local\\final\\restart\\vsim.log",
+      "command": [
+        "D:/intelFPGA/18.1/modelsim_ase/win32aloem/vsim.exe",
+        "-c",
+        "-modelsimini",
+        "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T08.sync-production-sim/local/build2/modelsim.ini",
+        "-lib",
+        "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T08.sync-production-sim/local/build2/work",
+        "-voptargs=+acc",
+        "tb_production_sync",
+        "+CASE=4",
+        "-do",
+        "onerror {quit -code 2}; onbreak {quit -code 3}; run -all; quit -code 0"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T08.sync-production-sim\\local\\final\\restart",
+      "sim_pass": true
+    },
+    "oracle": {
+      "pass": true,
+      "mismatch": 0,
+      "case": 4,
+      "pin_transactions": 436,
+      "accepted_requests": 34,
+      "responses": 34,
+      "frames": [
+        {
+          "camera": 0,
+          "seq": 1,
+          "source_frame": 10,
+          "base": "00100000",
+          "bytes": 4096,
+          "crc32": "11ba3520"
+        },
+        {
+          "camera": 1,
+          "seq": 1,
+          "source_frame": 10,
+          "base": "01100000",
+          "bytes": 4096,
+          "crc32": "46b7037e"
+        },
+        {
+          "camera": 0,
+          "seq": 2,
+          "source_frame": 11,
+          "base": "00900000",
+          "bytes": 4096,
+          "crc32": "f737ee9f"
+        },
+        {
+          "camera": 1,
+          "seq": 2,
+          "source_frame": 11,
+          "base": "01900000",
+          "bytes": 4096,
+          "crc32": "bb72d640"
+        },
+        {
+          "camera": 0,
+          "seq": 3,
+          "source_frame": 12,
+          "base": "00100000",
+          "bytes": 4096,
+          "crc32": "35ac7cff"
+        },
+        {
+          "camera": 1,
+          "seq": 3,
+          "source_frame": 12,
+          "base": "01100000",
+          "bytes": 4096,
+          "crc32": "08e1b5d1"
+        },
+        {
+          "camera": 0,
+          "seq": 4,
+          "source_frame": 10,
+          "base": "00900000",
+          "bytes": 4096,
+          "crc32": "11ba3520"
+        },
+        {
+          "camera": 1,
+          "seq": 4,
+          "source_frame": 10,
+          "base": "01900000",
+          "bytes": 4096,
+          "crc32": "46b7037e"
+        },
+        {
+          "camera": 1,
+          "seq": 5,
+          "source_frame": 11,
+          "base": "01100000",
+          "bytes": 4096,
+          "crc32": "bb72d640"
+        },
+        {
+          "camera": 0,
+          "seq": 5,
+          "source_frame": 11,
+          "base": "00100000",
+          "bytes": 4096,
+          "crc32": "f737ee9f"
+        },
+        {
+          "camera": 0,
+          "seq": 6,
+          "source_frame": 12,
+          "base": "00900000",
+          "bytes": 4096,
+          "crc32": "35ac7cff"
+        },
+        {
+          "camera": 1,
+          "seq": 6,
+          "source_frame": 12,
+          "base": "01900000",
+          "bytes": 4096,
+          "crc32": "08e1b5d1"
+        }
+      ]
+    },
+    "input_build": "build2"
+  },
+  {
+    "case": 0,
+    "name": "role-mutation",
+    "simulation": {
+      "exit_code": 0,
+      "timeout": false,
+      "owned_pid": 51732,
+      "elapsed_seconds": 28.572489976882935,
+      "log": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T08.sync-production-sim\\local\\final\\role-mutation\\vsim.log",
+      "command": [
+        "D:/intelFPGA/18.1/modelsim_ase/win32aloem/vsim.exe",
+        "-c",
+        "-modelsimini",
+        "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T08.sync-production-sim/local/build2/modelsim.ini",
+        "-lib",
+        "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T08.sync-production-sim/local/build2/work",
+        "-voptargs=+acc",
+        "tb_production_sync",
+        "+CASE=0",
+        "+MUTATE_ROLE",
+        "-do",
+        "onerror {quit -code 2}; onbreak {quit -code 3}; run -all; quit -code 0"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T08.sync-production-sim\\local\\final\\role-mutation",
+      "sim_pass": true
+    },
+    "oracle": {
+      "pass": false,
+      "reason": "ordered 14 role writes and six cleanup writes"
+    },
+    "input_build": "build2"
+  }
+]

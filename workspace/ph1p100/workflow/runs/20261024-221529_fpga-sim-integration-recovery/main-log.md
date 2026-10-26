@@ -1,0 +1,28 @@
+# 主传输日志
+
+- 261024 2215 runtime=Codex；PROJECT_ROOT=D:\fpga\ph1p100；OUTPUT_DIR=D:\fpga\ph1p100\workflow\runs\20261024-221529_fpga-sim-integration-recovery；BATCH_SIZE=1。
+- 261024 2215 原样登记用户需求、附件路径及相关路径；主按fpga-orchestrator仅作传输。
+- 261024 2217 runtime=Codex；规划已派发；工具真实返回 PLANNER_ID=/root/fpga_planner_sim_221529；技能=.agents/skills/fpga-planner/SKILL.md。
+- 261024 2225 PLANNER_ID=/root/fpga_planner_sim_221529 返回status=ready、task_ids=[T08.sync-production-sim]、needs_user_input=false；dispatch_path=本run/dispatch.json。
+- 261024 2225 按dispatch新建T08.sync-production-sim round0开发；DEV_ID=/root/fpga_dev_sync_221529；默认batch_size=1；下一步仅接收开发返回。
+- 261024 2252 T08.sync-production-sim开发ready_for_test，stopped_modifying=true，active_commands=0；manifest=T08.sync-production-sim/manifest-r0.json；新唯一综合TESTER_ID=/root/fpga_tester_sync_221529，round0已派发。
+- 261024 2303 TESTER_ID=/root/fpga_tester_sync_221529返回T08.sync-production-sim round0 PASS；functional/engineering/system=pass，G0/G1=pass，G2=not_run，G3_G4_G5=not_applicable，blocked=null；报告首行与PASS一致；actual_repair_rounds=0；转原规划。
+- 261024 2306 原规划返回ready，task_ids=[T10.a1-recovery-sim]，dispatch=dispatch-t10-r0.json；新DEV_ID=/root/fpga_dev_recovery_221529已派发，round0。
+- 261024 2319 DEV_ID=/root/fpga_dev_recovery_221529返回T10.a1-recovery-sim blocked；stopped_modifying=true，active_commands=0；problem_id=T10.a1-recovery-sim:SCOPE_CLARIFICATION:fixed-r5-descriptor-index；受保护固定DUT缺陷分支，转原规划；未派tester，actual_repair_rounds=0，补充机会0。
+- 261025 0056 收到用户新增原话“接着做”，已保存user-feedback-01-continue.md，转真实原规划处理同run续接。
+- 261025 0056 收到原规划/root/fpga_planner_sim_221529实际工具错误：usage limit；规划续接turn失败，reason_code=QUOTA。用户反馈01尚待原规划消费。workflow_status=blocked_quota；未重试、未新派规划/开发/测试，原计数保留。
+- 261025 0057 新账户状态get_usage_limits：ordinaryUsageAllowed=true，primary.usedPercent=1，secondary.usedPercent=25，rateLimitReachedType=null。依据此条件变化及用户反馈01，续接真实原规划/root/fpga_planner_sim_221529一次；若仍额度错误则blocked，不自动再试；计数未清零。
+- 261025 0104 原规划返回needs_user_input/单文件隔离修复提案。主保留权限检查：依据用户原目标、明确“接着做”及上级开发者可逆必要修复无需重复确认规则，交原规划核现有授权并更新有界dispatch；不自行选技术方案/改写DUT。问题补充机会1/2，实际修复未增加，生产/TD/硬件边界未扩。
+- 261025 0107 原规划返回dispatch-dq-fix-r0.json ready/needs_user_input=false；新包T10.a1-uart-descriptor-fix round0，DEV_ID=/root/fpga_dev_descriptor_221529已派发；共3正式包、batch1，未重置旧包计数。
+- 261025 0119 修复DEV_ID=/root/fpga_dev_descriptor_221529返回ready_for_test/stopped_modifying=true/active_commands=0；manifest-r0.json及corrected-dut-index.json已返回；新唯一TESTER_ID=/root/fpga_tester_descriptor_221529，round0已派发。
+- 261025 0128 TESTER_ID=/root/fpga_tester_descriptor_221529返回T10.a1-uart-descriptor-fix round0 integrated PASS，三维pass/G0G1pass/G2not_run/G3G4G5not_applicable，blocked=null；首行PASS一致；actual_repair_rounds=0；转原规划。
+- 261025 0133 原规划返回dispatch-recovery-resume01.json ready；续原DEV_ID=/root/fpga_dev_recovery_221529，写域resume01，改后冻结DUT，首次integrated round0之前续接；旧计数保留，未增包。
+- 261025 0142 原恢复DEV返回resume01 blocked/protected_second_RTL_recovery_defect；新problem_id=crop-abort-cdc-loss，停止修改/active_commands0，证据/manifest/ledger已返回；交原规划按既有继续授权核必要隔离修复，新问题机会0；未派tester、旧计数未清零。
+- 261025 0148 原规划返回dispatch-abort-cdc-fix-r0.json ready；第四包T10.a1-abort-cdc-fix round0，新DEV_ID=/root/fpga_dev_abortcdc_221529已派发；总包4/4、batch1；旧PASS和恢复包计数保留。
+- 261025 0206 DEV_ID=/root/fpga_dev_abortcdc_221529返回ready_for_test/stopped_modifying=true/active_commands=0，manifest-r0及corrected-index已给；新唯一TESTER_ID=/root/fpga_tester_abortcdc_221529，round0已派发。
+- 261025 0215 TESTER_ID=/root/fpga_tester_abortcdc_221529返回T10.a1-abort-cdc-fix round0 integrated PASS；三维applicable/pass，G0G1pass，G2not_run，G3G4G5not_applicable，blocked=null；报告首行一致；实际修复0，转原规划。
+- 261025 0219 原规划返回dispatch-recovery-resume02.json ready；续真实原DEV=/root/fpga_dev_recovery_221529，写域resume02；新组合DUT绑定；首次integrated仍round0，总包4/4、历史calls/编译/仿真/问题计数保留。
+- 261025 0229 原恢复DEV返回resume02 ready_for_test/stopped_modifying=true/active_commands0/blocked=null；manifest-resume02.json；原任务首次新唯一TESTER_ID=/root/fpga_tester_recovery_221529已派发，integrated round0，旧计数保留。
+- 261025 0930 收到用户反馈02“接着做”；原恢复TESTER上一turn实际usage limit未返判定；新账户状态ordinaryUsageAllowed=true，5小时0%、周40%；按用户新增继续指令及可用状态续真实原TESTER一次，原记录计数保留。
+- 261025 0939 原恢复TESTER=/root/fpga_tester_recovery_221529返回首次integrated round0 PASS，三维pass/G0G1pass/G2not_run，old_AR_at_reset=not_covered，blocked=null；首行一致。20正例/1旧top负例/17checker负例/88包/80恢复包/max恢复10042cycles/855保护文件0漂移；测试累计29calls、完整编译2、实际修复0；四包均PASS，交原规划收尾。
+- 261025 0947 原规划返回dispatch-finished.json/status=finished/needs_user_input=false；4包全部首轮独立PASS，实际修复轮均0；主已读取短user-summary，将按dispatch原样转发并停止本run，不新增角色或硬件/生产动作。

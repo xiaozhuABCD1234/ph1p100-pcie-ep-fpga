@@ -1,0 +1,168 @@
+{
+  "case_id": 6,
+  "status": "PASS",
+  "errors": [],
+  "stats": {
+    "case": 6,
+    "w": 8,
+    "h": 2,
+    "epoch": 1,
+    "inject_hit": 1,
+    "post_reset_zero": 1,
+    "good_sent": 4,
+    "recovered": 4,
+    "recovery_elapsed": 10011,
+    "cap": 4,
+    "enc": 4,
+    "exported": 4,
+    "raw_pub": 4,
+    "raw_drop": 0,
+    "cmp_drop": 0,
+    "geom": 0,
+    "err": 0,
+    "read_words": 4,
+    "dup_words": 0,
+    "old_r_count": 0,
+    "bytes": 291,
+    "aw": 8,
+    "wbeats": 8,
+    "raw_aw": 4,
+    "cmp_aw": 4,
+    "raw_ingress": 16,
+    "cmp_ingress": 31,
+    "fifo_full": 112,
+    "fifo_rejected": 1,
+    "abort_seen": 1,
+    "fault_geom": 0,
+    "fault_rawdrop": 0,
+    "fault_cmpdrop": 0,
+    "fault_err": 0,
+    "cycles": 60381
+  },
+  "decoded": [
+    {
+      "frame_id": 1,
+      "seed": 1100,
+      "bytes": 73,
+      "raw_sha256": "be7bf0bacb3ea17caf7671a84a438f29394b32d854f9ded4c11b1c820db41b66",
+      "header_crc": true,
+      "stream_crc": true,
+      "xform_crc": true,
+      "raw_crc": true,
+      "strict_zlib": true
+    },
+    {
+      "frame_id": 2,
+      "seed": 1101,
+      "bytes": 73,
+      "raw_sha256": "09e1be4586dd95fcf588562ea953582d221868a6ca4bb3c5ef0474999f9e1955",
+      "header_crc": true,
+      "stream_crc": true,
+      "xform_crc": true,
+      "raw_crc": true,
+      "strict_zlib": true
+    },
+    {
+      "frame_id": 3,
+      "seed": 1102,
+      "bytes": 72,
+      "raw_sha256": "5331dd2d7e9dc479f0d4247ecd37aca083f8bab1e7f1fa06269b7bf7764716d7",
+      "header_crc": true,
+      "stream_crc": true,
+      "xform_crc": true,
+      "raw_crc": true,
+      "strict_zlib": true
+    },
+    {
+      "frame_id": 4,
+      "seed": 1103,
+      "bytes": 73,
+      "raw_sha256": "8f185779402df75c209832e55beeeb4b3af7aa4198fb72efaecf94f6ca22c156",
+      "header_crc": true,
+      "stream_crc": true,
+      "xform_crc": true,
+      "raw_crc": true,
+      "strict_zlib": true
+    }
+  ],
+  "bytes": 291,
+  "capture_sha256": "b84dd7963a19926d649bed0cca9d692df57f169cb8757837c00cc6882c681ca1",
+  "legal_prefix": [],
+  "allowed_good_seeds": [
+    1100,
+    1101,
+    1102,
+    1103
+  ],
+  "independent_forward_packets": [
+    {
+      "seed": 1100,
+      "frame_id": 1,
+      "packet_bytes": 73,
+      "raw_sha256": "be7bf0bacb3ea17caf7671a84a438f29394b32d854f9ded4c11b1c820db41b66"
+    },
+    {
+      "seed": 1101,
+      "frame_id": 2,
+      "packet_bytes": 73,
+      "raw_sha256": "09e1be4586dd95fcf588562ea953582d221868a6ca4bb3c5ef0474999f9e1955"
+    },
+    {
+      "seed": 1102,
+      "frame_id": 3,
+      "packet_bytes": 72,
+      "raw_sha256": "5331dd2d7e9dc479f0d4247ecd37aca083f8bab1e7f1fa06269b7bf7764716d7"
+    },
+    {
+      "seed": 1103,
+      "frame_id": 4,
+      "packet_bytes": 73,
+      "raw_sha256": "8f185779402df75c209832e55beeeb4b3af7aa4198fb72efaecf94f6ca22c156"
+    }
+  ],
+  "control": {
+    "abort_writes": 0,
+    "abort_reads": 0,
+    "raw_aborts": 0,
+    "abort_stalls": 0,
+    "last_abort_hits": 0,
+    "sof_abort_hits": 0,
+    "source_losses": 1,
+    "token_w": 16,
+    "token_r": 16
+  },
+  "independent_slot_releases": 0,
+  "command": {
+    "argv": [
+      "D:/intelFPGA/18.1/modelsim_ase/win32aloem/vsim.exe",
+      "-c",
+      "-modelsimini",
+      "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/test-reports/T10.a1-abort-cdc-fix/corrected/modelsim.ini",
+      "-wlf",
+      "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/test-reports/T10.a1-abort-cdc-fix/corrected/pending-reset-fast/case.wlf",
+      "-l",
+      "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/test-reports/T10.a1-abort-cdc-fix/corrected/pending-reset-fast/transcript.log",
+      "work.tb_recovery",
+      "-gW=8",
+      "-gH=2",
+      "-gFIFO_AW=2",
+      "-gCAM_HALF=1.85",
+      "-gA1_PHASE=0.91",
+      "-gMAX_CYCLES=1500000",
+      "+CASE=6",
+      "+OUT=D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/test-reports/T10.a1-abort-cdc-fix/corrected/pending-reset-fast/capture.dec",
+      "+TRACE=D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/test-reports/T10.a1-abort-cdc-fix/corrected/pending-reset-fast/trace.txt",
+      "+STAT=D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/test-reports/T10.a1-abort-cdc-fix/corrected/pending-reset-fast/stats.txt",
+      "-do",
+      "do D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/test-reports/T10.a1-abort-cdc-fix/run.do"
+    ],
+    "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\test-reports\\T10.a1-abort-cdc-fix",
+    "timeout_seconds": 300,
+    "owned_pid": 51760,
+    "exit_code": 0,
+    "elapsed_seconds": 3.937
+  },
+  "mode": "corrected",
+  "name": "pending-reset",
+  "ratio": "fast"
+}

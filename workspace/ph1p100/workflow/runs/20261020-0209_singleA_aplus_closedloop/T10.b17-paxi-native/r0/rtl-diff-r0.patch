@@ -1,0 +1,368 @@
+--- b15/r0/changed-src/p2_ddr_bridge.v
++++ b17/r0/changed-src/p2_ddr_bridge.v
+@@ -41,8 +41,23 @@
+ //                 counted (stale_r_cnt), never queued.
+ //   R5 fallback : TIMEOUT 8192 clk_a1 / RETRY_MAX 2 / A1_GUARD_N 70000 /
+ //                 BRIDGE_GUARD_N 65536 / purge semantics are b13-identical.
++//
++// T10.b17-paxi-native: this module is the ONE native PAXI boundary.
++//   A1  : internal slot address is a 256-bit WORD index (max 424313).
++//   PAXI: native word address {word_index[23:0], 3'b000} on AW and AR, so
++//         internal word 0/1/2 appears on the port as 0/8/16.
++//   mask: paxi_wstrb = 0 (native contract: mask 0 writes every byte).
++//   cmd : ALLOW_CONCURRENT=0 (default) makes AW/W and AR mutually exclusive,
++//         write-priority; =1 is a comparison-only configuration.
++//   v6  : dbg_a1 grows to 512 bits with the last-issued AR address, the
++//         timeout-latched AR address/low3, same-cycle AW/W+AR counters and
++//         the in-flight state word.  Bits [255:0] keep the b15 layout.
+ // =============================================================================
+-module p2_ddr_bridge (
++module p2_ddr_bridge #(
++    // 0 = native single-command diagnostic default (bitgen/board value).
++    // 1 = comparison only: lets an AR request coincide with a write start.
++    parameter integer ALLOW_CONCURRENT = 0
++) (
+     // A1 / 187.5 MHz side (same shape as the P1 store's DDR port)
+     input  wire         clk_a1,
+     input  wire         rst_n,
+@@ -86,7 +101,9 @@
+     // T10.b11 observation (clk_a1, stable between mailbox publications)
+     // T10.b13: 192 -> 256 bits; [255:224]=purge_cnt, [223:192]=stale_guard_cnt,
+     // [191:0] unchanged.
+-    output wire [255:0] dbg_a1
++    // T10.b17: 256 -> 512 bits; [511:256] are the v6 diagnostics, [255:0] are
++    // byte-for-byte the b15 layout.
++    output wire [511:0] dbg_a1
+ );
+     // ---------------------------------------------------------- write request
+     wire        wf_wready;
+@@ -340,12 +357,29 @@
+     reg [1:0] wstate;
+     reg       aw_seen, w_seen;
+ 
+-    assign paxi_awaddr  = wf_rdata[282:256];
++    // T10.b17: native PAXI address unit.  The only address conversion in the
++    // whole chain: internal 256-bit word index -> native address (word * 8).
++    localparam [23:0] PAXI_MAX_WORD = 24'd424313;
++    assign paxi_awaddr  = {wf_rdata[279:256], 3'b000};
+     assign paxi_wdata   = wf_rdata[255:0];
+-    assign paxi_wstrb   = 32'hFFFF_FFFF;   // every store word is a full 32-byte beat
++    // T10.b17: native full-word write mask.  Bit=0 enables the byte; all-zero
++    // therefore writes the complete 32-byte beat (all-ones would write nothing).
++    assign paxi_wstrb   = 32'h0000_0000;
+     assign paxi_wlast   = 1'b1;            // single-beat transaction
+     assign paxi_awvalid = (wstate == W_RUN) && !aw_seen;
+     assign paxi_wvalid  = (wstate == W_RUN) && !w_seen;
++
++    // T10.b17 single-command acceptance (ALLOW_CONCURRENT=0 default).
++    // wr_start_req is the write-priority request that moves W_IDLE -> W_RUN.
++    // rd_req additionally requires W_IDLE, so an AR is never presented while
++    // the write engine owns the command port; the combinational term below
++    // also suppresses an AR in the exact cycle a write starts.
++    wire wr_start_req = wf_rvalid && !wf_pop && ddr_rdy && !ar_busy;
++    // ALLOW_CONCURRENT=1 removes the W_IDLE gate too, so the comparison build
++    // can really present AR while AW/W are active; =0 keeps the native rule.
++    wire rd_req       = af_rvalid && !ar_busy && rf_path_empty &&
++                        ddr_rdy && !rd_hold &&
++                        ((ALLOW_CONCURRENT != 0) || (wstate == W_IDLE));
+ 
+     always @(posedge clk_ddr or negedge rst_n) begin
+         if (!rst_n) begin
+@@ -361,7 +395,7 @@
+                     // that cycle presented the same FIFO word a second time and
+                     // produced two AW/W handshakes for one store word.  Wait for
+                     // the pop to actually take effect.
+-                    if (wf_rvalid && !wf_pop && ddr_rdy) wstate <= W_RUN;
++                    if (wr_start_req) wstate <= W_RUN;
+                 end
+                 W_RUN: begin
+                     if (paxi_awvalid && paxi_awready) aw_seen <= 1'b1;
+@@ -387,14 +421,17 @@
+     // re-issue the same address while ddr_rdy was low (duplicate rdata).
+     // (ar_busy / the RF occupancy counters are declared with the read-data
+     //  section above; T10.b15 replaced the old ar_pending first-beat clear.)
+-    assign paxi_araddr  = af_rdata;
++    // T10.b17: the same unique address conversion is applied to AR.
++    assign paxi_araddr  = {af_rdata[23:0], 3'b000};
+     // T10.b13: no AR while the purge/guard window is open, and the AF is drained
+     // by the purge itself (af_pop_purge never sets ar_busy).
+     // T10.b15 R2: a new AR also requires the whole read-data path to be empty
+     // (!ar_busy, rf_level==0, skid empty) so the burst that follows has room by
+     // construction and MAX_OS stays 1 (one AR in flight, start to rlast).
+-    assign paxi_arvalid = af_rvalid && !ar_busy && rf_path_empty &&
+-                          ddr_rdy && !rd_hold;
++    // T10.b17: write-priority single-command arbitration.  With the default
++    // ALLOW_CONCURRENT=0, an AR request in the same cycle as a write start is
++    // held (valid dropped before any ready) until the write has completed.
++    assign paxi_arvalid = rd_req && ((ALLOW_CONCURRENT != 0) || !wr_start_req);
+     wire   af_pop_normal = paxi_arvalid && paxi_arready;
+     wire   af_pop_purge  = rd_hold && af_rvalid;
+     assign af_pop        = af_pop_normal || af_pop_purge;
+@@ -455,18 +492,97 @@
+         end
+     end
+ 
++    // =========================================================================
++    // T10.b17 v6 diagnostics (clk_ddr; observation only, no engine feedback).
++    // =========================================================================
++    reg  [26:0] last_issued_ar_addr;
++    reg  [26:0] timeout_ar_addr;
++    reg         timeout_ar_valid;
++    reg  [31:0] same_aw_ar_cnt, same_w_ar_cnt;
++    reg         same_aw_ar_seen, same_w_ar_seen;
++    reg         oob_addr_seen, low3_nonzero_seen, wstrb_nonzero_seen;
++
++    wire aw_hs_v6 = paxi_awvalid && paxi_awready;
++    wire w_hs_v6  = paxi_wvalid  && paxi_wready;
++    wire ar_hs_v6 = paxi_arvalid && paxi_arready;
++    wire same_aw_ar = aw_hs_v6 && ar_hs_v6;
++    wire same_w_ar  = w_hs_v6  && ar_hs_v6;
++    wire aw_idx_oob = (wf_rdata[282:256] > PAXI_MAX_WORD);
++    wire ar_idx_oob = (af_rdata > PAXI_MAX_WORD);
++
++    always @(posedge clk_ddr or negedge rst_n) begin
++        if (!rst_n) begin
++            last_issued_ar_addr <= 27'd0;
++            timeout_ar_addr     <= 27'd0;
++            timeout_ar_valid    <= 1'b0;
++            same_aw_ar_cnt      <= 32'd0;
++            same_w_ar_cnt       <= 32'd0;
++            same_aw_ar_seen     <= 1'b0;
++            same_w_ar_seen      <= 1'b0;
++            oob_addr_seen       <= 1'b0;
++            low3_nonzero_seen   <= 1'b0;
++            wstrb_nonzero_seen  <= 1'b0;
++        end else begin
++            if (ar_hs_v6) last_issued_ar_addr <= paxi_araddr;
++            // Latch the failed AR when the b13 abort purge fires with an AR
++            // still outstanding; a successful rlast (or reset) clears the flag.
++            if (purge_evt && ar_busy) begin
++                timeout_ar_addr  <= last_issued_ar_addr;
++                timeout_ar_valid <= 1'b1;
++            end else if (paxi_rvalid && paxi_rready && paxi_rlast) begin
++                timeout_ar_valid <= 1'b0;
++            end
++            if (same_aw_ar) begin
++                same_aw_ar_cnt  <= same_aw_ar_cnt + 32'd1;
++                same_aw_ar_seen <= 1'b1;
++            end
++            if (same_w_ar) begin
++                same_w_ar_cnt  <= same_w_ar_cnt + 32'd1;
++                same_w_ar_seen <= 1'b1;
++            end
++            // Sticky contract monitors.  The OOB check only evaluates while the
++            // source FIFO really holds a word (never on reset/empty garbage).
++            if (wf_rvalid && aw_idx_oob) oob_addr_seen <= 1'b1;
++            if (af_rvalid && ar_idx_oob) oob_addr_seen <= 1'b1;
++            if ((paxi_awvalid && (paxi_awaddr[2:0] != 3'b000)) ||
++                (paxi_arvalid && (paxi_araddr[2:0] != 3'b000)))
++                low3_nonzero_seen <= 1'b1;
++            if (paxi_wvalid && (|paxi_wstrb)) wstrb_nonzero_seen <= 1'b1;
++        end
++    end
++
++    wire [31:0] inflight_state = {24'd0, paxi_arvalid, rf_path_empty, rd_hold,
++                                  ddr_rdy, wstate[0], w_seen, aw_seen, ar_busy};
++    wire [31:0] diag_flags = {26'd0, wstrb_nonzero_seen, low3_nonzero_seen,
++                              oob_addr_seen, same_w_ar_seen, same_aw_ar_seen,
++                              timeout_ar_valid};
++
+     // clk_ddr observation word (bit map fixed by the v4 #44 field):
+     // T10.b15: bit [1] keeps its "an AR is outstanding" meaning (ar_busy).
+     wire [31:0] br0_ddr = {23'd0, wf_pop, wf_rvalid, w_seen, aw_seen, wstate,
+                            rf_wready, af_rvalid, ar_busy, ddr_rdy};
+-    wire [255:0] dbg_ddr = {32'd0, stale_guard_cnt, stale_r_cnt, rlast_cnt,
+-                            r_cnt, ar_block_cnt, ar_cnt, br0_ddr};
+-    wire [255:0] dbg_mid;
++    wire [511:0] dbg_ddr = {diag_flags,                    // [511:480]
++                            inflight_state,                // [479:448]
++                            same_w_ar_cnt,                 // [447:416]
++                            same_aw_ar_cnt,                // [415:384]
++                            {29'd0, timeout_ar_addr[2:0]}, // [383:352]
++                            {5'd0,  timeout_ar_addr},      // [351:320]
++                            {29'd0, last_issued_ar_addr[2:0]}, // [319:288]
++                            {5'd0,  last_issued_ar_addr},  // [287:256]
++                            32'd0,                         // [255:224] unused (b15)
++                            stale_guard_cnt,               // [223:192]
++                            stale_r_cnt,                   // [223:192]
++                            rlast_cnt,                     // [191:160]
++                            r_cnt,                         // [159:128]
++                            ar_block_cnt,                  // [127:96]
++                            ar_cnt,                        // [95:64]
++                            br0_ddr};                      // [63:0]
++    wire [511:0] dbg_mid;
+ 
+     // Stable-hold/toggle transfer: 256 clk_ddr cycles (1.28 us @ 200 MHz)
+     // between publications, so the slower clk_a1 side always samples a frozen
+     // bus.  The mailbox is observation-only and never blocks either domain.
+-    cam_diag_mailbox #(.W(256), .DIV_BITS(8)) u_dbg_mail(
++    cam_diag_mailbox #(.W(512), .DIV_BITS(8)) u_dbg_mail(
+         .clk_slow   (clk_ddr),
+         .rst_slow_n (rst_n),
+         .i_data     (dbg_ddr),
+@@ -493,7 +609,8 @@
+         br0_a1[11] = dbg_mid[7];   // wf_rvalid
+         br0_a1[12] = dbg_mid[8];   // wf_pop
+     end
+-    assign dbg_a1 = {purge_cnt,           // [255:224] T10.b13 purge events
++    assign dbg_a1 = {dbg_mid[511:256],    // [511:256] T10.b17 v6 diagnostics
++                     purge_cnt,           // [255:224] T10.b13 purge events
+                      dbg_mid[223:192],    // [223:192] stale_guard_cnt
+                      dbg_mid[191:160],    // [191:160] stale_r_cnt
+                      dbg_mid[159:128],    // [159:128] rlast_cnt
+@@ -501,4 +618,14 @@
+                      dbg_mid[95:64],      // [95:64]   ar_block_cnt
+                      dbg_mid[63:32],      // [63:32]   ar_cnt
+                      br0_a1};             // [31:0]    br0 (unchanged)
++`ifdef SIMULATION
++    // T10.b17: an out-of-range word index must never reach the PAXI port.
++    // Simulation fails loudly; the synthesized path only sets the sticky bit.
++    always @(posedge clk_ddr) begin
++        if (rst_n && ((paxi_awvalid && aw_idx_oob) ||
++                      (paxi_arvalid && ar_idx_oob)))
++            $fatal(1, "B17_PAXI_OOB_ADDR aw=%b awidx=%0d aridx=%0d max=%0d",
++                   paxi_awvalid, wf_rdata[282:256], af_rdata, PAXI_MAX_WORD);
++    end
++`endif
+ endmodule
+--- b15/r0/changed-src/camera_a1_uart_top.v
++++ b17/r0/changed-src/camera_a1_uart_top.v
+@@ -81,7 +81,8 @@
+     // mailbox inside the bridge), so it can be latched by the status packet.
+     // [191:160]stale_r [159:128]rlast [127:96]r_cnt [95:64]ar_block
+     // [63:32]ar_cnt  [31:0]br0
+-    input  wire [255:0] i_dbg_bridge,
++    // T10.b17: 256 -> 512; [255:0] unchanged, [511:256] is the v6 block.
++    input  wire [511:0] i_dbg_bridge,
+ 
+     // native 256-bit DDR port (P2 maps to PH1P PAXI)
+     output wire [31:0]  o_ddr_awaddr,
+@@ -807,7 +808,15 @@
+         end
+     end
+ 
+-    wire [511:0] sts_ext_bus = {
++    wire [767:0] sts_ext_bus = {
++        i_dbg_bridge[511:480],                                   // 67 diag_flags
++        i_dbg_bridge[479:448],                                   // 66 inflight_state
++        i_dbg_bridge[447:416],                                   // 65 same_w_ar_cnt
++        i_dbg_bridge[415:384],                                   // 64 same_aw_ar_cnt
++        {29'd0, i_dbg_bridge[354:352]},                          // 63 timeout_ar_low3
++        {5'd0,  i_dbg_bridge[346:320]},                          // 62 timeout_ar_addr
++        {29'd0, i_dbg_bridge[290:288]},                          // 61 last_issued_ar_low3
++        {5'd0,  i_dbg_bridge[282:256]},                          // 60 last_issued_ar_addr
+         raw_stale_guard,                                         // 59 stale_guard_cnt
+         raw_retry_giveup,                                        // 58
+         raw_retry_cnt,                                           // 57
+--- b15/r0/changed-src/p2_a1_board_top.v
++++ b17/r0/changed-src/p2_a1_board_top.v
+@@ -382,7 +382,7 @@
+     );
+ 
+     // ------------------------------------------------------- 187.5 -> dhi_clk bridge
+-    wire [255:0] dbg_bridge;            // T10.b11/b13: clk_a1 read-path snapshot
++    wire [511:0] dbg_bridge;            // T10.b17: v6 bridge snapshot (512 bit)
+     wire         a1_rd_abort;           // T10.b13: raw store read timeout pulse
+     p2_ddr_bridge u_bridge (
+         .clk_a1       (clk_a1),
+--- b15/r0/changed-src/a1_uart_export.v
++++ b17/r0/changed-src/a1_uart_export.v
+@@ -146,8 +146,8 @@
+     input  wire [639:0] sts_raw,
+     // T10.b11 r0-diag v4: 12 x u32 read-path / A+ observability fields
+     // (#44..#55), field k in bits [32k+:32].  T10.b13 v5 appends four more
+-    // words (#56..#59), so the port widens 384 -> 512 bits.
+-    input  wire [511:0] sts_ext,
++    // words (#56..#59).  T10.b17 v6 appends #60..#67, so 512 -> 768 bits.
++    input  wire [767:0] sts_ext,
+     // T10.b11 observation: exporter state tap for v4 field #54 (no logic use)
+     output wire [31:0]  dbg_st
+ );
+@@ -184,12 +184,12 @@
+     reg [31:0]  sts_cnt;            // status packet divider
+     reg         sts_want;           // T10.b9: a status packet is due
+     reg [1:0]   sstate;             // status packet state
+-    reg [7:0]   sidx;               // status packet byte index 0..224
+-    reg [7:0]   sxacc;              // running XOR over bytes 0..223
++    reg [8:0]   sidx;               // T10.b17 v6: status packet byte index 0..272
++    reg [7:0]   sxacc;              // running XOR over bytes 0..271
+     reg [255:0] ssnap;              // latched legacy snapshot  (8 x u32)
+     reg [479:0] camsnap;            // latched camera snapshot (15 x u32)
+     reg [639:0] rawsnap;            // latched raw-store snapshot (20 x u32)
+-    reg [511:0] extsnap;            // latched read-path snapshot (16 x u32)
++    reg [767:0] extsnap;            // T10.b17 v6: 24 x u32 (#44..#67)
+     reg [7:0]   dbg_byte_r;         // byte actually handed to the transmitter
+     reg         dbg_byte_valid_r;
+     reg         dbg_hold;
+@@ -202,10 +202,10 @@
+     wire        sts_tick = sts_en && (sts_cnt == (STS_DIV - 1));
+ 
+     localparam [1:0] S_IDLE = 2'd0, S_SEND = 2'd1;
+-    // T10.b13 v5: 241 B = 4 hdr + 59 x u32 + XOR8, XOR covers bytes 0..239.
+-    localparam [7:0] STS_LAST = 8'd240;             // last byte index = XOR8
+-    localparam [7:0] STS_LEN  = 8'd241;             // 4 + 59*4 + 1
+-    localparam [7:0] STS_VER  = 8'd5;
++    // T10.b17 v6: 273 B = 4 hdr + 67 x u32 + XOR8, XOR covers bytes 0..271.
++    localparam [8:0] STS_LAST = 9'd272;             // last byte index = XOR8
++    localparam [8:0] STS_LEN  = 9'd273;             // 4 + 67*4 + 1
++    localparam [7:0] STS_VER  = 8'd6;
+ 
+     // ------------------------------------------- frame-boundary arbitration
+     // T10.b10 B9-01: the single place that decides "status packet" vs "next
+@@ -226,12 +226,12 @@
+     // 20 raw-store LE words, then the XOR of bytes 0..175.  All 43 fields are
+     // latched on the same clk edge, so one packet can never mix two counter
+     // values (no multi-bit CDC and no per-field resampling).
+-    wire [7:0]  sbyte_i = sidx - 8'd4;                  // 0..235 for sidx 4..239
+-    wire [1887:0] allsnap = {extsnap, rawsnap, camsnap, ssnap}; // field 0 in bits [31:0]
+-    wire [7:0]  sbyte   = (sidx == 8'd0) ? 8'hA5 :
+-                          (sidx == 8'd1) ? 8'h5A :
+-                          (sidx == 8'd2) ? STS_LEN :
+-                          (sidx == 8'd3) ? STS_VER :
++    wire [8:0]  sbyte_i = sidx - 9'd4;                  // 0..268 for sidx 4..272
++    wire [2143:0] allsnap = {extsnap, rawsnap, camsnap, ssnap}; // field 0 in bits [31:0]
++    wire [7:0]  sbyte   = (sidx == 9'd0) ? 8'hA5 :
++                          (sidx == 9'd1) ? 8'h5A :
++                          (sidx == 9'd2) ? STS_LEN[7:0] :
++                          (sidx == 9'd3) ? STS_VER :
+                           (sidx <  STS_LAST) ? allsnap[{sbyte_i, 3'b000} +: 8] :
+                                                sxacc;
+ 
+@@ -295,10 +295,10 @@
+             tx_byte_r <= 8'd0; tx_valid_r <= 1'b0; hb_cnt <= 32'd0;
+             cmp_open <= 1'b0; cmp_close <= 1'b0;
+             st_exported <= 32'd0; st_bytes <= 32'd0; st_err <= 32'd0;
+-            sts_cnt <= 32'd0; sstate <= S_IDLE; sidx <= 8'd0;
++            sts_cnt <= 32'd0; sstate <= S_IDLE; sidx <= 9'd0;
+             sts_want <= 1'b0;
+             sxacc <= 8'd0; ssnap <= 256'd0; camsnap <= 480'd0;
+-            rawsnap <= 640'd0; extsnap <= 512'd0;
++            rawsnap <= 640'd0; extsnap <= 768'd0;
+         end else begin
+             cmp_open  <= 1'b0;
+             cmp_close <= 1'b0;
+@@ -357,7 +357,7 @@
+                         camsnap<= sts_cam;
+                         rawsnap<= sts_raw;
+                         extsnap<= sts_ext;
+-                        sidx   <= 8'd0;
++                        sidx   <= 9'd0;
+                         sxacc  <= 8'd0;
+                         sstate <= S_SEND;
+                     end
+@@ -368,7 +368,7 @@
+                         tx_valid_r <= 1'b1;
+                         sxacc      <= sxacc ^ sbyte;
+                         if (sidx == STS_LAST) sstate <= S_IDLE;
+-                        else                  sidx   <= sidx + 8'd1;
++                        else                  sidx   <= sidx + 9'd1;
+                     end
+                 end
+                 default: sstate <= S_IDLE;
+### f9p_camera_display_core.v: byte-identical
+### a1_ddr_slot_store.v: byte-identical
+### a1_ddr_arb2.v: byte-identical
+### a1_frame_top.v: byte-identical
+### a1_deflate_core.v: byte-identical
+### a1_raw_crop.v: byte-identical
+### cam_diag_mailbox.v: byte-identical

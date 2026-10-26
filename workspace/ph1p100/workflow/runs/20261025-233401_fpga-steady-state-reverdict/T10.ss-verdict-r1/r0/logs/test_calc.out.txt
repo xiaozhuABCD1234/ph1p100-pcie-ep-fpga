@@ -1,0 +1,88 @@
+﻿PASS  A1 cycles = 4,677,535 (P1 measured S_ss)
+PASS  A1 C_ss = 103.9009 MB/s
+PASS  A1 fps = 40.0852
+PASS  A1 margin_0 = +33.6174%
+PASS  A1 margin_25 = +6.8939%
+PASS  A1 f_req_0 = 140.326 MHz
+PASS  A1 f_req_25 = 175.408 MHz
+PASS  A1 G0/G25 both pass
+PASS  A2 cycles = 6,421,414.375
+PASS  A2 C_ss = 75.6843 MB/s
+PASS  A2 margin_0 = -2.6694%
+PASS  A2 margin_25 = -22.1355%
+PASS  A2 G0/G25 both fail
+PASS  A3 cycles = 3,151,346.5
+PASS  A3 C_ss = 154.2198 MB/s
+PASS  A3 margin_0 = +98.3279%
+PASS  A3 margin_25 = +58.6623%
+PASS  A2 - A4 = 0.375 cycles (circular definition disclosed)
+PASS  A4 is not a throughput anchor
+PASS  S=6,250,000 -> 77.76 MB/s (exactly 0%)
+PASS  S=5,000,000 -> 97.20 MB/s (exactly 25%)
+PASS  demand 1080p30 = 77.76 MB/s
+PASS  G0 boundary: exactly 0% counts as pass
+PASS  G25 boundary: exactly 25% counts as pass
+PASS  G25 just below 25% fails
+PASS  m0 == 0% -> below_25 (conditional), never infeasible
+PASS  m0 == 25% -> feasible
+PASS  m0 < 0 -> infeasible MISSES_NOMINAL
+PASS  dual-core with G25 met -> conditional, never feasible
+PASS  marginal ERAM > 300 -> infeasible (resource)
+PASS  1c2s per-stream = C/2
+PASS  2c2s per-stream = C, never 2C
+PASS  c1s2 A1 margin_0 = -33.1913%
+PASS  A1 25% max fps = 32.068
+PASS  A2 25% max fps = 23.359
+PASS  A2 f_req_25 = 240.803 MHz
+PASS  tier 0 -> 4,251,150 cycles
+PASS  tier primary -> 4,677,535 cycles
+PASS  tier 1e6 -> 5,251,150 cycles
+PASS  tier 0 margin_0 = +47.0190%
+PASS  tier 0 margin_25 = +17.6152%
+PASS  tier 426385 margin_0 = +33.6174%
+PASS  tier 426385 margin_25 = +6.8939%
+PASS  tier 1000000 margin_0 = +19.0215%
+PASS  tier 1000000 margin_25 = -4.7827%
+PASS  DDR 2R+2S total = 809.034 MB/s
+PASS  DDR gate 1.25x = 1,011.2925 MB/s
+PASS  required_eff @5332 = 15.1732%
+PASS  gate_eff @5332 = 18.9665%
+PASS  required_eff @6400 = 12.6412%
+PASS  gate_eff @6400 = 15.8014%
+PASS  peak 1333 formula = 1333e6*32/8/1e6 = 5332
+PASS  UART 40,032 B @11,520 B/s = 3.475 s
+PASS  UART frame 2,594,706 B = 225.235 s
+PASS  UART payload vs 33.333 ms = 104.2x
+PASS  UART frame vs 33.333 ms = 6,757x
+PASS  export ideal cost = 400,320 cycles
+PASS  measured export_tail = 480,930 cycles, constant, sink_limited=false
+PASS  b11 sink 2.135 ms for 40,032 B
+PASS  b6 sink 0.400 ms for 40,032 B
+PASS  sim sink vs real 115200 = 1,628x
+PASS  1080p30 per-stream headline = not_proven (content crossing)
+PASS  headline keeps G0/G25 separate
+PASS  dual-core headline is never feasible
+PASS  both content bases below G0 -> infeasible
+PASS  scenario grid = 43 rows
+PASS  scenario ids unique
+PASS  no dual-core row is feasible
+PASS  no G25-miss row collapsed to infeasible
+PASS  all 1080p rows use the A1 anchor
+PASS  all 1080p rows carry claim_status=not_proven_all_content
+PASS  all rows carry claim_status=not_proven_all_content
+PASS  NC1 cold latency as throughput
+PASS  NC1 control: A1 throughput use is allowed
+PASS  NC2 G25 miss -> infeasible
+PASS  NC2 control: below_25 -> conditional is allowed
+PASS  NC3 ddr1333 quoted with 6400 peak
+PASS  NC3 control: 6400 labelled fallback is allowed
+PASS  NC4 sim fast sink as production
+PASS  NC4 control: sim sink as evidence-only is allowed
+PASS  NC5 aggregate 2C as per-stream capacity
+PASS  NC5 control: per-stream C is allowed
+PASS  NC6 1080p with tier applies=false
+PASS  NC6 control: 1080p with applies=true is allowed
+PASS  extra: A1 cycles with A2 demand anchor
+
+85 checks, 0 failures
+TEST_CALC=PASS

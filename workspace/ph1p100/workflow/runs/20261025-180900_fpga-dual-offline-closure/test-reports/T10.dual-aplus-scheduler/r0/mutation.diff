@@ -1,0 +1,19 @@
+--- frozen scheduler
++++ private camera swap fixture
+@@ -1,6 +1,6 @@
+ // Isolated G0/G1 candidate. One shared DHI clock, one AXI beat outstanding.
+ // RAW ownership is held until rel handshake; a missing R locks until DDR reset.
+-module dual_aplus_scheduler #(
++module dual_aplus_scheduler_swap #(
+  parameter integer W=1920,H=1080,CMP_CAP=8388608,TIMEOUT=20000
+ )(
+  input wire clk,rst_n,input wire [31:0] current_epoch,
+@@ -47,7 +47,7 @@
+  reg cmp_offer_valid,cmp_offer_slot;
+  wire cmp_sel=cmp_offer_slot;
+  assign cmp_valid=cmp_offer_valid;assign cmp_slot=cmp_sel;
+- assign cmp_camera_id=mc[cmp_sel];assign cmp_source_slot_id=mslot[cmp_sel];
++ assign cmp_camera_id=~mc[cmp_sel];assign cmp_source_slot_id=mslot[cmp_sel];
+  assign cmp_epoch=me[cmp_sel];assign cmp_session=ms[cmp_sel];assign cmp_capture_seq=mq[cmp_sel];
+  assign cmp_raw_len=mraw[cmp_sel];assign cmp_xform_len=mxf[cmp_sel];assign cmp_stream_len=mlen[cmp_sel];
+  assign cmp_raw_crc=mrc[cmp_sel];assign cmp_xform_crc=mxc[cmp_sel];assign cmp_stream_crc=msc[cmp_sel];

@@ -1,0 +1,994 @@
+diff --git a/AGENTS.md b/AGENTS.md
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -32,24 +32,30 @@
+ 
+ ## 后续任务的默认工作流
+ 
+-用户于2026-10-16明确批准《FPGA 多智能体工作流——主对话仅作传输》，作为本比赛项目后续对话的默认逻辑，无需重复粘贴提示词。本次只是配置同步，不代表已启动FPGA开发、旧试任务或硬件操作。
++用户于2026-10-16批准主对话仅作传输，2026-10-17进一步指定一个综合测试者、有限拆分、主不监控与有限返回机会。仅同步本项目默认配置，不代表启动FPGA开发、旧试任务或硬件操作。
+ 
+-后续在本项目接到新任务或恢复任务，首先读取项目内`.agents/skills/fpga-orchestrator/SKILL.md`，按[使用说明](workflow/FPGA多智能体工作流_使用说明.md)执行。该项目流程优先于通用技能中与用户指定架构冲突的调度建议；不覆盖系统/开发者权限规则。
++只有当前用户明确调用“$fpga-orchestrator 执行：<需求>”或“$fpga-orchestrator 恢复：<原run绝对路径>；本轮目标：<目标>”，或从技能选择器显式选择后明确要求执行/恢复，才启用本套工作流，主Agent先读项目内[fpga-orchestrator](.agents/skills/fpga-orchestrator/SKILL.md)，按[使用说明](workflow/FPGA多智能体工作流_使用说明.md)执行。项目流程优先于通用技能中冲突的调度建议，不覆盖系统/开发者权限规则。已派发子角色直接执行指定角色技能，不再进主流程或派生代理。
+ 
+-此入口只用于接收用户任务的主智能体。已经由主调度派出的规划、开发或测试子智能体直接读取并执行指定角色技能，不再进入主调度流程，也不再派生子代理；对工作流本身进行只读验证的代理仅执行其验证任务。
++只有当前用户明确调用本Skill并要求执行/恢复才启用本套角色链。标准输入为“$fpga-orchestrator 执行：<本轮需求>”或“$fpga-orchestrator 恢复：<原run绝对路径>；本轮目标：<目标>”；从技能选择器显式选择后给明确执行/恢复指令同样接受。仅提名称、引用/代码示例/转述、解释/查看/比较/修改规则，以及普通问答、报错解释或资料讨论，均不触发本链。其他通用技能/工具与根删除禁令、完整DeepSeek约束仍适用。
+ 
+-固定主体：**主Agent仅原样传输 → 规划Agent理解/拆分/派发 → 每任务新开发Agent → 同一冻结输入三个新测试Agent并行 → 同任务FAIL续原开发/测试，最多三轮实际修复 → 原规划更新状态/派发下一任务/收尾 → 主原样转发。**
++本Skill的agents/openai.yaml设置policy.allow_implicit_invocation: false，仅关闭隐式调用，保留显式使用。已明确启动的同一run继续原授权范围，状态/规则讨论不另开链；用户明确停止/退出时停止派发并交代恢复入口。当前配置run续原角色，无需重发触发词。此为配置/指令合同，静态复核不代表客户端选择器加载或普通聊天运行已验证。
+ 
+-- 主只原样转发用户原话、路径、真实ID、判定和状态，机械保存需求/调度日志并执行固定分支；不理解技术需求、不选题/设计/拆分/排依赖，不读原始材料/完整计划/源码/报告，不开发/修复/跑测试，不判断根因或复测影响，不写技术总结。系统要求的权限、路径范围检查仍须执行。
+-- 规划者读取材料理解需求，拆可验收任务，确定依赖/顺序/修改范围/三维验收/G层/工具设备/停止/回退；向主只给简短`dispatch.json`、问题及状态元数据，主不从`dev-plan.md`选任务。PASS、三轮未过或阻塞都交原规划者更新、派发和收尾。
+-- 默认批大小1，每个新任务新开发和新三测试，不跨任务复用角色对话；同任务失败才续原角色，受其修复影响的PASS维度按开发/测试清单续原测试。只有用户明确批大小大于1才由规划定义批，每批一个开发者、三个测试者各覆盖全批。
+-- 三维固定为功能、时序与工程、上板与系统；开发停止修改并冻结同一输入后再并行测试。按任务范围缩放验证，文档/模型不用无关硬件流程，不适用项由规划事先明确。复测影响与证据复用由开发/测试给清单，主不判断，不拼不同输入PASS。
+-- round0首次验收，最多round1—3三轮实际修复。缺工具/设备/资料/用户输入或额度直接blocked交原规划者备条件，主原样转用户，不空转三轮。三轮后保留⚠未通过/待条件，由原规划派发可独立继续任务；不得强制通过必要FPGA验收。任务状态和G层验证分账。
+-- 用实际`spawn_agent / followup_task / wait_agent / list_agents / send_message`，`fork_turns="none"`传技能和输入路径，从真实返回值即时登记ID；collaboration直接调用，不放functions.exec，不读缓存猜ID，不虚构`Agent()`参数。send_message只送消息，空闲角色新轮用followup_task。
+-- 缺输入、疑问或状态矛盾交对应原角色；范围/验收归规划，复现/报告归测试，实现归开发。用户反馈原话转发；无效或过长返回由原角色整理，主不解析长报告。详细内容留文件，主只收简短元数据。
+-- 角色skills为`fpga-planner`、`fpga-design-guide`、`fpga-dev`、`fpga-tester-functional`、`fpga-tester-engineering`、`fpga-tester-system`，都在`.agents/skills/`。工程规范是规划/开发所用技能，不增加一个常驻角色。
+-- DeepSeek按上面的既有边界做有界低风险辅助，不能替代这套Codex调度、三个测试角色或真实硬件验收。不得向其他聊天/队友发送未获授权消息。
+-- 原规划者读取判定矩阵/报告路径/轮数，更新允许的任务记录、handoff、final-summary和用户短总结；主原样转发，开发写lessons。任务/结果以现有`workflow/tasks.json`、证据和交接为主源，run控制文件不另立全局任务板；离线子包完成不把父硬件任务置done。
+-- 多agent工具不可用或ID失效如实记录，不得主接管或伪称后台执行。原会话能续则续；跨会话失效交规划者按文件恢复，记录新旧ID映射，不假称resume。所有子角色禁止递归派生。
++复用项目Skill控制规则与启动条件；本轮不安装或实现MCP、不改全局配置。Skill与MCP依据见[使用说明](workflow/FPGA多智能体工作流_使用说明.md)。
+ 
+-此配置仅对本项目生效，不改全局Codex配置。技能/流程不新增外部工程写入、下载位流、写Flash、发布、自动监控或队友消息授权。
++启用后的固定主体：**主仅原样传输 → 规划理解/有限拆分/派发 → 每任务新开发 → 停止修改并冻结manifest → 一个新综合测试者 → 同任务FAIL续原开发/综合测试，最多三轮实际修复 → 原规划更新/收尾 → 主原样转发。**
++
++- 主只原样传用户原话、路径、真实ID、判定/状态并机械留档，按简短dispatch执行；不理解技术需求/选题/设计/拆分/排依赖，不读原材料/完整计划/源码/报告，不开发/修复/跑测试/判断根因或复测影响/写技术总结。系统权限和路径检查仍执行。
++- 规划读取相关材料，确定可验收包、依赖顺序、允许范围、三维检查/G层/阈值、工具设备、停止回退；主不从dev-plan选任务。默认本轮1主要可验收目标、最多4正式包、两级（需求→工作包）、每包最多5项语义实现步骤。超限切片、最多3条后续主题及有限例外授权统一按[有界规则](.agents/skills/fpga-orchestrator/references/work-limits.md)，不自动续做余项，不以合批/新run/改ID绕限。
++- 默认批大小1，每新任务新开发与新综合测试者，不跨任务复用；只有用户明确批大小大于1才由规划定义批，每批一开发、一综合测试覆盖全批，任务总数和轮数分账。机械动作不另建包或代理。
++- functional/engineering/system是一个综合测试者的检查清单。按任务范围/风险覆盖必要功能、工程和系统检查，文档/模型不用无关硬件流程；不适用须规划事先给理由。高风险先增加必要检查或缩小包，不自动加角色；独立指测试者独立于开发。必要真实DUT、STA/CDC/资源/候选绑定与真实硬件/恢复/稳定性能门槛不得因节约取消。
++- 开发停止修改和活动结束后冻结唯一输入；主仅一次spawn_agent派综合测试者。每任务每轮一份integrated报告，回dimension=integrated及三维结果；同任务失败续真实原开发/综合测试，失败/受影响项复测，未影响证据由综合测试者绑定新manifest，不拼不同输入PASS。
++- round0首次验收，round1—3最多三轮实际修复。缺工具/设备/资料/授权/用户输入或额度直接blocked交原规划备条件，不空转；三轮后保留⚠未通过，由原规划在本轮边界内派独立任务。任务状态和G层分账，离线子包不把父硬件任务置done。
++- 主不监控进度：不轮询list_agents、不扫描目录/日志、不问进度或催促；wait_agent单次<=60000ms只等事件，超时不检查/重试/判故障。真实ID从spawn返回登记，实际失效才交原规划文件恢复和映射，不预防性探测，不假称resume。失联无返回不伪造状态。
++- 子角色按有界规则自行停止：每次派发/续接默认30次工具调用，规划15分钟、开发/综合测试45分钟；单问题最多3轮搜索/读取，同失败命令首次+1次有新证据的重试，连续2次无进展主动blocked。读/搜60秒、局部静态/仿真5分钟、构建30分钟，启动前落实可执行超时/安全终止；yield不冒充超时。规划可提前冻结有限执行预算并说明理由，运行角色不自行扩。此为角色合同，不声称平台硬限或自动终止。
++- 收到问题返回才按task_id+稳定problem_id登记最多2次补充/整理机会；须new_information=true且证据、恢复路径和原范围动作齐备。无新信息/缺字段矛盾/到限交原规划blocked，转交不重置；外部缺条件及API/额度错误直接blocked，不自动重试/扩权。problem字段/固定枚举见有界规则，机会与三轮实际修复分账，主不解技术题。
++- 使用真实spawn_agent/followup_task/wait_agent/send_message，fork_turns="none"传技能与输入路径，collaboration直接调用，不放functions.exec、不读缓存猜ID；send_message只送消息，空闲原角色新轮用followup_task。无多agent工具如实blocked，主不接管或伪称后台执行。
++- 现行角色skills为fpga-planner、fpga-design-guide、fpga-dev和fpga-tester，都在.agents/skills。三个旧tester技能保留为历史兼容/专业检查参考，旧调度/并行/分维报告语句不生效，不默认独立派发。设计指南不新增常驻角色。
++- DeepSeek按上面完整块作有界低风险辅助，不能替代Codex调度、综合测试或真实硬件验收。不得向其他聊天/队友发送未获授权消息。
++- 原规划读取报告/轮数更新允许的任务记录、dispatch、handoff、final-summary及用户短总结；主原样转发，开发写lessons。workflow/tasks.json及证据/交接保持主源，run不另立全局任务板。缺输入/矛盾按有限机会交原责任角色：范围验收归规划、实现归开发、复现报告归综合测试。
++
++本配置仅对本项目生效，不改全局配置，不新增外部工程写入、下载位流、写Flash、发布、自动监控或队友消息授权。禁止批量删除的既有约束及完整DeepSeek块保持原状。
+diff --git a/.gitignore b/.gitignore
+--- a/.gitignore
++++ b/.gitignore
+@@ -10,6 +10,7 @@
+ !/.agents/skills/fpga-planner/
+ !/.agents/skills/fpga-design-guide/
+ !/.agents/skills/fpga-dev/
++!/.agents/skills/fpga-tester/
+ !/.agents/skills/fpga-tester-functional/
+ !/.agents/skills/fpga-tester-engineering/
+ !/.agents/skills/fpga-tester-system/
+diff --git a/.agents/skills/fpga-orchestrator/SKILL.md b/.agents/skills/fpga-orchestrator/SKILL.md
+--- a/.agents/skills/fpga-orchestrator/SKILL.md
++++ b/.agents/skills/fpga-orchestrator/SKILL.md
+@@ -1,57 +1,52 @@
+ ---
+ name: fpga-orchestrator
+-description: Use when the user assigns or resumes work in this PH1P100 stereo FPGA competition project under its default multi-agent workflow.
++description: Use only when the user explicitly invokes fpga-orchestrator and requests execution or resumption in this project; do not trigger for ordinary discussion, references, explanations or workflow-rule edits.
+ ---
+ 
+ # FPGA 多智能体主对话：仅作传输
+ 
+-本技能只供本项目接收用户任务的主Agent使用。子角色直接执行指定技能，禁止递归派生代理。批准主体：**主原样转发 → 规划理解与派发 → 每任务新开发 → 同输入三个新测试并行 → 同任务失败续原角色，最多三轮实际修复 → 原规划更新与收尾 → 主原样转发。**
++只有当前用户明确调用本Skill并要求执行/恢复才启用本套角色链。标准输入为“$fpga-orchestrator 执行：<本轮需求>”或“$fpga-orchestrator 恢复：<原run绝对路径>；本轮目标：<目标>”；从技能选择器显式选择后给明确执行/恢复指令同样接受。仅提名称、引用/代码示例/转述、解释/查看/比较/修改规则，以及普通问答、报错解释或资料讨论，均不触发本链。其他通用技能/工具与根删除禁令、完整DeepSeek约束仍适用。
++
++本Skill的agents/openai.yaml设置policy.allow_implicit_invocation: false，仅关闭隐式调用，保留显式使用。已明确启动的同一run继续原授权范围，状态/规则讨论不另开链；用户明确停止/退出时停止派发并交代恢复入口。当前配置run续原角色，无需重发触发词。此为配置/指令合同，静态复核不代表客户端选择器加载或普通聊天运行已验证。
++
++只供本项目已明确启用流程的主Agent使用。子角色直接读指定技能，禁止递归派生。现行主体：**主原样转发 → 规划理解/有限拆分/派发 → 每任务新开发 → 停止修改并冻结 → 一个新综合测试者 → 同任务FAIL续原开发/综合测试，最多三轮实际修复 → 原规划更新/收尾 → 主原样转发。**
+ 
+ ## 主职责与可读范围
+ 
+-- 原样保存/转发用户原话、附件路径、真实代理ID、判定和状态；机械维护`request.md`、`main-log.md`与判定矩阵，执行[传输合同](references/relay-contract.md)固定分支。
+-- 只读根AGENTS、本技能、调用/传输合同、简短`dispatch.json`与角色返回元数据。需求材料、完整`dev-plan.md`、工程指南、源码、完整报告和技术总结都只传路径。
+-- 不理解技术需求、不选题/设计/拆分/排依赖，不开发/修复/跑测试，不判断根因或复测影响，不写技术总结，不修改计划或全局任务状态。系统要求的权限、路径范围和工具参数检查仍须执行。
+-- 无效、过长、缺输入或状态矛盾的返回交原角色整理；范围/验收归原规划、实现归原开发、复现/报告归原测试。用户反馈保留原话，不由主重解释。
+-- 不批量删除、不覆盖无关修改；本流程不扩大外部工程写入、下载位流、写Flash、发布、自动监控或外部/队友消息授权。DeepSeek仅按根AGENTS作低风险有界辅助，不能替代Codex角色和三个测试。
++- 原样保存/转发用户原话、附件路径、真实ID、判定和状态；机械维护request.md、main-log.md、判定矩阵及重复问题机会计数，按[传输合同](references/relay-contract.md)执行固定分支。
++- 只读根AGENTS、本技能、[有界规则](references/work-limits.md)、调用/传输合同、简短dispatch与返回元数据。需求材料、完整计划、指南、源码、完整报告和技术收尾只传路径。
++- 不理解技术需求、不选题/设计/拆分/排依赖，不开发/修复/跑测试，不判断根因或复测影响，不写技术总结或修改全局任务状态。保留系统权限、路径与工具参数检查。
++- 主不监控进度：不轮询list_agents、不扫描目录/日志、不问进度或催促。wait_agent单次<=60000ms只等事件；超时不产生检查、故障或重试动作。失联无返回不伪造状态或声称平台自动终止。
++- 问题仅收到返回后按稳定problem_id及元数据处理；机会至多2次，缺字段/无新信息/到限交原规划，具体固定分支见有界规则和传输合同。主不解技术题。
++- 不批量删除、不覆盖无关修改；不扩大外部工程写入、下载位流、写Flash、发布、自动监控或外部/队友消息授权。DeepSeek仅按根AGENTS辅助，不能替代Codex综合测试或必要硬件验收。
+ 
+ ## 初始化与规划
+ 
+-1. 机械登记实际`PROJECT_ROOT`、`SCRIPT_FILE`（需求/索引路径）、新的项目内`OUTPUT_DIR=workflow/runs/<run_id>/`。默认`BATCH_SIZE=1`；只有用户明确指定大于1才原样传规划者定义批。
+-2. 原样保存聊天需求；附件只记路径。新run不覆盖旧run，恢复使用原目录。`main-log.md`采用上海时间`yyMMdd HHmm`，即时登记工具真实返回ID及路径。
+-3. 用`collaboration.list_agents`核对会话与原ID。按[Codex调用](references/codex-calls.md)直接`spawn_agent`，`fork_turns="none"`，传规划技能、设计指南技能、实际根/需求/输出路径与用户原话。
+-4. 规划者读材料、理解和拆分，写详细计划/指南/输入索引及简短dispatch。主只读dispatch，按其任务顺序、路径、范围与固定分支传输；不从详细计划选任务。需用户决定的问题由规划者写文件，主原样转发。
++1. 机械登记实际PROJECT_ROOT、SCRIPT_FILE需求/索引路径及项目内OUTPUT_DIR=workflow/runs/<run_id>/。新run不覆盖旧run，恢复用原目录；默认BATCH_SIZE=1，用户明确大于1才原样传规划定义批。
++2. 原样保存聊天需求，附件只记路径；main-log采用上海时间yyMMdd HHmm，即时登记工具真实返回ID及路径，不扫描缓存猜ID。
++3. 按[Codex调用](references/codex-calls.md)直接spawn_agent，fork_turns="none"，传规划/设计指南技能、实际根/需求/输出路径和用户原话。不用list_agents预防性探测原ID。
++4. 规划按有界规则选本轮有限范围：默认1主要目标、最多4包、两级、每包最多5项语义步骤；写计划/指南/索引和简短dispatch。主只执行dispatch，不从dev-plan选任务。超限取舍与用户新边界交原规划。
+ 
+-## 开发与三维测试
++## 开发与一个综合测试者
+ 
+-默认每个新任务新建一位`fpga-dev`和三位新测试者，不跨任务复用角色对话；成果只传明确文件路径。用户明确批大小大于1时由规划者定义批，每批一个开发者顺序开发，三个测试者各覆盖全批。
++默认每个新任务新建一个fpga-dev和一个fpga-tester，不跨任务复用；用户明确合批时每批一开发、一综合测试覆盖全批。开发冻结唯一manifest并停止修改、活动结束后，主按spawn_single_tester逻辑标签只发一次原生spawn_agent，传同一manifest及计划/指南路径，不开旧三测试或额外审阅代理。
+ 
+-开发者冻结实际输入manifest并停止修改、活动结束后，主按返回路径启动三个测试者并行，不读候选源码或技术报告：
++综合测试者与开发独立，一次覆盖任务相关functional、engineering、system检查，依次承担独立审阅和最终工程复核。三维是检查清单，适用项/G层/门槛由规划事先确定；按风险增必要检查或缩小包，不自动增角色。文档配置只做相关静态复核；必需设备/工具缺失为FAIL+blocked，不伪造PASS。
+ 
+-| 维度 | 技能 | 内容由规划按任务范围限定 |
+-|---|---|---|
+-| functional | fpga-tester-functional | 文档语义、模型/RTL、数据与协议、边界和故障拒绝 |
+-| engineering | fpga-tester-engineering | 格式/入口/哈希、构建、最终STA/CDC、资源和候选绑定 |
+-| system | fpga-tester-system | 默认入口/交接、接口、上板、恢复、长稳、性能与发布证据 |
+-
+-三者使用同一冻结输入，独立按[报告约定](references/report-contract.md)逐任务出报告，只回任务/维度/PASS-FAIL/报告路径/阻塞与续接元数据。测试时不改输入；G层和不适用理由由规划预先确定，文档配置不启动无关TD或板测。缺必需工具/设备不得伪造PASS。
+-
+-当前总活动槽为4：开发结束后再启动三个测试者；所有子角色禁止再派生。真实ID从工具返回即时登记，不读缓存猜ID。
++综合测试按[报告约定](references/report-contract.md)逐任务每轮写一份integrated报告，仅回总体判定、三维结果、报告/manifest路径及阻塞/复测元数据。主不读完整报告判断影响，不拼不同输入PASS。子角色按有界规则自行有限执行、主动停止；主不监控兜底。
+ 
+ ## 固定结果分支
+ 
+-完整字段与分支见[传输合同](references/relay-contract.md)，主只执行以下机械流转：
++1. 综合同候选PASS：把三维结果、报告路径及轮数交原规划更新/派发或收尾。
++2. 同任务可修FAIL、blocked为空且实际修复不足3轮：续真实原开发，传失败报告和原话。开发冻结新输入后按清单续真实原综合测试者，失败/受影响项复测，未影响证据由综合测试绑定新manifest。
++3. 外部缺条件、API/额度错误、达到预算或主动停止：交原规划备条件/恢复入口，保留blocked/awaiting_hardware，不空转三轮、不自动重试/扩权。
++4. 已实际修复3轮仍FAIL：原规划保留⚠未通过，决定本轮范围内可独立继续任务，不强制通过必要FPGA验收。
++5. 无效/缺字段/矛盾/重复问题：按有界规则检查返回元数据，最多2次有新信息的原范围补充/整理；无新信息或到限直接交原规划。范围验收归原规划、实现归原开发、复现报告归原综合测试。
+ 
+-1. 三维同候选PASS：把矩阵、报告路径和轮数交原规划者；原规划更新任务/dispatch，决定下一任务或收尾。
+-2. 同任务可修配置/实现FAIL且无外部阻塞、实际修复不足3轮：续接原开发，传全部失败报告路径和用户原话。开发冻结新输入并给复测影响清单；按开发/测试清单续接本任务原测试者，主不判断影响，不拼不同输入PASS。
+-3. 缺设备/工具/资料/用户输入或额度不可用：直接交原规划者备条件并原样转用户，保留`blocked/awaiting_hardware`，不空转三轮。
+-4. 已实际修复3轮仍FAIL：交原规划者保留⚠未通过、依赖与恢复入口，由其派发可独立继续的任务；不得强制通过必要FPGA验收。
+-5. 缺字段、范围/验收矛盾、候选漂移或元数据不一致：停止对应流转，交相应原角色核实，不由主读长报告解题。
+-
+-round0为首次验收，round1—3只计实际修复。测试结束后才修复，修复停止后才复测。`followup_task`启动空闲原角色新轮；`send_message`仅送消息。
++round0首次验收；round1—3只计实际实现修复，与返回补充机会分账。测试结束后才修复，停止修改后才复测。followup_task启动空闲原角色新轮，send_message只送消息。
+ 
+ ## 收尾与恢复
+ 
+-原规划者读矩阵/报告路径/轮数，更新本次允许的任务记录、handoff、final-summary及用户短总结，统计首次/1/2/3轮通过、⚠未过与待条件。开发写lessons。主原样转发规划者短总结，不重写技术解释；run控制文件不替代`workflow/tasks.json`及已有证据主源。
++原规划读三维结果/综合报告/轮数，更新允许的任务记录、handoff、final-summary及user-summary，统计首次/1/2/3轮通过、⚠未过及待条件；开发写lessons。主原样转发短总结，不重写技术解释。run控制文件不替代workflow/tasks.json与已有证据；离线子包不把父硬件任务置done，任务状态和G层分账。
+ 
+-同任务同会话能续接则续原ID；跨会话/原ID失效交规划者以文件恢复并记录新旧映射，不能假称resume或跨任务复用。没有多agent工具时明确记录架构不可运行，保留待调度状态，主不得接管。此入口只对本项目生效，不创建无人值守执行器或改变全局配置。
++原ID可续则续；实际工具报失效时交规划以文件恢复并登记真实新旧映射，不能假称resume或跨任务复用。多agent工具不可用如实blocked，主不接管、不自动重试。只对本项目生效，不创建监控Agent、定时任务或常驻执行器，不改全局配置。
+diff --git a/.agents/skills/fpga-orchestrator/references/relay-contract.md b/.agents/skills/fpga-orchestrator/references/relay-contract.md
+--- a/.agents/skills/fpga-orchestrator/references/relay-contract.md
++++ b/.agents/skills/fpga-orchestrator/references/relay-contract.md
+@@ -1,48 +1,60 @@
+ # 主对话传输合同
+ 
+-主只读本合同、调用约定、简短dispatch及返回元数据。详细需求、计划、源码、报告和技术收尾以路径交对应角色读取。下列是文件/消息格式，不是自动执行程序；字段不授予额外权限。
++主只读本合同、调用约定、[有界规则](work-limits.md)、简短dispatch与返回元数据。完整需求、计划、源码、报告和技术收尾只传路径。这些是文件/消息格式，不是自动执行程序，字段不授予权限。
+ 
+-## 规划者派发
++仅在用户明确调用fpga-orchestrator并要求执行/恢复后适用本合同。引用/解释/修改规则等不触发新链，已授权同run按原范围续接。入口与停止意图见主技能及有界规则。
+ 
+-`dispatch.json`由规划者写，主不从dev-plan提取或自选任务。字段保持简短：
++## 规划派发
++
++dispatch.json由原规划写，主不从dev-plan选任务。至少包含：
+ 
+ | 字段 | 内容 |
+ |---|---|
+ | run_id / project_root / output_dir | 本run及实际绝对路径 |
+-| task_ids / batch_size | 规划确定的下一任务；默认1，用户明确大于1才定义批 |
++| task_ids / batch_size | 下一任务或用户明确批准批，默认1 |
+ | status / needs_user_input | ready / blocked / needs_user_input / finished及布尔值 |
+-| input_paths / write_scope / protected | 角色输入路径、允许范围与保护边界，可引用已写文件 |
+-| next_action | 固定操作、指定角色技能路径、输入路径、原角色槽位（续接时） |
+-| question_path / user_summary_path | 需原样转用户的问题或短总结，按状态提供 |
++| input_paths / write_scope / protected | 输入、允许路径与保护范围 |
++| next_action / after_development | 固定操作、角色技能/输入路径；续接时真实原角色槽位 |
++| scope_limits / execution_limits | 有界规则默认值或派发前冻结的有限覆盖值、理由及必要用户授权来源 |
++| question_path / user_summary_path | 适用时供主原样转发 |
+ 
+-`next_action.operation`只使用本流程动作：新任务`spawn_agent`、开发冻结后`spawn_three_testers`、同任务续接`followup_task`、终止态`return_to_planner`或`relay_to_user`。`spawn_three_testers`/`return_to_planner`/`relay_to_user`是dispatch逻辑标签，不是工具名；主依调用约定分别直接发出三次spawn、续接真实原规划ID或原样转发文本。主保留系统要求的权限/路径检查；发现越界将原信息交原规划者，不自行改范围。
++本轮默认1主要目标、最多4包、两级、每包最多5项语义步骤；超大需求的切片/余项、例外授权及角色停止预算按有界规则由规划记录，主不做范围判断。合批、新run或改ID不能绕限。
+ 
+-规划返回只含：`task_ids、dispatch_path、status、needs_user_input、question_path（适用时）、user_summary_path（适用时）`。详细计划/指南/索引路径放dispatch交开发和测试，不要求主读取正文。
++operation只用spawn_agent、spawn_single_tester、followup_task、return_to_planner、relay_to_user。后三种逻辑标签中的spawn_single_tester展开为一次原生spawn_agent，return_to_planner续真实原规划，relay_to_user原样转文本；标签不是工具名。主保留权限/路径检查，越界原样交原规划，不改范围。
+ 
+-## 开发与测试返回
++规划仅回task_ids、dispatch_path、status、needs_user_input及适用question_path/user_summary_path。有问题另附problem对象；详细计划留文件。
+ 
+-开发返回：`task_ids、status、artifact_paths、manifest_path、test_input_paths、lessons_path（已有时）、blocked、retest（修复时）`。停止修改并冻结后才可返回`ready_for_test`。
++## 开发与综合测试返回
+ 
+-测试每任务返回：`task_id、dimension、verdict（PASS/FAIL）、report_path、manifest_path、blocked、retest`。`dimension`只能是functional/engineering/system；报告第一行保持唯一`### 判定：PASS`或`### 判定：FAIL`。首轮round=0，修正轮1—3。
++开发仅回task_ids、status、artifact_paths、manifest_path、test_input_paths、lessons_path（已有时）、blocked、retest（修复时）。停止修改、活动结束并冻结后才可ready_for_test。
+ 
+-`blocked`为空或简短条件元数据（类别、缺失条件路径、`blocked/awaiting_hardware/needs_user_input`状态）；详细解释留文件。缺必需条件时判定FAIL，G层中区分`blocked/not_run/fail`，不能误称DUT实测失败。
++综合测试每任务仅回task_id、dimension=integrated、dimension_results、verdict（PASS/FAIL）、report_path、manifest_path、blocked、retest。dimension_results覆盖functional/engineering/system的适用性、结果及G层，详细依据留报告。每任务每轮一份<task_id>-r<round>-integrated.md，首行唯一判定标题。round0首次验收，round1—3实际修复。
+ 
+-`retest`由开发/测试给：`required_dimensions、report_paths、input_status（same/changed/drifted）、reuse_decision_paths`。FAIL维度必复测；受影响PASS维度续原测试者判断复测/证据复用。主只转发清单；清单缺失、矛盾或证据输入不同即交原角色补齐，不能自行推断。新manifest的最终三维判定由各对应测试者明确绑定，旧证据复用也由该测试者出具绑定依据。
++blocked为空或简短条件元数据，包含类别、缺项/恢复路径和blocked/awaiting_hardware/needs_user_input状态。必需门槛缺条件为FAIL；报告G层区分blocked/not_run/fail，不误称DUT已实测判坏。
++
++retest由开发/综合测试给required_dimensions、required_checks、report_paths、input_status（same/changed/drifted）、reuse_decision_paths。失败与受影响项必须复测；未影响证据由同一综合测试者明确复用依据并绑定当前manifest。主只转清单，缺失/矛盾按有限返回机会处理，不猜影响，不拼不同输入PASS。
++
++## 问题元数据与机会
++
++problem须含problem_id、reason_code、new_information（布尔）、evidence_path、requested_action、resume_input_path；固定枚举、稳定身份及外部阻塞分类按有界规则。主仅在收到返回时按task_id+problem_id登记最多2次续原责任角色机会，不能用wait超时触发机会。
++
++仅字段齐备、new_information=true、证据/恢复路径齐备且requested_action是原授权范围补充/整理，才机械followup_task续原角色。new_information=false、缺字段/矛盾、身份无法稳定归类或2次后仍同问题，交原规划blocked/备条件；规划不靠转交重置计数。外部工具/设备/资料/权限/API/额度缺失直接交规划，不走机会循环、不自动重试/扩权。到限后仅真实新用户输入或条件变化可由原规划明确恢复。实际实现修复单按round1—3，不伪装为返回机会。
+ 
+ ## 固定状态流转
+ 
+-| 可观察状态 | 主的机械下一步 |
++| 收到的可观察返回 | 主的机械下一步 |
+ |---|---|
+-| 规划ready | 按dispatch新建本任务开发；用户明确合批时按规划批执行 |
+-| 开发ready_for_test且停止修改/manifest齐备 | 新建三测试并行，传同一manifest与计划路径 |
+-| 三维同候选PASS | 续接原规划，传矩阵/报告路径/轮数，由其更新与派发 |
+-| 同任务FAIL、blocked为空、实际修复轮数<3 | 续原开发传全部失败报告；新冻结后按角色影响清单续原测试 |
+-| blocked非空/需用户输入 | 立即续原规划准备条件或问题，主原样转用户；不消耗空转修复轮 |
+-| 三轮实际修复后仍FAIL | 续原规划，保留⚠未通过；下一独立任务由规划派发 |
+-| 缺输入/疑问/返回过长/状态矛盾 | 交原责任角色整理；范围验收归规划、实现归开发、复现报告归测试 |
+-| ID失效/跨会话恢复 | 原规划能续则续；否则新建同规划角色读文件恢复，登记新旧映射，再由其派发恢复方案 |
+-| 无多agent工具/额度不可用 | 如实记录blocked与待调度入口，不让主接管、不自动重试 |
++| 规划ready | 按dispatch新建本任务开发或用户明确批准批 |
++| 开发ready_for_test且停止修改/manifest齐备 | spawn_single_tester，只新建一综合测试者，传同输入 |
++| 综合同候选PASS | 续原规划，传三维结果、报告路径与轮数 |
++| 同任务FAIL、blocked为空且实际修复<3 | 续原开发；重新冻结后续本任务原综合测试者 |
++| blocked非空/需输入/外部错误/角色主动停止 | 立即交原规划备条件，主原样转用户，不空转 |
++| 三轮实际修复后仍FAIL | 原规划保留⚠未通过，决定本轮范围内独立后续包 |
++| 疑问/无效/过长/矛盾/重复问题 | 按problem计数和固定条件续原责任角色或直接交原规划 |
++| 实际工具报ID失效/跨会话恢复 | 原规划能续则续，否则新规划按文件恢复并登记新旧真实映射 |
++| 多agent工具/额度不可用 | 如实blocked并给恢复入口，主不接管、不自动重试 |
++| wait_agent等待超时，无返回 | 不检查、不催促、不判故障、不重试；继续只接收事件 |
+ 
+-默认新任务新开发与新三测试，不把上一任务对话转作下一任务；原规划负责本run连续派发和收尾。同任务修复才复用本任务原开发/测试。每批仅一个开发者、三测试各覆盖全批；轮数与逐任务判定分别记账。
++默认每新任务新开发/新综合测试，不跨任务复用；同任务修复才续原ID。主不轮询list_agents、不扫描目录日志、不问进度；wait_agent单次<=60000ms仅等事件，具体边界见有界规则。
+ 
+-原规划者读取详细报告完成任务记录、handoff、final-summary与用户短总结；主仅转发。开发维护lessons。任务状态和G层验证分账，离线子包完成不把父硬件任务置done，不降低必要验收。用户反馈逐字保存并按原路径传给责任角色。不得通过本合同扩展删除、外部写入、硬件操作、发布、外部消息或自动化授权。
++原规划读详细报告更新允许的任务记录、dispatch、handoff、final-summary和用户短总结；开发写lessons，主只转发。任务/G层分账，离线子包不把父硬件任务置done。用户反馈逐字保存并传路径。不得扩展删除、外部写入、硬件、发布、外部消息或自动化授权。
+diff --git a/.agents/skills/fpga-orchestrator/references/report-contract.md b/.agents/skills/fpga-orchestrator/references/report-contract.md
+--- a/.agents/skills/fpga-orchestrator/references/report-contract.md
++++ b/.agents/skills/fpga-orchestrator/references/report-contract.md
+@@ -1,32 +1,28 @@
+-# 三维测试报告约定
++# 综合测试报告约定
+ 
+-默认每任务新建三个测试者；同任务FAIL和修复影响才续原测试。只有用户明确批大小大于1时每个测试者覆盖规划批全部任务。每任务一份报告，输出路径为`OUTPUT_DIR/test-reports/<task_id>-r<round>-<dimension>.md`。首轮round=0，修正轮1—3只计实际修复。同一文件只属一个测试者；后续轮次新建，保留失败报告。开发停止修改后，三者独立检查同一manifest。
++默认每任务新建一个与开发独立的综合测试者；仅同任务FAIL及修复影响续原测试。用户明确批大小大于1时一综合测试者覆盖全批，仍逐任务出报告。开发停止修改、活动结束并冻结唯一manifest后测试。三维是检查清单，不是三个代理。
+ 
+-第一行必须是以下之一，文件中只出现一条该判定标题：
++每任务每轮一份OUTPUT_DIR/test-reports/<task_id>-r<round>-integrated.md。round0首次验收，round1—3最多三轮实际修复；每轮新建报告，保留失败证据。本约定及[有界规则](work-limits.md)覆盖旧领域技能中的调度/并行/分维报告历史语句。
+ 
+-```text
+-### 判定：PASS
+-```
++首行必须是以下之一，文件只出现一条判定标题：
+ 
+-```text
+-### 判定：FAIL
+-```
++- ### 判定：PASS
++- ### 判定：FAIL
+ 
+-PASS/FAIL表示“本任务本维度预先要求的门槛是否满足”。缺设备、未运行和实际失败都不能写PASS，但详细G层结果必须区分`not_run / blocked / fail`，不能误报为DUT被实测判坏。
++实际报告首行直接写标题，不加列表符号。总体PASS表示本任务全部预先要求的适用门槛满足；缺设备、未运行或实际失败不能写PASS。G层须区分pass/fail/not_run/blocked/not_applicable，不将缺条件误报为DUT已实测判坏。
+ 
+ 报告至少写：
+ 
+-- task_id、dimension、round、实际工作树/候选、冻结输入manifest路径及SHA256、工具版本。
+-- 本任务范围、必需G层和通过阈值；`pass/fail/not_run/blocked/not_applicable`逐层记录。不适用须引用规划时确定的理由。
+-- 实际命令、工作目录、退出码、完成标记、非空产物及原始证据路径。没有运行的命令明确标为建议，不能放进“实际执行”。
+-- 触发条件、期望/实际、可复现缺陷、影响范围。测试者不修生产文件，必要验证副本/变异输入独立保存。
+-- 新旧输入差异、证据复用依据；共享接口/顶层变化必须指出对其他维度的影响。
+-- 真实硬件观察者/时间/位流身份、未测项、下一动作及回退。纯离线任务说明上板层不适用的范围。
++- task_id、dimension=integrated、dimension_results、round、实际工作树/候选、manifest路径/SHA及工具版本。
++- functional、engineering、system逐项适用性、要求/阈值、结果、证据；各G层状态及规划预先确定的不适用理由。
++- 独立审阅范围/结论及随后最终实际文件、测试结果、哈希复核；独立于开发，同一综合测试者依次承担，无需额外审阅代理。
++- 实际命令、cwd、退出码、完成标记、非空产物和原始证据；未执行命令明确标建议。
++- 触发、期望/实际、复现、影响范围；测试不修冻结候选，验证副本/变异输入隔离保存。
++- 输入变化、失败/受影响检查清单、未影响证据的复用依据及当前manifest绑定，不能混拼不同输入PASS。
++- 必要真实硬件的观察者/时间/位流身份/电源/连接/负载与计数；未测边界、下一步和回退。纯离线任务注明硬件层不适用理由。
+ 
+-给主的返回仅含[传输合同](relay-contract.md)字段：`task_id、dimension、verdict（PASS/FAIL）、report_path、manifest_path、blocked、retest`。详细缺陷写报告，由原开发读取修复，原规划读取更新/收尾；主只登记元数据，必要时提取首条判定，不读完整报告或判断根因/复测影响。
++给主仅回[传输合同](relay-contract.md)字段task_id、dimension=integrated、dimension_results、verdict、report_path、manifest_path、blocked、retest；问题附有界规则的problem对象。详细缺陷交原开发读取，原规划读报告更新/收尾；主只登记，必要时提取首条判定，不读完整报告判断根因/影响。
+ 
+-复测维度/输入变化清单由开发和测试提供；旧证据复用由对应测试者明确依据并绑定当前manifest，不拼不同输入PASS。缺必需设备/工具/资料/用户输入或额度直接blocked交原规划，不空转三轮。过长/无效/缺字段返回由原角色整理；范围/验收疑问交规划，复现/报告归测试，实现归开发。用户反馈保持原话。三轮后仍FAIL保留⚠未通过，由原规划决定独立后续任务。
++综合测试者按范围/风险选择完整必要检查；文档/模型不用无关硬件流程。纯文档/软件三维适用检查满足、硬件层明确不适用可总体PASS，不证明RTL、实拍、整机或完整调度行为通过。回放stub、软件吞吐、旧位流照片不能充当真实DUT、硬件性能或新位流板测。
+ 
+-软件或文档工作包可在自己范围三维PASS，例如功能语义、工程可复现、接口兼容性均满足且G3明确不适用；这不证明RTL、实拍或整机通过。测试台回放stub、软件吞吐、旧位流照片不能分别充当真实DUT、硬件性能或新位流板测。
+-
+-如果并行测试时发现输入已变，停止引用该次结果，登记漂移并要求重新冻结；不要以旧哈希新日志组装完整通过。最终STA失败、必要CDC问题、帧损坏、DMA越界或无法证明必需门槛，三轮之后也不能强制通过。
++测试输入漂移时停止引用该次结果并回报，重新冻结后判定。必要最终STA/CDC、帧完整性、DMA边界或硬件门槛无法证明，三轮后也不能强制PASS。缺必需设备/工具/资料/授权/额度直接blocked交原规划，不空转三轮、不自动重试API。无效/过长/重复返回按有界规则最多2次有新信息的补充机会，与实际修复轮数分账。子角色自行有限执行和主动停止，主不监控。
+diff --git a/.agents/skills/fpga-orchestrator/references/codex-calls.md b/.agents/skills/fpga-orchestrator/references/codex-calls.md
+--- a/.agents/skills/fpga-orchestrator/references/codex-calls.md
++++ b/.agents/skills/fpga-orchestrator/references/codex-calls.md
+@@ -1,20 +1,24 @@
+ # Codex 原生命令对照与调用模板
+ 
+-2026-10-16按本会话实际工具schema核对。调用服务于[主对话传输合同](relay-contract.md)：默认新任务新DEV/三TEST，同任务修复续原ID；用户明确批大小大于1才由规划定义批。后续工具版本不同时先读实际schema，不复制不存在的参数。
++2026-10-17同步调用合同。调用服务于[主对话传输合同](relay-contract.md)及[有界规则](work-limits.md)：默认新任务新DEV/一个综合TEST，同任务修复续真实原ID；用户明确合批不扩大需求范围。后续工具版本不同时先读实际schema，不复制不存在的参数。
+ 
+ | 原调用/字段 | 本环境替换 | 保留的语义 |
+ |---|---|---|
+ | `Agent(subagent_type=..., prompt=...)` | `collaboration.spawn_agent(task_name=..., message=..., fork_turns="none")` | 新建一个指定角色的执行者 |
+ | `subagent_type` | 在message内指定真实`SKILL.md`绝对路径 | 角色职责；不是注册一个虚构agent_type |
+-| `run_in_background=true` | `spawn_agent`非阻塞返回；用`wait_agent/list_agents`观察 | 后台完成后收集结果 |
++| `run_in_background=true` | `spawn_agent`非阻塞返回；只接收返回事件，用`wait_agent`等事件 | 后台完成后收集结果 |
+ | `Agent(resume=DEV_ID, ...)` | `collaboration.followup_task(target=DEV_ID, message=...)` | 原开发者继续修复 |
+ | 测试者`resume` | `followup_task(target=原测试者ID, ...)` | 原测试者继续复测 |
+-| `TaskOutput` | `collaboration.wait_agent`，随后读取到达的消息/必要时`list_agents` | 等待完成；等待本身不返回完整报告 |
++| `TaskOutput` | `collaboration.wait_agent`，只接收到达消息，超时无检查动作 | 等待完成；等待本身不返回完整报告 |
+ | `Grep(pattern="^### 判定", path=...)` | PowerShell中`rg -m 1 '^### 判定' -- $reportPath` | 仅提取第一条判定 |
+ | Bash `Read` | `Get-Content -LiteralPath` | 主只读简短dispatch/元数据，不读完整计划/材料/源码/报告 |
+ | `find ~/.claude/projects/...agent-*.meta.json` | 保存`spawn_agent`实际返回的canonical task name/ID | 不扫描Claude缓存，不猜“最近ID” |
+ 
+ 这些是智能体工具调用，不是shell命令。`collaboration`调用必须直接调用工具，不能放进`functions.exec`的JavaScript里。不要为了沿用旧语法创建一个假`Agent()`脚本。
++
++## 显式启动入口
++
++仅当前用户明确调用本项目fpga-orchestrator并要求执行/恢复才启动角色链：$fpga-orchestrator 执行：需求；或$fpga-orchestrator 恢复：原run绝对路径；本轮目标：目标。选择器显式选择后明确执行/恢复同样有效。仅引用、代码示例、转述、问答或查看/修改规则不触发。主Skill的agents/openai.yaml关闭隐式调用；已授权同run续接不另开新链，明确停止/退出则停止派发。静态检查不证明客户端真实加载；不用MCP封装本轮规则。
+ 
+ ## 新建角色
+ 
+@@ -43,11 +47,11 @@
+ 
+ `target`必须替换为原来实际返回的ID；不要把模板值当真实代理。`send_message`可传信息，但空闲代理需要新工作时应使用`followup_task`。
+ 
+-## 等待与并行
++## 单综合测试派发与事件等待
+ 
+-默认每任务新建开发与三个测试，不跨任务复用对话；同任务FAIL和受修复影响的维度续接本任务原测试者。用户明确合批时三个测试者各覆盖规划批全部任务。开发停止修改、冻结manifest且活动结束后，依次发出三次`spawn_agent`使三测试并行，共用同一manifest和相关计划路径。同一输入不得边改边测。当前总活动槽为4，先等槽位，不超量派生；子角色禁止派生。
++默认每任务新开发与一个新综合测试者，不跨任务复用；同任务FAIL续本任务原开发/综合测试。用户明确合批时一综合测试者覆盖全批。开发停止修改、冻结manifest且活动结束后，dispatch的spawn_single_tester只展开一次原生spawn_agent，skill指定fpga-tester/SKILL.md，传manifest及计划路径。返回dimension=integrated、dimension_results与一份综合报告；不启动旧三测试或额外审阅代理，不边改边测。子角色禁止派生。
+ 
+-`collaboration.wait_agent`使用不超过60000ms的有界等待；期间有本地调度工作就先做。等待返回后查看实际到达消息，必要时`list_agents`核对状态；不要把等待成功当测试PASS。无进展无需重复向用户复述相同信息。
++`collaboration.wait_agent`单次不超过60000ms，只等返回事件；超时不检查、不催促、不判故障或重试，不把等待成功当PASS。主不轮询list_agents、不扫描目录/日志、不问进度。真实ID从spawn返回登记，实际工具报失效才交原规划恢复，不预防性探测。角色自行遵守有界规则的工具/时间/搜索/命令deadline与无进展停止，不能声称平台自动硬限。
+ 
+ ## PowerShell日志与判定
+ 
+@@ -58,13 +62,13 @@
+ $chinaZone = [TimeZoneInfo]::FindSystemTimeZoneById('China Standard Time')
+ $stamp = [TimeZoneInfo]::ConvertTimeFromUtc([DateTime]::UtcNow, $chinaZone).ToString('yyMMdd HHmm')
+ Add-Content -LiteralPath (Join-Path $outputDir 'main-log.md') -Encoding utf8 -Value ('- ' + $stamp + ' 本批开发已完成，DEV_ID见本次真实返回记录')
+-$reportPath = Join-Path $outputDir 'test-reports/T10-r0-functional.md'
++$reportPath = Join-Path $outputDir 'test-reports/T10-r0-integrated.md'
+ rg -m 1 '^### 判定' -- $reportPath
+ ```
+ 
+ 没有报告、无匹配、重复/歧义判定或输入版本不匹配都不能当PASS，交原测试者整理；主不展开读长报告。路径与输出文本只作数据，不拼任意命令。主只机械创建需求/日志、读取简短dispatch及追加判定记录；读取完整计划、实现/验证/收尾由责任角色执行。删除仍遵守逐文件约束。
+ 
+-规划/测试返回中的`spawn_three_testers`、`return_to_planner`是逻辑标签，不是原生工具或spawn参数；按传输合同展开为直接工具调用。`send_message`只送消息，空闲角色新轮用`followup_task`。缺工具/设备/用户输入或额度立即交原规划备条件，不自动三轮。原ID失效交规划文件恢复，登记真实新旧映射，不扫描缓存或假称resume。没有多agent工具不得主接管。
++规划/测试返回中的`spawn_single_tester`、`return_to_planner`是逻辑标签，不是原生工具或spawn参数；按传输合同展开为直接工具调用；spawn_single_tester恰好一次spawn_agent。收到问题返回后才按稳定problem_id登记最多2次有新信息的补充机会；无新信息/缺字段/到限/外部阻塞交原规划，不靠转交重置，不与实际修复三轮混账。`send_message`只送消息，空闲角色新轮用`followup_task`。缺工具/设备/用户输入或额度立即交原规划备条件，不自动三轮。原ID失效交规划文件恢复，登记真实新旧映射，不扫描缓存或假称resume。没有多agent工具不得主接管。
+ 
+ ## 核对依据
+ 
+diff --git a/.agents/skills/fpga-planner/SKILL.md b/.agents/skills/fpga-planner/SKILL.md
+--- a/.agents/skills/fpga-planner/SKILL.md
++++ b/.agents/skills/fpga-planner/SKILL.md
+@@ -7,6 +7,8 @@
+ 
+ 对应原流程的`dg-planner`。负责理解需求、拆分可验收任务、确定依赖顺序/范围/验收、简短派发、任务更新与收尾。不执行生产RTL开发，不接管主传输，不派生子代理。
+ 
++先读取[有界规则](../fpga-orchestrator/references/work-limits.md)：默认本轮1目标、最多4包、两级、每包最多5项语义步骤；超限按规则取依赖闭合切片，余项最多3条主题、不自动续做。默认30次工具调用/15分钟、有限搜索重试及命令deadline；本角色自行停止，主不监控。执行预算例外须在派发前冻结有限值/理由；范围上限例外须用户明确本轮有限值并记录授权来源，不以合批/新run/ID绕限。
++
+ ## 输入与定位
+ 
+ 接收实际项目根、用户原话/材料路径、OUTPUT_DIR、批大小与用户约束。读取根AGENTS、实际需求及[项目入口](../fpga-orchestrator/references/project-context.md)中任务相关材料；再核对相关README/交接、任务板和证据。纯配置任务不强制读生产源码、D盘工程或运行无关检查。先辨别工作树、dirty修改和所有者；其他工作树未授权只读。不要用旧标题覆盖新证据，也不重复访谈已确认硬件/目标。
+@@ -15,7 +17,7 @@
+ 
+ 1. `OUTPUT_DIR/input-index.md`：当前需求、赛题/设计、工程/参考、证据、已有成果/所有者的准确路径；附本次采用的版本和未决事项。
+ 2. `OUTPUT_DIR/fpga-design-guide.md`：先读取`fpga-design-guide/SKILL.md`；冻结本任务的数据格式、接口、参数、工作目录、构建入口及现有约束。复用已有协议，不另起冲突标准。
+-3. `OUTPUT_DIR/dev-plan.md`：理解需求后按原T任务归属拆可验收工作包，确定任务顺序、依赖与ready/blocked；同一全局任务不新造第二ID。每包填实际工作树/允许写范围、明确产物、三维测试对象、必要G层、阈值、所需工具/设备、停止条件、回退与负责角色。主不读取完整计划或自行选题。
++3. `OUTPUT_DIR/dev-plan.md`：理解需求后按原T任务归属拆可验收工作包，确定任务顺序、依赖与ready/blocked；同一全局任务不新造第二ID。每包填实际工作树/允许写范围、一个主要可观察结果、最多5项语义步骤、综合测试的三维检查对象、必要G层、阈值、所需工具/设备、停止条件、回退与负责角色。主不读取完整计划或自行选题。
+ 4. `OUTPUT_DIR/dispatch.json`：按[传输合同](../fpga-orchestrator/references/relay-contract.md)只给主下一任务/角色/路径/范围/固定操作及ready、blocked、需用户输入状态；问题写独立文件供主原样转发。详细内容留计划，不让主解析报告或补做技术决定。
+ 
+ 任务计划最小表：`task_id｜问题/产物｜实际工作树/允许写路径｜依赖｜functional验收｜engineering验收｜system验收｜必要G层｜状态｜下一动作`。复杂接口在指南说明，避免把源码/原始报告粘进计划。
+@@ -23,18 +25,20 @@
+ ## FPGA适配
+ 
+ - 当前方向以最新有证据的用户决定为准；配置时为Bayer预测＋有界Rice＋RAW回退，旧LZ77路线不自动复活。规则接受口径未定单列风险。
+-- 默认每任务新开发与新三测试，不跨任务复用角色对话；只有用户明确指定批大小大于1才定义批，每批一个开发者顺序实现、三测试各覆盖全批。依赖/批次/先后由规划者决定，主只执行dispatch。不能把互相等待的顶层/DDR/IP修改当独立并行任务。
++- 默认每任务新开发与一个新综合测试者，不跨任务复用；只有用户明确批大小大于1才定义批，每批一开发顺序实现、一综合测试覆盖全批，任务总数不因合批减少。依赖/批次/先后由规划者决定，主只执行dispatch。不能把互相等待的顶层/DDR/IP修改当独立并行任务。
+ - 同时明确“本次范围done”与“父工程done”。纯文档/软件子包不必运行TD或上板，G2/G3等事先注明不适用理由；真实RTL、时序和板测必要项不得排除以求PASS。
+ - 已有BPR1与局部RTL、parallel软件轨道先核对再安排接入。回放stub只能证明TB通路，不能记为算法DUT完成；未合并/未提交成果明确其位置，不直接覆盖。
+-- 三维测试者按同一冻结输入出独立报告，使用[报告约定](../fpga-orchestrator/references/report-contract.md)。工程候选交付必须包含工作流5.1适用项。
++- 一个与开发独立的综合测试者按同一冻结输入逐任务每轮出integrated报告，内部覆盖三维相关检查，使用[报告约定](../fpga-orchestrator/references/report-contract.md)。工程候选交付必须包含工作流5.1适用项。
+ - 共享bit、CWC、最终DB和物理板卡必须有唯一候选/独占窗口；板测需要用户或真实工具执行，缺窗口标awaiting_hardware。
+ - 日期是风险检查点，不是完成证据；有新范围/架构决定时给用户具体取舍材料，已授权独立包继续。
+ 
+ ## 结果流转与收尾
+ 
+-三维同候选PASS后，接收主转来的判定矩阵、报告路径和轮数，读取详细报告并更新本次允许的任务记录/全局任务状态与dispatch。离线子包完成不把父硬件任务置done；run内计划不替代`workflow/tasks.json`和证据。用户限定不改任务板时遵守该保护范围。
++综合同候选PASS后，接收主转来的判定矩阵、报告路径和轮数，读取详细报告并更新本次允许的任务记录/全局任务状态与dispatch。离线子包完成不把父硬件任务置done；run内计划不替代`workflow/tasks.json`和证据。用户限定不改任务板时遵守该保护范围。
+ 
+-同任务真实FAIL由原开发/测试修复复测，round0首次验收，最多三轮实际修复。复测影响/证据复用由开发和测试给清单，主不判断。缺设备/工具/资料/用户输入或额度不可用立即备条件/具体问题，不要求空转三轮。三轮后仍FAIL保留⚠未通过，重排可独立继续任务；依赖未满足项保持blocked，不能放宽验收换PASS。
++同任务真实FAIL由原开发/原综合测试修复复测，round0首次验收，最多三轮实际修复。复测影响/证据复用由开发和测试给清单，主不判断。缺设备/工具/资料/用户输入或额度不可用立即备条件/具体问题，不要求空转三轮。三轮后仍FAIL保留⚠未通过，重排可独立继续任务；依赖未满足项保持blocked，不能放宽验收换PASS。
++
++范围/验收疑问由本角色处理，须返回稳定problem元数据；收到返回后的补充机会最多2次且仅有新信息，按有界规则执行，转交不重置，与实际修复轮数分账。外部阻塞直接备条件，不走机会循环。本角色不得借反复澄清或新增run/子ID扩展本轮范围。
+ 
+ 范围/验收疑问由本角色处理，复现/报告交原测试，实现交原开发；用户反馈保持原话。原ID可续则续；跨会话失效时读计划、交接、冻结输入和报告恢复，并让主登记新旧ID映射，不假称resume，不跨任务复用开发/测试。无多agent工具不得让主接管。
+ 
+diff --git a/.agents/skills/fpga-design-guide/SKILL.md b/.agents/skills/fpga-design-guide/SKILL.md
+--- a/.agents/skills/fpga-design-guide/SKILL.md
++++ b/.agents/skills/fpga-design-guide/SKILL.md
+@@ -8,6 +8,8 @@
+ 替换截图规划者引用的幻灯片设计规范`dg-gray-slide-designer`。本技能由规划者/开发者按任务需要使用，不新增常驻角色，不派生代理。需求理解、拆分、依赖、范围与三维验收由规划者负责；主只传路径，不读完整指南或判断工程影响。
+ 
+ 读取[项目入口](../fpga-orchestrator/references/project-context.md)的任务相关项、本次需求与已有设计/接口；只冻结相关项，引用原文件。纯文档配置只定配置合同、写范围和静态复核，不强制读生产源码、访问D盘、跑TD/板测。通用规范不替代实际工具报告或双方确认。旧值与新值冲突时给来源和版本，不凭“最终版”文件名决定。
++
++遵守[有界规则](../fpga-orchestrator/references/work-limits.md)。本规范不增加目标/工作包/拆分层级；指南由规划/开发在各自有限预算内完成，不单独派代理。三维是一个综合测试者的检查清单，适用项与不适用理由由规划事先限定；风险增大增加必要检查或缩小包，不自动增加测试角色。
+ 
+ ## 必须明确的工程语义
+ 
+@@ -36,4 +38,4 @@
+ 
+ 改变共享协议/几何/时钟/IP时，由开发/测试给出需要复测的维度、输入变化与证据复用依据，主按清单传输，不自行判断影响；队友确认材料交用户安排，不扩大外部消息授权。遵守已选1080p60和封存/暂缓项，不因优化擅自改变用户目标；失败不通过放宽约束掩盖。只有确需新增规范时才写，避免重复建设。
+ 
+-指南结尾列“已冻结/待确认/不适用”和本次三个测试维度的边界；交由规划者纳入dev-plan。不得将配置值、设计预算、作者结果写成当前板实测。
++指南结尾列“已冻结/待确认/不适用”和本次综合测试的三个检查维度边界；交由规划者纳入dev-plan。不得将配置值、设计预算、作者结果写成当前板实测。
+diff --git a/.agents/skills/fpga-dev/SKILL.md b/.agents/skills/fpga-dev/SKILL.md
+--- a/.agents/skills/fpga-dev/SKILL.md
++++ b/.agents/skills/fpga-dev/SKILL.md
+@@ -5,7 +5,9 @@
+ 
+ # FPGA 开发智能体
+ 
+-对应原`dg-slide-dev`。默认每个新任务新开发代理，仅同任务FAIL修正续接本代理，不跨任务复用对话。用户明确批大小大于1时由规划者定义批，每批只用本开发者顺序实现，三测试各覆盖全批。允许计划范围的代码、脚本、模型、文档和必要局部检查；正式三维判定由三个独立测试者完成。不得再派生代理或接管主传输。
++对应原`dg-slide-dev`。默认每个新任务新开发代理，仅同任务FAIL修正续接本代理，不跨任务复用对话。用户明确批大小大于1时由规划定义批，每批只用本开发者顺序实现，一个与开发独立的综合测试者覆盖全批。允许计划范围的代码、脚本、模型、文档和必要局部检查；正式三维检查由一个综合测试者统一完成。不得再派生代理或接管主传输。
++
++先读[有界规则](../fpga-orchestrator/references/work-limits.md)，在冻结范围内执行：默认本轮1目标/最多4包/两级，每包最多5项语义步骤；本角色每次派发/续接30次工具调用、45分钟，单问题3轮搜索/读取、同失败命令首次+1次有新证据重试、连续2次无进展主动blocked。命令启动前落实实际deadline/安全终止，yield不是超时。主不监控或催促，运行中不自行扩预算或范围。
+ 
+ ## 开工
+ 
+@@ -18,8 +20,8 @@
+ 1. 每项先确定可观察的成功条件及必要测试；功能修复要有能拒绝旧行为的针对性检查，避免镜像实现的自证测试。
+ 2. 实现最小完整工作包，遵守真实ready/valid、帧裁决、地址/长度/CRC、复位/跨域与接口合同；不顺便增加ISP/第二压缩器/4K等未排期功能。
+ 3. 局部检查覆盖本次改动，保存实际命令、工作目录、退出码、标记、产物路径。失败日志保留，不将单一exit0或“文件生成了”当通过。
+-4. 冻结本任务/批准批的实际待测文件与相关参数、IP/约束/ROM/脚本和SHA，建立唯一manifest。停止修改并结束活动后只返回冻结路径和ready_for_test元数据，供主启动同输入三测试并行；详细内容留文件。
+-5. 修复后按传输合同给复测影响清单：必复测维度、输入变化、报告路径和证据复用待判项。修改公共接口/顶层/时钟时标注其他维度；主只转发，不判断根因/影响，不拼旧PASS。
++4. 冻结本任务/批准批的实际待测文件与相关参数、IP/约束/ROM/脚本和SHA，建立唯一manifest。停止修改并结束活动后只返回冻结路径和ready_for_test元数据，供主只启动一个新综合测试者检查同一输入；详细内容留文件。
++5. 修复后按传输合同给复测影响清单：必复测维度、输入变化、报告路径和证据复用待判项。修改公共接口/顶层/时钟时标注其他受影响检查项；主只转发，不判断根因/影响，不拼旧PASS。
+ 
+ 纯文档/软件任务只做对应工作，不为符合流程运行无关TD或板测。硬件候选下载和Flash写入不由文档或技能自动授权；生产候选必须通过适用门槛并有当前任务授权。
+ 
+@@ -27,12 +29,14 @@
+ 
+ 读取主原样转来的用户反馈与全部未通过报告，按原允许范围一次修正同任务/批准批问题。报告与需求不一致时保留证据交原规划，复现/报告疑问交原测试；不靠放宽阈值、删除负对照或把必需层改不适用获得PASS。
+ 
+-round0首次验收；最多三轮实际修复，每轮重新冻结并更新`lessons-learned.md`，只记可复用根因/触发/修正/验证入口。缺工具/设备/资料/用户输入或额度时直接返回blocked，由原规划备条件，不空转三轮、不自动重试。第三轮仍未达门槛保留失败，交原规划决定后续独立任务，不声称“低质量通过”。
++round0首次验收；最多三轮实际修复，每轮重新冻结并更新`lessons-learned.md`，只记可复用根因/触发/修正/验证入口。缺工具/设备/资料/授权/用户输入或额度、达到预算或无进展时直接返回blocked，由原规划备条件，不空转三轮、不自动重试。第三轮仍未达门槛保留失败，交原规划决定后续独立任务，不声称“低质量通过”。
+ 
+ 已授权且确能节省工作的简单向量/文本/日志转换可使用DeepSeek，遵守根AGENTS的最小上下文、提案检查、原生执行与resume规则。不得让worker承担架构、复杂调试、真实板测或最终验收，也不改变一个开发者的责任。
++
++有问题返回有界规则规定的稳定problem_id、reason_code、new_information、evidence_path、requested_action、resume_input_path。补充/整理机会最多2次，须真实新信息及原授权范围；无新信息/到限交原规划，转交不重置。外部阻塞/API错误不自动重试，实际实现修复单独计round1—3。
+ 
+ ## 交付
+ 
+ 详细变更、局部检查、未测边界、回退和lessons写文件；任务记录、任务板、dispatch、handoff和技术收尾由原规划者在允许范围更新，开发不代写用户技术总结。离线子包完成不把父硬件任务置done。
+ 
+-向主只按传输合同返回任务ID、状态、产物绝对路径、manifest、测试输入/lessons路径、必要blocked及复测清单。不粘源码或长报告，不宣称三个独立测试已通过；过长/缺字段返回由本角色整理。失效ID/跨会话恢复交规划者按文件恢复并登记新旧映射，不能假称resume。
++向主只按传输合同返回任务ID、状态、产物绝对路径、manifest、测试输入/lessons路径、必要blocked及复测清单。不粘源码或长报告，不宣称综合独立验收已通过；过长/缺字段返回由本角色整理。失效ID/跨会话恢复交规划者按文件恢复并登记新旧映射，不能假称resume。
+diff --git a/.agents/skills/fpga-tester-functional/SKILL.md b/.agents/skills/fpga-tester-functional/SKILL.md
+--- a/.agents/skills/fpga-tester-functional/SKILL.md
++++ b/.agents/skills/fpga-tester-functional/SKILL.md
+@@ -1,9 +1,11 @@
+ ---
+ name: fpga-tester-functional
+-description: Use when assigned functional validation of a frozen task or an explicitly approved batch in this FPGA workflow, including document, model, RTL and protocol behavior.
++description: Historical functional checklist reference for fpga-tester; not an independently dispatched default role.
+ ---
+ 
+ # FPGA 功能测试智能体
++
++> **历史参考，当前不独立派发。** 本文件保留原专业检查内容；其中旧角色调度、另两维并行、分维报告及独立续接语句均无现行执行效力。现由一个[fpga-tester综合测试者](../fpga-tester/SKILL.md)按任务范围/风险按需引用；以[报告约定](../fpga-orchestrator/references/report-contract.md)、[传输合同](../fpga-orchestrator/references/relay-contract.md)及[有界规则](../fpga-orchestrator/references/work-limits.md)为准，不因读取本文件新增角色。
+ 
+ 替换原布局测试角色。默认每个新任务新建本维度测试者，仅同任务FAIL或其修复影响续接本代理，不跨任务复用对话；用户明确批准批大小大于1时一位测试者覆盖规划批全部任务。不派生代理、不改生产DUT。读取任务/批准批dev-plan、相关指南、同一冻结manifest与[报告约定](../fpga-orchestrator/references/report-contract.md)、[传输合同](../fpga-orchestrator/references/relay-contract.md)。开发停止修改后与另两维并行，主要G1，适用层和阈值由规划预先确定。
+ 
+diff --git a/.agents/skills/fpga-tester-engineering/SKILL.md b/.agents/skills/fpga-tester-engineering/SKILL.md
+--- a/.agents/skills/fpga-tester-engineering/SKILL.md
++++ b/.agents/skills/fpga-tester-engineering/SKILL.md
+@@ -1,9 +1,11 @@
+ ---
+ name: fpga-tester-engineering
+-description: Use when assigned engineering, build, timing, CDC, resource or candidate-integrity validation for a frozen task or an explicitly approved batch in this FPGA workflow.
++description: Historical engineering checklist reference for fpga-tester; not an independently dispatched default role.
+ ---
+ 
+ # FPGA 时序与工程测试智能体
++
++> **历史参考，当前不独立派发。** 本文件保留原专业检查内容；其中旧角色调度、另两维并行、分维报告及独立续接语句均无现行执行效力。现由一个[fpga-tester综合测试者](../fpga-tester/SKILL.md)按任务范围/风险按需引用；以[报告约定](../fpga-orchestrator/references/report-contract.md)、[传输合同](../fpga-orchestrator/references/relay-contract.md)及[有界规则](../fpga-orchestrator/references/work-limits.md)为准，不因读取本文件新增角色。
+ 
+ 替换原美观测试角色。默认每个新任务新建本维度测试者，仅同任务FAIL或其修复影响续接本代理，不跨任务复用对话；用户明确批准批大小大于1时覆盖规划批全部任务。不派生代理、不修改生产RTL/约束/IP。读取dev-plan、相关指南、同一冻结manifest、`workflow/README.md`第5.1节及[报告约定](../fpga-orchestrator/references/report-contract.md)、[传输合同](../fpga-orchestrator/references/relay-contract.md)。开发停止修改后与另两维并行；负责适用工程层及可追溯性，硬件G2是否必需由规划预先限定。
+ 
+diff --git a/.agents/skills/fpga-tester-system/SKILL.md b/.agents/skills/fpga-tester-system/SKILL.md
+--- a/.agents/skills/fpga-tester-system/SKILL.md
++++ b/.agents/skills/fpga-tester-system/SKILL.md
+@@ -1,9 +1,11 @@
+ ---
+ name: fpga-tester-system
+-description: Use when assigned interface, integration, board, stability, performance or release validation for a frozen task or an explicitly approved batch in this FPGA workflow.
++description: Historical system checklist reference for fpga-tester; not an independently dispatched default role.
+ ---
+ 
+ # FPGA 上板与系统测试智能体
++
++> **历史参考，当前不独立派发。** 本文件保留原专业检查内容；其中旧角色调度、另两维并行、分维报告及独立续接语句均无现行执行效力。现由一个[fpga-tester综合测试者](../fpga-tester/SKILL.md)按任务范围/风险按需引用；以[报告约定](../fpga-orchestrator/references/report-contract.md)、[传输合同](../fpga-orchestrator/references/relay-contract.md)及[有界规则](../fpga-orchestrator/references/work-limits.md)为准，不因读取本文件新增角色。
+ 
+ 替换原动画测试角色。默认每个新任务新建本维度测试者，仅同任务FAIL或其修复影响续接本代理，不跨任务复用对话；用户明确批准批大小大于1时覆盖规划批全部任务。不派生代理、不改生产文件。读取dev-plan、相关指南、同一冻结manifest、任务相关候选操作文档及[报告约定](../fpga-orchestrator/references/report-contract.md)、[传输合同](../fpga-orchestrator/references/relay-contract.md)。开发停止修改后与另两维并行；适用G0/G3—G5由规划预先限定，纯配置不启动无关板测或整机流程。
+ 
+diff --git a/workflow/FPGA多智能体工作流_使用说明.md b/workflow/FPGA多智能体工作流_使用说明.md
+--- a/workflow/FPGA多智能体工作流_使用说明.md
++++ b/workflow/FPGA多智能体工作流_使用说明.md
+@@ -1,118 +1,128 @@
+ # FPGA 多智能体工作流：主对话仅作传输
+ 
+-2026-10-16。沿用截图原主体及项目配套技能，按用户明确批准的完整《主对话仅作传输》模板同步默认入口。本轮不重新研究原图、不重设计流程，不运行旧试任务或完整工作流。
++2026-10-17现行规则。保留主传输/规划/开发分工，按用户新要求改为一个综合测试者、有限拆分、主不监控和有限返回机会。根[AGENTS.md](../AGENTS.md)是项目入口；统一有界正文见[工作范围、停止与有限返回机会](../.agents/skills/fpga-orchestrator/references/work-limits.md)。
+ 
+ ## 以后怎么用
+ 
+-已将默认入口写入根[AGENTS.md](../AGENTS.md)。以后在这个项目直接布置任务即可，例如：
++本项目复用现有fpga-orchestrator Skill作为唯一入口，关闭隐式调用，无需安装MCP或修改全局配置。需要启动时明确输入：
+ 
+-> 继续T10的行级压缩组合，复用现有BPR1软件和已有RTL，按默认工作流逐项验收。本次不改DDR/IP候选。
++> $fpga-orchestrator 执行：<本轮明确需求>
+ 
+-> 核对T03的R10F与BPR1接入合同，交付双方可用的字段表、样例和验收清单，不做硬件下载。
++> $fpga-orchestrator 恢复：<原run绝对路径>；本轮目标：<目标>
+ 
+-> 继续上次run，把原dev-plan、main-log、冻结manifest和失败报告路径交规划者恢复；同任务能续原开发/测试则续接，失效时登记新旧映射。
++从技能选择器显式选择后明确要求执行/恢复也有效。例如：
+ 
+-无需每次指定代理个数或粘贴长提示词。主提示词就是[fpga-orchestrator/SKILL.md](../.agents/skills/fpga-orchestrator/SKILL.md)，可以直接检查完整正文；显式调用名为`$fpga-orchestrator`。项目`.agents/skills`是Codex支持的本地技能位置，变更未出现在选择器时可重启Codex；当前会话也可按准确文件路径读取。[官方技能说明](https://learn.chatgpt.com/docs/build-skills)
++> $fpga-orchestrator 执行：核对T03的R10F与BPR1接入合同，本轮交一份字段表、样例及验收清单，不做硬件下载。
+ 
+-本次交付配置与技能，不因编写流程而下载FPGA、运行TD、修改RTL或自动推进其他聊天。也没有建立无人值守的定时执行器。
++> $fpga-orchestrator 恢复：<原run绝对路径>；本轮目标：完成该run原授权的剩余配置。原ID可续则续，实际失效由规划按文件恢复并登记真实映射。
+ 
+-此前配置校验、原代理续接与角色情境复核见[历史验证记录](FPGA多智能体工作流_验证记录_2026-10-16.md)，只代表当时版本。本次批准同步的范围为G0配置合同/G1静态一致性，详见[本轮计划](runs/20261016_185549_approved_workflow_default/dev-plan.md)；没有实际创建新聊天或运行完整流程，旧记录不能充当新配置行为验证。
++普通问答、报错解释、资料讨论、仅提技能名、引用/代码例子/转述、解释/查看/比较/修改规则都不启动本链；技能选择后仅要求讨论也不算执行。根项目通用约束及其他适用技能/工具照常。已启动同一run继续已授权范围，中途问状态/规则不另开新链；明确停止/退出时停止派发并留下恢复入口，当前配置无需重新触发。
+ 
+-## 原主体逐项保留
++agents/openai.yaml只设policy.allow_implicit_invocation: false，保留显式使用。项目Skill保存规则与启动约定，足以覆盖本需求；MCP连接真实工具/其他系统信息，当前无需实现或安装服务器。这是结合需求的选择，不是说MCP不能编排。依据：[OpenAI Skill文档](https://learn.chatgpt.com/docs/build-skills)、[OpenAI MCP文档](https://learn.chatgpt.com/docs/extend/mcp?surface=cli)。本地技能通常自动检测，选择器未更新时可重启客户端；本包只静态复核配置，不声称已验证客户端实际加载、普通聊天运行或MCP执行。
+ 
+-| 截图原结构 | 本项目保留/适配 |
++明确启用后主先读[fpga-orchestrator](../.agents/skills/fpga-orchestrator/SKILL.md)，原样保存需求/路径并派规划。已经派出的子角色直接读指定角色技能，不回主入口、不再派生。历史配置验证见[旧验证记录](FPGA多智能体工作流_验证记录_2026-10-16.md)，只代表当时版本；旧三测试记录不能当新规则的行为证据。本次配置只验证G0合同/G1静态一致性，不代表完整调度、RTL、时序或板测完成。
++
++## 固定责任链
++
++**主原样传输 → 原规划理解/有限拆分/dispatch → 每任务新开发 → 停止修改并冻结唯一manifest → 一个新综合测试者 → 同任务FAIL续原开发/综合测试，最多三轮实际修复 → 原规划更新/收尾 → 主原样转发。**
++
++| 角色/技能 | 职责 |
+ |---|---|
+-| 主Agent只调度，不开发/测试/视觉验证 | 主Codex只原样转发用户原话、路径、真实ID、判定、状态和机械日志；技术理解/拆分/依赖/验收/总结归角色 |
+-| 原素材只传路径，不读大段内容 | 需求/赛题/工程材料由规划者读取，主调度只传路径 |
+-| 只收路径、ID和PASS/FAIL | 保留；增加必要的待硬件/阻塞元数据，真实G层结果仍在报告 |
+-| 初始化OUTPUT_DIR、SCRIPT_FILE、BATCH_SIZE，默认1 | 原变量保留；默认每任务新DEV/三TEST，用户明确大于1才由规划定义批 |
+-| main-log.md、dev-plan.md、设计指南、lessons-learned.md | 名称与分工保留；设计指南改为fpga-design-guide.md |
+-| Phase1规划，生成计划/规范/公共页面框架 | 规划理解需求并拆分、定顺序/范围/验收，写详细计划/指南/索引和简短dispatch；主不读完整计划或选任务 |
+-| 每批仅一个开发Agent，按顺序完成 | 完整保留；页面换为可验收FPGA工作包 |
+-| 布局/美观/动画三个测试Agent并行，各测本批全部页面 | 数量与调度保留，改为功能/工程/系统三个维度 |
+-| 第一时间记开发和测试ID，同批修复resume原Agent | 保留；直接记Codex工具返回ID，用followup_task续接 |
+-| 最多三轮修正、失败维度原测试者重测本批 | round0首次验收，最多三轮实际修复；开发/测试给复测影响，主不判断；缺外部条件直接交原规划，不空转 |
+-| 全PASS为✅，第三轮仍FAIL为⚠，继续下一批 | 分支/循环保留；FPGA的⚠明确为未通过，依赖任务等待，独立任务继续 |
+-| 每批状态更新、反馈，最后通过轮数统计 | 原规划更新任务/dispatch并写交接、技术和用户短总结，主原样转发；不虚报硬件验收 |
+-| yyMMdd HHmm日志，精确到分钟 | 格式保留，采用Asia/Shanghai |
++| [主传输](../.agents/skills/fpga-orchestrator/SKILL.md) | 原样需求/路径/真实ID/判定/状态，机械日志和固定分支，保留权限/路径检查 |
++| [规划](../.agents/skills/fpga-planner/SKILL.md) | 读相关材料、理解/有限拆分、依赖/范围/验收/G层、dispatch、任务更新和收尾 |
++| [设计规范](../.agents/skills/fpga-design-guide/SKILL.md) | 规划/开发按需冻结接口/参数/时序/证据；不新增常驻角色 |
++| [开发](../.agents/skills/fpga-dev/SKILL.md) | 允许范围实现、必要局部检查、冻结、停止修改、修复与lessons |
++| [综合测试](../.agents/skills/fpga-tester/SKILL.md) | 与开发独立，统一完成相关功能/工程/系统检查，依次独立审阅和最终工程复核 |
+ 
+-只有“第三轮失败也低质量通过”不能成为FPGA功能、时序或安全的通过结论；它在相同流程节点保留为警告/未通过。没有改成主助手包办或换另一种协作架构。
++三个旧领域技能保留为历史兼容与按需检查参考：[功能](../.agents/skills/fpga-tester-functional/SKILL.md)、[工程](../.agents/skills/fpga-tester-engineering/SKILL.md)、[系统](../.agents/skills/fpga-tester-system/SKILL.md)。其旧调度、另两维并行、分维报告和独立角色续接语句不生效，不默认派发，不要求每次全读三份。
++
++主不理解技术需求、选题/设计/拆分/排依赖，不读原材料/完整计划/源码/报告，不开发/测试/判断根因或影响/写技术总结。详细材料交对应角色，主只收简短dispatch和返回元数据；用户反馈保持原话。
++
++## 拆得细，也限定本轮规模
++
++默认一次需求本轮1个主要可验收目标、最多4个正式工作包（ready/blocked/依赖均计入），只有需求→工作包两级。每包一个主要可观察结果，通常一个模块、接口或文档主题及必要相邻引用，最多5项语义实现步骤；两个独立结果、无关接口或第6项语义步骤触发拆窄。读取/哈希/跑命令/同步多份引用等机械动作不另建包或代理。
++
++超限时原规划首次计划只取依赖闭合最小切片（<=4包），依用户明确优先级、已有依赖顺序、需求出现顺序取舍。余项最多3条后续主题加原需求路径，不展开树、不自动续做。无法成小闭环只交1个范围/接口冻结包，不能冒充父目标完成。
++
++只有用户明确本轮新的有限目标数/任务数/层数才可由规划在dispatch记覆盖值和授权来源；“全部做完”、合批、时间宽裕不算。不能用增大BATCH_SIZE、新run、自造子ID或重命名失败包绕限。默认批大小1，用户明确大于1才定义批；每批一开发、一综合测试覆盖全批，任务总数不因合批减少。
++
++## 一个测试者，保留必要验收
++
++functional、engineering、system是同一综合测试者的检查清单。规划事先选适用项/G层/阈值与不适用理由；测试者独立于开发，不声称三个独立视角，不额外派审阅Agent。
++
++文档/配置检查语义、格式/入口/哈希及交接兼容；模型/软件检查相关正反向、边界、可复现性和接口；RTL/时钟/IP/存储/地址/板上行为保留所需真实DUT、最终STA/CDC/资源/候选绑定以及必要真实硬件、恢复、稳定性和性能检查。风险增加先加检查或缩小包，不自动加角色；缺必需条件为FAIL+blocked，不临时改不适用求PASS。
++
++最小相关上下文、按需引用旧领域清单、一次必要构建及有依据的同输入证据复用减少重复；不能节约门槛，不承诺token百分比。开发自检不代替独立综合验收，软件/离线包PASS不将父硬件任务置done。
++
++## 主不监控，子角色自行停止
++
++主只接收返回事件/完成消息及明确元数据，不轮询list_agents、不扫描目录或日志、不问进度/催促。wait_agent单次<=60000ms只等事件；超时不产生检查、故障、催促或重试。真实ID来自spawn返回，实际工具报失效才交原规划恢复；失联无返回不伪造blocked/PASS，不称平台自动终止。
++
++子角色每次派发/续接默认最多30次实际工具调用，规划15分钟、开发/综合测试45分钟；自己的命令轮询/worker调用计入。单问题最多3轮有目标搜索/读取；同失败命令首次+1次有新证据或参数纠正的重试。连续2次无新证据/产物/有效验证/假设收窄即主动blocked；达到预算或需扩范围也停止，不等主催促。
++
++命令启动前落实实际deadline或安全终止：读取/搜索60秒、局部静态/仿真5分钟、构建30分钟；yield_time_ms不是执行超时。无法安全控制则不启动无界命令，返回TOOL_CONTROL_MISSING。只停止自己拥有的进程，保留实际日志/退出信息。规划可派发前冻结其他有限执行预算及理由，角色不自行扩。
++
++缺资料/工具/设备/授权/额度直接blocked，DeepSeek/API错误不自动重试。不新增监控Agent、定时任务或常驻执行器。这是角色合同，不是平台硬限或失联自动停止保证。
++
++## 重复问题最多2次补充机会
++
++只在收到返回时，按task_id+稳定problem_id记账。problem须含reason_code、new_information布尔、evidence_path、requested_action、resume_input_path；固定枚举及身份约定见统一有界正文。
++
++字段齐备、有真实新信息、证据/恢复路径齐备且是原授权范围补充/整理，最多2次followup_task续原责任角色。无新信息、缺字段/矛盾、无法稳定归类或2次后仍同问题，直接交原规划blocked/备条件；转交/换措辞/改轮次不能重置。工具/设备/资料/权限/API/额度等外部阻塞直接备条件，不走机会循环。到限后仅真实新用户输入或条件变化可由原规划明确恢复。
++
++补充机会与实际修复分账：round0首次验收，round1—3最多三轮实际实现修复；不能把修复改名为“回答机会”。主只检查元数据，不解技术题或监控兜底。
++
++## 派发、判定与收尾
++
++开发停止修改、活动结束并冻结后，dispatch的spawn_single_tester只展开一次原生spawn_agent，传同一manifest和计划路径，fork_turns="none"。每任务每轮一份integrated报告，首行唯一PASS/FAIL；回dimension=integrated、dimension_results、总体判定、报告/manifest路径、blocked和retest。
+ 
+ ```mermaid
+ flowchart TD
+-    M[主：原样需求/路径/日志] --> P[规划：理解拆分/依赖范围验收/dispatch]
+-    P --> D[新任务新开发/批准批一个开发]
+-    D --> F[功能测试]
+-    D --> E[时序与工程测试]
+-    D --> S[上板与系统测试]
+-    F --> C[汇总每任务三维判定与路径]
+-    E --> C
+-    S --> C
+-    C -->|真实FAIL且无阻塞/不足3轮| R[续接本任务原开发修正]
+-    R --> T[按角色影响清单续原测试/同输入]
+-    T --> C
+-    C -->|缺条件或疑问| P
+-    C -->|全PASS或实际3轮仍FAIL| U[原规划更新状态/dispatch]
+-    U -->|派发下一独立任务| D
+-    U -->|本轮收束| Z[原规划统计/交接/用户短总结]
+-    Z --> Q[主原样转发]
++    M[主原样需求/路径/真实ID] --> P[规划：有限范围/验收/dispatch]
++    P --> D[新任务新开发]
++    D --> F[停止修改/冻结manifest]
++    F --> T[一个新综合测试：功能/工程/系统]
++    T -->|可修FAIL且不足3轮| R[续真实原开发]
++    R --> N[重新冻结]
++    N --> O[续真实原综合测试]
++    O --> T
++    T -->|PASS/三轮仍FAIL/blocked| U[原规划更新/交接/收尾]
++    T -->|返回问题| Q[主按元数据登记有限机会]
++    Q -->|有新信息且机会未到限| V[续原责任角色补充/整理]
++    V --> Q
++    Q -->|无新信息/缺字段/到限/外部阻塞| U
++    U -->|本轮范围内独立下一包| D
++    U -->|本轮收束| Z[规划用户短总结/主原样转发]
+ ```
+ 
+-## 配套技能逐一替换
++同任务FAIL续真实原开发/原综合测试，失败/受影响项复测，未影响证据由综合测试者明确绑定新manifest。输入漂移重新冻结，不拼不同输入PASS。缺条件直接交原规划，不空转三轮；三轮后仍FAIL保留⚠未通过，必要FPGA门槛不能强行通过。
+ 
+-| 截图角色/技能 | 本项目Codex技能 | 实际职责 |
+-|---|---|---|
+-| 主智能体提示词 | [fpga-orchestrator](../.agents/skills/fpga-orchestrator/SKILL.md) | 原样传输、真实ID/判定留档和固定分支，保留权限/路径检查 |
+-| dg-planner | [fpga-planner](../.agents/skills/fpga-planner/SKILL.md) | 理解拆分、依赖顺序、范围验收、dispatch、任务更新和收尾 |
+-| dg-gray-slide-designer | [fpga-design-guide](../.agents/skills/fpga-design-guide/SKILL.md) | 像素/码流/握手/队列/时钟及证据约定，不新增常驻角色 |
+-| dg-slide-dev | [fpga-dev](../.agents/skills/fpga-dev/SKILL.md) | 实现/局部检查/冻结输入、按报告修正 |
+-| dg-slide-tester-layout | [fpga-tester-functional](../.agents/skills/fpga-tester-functional/SKILL.md) | 数据、协议、算法、边界与故障拒绝 |
+-| dg-slide-tester-beauty | [fpga-tester-engineering](../.agents/skills/fpga-tester-engineering/SKILL.md) | 工程、最终STA/CDC、资源、bit/CWC与输入绑定 |
+-| dg-slide-tester-animation | [fpga-tester-system](../.agents/skills/fpga-tester-system/SKILL.md) | FPGA/RK接口、上板、恢复、长稳与整链路指标 |
++固定分支见[传输合同](../.agents/skills/fpga-orchestrator/references/relay-contract.md)，调用模板见[Codex调用](../.agents/skills/fpga-orchestrator/references/codex-calls.md)，报告见[综合报告约定](../.agents/skills/fpga-orchestrator/references/report-contract.md)。collaboration直接调用，不放functions.exec、不虚构Agent参数/ID；send_message只送消息，空闲原角色新轮用followup_task。
+ 
+-子角色技能由主按真实绝对路径传给对应代理，不虚构`subagent_type`。使用`fork_turns="none"`传技能/输入路径，真实返回ID即时登记，collaboration直接调用，不放functions.exec。模板见[Codex调用对照](../.agents/skills/fpga-orchestrator/references/codex-calls.md)，简短dispatch/返回与分支见[传输合同](../.agents/skills/fpga-orchestrator/references/relay-contract.md)，报告见[报告约定](../.agents/skills/fpga-orchestrator/references/report-contract.md)。send_message只送消息，空闲角色新轮用followup_task。
++## 文件与恢复入口
+ 
+-原`Agent/resume/TaskOutput/Grep`的调用语法和`.claude`缓存扫描均已换为当前实际工具；保留其调度含义。[官方多智能体说明](https://developers.openai.com/api/docs/guides/responses-multi-agent)
+-
+-## 本项目具体从哪里接
+-
+-沿用`workflow/tasks.json`的T01—T14，F工作包只作现行策略映射。规划者每次核对[项目入口](../.agents/skills/fpga-orchestrator/references/project-context.md)，不能把本说明的配置日期当最新进度。
+-
+-当前复用方向包括BPR1软件/局部RTL、parallel共享向量/算法参考、固定块/TLP和RK离线工具；DDR1333生成入口与颜色板验保持原边界。真实RAW、压缩行组合/回退/CRC、三算法真实DUT、PCIe硬核适配与实收各自形成小工作包。已有他人工作树成果先读验收记录，不能只看当前分支就重复建设。
+-
+-本次不改任务板状态、不合并另一工作树、不换位流、不改全局skills或Codex配置；只同步项目入口、角色技能/引用和说明。既有`.gitignore`的七技能精确白名单保持原状。规划者按当前任务相关范围读材料，配置包不用生产源码、TD或板测凑流程。
+-
+-## 每次任务产生的文件
++真实开工时按需创建，不预建任务树：
+ 
+ ```text
+ workflow/runs/<run_id>/
+-  request.md                   主原样保存的需求，附件只记路径
+-  main-log.md                  主的机械阶段、真实ID、判定与时间
+-  dispatch.json                原规划的下一动作/路径/范围/状态
+-  input-index.md               规划者的需求/来源/已有成果索引
+-  dev-plan.md                  规划的工作包/依赖/验收，主不读完整正文
+-  fpga-design-guide.md         本次采用的工程接口与设计约定
+-  lessons-learned.md           开发者的修正经验；首次需要时创建
+-  candidate-manifest.json      开发冻结同一实际输入与SHA，停止修改
+-  handoff.md                   原规划的恢复入口/未测边界
+-  final-summary.md             原规划的详细收尾
+-  user-summary.md              原规划的用户短总结，主原样转发
++  request.md                 主原样需求
++  main-log.md                主机械日志、真实ID、判定、问题机会计数
++  dispatch.json              原规划下一动作/范围/有限预算
++  input-index.md             原规划相关输入索引
++  dev-plan.md                原规划有限工作包/验收
++  fpga-design-guide.md        原规划冻结接口/参数
++  candidate-manifest.json    开发唯一冻结输入/SHA
++  candidate.diff             本包差异
++  dev-notes.md                开发局部检查/边界
++  lessons-learned.md          开发经验
+   test-reports/
+-    <task_id>-r0-functional.md
+-    <task_id>-r0-engineering.md
+-    <task_id>-r0-system.md
+-    ...                        每轮新报告，旧失败证据保留
++    <task_id>-r0-integrated.md
++    <task_id>-r1-integrated.md
++  handoff.md                 原规划恢复入口
++  final-summary.md           原规划详细收尾
++  user-summary.md            原规划用户文本，主原样转发
+ ```
+ 
+-这些目录在真实任务开工时创建，没有预建大量空任务。输入/DB/bit等原始证据继续引用现有`docs/evidence`或隔离工程，不搬运大文件来凑数量。
++原规划读三维结果/综合报告/轮数，更新允许的任务记录与dispatch，统计首次/修复1/2/3轮通过、⚠未过、待条件；主只原样转发。任务状态与G层分账，workflow/tasks.json及证据/交接保持主源，run不另立全局任务板。
+ 
+-原规划读取矩阵/报告路径/轮数收尾，给首次通过、修正1/2/3轮通过、⚠未通过、待条件统计和下一入口；开发写lessons，主原样转发短总结。run控制文件不替代全局任务板。软件子包只完成自己范围，父任务板验/双路/整机不会自动完成。
+-
+-## 效率与恢复
+-
+-- 默认每任务新DEV与新三TEST，仅同任务FAIL续原角色；用户明确批大小大于1才由规划定义批。三测试同manifest并行，开发/测试提供复测影响，主不拼不同输入PASS。
+-- 主只收简短元数据，完整材料/计划/报告交角色；缺输入或状态矛盾交原角色，范围/验收归规划、复现/报告归测试、实现归开发。用户反馈原话传输，无效或过长返回由原角色整理。
+-- 一项失败不堵住所有无依赖工作；共享顶层/约束/队列/帧合同仍按依赖顺序集成。
+-- 缺设备/工具/资料/用户输入或额度直接blocked交原规划备条件，主原样转用户，不空转三轮。三轮后FAIL保留⚠，下一独立任务由原规划派发。
+-- 同任务同会话优先原ID续接；跨会话代理失效交规划者按文件恢复，登记新旧映射，不假称resume。所有子角色禁止递归派生。
+-- 本流程不会扩展删除、下载、发布或外部消息权限；缺少多智能体工具时报告不能运行当前架构，保留计划，不偷偷改成主助手亲自开发。
++同任务原ID能续则续；实际失效交规划按文件恢复并登记新旧映射，不假称resume。没有多agent工具如实blocked，主不接管、不自动重试。本次不改任务板、其他worktree、生产/位流、全局skills或配置；.gitignore仅追加新综合tester精确白名单，旧三tester不删除。流程不扩大删除、外部写入、下载/Flash、发布、自动监控或队友消息授权。
+diff --git a/workflow/README.md b/workflow/README.md
+--- a/workflow/README.md
++++ b/workflow/README.md
+@@ -4,7 +4,7 @@
+ 
+ # 项目工作流：工程全流程 + AI 协作
+ 
+-> **2026-10-16默认传输更新：** 后续对话按[FPGA多智能体工作流](FPGA多智能体工作流_使用说明.md)与根[AGENTS.md](../AGENTS.md)执行。主仅原样转发用户原话/路径/真实ID/判定/状态、机械留档和执行简短dispatch，保留权限/路径检查；不理解拆分/选题/读完整计划源码报告/开发测试/判断影响/写技术总结。规划者理解拆分、确定顺序范围验收、更新任务/dispatch与收尾；开发和三个独立测试完成工程工作。本文件G层与硬件验收标准不变。
++> **2026-10-17默认传输更新：** 仅用户显式调用$fpga-orchestrator并要求执行/恢复时启用[FPGA多智能体工作流](FPGA多智能体工作流_使用说明.md)与根[AGENTS.md](../AGENTS.md)执行。主仅原样转发用户原话/路径/真实ID/判定/状态、机械留档和执行简短dispatch，保留权限/路径检查；不理解拆分/选题/读完整计划源码报告/开发测试/判断影响/写技术总结。规划者理解拆分、确定顺序范围验收、更新任务/dispatch与收尾；开发和一个与开发独立的综合测试者完成相关三维检查。主不监控进度；范围/停止/有限返回机会见[有界规则](../.agents/skills/fpga-orchestrator/references/work-limits.md)。本文件G层与硬件验收标准不变。
+ 
+ > **交付标准：** 用户要求每次交付前执行本文件第5.1节。通过门槛以当前候选证据为准，不能沿用旧位流板测结论。
+ 
+@@ -14,12 +14,12 @@
+ 
+ ## 先从这里开始
+ 
+-1. 主从根AGENTS进入主技能，原样保存需求/材料路径并交规划者。规划者按任务相关范围读[当前项目状态](../README.md)、[当前方案基线](../当前必读/选题三_重新对齐后的方案基线.md)和证据，辨别最新结论与历史。
++1. 明确输入“$fpga-orchestrator 执行：需求”或“$fpga-orchestrator 恢复：原run绝对路径；本轮目标：目标”，或选择器显式选择后明确执行/恢复，主才从根AGENTS进入主技能；普通问答、报错解释、引用/代码示例/转述、讨论/查看/比较/修改规则不启动本链。主Skill关闭隐式调用，不安装MCP、不改全局。已启动同run按原授权继续，状态/规则讨论不另开链，明确停止/退出则停止派发并给恢复入口。主原样保存需求/材料路径并交规划者。规划者按任务相关范围读[当前项目状态](../README.md)、[当前方案基线](../当前必读/选题三_重新对齐后的方案基线.md)和证据，辨别最新结论与历史。
+ 2. 由规划者在[任务路线与初始任务板](任务路线.md)/[tasks.json](tasks.json)理解拆分、定依赖顺序，写完整计划与简短dispatch，主不自选任务。
+-3. 规划者按[任务模板](templates/task.md)定范围/三维验收/G层/工具设备/停止回退。默认每任务新开发和新三测试；仅用户明确批大小大于1才定义批，每批一开发、三测试各覆盖全批。
+-4. 开发停止修改并冻结同一manifest后三测试并行。round0首次验收、最多三轮实际修复，同任务FAIL续原开发/测试；复测影响与证据复用由角色给清单，主不拼不同输入PASS。缺设备/工具/资料/用户输入或额度直接blocked交原规划备条件，不空转。
++3. 规划者按[任务模板](templates/task.md)定范围/三维验收/G层/工具设备/停止回退。默认本轮1主要目标、最多4包、两级、每包最多5项语义步骤，超限由原规划取最小闭环，余项不自动续做；默认每任务新开发和一个新综合测试者，用户明确合批不扩大任务上限。
++4. 开发停止修改并冻结同一manifest后，只派一个综合测试者覆盖相关功能/工程/系统检查，逐任务每轮一份integrated报告。round0首次验收、最多三轮实际修复，同任务FAIL续原开发/测试；复测影响与证据复用由角色给清单，主不拼不同输入PASS。缺设备/工具/资料/用户输入或额度直接blocked交原规划备条件，不空转。
+ 5. PASS、三轮未过或阻塞由原规划更新任务/dispatch，派发独立下一任务或按[交接模板](templates/handoff.md)写交接/技术及用户短总结，主原样转发，开发写lessons。用户反馈原话传角色，疑问/无效返回交原角色整理。
+-6. 工具调用/真实ID/失效恢复按[AI协作](AI协作与工具接入.md)及[调用合同](../.agents/skills/fpga-orchestrator/references/codex-calls.md)。子角色不递归派生；无多agent工具不得主接管。本入口仅本项目，不扩大硬件/发布/外部消息/自动化权限。文档配置只做相关静态复核，不启动无关生产检查。
++6. 主不轮询/扫描日志/催促，只接收返回，wait超时不产生检查或重试。子角色按有界规则自行有限执行/主动停止，问题最多2次有新信息补充机会，与三轮实际修复分账。工具调用/真实ID/失效恢复按[AI协作](AI协作与工具接入.md)及[调用合同](../.agents/skills/fpga-orchestrator/references/codex-calls.md)。子角色不递归派生；无多agent工具不得主接管。本入口仅本项目，不扩大硬件/发布/外部消息/自动化权限。文档配置只做相关静态复核，不启动无关生产检查。
+ 
+ 已经用现有资料填好一份 [T02 任务](records/T02/task.md)和[交接](records/T02/handoff.md)，可直接参考。其顶部记录最新的 222159 部分板验状态，下方保留 10-12 初始化历史；旧候选“尚未板测”的描述不能覆盖后续用户观察。
+ 
+@@ -128,7 +128,7 @@
+ 3. TD原生命令须同时满足退出码、完成标记、非空产物；保留失败和超时记录，不用exit0代替成功判断。
+ 4. 使用同一最终实现数据库检查STA、约束覆盖、所选CDC/复位、资源与必要接口路径；绑定数据库、报告及位流哈希。HDMI并行STA不能证明串行电气资格。
+ 5. 含ChipWatcher的候选须运行`tools/td/check_chipwatcher_readback.py`校验完整CWC与BID的物理ERAM覆盖，确认配对bit逐字节一致；仅有探针名单不足以交付可读回调试文件。
+-6. 完成独立审阅后，由工程测试智能体复查最终实际文件、测试结果和哈希，并按同一冻结输入出具判定；主仅机械登记各维度判定/报告路径，完整报告、技术判断与收尾归原规划及对应角色。审阅未完成须如实标明，不宣称已审阅。
++6. 由同一综合测试者依次完成独立审阅和最终工程复核，复查最终实际文件、测试结果及哈希，按同一冻结输入出具覆盖相关三维检查的综合判定；独立性针对开发者，无需额外审阅代理。主仅登记三维结果/综合报告路径，完整报告、技术判断与收尾归原规划及对应角色。审阅未完成须如实标明，不宣称已审阅。
+ 7. 给用户唯一当前位流/CWC入口、操作与预期现象、已知问题和回退版本。G3/G4待测明确写出；仿真及构建通过不表示颜色或长稳已上板通过。
+ 8. 大改或累计多轮小改后，按用户授权将本任务源码、详细说明与精简证据同步私有GitHub。只提交本任务文件，不上传图片、凭据、数据库或巨大中间产物。
+ 
+diff --git a/workflow/AI协作与工具接入.md b/workflow/AI协作与工具接入.md
+--- a/workflow/AI协作与工具接入.md
++++ b/workflow/AI协作与工具接入.md
+@@ -2,7 +2,13 @@
+ 
+ 本文件定义本项目的协作方式，不更改当前 Codex/系统权限，也不安装全局技能或自动化。
+ 
+-> **2026-10-16默认传输更新：** 按用户批准的[主对话仅作传输](FPGA多智能体工作流_使用说明.md)执行。主只转用户原话/路径/真实ID/判定/状态并机械留档；需求理解、拆分、依赖、范围验收、工程执行和技术收尾由对应角色承担。DeepSeek边界保持原状。
++> **2026-10-17默认传输更新：** 仅用户明确调用fpga-orchestrator并要求执行/恢复时按[主对话仅作传输](FPGA多智能体工作流_使用说明.md)执行。主只转用户原话/路径/真实ID/判定/状态并机械留档；需求理解、拆分、依赖、范围验收、工程执行和技术收尾由对应角色承担。DeepSeek边界保持原状。
++
++只有当前用户明确调用本Skill并要求执行/恢复才启用本套角色链。标准输入为“$fpga-orchestrator 执行：<本轮需求>”或“$fpga-orchestrator 恢复：<原run绝对路径>；本轮目标：<目标>”；从技能选择器显式选择后给明确执行/恢复指令同样接受。仅提名称、引用/代码示例/转述、解释/查看/比较/修改规则，以及普通问答、报错解释或资料讨论，均不触发本链。其他通用技能/工具与根删除禁令、完整DeepSeek约束仍适用。
++
++本Skill的agents/openai.yaml设置policy.allow_implicit_invocation: false，仅关闭隐式调用，保留显式使用。已明确启动的同一run继续原授权范围，状态/规则讨论不另开链；用户明确停止/退出时停止派发并交代恢复入口。当前配置run续原角色，无需重发触发词。此为配置/指令合同，静态复核不代表客户端选择器加载或普通聊天运行已验证。
++
++本轮复用项目Skill，不实现/安装MCP或全局入口。Skill适合保存规则/显式启动，MCP连接真实工具/系统信息；选择依据：[OpenAI Skill文档](https://learn.chatgpt.com/docs/build-skills)、[OpenAI MCP文档](https://learn.chatgpt.com/docs/extend/mcp?surface=cli)。这是本需求的选择，不否认MCP可参与编排；不宣称静态检查验证了客户端加载或MCP执行。
+ 
+ ## 1. 谁负责什么
+ 
+@@ -12,17 +18,18 @@
+ | 主传输Agent | 原样存/转需求、路径、真实ID、判定、状态，按简短dispatch执行固定分支，保留系统权限/路径检查 | 用户原话/角色元数据 → 原样转发/机械日志 |
+ | Codex规划者 | 读材料理解拆分、依赖顺序、范围/三维验收/工具设备/停止回退、dispatch、更新和收尾 | 需求/证据 → 完整计划/指南/简短派发/用户短总结 |
+ | Codex开发者 | 计划范围实现、局部检查、冻结输入、停止修改、修复影响清单、lessons | 计划/报告 → 实际产物/manifest/复测清单 |
+-| Codex三测试者 | 同输入独立功能/工程/系统验证，给判定、阻塞和复测/证据复用依据 | 冻结输入 → 逐任务报告及简短元数据 |
++| Codex综合测试者 | 与开发独立，同输入覆盖相关功能/工程/系统检查，依次独立审阅和最终工程复核，给阻塞/复测/证据复用依据 | 冻结输入 → 每任务每轮一综合报告及简短元数据 |
+ | 有界执行者 | 清楚的小补丁、数据转换、日志摘要或模板草稿 | 最小上下文+验收 → 提案/结果；不得擅自扩范围 |
+-| 审阅角色 | 从需求和原始证据检查遗漏、回归和误报 | 改动+验收+证据 → 可行动问题或明确范围内无发现 |
+ | IC Coder（可选） | 有限额度内的 FPGA 专项只读审阅/验证缺口分析 | 最小 RTL/TB/日志 → 有位置与反例的建议；对应Codex角色独立核验 |
+ | RK 队友 | 驱动、收帧、解码、ISP、深度/NPU的约定交付 | 冻结接口+测试样例 → 代码/命令/版本/结果；责任需实际确认 |
+ 
+-本项目后续对话默认主传输、规划者、每任务新开发及新三测试；仅同任务FAIL续原开发/测试，受修复影响的PASS维度按角色清单续原测试，不跨任务复用对话。只有用户明确批大小大于1才由规划定义批，每批一个开发者、三测试各覆盖全批。主不读完整材料/计划/源码/报告，不选题/设计/拆分，不开发/测试/判断根因影响/写技术总结。各角色不递归派生，不把自审称独立审阅。DeepSeek只处理已授权低风险有界辅助，不替代三测试。
++本套流程明确启用后默认主传输、规划者、每任务新开发及一个新综合测试者；仅同任务FAIL续原开发/综合测试，失败/受影响项按清单复测、未影响证据由综合测试绑定当前manifest，不跨任务复用。只有用户明确合批才由规划定义批，每批一开发、一综合测试覆盖全批，合批不减少任务总数。主不读完整材料/计划/源码/报告，不选题/设计/拆分，不开发/测试/判断根因影响/写技术总结。各角色不递归派生，不把自审称独立审阅。DeepSeek只处理已授权低风险有界辅助，不替代综合独立验收。独立审阅与最终工程复核由同一综合测试者依次承担，不自动另开审阅角色。
+ 
+-简短派发、返回字段和固定分支统一见[传输合同](../.agents/skills/fpga-orchestrator/references/relay-contract.md)。开发停止修改后冻结同一manifest，三测试并行；复测影响和旧证据复用由开发/测试判断，主不拼不同输入PASS。round0首次验收、最多三轮实际修复；缺设备/工具/资料/用户输入或额度直接blocked交原规划备条件，不空转。PASS、三轮后仍FAIL或阻塞都由原规划更新dispatch/记录，决定独立下一任务并写handoff/final-summary/用户短总结，主原样转发，开发写lessons。
++简短派发、返回字段和固定分支统一见[传输合同](../.agents/skills/fpga-orchestrator/references/relay-contract.md)。开发停止修改和活动结束后冻结同一manifest，spawn_single_tester只展开一次原生spawn_agent，回dimension=integrated及三维结果；复测影响和旧证据复用由开发/测试判断，主不拼不同输入PASS。round0首次验收、最多三轮实际修复；缺设备/工具/资料/用户输入或额度直接blocked交原规划备条件，不空转。PASS、三轮后仍FAIL或阻塞都由原规划更新dispatch/记录，决定独立下一任务并写handoff/final-summary/用户短总结，主原样转发，开发写lessons。
+ 
+-用户反馈保持原话；缺输入/疑问/矛盾交对应原角色，范围/验收归规划、复现/报告归测试、实现归开发，无效或过长返回由原角色整理。实际spawn/followup/wait/list/send直接调用collaboration，fork_turns="none"传技能及输入路径，真实ID即时登记；send_message只送消息，空闲角色新轮用followup_task。原ID失效交规划文件恢复并登记映射，不假称resume；无多agent工具不得主接管。
++用户反馈保持原话；缺输入/疑问/矛盾交对应原角色，范围/验收归规划、复现/报告归测试、实现归开发，无效或过长返回由原角色整理。实际spawn/followup/wait/send直接调用collaboration，fork_turns="none"传技能及输入路径，真实ID即时登记；send_message只送消息，空闲角色新轮用followup_task。原ID失效交规划文件恢复并登记映射，不假称resume；无多agent工具不得主接管。
++
++范围与停止统一见[有界规则](../.agents/skills/fpga-orchestrator/references/work-limits.md)：默认本轮1主要目标、最多4包、两级、每包最多5语义步骤；超限原规划取最小闭环，最多3条后续主题、不自动续做。主不轮询list_agents、不扫描目录日志或催促，wait单次<=60000ms只等事件，超时无检查动作。子角色默认每次30工具调用，规划15分钟、开发/综合测试45分钟，单问题3轮搜索/读取、同失败命令首次+1次有新证据重试、连续2次无进展主动blocked；命令须有实际deadline/安全终止，不称平台硬限。收到稳定problem元数据后才最多2次有新信息补充/整理，缺字段/无新信息/到限或外部阻塞交原规划，不能重置或与实际三轮修复混账。
+ 
+ IC Coder 当前按人工交接设计，不常驻、不自动调用。用户报告剩余 1000 Credits、30 天到期，具体预算、止损和首个任务见 [IC Coder 有限额度方案](ICCoder有限额度使用方案.md)。没有实际请求时不把准备好的任务记成外部独立审阅；到期不阻塞任何工程任务。
+ 
+@@ -40,7 +47,7 @@
+ 
+ ### 开始/恢复一个任务
+ 
+-> 交规划者读取本次需求与任务相关README、workflow/README.md、方案摘要/tasks.json和证据。由规划者理解并选择/拆分 `<task-id>`，确定依赖/范围/验收/停止回退，写计划与简短dispatch交主传输。开发和三测试依同输入执行；缺条件由规划备条件，任务记录和交接由原规划更新。不覆盖历史，不批量删除。
++> $fpga-orchestrator 执行：<本轮明确需求>。或$fpga-orchestrator 恢复：<原run绝对路径>；本轮目标：<目标>。只有明确执行/恢复才交规划者读取本次需求与任务相关README、workflow/README.md、方案摘要/tasks.json和证据。由规划者理解并选择/拆分 `<task-id>`，确定依赖/范围/验收/停止回退，写计划与简短dispatch交主传输。开发冻结后由一个综合测试者依同输入执行相关三维检查；缺条件由规划备条件，任务记录和交接由原规划更新。不覆盖历史，不批量删除。
+ 
+ ### 调试
+ 
+@@ -50,7 +57,7 @@
+ 
+ > 依据 `<任务/设计/接口版本>` 在 `<允许路径>` 完成最小实现。先确定能证明行为的测试；保持参考模型独立，覆盖边界、反压和恢复。只运行与改动相关的必要检查。构建/板测分开报告，最终给修改、验证、风险、下一步和回退。
+ 
+-### 审阅
++### 审阅（综合测试者职责，不新增代理）
+ 
+ > 按 `<验收>` 审阅 `<diff或文件>` 与 `<证据>`。重点检查帧完整性/坏帧发布、地址单位/容量、跨域/复位、ready/valid、输入哈希与最终报告绑定、性能单位以及 FPGA/RK 接口。发现问题给具体位置、触发条件、影响和可验证修正。未发现问题时注明读过的范围与未覆盖项。
+ 
+diff --git a/workflow/AGENTS接入片段.md b/workflow/AGENTS接入片段.md
+--- a/workflow/AGENTS接入片段.md
++++ b/workflow/AGENTS接入片段.md
+@@ -1,19 +1,33 @@
+ # 可选 AGENTS 接入片段
+ 
+-本项目根AGENTS.md已设置默认入口；本片段是同一逻辑的同步参考，迁移时只合并工作流段，必须保留原删除禁令、完整DeepSeek块及其他约束。仅对本项目生效，不改全局技能/配置，不授予外部动作权限。
++本项目根AGENTS.md已设置默认入口；本片段同步2026-10-17现行规则。迁移时只合并工作流段，必须保留原删除禁令、完整DeepSeek块及其他约束。仅本项目，不改全局或增加外部动作授权。统一正文见[有界规则](../.agents/skills/fpga-orchestrator/references/work-limits.md)。
+ 
+ ```markdown
+ ## 项目研发工作流
+ 
+-接收用户任务的主Agent首先读取 .agents/skills/fpga-orchestrator/SKILL.md。子角色直接读指定角色技能，禁止递归派生。主只原样保存/转发用户原话、路径、真实ID、判定和状态，机械维护日志并按简短dispatch执行固定分支；不理解技术需求/选题/设计/拆分，不读原始材料/完整计划/源码/报告，不开发/修复/测试/判断根因或复测影响/写技术总结。系统权限和路径范围检查仍执行。
++只有当前用户明确调用本Skill并要求执行/恢复才启用本套角色链。标准输入为“$fpga-orchestrator 执行：<本轮需求>”或“$fpga-orchestrator 恢复：<原run绝对路径>；本轮目标：<目标>”；从技能选择器显式选择后给明确执行/恢复指令同样接受。仅提名称、引用/代码示例/转述、解释/查看/比较/修改规则，以及普通问答、报错解释或资料讨论，均不触发本链。其他通用技能/工具与根删除禁令、完整DeepSeek约束仍适用。
+ 
+-规划者读任务相关材料理解拆分，确定task_id、依赖顺序、范围、三维验收/G层、工具设备、停止/回退，写完整计划和简短dispatch；主不从dev-plan选任务。默认每任务新开发和新三测试，不跨任务复用；只有用户明确批大小大于1才由规划定义批，每批一开发、三测试覆盖全批。
++本Skill的agents/openai.yaml设置policy.allow_implicit_invocation: false，仅关闭隐式调用，保留显式使用。已明确启动的同一run继续原授权范围，状态/规则讨论不另开链；用户明确停止/退出时停止派发并交代恢复入口。当前配置run续原角色，无需重发触发词。此为配置/指令合同，静态复核不代表客户端选择器加载或普通聊天运行已验证。
+ 
+-开发冻结manifest并停止修改后，同输入三测试并行。round0首次验收，最多三轮实际修复；同任务FAIL续原开发/测试，受修复影响的PASS维度按开发/测试清单续原测试，主不判断影响、不拼不同输入PASS。缺设备/工具/资料/用户输入或额度直接blocked交原规划备条件，主原样转用户，不空转三轮。必要验收不得放宽，仿真/构建/板测/长稳分账；文档配置事先限定静态复核，不跑无关硬件流程。
++明确启用后的主Agent先读.agents/skills/fpga-orchestrator/SKILL.md；子角色直接读指定技能，禁止递归派生。主仅原样存/转用户原话、路径、真实ID、判定和状态，机械留档并按简短dispatch执行；不理解需求/选题/设计/拆分/排依赖，不读原材料/完整计划/源码/报告，不开发/测试/判断根因或影响/写技术总结。保留系统权限和路径检查。
+ 
+-PASS、三轮未过或阻塞交原规划更新任务/dispatch、派发独立下一任务或写handoff/final-summary/用户短总结，主原样转发，开发写lessons。workflow/tasks.json及证据/交接保持主源，run控制文件不另立任务板，离线子包不把父硬件任务置done。缺输入/疑问/矛盾回原角色，范围验收归规划、复现报告归测试、实现归开发；用户反馈保持原话，无效或过长返回由原角色整理。
++固定链：主原样传输→原规划理解/有限拆分/dispatch→每任务新开发→停止修改并冻结manifest→一个新综合测试者→同任务FAIL续原开发/综合测试、最多三轮实际修复→原规划更新/收尾→主原样转发。
+ 
+-使用实际spawn_agent/followup_task/wait_agent/list_agents/send_message；fork_turns="none"传技能及输入路径，collaboration直接调用不放functions.exec，真实ID即时登记。send_message只送消息，空闲角色新轮用followup_task。原ID失效交规划按文件恢复并登记新旧映射，不假称resume；无多agent工具不得主接管。
++默认本轮1主要可验收目标、最多4正式包（含ready/blocked/依赖）、两级需求→工作包，每包1主要结果/最多5项语义步骤；机械动作不另建包/代理。超限原规划依用户优先级、依赖顺序、需求出现顺序取最小闭环，最多3条后续主题加需求路径、不自动续做；无法闭环只交1范围冻结包，不冒充父目标完成。用户明确本轮新有限值才可记录覆盖，合批/新run/改ID不能绕限；默认批大小1，用户明确合批时每批一开发、一综合测试覆盖全批。
+ 
+-AI/DeepSeek遵守根AGENTS和workflow/AI协作与工具接入.md的最小上下文/提案检查/原生执行/resume边界，不替代三个测试。禁止批量删除、不覆盖无关修改；不得扩大外部工程写入、下载位流、Flash、发布、外部/队友消息或自动化权限，不改全局配置。
++综合测试与开发独立，三维为functional/engineering/system检查清单；相关验收/G层/阈值及不适用理由由规划事先选择。文档/模型不用无关硬件流程，必要真实DUT、最终STA/CDC/资源/候选绑定和真实硬件/恢复/稳定性能检查不因节约取消。风险增大先增加必要检查或缩小包，不自动增加角色；独立审阅和最终工程复核由同一综合测试者依次承担。
++
++开发停止修改/活动结束并冻结后，spawn_single_tester只展开一次原生spawn_agent。每任务每轮一份integrated报告，返回dimension=integrated及三维结果。旧三个领域tester只作历史/检查参考，旧调度/并行/分维报告语句不生效。round0首次验收，round1—3最多三轮实际修复；同任务续原真实ID，复测失败/受影响项，未影响证据由综合测试绑定新manifest，不拼不同输入PASS。
++
++主不监控进度、不轮询list_agents/扫描日志/问进度或催促；wait_agent单次<=60000ms只等事件，超时不检查/判故障/重试。真实ID从spawn返回登记，实际工具报失效才交原规划恢复与新旧映射；失联无返回不伪造状态或称平台自动终止。
++
++角色按.agents/skills/fpga-orchestrator/references/work-limits.md自行有界执行：每次派发/续接默认30次工具调用，规划15分钟、开发/综合测试45分钟；单问题3轮搜索/读取，同失败命令首次+1次有新证据重试，连续2次无进展主动blocked。启动前落实读搜60秒/局部静态仿真5分钟/构建30分钟的实际deadline或安全终止，yield不是超时，无法安全控制不启动。规划可提前冻结有限执行预算并说明理由，角色不自行扩。此为角色合同，不保证平台硬限。
++
++问题返回须带稳定problem_id、reason_code、new_information、evidence_path、requested_action、resume_input_path。主只收到返回后记task_id+problem_id，最多2次有新信息且字段/证据/恢复路径齐备的原范围补充/整理机会；无新信息/缺字段矛盾/到限交原规划blocked，转交不重置，外部资料/设备/工具/权限/API/额度阻塞直接备条件，不自动重试/扩权。机会与三轮实际修复分账，主不解题。到限后须真实新输入或条件变化由原规划明确恢复。
++
++PASS、三轮未过或blocked由原规划读报告/轮数更新允许记录/dispatch及handoff/final-summary/用户短总结，主原样转发，开发写lessons。workflow/tasks.json及证据/交接是主源，run不另立任务板；任务与G层分账，离线子包不将父硬件任务置done。必要验收不放宽。
++
++collaboration直接调用，不放functions.exec，fork_turns="none"传技能/输入路径；不读缓存猜ID。send_message只送消息，空闲原角色新轮用followup_task。无多agent工具如实blocked，主不接管。
++
++DeepSeek遵守根AGENTS完整块的最小上下文/提案检查/原生执行/resume边界，不替代综合测试或真实硬件。禁止批量删除、不覆盖无关修改；不扩大外部工程写入、下载位流、Flash、发布、自动监控或外部/队友消息权限，不改全局配置。
+ ```
+diff --git a/.agents/skills/fpga-tester/SKILL.md b/.agents/skills/fpga-tester/SKILL.md
+new file mode 100644
+--- /dev/null
++++ b/.agents/skills/fpga-tester/SKILL.md
+@@ -0,0 +1,38 @@
++---
++name: fpga-tester
++description: Use when assigned integrated functional, engineering and system validation of one frozen task or an explicitly approved batch in this FPGA workflow.
++---
++
++# FPGA 综合测试智能体
++
++每个新任务默认新建本综合测试者，与开发独立；仅同任务FAIL及修复影响续本代理，不跨任务复用对话。用户明确合批时本测试者覆盖规划批全部任务，逐任务出综合报告。不派生代理，不改生产DUT、约束、IP或冻结候选，不接管主传输。
++
++开工先读取[有界规则](../fpga-orchestrator/references/work-limits.md)，遵守30次工具调用、45分钟及有限搜索/重试、命令deadline与主动停止合同；派发前规划已冻结其他有限预算时按其执行。主只看返回，不监控或催促；有问题返回稳定problem元数据，不自行扩大范围。
++
++## 冻结输入与独立审阅
++
++读取根AGENTS、任务/批准批dev-plan、相关指南、同一冻结manifest与[报告约定](../fpga-orchestrator/references/report-contract.md)、[传输合同](../fpga-orchestrator/references/relay-contract.md)，以及workflow/README.md第5.1节适用项。先验证实际文件/SHA、工作树、工具/入口、适用G层与阈值；确认开发停止修改和活动结束。输入漂移立即停止该次判定，返回INPUT_CONFLICT，要求重新冻结，不能混拼不同输入PASS。
++
++本角色依次承担独立审阅与最终工程复核：从需求/原始证据检查遗漏、回归、误报，再复查最终实际文件、测试结果和哈希。独立性针对开发者，不额外开审阅Agent，不把开发自检称独立验收。只读任务相关输入，按需引用下列旧领域清单；旧技能的调度/并行/独立角色/分维报告语句只是历史，不生效。
++
++## 按范围覆盖三维
++
++| 检查维度 | 本角色负责的相关检查 | 可选领域参考 |
++|---|---|---|
++| functional | 文档语义/来源/单位；模型精度、边界、非法输入；真实DUT逐拍/逐字节/逐像素、反压/复位/坏帧/恢复；压缩独立解码、RAW回退、长度/CRC；地址/容量、PCIe协议拒绝 | [功能清单](../fpga-tester-functional/SKILL.md) |
++| engineering | 格式、入口、路径、依赖、manifest/哈希；真实构建退出码+完成标记+非空产物；同一最终DB的STA/约束覆盖/所选CDC复位/资源；bit/CWC/BID配对与物理ERAM覆盖 | [工程清单](../fpga-tester-engineering/SKILL.md) |
++| system | 入口/交接兼容、FPGA/RK接口确认；唯一候选/授权/板卡窗口；真实硬件观察与恢复；持续运行/热态/性能、端到端版本及回退 | [系统清单](../fpga-tester-system/SKILL.md) |
++
++具体适用项、G层与阈值由规划事先确定。文档/配置只做语义、格式/入口/哈希、交接复核；模型/软件覆盖必要正反向与边界和可复现性；RTL/时钟/IP/存储/地址/板上行为保留所需真实DUT、最终STA/CDC/资源/候选绑定和必要真实硬件/恢复/稳定性能检查。风险增加先加必要检查或缩小包，不自动增角色，不以节约免门槛。不适用须引用规划理由。
++
++行为修复使用能拒绝旧行为的针对性负对照和正向回归；隔离副本可保存验证/变异输入。负对照被拒说明测试有效，不能记成坏DUT通过。回放stub不证明真实算法DUT，软件吞吐不证明FPGA吞吐，并行STA不证明串行电气资格，旧位流照片不证明新候选板测。
++
++必要构建可只运行一次供相关检查使用，但每任务报告须说明对应输入/范围。含ChipWatcher候选按受支持入口运行tools/td/check_chipwatcher_readback.py检查完整CWC/BID和bit配对。真实硬件记录观察者、时间、位流SHA、电源连续性、连接/负载与计数。规划要求的工具、设备、日志或实际授权缺失，综合判定FAIL并blocked/not_run，不能编造实测或降低验收。
++
++## 报告、复测与返回
++
++每任务每轮一份OUTPUT_DIR/test-reports/<task_id>-r<round>-integrated.md，首行唯一判定标题PASS或FAIL，内部覆盖functional/engineering/system适用项、结果及G层。保留实际命令、cwd、退出码、完成标记、非空产物及原始证据；未执行命令明确标建议。所有适用门槛满足才可总体PASS，纯配置PASS不外推RTL、板测或完整调度行为。
++
++按传输合同仅回task_id、dimension=integrated、dimension_results、verdict、report_path、manifest_path、blocked、retest；详细缺陷/复现留报告给原开发和原规划。问题另附problem对象，字段和有限机会按有界规则。用户反馈保持原话。
++
++round0首次验收；round1—3最多三轮实际修复，同任务复测续本原ID。复测清单覆盖失败与受影响检查项；未影响证据由本综合测试者明确复用依据并绑定新manifest，不拼不同输入PASS。缺外部条件或达到停止预算直接blocked交原规划，不空转三轮、不自动重试API。原ID失效交原规划按文件恢复并登记映射，不假称resume。任务更新/交接/技术收尾归原规划，主只传元数据，不扩大硬件、发布、外部消息或自动化授权。
+diff --git a/.agents/skills/fpga-orchestrator/references/work-limits.md b/.agents/skills/fpga-orchestrator/references/work-limits.md
+new file mode 100644
+--- /dev/null
++++ b/.agents/skills/fpga-orchestrator/references/work-limits.md
+@@ -0,0 +1,68 @@
++# 工作范围、停止与有限返回机会
++
++本文件是本项目现行有界规则的唯一正文，供主传输、规划、开发和综合测试使用。角色技能、dispatch及使用说明引用本文件；不授予新权限，不替代系统工具的实际控制。默认角色链为主传输 → 规划 → 每任务新开发 → 冻结 → 一个新综合测试者 → 原规划收尾。子角色禁止派生。
++
++## 启用边界
++
++仅当前用户明确调用fpga-orchestrator并要求执行/恢复时启用本角色链，主入口Skill关闭隐式调用。普通问答、报错解释、资料讨论、技能引用/代码例子/转述、查看/比较/修改规则均不启动本链。已启动同run按原授权续接，状态/规则讨论不另开链；明确停止/退出时停止派发并给恢复入口。其他通用约束及技能/工具照常适用。本文件只约束启用后的执行，不安装MCP或修改全局配置。
++
++## 范围与拆分
++
++1. 一次需求本轮只做1个主要可验收目标，最多4个正式工作包，ready、blocked及依赖包都计入。仅两级：需求 → 工作包；包内操作是清单，不另建子任务或新代理。批准合批不会减少正式任务总数。
++2. 每包一个主要可观察结果，通常围绕一个模块、接口或文档主题及必要相邻引用，最多5项语义实现步骤。出现两个可独立验收结果、无关接口改动或第6项语义步骤时拆窄。同步多份引用、读取、改一行、计算哈希、运行命令等机械动作不单独建包或代理。
++3. 超过1目标、4包或两级时，规划在首次计划选依赖闭合的最小可交付切片（不超过4包）：先按用户明确优先级，再按已有依赖顺序，最后按需求出现顺序取舍。余项只留最多3条后续主题与原需求路径，不展开任务树，本轮不自动续做。无法形成小闭环时，只交1个范围/接口冻结包，其余待后轮；不能把范围冻结当作父目标已完成。
++4. 只有用户明确给出本轮新的有限目标数、任务数或层数，规划才可在dispatch记录相应覆盖值及授权来源。“全部做完”、合批、时间宽裕均不是覆盖授权。禁止增大BATCH_SIZE、新run、自造子ID或重命名失败包绕上限。用户新需求改变边界时交原规划，主不选范围。
++5. 默认BATCH_SIZE=1。只有用户明确大于1才由规划定义批；每批一个开发者顺序实现、一个综合测试者覆盖全批，逐任务判定和修复轮数分别记账。用户明确授权新角色之前，不因风险增大自动增加测试或审阅代理。
++
++## 一个综合测试者按风险覆盖必要检查
++
++三维是functional、engineering、system检查清单，由与开发独立的一个综合测试者统一核验。规划事先写适用项、G层、门槛与不适用理由；“独立”指测试者独立于开发，不声称三个独立视角。
++
++| 范围 | 必要检查由规划按改动选择 |
++|---|---|
++| 文档/配置 | 语义、格式/入口/哈希、交接兼容性 |
++| 模型/软件 | 针对性正反向与边界、可复现性及相关接口 |
++| RTL/时钟/IP/存储/地址/板上行为 | 所需真实DUT、最终STA/CDC/资源及候选绑定，真实硬件、恢复、稳定性与性能检查 |
++
++风险增大先增加必要检查或缩小工作包，不自动增加角色。必需工具/设备/资料/授权缺失直接blocked，综合判定FAIL；不能临时改不适用或放宽门槛求PASS。文档/模型不用无关硬件流程，纯配置PASS不证明RTL、时序、板测或完整调度行为已通过。
++
++角色与上下文只用最小相关输入；综合测试按需读取旧领域清单，不要求一律读取三份。必要验证可复用同输入证据，须写依据并绑定当前manifest；一次检查避免重复重建。不得以节约成本免门槛，不承诺具体token节省百分比。
++
++## 主只接收返回，不监控进度
++
++主不轮询list_agents、不扫描目录或日志估计进度、不问进度或催促、不做超时后的反复盯控。仅接收返回事件、完成消息和明确元数据。wait_agent仅等事件，单次不超过60000ms；等待超时不产生检查、催促、故障或重试动作。
++
++真实ID从spawn_agent返回即时登记，不预防性探测。ID失效以实际工具错误交原规划恢复；能续则续，跨会话须登记真实新旧映射，不假称resume。失联且无返回时，主不伪造blocked/PASS或称平台已自动终止。
++
++## 子角色自行有界执行
++
++- 每角色每次派发/续接默认最多30次实际工具调用；规划自我停止预算15分钟，开发/综合测试各45分钟。自己的命令轮询和worker调用也计入。规划可在派发前按必需构建或长稳时长冻结其他有限预算及理由；运行角色不能自行扩预算，更不能因此扩大需求上限。
++- 单一未决问题最多3轮有目标的搜索/读取。同一失败命令最多首次加1次重试，且仅在有新证据或参数纠正时重试；不能换关键词、ID或目录绕计数。
++- 缺资料、工具、设备、授权或额度直接blocked。DeepSeek/API错误不自动重试，根AGENTS完整规则继续有效。
++- 连续2次工作循环没有新证据、实质产物变化、有效验证结果或可检查的假设收窄，主动停止并返回blocked。换措辞、记日志或重复同输入不算进展。达到工具/时间/搜索预算，或发现必须扩范围时同样停止。
++- 返回须写原因、已做/未做、最后实际结果路径、最小下一步及准确恢复入口，交原规划处理。不能等待主催促才停止。
++
++命令启动前落实工具支持的超时或可安全终止机制：读取/搜索默认deadline为60秒，局部静态检查/仿真5分钟，FPGA构建30分钟。规划可在派发前为必要工作冻结其他有限值。exec的yield_time_ms仅控制输出返回，不能冒充执行超时。不支持实际超时且无法安全控制时，不启动无界命令，返回reason_code=TOOL_CONTROL_MISSING（原因tool_control_missing）。
++
++角色只跟踪自己发起的命令；达到deadline安全停止本角色拥有的进程，保留日志与退出信息并返回，不能杀他人进程。不要新建监控Agent、定时任务或常驻执行器。这些是提示词/角色执行合同，并非平台保证的硬时限，也不保证失联角色自动停止或自动回报。
++
++## 收到重复问题后的有限机会
++
++与实际实现修复轮数分账。子角色有问题时返回problem对象：
++
++| 字段 | 要求 |
++|---|---|
++| problem_id | 同任务同根因稳定，例如task_id:INPUT_CONFLICT:manifest |
++| reason_code | 下列固定枚举之一 |
++| new_information | 布尔值，是否有新信息 |
++| evidence_path | 最后实际证据的准确路径 |
++| requested_action | 原授权范围的补充/整理动作，外部条件则写缺失条件 |
++| resume_input_path | 准确恢复输入路径 |
++
++reason_code仅用RETURN_FORMAT / INPUT_CONFLICT / SCOPE_CLARIFICATION / REPRO_DETAIL / TOOL_UNAVAILABLE / DEVICE_MISSING / PERMISSION_MISSING / API_ERROR / QUOTA / TOOL_CONTROL_MISSING / NO_PROGRESS / LIMIT_REACHED。资料缺失按实际问题归INPUT_CONFLICT或SCOPE_CLARIFICATION，保留具体缺项。
++
++相同问题换措辞、修复轮次或转交角色不改problem_id；真正不同问题由原责任角色说明不同证据，主不读长文猜身份。主只在收到返回后，按task_id+problem_id登记最多2次续原责任角色机会。仅字段齐备、new_information=true、证据/恢复路径齐备，且requested_action为原授权范围补充/整理时可机械续接。信息真假、技术根因由责任角色核验，主只检查元数据。
++
++new_information=false、字段缺失或矛盾、无法稳定归类，或已给2次机会后仍返回同问题，直接交原规划blocked/备条件。规划同样受该计数，不靠往返转交重置机会。到限后仅真实新增用户输入或工具设备条件变化可由原规划明确恢复，不能自行再试。
++
++设备、工具、资料、权限、API/额度错误等明确外部阻塞不走机会循环，不自动重试或扩权。PASS/FAIL实际实现修复仍按round0首次验收、round1—3最多三轮实际修复；不能把修复改名“回答机会”绕三轮。机会仅用于返回内容补充/整理，不由主提供技术答案或监控兜底。
+diff --git a/.agents/skills/fpga-orchestrator/agents/openai.yaml b/.agents/skills/fpga-orchestrator/agents/openai.yaml
+new file mode 100644
+--- /dev/null
++++ b/.agents/skills/fpga-orchestrator/agents/openai.yaml
+@@ -0,0 +1,2 @@
++policy:
++  allow_implicit_invocation: false

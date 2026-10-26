@@ -1,0 +1,440 @@
+{
+  "date": "2026-10-13",
+  "kind": "Independent same-bit load-preserving HDMI diagnostic; not a sparkle fix",
+  "hardware_downloaded": false,
+  "hardware_verified": false,
+  "user_board_specific_vendor_confirmation": false,
+  "project": "D:\\TD\\work\\csi2\\prj\\camera_hdmi_loaded_probe_20261013_004034",
+  "bit_generated": false,
+  "bit": null,
+  "checkpoint": {
+    "path": "D:\\TD\\work\\csi2\\prj\\camera_hdmi_loaded_probe_20261013_004034\\csi_checked_refined_pr.db",
+    "sha256": "c941a827240e0f72837d86f18057f402eb45bd142e74c048bfb560a79f1fd04d"
+  },
+  "first_route": {
+    "timing": {
+      "setup_wns_ns": -0.036,
+      "setup_tns_ns": -0.434,
+      "hold_wns_ns": 0.02
+    },
+    "checkpoint_sha256": "92e5140c4c5712854a50ebcc9ab338ed902c471283a2d4e1b3fba661b4d77a21",
+    "bit_generated": false
+  },
+  "frozen_inputs": {
+    "baseline_count": 184,
+    "baseline_manifest_sha256": "fc78e04f2b02ae52b8c1729c178a32cd7108d944b7dcfdcbc2867e7216e1d327",
+    "candidate_count": 188,
+    "candidate_manifest_sha256": "5b89e59096d11df09ecbee807648723b51371be8252845fa3d119b2bba60b13e",
+    "postprocess_count": 5,
+    "postprocess_manifest_sha256": "2507e3d08a91157c23d81b0df3d9b51d9727c04d0f41e8cb08f31f233973a15e",
+    "refinement_count": 4,
+    "refinement_manifest_sha256": "151a675472a47ac5a2bdddf337ce24474156547bcc85720acd654e18528d31bf"
+  },
+  "timing": {
+    "setup_wns_ns": -0.036,
+    "setup_tns_ns": -0.434,
+    "hold_wns_ns": 0.02,
+    "hold_tns_ns": 0.0,
+    "period_wns_ns": 2.2,
+    "reimport_coverage_percent": 96.4,
+    "route_coverage_percent": 97.75
+  },
+  "timing_gate_passed": false,
+  "gray_skew": {
+    "constraints": 4,
+    "minimum_reported_slack_ns": 2.717
+  },
+  "cdc": {
+    "u_fifo": {
+      "q_drivers": 54,
+      "same_bit_stage_links": 36,
+      "selected_slice_cells": 35
+    },
+    "u_display_fifo": {
+      "q_drivers": 54,
+      "same_bit_stage_links": 36,
+      "selected_slice_cells": 40
+    }
+  },
+  "checked_sync_ff_functions": 72,
+  "capture_error_cdc": "Registered source, direct stage0/stage1, expected clocks and common active-low async reset.",
+  "hdmi_parallel_inputs": {
+    "paths": 68,
+    "pads": 4,
+    "by_lane": [
+      {
+        "lane": 0,
+        "data_bits": 10,
+        "setup_wns_ns": 4.669,
+        "hold_wns_ns": 0.428
+      },
+      {
+        "lane": 1,
+        "data_bits": 10,
+        "setup_wns_ns": 5.418,
+        "hold_wns_ns": 0.171
+      },
+      {
+        "lane": 2,
+        "data_bits": 10,
+        "setup_wns_ns": 5.37,
+        "hold_wns_ns": 0.185
+      }
+    ]
+  },
+  "warnings": [
+    "DRC RTCLK-5078 WARNING: Detected clock net \"cwc_jtck\" driven by data port utilizes 7 local routing resource(s):",
+    "DRC RTCLK-5079 CRITICAL-WARNING: Detected clock net \"sys_clk50m_dup_1\" driven by clock port utilizes 10 local routing resource(s):",
+    "HDL-7225 CRITICAL-WARNING: 'cap_frame_end' is already implicitly declared on line 122 in camera_ddr_display_top.v(184)",
+    "HDL-7225 CRITICAL-WARNING: 'ddr_de' is already implicitly declared on line 121 in camera_ddr_display_top.v(183)",
+    "HDL-7225 CRITICAL-WARNING: 'ddr_hs' is already implicitly declared on line 121 in camera_ddr_display_top.v(183)",
+    "HDL-7225 CRITICAL-WARNING: 'ddr_rgb' is already implicitly declared on line 121 in camera_ddr_display_top.v(183)",
+    "HDL-7225 CRITICAL-WARNING: 'ddr_vs' is already implicitly declared on line 121 in camera_ddr_display_top.v(183)",
+    "HDL-7225 CRITICAL-WARNING: 'display_de' is already implicitly declared on line 120 in camera_ddr_display_top.v(182)",
+    "HDL-7225 CRITICAL-WARNING: 'display_hs' is already implicitly declared on line 120 in camera_ddr_display_top.v(182)",
+    "HDL-7225 CRITICAL-WARNING: 'display_pclk' is already implicitly declared on line 120 in camera_ddr_display_top.v(182)",
+    "HDL-7225 CRITICAL-WARNING: 'display_rst_n' is already implicitly declared on line 120 in camera_ddr_display_top.v(182)",
+    "HDL-7225 CRITICAL-WARNING: 'display_vs' is already implicitly declared on line 120 in camera_ddr_display_top.v(182)",
+    "PHY-5010 WARNING: Net u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_dcu_wrapper/byteIdx[2]$u_ddrphy_dcu/wsl_r_reg[2]_syn_43 is skipped due to 0 input or output",
+    "PHY-5010 WARNING: Net u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_dcu_wrapper/byteIdx[2]$u_ddrphy_dcu/wsl_r_reg[2]_syn_44 is skipped due to 0 input or output",
+    "PHY-5010 WARNING: Net u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_dcu_wrapper/byteIdx[2]$u_ddrphy_dcu/wsl_r_reg[2]_syn_45 is skipped due to 0 input or output",
+    "PHY-5010 WARNING: Net u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_dcu_wrapper/byteIdx[2]$u_ddrphy_dcu/wsl_r_reg[2]_syn_46 is skipped due to 0 input or output",
+    "PHY-5010 WARNING: Net u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_dcu_wrapper/byteIdx[3]$u_ddrphy_dcu/lcdl_rdqsn_r_reg[0]_syn_10 is skipped due to 0 input or output",
+    "PHY-5010 WARNING: Net u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_dcu_wrapper/byteIdx[3]$u_ddrphy_dcu/lcdl_rdqsn_r_reg[0]_syn_11 is skipped due to 0 input or output",
+    "PHY-5010 WARNING: Net u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_dcu_wrapper/byteIdx[3]$u_ddrphy_dcu/lcdl_rdqsn_r_reg[0]_syn_12 is skipped due to 0 input or output",
+    "PHY-5010 WARNING: Net u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_dcu_wrapper/byteIdx[3]$u_ddrphy_dcu/lcdl_rdqsn_r_reg[0]_syn_13 is skipped due to 0 input or output",
+    "PHY-5010 WARNING: Net u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_dcu_wrapper/byteIdx[3]$u_ddrphy_dcu/lcdl_rdqsn_r_reg[0]_syn_8 is skipped due to 0 input or output",
+    "PHY-5010 WARNING: Net u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_dcu_wrapper/byteIdx[3]$u_ddrphy_dcu/lcdl_rdqsn_r_reg[0]_syn_9 is skipped due to 0 input or output",
+    "PHY-5016 WARNING: PLL clkc is driving an IO without location.",
+    "PHY-5060 CRITICAL-WARNING: Clock net candidate \"u_camera/u_cam_preview/I_bc_clk\" in ../../cam_preview_capture.v(48) has mixed fanouts of 6148 clock pins; 1 data/ctrl pins. Example data/ctrl pins: ",
+    "PHY-5060 CRITICAL-WARNING: Clock net candidate \"u_camera/u_camera_startup/I_mclk_syn_13\" in ../../camera/uisrc/01_rtl/camera_startup.v(8) has mixed fanouts of 2 clock pins; 1 data/ctrl pins. Example data/ctrl pins: "
+  ],
+  "simulations": [
+    {
+      "label": "red",
+      "path": "D:\\TD\\work\\csi2\\_validation\\gray_probe_20261013_004706_084363",
+      "result": {
+        "baseline": true,
+        "accepted": true,
+        "behavior_passed": false,
+        "commands": [
+          {
+            "command": [
+              "vlib.exe",
+              "work"
+            ],
+            "returncode": 0
+          },
+          {
+            "command": [
+              "vlog.exe",
+              "-sv",
+              "+define+BASELINE_PASS_THROUGH",
+              "tb_gray_pattern_probe.sv"
+            ],
+            "returncode": 0
+          },
+          {
+            "command": [
+              "vsim.exe",
+              "-c",
+              "work.tb_gray_pattern_probe",
+              "-do",
+              "run -all; quit -f"
+            ],
+            "returncode": 0
+          }
+        ],
+        "inputs": {
+          "tb_gray_pattern_probe.sv": "a9566ac5adb7e6adff1a5aa868a695e3f25de82340699f705589ab2555f543d4"
+        }
+      }
+    },
+    {
+      "label": "green",
+      "path": "D:\\TD\\work\\csi2\\_validation\\gray_probe_20261013_004706_341461",
+      "result": {
+        "baseline": false,
+        "accepted": true,
+        "behavior_passed": true,
+        "commands": [
+          {
+            "command": [
+              "vlib.exe",
+              "work"
+            ],
+            "returncode": 0
+          },
+          {
+            "command": [
+              "vlog.exe",
+              "-sv",
+              "tb_gray_pattern_probe.sv",
+              "gray_pattern_probe.v"
+            ],
+            "returncode": 0
+          },
+          {
+            "command": [
+              "vsim.exe",
+              "-c",
+              "work.tb_gray_pattern_probe",
+              "-do",
+              "run -all; quit -f"
+            ],
+            "returncode": 0
+          }
+        ],
+        "inputs": {
+          "tb_gray_pattern_probe.sv": "a9566ac5adb7e6adff1a5aa868a695e3f25de82340699f705589ab2555f543d4",
+          "gray_pattern_probe.v": "84214fd8648716ab95bcd02c0c19f971115e598377ca54594b3013097516c28b"
+        }
+      }
+    }
+  ],
+  "limits": "Device rate qualification unresolved; STA is parallel-input/constraint scope. No eye, thermal, MTBF or whole-design CDC proof. Camera4K30 -> Gray8 960x540 -> HDMI1080p60.",
+  "next_step": "Keep222159. Stop repeated physical effort after unchanged four extra rounds. Review registered local DDR-ready control, preserving immediate stop/flush semantics before another build.",
+  "artifacts": {
+    "docs/evidence/hdmi_loaded_probe_20261013/input_manifest.json": {
+      "bytes": 21942,
+      "sha256": "5b89e59096d11df09ecbee807648723b51371be8252845fa3d119b2bba60b13e"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/probe_overlay.json": {
+      "bytes": 1983,
+      "sha256": "839f194a53c6e37f1744e7f0859c6e891c0b108ff916a5729eb016fc7bdce569"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/postprocess_manifest.json": {
+      "bytes": 469,
+      "sha256": "2507e3d08a91157c23d81b0df3d9b51d9727c04d0f41e8cb08f31f233973a15e"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/build_probe.tcl": {
+      "bytes": 3340,
+      "sha256": "d93939a7570c789c2c2530b1cf2d79fc3dc553cbabcf249acf9e76d45f6552b0"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/route_probe.tcl": {
+      "bytes": 1140,
+      "sha256": "75134a485343c00443fc20c1819307f487c67ce2f1bb07f43b999699a30f405f"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/inspect_probe_body.tcl": {
+      "bytes": 876,
+      "sha256": "48d386d89ec66b05be2ec2f1895359144fe33a1f2ad875d5c03fa3bccf18e73b"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/inspect_probe.tcl": {
+      "bytes": 81,
+      "sha256": "cff1a16256d9386fd099bd9294bf906531dad618e9edba2866e8cc7d840ef16b"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/bitgen_probe_body.tcl": {
+      "bytes": 2421,
+      "sha256": "7999f5f75136f5c1aa893ad64737f3b861f666b26a3608a76cea07a94af21b31"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/bitgen_probe.tcl": {
+      "bytes": 80,
+      "sha256": "39906a0e0bc25bc2cd26c555ef76a43829c9082b2aa1e8fc633f97dd4076d5b0"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/audit_hdmi_probe.tcl": {
+      "bytes": 683,
+      "sha256": "270409f59ad7abc116a646f9be67c7cf72b6cc990b9201a03c25b5da0f19f162"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/f9p_camera_display_core.v": {
+      "bytes": 17845,
+      "sha256": "ca78425713b70fc6b3cf222050c31635409597978d5bbd4e5576983678ae2a49"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/probe_synthesis_console.txt": {
+      "bytes": 13042,
+      "sha256": "38b310970be21630629d07c48d6284d8a0a432f9ab1dae7f3c6bd380270c4a8e"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/probe_route_console.txt": {
+      "bytes": 243748,
+      "sha256": "43567f021cf85b96680dab90f8b29ab2dcfe58ddff33bf76fed21de8371be8e0"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/probe_inspect_console.txt": {
+      "bytes": 24609,
+      "sha256": "0032021d6d24b2a1837c422afd670cafba913d75c35dfae35bf13d19059451d1"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/probe_hdmi_console.txt": {
+      "bytes": 23640,
+      "sha256": "d01630cf72ea451615e9c78f81fd1297f820a8317a6bfecc95bb085962806d26"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/probe_bitgen_console.txt": {
+      "bytes": 23612,
+      "sha256": "45f87dc79310a553b4943d00680024536d75e8e258a52d13ab3bf4069040aeb1"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/capture_timing.rpt": {
+      "bytes": 5701309,
+      "sha256": "36cec79f42beeaf315b876522c9bb1959747f565f5b0d40677ddcc77674f107e"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/capture_ignored.rpt": {
+      "bytes": 1235791,
+      "sha256": "eda8b0fa13f01d64daa4a47db47a1ccb341dbb42e9532dba89c967397a1e06e3"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/capture_abnormal.rpt": {
+      "bytes": 122,
+      "sha256": "a4e5f4685518c9a537bd1f7fd5894808add6a2c61d0f75f02592300b77dc71da"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/capture_skew.rpt": {
+      "bytes": 542065,
+      "sha256": "598afd506b19b64d4800a1842e1936699f837955f155874725e85783fdec2a9d"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/capture.area": {
+      "bytes": 56839,
+      "sha256": "de2e40f065c0f4219de3172e37edd3b6c5bca3acfa0a93f71d2942b5e6bea6b8"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/candidate_timing.rpt": {
+      "bytes": 5701309,
+      "sha256": "d6183b8c7c18e9169be22a36f060b2479384c1a5aaeaee3d441f8c2b39fa9157"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/candidate_ignored.rpt": {
+      "bytes": 1203909,
+      "sha256": "a6445de072d46ce3a5d86207921336d33140cfab5426921523504a6157981252"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/candidate_abnormal.rpt": {
+      "bytes": 122,
+      "sha256": "a4e5f4685518c9a537bd1f7fd5894808add6a2c61d0f75f02592300b77dc71da"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/candidate_skew.rpt": {
+      "bytes": 542065,
+      "sha256": "dce076ac8f80683bce0b9d3cd114065b7c74585eb9c06f635d2eae19266dc5cd"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/hdmi_clocks.rpt": {
+      "bytes": 585,
+      "sha256": "70d32eae1cd5ea77eca33ea5bf8c5c94dd164797423f74f25bbb27eb5274f84f"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/hdmi_data_paths.rpt": {
+      "bytes": 445436,
+      "sha256": "3a16a1c64f3a34360672c2687004d9970179e9abb5f423aeec70ae8de6e42873"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/hdmi_targets.txt": {
+      "bytes": 8097,
+      "sha256": "e3fe11751ace4ffe0d7dea9438d805bd4dd962def3483b62c627c210a23c07a7"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/hdmi_pad_excerpt.v": {
+      "bytes": 6274,
+      "sha256": "a95a2b9d70a8318d447df73fd0ef94f044d222da9501ffb961fe602682421781"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/u_fifo_cdc_audit.json": {
+      "bytes": 77374,
+      "sha256": "a7a9ef5cc181a09d640d433565bfac17aa01949ec0b992ad0dfab5ea4187dfd8"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/u_fifo_cdc_excerpt.v": {
+      "bytes": 43590,
+      "sha256": "2e3c8865b4d242d9ff39d013477929f456e94c3ef0a06689fcd010389e3b9b64"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/u_display_fifo_cdc_audit.json": {
+      "bytes": 79448,
+      "sha256": "798b9f48e3fc0e76a4aee271e7929b1b008c021816c6003b77e025b3ed4cdc91"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/u_display_fifo_cdc_excerpt.v": {
+      "bytes": 49657,
+      "sha256": "5bb86a6bd5aa2c6c571dd39f0761302b8eb0be109380c14d996cf43c1cdc3f05"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/display_cdc_functions.json": {
+      "bytes": 35550,
+      "sha256": "4fbf469f5ad896ad2096105b0f10dd1ef9e966392d9dfc08e9c102128d251fd1"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/cdc_reset_clock_review.txt": {
+      "bytes": 19942,
+      "sha256": "9744ceccd8bf0867ec18eac7225c13d9ee3bf010448180927027050e6ab636dc"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/cap_error_cdc_review.json": {
+      "bytes": 4062,
+      "sha256": "c0b42629a8cc1bae7db86afc666a3d04762aac4f8b1f8c5c0a275fe8eb347fd0"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/refinement_manifest.json": {
+      "bytes": 374,
+      "sha256": "151a675472a47ac5a2bdddf337ce24474156547bcc85720acd654e18528d31bf"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/refine_probe.tcl": {
+      "bytes": 772,
+      "sha256": "97fe9d8dcc74b10353691706669e103000d48ba62772276b1b588048abbf3919"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/inspect_refined.tcl": {
+      "bytes": 83,
+      "sha256": "29644ab812e1dd0fec9ac3757573e63b8dd68b5c8c469957cf6bcea7795e9c80"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/bitgen_refined.tcl": {
+      "bytes": 82,
+      "sha256": "33aba2892f782e07fc2c3584945ae0b2fd26c1597931ed29d8a3e4b81af88a05"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/audit_hdmi_refined.tcl": {
+      "bytes": 685,
+      "sha256": "2b7413a9b0f5e67fd367e3a3193282e2e71582d3386e6d1e363eeeab5cc5c977"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/probe_refine_console.txt": {
+      "bytes": 49672,
+      "sha256": "6c5af6d2d4c125e2688534ce183e2cf03112f8d4c9eff3e5ee39f05bbd2a154f"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/refined_timing.rpt": {
+      "bytes": 5701309,
+      "sha256": "bddb459612154d0a777fba1d4340934a60c0dfcdd8425ef7eb3c189ea51c9c78"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/refined_ignored.rpt": {
+      "bytes": 1235791,
+      "sha256": "6fb277cc816f469847c601dacde1d89b4e544bda6304cc5b31974a748bb45021"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/refined_abnormal.rpt": {
+      "bytes": 122,
+      "sha256": "a4e5f4685518c9a537bd1f7fd5894808add6a2c61d0f75f02592300b77dc71da"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/refined_skew.rpt": {
+      "bytes": 542065,
+      "sha256": "b7e031ecae6f7dad8724427f3f60c7fd2067aa50e29fd33dee99558fe158c606"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/refined.area": {
+      "bytes": 56839,
+      "sha256": "de2e40f065c0f4219de3172e37edd3b6c5bca3acfa0a93f71d2942b5e6bea6b8"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/route.qor": {
+      "bytes": 3371,
+      "sha256": "3e44c2540c7691f05e4d28f338cb8a478ed077bf39b720fd513ae9df126c857e"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/route_qor_suggestion.tcl": {
+      "bytes": 80,
+      "sha256": "eb28d61d1176e551185139fb77ea238e4656892d9f732b89b2fa6289f2730092"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/red/result.json": {
+      "bytes": 659,
+      "sha256": "2ce5f231c93be43434c230a230d2238ee2b101fd653130b85641d276d06f0cd4"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/red/0.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/red/1.txt": {
+      "bytes": 404,
+      "sha256": "dfd781ac81144952820742871204def45ee01486c166c02a9b511611c5e7aa87"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/red/2.txt": {
+      "bytes": 634,
+      "sha256": "cdeee7834b9fb0987ccf20a5352c99c19c947d9e4bf2b02920874d443afaba76"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/green/result.json": {
+      "bytes": 746,
+      "sha256": "619b8c408c865fe77897ba6c520c28dc321b29322ee3a033f3b12c01410c499f"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/green/0.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/green/1.txt": {
+      "bytes": 393,
+      "sha256": "b2e38b6faa790c6d2db17c57a17acf018dca85552e224afc260f7620a9bfa936"
+    },
+    "docs/evidence/hdmi_loaded_probe_20261013/green/2.txt": {
+      "bytes": 571,
+      "sha256": "44ca72c73b6eacce5a9211446681dae509fdc265246809e0aeb0e19ba3d8f694"
+    }
+  },
+  "tool_exit_codes": {
+    "synthesis": 0,
+    "first_route": 0,
+    "refinement": 0,
+    "readonly_export": 0,
+    "hdmi_audit": 0,
+    "bitgen_gate": 1
+  },
+  "cdc_reset_clock_review": {
+    "common_reset_aliases": 3,
+    "excerpt_cells": 16,
+    "formal_proof": false
+  }
+}

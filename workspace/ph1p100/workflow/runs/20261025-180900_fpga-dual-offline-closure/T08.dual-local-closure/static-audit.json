@@ -1,0 +1,28 @@
+{
+  "geometry": {
+    "W": 1920,
+    "H": 1080,
+    "raw_bytes": 2592000,
+    "content_bytes": 2592128,
+    "dma_bytes": 2592768,
+    "slot_bytes": 8388608
+  },
+  "slot_bases": [
+    1048576,
+    9437184,
+    17825792,
+    26214400
+  ],
+  "boundary_check": true,
+  "double_1080p30_raw_MBps": 155.52,
+  "raw_write_plus_read_minimum_MBps": 311.04,
+  "physical_CDC_STA_resources": "not_run",
+  "cdc_structure": "writer asynchronous FIFO retained; sync_sof_mailbox/reset retained; ownership and AXI operate only in DHI; exported sync observations remain in existing tl_clk_user 50MHz domain, no asynchronous multi-bit resampling added",
+  "reset": "common DDR reset clears reader skid/outstanding/ownership and environment queue; only common DDR reset recovers LOCK",
+  "latch_review": "new combinational ext range loop assigns defaults; sequential state owns every mailbox/AXI register; no intentional latch",
+  "axi": "at most one burst, max128 beats, no4KiB crossing, registered AR stable to handshake, RRESP/RID/RLAST checked, drain before release",
+  "python": "3.11.5",
+  "source_count": 71,
+  "worker_task": "e41b4647d8a442e49e42b98807adc147",
+  "worker_pending_call_ids": []
+}

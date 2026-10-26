@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "run_id": "KIT-dryrun-neg-channel",
+  "timestamp": "2026-10-18T00:00:00Z",
+  "operator": "fpga-dev",
+  "channel": "bw-jtag-session-log",
+  "tool": {
+    "name": "parse_dump.py",
+    "version": "1.0.0"
+  },
+  "input": {
+    "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\upstream\\ph1p100-pcie-ep-fpga\\tools\\bringup\\fixtures\\neg-channel-flash.log",
+    "sha256": "60cb4ab8181e19ae477f93b0074512b1525b7216918301053136ddac2bf24074"
+  },
+  "readings": [],
+  "verdicts": [
+    {
+      "rule_id": "CH01",
+      "offset": "-",
+      "name": "device_id",
+      "verdict": "pass",
+      "detail": "device id PH1P100",
+      "source": "B1 channel-notes.md s3"
+    },
+    {
+      "rule_id": "CH02",
+      "offset": "-",
+      "name": "sram_download",
+      "verdict": "pass",
+      "detail": "PRG-2014 success with -mode jtag",
+      "source": "B1 channel-notes.md s3"
+    },
+    {
+      "rule_id": "CH03",
+      "offset": "-",
+      "name": "flash_absent",
+      "verdict": "fail",
+      "detail": "forbidden flash/SPI/efuse command(s): program_spi",
+      "source": "dev-plan s1 safety boundary"
+    }
+  ],
+  "summary": {
+    "pass": 2,
+    "fail": 1,
+    "blocked": 0,
+    "not_applicable": 0,
+    "verdict": "fail"
+  },
+  "notes": [
+    "channel evidence only; no user register readings are implied",
+    "JTAG register access semantics remain undocumented (KIT doc check: unavailable)"
+  ]
+}

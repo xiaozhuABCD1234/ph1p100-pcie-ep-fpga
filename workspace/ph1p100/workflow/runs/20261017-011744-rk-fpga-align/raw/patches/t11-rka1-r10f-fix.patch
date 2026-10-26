@@ -1,0 +1,481 @@
+diff --git a/app/rs/src/bin/frame_grab.rs b/app/rs/src/bin/frame_grab.rs
+index cf11316..3db4b4e 100644
+--- a/app/rs/src/bin/frame_grab.rs
++++ b/app/rs/src/bin/frame_grab.rs
+@@ -43,6 +43,7 @@ use anlogic_pci_tools::ioctl::{
+     ANLOGIC_FRAME_MAGIC, ANLOGIC_FRAME_MAX_WAIT_MS, ANLOGIC_IOCFRAMEINFO, ANLOGIC_IOCFRAMEWAIT,
+ };
+ use anlogic_pci_tools::parse::strtoul_base0;
++use anlogic_pci_tools::rka1::r10f;
+ use anlogic_pci_tools::sys::{self, Mmap, PROT_READ};
+ 
+ const DEF_DEV: &str = "/dev/ANLOGIC-PCI0_frame";
+@@ -406,6 +407,41 @@ fn run() -> i32 {
+         rc = EX_INCONSISTENT;
+     }
+ 
++    // ---- 6.5 T11：内容若为 R10F（正式非压缩帧），先严格解析；不通过不发布 ----
++    //   判据与 `tools/pcie_integration/r10f_strict.py` / contract/acceptance-vectors.json
++    //   逐字段一致（magic/version/format/codec/几何三层长度/三 CRC/尾零/flags）。
++    //   ⚠ PGM 是灰度诊断输出：R10F 内容笔写出的是 packed RAW10 原始字节（8192bit/4px），
++    //   不是灰度像素；这里只为「取到、审到、可复算」留证据，不代表颜色/几何正确。
++    if img.len() >= r10f::HDR_BYTES && &img[0..4] == b"R10F" {
++        let pb = u32::from_le_bytes([img[0x30], img[0x31], img[0x32], img[0x33]]) as usize;
++        if r10f::HDR_BYTES + pb > img.len() {
++            eprintln!(
++                "!! R10F payload_bytes={} 超出槽内容（{} 字节）：拒绝发布",
++                pb,
++                img.len()
++            );
++            return EX_INCONSISTENT;
++        }
++        let (hdr, rest) = img.split_at(r10f::HDR_BYTES);
++        let (payload, tail) = rest.split_at(pb);
++        match r10f::parse(hdr, payload, tail, info.width, info.height, None) {
++            Ok(h) => {
++                println!(
++                    "  R10F      : session=0x{:08x} seq={} {}x{} stride={} flags=0x{:x}",
++                    h.session_id, h.capture_seq, h.width, h.height, h.stride, h.flags
++                );
++                println!(
++                    "  R10F CRC  : payload=0x{:08x} header=0x{:08x}（parse 内部已逐字节复算通过）",
++                    h.payload_crc32, h.header_crc32
++                );
++            }
++            Err(e) => {
++                eprintln!("!! R10F 严格解析失败：{}（拒绝发布；RC 槽头编号/长度一致也无效）", e);
++                return EX_INCONSISTENT;
++            }
++        }
++    }
++
+     // ---- 7. 搬运转查：只有环形缓冲绕回一圈才可能盖掉刚取的这一帧 ----
+     // （与 C 版一样重新问一次，覆盖同一个 info）
+     if frame_info(fd, &mut info).is_err() {
+diff --git a/app/rs/src/bin/r10f_check.rs b/app/rs/src/bin/r10f_check.rs
+new file mode 100644
+index 0000000..eb72baa
+--- /dev/null
++++ b/app/rs/src/bin/r10f_check.rs
+@@ -0,0 +1,160 @@
++// SPDX-License-Identifier: GPL-2.0
++/*!
++ * r10f_check —— T11.rk-align-raw：R10F v1 非压缩帧的**离线严格校验**（RK 侧）
++ *
++ * 输入：一份「R10F 传输内容」文件（= 主机槽内 `hdr_bytes` 偏移起、长度 `dma_bytes`
++ * 的那段字节：128B 头 + packed 有效载荷 + 4KiB 对齐全 0 尾）。
++ *   来源可以是：
++ *     · FPGA 实收帧的槽内容 dump（`dd if=/dev/... skip=<槽偏移 + hdr_bytes> count=<dma_bytes>`）；
++ *     · PC 侧生成/发布的样例（tools/pcie_integration/r10f_strict.py gen 的输出）。
++ *
++ * 判据与 `app/rs/src/rka1.rs` 的 `r10f::parse`、Python 对照工具、合同验收向量
++ * (`contract/acceptance-vectors.json`) 逐字段一致；任何一项不符 → 退出码 5、不打印 PASS。
++ *
++ * 用法：
++ *   r10f_check <文件> [--session 0x20261017] [--width 1920 --height 1080]
++ * 退出码：0 校验通过；1 用法错；2 文件读不了；5 严格校验不过。
++ */
++use std::io::Read;
++
++use anlogic_pci_tools::rka1::r10f;
++
++const EX_OK: i32 = 0;
++const EX_USAGE: i32 = 1;
++const EX_IO: i32 = 2;
++const EX_INCONSISTENT: i32 = 5;
++
++fn usage(prog: &str) {
++    eprintln!(
++        "用法：{} <R10F内容文件> [--session 0xNNNNNNNN] [--width W --height H]\n\
++         \x20 输入 = 槽内 hdr_bytes 偏移起、长度 dma_bytes 的一段（128B 头+载荷+尾零）\n\
++         \x20 退出码：0 通过，1 用法，2 读文件失败，5 严格校验不过",
++        prog
++    );
++}
++
++fn parse_u32(s: &str) -> Option<u32> {
++    let t = s.trim();
++    if let Some(h) = t.strip_prefix("0x").or_else(|| t.strip_prefix("0X")) {
++        u32::from_str_radix(h, 16).ok()
++    } else {
++        t.parse::<u32>().ok()
++    }
++}
++
++fn run() -> i32 {
++    let argv: Vec<String> = std::env::args().collect();
++    if argv.len() < 2 {
++        usage(&argv[0]);
++        return EX_USAGE;
++    }
++    let path = argv[1].clone();
++    let mut expect_session: Option<u32> = None;
++    let mut expect_w: Option<u16> = None;
++    let mut expect_h: Option<u16> = None;
++
++    let mut i = 2;
++    while i < argv.len() {
++        match argv[i].as_str() {
++            "--session" if i + 1 < argv.len() => {
++                match parse_u32(&argv[i + 1]) {
++                    Some(v) => expect_session = Some(v),
++                    None => {
++                        eprintln!("!! --session 需要 32bit 数（可 0x 前缀）");
++                        return EX_USAGE;
++                    }
++                }
++                i += 2;
++            }
++            "--width" if i + 1 < argv.len() => {
++                match parse_u32(&argv[i + 1]).and_then(|v| u16::try_from(v).ok()) {
++                    Some(v) => expect_w = Some(v),
++                    None => {
++                        eprintln!("!! --width 需要 16bit 数");
++                        return EX_USAGE;
++                    }
++                }
++                i += 2;
++            }
++            "--height" if i + 1 < argv.len() => {
++                match parse_u32(&argv[i + 1]).and_then(|v| u16::try_from(v).ok()) {
++                    Some(v) => expect_h = Some(v),
++                    None => {
++                        eprintln!("!! --height 需要 16bit 数");
++                        return EX_USAGE;
++                    }
++                }
++                i += 2;
++            }
++            "-h" | "--help" => {
++                usage(&argv[0]);
++                return EX_OK;
++            }
++            other => {
++                eprintln!("!! 未知参数 '{}'", other);
++                usage(&argv[0]);
++                return EX_USAGE;
++            }
++        }
++    }
++
++    let mut buf = Vec::new();
++    match std::fs::File::open(&path).and_then(|mut f| f.read_to_end(&mut buf)) {
++        Ok(_) => {}
++        Err(e) => {
++            eprintln!("!! 打不开/读不了 {}：{}", path, e);
++            return EX_IO;
++        }
++    }
++    if buf.len() < r10f::HDR_BYTES {
++        eprintln!("!! 文件只有 {} 字节（R10F 头就要 128）", buf.len());
++        return EX_INCONSISTENT;
++    }
++    if &buf[0..4] != b"R10F" {
++        eprintln!("!! 不是 R10F 内容（magic = {:02x?}）", &buf[0..4]);
++        return EX_INCONSISTENT;
++    }
++
++    let le16 = |o: usize| u16::from_le_bytes([buf[o], buf[o + 1]]);
++    let le32 = |o: usize| u32::from_le_bytes([buf[o], buf[o + 1], buf[o + 2], buf[o + 3]]);
++    let width = le16(0x1C);
++    let height = le16(0x1E);
++    let payload_bytes = le32(0x30) as usize;
++    let want = r10f::HDR_BYTES + payload_bytes;
++    if buf.len() < want {
++        eprintln!(
++            "!! 文件长度 {} 小于 128+payload_bytes {}：截断",
++            buf.len(),
++            want
++        );
++        return EX_INCONSISTENT;
++    }
++    let (hdr, rest) = buf.split_at(r10f::HDR_BYTES);
++    let (payload, tail) = rest.split_at(payload_bytes);
++
++    let ew = expect_w.unwrap_or(width);
++    let eh = expect_h.unwrap_or(height);
++    match r10f::parse(hdr, payload, tail, ew, eh, expect_session) {
++        Ok(h) => {
++            println!(
++                "R10F OK: {}x{} stride={} session=0x{:08x} seq={} mode={} camera={} flags=0x{:x} roi=({},{})",
++                h.width, h.height, h.stride, h.session_id, h.capture_seq, h.mode_id,
++                h.camera_id, h.flags, h.roi_x, h.roi_y
++            );
++            println!(
++                "         raw_bytes={} payload_bytes={} crc(payload)=0x{:08x} crc(header)=0x{:08x} tail={}B 全零",
++                h.raw_bytes, h.payload_bytes, h.payload_crc32, h.header_crc32,
++                tail.len()
++            );
++            EX_OK
++        }
++        Err(e) => {
++            eprintln!("R10F FAIL: {}（文件 {}，{} 字节）", e, path, buf.len());
++            EX_INCONSISTENT
++        }
++    }
++}
++
++fn main() {
++    anlogic_pci_tools::exit_with(run());
++}
+diff --git a/app/rs/src/rka1.rs b/app/rs/src/rka1.rs
+index 1c25f5a..862b2a2 100644
+--- a/app/rs/src/rka1.rs
++++ b/app/rs/src/rka1.rs
+@@ -6,9 +6,17 @@
+ //!   1) [`Rka1`]：扩展探测 / 授权配置 / one-shot ARM / ACK_RELEASE / CANCEL 的薄封装。
+ //!      所有操作都 fail closed：EXT_MAGIC != "RKA1" 时直接报错，**不退回旧行为**。
+ //!   2) [`r10f`]：R10F 非压缩帧的严格解析（magic/version/format/codec/几何/三层长度/
+-//!      三段 CRC/尾零），任何一项不符就拒绝，绝不「夹紧后当成功」。
++//!      三段 CRC/尾零/flags），任何一项不符就拒绝，绝不「夹紧后当成功」。
+ //!
+ //! 说明：本模块不改任何既有结构体布局与 ioctl 编号；新结构体只走新编号 15。
++//!
++//! **T11 增量（本文件相对 T07 版本）**：`r10f` 模块的字段布局此前是按早期草案写的
++//! （magic "R0FR"、偏移/宽度不匹配正式帧），会拒绝 FPGA 实际输出的每一帧。本增量
++//! 把它改为与 `contract/acceptance-vectors.json` +
++//! `references/local-inputs/parallel/frame/frame_contract.py` + T11 写者 RTL
++//! (`fpga/csi2/pcie_integration/rtl/ep_side/ddr/cam_r10f_writer.v`) 逐字段一致的正式
++//! 布局（magic "R10F"、version 1.0、header_bytes 128、codec_id=0 …），并补齐
++//! reserved/flags/几何自洽检查；离线对照实现见 `tools/pcie_integration/r10f_strict.py`。
+ 
+ use crate::ioctl::*;
+ use crate::sys;
+@@ -148,39 +156,63 @@ fn describe(rq: &IocRka1, err: i32) -> String {
+     )
+ }
+ 
+-/// R10F 非压缩帧的严格解析（T07）。
++/// R10F 非压缩帧的严格解析（T07 引入；**T11 修正为正式布局**）。
+ ///
+ /// 判据（任一项不符即 `Err`，不做任何"夹紧/容错"）：
+-///   · magic == 0x46523052（"R0FR" 小端，见 frame_contract.py）、version == 0、
+-///     format == 0（非压缩）、codec == 0（RAW，BPR1 是另一个 codec，不在这里）、
+-///     valid_bits == 10、packing == 0；
+-///   · width/height/stride 与传输长度自洽：stride >= ceil(width*10/8)，
+-///     raw_bytes == payload_bytes == stride*height（本框架无额外行填充）；
+-///   · dma_len 必须精确等于 hdr(128) + payload + 尾零，且尾零全 0；
+-///   · header_crc32 / payload_crc32 与内容逐字节相符（IEEE 反射 poly 0xEDB88320，
+-///     init/final 全 1；header CRC 计算时把 0x58..0x5B 的 crc 字段自身清 0）。
++///   · magic == "R10F"（小端读 0x46303152）、version == 1.0（0x04 主 / 0x06 次）、
++///     header_bytes == 128；
++///   · format_id == 0（非压缩，0x0B）、codec_id == 0（0x0C；BPR1 是别的 codec，
++///     不在这里）、valid_bits == 10（0x2A）、packing == 0（0x2B）；
++///   · 几何自洽：width（0x1C）>0 且 %4==0、stride（0x20）== width*5/4、
++///     raw_bytes（0x2C）== payload_bytes（0x30）== stride*height；
++///   · flags（0x4C）不得含 BAD(1)/PARTIAL(4)/OVERSIZE(8)；CROPPED(2) 允许；
++///   · reserved 0x5C..0x7F 必须全 0；
++///   · payload 长度精确等于 payload_bytes、transport_tail 必须全 0；
++///   · raw_crc32 == payload_crc32 == CRC32(packed 载荷)（IEEE 反射 poly 0xEDB88320，
++///     init/final 全 1）；
++///   · header_crc32（0x58）== CRC32(头 128B，其中 0x58..0x5B 先清 0)；
++///   · expect_session 给出时 session（0x10）必须相等。
+ pub mod r10f {
+-    pub const MAGIC: u32 = 0x52_30_46_52; // 'R','0','F','R'（小端）
++    pub const MAGIC: u32 = 0x4630_3152; // 'R','1','0','F'（小端读）
+     pub const HDR_BYTES: usize = 128;
+-    pub const VALID_BITS: u16 = 10;
++    pub const VERSION_MAJOR: u16 = 1;
++    pub const VERSION_MINOR: u16 = 0;
++    pub const FORMAT_RAW10_PACKED: u16 = 0;
++    pub const CODEC_NONE: u16 = 0;
++    pub const VALID_BITS: u8 = 10;
++
++    pub const FLAG_BAD: u32 = 1 << 0;
++    pub const FLAG_CROPPED: u32 = 1 << 1;
++    pub const FLAG_PARTIAL: u32 = 1 << 2;
++    pub const FLAG_OVERSIZE: u32 = 1 << 3;
+ 
+     #[derive(Debug, Clone, Copy)]
+     pub struct R10fHeader {
+-        pub version: u16,
+-        pub format: u16,
+-        pub codec: u16,
+-        pub valid_bits: u16,
+-        pub packing: u16,
+-        pub flags: u32,
++        pub version_major: u16,
++        pub version_minor: u16,
++        pub header_bytes: u16,
++        pub camera_id: u8,
++        pub format_id: u8,
++        pub codec_id: u32,
++        pub session_id: u32,
++        pub capture_seq: u32,
++        pub mode_id: u32,
+         pub width: u16,
+         pub height: u16,
+         pub stride: u32,
++        pub roi_x: u16,
++        pub roi_y: u16,
++        pub bayer_phase: u8,
++        pub bayer_dir: u8,
++        pub valid_bits: u8,
++        pub packing: u8,
+         pub raw_bytes: u32,
+         pub payload_bytes: u32,
+-        pub header_crc32: u32,
++        pub block_count: u32,
++        pub flags: u32,
++        pub raw_crc32: u32,
+         pub payload_crc32: u32,
+-        pub session: u32,
+-        pub seq: u32,
++        pub header_crc32: u32,
+     }
+ 
+     pub fn le16(b: &[u8], o: usize) -> u16 {
+@@ -205,40 +237,57 @@ pub mod r10f {
+         !crc
+     }
+ 
+-    pub fn parse(hdr: &[u8], payload: &[u8], transport_tail: &[u8], expect_w: u16, expect_h: u16, expect_session: Option<u32>)
++    /// 严格解析。`hdr` 至少 128B（只取前 128B）；`payload` 为 packed 有效载荷；
++    /// `transport_tail` 为 4KiB 对齐尾（content_bytes 之后到 dma_bytes）。
++    pub fn parse(hdr: &[u8], payload: &[u8], transport_tail: &[u8],
++                 expect_w: u16, expect_h: u16, expect_session: Option<u32>)
+         -> Result<R10fHeader, String>
+     {
+         if hdr.len() < HDR_BYTES {
+             return Err(format!("header too short: {} < {}", hdr.len(), HDR_BYTES));
+         }
+         if le32(hdr, 0) != MAGIC {
+-            return Err(format!("bad R10F magic 0x{:08x}", le32(hdr, 0)));
++            return Err(format!("bad R10F magic 0x{:08x} != 0x{:08x}", le32(hdr, 0), MAGIC));
+         }
+         let h = R10fHeader {
+-            version: le16(hdr, 4),
+-            format: le16(hdr, 6),
+-            codec: le16(hdr, 8),
+-            valid_bits: le16(hdr, 10),
+-            packing: le16(hdr, 12),
+-            flags: le32(hdr, 16),
+-            width: le16(hdr, 24),
+-            height: le16(hdr, 26),
+-            stride: le32(hdr, 28),
+-            raw_bytes: le32(hdr, 32),
+-            payload_bytes: le32(hdr, 36),
++            version_major: le16(hdr, 0x04),
++            version_minor: le16(hdr, 0x06),
++            header_bytes: le16(hdr, 0x08),
++            camera_id: hdr[0x0A],
++            format_id: hdr[0x0B],
++            codec_id: le32(hdr, 0x0C),
++            session_id: le32(hdr, 0x10),
++            capture_seq: le32(hdr, 0x14),
++            mode_id: le32(hdr, 0x18),
++            width: le16(hdr, 0x1C),
++            height: le16(hdr, 0x1E),
++            stride: le32(hdr, 0x20),
++            roi_x: le16(hdr, 0x24),
++            roi_y: le16(hdr, 0x26),
++            bayer_phase: hdr[0x28],
++            bayer_dir: hdr[0x29],
++            valid_bits: hdr[0x2A],
++            packing: hdr[0x2B],
++            raw_bytes: le32(hdr, 0x2C),
++            payload_bytes: le32(hdr, 0x30),
++            block_count: le32(hdr, 0x34),
++            flags: le32(hdr, 0x4C),
++            raw_crc32: le32(hdr, 0x50),
++            payload_crc32: le32(hdr, 0x54),
+             header_crc32: le32(hdr, 0x58),
+-            payload_crc32: le32(hdr, 0x5c),
+-            session: le32(hdr, 0x60),
+-            seq: le32(hdr, 0x64),
+         };
+-        if h.version != 0 {
+-            return Err(format!("R10F version {} != 0", h.version));
++        if (h.version_major, h.version_minor) != (VERSION_MAJOR, VERSION_MINOR) {
++            return Err(format!("R10F version {}.{} != 1.0", h.version_major, h.version_minor));
++        }
++        if h.header_bytes != HDR_BYTES as u16 {
++            return Err(format!("R10F header_bytes {} != 128", h.header_bytes));
+         }
+-        if h.format != 0 {
+-            return Err(format!("R10F format {} != 0（非压缩）", h.format));
++        if h.format_id != FORMAT_RAW10_PACKED as u8 {
++            return Err(format!("R10F format_id {} != 0（非压缩）", h.format_id));
+         }
+-        if h.codec != 0 {
+-            return Err(format!("R10F codec {} 未知（BPR1 走别的 codec）", h.codec));
++        // codec_id 是 u32 字段（0x0C）：正式非压缩帧必须为 0
++        if h.codec_id != CODEC_NONE as u32 {
++            return Err(format!("R10F codec_id {} 未知（BPR1 走别的 codec）", h.codec_id));
+         }
+         if h.valid_bits != VALID_BITS || h.packing != 0 {
+             return Err(format!(
+@@ -246,21 +295,15 @@ pub mod r10f {
+                 h.valid_bits, h.packing
+             ));
+         }
+-        if h.width != expect_w || h.height != expect_h {
+-            return Err(format!(
+-                "R10F geometry {}x{} != 已授权的 {}x{}",
+-                h.width, h.height, expect_w, expect_h
+-            ));
++        if h.width == 0 || h.height == 0 || (h.width & 3) != 0 {
++            return Err(format!("R10F geometry {}x{} 非法（width 必须为 4 的倍数）", h.width, h.height));
+         }
+-        let min_stride = ((h.width as u32) * 10 + 7) / 8;
+-        if h.stride < min_stride {
+-            return Err(format!("R10F stride {} < 每行最少 {} ", h.stride, min_stride));
++        let expect_stride = (h.width as u32) / 4 * 5;
++        if h.stride != expect_stride {
++            return Err(format!("R10F stride {} != width*5/4 {}", h.stride, expect_stride));
+         }
+         if h.raw_bytes != h.payload_bytes {
+-            return Err(format!(
+-                "R10F raw_bytes {} != payload_bytes {}",
+-                h.raw_bytes, h.payload_bytes
+-            ));
++            return Err(format!("R10F raw_bytes {} != payload_bytes {}", h.raw_bytes, h.payload_bytes));
+         }
+         if h.payload_bytes != h.stride * h.height as u32 {
+             return Err(format!(
+@@ -268,6 +311,21 @@ pub mod r10f {
+                 h.payload_bytes, h.stride, h.height
+             ));
+         }
++        if h.flags & (FLAG_BAD | FLAG_PARTIAL | FLAG_OVERSIZE) != 0 || h.flags & !FLAG_CROPPED != 0 {
++            return Err(format!("R10F flags 0x{:x} 不可发布（只允许 0/2=CROPPED）", h.flags));
++        }
++        if h.block_count < 1 {
++            return Err(format!("R10F block_count {} < 1", h.block_count));
++        }
++        if hdr[0x5C..HDR_BYTES].iter().any(|b| *b != 0) {
++            return Err("R10F reserved 0x5C..0x7F 非 0".to_string());
++        }
++        if h.width != expect_w || h.height != expect_h {
++            return Err(format!(
++                "R10F geometry {}x{} != 已授权的 {}x{}",
++                h.width, h.height, expect_w, expect_h
++            ));
++        }
+         if payload.len() != h.payload_bytes as usize {
+             return Err(format!(
+                 "payload len {} != payload_bytes {}",
+@@ -278,8 +336,8 @@ pub mod r10f {
+             return Err("transport tail is not all zero".to_string());
+         }
+         if let Some(sess) = expect_session {
+-            if h.session != sess {
+-                return Err(format!("R10F session 0x{:08x} != 授权 session 0x{:08x}", h.session, sess));
++            if h.session_id != sess {
++                return Err(format!("R10F session 0x{:08x} != 授权 session 0x{:08x}", h.session_id, sess));
+             }
+         }
+         // header CRC：把自身 crc 字段清 0 再算
+@@ -297,6 +355,12 @@ pub mod r10f {
+         if pc != h.payload_crc32 {
+             return Err(format!("payload_crc32 0x{:08x} != 计算值 0x{:08x}", h.payload_crc32, pc));
+         }
++        if pc != h.raw_crc32 {
++            return Err(format!(
++                "raw_crc32 0x{:08x} != payload_crc32 0x{:08x}（非压缩必须相等）",
++                h.raw_crc32, h.payload_crc32
++            ));
++        }
+         Ok(h)
+     }
+ }

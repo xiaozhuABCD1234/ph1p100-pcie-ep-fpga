@@ -1,0 +1,96 @@
+﻿T10.a1-format-ref r0 independent evidence
+START_UTC=2026-10-20T03:26:54.9609400+08:00
+[1] manifest hash/size/input binding
+verify-report actual: fed9e3fe087dde0227143de8ecce0725a1ba839a21b69c8e402c70d81dbdfefe declared: fed9e3fe087dde0227143de8ecce0725a1ba839a21b69c8e402c70d81dbdfefe match True
+OK: 78 MISSING: 0 BAD: 0
+manifest sha256: a2273f0473abef12e8614fbec353b2ada41ef290b118d5ad9416c097f6aa03b0
+EXIT=0
+[2] independent decoder + independent Bayer round-trip + negatives
+POS OK p_8x4_flat_prep0_pred0                   8x4 prep=0 pred=0 blocks=2 fixed=2 stored=0 mismatch=0 stream=22
+POS OK p_8x4_grad_prep1_pred0                   8x4 prep=1 pred=0 blocks=2 fixed=2 stored=0 mismatch=0 stream=47
+POS OK p_8x4_grad_prep1_pred1                   8x4 prep=1 pred=1 blocks=2 fixed=2 stored=0 mismatch=0 stream=42
+POS OK p_1920x4_repeat_prep0_pred0              1920x4 prep=0 pred=0 blocks=2 fixed=2 stored=0 mismatch=0 stream=128
+POS OK p_1920x4_repeat_prep1_pred1              1920x4 prep=1 pred=1 blocks=2 fixed=2 stored=0 mismatch=0 stream=170
+POS OK p_32x5_tail_prep1_pred1                  32x5 prep=1 pred=1 blocks=3 fixed=3 stored=0 mismatch=0 stream=101
+POS OK p_1920x1080_texture_prep1_pred1          1920x1080 prep=1 pred=1 blocks=540 fixed=540 stored=0 mismatch=0 stream=101566
+POS OK p_1920x1080_random_prep0_pred0           1920x1080 prep=0 pred=0 blocks=540 fixed=0 stored=540 mismatch=0 stream=2594706
+POS OK p_tokens_boundary                        stream-only out=2319 blocks=1 lit=2048 match=3 len{[3, 10, 258]} dist{[1, 2048]} maxlen=258 maxdist=2048
+NEG OK   n_trunc_last_byte                expected=E_TRUNCATED            actual=E_TRUNCATED            zlib=ZLIB_INCOMPLETE
+NEG OK   n_trunc_mid                      expected=E_TRUNCATED            actual=E_TRUNCATED            zlib=ZLIB_INCOMPLETE
+NEG OK   n_bad_adler                      expected=E_BAD_ADLER            actual=E_BAD_ADLER            zlib=error
+NEG OK   n_trailing_byte                  expected=E_TRAILING_BYTES       actual=E_TRAILING_BYTES       zlib=ZLIB_UNUSED_DATA
+NEG OK   n_bad_stored_nlen                expected=E_BAD_STORED_NLEN      actual=E_BAD_STORED_NLEN      zlib=error
+NEG OK   n_btype_dynamic                  expected=E_BAD_BTYPE_DYNAMIC    actual=E_BAD_BTYPE_DYNAMIC    zlib=ZLIB_INCOMPLETE
+NEG OK   n_bad_distance                   expected=E_BAD_DISTANCE         actual=E_BAD_DISTANCE         zlib=error
+NEG OK   n_bad_length_code                expected=E_BAD_LENGTH_CODE      actual=E_BAD_LENGTH_CODE      zlib=error
+NEG OK   n_bad_distance_code              expected=E_BAD_DISTANCE_CODE    actual=E_BAD_DISTANCE_CODE    zlib=error
+NEG OK   n_record_truncated               expected=E_RECORD_TRUNCATED     actual=E_RECORD_TRUNCATED     zlib=n/a
+NEG OK   n_bad_magic                      expected=E_BAD_MAGIC            actual=E_BAD_MAGIC            zlib=n/a
+NEG OK   n_bad_version                    expected=E_BAD_VERSION          actual=E_BAD_VERSION          zlib=n/a
+NEG OK   n_bad_flags                      expected=E_BAD_FLAGS            actual=E_BAD_FLAGS            zlib=n/a
+NEG OK   n_bad_header_crc                 expected=E_BAD_HEADER_CRC       actual=E_BAD_HEADER_CRC       zlib=n/a
+NEG OK   n_bad_stream_len                 expected=E_STREAM_LEN_MISMATCH  actual=E_STREAM_LEN_MISMATCH  zlib=n/a
+NEG OK   n_bad_raw_crc                    expected=E_BAD_RAW_CRC          actual=E_BAD_RAW_CRC          zlib=n/a
+NEG OK   n_bad_xform_crc                  expected=E_BAD_XFORM_CRC        actual=E_BAD_XFORM_CRC        zlib=n/a
+SUMMARY positives=9/9 negatives=17/17 failures=0
+INDEPENDENT_PASS mismatch=0
+EXIT=0
+[3] rerun dev verifier to temp report (frozen report untouched)
+POS OK p_8x4_flat_prep0_pred0                 8x4 prep=0 pred=0 raw=40 stream=22 blocks=2 fixed=2 stored=0 ratio=1.8182
+POS OK p_8x4_grad_prep1_pred0                 8x4 prep=1 pred=0 raw=40 stream=47 blocks=2 fixed=2 stored=0 ratio=0.8511
+POS OK p_8x4_grad_prep1_pred1                 8x4 prep=1 pred=1 raw=40 stream=42 blocks=2 fixed=2 stored=0 ratio=0.9524
+POS OK p_1920x4_repeat_prep0_pred0            1920x4 prep=0 pred=0 raw=9600 stream=128 blocks=2 fixed=2 stored=0 ratio=75.0000
+POS OK p_1920x4_repeat_prep1_pred1            1920x4 prep=1 pred=1 raw=9600 stream=170 blocks=2 fixed=2 stored=0 ratio=56.4706
+POS OK p_32x5_tail_prep1_pred1                32x5 prep=1 pred=1 raw=200 stream=101 blocks=3 fixed=3 stored=0 ratio=1.9802
+POS OK p_1920x1080_texture_prep1_pred1        1920x1080 prep=1 pred=1 raw=2592000 stream=101566 blocks=540 fixed=540 stored=0 ratio=25.5204
+POS OK p_1920x1080_random_prep0_pred0         1920x1080 prep=0 pred=0 raw=2592000 stream=2594706 blocks=540 fixed=0 stored=540 ratio=0.9990
+POS OK p_tokens_boundary                      stream_only out=2319 tail=2 literals=2048 matches=3
+NEG OK   n_trunc_last_byte              expected=E_TRUNCATED            actual=E_TRUNCATED            zlib=incomplete  
+NEG OK   n_trunc_mid                    expected=E_TRUNCATED            actual=E_TRUNCATED            zlib=incomplete  
+NEG OK   n_bad_adler                    expected=E_BAD_ADLER            actual=E_BAD_ADLER            zlib=error       
+NEG OK   n_trailing_byte                expected=E_TRAILING_BYTES       actual=E_TRAILING_BYTES       zlib=unused_data 
+NEG OK   n_bad_stored_nlen              expected=E_BAD_STORED_NLEN      actual=E_BAD_STORED_NLEN      zlib=error       
+NEG OK   n_btype_dynamic                expected=E_BAD_BTYPE_DYNAMIC    actual=E_BAD_BTYPE_DYNAMIC    zlib=incomplete  
+NEG OK   n_bad_distance                 expected=E_BAD_DISTANCE         actual=E_BAD_DISTANCE         zlib=error       
+NEG OK   n_bad_length_code              expected=E_BAD_LENGTH_CODE      actual=E_BAD_LENGTH_CODE      zlib=error       
+NEG OK   n_bad_distance_code            expected=E_BAD_DISTANCE_CODE    actual=E_BAD_DISTANCE_CODE    zlib=error       
+NEG OK   n_record_truncated             expected=E_RECORD_TRUNCATED     actual=E_RECORD_TRUNCATED     zlib=n/a         
+NEG OK   n_bad_magic                    expected=E_BAD_MAGIC            actual=E_BAD_MAGIC            zlib=n/a         
+NEG OK   n_bad_version                  expected=E_BAD_VERSION          actual=E_BAD_VERSION          zlib=n/a         
+NEG OK   n_bad_flags                    expected=E_BAD_FLAGS            actual=E_BAD_FLAGS            zlib=n/a         
+NEG OK   n_bad_header_crc               expected=E_BAD_HEADER_CRC       actual=E_BAD_HEADER_CRC       zlib=n/a         
+NEG OK   n_bad_stream_len               expected=E_STREAM_LEN_MISMATCH  actual=E_STREAM_LEN_MISMATCH  zlib=n/a         
+NEG OK   n_bad_raw_crc                  expected=E_BAD_RAW_CRC          actual=E_BAD_RAW_CRC          zlib=n/a         
+NEG OK   n_bad_xform_crc                expected=E_BAD_XFORM_CRC        actual=E_BAD_XFORM_CRC        zlib=n/a         
+ROUNDTRIP_PASS mismatch=0 positives=9 negatives=17 three_way=9 elapsed=1.74s
+EXIT=0
+[4] regenerate vectors to temp + payload hash compare
+GEN p_8x4_flat_prep0_pred0 8x4 prep=0 pred=0 kind=flat
+  raw=40 xform=40 stream=22 blocks=2 fixed=2 stored=0 ratio=1.8182 maxlen=12 maxdist=5 tail=0
+GEN p_8x4_grad_prep1_pred0 8x4 prep=1 pred=0 kind=grad
+  raw=40 xform=40 stream=47 blocks=2 fixed=2 stored=0 ratio=0.8511 maxlen=3 maxdist=9 tail=2
+GEN p_8x4_grad_prep1_pred1 8x4 prep=1 pred=1 kind=grad
+  raw=40 xform=40 stream=42 blocks=2 fixed=2 stored=0 ratio=0.9524 maxlen=3 maxdist=5 tail=1
+GEN p_1920x4_repeat_prep0_pred0 1920x4 prep=0 pred=0 kind=repeat
+  raw=9600 xform=9600 stream=128 blocks=2 fixed=2 stored=0 ratio=75.0000 maxlen=258 maxdist=20 tail=2
+GEN p_1920x4_repeat_prep1_pred1 1920x4 prep=1 pred=1 kind=repeat
+  raw=9600 xform=9600 stream=170 blocks=2 fixed=2 stored=0 ratio=56.4706 maxlen=258 maxdist=1220 tail=0
+GEN p_32x5_tail_prep1_pred1 32x5 prep=1 pred=1 kind=grad
+  raw=200 xform=200 stream=101 blocks=3 fixed=3 stored=0 ratio=1.9802 maxlen=16 maxdist=60 tail=4
+GEN p_1920x1080_texture_prep1_pred1 1920x1080 prep=1 pred=1 kind=texture
+  raw=2592000 xform=2592000 stream=101566 blocks=540 fixed=540 stored=0 ratio=25.5204 maxlen=258 maxdist=2000 tail=5
+GEN p_1920x1080_random_prep0_pred0 1920x1080 prep=0 pred=0 kind=random
+  raw=2592000 xform=2592000 stream=2594706 blocks=540 fixed=0 stored=540 ratio=0.9990 maxlen=3 maxdist=2025 tail=0
+GEN p_tokens_boundary out=2319 tail=2
+GEN negatives=17
+VECTORS_OK positives=9 negatives=17 total_payload_bytes=5205839 out=C:\Users\czz\AppData\Local\Temp\opencode\t10a1_gen_evidence
+EXIT=0
+generated_files 52 frozen_files 52
+missing_in_gen []
+extra_in_gen []
+payload_hash_mismatch 0 []
+vectors_json_semantic_equal True
+EXIT=0
+ALL_EXIT=0
+END_UTC=2026-10-20T03:27:03.0778795+08:00
+

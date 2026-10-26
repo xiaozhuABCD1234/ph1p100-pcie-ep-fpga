@@ -1,0 +1,51 @@
+{
+  "run_id": "20261017_162355_fpga_knowledge_book",
+  "task_id": "KB3",
+  "role": "fpga-dev",
+  "created_at": "2026-10-17",
+  "tool": "会话联网工具（webfetch 直取 + websearch 检索分析）；B 站条目本会话页面级直取成功，另用 B 站公开 API 复核时长/身份",
+  "schema_note": "字段：chapter/url/title_expected/title_returned/status/checked_at/proposed_state/note；status 取值=ok|mismatch|timeout|dead|unverifiable。unused 条目 chapter=\"unused\"。",
+  "summary": {
+    "attempted": 23,
+    "verified_pass": 20,
+    "failed_or_unverifiable": 3,
+    "entries_by_chapter": {"09": 5, "10": 5, "11": 5, "12": 5, "unused": 3, "total": 23},
+    "distinct_urls_used_in_tables": 20,
+    "table_rows_by_chapter": {"09": 5, "10": 5, "11": 5, "12": 5, "total_rows": 20},
+    "shared_rows_note": "本包四章资源表共 20 行=20 条不重复 URL，章内/章间无重复；无与既有章共用条目。",
+    "entries_note": "23 条 = 入表 20（20 条在线核验通过；分类=14 条网页直取＋1 条米联客课程页＋4 条 B 站（3 视频＋1 专栏）＋1 条 PDF（可达性确认＋标题分核））＋未采用/未入表 3（JEDEC 旧链接 404、AMD UG586 动态壳页、Arm AXI 规范页直取无正文）。明细以 entries 列表为准。",
+    "bilibili_method_note": "本会话对 B 站页面级直取成功（与 KB2 会话环境不同）：3 条视频页与 1 条专栏页均直取并核对标题/UP 主；另有 3 条视频同时用 B 站公开 API（api.bilibili.com/x/web-interface/view?bvid=…）复核时长——BV1vP411c7pt≈2133s、BV1Htr8YhELV≈809s、BV18r421p7Ck≈6335s。故本包 B 站条目按“在线核验通过”登记（实际请求成功且标题一致）。",
+    "jedec_note": "JEDEC 旧链接 https://www.jedec.org/standards-documents/docs/jesd-79-3 直取 404（检索索引滞后）；已改用 https://www.jedec.org/standards-documents/docs/jesd-79-3d（JESD79-3F 标准页，直取核验通过）。标准全文为付费内容，资源表仅登记标准页。",
+    "pdf_note": "ISSI 数据手册 PDF 直取返回内容类型 application/pdf（HTTP 200 可达，会话工具不解析正文）；标题（IS43/46TR16640B 系列 DDR3/DDR3L datasheet）经检索工具核验，且检索快照可见其“JEDEC Speed Grade=DDR3-1333G/1600K/1600J…”速度等级表。登记为“可达性确认＋标题分核”，不写成“已读全文”。"
+  },
+  "entries": [
+    {"chapter": "09", "url": "https://zh.wikipedia.org/wiki/動態隨機存取記憶體", "title_expected": "动态随机存储器（维基百科，中文）", "title_returned": "动态随机存储器 - 维基百科，自由的百科全书（由“動態隨機存取記憶體”重定向）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 09 章资源第 1 条（直取实抓；按重定向终局条目登记；含 1T1C/刷新/时序章节）。"},
+    {"chapter": "09", "url": "https://en.wikipedia.org/wiki/DDR_SDRAM", "title_expected": "DDR SDRAM（维基百科，英文）", "title_returned": "DDR SDRAM - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 09 章资源第 2 条（直取实抓；含“数据率=2×CK、MHz 描述传输率不正确”原文）。"},
+    {"chapter": "09", "url": "https://tw.micron.com/products/memory/dram-components/ddr3-to-ddr4", "title_expected": "DDR3 與 DDR4 記憶體（Micron 官网，繁中）", "title_returned": "DDR3 與 DDR4 記憶體 — 美光科技（含资料速率 800–2133 Mb/s、tCK 300–800MHz 等对照表）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 09 章资源第 3 条（直取实抓；页面含登录弹窗但不阻塞正文抓取）。"},
+    {"chapter": "09", "url": "https://www.bilibili.com/video/BV1vP411c7pt/", "title_expected": "计算机是如何工作的？探索主内存，以DDR5为例（B站·BranchEducation）", "title_returned": "计算机是如何工作的？探索主内存，以DDR5为例（UP：BranchEducation；2022-11-14；API 时长≈2133s）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 09 章资源第 4 条（本会话页面级直取成功＋API 复核；章节含 DRAM 单元/读/写/刷新/行命中/时序参数）。"},
+    {"chapter": "09", "url": "https://www.bilibili.com/video/BV1Htr8YhELV/", "title_expected": "用最好的动画为你讲解--内存的原理（B站·Redknot-乔红）", "title_returned": "用最好的动画为你讲解--内存的原理（UP：Redknot-乔红；2025-01-05；API 时长≈809s）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 09 章资源第 5 条（页面直取成功＋API 复核）。"},
+
+    {"chapter": "10", "url": "https://www.jedec.org/standards-documents/docs/jesd-79-3d", "title_expected": "DDR3 SDRAM STANDARD（JEDEC，JESD79-3F 标准页）", "title_returned": "DDR3 SDRAM STANDARD — JESD79-3F（Published: Jul 2012；全文付费 $247）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 10 章资源第 1 条（直取实抓；目录页可见 Standard Speed Bins/Table 62–67 等章节；全文付费，不声称已读全文）。"},
+    {"chapter": "10", "url": "https://en.wikipedia.org/wiki/DDR3_SDRAM", "title_expected": "DDR3 SDRAM（维基百科，英文）", "title_returned": "DDR3 SDRAM - Wikipedia（含 DDR3-800 E=6-6-6、1333 J=10-10-10、1600 K=11-11-11 速度等级表）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 10 章资源第 2 条（直取实抓；与 JEDEC 示例值互证）。"},
+    {"chapter": "10", "url": "https://zh.wikipedia.org/wiki/DDR3_SDRAM", "title_expected": "DDR3 SDRAM（维基百科，中文）", "title_returned": "DDR3 SDRAM - 维基百科，自由的百科全书（含 JEDEC 標準模組表：666⅔MHz/CK 与 PC3 命名）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 10 章资源第 3 条（直取实抓）。"},
+    {"chapter": "10", "url": "https://media.digikey.com/pdf/Data%20Sheets/ISSI%20PDFs/IS43_46TR16640B_81280B_L.pdf", "title_expected": "IS43/46TR16640B 系列 DDR3/DDR3L 数据手册（ISSI，PDF）", "title_returned": "可达（HTTP 200，application/pdf；会话工具不解析 PDF 正文）；标题经检索工具核验，且检索快照含“JEDEC Speed Grade：DDR3-1333G/1600K/1600J/1866M/2133N”速度等级表", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17（PDF 可达；正文未解析）", "note": "第 10 章资源第 4 条（真实颗粒命名实例，支撑“字母=速度等级”论述；不写成已读全文）。"},
+    {"chapter": "10", "url": "https://developer.aliyun.com/article/1143300", "title_expected": "DDR 时序（阿里云开发者社区）", "title_returned": "DDR时序（作者：快跑bug来啦；2023-01-18）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 10 章资源第 5 条（直取实抓；中文梳理 CL/tRCD/tRP/tRAS 与二/三时序）。"},
+
+    {"chapter": "11", "url": "https://www.arm.com/architecture/system-architectures/amba/amba-specifications", "title_expected": "AMBA Specifications（Arm 官网）", "title_returned": "AMBA Specifications – Arm（AMBA 5 含 CHI/AXI；指向 developer.arm.com 规范页）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 11 章资源第 1 条（直取实抓；AXI 规范 PDF 详情页直取未获正文，见 unused）。"},
+    {"chapter": "11", "url": "https://en.wikipedia.org/wiki/Memory_controller", "title_expected": "Memory controller（维基百科，英文）", "title_returned": "Memory controller - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 11 章资源第 2 条（直取实抓；含 DDR 控制器/刷新/多通道/ECC）。"},
+    {"chapter": "11", "url": "https://zh.wikipedia.org/wiki/内存控制器", "title_expected": "内存控制器（维基百科，中文）", "title_returned": "内存控制器 - 维基百科，自由的百科全书", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 11 章资源第 3 条（直取实抓；含 DRAM 刷新/双通道/FB-DIMM 中文表述）。"},
+    {"chapter": "11", "url": "https://www.bilibili.com/video/BV18r421p7Ck/", "title_expected": "【小梅哥FPGA】例解ZYNQ系统中用到的AXI4协议（B站·小梅哥FPGA）", "title_returned": "【小梅哥FPGA】例解ZYNQ系统中用到的AXI4协议（UP：小梅哥FPGA；2024-02-28；API 时长≈6335s）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 11 章资源第 4 条（页面直取成功＋API 复核；总线规格/信号/时序/ILA 实测）。"},
+    {"chapter": "11", "url": "https://www.uisrc.com/lesson-621.html", "title_expected": "米联客 AXI4 总线编程入门专题：01 初识 AXI4 总线", "title_returned": "01初识AXI4总线 - 米联客视频课程（讲师：米联客-课程研发团队；第 1 讲标价“免 24:53”；页面注明“登录后可以观看”）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 11 章资源第 5 条（直取实抓；播放视频需登录，已在资源表“体量”栏注明）。"},
+
+    {"chapter": "12", "url": "https://en.wikipedia.org/wiki/Framebuffer", "title_expected": "Framebuffer（维基百科，英文）", "title_returned": "Framebuffer - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 12 章资源第 1 条（直取实抓；含 page flipping/双缓冲与撕裂）。"},
+    {"chapter": "12", "url": "https://en.wikipedia.org/wiki/Multiple_buffering", "title_expected": "Multiple buffering（维基百科，英文）", "title_returned": "Multiple buffering - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 12 章资源第 2 条（直取实抓；含双/三缓冲与 swap chain）。"},
+    {"chapter": "12", "url": "https://zh.wikipedia.org/wiki/帧缓冲器", "title_expected": "帧缓冲器（维基百科，中文）", "title_returned": "帧缓冲器 - 维基百科，自由的百科全书（含“画面交换”防撕裂一节）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 12 章资源第 3 条（直取实抓；条目无参考文献，内容按一般共识使用，仅作入门）。"},
+    {"chapter": "12", "url": "https://cloud.tencent.com/developer/article/1586225", "title_expected": "Android VSYNC 与图形系统中的撕裂、双缓冲、三缓冲浅析（腾讯云开发者社区）", "title_returned": "Android VSYNC与图形系统中的撕裂、双缓冲、三缓冲浅析（作者：看书的小蜗牛；2020-02-19）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 12 章资源第 4 条（直取实抓；同步锁+缓冲配合关系的工程视角）。"},
+    {"chapter": "12", "url": "https://www.bilibili.com/opus/750680865293467672", "title_expected": "【硬件科普】垂直同步工作原理科普（B站专栏）", "title_returned": "【硬件科普】全网最详细易懂的Gsync Freesync 垂直同步工作原理科普（B站专栏；作者：AAA客服祥；2023-01-13）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 12 章资源第 5 条（页面直取成功；Buffer Swap/VBlank 与撕裂）。"},
+
+    {"chapter": "unused", "url": "https://www.jedec.org/standards-documents/docs/jesd-79-3", "title_expected": "JEDEC DDR3 标准页（旧链接候选）", "title_returned": "直取 404（该路径已不存在）", "status": "dead", "checked_at": "2026-10-17", "proposed_state": "未采用（失败/未纳入）", "note": "已改用 jesd-79-3d（JESD79-3F 标准页，本会话直取核验通过）。检索索引中旧链接仍在流通，登记备查。"},
+    {"chapter": "unused", "url": "https://docs.amd.com/r/en-US/ug586_7Series_MIS", "title_expected": "AMD UG586 7 Series Memory Interface Solutions（候选）", "title_returned": "仅返回“Loading application...”（动态门户壳页）", "status": "mismatch", "checked_at": "2026-10-17", "proposed_state": "未入表（标题不可核验，保留备选）", "note": "AMD 文档门户为 JS 应用，直取无法核验标题；未写入资源表。"},
+    {"chapter": "unused", "url": "https://developer.arm.com/documentation/ihi0022/latest", "title_expected": "AMBA AXI Protocol Specification（Arm 规范 PDF 详情页，候选）", "title_returned": "直取返回空内容（未获正文/标题）", "status": "unverifiable", "checked_at": "2026-10-17", "proposed_state": "未入表（直取不可复现，保留备选）", "note": "AMBA/AXI 入口改用 arm.com 规范列表页（本会话直取核验通过）；规范 PDF 详情页保留为备选。"}
+  ],
+  "integrity_statement": "以上状态均来自本会话实际请求结果（2026-10-17）：入表 20 条全部为直取实抓（其中 1 条 PDF 为“可达性确认＋标题检索分核”、4 条 B 站（3 视频＋1 专栏）为页面直取成功并附 API 时长复核）；未采用/未入表 3 条如实登记（1 处旧链接 404、1 处动态壳页、1 处直取空返回）。未以检索结果标题冒充“在线核验通过”；B 站条目本会话页面级直取成功，故按规则登记为“在线核验通过”（与 KB2 会话的降级情形不同，已记录环境差异）。"
+}

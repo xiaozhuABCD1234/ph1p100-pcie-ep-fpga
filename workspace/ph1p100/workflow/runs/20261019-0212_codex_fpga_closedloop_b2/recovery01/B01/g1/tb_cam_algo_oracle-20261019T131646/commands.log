@@ -1,0 +1,12 @@
+﻿# run_sim.ps1 2026-10-19T13:16:47.4276482+08:00
+root        = C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\upstream\ph1p100-pcie-ep-fpga
+mapped_root = S:\
+tb          = tb_cam_algo_oracle
+outdir      = C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261019-0212_codex_fpga_closedloop_b2\recovery01\B01\g1\tb_cam_algo_oracle-20261019T131646
+defines     = MIPI_PHY_SIM_STUB
+vlib work
+vlog +define+MIPI_PHY_SIM_STUB -f abs.f  (cwd=T:\)
+vlog exit=0
+cmd /c "vsim -c -l vsim.log -do run.do tb_cam_algo_oracle"  (cwd=T:\)
+vsim exit=0
+subst S: removed

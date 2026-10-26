@@ -1,0 +1,76 @@
+{
+  "run_id": "20261025-180900_fpga-dual-offline-closure",
+  "project_root": "D:\\fpga\\ph1p100",
+  "output_dir": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure",
+  "batch_size": 1,
+  "status": "ready",
+  "needs_user_input": false,
+  "question_path": null,
+  "user_summary_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\user-summary-continue03.md",
+  "authorization_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\user-feedback-continue03.md",
+  "scope_limits": {
+    "formal_tasks": 2,
+    "new_tasks": 0,
+    "new_roles": 0,
+    "new_implementation_repairs": 0,
+    "batch_size": 1,
+    "offline_only": true
+  },
+  "protected": [
+    "All frozen candidate RTL/TB/runner/source inputs and old evidence",
+    "Production, other runs, OpenCode candidates, TD and hardware",
+    "Global taskboard/config/Git/drive mappings"
+  ],
+  "on_external_error_or_actual_ID_error": {
+    "operation": "return_to_planner",
+    "target": "/root/fpga_plan_dual_offline",
+    "automatic_retry": false,
+    "model_change": false,
+    "preemptive_replacement": false
+  },
+  "after_each_return": {
+    "operation": "return_to_planner",
+    "target": "/root/fpga_plan_dual_offline",
+    "requires_actual_counts_stop_flags_manifest_and_problem_if_any": true
+  },
+  "task_ids": [
+    "T08.dual-local-closure",
+    "T10.dual-aplus-scheduler"
+  ],
+  "stage": "two independent original-role resumptions; BATCH_SIZE remains one per task",
+  "input_paths": [
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\continue03-recovery-plan.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\continue03-recovery-audit.json"
+  ],
+  "write_scope": [
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T08.dual-local-closure\\r1/**",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T08.dual-local-closure-r1-integrated.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10.dual-aplus-scheduler\\cmp-stall-fix01\\static-closeout02/**"
+  ],
+  "next_actions": [
+    {
+      "operation": "followup_task",
+      "target": "/root/fpga_tester_dual_local_180900",
+      "task_id": "T08.dual-local-closure",
+      "dispatch_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\dispatch-T08-continue03.json",
+      "prompt_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T08-continue03-input.md",
+      "scope": "recover actual counts then original remaining integrated r1 only"
+    },
+    {
+      "operation": "followup_task",
+      "target": "/root/fpga_dev_dual_scheduler_180900",
+      "task_id": "T10.dual-aplus-scheduler",
+      "dispatch_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\dispatch-T10-continue03-static.json",
+      "prompt_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10-continue03-input.md",
+      "scope": "10call/15min static-only final manifest/accounting/author stop"
+    }
+  ],
+  "independent_parallel_actions": true,
+  "not_a_batch": true,
+  "execution_limits": {
+    "T08": "prior original calls/compiles/cases deducted; 30min resumed calendar cap",
+    "T10": "10 static calls/15min; zero compile/simulation/faults"
+  },
+  "wait_policy": "Only receive events from the two dispatched roles; no polling, scanning logs or progress questions. Each actual return/error goes to original planner; do not wait for failed old turns.",
+  "on_actual_ID_error": "Return actual error to original planner; only then file recovery and real ID mapping. Do not preemptively create a replacement."
+}

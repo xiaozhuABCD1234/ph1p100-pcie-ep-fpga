@@ -1,0 +1,19 @@
+﻿=== T07 RK patch independent check (2026-10-17T04:52:37.1690527+08:00) ===
+ref_tree = C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261017-011744-rk-fpga-align\references\peer-driver-a0215c5
+--- git apply --check ---
+check exit=0
+--- git apply ---
+apply exit=0
+--- git apply -R --check (reverse after apply) ---
+reverse-check exit=0
+diff_count=10
+SHA_DIFF: Makefile
+SHA_DIFF: app/rs/src/lib.rs
+MISSING_IN_APPLIED: app/rs/src/rka1.rs
+SHA_DIFF: app/rs/src/bin/frame_grab.rs
+SHA_DIFF: include/anlogic_pci_ioctl.h
+SHA_DIFF: src/anlogic_pci.h
+SHA_DIFF: src/anlogic_pci_ctrl.c
+SHA_DIFF: src/anlogic_pci_frame.c
+SHA_DIFF: src/anlogic_pci_link.c
+MISSING_IN_APPLIED: src/anlogic_pci_rka1.c

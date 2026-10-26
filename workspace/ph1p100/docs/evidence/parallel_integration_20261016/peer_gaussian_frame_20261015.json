@@ -1,0 +1,2032 @@
+{
+  "schema": "gaussian-frame-evidence-v1",
+  "date": "2026-10-15",
+  "project_root": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\FPGA创新设计赛道",
+  "base_commit": "1994131",
+  "status": "simulation_passed_with_expected_negative_control",
+  "rtl": "fpga/csi2/src/img/gray8_gaussian3x3_frame.v",
+  "testbench": "fpga/csi2/tb/tb_gray8_gaussian3x3_frame.sv",
+  "verifier": "tools/rtl_checks/verify_gaussian.py",
+  "architecture": {
+    "row_count": 3,
+    "sample_bits": 8,
+    "default_max_width": 1920,
+    "sample_storage_bits_default": 46080,
+    "frame_memory": false,
+    "mass_reset_clear": false,
+    "row_reads": "nine asynchronous sample reads per output",
+    "rounding": "horizontal sums <=1020 in 10 bits, vertical <=4080 and rounded <=4088 in 12 bits; one final +8 then >>4",
+    "service": "load and output phases do not overlap; s_ready=0 throughout output rows including sink stalls",
+    "validation": "one bounded validation cycle after descriptor acceptance"
+  },
+  "category_counts": {
+    "literal_1x1": 7,
+    "literal_1xN": 1,
+    "literal_Nx1": 1,
+    "literal_2x2": 1,
+    "literal_rounding": 1,
+    "constant": 4,
+    "impulse": 5,
+    "ramp_odd": 1,
+    "height2160": 1,
+    "max_width_3rows": 1,
+    "random_bubbles_stalls": 16,
+    "random_full_rate": 16,
+    "reset_collect": 1,
+    "after_collect_reset": 1,
+    "reset_output": 1,
+    "after_output_reset": 1,
+    "invalid": 9
+  },
+  "runs": {
+    "default": {
+      "report": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-final_green-20261015T142102_705921\\report.json",
+      "report_sha256": "29dd8fcfd2d469ecf1a196d1c6f0c231b5afde3f1e50dcbf483230a843287f1a",
+      "commands": [
+        {
+          "command": [
+            "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlib.exe",
+            "work"
+          ],
+          "cwd": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-final_green-20261015T142102_705921",
+          "exit_code": 0,
+          "log": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-final_green-20261015T142102_705921\\command_0.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "log_bytes": 0
+        },
+        {
+          "command": [
+            "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlog.exe",
+            "-sv",
+            "gray8_gaussian3x3_frame.v",
+            "tb_gray8_gaussian3x3_frame.sv"
+          ],
+          "cwd": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-final_green-20261015T142102_705921",
+          "exit_code": 0,
+          "log": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-final_green-20261015T142102_705921\\command_1.log",
+          "log_sha256": "d951e31dabda3f88d3bf2695de3def70f4253f23aad6731b15aacae9c9724d82",
+          "log_bytes": 418
+        },
+        {
+          "command": [
+            "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vsim.exe",
+            "-c",
+            "-onfinish",
+            "stop",
+            "-l",
+            "transcript.log",
+            "-gMAX_WIDTH=1920",
+            "work.tb_gray8_gaussian3x3_frame",
+            "+VECTORS=vectors.txt",
+            "-do",
+            "run.do"
+          ],
+          "cwd": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-final_green-20261015T142102_705921",
+          "exit_code": 0,
+          "log": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-final_green-20261015T142102_705921\\command_2.log",
+          "log_sha256": "cc964d05f4c67c19451a3771a27d02f8e2485a407636b7da7d78ddbecceaac38",
+          "log_bytes": 7168
+        }
+      ],
+      "max_width": 1920,
+      "passed": true,
+      "expected_negative_detected": false,
+      "expected_red_detected": false,
+      "simulation_rtl_sha256": "d5b14c597401313d25d9096a59f94d101e97fcf090198d04c5b0ef2dccbd86ee",
+      "vector_sha256": "7dbcf3c6d0807b13c1e49320d5306d07a31dcb38525646d9e07408619a4527bd",
+      "coverage": {
+        "frames": 68,
+        "invalid": 9,
+        "accepted": 12901,
+        "emitted": 12887,
+        "complete_pixels": 12885,
+        "held": 10536,
+        "stalls": 4595,
+        "bubbles": 10857,
+        "ack_stalls": 594,
+        "reset_collect": 1,
+        "reset_output": 1,
+        "cycles": 34294
+      },
+      "case_count": 68,
+      "literal_frame_count": 12,
+      "software_reference_crosscheck": true,
+      "source_checks": {
+        "fpga\\csi2\\src\\img\\gray8_gaussian3x3_frame.v": {
+          "sha256_before": "d5b14c597401313d25d9096a59f94d101e97fcf090198d04c5b0ef2dccbd86ee",
+          "copy_sha256": "d5b14c597401313d25d9096a59f94d101e97fcf090198d04c5b0ef2dccbd86ee",
+          "sha256_after": "d5b14c597401313d25d9096a59f94d101e97fcf090198d04c5b0ef2dccbd86ee",
+          "unchanged_during_run": true
+        },
+        "fpga\\csi2\\tb\\tb_gray8_gaussian3x3_frame.sv": {
+          "sha256_before": "9709348590015a9ee46103da62dffa995e6c13087b4e4960a4279c16421b9df7",
+          "copy_sha256": "9709348590015a9ee46103da62dffa995e6c13087b4e4960a4279c16421b9df7",
+          "sha256_after": "9709348590015a9ee46103da62dffa995e6c13087b4e4960a4279c16421b9df7",
+          "unchanged_during_run": true
+        },
+        "tools\\rtl_checks\\verify_gaussian.py": {
+          "sha256_before": "f9349bb3772e45184f559deb6319528ce18fea45e5d71e8eae63fcc784ec76f4",
+          "copy_sha256": "f9349bb3772e45184f559deb6319528ce18fea45e5d71e8eae63fcc784ec76f4",
+          "sha256_after": "f9349bb3772e45184f559deb6319528ce18fea45e5d71e8eae63fcc784ec76f4",
+          "unchanged_during_run": true
+        },
+        "tools\\image_preprocess\\reference.py": {
+          "sha256_before": "12fce30ab8dd1647622caec3682fa9c0668c73db9903777b3e387d07d2be347c",
+          "copy_sha256": "12fce30ab8dd1647622caec3682fa9c0668c73db9903777b3e387d07d2be347c",
+          "sha256_after": "12fce30ab8dd1647622caec3682fa9c0668c73db9903777b3e387d07d2be347c",
+          "unchanged_during_run": true
+        }
+      },
+      "frame_counts_checked": true,
+      "frame_results": [
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 3,
+          "accepted": 3,
+          "emitted": 3,
+          "sof": 1,
+          "eol": 3,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 3,
+          "height": 1,
+          "accepted": 3,
+          "emitted": 3,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 2,
+          "height": 2,
+          "accepted": 4,
+          "emitted": 4,
+          "sof": 1,
+          "eol": 2,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 3,
+          "height": 3,
+          "accepted": 9,
+          "emitted": 9,
+          "sof": 1,
+          "eol": 3,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 5,
+          "accepted": 35,
+          "emitted": 35,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 5,
+          "accepted": 35,
+          "emitted": 35,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 5,
+          "accepted": 35,
+          "emitted": 35,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 5,
+          "accepted": 35,
+          "emitted": 35,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 5,
+          "accepted": 35,
+          "emitted": 35,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 5,
+          "accepted": 35,
+          "emitted": 35,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 5,
+          "accepted": 35,
+          "emitted": 35,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 5,
+          "accepted": 35,
+          "emitted": 35,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 5,
+          "accepted": 35,
+          "emitted": 35,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 9,
+          "accepted": 63,
+          "emitted": 63,
+          "sof": 1,
+          "eol": 9,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 2160,
+          "accepted": 2160,
+          "emitted": 2160,
+          "sof": 1,
+          "eol": 2160,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1920,
+          "height": 3,
+          "accepted": 5760,
+          "emitted": 5760,
+          "sof": 1,
+          "eol": 3,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 30,
+          "height": 2,
+          "accepted": 60,
+          "emitted": 60,
+          "sof": 1,
+          "eol": 2,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 11,
+          "height": 14,
+          "accepted": 154,
+          "emitted": 154,
+          "sof": 1,
+          "eol": 14,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 21,
+          "height": 13,
+          "accepted": 273,
+          "emitted": 273,
+          "sof": 1,
+          "eol": 13,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 4,
+          "height": 16,
+          "accepted": 64,
+          "emitted": 64,
+          "sof": 1,
+          "eol": 16,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 30,
+          "height": 4,
+          "accepted": 120,
+          "emitted": 120,
+          "sof": 1,
+          "eol": 4,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 20,
+          "height": 9,
+          "accepted": 180,
+          "emitted": 180,
+          "sof": 1,
+          "eol": 9,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 13,
+          "height": 12,
+          "accepted": 156,
+          "emitted": 156,
+          "sof": 1,
+          "eol": 12,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 5,
+          "height": 10,
+          "accepted": 50,
+          "emitted": 50,
+          "sof": 1,
+          "eol": 10,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 3,
+          "height": 15,
+          "accepted": 45,
+          "emitted": 45,
+          "sof": 1,
+          "eol": 15,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 4,
+          "height": 9,
+          "accepted": 36,
+          "emitted": 36,
+          "sof": 1,
+          "eol": 9,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 9,
+          "height": 6,
+          "accepted": 54,
+          "emitted": 54,
+          "sof": 1,
+          "eol": 6,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 20,
+          "height": 17,
+          "accepted": 340,
+          "emitted": 340,
+          "sof": 1,
+          "eol": 17,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 15,
+          "height": 7,
+          "accepted": 105,
+          "emitted": 105,
+          "sof": 1,
+          "eol": 7,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 22,
+          "height": 9,
+          "accepted": 198,
+          "emitted": 198,
+          "sof": 1,
+          "eol": 9,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 28,
+          "height": 9,
+          "accepted": 252,
+          "emitted": 252,
+          "sof": 1,
+          "eol": 9,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 22,
+          "height": 11,
+          "accepted": 242,
+          "emitted": 242,
+          "sof": 1,
+          "eol": 11,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 31,
+          "height": 1,
+          "accepted": 31,
+          "emitted": 31,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 20,
+          "height": 7,
+          "accepted": 140,
+          "emitted": 140,
+          "sof": 1,
+          "eol": 7,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 14,
+          "accepted": 98,
+          "emitted": 98,
+          "sof": 1,
+          "eol": 14,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 29,
+          "height": 8,
+          "accepted": 232,
+          "emitted": 232,
+          "sof": 1,
+          "eol": 8,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 28,
+          "height": 5,
+          "accepted": 140,
+          "emitted": 140,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 25,
+          "height": 17,
+          "accepted": 425,
+          "emitted": 425,
+          "sof": 1,
+          "eol": 17,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 21,
+          "height": 11,
+          "accepted": 231,
+          "emitted": 231,
+          "sof": 1,
+          "eol": 11,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 24,
+          "height": 6,
+          "accepted": 144,
+          "emitted": 144,
+          "sof": 1,
+          "eol": 6,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 23,
+          "height": 15,
+          "accepted": 345,
+          "emitted": 345,
+          "sof": 1,
+          "eol": 15,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 3,
+          "height": 17,
+          "accepted": 51,
+          "emitted": 51,
+          "sof": 1,
+          "eol": 17,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 13,
+          "height": 5,
+          "accepted": 65,
+          "emitted": 65,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 5,
+          "height": 4,
+          "accepted": 20,
+          "emitted": 20,
+          "sof": 1,
+          "eol": 4,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 2,
+          "height": 16,
+          "accepted": 32,
+          "emitted": 32,
+          "sof": 1,
+          "eol": 16,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 15,
+          "height": 1,
+          "accepted": 15,
+          "emitted": 15,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 3,
+          "height": 14,
+          "accepted": 42,
+          "emitted": 42,
+          "sof": 1,
+          "eol": 14,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 24,
+          "height": 9,
+          "accepted": 216,
+          "emitted": 216,
+          "sof": 1,
+          "eol": 9,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 2,
+          "width": 7,
+          "height": 5,
+          "accepted": 2,
+          "emitted": 0,
+          "sof": 0,
+          "eol": 0,
+          "eof": 0,
+          "reset": 1
+        },
+        {
+          "kind": 0,
+          "width": 2,
+          "height": 2,
+          "accepted": 4,
+          "emitted": 4,
+          "sof": 1,
+          "eol": 2,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 3,
+          "width": 7,
+          "height": 5,
+          "accepted": 14,
+          "emitted": 2,
+          "sof": 1,
+          "eol": 0,
+          "eof": 0,
+          "reset": 1
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 1,
+          "width": 0,
+          "height": 0,
+          "accepted": 0,
+          "emitted": 0,
+          "sof": 0,
+          "eol": 0,
+          "eof": 0,
+          "reset": 0
+        },
+        {
+          "kind": 1,
+          "width": 0,
+          "height": 1,
+          "accepted": 0,
+          "emitted": 0,
+          "sof": 0,
+          "eol": 0,
+          "eof": 0,
+          "reset": 0
+        },
+        {
+          "kind": 1,
+          "width": 1,
+          "height": 0,
+          "accepted": 0,
+          "emitted": 0,
+          "sof": 0,
+          "eol": 0,
+          "eof": 0,
+          "reset": 0
+        },
+        {
+          "kind": 1,
+          "width": 1,
+          "height": 2161,
+          "accepted": 0,
+          "emitted": 0,
+          "sof": 0,
+          "eol": 0,
+          "eof": 0,
+          "reset": 0
+        },
+        {
+          "kind": 1,
+          "width": 1,
+          "height": 4095,
+          "accepted": 0,
+          "emitted": 0,
+          "sof": 0,
+          "eol": 0,
+          "eof": 0,
+          "reset": 0
+        },
+        {
+          "kind": 1,
+          "width": 1921,
+          "height": 1,
+          "accepted": 0,
+          "emitted": 0,
+          "sof": 0,
+          "eol": 0,
+          "eof": 0,
+          "reset": 0
+        },
+        {
+          "kind": 1,
+          "width": 3840,
+          "height": 1,
+          "accepted": 0,
+          "emitted": 0,
+          "sof": 0,
+          "eol": 0,
+          "eof": 0,
+          "reset": 0
+        },
+        {
+          "kind": 1,
+          "width": 3841,
+          "height": 1,
+          "accepted": 0,
+          "emitted": 0,
+          "sof": 0,
+          "eol": 0,
+          "eof": 0,
+          "reset": 0
+        },
+        {
+          "kind": 1,
+          "width": 4095,
+          "height": 1,
+          "accepted": 0,
+          "emitted": 0,
+          "sof": 0,
+          "eol": 0,
+          "eof": 0,
+          "reset": 0
+        }
+      ]
+    },
+    "small_width7": {
+      "report": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-final_small_width7-20261015T142102_713921\\report.json",
+      "report_sha256": "80757bfa40bc4c4b6793cdee9f9f591ea6d627fe421dcfb2bc182ed8dc476ac2",
+      "commands": [
+        {
+          "command": [
+            "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlib.exe",
+            "work"
+          ],
+          "cwd": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-final_small_width7-20261015T142102_713921",
+          "exit_code": 0,
+          "log": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-final_small_width7-20261015T142102_713921\\command_0.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "log_bytes": 0
+        },
+        {
+          "command": [
+            "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlog.exe",
+            "-sv",
+            "gray8_gaussian3x3_frame.v",
+            "tb_gray8_gaussian3x3_frame.sv"
+          ],
+          "cwd": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-final_small_width7-20261015T142102_713921",
+          "exit_code": 0,
+          "log": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-final_small_width7-20261015T142102_713921\\command_1.log",
+          "log_sha256": "af3ae543007f27b21fafbd72e4f571af9c52d9a4e1ae92da368dfca8599bb93c",
+          "log_bytes": 418
+        },
+        {
+          "command": [
+            "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vsim.exe",
+            "-c",
+            "-onfinish",
+            "stop",
+            "-l",
+            "transcript.log",
+            "-gMAX_WIDTH=7",
+            "work.tb_gray8_gaussian3x3_frame",
+            "+VECTORS=vectors.txt",
+            "-do",
+            "run.do"
+          ],
+          "cwd": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-final_small_width7-20261015T142102_713921",
+          "exit_code": 0,
+          "log": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-final_small_width7-20261015T142102_713921\\command_2.log",
+          "log_sha256": "8bff212c3f4aa365dd71578546d08dfe8ebcd887004dea70218532aef8cf5d2a",
+          "log_bytes": 7068
+        }
+      ],
+      "max_width": 7,
+      "passed": true,
+      "expected_negative_detected": false,
+      "expected_red_detected": false,
+      "simulation_rtl_sha256": "d5b14c597401313d25d9096a59f94d101e97fcf090198d04c5b0ef2dccbd86ee",
+      "vector_sha256": "75e9314cf4fac4d66a936ae17bff9f243c6f8869bffa8857d929f7f7b4ab5e41",
+      "coverage": {
+        "frames": 68,
+        "invalid": 9,
+        "accepted": 3426,
+        "emitted": 3412,
+        "complete_pixels": 3410,
+        "held": 4356,
+        "stalls": 1328,
+        "bubbles": 1776,
+        "ack_stalls": 594,
+        "reset_collect": 1,
+        "reset_output": 1,
+        "cycles": 9558
+      },
+      "case_count": 68,
+      "literal_frame_count": 12,
+      "software_reference_crosscheck": true,
+      "source_checks": {
+        "fpga\\csi2\\src\\img\\gray8_gaussian3x3_frame.v": {
+          "sha256_before": "d5b14c597401313d25d9096a59f94d101e97fcf090198d04c5b0ef2dccbd86ee",
+          "copy_sha256": "d5b14c597401313d25d9096a59f94d101e97fcf090198d04c5b0ef2dccbd86ee",
+          "sha256_after": "d5b14c597401313d25d9096a59f94d101e97fcf090198d04c5b0ef2dccbd86ee",
+          "unchanged_during_run": true
+        },
+        "fpga\\csi2\\tb\\tb_gray8_gaussian3x3_frame.sv": {
+          "sha256_before": "9709348590015a9ee46103da62dffa995e6c13087b4e4960a4279c16421b9df7",
+          "copy_sha256": "9709348590015a9ee46103da62dffa995e6c13087b4e4960a4279c16421b9df7",
+          "sha256_after": "9709348590015a9ee46103da62dffa995e6c13087b4e4960a4279c16421b9df7",
+          "unchanged_during_run": true
+        },
+        "tools\\rtl_checks\\verify_gaussian.py": {
+          "sha256_before": "f9349bb3772e45184f559deb6319528ce18fea45e5d71e8eae63fcc784ec76f4",
+          "copy_sha256": "f9349bb3772e45184f559deb6319528ce18fea45e5d71e8eae63fcc784ec76f4",
+          "sha256_after": "f9349bb3772e45184f559deb6319528ce18fea45e5d71e8eae63fcc784ec76f4",
+          "unchanged_during_run": true
+        },
+        "tools\\image_preprocess\\reference.py": {
+          "sha256_before": "12fce30ab8dd1647622caec3682fa9c0668c73db9903777b3e387d07d2be347c",
+          "copy_sha256": "12fce30ab8dd1647622caec3682fa9c0668c73db9903777b3e387d07d2be347c",
+          "sha256_after": "12fce30ab8dd1647622caec3682fa9c0668c73db9903777b3e387d07d2be347c",
+          "unchanged_during_run": true
+        }
+      },
+      "frame_counts_checked": true,
+      "frame_results": [
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 3,
+          "accepted": 3,
+          "emitted": 3,
+          "sof": 1,
+          "eol": 3,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 3,
+          "height": 1,
+          "accepted": 3,
+          "emitted": 3,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 2,
+          "height": 2,
+          "accepted": 4,
+          "emitted": 4,
+          "sof": 1,
+          "eol": 2,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 3,
+          "height": 3,
+          "accepted": 9,
+          "emitted": 9,
+          "sof": 1,
+          "eol": 3,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 5,
+          "accepted": 35,
+          "emitted": 35,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 5,
+          "accepted": 35,
+          "emitted": 35,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 5,
+          "accepted": 35,
+          "emitted": 35,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 5,
+          "accepted": 35,
+          "emitted": 35,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 5,
+          "accepted": 35,
+          "emitted": 35,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 5,
+          "accepted": 35,
+          "emitted": 35,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 5,
+          "accepted": 35,
+          "emitted": 35,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 5,
+          "accepted": 35,
+          "emitted": 35,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 5,
+          "accepted": 35,
+          "emitted": 35,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 9,
+          "accepted": 63,
+          "emitted": 63,
+          "sof": 1,
+          "eol": 9,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 2160,
+          "accepted": 2160,
+          "emitted": 2160,
+          "sof": 1,
+          "eol": 2160,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 3,
+          "accepted": 21,
+          "emitted": 21,
+          "sof": 1,
+          "eol": 3,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 3,
+          "height": 4,
+          "accepted": 12,
+          "emitted": 12,
+          "sof": 1,
+          "eol": 4,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 3,
+          "height": 1,
+          "accepted": 3,
+          "emitted": 3,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 17,
+          "accepted": 17,
+          "emitted": 17,
+          "sof": 1,
+          "eol": 17,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 6,
+          "height": 3,
+          "accepted": 18,
+          "emitted": 18,
+          "sof": 1,
+          "eol": 3,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 7,
+          "accepted": 7,
+          "emitted": 7,
+          "sof": 1,
+          "eol": 7,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 4,
+          "height": 3,
+          "accepted": 12,
+          "emitted": 12,
+          "sof": 1,
+          "eol": 3,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 6,
+          "accepted": 42,
+          "emitted": 42,
+          "sof": 1,
+          "eol": 6,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 6,
+          "height": 2,
+          "accepted": 12,
+          "emitted": 12,
+          "sof": 1,
+          "eol": 2,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 15,
+          "accepted": 15,
+          "emitted": 15,
+          "sof": 1,
+          "eol": 15,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 17,
+          "accepted": 17,
+          "emitted": 17,
+          "sof": 1,
+          "eol": 17,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 2,
+          "height": 4,
+          "accepted": 8,
+          "emitted": 8,
+          "sof": 1,
+          "eol": 4,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 4,
+          "accepted": 28,
+          "emitted": 28,
+          "sof": 1,
+          "eol": 4,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 15,
+          "accepted": 15,
+          "emitted": 15,
+          "sof": 1,
+          "eol": 15,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 4,
+          "height": 5,
+          "accepted": 20,
+          "emitted": 20,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 9,
+          "accepted": 63,
+          "emitted": 63,
+          "sof": 1,
+          "eol": 9,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 5,
+          "height": 1,
+          "accepted": 5,
+          "emitted": 5,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 11,
+          "accepted": 11,
+          "emitted": 11,
+          "sof": 1,
+          "eol": 11,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 8,
+          "accepted": 8,
+          "emitted": 8,
+          "sof": 1,
+          "eol": 8,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 6,
+          "height": 11,
+          "accepted": 66,
+          "emitted": 66,
+          "sof": 1,
+          "eol": 11,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 3,
+          "height": 9,
+          "accepted": 27,
+          "emitted": 27,
+          "sof": 1,
+          "eol": 9,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 3,
+          "height": 9,
+          "accepted": 27,
+          "emitted": 27,
+          "sof": 1,
+          "eol": 9,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 4,
+          "height": 3,
+          "accepted": 12,
+          "emitted": 12,
+          "sof": 1,
+          "eol": 3,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 3,
+          "height": 14,
+          "accepted": 42,
+          "emitted": 42,
+          "sof": 1,
+          "eol": 14,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 3,
+          "height": 5,
+          "accepted": 15,
+          "emitted": 15,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 3,
+          "height": 13,
+          "accepted": 39,
+          "emitted": 39,
+          "sof": 1,
+          "eol": 13,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 5,
+          "height": 10,
+          "accepted": 50,
+          "emitted": 50,
+          "sof": 1,
+          "eol": 10,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 5,
+          "height": 9,
+          "accepted": 45,
+          "emitted": 45,
+          "sof": 1,
+          "eol": 9,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 6,
+          "height": 14,
+          "accepted": 84,
+          "emitted": 84,
+          "sof": 1,
+          "eol": 14,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 3,
+          "height": 5,
+          "accepted": 15,
+          "emitted": 15,
+          "sof": 1,
+          "eol": 5,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 1,
+          "accepted": 7,
+          "emitted": 7,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 4,
+          "height": 9,
+          "accepted": 36,
+          "emitted": 36,
+          "sof": 1,
+          "eol": 9,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 7,
+          "height": 6,
+          "accepted": 42,
+          "emitted": 42,
+          "sof": 1,
+          "eol": 6,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 2,
+          "width": 7,
+          "height": 5,
+          "accepted": 2,
+          "emitted": 0,
+          "sof": 0,
+          "eol": 0,
+          "eof": 0,
+          "reset": 1
+        },
+        {
+          "kind": 0,
+          "width": 2,
+          "height": 2,
+          "accepted": 4,
+          "emitted": 4,
+          "sof": 1,
+          "eol": 2,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 3,
+          "width": 7,
+          "height": 5,
+          "accepted": 14,
+          "emitted": 2,
+          "sof": 1,
+          "eol": 0,
+          "eof": 0,
+          "reset": 1
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 1,
+          "width": 0,
+          "height": 0,
+          "accepted": 0,
+          "emitted": 0,
+          "sof": 0,
+          "eol": 0,
+          "eof": 0,
+          "reset": 0
+        },
+        {
+          "kind": 1,
+          "width": 0,
+          "height": 1,
+          "accepted": 0,
+          "emitted": 0,
+          "sof": 0,
+          "eol": 0,
+          "eof": 0,
+          "reset": 0
+        },
+        {
+          "kind": 1,
+          "width": 1,
+          "height": 0,
+          "accepted": 0,
+          "emitted": 0,
+          "sof": 0,
+          "eol": 0,
+          "eof": 0,
+          "reset": 0
+        },
+        {
+          "kind": 1,
+          "width": 1,
+          "height": 2161,
+          "accepted": 0,
+          "emitted": 0,
+          "sof": 0,
+          "eol": 0,
+          "eof": 0,
+          "reset": 0
+        },
+        {
+          "kind": 1,
+          "width": 1,
+          "height": 4095,
+          "accepted": 0,
+          "emitted": 0,
+          "sof": 0,
+          "eol": 0,
+          "eof": 0,
+          "reset": 0
+        },
+        {
+          "kind": 1,
+          "width": 8,
+          "height": 1,
+          "accepted": 0,
+          "emitted": 0,
+          "sof": 0,
+          "eol": 0,
+          "eof": 0,
+          "reset": 0
+        },
+        {
+          "kind": 1,
+          "width": 3840,
+          "height": 1,
+          "accepted": 0,
+          "emitted": 0,
+          "sof": 0,
+          "eol": 0,
+          "eof": 0,
+          "reset": 0
+        },
+        {
+          "kind": 1,
+          "width": 3841,
+          "height": 1,
+          "accepted": 0,
+          "emitted": 0,
+          "sof": 0,
+          "eol": 0,
+          "eof": 0,
+          "reset": 0
+        },
+        {
+          "kind": 1,
+          "width": 4095,
+          "height": 1,
+          "accepted": 0,
+          "emitted": 0,
+          "sof": 0,
+          "eol": 0,
+          "eof": 0,
+          "reset": 0
+        }
+      ]
+    },
+    "rounding_negative": {
+      "report": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-final_rounding_negative-20261015T142102_726515\\report.json",
+      "report_sha256": "964bf5274b63b1fca21f6634afaa44bdabe3417c79f6bd765abf8aac9e7973b9",
+      "commands": [
+        {
+          "command": [
+            "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlib.exe",
+            "work"
+          ],
+          "cwd": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-final_rounding_negative-20261015T142102_726515",
+          "exit_code": 0,
+          "log": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-final_rounding_negative-20261015T142102_726515\\command_0.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "log_bytes": 0
+        },
+        {
+          "command": [
+            "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlog.exe",
+            "-sv",
+            "gray8_gaussian3x3_frame.v",
+            "tb_gray8_gaussian3x3_frame.sv"
+          ],
+          "cwd": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-final_rounding_negative-20261015T142102_726515",
+          "exit_code": 0,
+          "log": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-final_rounding_negative-20261015T142102_726515\\command_1.log",
+          "log_sha256": "d951e31dabda3f88d3bf2695de3def70f4253f23aad6731b15aacae9c9724d82",
+          "log_bytes": 418
+        },
+        {
+          "command": [
+            "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vsim.exe",
+            "-c",
+            "-onfinish",
+            "stop",
+            "-l",
+            "transcript.log",
+            "-gMAX_WIDTH=1920",
+            "work.tb_gray8_gaussian3x3_frame",
+            "+VECTORS=vectors.txt",
+            "-do",
+            "run.do"
+          ],
+          "cwd": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-final_rounding_negative-20261015T142102_726515",
+          "exit_code": 3,
+          "log": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-final_rounding_negative-20261015T142102_726515\\command_2.log",
+          "log_sha256": "329e8e6a9fef6a4e4f41e0f4c85d24c00e34170f8edaaf03c10921ccbb226e5d",
+          "log_bytes": 1669
+        }
+      ],
+      "max_width": 1920,
+      "passed": false,
+      "expected_negative_detected": true,
+      "expected_red_detected": false,
+      "simulation_rtl_sha256": "bb474d6654326bed6a226807735699ae0d25ea1abdb91760118dd9aa4cf2d3a8",
+      "vector_sha256": "7dbcf3c6d0807b13c1e49320d5306d07a31dcb38525646d9e07408619a4527bd",
+      "coverage": null,
+      "case_count": 68,
+      "literal_frame_count": 12,
+      "software_reference_crosscheck": true,
+      "source_checks": {
+        "fpga\\csi2\\src\\img\\gray8_gaussian3x3_frame.v": {
+          "sha256_before": "d5b14c597401313d25d9096a59f94d101e97fcf090198d04c5b0ef2dccbd86ee",
+          "copy_sha256": "d5b14c597401313d25d9096a59f94d101e97fcf090198d04c5b0ef2dccbd86ee",
+          "sha256_after": "d5b14c597401313d25d9096a59f94d101e97fcf090198d04c5b0ef2dccbd86ee",
+          "unchanged_during_run": true
+        },
+        "fpga\\csi2\\tb\\tb_gray8_gaussian3x3_frame.sv": {
+          "sha256_before": "9709348590015a9ee46103da62dffa995e6c13087b4e4960a4279c16421b9df7",
+          "copy_sha256": "9709348590015a9ee46103da62dffa995e6c13087b4e4960a4279c16421b9df7",
+          "sha256_after": "9709348590015a9ee46103da62dffa995e6c13087b4e4960a4279c16421b9df7",
+          "unchanged_during_run": true
+        },
+        "tools\\rtl_checks\\verify_gaussian.py": {
+          "sha256_before": "f9349bb3772e45184f559deb6319528ce18fea45e5d71e8eae63fcc784ec76f4",
+          "copy_sha256": "f9349bb3772e45184f559deb6319528ce18fea45e5d71e8eae63fcc784ec76f4",
+          "sha256_after": "f9349bb3772e45184f559deb6319528ce18fea45e5d71e8eae63fcc784ec76f4",
+          "unchanged_during_run": true
+        },
+        "tools\\image_preprocess\\reference.py": {
+          "sha256_before": "12fce30ab8dd1647622caec3682fa9c0668c73db9903777b3e387d07d2be347c",
+          "copy_sha256": "12fce30ab8dd1647622caec3682fa9c0668c73db9903777b3e387d07d2be347c",
+          "sha256_after": "12fce30ab8dd1647622caec3682fa9c0668c73db9903777b3e387d07d2be347c",
+          "unchanged_during_run": true
+        }
+      },
+      "frame_counts_checked": false,
+      "frame_results": [
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 1,
+          "accepted": 1,
+          "emitted": 1,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 1,
+          "height": 3,
+          "accepted": 3,
+          "emitted": 3,
+          "sof": 1,
+          "eol": 3,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 3,
+          "height": 1,
+          "accepted": 3,
+          "emitted": 3,
+          "sof": 1,
+          "eol": 1,
+          "eof": 1,
+          "reset": 0
+        },
+        {
+          "kind": 0,
+          "width": 2,
+          "height": 2,
+          "accepted": 4,
+          "emitted": 4,
+          "sof": 1,
+          "eol": 2,
+          "eof": 1,
+          "reset": 0
+        }
+      ]
+    },
+    "test_first_red": {
+      "report": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-red_stub_fixed_driver-20261015T141619_639191\\report.json",
+      "report_sha256": "2adf8a4d355760d2ab182ca69a2266df5fab73d0cc7e275accf2d4ac726b0129",
+      "commands": [
+        {
+          "command": [
+            "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlib.exe",
+            "work"
+          ],
+          "cwd": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-red_stub_fixed_driver-20261015T141619_639191",
+          "exit_code": 0,
+          "log": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-red_stub_fixed_driver-20261015T141619_639191\\command_0.log",
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "log_bytes": 0
+        },
+        {
+          "command": [
+            "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlog.exe",
+            "-sv",
+            "gray8_gaussian3x3_frame.v",
+            "tb_gray8_gaussian3x3_frame.sv"
+          ],
+          "cwd": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-red_stub_fixed_driver-20261015T141619_639191",
+          "exit_code": 0,
+          "log": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-red_stub_fixed_driver-20261015T141619_639191\\command_1.log",
+          "log_sha256": "3f0a51edf99e2d80b0ca1c9a9d1da08f305ede8d81c49e718fcef56eebef1ef9",
+          "log_bytes": 418
+        },
+        {
+          "command": [
+            "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vsim.exe",
+            "-c",
+            "-onfinish",
+            "stop",
+            "-l",
+            "transcript.log",
+            "-gMAX_WIDTH=1920",
+            "work.tb_gray8_gaussian3x3_frame",
+            "+VECTORS=vectors.txt",
+            "-do",
+            "run.do"
+          ],
+          "cwd": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-red_stub_fixed_driver-20261015T141619_639191",
+          "exit_code": 3,
+          "log": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\gaussian-red_stub_fixed_driver-20261015T141619_639191\\command_2.log",
+          "log_sha256": "10941ba80c3d69ac84b9cabdc72da66a48e22a820d305f589fc96ae65afe465f",
+          "log_bytes": 753
+        }
+      ],
+      "max_width": 1920,
+      "passed": false,
+      "expected_negative_detected": false,
+      "expected_red_detected": true,
+      "simulation_rtl_sha256": "1c37e1bad22d0f761fc5b42f230b62f06101fdabb56cea8d939f0a7bd83c07fc",
+      "vector_sha256": "7dbcf3c6d0807b13c1e49320d5306d07a31dcb38525646d9e07408619a4527bd",
+      "coverage": null,
+      "case_count": 68,
+      "literal_frame_count": 12,
+      "software_reference_crosscheck": true,
+      "source_checks": {
+        "fpga\\csi2\\tb\\tb_gray8_gaussian3x3_frame.sv": {
+          "sha256_before": "9709348590015a9ee46103da62dffa995e6c13087b4e4960a4279c16421b9df7",
+          "copy_sha256": "9709348590015a9ee46103da62dffa995e6c13087b4e4960a4279c16421b9df7",
+          "sha256_after": "9709348590015a9ee46103da62dffa995e6c13087b4e4960a4279c16421b9df7",
+          "unchanged_during_run": true
+        },
+        "tools\\rtl_checks\\verify_gaussian.py": {
+          "sha256_before": "a81fc56959aa51a72c06673b750f61d6e5e355995f1f1a743298b6d5630e3987",
+          "copy_sha256": "a81fc56959aa51a72c06673b750f61d6e5e355995f1f1a743298b6d5630e3987",
+          "sha256_after": "a81fc56959aa51a72c06673b750f61d6e5e355995f1f1a743298b6d5630e3987",
+          "unchanged_during_run": true
+        },
+        "tools\\image_preprocess\\reference.py": {
+          "sha256_before": "12fce30ab8dd1647622caec3682fa9c0668c73db9903777b3e387d07d2be347c",
+          "copy_sha256": "12fce30ab8dd1647622caec3682fa9c0668c73db9903777b3e387d07d2be347c",
+          "sha256_after": "12fce30ab8dd1647622caec3682fa9c0668c73db9903777b3e387d07d2be347c",
+          "unchanged_during_run": true
+        }
+      },
+      "frame_counts_checked": false,
+      "frame_results": []
+    }
+  },
+  "negative_assertion": "FAIL gaussian ... payload mismatch index=4 expected=1 got=0",
+  "negative_mutation": "frozen copied DUT only: rounded_sum = weighted_sum + 12'd8 -> + 12'd0",
+  "limitations": [
+    "Correctness prototype only; no CSI/top/DDR/TD integration or board test",
+    "No synthesis, RAM inference/port suitability, resources, Fmax or timing evidence",
+    "Phased row input service cannot substantiate uninterrupted CSI service or dual1080p30 throughput",
+    "Finite directed/random simulation, not exhaustive or formal; maximum width tested at height3 and maximum height at width1"
+  ]
+}

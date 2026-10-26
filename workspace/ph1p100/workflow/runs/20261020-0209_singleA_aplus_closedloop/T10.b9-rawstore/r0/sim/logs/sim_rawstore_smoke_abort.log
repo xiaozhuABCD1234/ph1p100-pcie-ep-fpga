@@ -1,0 +1,16 @@
+# vsim -c -lib work -l D:\fpga\ph1p100\workflow\runs\20261020-0209_singleA_aplus_closedloop\T10.b9-rawstore\r0\sim\logs\sim_rawstore_smoke_abort.log tb_raw_store "+CASE=abort" -do "run -all; quit -f" -gRAW_WORDS=120 -gGROUPS=480 -gABORT_BEATS=120 -gEXP_BYTES=2400 
+# Start time: 04:00:19 on Oct 25,2026
+# Loading work.tb_raw_store
+# Loading work.a1_ddr_slot_store
+# Loading work.p2_ddr_bridge
+# Loading work.capture_async_fifo
+# Loading work.p2_paxi_model
+# run -all
+# WRITE_DONE n=0 beats=121 words=30 pub=0 drop=1 abort=1
+# WRITE_DONE n=1 beats=601 words=150 pub=1 drop=1 abort=1
+# READ_DONE n=1 words=120 checked=120 ar_paxi=120 ar_store=120 dup=0
+# RESULT case=abort pass=1 errors=0 words=120 beats=601 ar_paxi=120 ar_store=120 pub=1 drop=1 abort=1 dup=0 cyc=2565
+# ** Note: $finish    : D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b9-rawstore/r0/sim/tb_raw_store.v(384)
+#    Time: 13681710 ps  Iteration: 1  Instance: /tb_raw_store
+# End time: 04:00:20 on Oct 25,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0

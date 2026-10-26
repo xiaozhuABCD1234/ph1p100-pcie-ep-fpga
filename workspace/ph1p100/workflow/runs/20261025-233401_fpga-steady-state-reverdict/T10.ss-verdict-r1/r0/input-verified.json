@@ -1,0 +1,286 @@
+{
+  "schema_version": 1,
+  "task_id": "T10.ss-verdict-r1",
+  "run_id": "20261025-233401_fpga-steady-state-reverdict",
+  "round": "r0",
+  "verified_at": "2026-10-26T02:20:00+08:00",
+  "verified_by": "fpga-dev (this task); fresh recomputation with Get-FileHash -Algorithm SHA256 (PowerShell 5.1), no reuse of planning-round values",
+  "method": "every SHA256 below was recomputed on disk in this task and compared with the frozen value from input-index.md / the P1 manifest / the P2 manifest",
+  "read_only_roots": [
+    "workflow/runs/20261025-233401_fpga-steady-state-reverdict/T10.ss-steady-anchor/**",
+    "workflow/runs/20261025-195604_fpga-dual-aplus-core-feasibility/T10.dual-aplus-service-verdict/**",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b6-a1-htab-nw/**",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b11-aplus-read/**",
+    "docs/**",
+    "fpga/csi2/src/**",
+    "workflow/tasks.json"
+  ],
+  "inputs": [
+    {
+      "id": "P1-MANIFEST",
+      "path": "workflow/runs/20261025-233401_fpga-steady-state-reverdict/T10.ss-steady-anchor/r0/manifest-r0.json",
+      "bytes": 19561,
+      "sha256": "39f3e3d6d115afbdcda9753b254f6971a10eb75df88d5718eb9ea5a247199f9a",
+      "expected_sha256": "39f3e3d6d115afbdcda9753b254f6971a10eb75df88d5718eb9ea5a247199f9a",
+      "match": true,
+      "label": "measured",
+      "role": "P1 frozen manifest (41 artifacts); the P2 dependency gate"
+    },
+    {
+      "id": "P1-STEADY-STATE",
+      "path": "workflow/runs/20261025-233401_fpga-steady-state-reverdict/T10.ss-steady-anchor/r0/out/steady-state.json",
+      "bytes": 6779,
+      "sha256": "a0945e1f60d9e7651d3db2d1a4d939b665d4fe451e9206537fb3b7d0c5430023",
+      "expected_sha256": "a0945e1f60d9e7651d3db2d1a4d939b665d4fe451e9206537fb3b7d0c5430023",
+      "match": true,
+      "label": "measured",
+      "role": "A1 anchor source (S_ss / margins / export_tail / validity)"
+    },
+    {
+      "id": "P1-SS4-STATS",
+      "path": "workflow/runs/20261025-233401_fpga-steady-state-reverdict/T10.ss-steady-anchor/r0/sim/caps/ss4.stats",
+      "bytes": null,
+      "sha256": "29bd31851804714bf65df6d5f4aa29f9daddccebe4d858e08dbfed2e937981a5",
+      "expected_sha256": "29bd31851804714bf65df6d5f4aa29f9daddccebe4d858e08dbfed2e937981a5",
+      "match": true,
+      "label": "measured",
+      "role": "4-frame STAT line (counters)"
+    },
+    {
+      "id": "P1-RUN4-LOG",
+      "path": "workflow/runs/20261025-233401_fpga-steady-state-reverdict/T10.ss-steady-anchor/r0/sim/logs/run4.log",
+      "bytes": null,
+      "sha256": "dc215e0b46e4d87271cd6f1ff736eea5bfc2bb3b301431d1c663dcab925e6cda",
+      "expected_sha256": "dc215e0b46e4d87271cd6f1ff736eea5bfc2bb3b301431d1c663dcab925e6cda",
+      "match": true,
+      "label": "measured",
+      "role": "4-frame event log (SS_EVT)"
+    },
+    {
+      "id": "P1-TB",
+      "path": "workflow/runs/20261025-233401_fpga-steady-state-reverdict/T10.ss-steady-anchor/r0/src/tb_ss_anchor.v",
+      "bytes": null,
+      "sha256": "ddd9e02ca71aa3b81e86f4cc0f151498fd48bf9a4dbbcc042b59c97d9f15d1ff",
+      "expected_sha256": "ddd9e02ca71aa3b81e86f4cc0f151498fd48bf9a4dbbcc042b59c97d9f15d1ff",
+      "match": true,
+      "label": "measured",
+      "role": "derived testbench identity (P1 report reference)"
+    },
+    {
+      "id": "P2-MANIFEST",
+      "path": "workflow/runs/20261025-195604_fpga-dual-aplus-core-feasibility/T10.dual-aplus-service-verdict/r0/manifest-r0.json",
+      "bytes": 28684,
+      "sha256": "5ed90500a7e9650ca17e5f269731984fea9f215d7401d555dc5633551c2436a6",
+      "expected_sha256": "5ed90500a7e9650ca17e5f269731984fea9f215d7401d555dc5633551c2436a6",
+      "match": true,
+      "label": "measured",
+      "role": "P2 frozen manifest (being reviewed)"
+    },
+    {
+      "id": "P2-REPORT",
+      "path": "workflow/runs/20261025-195604_fpga-dual-aplus-core-feasibility/T10.dual-aplus-service-verdict/r0/feasibility-report.md",
+      "bytes": 28952,
+      "sha256": "82c2669ee2376a7252cf9e5537c62e35974b2277f6b87b25309af37118195355",
+      "expected_sha256": "82c2669ee2376a7252cf9e5537c62e35974b2277f6b87b25309af37118195355",
+      "match": true,
+      "label": "measured",
+      "role": "P2 report under review"
+    },
+    {
+      "id": "P2-CALC",
+      "path": "workflow/runs/20261025-195604_fpga-dual-aplus-core-feasibility/T10.dual-aplus-service-verdict/r0/model/calc.py",
+      "bytes": 32610,
+      "sha256": "9eea41f56586d6cdd18f50433d607870aa725396e1688d5ce97ecd0c67f9bd2c",
+      "expected_sha256": "9eea41f56586d6cdd18f50433d607870aa725396e1688d5ce97ecd0c67f9bd2c",
+      "match": true,
+      "label": "measured",
+      "role": "legacy model; byte-identical copy in inputs/legacy/calc.py"
+    },
+    {
+      "id": "P2-RULES",
+      "path": "workflow/runs/20261025-195604_fpga-dual-aplus-core-feasibility/T10.dual-aplus-service-verdict/r0/model/rules.json",
+      "bytes": 7639,
+      "sha256": "fdaae351c56d29cc97cdf3a66a393422854e61e95b24828b9ff3182ab1e42f4d",
+      "expected_sha256": "fdaae351c56d29cc97cdf3a66a393422854e61e95b24828b9ff3182ab1e42f4d",
+      "match": true,
+      "label": "measured",
+      "role": "legacy rules (R1-R6, peak 6400, 1080p applies=false)"
+    },
+    {
+      "id": "P2-FROZEN-INPUTS",
+      "path": "workflow/runs/20261025-195604_fpga-dual-aplus-core-feasibility/T10.dual-aplus-service-verdict/r0/inputs/frozen-inputs.json",
+      "bytes": 6918,
+      "sha256": "888d3f3361aada77c77fc87140d6469b052d4dac2c63466e2007cfbf973a0f59",
+      "expected_sha256": "888d3f3361aada77c77fc87140d6469b052d4dac2c63466e2007cfbf973a0f59",
+      "match": true,
+      "label": "measured",
+      "role": "P2 frozen constants (comp/rand anchors, overhead, resources, timing)"
+    },
+    {
+      "id": "P2-SCENARIOS",
+      "path": "workflow/runs/20261025-195604_fpga-dual-aplus-core-feasibility/T10.dual-aplus-service-verdict/r0/out/scenarios.csv",
+      "bytes": 21150,
+      "sha256": "2d8065998c765e64a336461b6029dafe121b2da3b111048405ed6077bf125f50",
+      "expected_sha256": "2d8065998c765e64a336461b6029dafe121b2da3b111048405ed6077bf125f50",
+      "match": true,
+      "label": "measured",
+      "role": "43-row legacy grid; byte-identical regression target"
+    },
+    {
+      "id": "P2-OVERHEAD",
+      "path": "workflow/runs/20261025-195604_fpga-dual-aplus-core-feasibility/T10.dual-aplus-service-verdict/r0/out/overhead-sensitivity.csv",
+      "bytes": 24190,
+      "sha256": "e4d6f8d9962006f6609be4a1a2a2bbef09ccbb18f250dfab141af42f6c6967f4",
+      "expected_sha256": "e4d6f8d9962006f6609be4a1a2a2bbef09ccbb18f250dfab141af42f6c6967f4",
+      "match": true,
+      "label": "measured",
+      "role": "129-row legacy overhead table (secondary regression)"
+    },
+    {
+      "id": "P2-DDR",
+      "path": "workflow/runs/20261025-195604_fpga-dual-aplus-core-feasibility/T10.dual-aplus-service-verdict/r0/out/ddr-budget.csv",
+      "bytes": 1777,
+      "sha256": "2c83c227bc31569318b9aef0a750a63ef33311dd3c268dbc156f59b2d61f4fb9",
+      "expected_sha256": "2c83c227bc31569318b9aef0a750a63ef33311dd3c268dbc156f59b2d61f4fb9",
+      "match": true,
+      "label": "measured",
+      "role": "legacy 6,400 MB/s DDR table"
+    },
+    {
+      "id": "P2-CONTENT",
+      "path": "workflow/runs/20261025-195604_fpga-dual-aplus-core-feasibility/T10.dual-aplus-service-verdict/r0/out/content-sensitivity.csv",
+      "bytes": 745,
+      "sha256": "50b81124c334107781d7dbd6e99b992967276e69f6b60585b9c48a3383927b69",
+      "expected_sha256": "50b81124c334107781d7dbd6e99b992967276e69f6b60585b9c48a3383927b69",
+      "match": true,
+      "label": "measured",
+      "role": "legacy 3-anchor content table"
+    },
+    {
+      "id": "P2-FRONTIER",
+      "path": "workflow/runs/20261025-195604_fpga-dual-aplus-core-feasibility/T10.dual-aplus-service-verdict/r0/out/frontier.csv",
+      "bytes": 4079,
+      "sha256": "cdd7e5040f3bb59c1500f8f45f21c094fe88d4332ab488f80e552781958899b4",
+      "expected_sha256": "cdd7e5040f3bb59c1500f8f45f21c094fe88d4332ab488f80e552781958899b4",
+      "match": true,
+      "label": "measured",
+      "role": "legacy frontier/recommendation"
+    },
+    {
+      "id": "P2-TEST-REPORT",
+      "path": "workflow/runs/20261025-195604_fpga-dual-aplus-core-feasibility/test-reports/T10.dual-aplus-service-verdict-r1-integrated.md",
+      "bytes": 15245,
+      "sha256": "71cafc6d0d972f6b44737ae000d973d7fb1b47a6f2edef180d2e5ce3a637c4d4",
+      "expected_sha256": "71cafc6d0d972f6b44737ae000d973d7fb1b47a6f2edef180d2e5ce3a637c4d4",
+      "match": true,
+      "label": "measured",
+      "role": "P2 independent integrated report (PASS)"
+    },
+    {
+      "id": "B6-FULL-GRAD",
+      "path": "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b6-a1-htab-nw/r0/sim/captures/full_grad.stats",
+      "bytes": 158,
+      "sha256": "217058d8558ab0a11f979e65eb8335536ed148c3c2b1e9b66c9eaec7d45a1ca2",
+      "expected_sha256": "217058d8558ab0a11f979e65eb8335536ed148c3c2b1e9b66c9eaec7d45a1ca2",
+      "match": true,
+      "label": "measured",
+      "role": "A4 source: cap=1 cycles=6,421,414 (cold single-frame latency)"
+    },
+    {
+      "id": "B11-FULL",
+      "path": "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b11-aplus-read/r0/sim/caps/full.stats",
+      "bytes": 159,
+      "sha256": "60b6a9c89bf673137217226931e94175f72edaa1c714cbb56bce4a26d7fa9212",
+      "expected_sha256": "60b6a9c89bf673137217226931e94175f72edaa1c714cbb56bce4a26d7fa9212",
+      "match": true,
+      "label": "measured",
+      "role": "two-frame control reference cycles=11,445,988 (cap=2)"
+    },
+    {
+      "id": "DOC-DDR",
+      "path": "docs/DDR1333集成与1333vs1600对比_2026-10-17.md",
+      "bytes": 34258,
+      "sha256": "3f273ee4c63744d3685362ac91bfbaa336bfbce0cddf6870345126a90725c6ad",
+      "expected_sha256": "3f273ee4c63744d3685362ac91bfbaa336bfbce0cddf6870345126a90725c6ad",
+      "match": true,
+      "label": "measured",
+      "role": "DDR1333 mainline decision + section 8 bandwidth figures (disclosed, not adopted)"
+    },
+    {
+      "id": "DOC-STATUS",
+      "path": "docs/项目成果整合与进度复核_2026-10-25.md",
+      "bytes": 17833,
+      "sha256": "2bec1a834364ba1fd61044635e705f1b1eb337295d728f9e1138b9e303ac3506",
+      "expected_sha256": "2bec1a834364ba1fd61044635e705f1b1eb337295d728f9e1138b9e303ac3506",
+      "match": true,
+      "label": "measured",
+      "role": "UART 115200 = 11,520 B/s diagnostic-only statement"
+    }
+  ],
+  "legacy_copies": [
+    {
+      "path": "inputs/legacy/calc.py",
+      "bytes": 32610,
+      "sha256": "9eea41f56586d6cdd18f50433d607870aa725396e1688d5ce97ecd0c67f9bd2c",
+      "source": "P2 model/calc.py",
+      "byte_identical": true
+    },
+    {
+      "path": "inputs/legacy/rules.json",
+      "bytes": 7639,
+      "sha256": "fdaae351c56d29cc97cdf3a66a393422854e61e95b24828b9ff3182ab1e42f4d",
+      "source": "P2 model/rules.json",
+      "byte_identical": true
+    },
+    {
+      "path": "inputs/legacy/frozen-inputs.json",
+      "bytes": 6918,
+      "sha256": "888d3f3361aada77c77fc87140d6469b052d4dac2c63466e2007cfbf973a0f59",
+      "source": "P2 inputs/frozen-inputs.json",
+      "byte_identical": true
+    }
+  ],
+  "p1_assertions": {
+    "manifest_sha256": "39f3e3d6d115afbdcda9753b254f6971a10eb75df88d5718eb9ea5a247199f9a",
+    "steady_state_json_sha256": "a0945e1f60d9e7651d3db2d1a4d939b665d4fe451e9206537fb3b7d0c5430023",
+    "L_cold_cycles": 6766434,
+    "S_ss_cycles": 4677535,
+    "S_2_S_23_S_34_cycles": [4677535, 4677535, 4677535],
+    "S_ss_spread_pct": 0.0,
+    "capacity_MBps": 103.90087941618823,
+    "margin_0_pct": 33.61738608048896,
+    "margin_25_pct": 6.893908864391185,
+    "export_tail_cycles": 480930,
+    "sink_limited": false,
+    "c_excl_export_MBps": 103.90087941618823,
+    "counters": {"cap": 4, "enc": 4, "exported": 4, "read": 518400, "raw_drop": 0, "cmp_drop": 0, "dup": 0, "geom": 0, "err": 0, "wd": 0},
+    "validity_all_true": true,
+    "source_b11_manifest_sha256": "4425fdcfbb0da4dc10013f3fa077e8ff4e297933d82660f2ed87a137d617961a",
+    "all_assertions_match": true,
+    "label": "measured"
+  },
+  "p2_assertions": {
+    "manifest_sha256": "5ed90500a7e9650ca17e5f269731984fea9f215d7401d555dc5633551c2436a6",
+    "scenarios_rows": 43,
+    "overhead_rows": 129,
+    "legacy_peak_MBps": 6400,
+    "legacy_overhead_1080p_applies": false,
+    "legacy_verdict_counts_from_p2_report": {"feasible": 8, "conditional": 22, "infeasible": 13},
+    "core_anchors": {"comp_cycles": 355261, "comp_bytes": 153600, "comp_cpb": 2.3128971354166667, "rand_cycles": 161479, "rand_cpb": 1.051296875},
+    "overhead_primary_cycles": 426385,
+    "all_assertions_match": true,
+    "label": "measured"
+  },
+  "drift": {
+    "p1_directory_modified": false,
+    "p2_directory_modified": false,
+    "b6_b11_directories_modified": false,
+    "method": "SHA256 recomputed for every bound input at task start and again before freezing manifest-r0.json",
+    "blocked_if_drift": true
+  },
+  "gate": {
+    "all_sha_match": true,
+    "proceed_allowed": true,
+    "note": "P1 manifest and steady-state.json match the frozen values; the P2 legacy model reproduces the frozen 43-row scenarios.csv byte-identically (see out/legacy-regression.json), so the corrections are rule/input changes, not arithmetic rewrites"
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "run_id": "20261017-011744-rk-fpga-align",
+  "project_root": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道",
+  "output_dir": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261017-011744-rk-fpga-align",
+  "task_ids": [
+    "T10.rk-align-codec"
+  ],
+  "batch_size": 1,
+  "status": "needs_user_input",
+  "needs_user_input": true,
+  "pause": {
+    "state": "await_user_sync",
+    "reason": "user-feedback-08：T09 已收束，队列暂停——T10.rk-align-codec 及后续（T11-opt/compress-int/board/release）不派发，等用户统一进度；后续只开一个对话推进（single_conversation）。",
+    "resume_entry": "用户说“继续/同步完成”后，主把原话转给本 run 规划者（ses_eba025958ffenOiSFeq1XsVCQQ）；规划者写 T10 task 文件并更新 dispatch（spawn_agent/developer）后派发；恢复时不得开并行工作链。"
+  },
+  "sequencing": {
+    "t11_raw_closed": "T11.rk-align-raw round0 三维同候选全部PASS（0修复轮；manifest AAB0CC08…6975；bit 14b32037…5686b）——已收束。",
+    "t11_base_closed": "T11.rk-align-base 收束：round0（functional FAIL/system FAIL/engineering PASS）→修复①→修复②（r2 三维同候选全部PASS，实际修复2轮；manifest FF079FFA…C069）——已收束。",
+    "t09_closed": "T09.rk-align-algo 收束（新流程单一综合测试者）：round0 blocked（G1 core 16 逐样本 mismatch；G2 187.5MHz setup -3.870ns）→修复轮1（流水化+HE/中止语义修复）→ integrated 综合测试 PASS（functional/engineering/system 三维全过；setup SWNS +0.059ns/STNS 0/0 违例、hold +0.020ns、Fmax 189.609MHz；G3/G4 not_run=范围外；G5 未完成；实际修复轮=1；无 retest）；manifest algo/candidate-manifest.json SHA=2195641AC491104549C2BDE4EC0EEC95D6519BC2B585B4576D5D4FD078E6A5F8（36/36 无漂移）；报告 test-reports/T09.rk-align-algo-r1-integrated.md。观察项：D1=he_samebin 冻结负对照锚点漂移（测试自有适配对照拒绝成立、测试力已确认，不影响判定）；D2–D4=文档记账陈旧项（change-report §5/§6 数字、actual-commands manifest_sha256 早期值、dev-result 负对照申报），随下次触碰更正。",
+    "fpga_base_queue": "FPGA 侧基础推进队列（batch=1，暂停中）：【await_user_sync】→ T10.rk-align-codec（LZ77 基线+Bayer 自有优化）→ T11.rk-align-opt → T11.rk-align-compress-int → T07.rk-align-board（条件）→ T11.rk-align-release（含 R6 量化汇总）。恢复前不派发任何一项。",
+    "endpoint_scope": "user-feedback-07：本轮终点=双路同步成功（T08）；RK 深度/NPU（T12 相应部分、T05）明确不进行；未验不置 done。",
+    "competition_alignment": "R1 已覆盖离线/待板验；R2=T09（integrated PASS，含真实并行硬件证据）；R3 已定 LZ77 基线+Bayer 自有优化（T10 范围）；R4=PCIe 已通+压缩帧传输集成包；R5=RK 队友（本轮不进行）；R6=板测/发布汇总量化数据。",
+    "observation_disposition": "跨任务观察：T11-raw r0 §6『全库检索无+5.058来源』=仅登记+正确来源（final_timing.rpt tl_clk_user 路径组 L2076-2081）；T09 r1 观察 D1–D4 已登记、随下次触碰更正；均不改写历史判定报告。",
+    "single_conversation": "user-feedback-08：后续只开一个对话推进——本 run 由本对话链路（原规划实例）续接；恢复时不再开并行工作链。",
+    "board": "T07.rk-align-board 条件（JTAG/BW 窗口、RK 侧事实）待查；不阻塞离线包。"
+  },
+  "input_paths": [
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261017-011744-rk-fpga-align/dev-plan.md",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261017-011744-rk-fpga-align/fpga-design-guide.md",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261017-011744-rk-fpga-align/user-feedback-04.md",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261017-011744-rk-fpga-align/user-feedback-06.md",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261017-011744-rk-fpga-align/user-feedback-07.md",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261017-011744-rk-fpga-align/user-feedback-08.md",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261017-011744-rk-fpga-align/contract/registers.json",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261017-011744-rk-fpga-align/contract/acceptance-vectors.json",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261017-011744-rk-fpga-align/raw/candidate-manifest.json",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261017-011744-rk-fpga-align/raw/hardware-ready.md",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261017-011744-rk-fpga-align/backend/rk-change-list.md",
+    "C:/Users/czz/.codex/worktrees/bayer-codec-reference/FPGA创新设计赛道/fpga/csi2/src/codec/bayer_samecolor_predict.v",
+    "C:/Users/czz/.codex/worktrees/bayer-codec-reference/FPGA创新设计赛道/fpga/csi2/src/codec/bayer_rice_codeword.v",
+    "C:/Users/czz/.codex/worktrees/bayer-codec-reference/FPGA创新设计赛道/fpga/csi2/src/codec/bayer_rice_row_stream.v",
+    "C:/Users/czz/.codex/worktrees/bayer-codec-reference/FPGA创新设计赛道/fpga/csi2/src/codec/bayer_bit_packer.v"
+  ],
+  "write_scope": [
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/fpga/csi2/src/codec/",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/tools/codec/",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261017-011744-rk-fpga-align/codec/",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261017-011744-rk-fpga-align/test-reports/"
+  ],
+  "protected": [
+    "Bayer工作树（C:/Users/czz/.codex/worktrees/bayer-codec-reference/FPGA创新设计赛道）只读；引入须带 provenance",
+    "raw/ 全部内容（T11.rk-align-raw 冻结输入与候选只读）；fpga/csi2/src/img/ 与 tools/algo/（T09 交付树只读）",
+    "fpga/csi2/pcie_integration/ 与 tools/pcie_integration/（只读；后续修改只能由 T11.rk-align-opt/compress-int 在其派发范围内进行）",
+    "backend/ 冻结包与首包冻结内容；fpga/csi2/src/{cam,csi,mem} 旧主线只读",
+    "所有既有生产RTL、旧候选、D:/TD与D:/anlogic；其他run、temp peer参考库、各测试证据目录",
+    "workflow/tasks.json及规划/传输文件（开发/测试只读）",
+    "不删除、不写Flash/发布/外部消息、不改全局系统配置、不访问未知RK机器"
+  ],
+  "next_action": {
+    "operation": "relay_to_user",
+    "note": "await_user_sync：T10.rk-align-codec 及后续（T11-opt/compress-int/board/release）不派发；主把 user-summary.md 原样转用户并等待其统一进度。",
+    "resume_entry": "用户说“继续/同步完成”后，主把该原话转给本 run 规划者（ses_eba025958ffenOiSFeq1XsVCQQ）；规划者写 T10 task 文件并更新 dispatch（spawn_agent/developer，input=task-T10.rk-align-codec.md）后派发；恢复时只开一个对话（single_conversation），不开并行工作链。"
+  },
+  "after_development": "恢复后：T10 开发停止修改并冻结 manifest → 主 spawn_single_tester（一个新综合测试者，同一冻结输入）→ 综合 PASS 后本规划收尾。",
+  "scope_limits": {
+    "goals_per_round": 1,
+    "packages_max": 4,
+    "levels": 2,
+    "semantic_steps_per_package_max": 5,
+    "batch_size": 1,
+    "note": "按有界规则；本 run 已执行包：T03/T07/T11-raw/T11-base/T09；后续主题（T10 压缩、opt、compress-int、board、release）待用户同步后按依赖顺序推进，不自动续做。"
+  },
+  "execution_limits": {
+    "planner_minutes": 15,
+    "dev_minutes": 45,
+    "tester_minutes": 45,
+    "tool_calls_per_dispatch": 30,
+    "note": "默认值；派发前可按必需构建/长稳冻结有限覆盖值并说明理由。"
+  },
+  "user_summary_path": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261017-011744-rk-fpga-align/user-summary.md",
+  "prior_result": {
+    "task_id": "T09.rk-align-algo",
+    "round": 1,
+    "dimension": "integrated",
+    "verdict": "PASS",
+    "actual_repair_rounds": 1,
+    "report_path": "test-reports/T09.rk-align-algo-r1-integrated.md",
+    "manifest_sha256": "2195641ac491104549c2bde4ec0eec95d6519bc2b585b4576d5d4fd078e6a5f8"
+  }
+}

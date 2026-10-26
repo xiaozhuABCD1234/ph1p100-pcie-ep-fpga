@@ -1,0 +1,555 @@
+{
+  "date": "2026-10-12",
+  "status": "User reports155843 no image, D37flash D38off D39on D40on; hardware acceptance FAILED. See csi_frontend_drain_20261012 for reproduced pipeline defect and replacement progress.",
+  "scope": "A-only RAW10 original-frame CRC16 and FE-gated preview commit; 960x540 Gray8 DDR to HDMI1080p60. Strict live sensor geometry still unmeasured.",
+  "candidate_project": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843",
+  "simulations": {
+    "pack_baseline_red": {
+      "directory": "D:/TD/work/csi2/_validation/csi_integrity/20261012_184605_691350_42b103",
+      "result_lines": [
+        "# INTEGRITY_FAIL pack published before FE footers=1 aborts=0"
+      ],
+      "inputs": "docs/evidence/csi_frame_integrity_20261012/pack_baseline_red_inputs.json",
+      "snapshot_verified": true,
+      "result": "expected baseline rejection"
+    },
+    "packet_baseline_red": {
+      "directory": "D:/TD/work/csi2/_validation/csi_integrity/20261012_184607_360845_39d591",
+      "result_lines": [
+        "# INTEGRITY_FAIL packet bad CRC frame accepted or undetected goods=1 crc=0"
+      ],
+      "inputs": "docs/evidence/csi_frame_integrity_20261012/packet_baseline_red_inputs.json",
+      "snapshot_verified": true,
+      "result": "expected baseline rejection"
+    },
+    "pack": {
+      "directory": "D:/TD/work/csi2/_validation/csi_integrity/20261012_155221_037677_39638f",
+      "result_lines": [
+        "# INTEGRITY_PASS pack cases=14 footers=7 aborts=7"
+      ],
+      "inputs": "docs/evidence/csi_frame_integrity_20261012/pack_inputs.json",
+      "snapshot_verified": true,
+      "result": "pass"
+    },
+    "packet20": {
+      "directory": "D:/TD/work/csi2/_validation/csi_integrity/20261012_155221_369541_02d944",
+      "result_lines": [
+        "# INTEGRITY_DIAGNOSTICS crc=3 header=1 packet_timeout=1 frame_timeout=1 bad_frames=10",
+        "# INTEGRITY_PASS packet cases=30 goods=20 crc_errors=0 header_errors=0 packet_timeouts=0 frame_timeouts=0"
+      ],
+      "inputs": "docs/evidence/csi_frame_integrity_20261012/packet20_inputs.json",
+      "snapshot_verified": true,
+      "result": "pass"
+    },
+    "packet4800": {
+      "directory": "D:/TD/work/csi2/_validation/csi_integrity/20261012_155536_866187_795daa",
+      "result_lines": [
+        "# INTEGRITY_DIAGNOSTICS crc=3 header=1 packet_timeout=1 frame_timeout=1 bad_frames=10",
+        "# INTEGRITY_PASS packet cases=30 goods=20 crc_errors=0 header_errors=0 packet_timeouts=0 frame_timeouts=0"
+      ],
+      "inputs": "docs/evidence/csi_frame_integrity_20261012/packet4800_inputs.json",
+      "snapshot_verified": true,
+      "result": "pass"
+    },
+    "chain80": {
+      "directory": "D:/TD/work/csi2/_validation/csi_integrity/20261012_160728_056613_6df693",
+      "result_lines": [
+        "# INTEGRITY_PASS chain wc=80 bytes=32 frames=10 pub=4 aborts=7 drops=8"
+      ],
+      "inputs": "docs/evidence/csi_frame_integrity_20261012/chain80_inputs.json",
+      "snapshot_verified": true,
+      "result": "pass"
+    },
+    "chain4800": {
+      "directory": "D:/TD/work/csi2/_validation/csi_integrity/20261012_155536_414316_f66b70",
+      "result_lines": [
+        "# INTEGRITY_PASS chain wc=4800 bytes=1920 frames=10 pub=4 aborts=7 drops=8"
+      ],
+      "inputs": "docs/evidence/csi_frame_integrity_20261012/chain4800_inputs.json",
+      "snapshot_verified": true,
+      "result": "pass"
+    },
+    "display_guarded_small": {
+      "directory": "D:/TD/work/csi2/_validation/ddr_display/20261012_155540_363575_72ffa1",
+      "result_lines": [
+        "# DDR_DISPLAY_PASS size=64x16 pixels=65536 reads=870 writes=198 crc=5 rejected=0 underflows=3 shown=4"
+      ],
+      "inputs": "docs/evidence/csi_frame_integrity_20261012/display_guarded_small_inputs.json",
+      "snapshot_verified": true,
+      "result": "pass"
+    },
+    "display_legacy_small": {
+      "directory": "D:/TD/work/csi2/_validation/ddr_display/20261012_155536_621547_3e38c3",
+      "result_lines": [
+        "# DDR_DISPLAY_PASS size=64x16 pixels=65536 reads=870 writes=198 crc=5 rejected=0 underflows=3 shown=4"
+      ],
+      "inputs": "docs/evidence/csi_frame_integrity_20261012/display_legacy_small_inputs.json",
+      "snapshot_verified": true,
+      "result": "pass"
+    },
+    "display_guarded_production": {
+      "directory": "D:/TD/work/csi2/_validation/ddr_display/20261012_155933_718414_99d266",
+      "result_lines": [
+        "# DDR_DISPLAY_PASS size=960x540 pixels=2073600 reads=32402 writes=16201 crc=1 rejected=0 underflows=0 shown=1"
+      ],
+      "inputs": "docs/evidence/csi_frame_integrity_20261012/display_guarded_production_inputs.json",
+      "snapshot_verified": true,
+      "result": "pass"
+    },
+    "preview80": {
+      "directory": "D:/TD/work/csi2/_validation/csi_integrity/20261012_185501_306170_35c006",
+      "result_lines": [
+        "# INTEGRITY_PASS preview wc=80 bytes=64 frames=10 pub=4 aborts=6 drops=6",
+        "# PREVIEW_TAP_DIAG gray_bytes=640 last_pulses=10"
+      ],
+      "inputs": "docs/evidence/csi_frame_integrity_20261012/preview80_inputs.json",
+      "snapshot_verified": true,
+      "result": "pass",
+      "scope": "Real cam_preview_capture, 16 source rows, SH=4; not full camera geometry. Geometry informational messages expected."
+    },
+    "preview4800": {
+      "directory": "D:/TD/work/csi2/_validation/csi_integrity/20261012_185537_309047_aea493",
+      "result_lines": [
+        "# INTEGRITY_PASS preview wc=4800 bytes=3840 frames=10 pub=4 aborts=6 drops=6",
+        "# PREVIEW_TAP_DIAG gray_bytes=38400 last_pulses=10"
+      ],
+      "inputs": "docs/evidence/csi_frame_integrity_20261012/preview4800_inputs.json",
+      "snapshot_verified": true,
+      "result": "pass",
+      "scope": "Real cam_preview_capture, 16 source rows, SH=4; not full camera geometry. Geometry informational messages expected."
+    }
+  },
+  "artifacts": {
+    "docs/evidence/csi_frame_integrity_20261012/pack_baseline_red.txt": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_184605_691350_42b103/regression.log",
+      "bytes": 1144,
+      "sha256": "e55aa07510a72a2bf63e31d6b408556275900a8bc5e2d6ef761ebac40399b806"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/pack_baseline_red_inputs.json": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_184605_691350_42b103/inputs.json",
+      "bytes": 348,
+      "sha256": "7ca929021638cde19f1350ee6073a991cd8a148743ff755fe3e1424531da60af"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/pack_baseline_red_run.do": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_184605_691350_42b103/run.do",
+      "bytes": 84,
+      "sha256": "6c5fcee04cca32d992486fb02ba2aa7e4b611e93d5b761b482bf8b2fb00cf408"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/packet_baseline_red.txt": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_184607_360845_39d591/regression.log",
+      "bytes": 1370,
+      "sha256": "a859a1599511048bdf8bba9a3a1b44822a427c3e95ab864c891c350f16451d3a"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/packet_baseline_red_inputs.json": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_184607_360845_39d591/inputs.json",
+      "bytes": 581,
+      "sha256": "4e39d7d638484592a12de3d10fa72089b6235188833ba9b1b4079a4d47a6bdbd"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/packet_baseline_red_run.do": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_184607_360845_39d591/run.do",
+      "bytes": 85,
+      "sha256": "b051a2529aaa1217573b72621ce6dd14fcc157e8225b378186c33415f3e729fd"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/pack.txt": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_155221_037677_39638f/regression.log",
+      "bytes": 1139,
+      "sha256": "03bfc828c23018c601dd8a3a4447b44750970b0cb6ea63f6a9ea94703c49368d"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/pack_inputs.json": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_155221_037677_39638f/inputs.json",
+      "bytes": 364,
+      "sha256": "1c1b6cc56ead1067dbf6ea697f19e833797c4c8e7f83803caf302b64088e2715"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/pack_run.do": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_155221_037677_39638f/run.do",
+      "bytes": 84,
+      "sha256": "6c5fcee04cca32d992486fb02ba2aa7e4b611e93d5b761b482bf8b2fb00cf408"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/packet20.txt": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_155221_369541_02d944/regression.log",
+      "bytes": 1453,
+      "sha256": "95f254c0722f9471d9f99421c39a9beaf155ef7abf5fe4ec9f1f6c7c260fb590"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/packet20_inputs.json": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_155221_369541_02d944/inputs.json",
+      "bytes": 569,
+      "sha256": "d67a929cddd5c4fe78122ab6948778c95acc368d188f731b519fb5de82da5590"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/packet20_run.do": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_155221_369541_02d944/run.do",
+      "bytes": 85,
+      "sha256": "b051a2529aaa1217573b72621ce6dd14fcc157e8225b378186c33415f3e729fd"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/packet4800.txt": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_155536_866187_795daa/regression.log",
+      "bytes": 1472,
+      "sha256": "e463fb1867ff1ed90ba5db44c77b93dda306cdb2b4c5cb0c4caddb75de0218c3"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/packet4800_inputs.json": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_155536_866187_795daa/inputs.json",
+      "bytes": 569,
+      "sha256": "d67a929cddd5c4fe78122ab6948778c95acc368d188f731b519fb5de82da5590"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/packet4800_run.do": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_155536_866187_795daa/run.do",
+      "bytes": 103,
+      "sha256": "72f2ff6b061f0a90d5afa833a8265ef8c0c53c95281ff153c7e5d18e0118294d"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/chain80.txt": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_160728_056613_6df693/regression.log",
+      "bytes": 2110,
+      "sha256": "6eff27b4cfef4c16159d9712430a4a0c3681ce4e45f527096ac20d2dba1465c5"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/chain80_inputs.json": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_160728_056613_6df693/inputs.json",
+      "bytes": 1575,
+      "sha256": "84fe8dd9897ee19d4f05c641f87529ee36ee81c3e23fb9db5fafbd7c37501efb"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/chain80_run.do": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_160728_056613_6df693/run.do",
+      "bytes": 91,
+      "sha256": "e204fd8582776ffec663b828c0c11cf6974b23465ca55d4861f573dfa57fac79"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/chain80_golden_crc.txt": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_160728_056613_6df693/golden_crc.txt",
+      "bytes": 9,
+      "sha256": "b57eec454732edf279a652b38adb8f5f9431cb8ea33e5e5ce895aeca7fadb103"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/chain4800.txt": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_155536_414316_f66b70/regression.log",
+      "bytes": 2133,
+      "sha256": "9f16df48b2e8a0da9385e01712f3412acbaa0a5abaa1ac5fea7c00ac1e0e31fb"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/chain4800_inputs.json": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_155536_414316_f66b70/inputs.json",
+      "bytes": 1575,
+      "sha256": "1799c138a6d5c38f95d54a911bfda794bec75a382e202cabb12ac15de86d181e"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/chain4800_run.do": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_155536_414316_f66b70/run.do",
+      "bytes": 109,
+      "sha256": "acfa16fe3edd2cf340966a3c1370e1b6a5ea6f165d1503bc75e8c18286c82ff0"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/chain4800_golden_crc.txt": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_155536_414316_f66b70/golden_crc.txt",
+      "bytes": 9,
+      "sha256": "080d656ae89c13d63af99d5d176da69db9bba42526cb0830017f1bc32c8f3515"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/display_guarded_small.txt": {
+      "source": "D:/TD/work/csi2/_validation/ddr_display/20261012_155540_363575_72ffa1/regression.log",
+      "bytes": 2376,
+      "sha256": "1993e0f349f3610ba8c7f5f5f898aee1edf8c28aeeb37e215a628d561295a2fb"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/display_guarded_small_inputs.json": {
+      "source": "D:/TD/work/csi2/_validation/ddr_display/20261012_155540_363575_72ffa1/inputs.json",
+      "bytes": 1624,
+      "sha256": "9de107ec754b33e5686e0e362f389ea83908e92b37a207b1cb4f147f3f141caa"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/display_guarded_small_run.do": {
+      "source": "D:/TD/work/csi2/_validation/ddr_display/20261012_155540_363575_72ffa1/run.do",
+      "bytes": 83,
+      "sha256": "f03b7397deb78aa820fe3008d68dd2ab6c87bf4d0a2f2aeb12c0fea734e7eab4"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/display_legacy_small.txt": {
+      "source": "D:/TD/work/csi2/_validation/ddr_display/20261012_155536_621547_3e38c3/regression.log",
+      "bytes": 2017,
+      "sha256": "93b317888877bc805078666aefeae50de2ba10be8deb10d55b23b38bd2b4d67b"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/display_legacy_small_inputs.json": {
+      "source": "D:/TD/work/csi2/_validation/ddr_display/20261012_155536_621547_3e38c3/inputs.json",
+      "bytes": 1238,
+      "sha256": "409858c34fbfd19cc7b7b7085a3a77e47f415f698cccc34846f9085c11daa96e"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/display_legacy_small_run.do": {
+      "source": "D:/TD/work/csi2/_validation/ddr_display/20261012_155536_621547_3e38c3/run.do",
+      "bytes": 83,
+      "sha256": "f03b7397deb78aa820fe3008d68dd2ab6c87bf4d0a2f2aeb12c0fea734e7eab4"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/display_guarded_production.txt": {
+      "source": "D:/TD/work/csi2/_validation/ddr_display/20261012_155933_718414_99d266/regression.log",
+      "bytes": 2419,
+      "sha256": "b6e136df4e73bb667a0ad30b8dbc9e1eb1d740c9c83394b31ac604c6f23a672c"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/display_guarded_production_inputs.json": {
+      "source": "D:/TD/work/csi2/_validation/ddr_display/20261012_155933_718414_99d266/inputs.json",
+      "bytes": 1624,
+      "sha256": "9de107ec754b33e5686e0e362f389ea83908e92b37a207b1cb4f147f3f141caa"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/display_guarded_production_run.do": {
+      "source": "D:/TD/work/csi2/_validation/ddr_display/20261012_155933_718414_99d266/run.do",
+      "bytes": 116,
+      "sha256": "544d82896a28b6994c0d56d39e74e71f31a7d65dbcc2d4b4cd22c96c9c2bc819"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/preview80.txt": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_185501_306170_35c006/regression.log",
+      "bytes": 2475,
+      "sha256": "6a938bca0f392348b029556b59aafd5405105db50f9db87a9622985fa43de31f"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/preview80_inputs.json": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_185501_306170_35c006/inputs.json",
+      "bytes": 1841,
+      "sha256": "6a0081b4363448f42cffc25f06d60aeedaa48a019a5b95756c075b0746d731f6"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/preview80_run.do": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_185501_306170_35c006/run.do",
+      "bytes": 93,
+      "sha256": "09499bd3878e94a60395000b601105355043e3a5db3d5cea675e3dca47fbe770"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/preview80_golden_crc.txt": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_185501_306170_35c006/golden_crc.txt",
+      "bytes": 9,
+      "sha256": "eefb8f92c2619489685a461c02f9b8c7ddd7af84ba87b22924ac796237420c7b"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/preview4800.txt": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_185537_309047_aea493/regression.log",
+      "bytes": 2444,
+      "sha256": "7d6bcc7bde3cbb37481dd82c4b0308e3eb2769e8edafe1f33bc35e0a359f36af"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/preview4800_inputs.json": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_185537_309047_aea493/inputs.json",
+      "bytes": 1841,
+      "sha256": "9e082a475ff077ae92208fb0d03b696226b6192f2fe2ab77838f0db4618fe1a7"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/preview4800_run.do": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_185537_309047_aea493/run.do",
+      "bytes": 111,
+      "sha256": "6c49670e3f5b141f1e27d78b0c55b385f5d431e8a4ef031f59d502a43570ad01"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/preview4800_golden_crc.txt": {
+      "source": "D:/TD/work/csi2/_validation/csi_integrity/20261012_185537_309047_aea493/golden_crc.txt",
+      "bytes": 9,
+      "sha256": "2fc61eb9d8c99587b32144481d7054632e7c901a6ce10b6a8e7be2f133e3edc0"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/capture_timing.rpt": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/capture_timing.rpt",
+      "bytes": 5617663,
+      "sha256": "ce84eec3fb27e70a26e6592f269f13f5d56fa03c5e3daea692d328b0512fae55"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/capture_ignored.rpt": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/capture_ignored.rpt",
+      "bytes": 1273000,
+      "sha256": "990d42d8e069fc1470b29c922a2bfcdfab3f84611913575790f37d9e5df2c866"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/capture_abnormal.rpt": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/capture_abnormal.rpt",
+      "bytes": 122,
+      "sha256": "a4e5f4685518c9a537bd1f7fd5894808add6a2c61d0f75f02592300b77dc71da"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/capture_skew.rpt": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/capture_skew.rpt",
+      "bytes": 538627,
+      "sha256": "299ecbd9081768ade6bd9cb28455f432fc046f0a2e9f51e9013d4fc941c60077"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/capture.area": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/capture.area",
+      "bytes": 56610,
+      "sha256": "5e748fe7fa6a129584f7957a62995050fba1840a5b2c19fd9cc6f9a6746432d9"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/candidate_timing.rpt": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/candidate_timing.rpt",
+      "bytes": 5617663,
+      "sha256": "ba4e4fd097a52c9c11a8a7d28b22465dc9f44bcd8c64637bf0984ce6f4dc6504"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/candidate_ignored.rpt": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/candidate_ignored.rpt",
+      "bytes": 1187957,
+      "sha256": "0f30aae565b75342291e30e26e9129b4010cec42495c458739e33cf9d17964f9"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/candidate_abnormal.rpt": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/candidate_abnormal.rpt",
+      "bytes": 122,
+      "sha256": "a4e5f4685518c9a537bd1f7fd5894808add6a2c61d0f75f02592300b77dc71da"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/candidate_skew.rpt": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/candidate_skew.rpt",
+      "bytes": 538627,
+      "sha256": "24b4d5dfb88b970462dfcd28a5ecc0e06c29e52a59dfd46cdabf37623ffa62d6"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/u_fifo_cdc_audit.json": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/u_fifo_cdc_audit.json",
+      "bytes": 77127,
+      "sha256": "610764b1dc36ddd653b1f0b73e152e2072313cf255639281886b84932bd3c4f6"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/u_display_fifo_cdc_audit.json": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/u_display_fifo_cdc_audit.json",
+      "bytes": 79102,
+      "sha256": "da949cc7f3b1d703eb4cbac7748608bcfa44eb41b0c75e0c31c6c91a37e31c57"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/u_fifo_cdc_excerpt.v": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/u_fifo_cdc_excerpt.v",
+      "bytes": 41772,
+      "sha256": "cd82574386c3a9d76ec2e664a89c7abfee270a6920f1c25405fd5c2dd12ba800"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/u_display_fifo_cdc_excerpt.v": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/u_display_fifo_cdc_excerpt.v",
+      "bytes": 45972,
+      "sha256": "67b0907e496016b639ba3e635431296d86bc216e7a726c9258a0f6d126141dcd"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/display_cdc_functions.json": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/display_cdc_functions.json",
+      "bytes": 35580,
+      "sha256": "f2a6ed57ab502ed1937b2f880b90821108ce3503792d0bbb5a77c4498b6e813d"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/cdc_reset_clock_review.txt": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/cdc_reset_clock_review.txt",
+      "bytes": 19738,
+      "sha256": "eff3bb5a501b8a528c120a78b36afa48da6f83521944ea56cc20add02be715ae"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/cap_error_cdc_review.json": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/cap_error_cdc_review.json",
+      "bytes": 3138,
+      "sha256": "173a929e647a389b1963158e6abe5e4c2a5fb4aa476209cb66c1cbeebfa0049b"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/cap_error_cdc_excerpt.txt": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/cap_error_cdc_excerpt.txt",
+      "bytes": 11373,
+      "sha256": "de6df3b0fe8a011a6920d6424afbd9950afc0ab99595d1ff2a00250c23a9dbef"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/input_manifest.json": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/input_manifest.json",
+      "bytes": 21578,
+      "sha256": "118eba6af6f138a91a6499b27f3b056a2c3accaf3b3ab56d9792f13bc69e4173"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/integrity_overlay.json": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/integrity_overlay.json",
+      "bytes": 1730,
+      "sha256": "54a635b683af46e19a3d08c41ed33b790022eb05ad0d858336b923533f1c655b"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/route_csi_checked.tcl": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/route_csi_checked.tcl",
+      "bytes": 1140,
+      "sha256": "75134a485343c00443fc20c1819307f487c67ce2f1bb07f43b999699a30f405f"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/inspect_integrity.tcl": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/inspect_integrity.tcl",
+      "bytes": 90,
+      "sha256": "040bfbae2f99ae8f8ec928eab4aea05d595ed53043a3e367cbcacb47782b1578"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/bitgen_integrity.tcl": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/bitgen_integrity.tcl",
+      "bytes": 89,
+      "sha256": "c22a033cb933724daf4aea5a618846db7200d243ddc243b5ed9b4908fea19128"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/inspect_camera_ddr_display.tcl": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/inspect_camera_ddr_display.tcl",
+      "bytes": 876,
+      "sha256": "48d386d89ec66b05be2ec2f1895359144fe33a1f2ad875d5c03fa3bccf18e73b"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/bitgen_camera_ddr_display.tcl": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/bitgen_camera_ddr_display.tcl",
+      "bytes": 2421,
+      "sha256": "7999f5f75136f5c1aa893ad64737f3b861f666b26a3608a76cea07a94af21b31"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/synthesis_console.txt": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/build_console.log",
+      "bytes": 12608,
+      "sha256": "aa3dcd7113a3aeba1c5abe569b0bb3c10d8c7ee61308e81280fecfe6feeb7575"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/route_console.txt": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/route_console.log",
+      "bytes": 240059,
+      "sha256": "b402091a88b3516ec80563033aec06d9ae20276a86f7130745ff6daa19c4c99c"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/inspect_console.txt": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/inspect_console.log",
+      "bytes": 24781,
+      "sha256": "f1dc50237f19f9dccc65deed2da72371a780cf35b49c1929f69dfafa974bc141"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/bitgen_console.txt": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/bitgen_console.log",
+      "bytes": 24484,
+      "sha256": "e630abcfbbf4975171d052179a89482a64aca764fbccf55b3fe36f714fca95dc"
+    },
+    "docs/evidence/csi_frame_integrity_20261012/synthesis_run.txt": {
+      "source": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/camera_ddr_display_Runs/syn_1/run.log",
+      "bytes": 121446,
+      "sha256": "477f44134b195ae19ebe366ec46050172dadd0224c6c37c1ef0317397a63d0d9"
+    }
+  },
+  "rollback": {
+    "path": "D:/TD/work/csi2/prj/camera_csi_checked_20261012_142857/camera_ddr_display.bit",
+    "bytes": 5224033,
+    "sha256": "dd63fc84d394b133c1c4096676fb5fb260b6710598d357c796df7f026a920c78",
+    "hardware_evidence": "Initial user report: no anomaly, expected picture and LEDs; later same bit develops red/green sparkles near high-contrast edges after sustained power-on, clears after power off and wait. Stability NOT passed."
+  },
+  "unverified": [
+    "New candidate hardware operation",
+    "Exact live WC / OB / EBD / line-count and FS-FE identity contract",
+    "Continuous-HS back-to-back packets",
+    "Full-design CDC / reset timing / HDMI electrical margin",
+    "Full RAW10 addressing, stereo synchronization, compression, PCIe image DMA, RK end-to-end"
+  ],
+  "bit": {
+    "path": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/camera_ddr_display.bit",
+    "bytes": 5224033,
+    "sha256": "638e0690239466854440d7350083843ce5cb478e8a506e146ea78c1ba374f82d",
+    "downloaded": true,
+    "hardware_verified": false,
+    "download_evidence": "User feedback after candidate instructions; no independent identity readback"
+  },
+  "implementation": {
+    "td": "2026.1 SP2 (6.2.2.200067)",
+    "checkpoint": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_155843/csi_checked_debug_pr.db",
+    "checkpoint_sha256": "a3689f06e602e6dba66c5808d81cf93801858f7905855962b7de3f04479008bf",
+    "input_files_verified": 184,
+    "strategy": "TimingHigh; native place/route includes physical insert_debugger",
+    "setup_wns_ns": 0.004,
+    "hold_wns_ns": 0.02,
+    "setup_tns_ns": 0,
+    "hold_tns_ns": 0,
+    "period_wns_ns": 2.2,
+    "route_sta_coverage_percent": 97.76,
+    "reimport_sta_coverage_percent": 96.41,
+    "coverage_boundary": "Difference unresolved; no full-design STA/CDC or external electrical guarantee.",
+    "path_skew_constraints": 4,
+    "abnormal_endpoints": 0,
+    "lut6": 15019,
+    "slice_registers": 25363,
+    "slices": 21096,
+    "eram20k": 66,
+    "pll": 3,
+    "route_drc_warnings": [
+      "RTCLK-5078 cwc_jtck uses local routing resources",
+      "RTCLK-5079 CRITICAL-WARNING sys_clk50m_dup_1 uses local routing resources"
+    ],
+    "route_drc_source": "route_console.txt; requested separate DRC report was not emitted",
+    "manager_diagnostic": "PRJ-8806 after synthesis export; native gate import resumed physical flow without relaxing constraints"
+  },
+  "cdc": {
+    "fifo_q_boundaries": 108,
+    "same_bit_links": 72,
+    "numeric_functions": 72,
+    "negative_truth_table_rejected": true,
+    "common_reset_aliases": 4,
+    "origin_excerpt_cells": 14,
+    "new_capture_error_flag": "Source registered; two direct DDR-domain stages; expected clocks and common reset checked on routed netlist",
+    "limitations": "Not formal CDC, MTBF or recovery/removal proof."
+  },
+  "review": {
+    "critical": 0,
+    "important": 0,
+    "minor": "Real preview adapter integration coverage gap was found and supplemented with preview80/preview4800 runs.",
+    "conservative_drop_limit": "A later discarded frame abort can revoke a prior stalled valid footer; no bad frame published, later complete frame recovers.",
+    "declined_to_judge": [
+      "Live sensor geometry / FS-FE identity contract",
+      "continuous HS / ECC correction / full RAW capacity / B sync",
+      "hardware stability and colored sparkle root cause"
+    ]
+  },
+  "file_management": {
+    "policy": "No deletion. Source, small raw reports and manifests tracked; large TD DBs and local bit remain in D engineering directories.",
+    "earlier_diagnostics_retained": "Earlier smaller test matrices, one implicit-net compile failure and one overbroad netlist excerpt extraction interrupted; not canonical passing evidence."
+  },
+  "hardware_feedback": {
+    "candidate": "155843",
+    "source": "user report following candidate steps; no independent download identity readback",
+    "image": "absent",
+    "D37": "flashing",
+    "D38": "off",
+    "D39": "on",
+    "D40": "on",
+    "classification_counters": "not captured",
+    "accepted": false
+  },
+  "replacement_evidence": "docs/evidence/csi_frontend_drain_20261012.json"
+}

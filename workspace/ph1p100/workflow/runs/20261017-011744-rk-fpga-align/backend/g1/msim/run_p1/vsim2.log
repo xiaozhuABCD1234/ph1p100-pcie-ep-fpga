@@ -1,0 +1,100 @@
+# vsim -c -l vsim2.log -do "r.do" tb_ddr_frame_pusher_rka1 
+# Start time: 03:27:16 on Oct 17,2026
+# Loading work.tb_ddr_frame_pusher_rka1
+# Loading work.ddr_frame_pusher
+# do r.do
+# === PHASE0 reset defaults @400000
+# === PHASE1 legacy negative (no ARM) @712000
+# === PHASE2 ARM validation negatives @3912000
+# === PHASE3 one-shot + held + ACK @4512000
+#   DBG AXI burst addr=00100000 @4615000
+#   DBG AXI burst addr=00101000 @6075000
+# === PHASE4 cancel paths @20184000
+#   DBG AXI burst addr=00900000 @20375000
+#   DBG AXI burst addr=00901000 @21835000
+#   DBG AXI burst addr=00100000 @26025000
+#   DBG AXI burst addr=00101000 @27485000
+# === PHASE5 release protocol counting @35816000
+# === PHASE6 long TL stall + multi-frame production @39016000
+#   DBG AXI burst addr=00100000 @39115000
+#   DBG AXI burst addr=00101000 @40575000
+# === PHASE7 timeout (open packet completed, no doorbell) @111840000
+#   DBG AXI burst addr=00900000 @112265000
+#   DBG AXI burst addr=00901000 @113725000
+# === PHASE8 hard stall before first beat: hold + complete + drain @411592000
+#   DBG AXI burst addr=00100000 @411695000
+#   DBG AXI burst addr=00101000 @706205000
+#   DBG pkt=0 addr=00000002:00000000 beat=5 p_st=3 g_st=2 err=02 flush=1 tlp=0 @706232000
+# === PHASE9 ERAM source (src_sel=1) + fb_hold @711128000
+#   DBG pkt=0 addr=00000002:00000000 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=0 @712024000
+#   DBG pkt=1 addr=00000002:00000080 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=1 @712760000
+#   DBG pkt=2 addr=00000002:00000100 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=2 @713464000
+#   DBG pkt=3 addr=00000002:00000180 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=3 @714264000
+#   DBG pkt=4 addr=00000002:00000200 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=4 @715048000
+#   DBG pkt=5 addr=00000002:00000280 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=5 @715896000
+#   DBG pkt=6 addr=00000002:00000300 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=6 @716600000
+#   DBG pkt=7 addr=00000002:00000380 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=7 @717336000
+#   DBG pkt=8 addr=00000002:00000400 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=8 @718056000
+#   DBG pkt=9 addr=00000002:00000480 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=9 @718792000
+#   DBG pkt=10 addr=00000002:00000500 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=10 @719608000
+#   DBG pkt=11 addr=00000002:00000580 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=11 @720312000
+#   DBG pkt=12 addr=00000002:00000600 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=12 @721160000
+#   DBG pkt=13 addr=00000002:00000680 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=13 @721896000
+#   DBG pkt=14 addr=00000002:00000700 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=14 @722648000
+#   DBG pkt=15 addr=00000002:00000780 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=15 @723352000
+#   DBG pkt=16 addr=00000002:00000800 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=16 @724072000
+#   DBG pkt=17 addr=00000002:00000880 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=17 @724824000
+#   DBG pkt=18 addr=00000002:00000900 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=18 @725544000
+#   DBG pkt=19 addr=00000002:00000980 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=19 @726280000
+#   DBG pkt=20 addr=00000002:00000a00 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=20 @727096000
+#   DBG pkt=21 addr=00000002:00000a80 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=21 @727864000
+#   DBG pkt=22 addr=00000002:00000b00 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=22 @728616000
+#   DBG pkt=23 addr=00000002:00000b80 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=23 @729336000
+#   DBG pkt=24 addr=00000002:00000c00 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=24 @730040000
+#   DBG pkt=25 addr=00000002:00000c80 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=25 @730760000
+#   DBG pkt=26 addr=00000002:00000d00 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=26 @731480000
+#   DBG pkt=27 addr=00000002:00000d80 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=27 @732216000
+#   DBG pkt=28 addr=00000002:00000e00 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=28 @732920000
+#   DBG pkt=29 addr=00000002:00000e80 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=29 @733656000
+#   DBG pkt=30 addr=00000002:00000f00 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=30 @734408000
+#   DBG pkt=31 addr=00000002:00000f80 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=31 @735160000
+#   DBG pkt=32 addr=00000002:00001000 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=32 @735864000
+#   DBG pkt=33 addr=00000002:00001080 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=33 @736584000
+#   DBG pkt=34 addr=00000002:00001100 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=34 @737352000
+#   DBG pkt=35 addr=00000002:00001180 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=35 @738072000
+#   DBG pkt=36 addr=00000002:00001200 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=36 @738776000
+#   DBG pkt=37 addr=00000002:00001280 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=37 @739480000
+#   DBG pkt=38 addr=00000002:00001300 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=38 @740200000
+#   DBG pkt=39 addr=00000002:00001380 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=39 @741048000
+#   DBG pkt=40 addr=00000002:00001400 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=40 @741784000
+#   DBG pkt=41 addr=00000002:00001480 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=41 @742536000
+#   DBG pkt=42 addr=00000002:00001500 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=42 @743384000
+#   DBG pkt=43 addr=00000002:00001580 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=43 @744120000
+#   DBG pkt=44 addr=00000002:00001600 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=44 @744840000
+#   DBG pkt=45 addr=00000002:00001680 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=45 @745560000
+#   DBG pkt=46 addr=00000002:00001700 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=46 @746360000
+#   DBG pkt=47 addr=00000002:00001780 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=47 @747112000
+#   DBG pkt=48 addr=00000002:00001800 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=48 @747928000
+#   DBG pkt=49 addr=00000002:00001880 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=49 @748648000
+#   DBG pkt=50 addr=00000002:00001900 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=50 @749384000
+#   DBG pkt=51 addr=00000002:00001980 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=51 @750152000
+#   DBG pkt=52 addr=00000002:00001a00 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=52 @750952000
+#   DBG pkt=53 addr=00000002:00001a80 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=53 @751656000
+#   DBG pkt=54 addr=00000002:00001b00 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=54 @752408000
+#   DBG pkt=55 addr=00000002:00001b80 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=55 @753128000
+#   DBG pkt=56 addr=00000002:00001c00 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=56 @753896000
+#   DBG pkt=57 addr=00000002:00001c80 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=57 @754600000
+#   DBG pkt=58 addr=00000002:00001d00 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=58 @755416000
+#   DBG pkt=59 addr=00000002:00001d80 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=59 @756120000
+#   DBG pkt=60 addr=00000002:00001e00 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=60 @756824000
+#   DBG pkt=61 addr=00000002:00001e80 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=61 @757576000
+#   DBG pkt=62 addr=00000002:00001f00 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=62 @758392000
+#   DBG pkt=63 addr=00000002:00001f80 beat=5 p_st=3 g_st=2 err=00 flush=0 tlp=63 @759096000
+#   DBG pkt=64 addr=00000003:00000100 beat=1 p_st=2 g_st=2 err=00 flush=0 tlp=64 @759144000
+# === PHASE10 full 1080p dma_bytes length boundary @759232000
+#   ERROR #1 @3591592000 :                                                                 PHASE10: data TLP after doorbell
+# FAIL: 1 error(s)
+# ** Note: $finish    : R:/fpga/csi2/pcie_integration/sim/tb/tb_ddr_frame_pusher_rka1.v(766)
+#    Time: 3593224 ns  Iteration: 1  Instance: /tb_ddr_frame_pusher_rka1
+# End time: 03:27:20 on Oct 17,2026, Elapsed time: 0:00:04
+# Errors: 0, Warnings: 0

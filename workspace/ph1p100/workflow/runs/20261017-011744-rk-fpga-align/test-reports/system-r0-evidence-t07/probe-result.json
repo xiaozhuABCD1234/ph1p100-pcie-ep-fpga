@@ -1,0 +1,73 @@
+{
+  "probe": "tb_t07_src_release_probe",
+  "task": "T07.rk-align-backend",
+  "dimension": "system",
+  "round": 0,
+  "frozen_manifest_sha256": "EAFB77CEBE6E2767E11E6D81F8ABE550A2A14EF21AA1738C8AFDE6D4EF09E038",
+  "dut": "fpga/csi2/pcie_integration/rtl/ep_side/ddr/ddr_frame_pusher.v",
+  "dut_sha256": "ea1d612722572d4af56c604516562c013250f65f6d2d392433efebd956a02e42",
+  "dut_parameters_replicating_top": {
+    "BASE0": "0x00100000 (A path, ph1p_pcie_ep_top.v)",
+    "BASE1": "0x00900000 (A path, ph1p_pcie_ep_top.v)"
+  },
+  "compile": {
+    "entry": "local probe_run.ps1 (ASCII subst R:, same compile_checked.f as delivered entry)",
+    "without_suppression": "vlog error: vlog-2388 'p_skip_frm' already declared (cam_ddr_writer.v) -> Errors: 1, vlog exit!=0",
+    "with_suppression": "vlog -suppress 2388 -> compile OK, vsim exit 0"
+  },
+  "cases": [
+    {
+      "name": "A-path control",
+      "cam_sel": 0,
+      "ddr_base": "0x00100000",
+      "observed": {
+        "tlp_count": 64,
+        "held": true,
+        "st_err": 0,
+        "rel0_pulses_total": 2,
+        "note": "1 pass-release for the pre-ARM published frame + 1 ACK release for the claimed frame -> contract 'one release per published frame' holds"
+      }
+    },
+    {
+      "name": "B-path (camera B selected, top B block0 base)",
+      "cam_sel": 1,
+      "ddr_base": "0x01100000",
+      "observed": {
+        "tlp_count": 64,
+        "held": true,
+        "st_err": 0,
+        "rel0_pulses_total": 0,
+        "rel1_pulses_total": 0,
+        "note": "frame was claimed, pushed (64 MWr), completed and released from HELD by matching ACK, yet NO release was ever emitted for the source block"
+      }
+    }
+  ],
+  "root_cause_static": {
+    "ddr_frame_pusher.v": [
+      "par_valid = (ddr_base == BASE0) || (ddr_base == BASE1)  -- only matches camera-A bases for which BASE0/BASE1 params are given",
+      "claimed_par_v <= (!src_sel) && par_valid && push_en      -- 0 for camera-B bases => release suppressed on ACK/CANCEL",
+      "pass release also gated by par_valid                    -- no release for camera-B pass either"
+    ],
+    "ph1p_pcie_ep_top.v": [
+      "pusher BASE0/BASE1 = DDR_CAM_BASE0/DDR_CAM_BASE1 (A path 0x100000/0x900000); B path uses DDR_CAM_B_BASE0/B_BASE1 (0x110000/0x190000) via w_push_ddr_base mux",
+      "rel_tgl0/rel_tgl1 are SHARED by both cam_ddr_writer instances (no per-camera release channel)"
+    ],
+    "cam_ddr_writer.v": [
+      "protect0/protect1 set on publish when prot_en; cleared by rel0_evt/rel1_evt regardless of camera",
+      "=> camera-A releases clear camera-B protect bits (false release); camera-B own frames never clear them"
+    ]
+  },
+  "impact": [
+    "formal camera-B push path (CTRL bit8 / driver ARM_BITS_B=0x161) cannot rely on the documented ownership contract",
+    "baseline writer/pusher arbitration after B claim is not closed-loop: B block stays protected after ACK/CANCEL; B published frames may be overwritten while being claimed (A releases clear B protect)",
+    "change-report.md SS2 claim '每个发布帧给且只给一个 release / 每块一根 toggle => 读窗口与写窗口互斥' is not valid for the B source"
+  ],
+  "evidence_files": [
+    "tb_t07_src_release_probe.v",
+    "probe_run.ps1",
+    "probe_abs.f",
+    "probe-vlog.log",
+    "probe-vsim.log",
+    "probe-commands.log"
+  ]
+}

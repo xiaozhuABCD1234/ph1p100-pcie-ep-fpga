@@ -1,0 +1,41 @@
+{
+  "run_id": "20261017_162355_fpga_knowledge_book",
+  "task_id": "KB4",
+  "role": "fpga-dev",
+  "created_at": "2026-10-17",
+  "tool": "会话联网工具（webfetch 直取 + websearch 检索定位）；B 站条目为页面直取成功，另用 B 站公开 API（api.bilibili.com/x/web-interface/view?bvid=…）复核标题/UP 主/分段时长",
+  "schema_note": "字段：chapter/url/title_expected/title_returned/status/checked_at/proposed_state/note；status 取值=ok|mismatch|timeout|dead|unverifiable。unused 条目 chapter=\"unused\"。",
+  "summary": {
+    "attempted": 17,
+    "verified_pass": 17,
+    "failed_or_unverifiable": 0,
+    "entries_by_chapter": {"13": 5, "14": 5, "15": 5, "unused": 2, "total": 17},
+    "distinct_urls_used_in_tables": 15,
+    "table_rows_by_chapter": {"13": 5, "14": 5, "15": 5, "total_rows": 15},
+    "shared_rows_note": "本包三章资源表共 15 行=15 条不重复 URL，章内/章间无重复；与既有章（01–12）资源表亦无重复条目。",
+    "entries_note": "17 条 = 入表 15（全部“在线核验通过 2026-10-17”；分类=8 条维基页面直取＋2 条官方/中文文档直取（docs.opencv.org、opencv.org.cn）＋1 条博客园直取＋4 条 B 站（页面直取成功＋API 复核））＋未采用/未入表 2（网易公开课黑马程序员条目、CSDN 个人笔记条目：页面直取成功但未选入资源表，记录备查）。明细以 entries 列表为准。",
+    "bilibili_method_note": "本会话对 B 站条目均为页面级直取成功，并用公开 API 复核（UP 主/时长）：BV1Rg411j7D7≈1504s（悠落Tanee）；BV15Z4y1A7Gq 全集 36 讲、P9 灰度变换 2819s（大毛里求斯酋长）；BV1YA411K7pp 含 P20“4.1图像中的卷积”854s、P22“4.3高斯模糊”405s（有硬币就是土豪）；BV1cE411n7yG 含 P3“Histogram equalization”1198s（筷_拨）。故按规则登记为“在线核验通过”。",
+    "wikipedia_note": "8 条维基条目均为页面直取实抓（含公式与示例）：灰度/亮度（Grayscale、灰度图像、Luma (video)）、高斯/卷积（Gaussian blur、高斯模糊、卷积）、直方图均衡（Histogram equalization、直方图均衡化）。其中“灰度图像”经“灰階”路径重定向（按终局条目登记）。",
+    "docs_note": "OpenCV 英文官方教程为 4.13.0 版页面（Smoothing Images）；OpenCV 中文文档为 2.3.2 版社区翻译页（旧版，仅作中文入门，正文已含“拉伸直方图/equalizeHist”解释）；博客园条目为 2021-12 个人系列文（含 CLAHE 对照）。"
+  },
+  "entries": [
+    {"chapter": "13", "url": "https://en.wikipedia.org/wiki/Grayscale", "title_expected": "Grayscale（维基百科，英文）", "title_returned": "Grayscale - Wikipedia（含 Rec.601 Y′=0.299R′+0.587G′+0.114B′ 与 Rec.709 系数）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 13 章资源第 1 条（直取实抓；支撑 77/150/29 的系数来源表述）。"},
+    {"chapter": "13", "url": "https://zh.wikipedia.org/wiki/%E7%81%B0%E9%9A%8E", "title_expected": "灰度图像（维基百科，中文）", "title_returned": "灰度图像 - 维基百科，自由的百科全书（由“灰階”重定向）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 13 章资源第 2 条（直取实抓；按重定向终局条目登记；表中链接为终局条目直链）。"},
+    {"chapter": "13", "url": "https://en.wikipedia.org/wiki/Luma_(video)", "title_expected": "Luma (video)（维基百科，英文）", "title_returned": "Luma (video) - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 13 章资源第 3 条（直取实抓；含 601/709 luma 系数与“luma≠相对亮度”辨析）。"},
+    {"chapter": "13", "url": "https://www.bilibili.com/video/BV1Rg411j7D7/", "title_expected": "【HLS图像处理系列】Lab01_1 HLS 的简介与灰度转换（B站·悠落Tanee）", "title_returned": "【HLS图像处理系列】Lab01_1 HLS的简介与灰度转换（UP：悠落Tanee；2021-07-19；API 时长≈1504s）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 13 章资源第 4 条（页面直取成功＋API 复核；FPGA/HLS 平台做灰度转换的实拍）。"},
+    {"chapter": "13", "url": "https://www.bilibili.com/video/BV15Z4y1A7Gq/", "title_expected": "数字图像处理-电子科技大学（任获荣）36讲（B站·大毛里求斯酋长）", "title_returned": "数字图像处理-电子科技大学（任获荣）36讲（UP：大毛里求斯酋长；分节 P9 灰度变换 46:59、P7 直方图变换 36:59）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 13 章资源第 5 条（页面直取成功＋API 复核；高校课程 P9 对应本章主题）。"},
+    {"chapter": "14", "url": "https://en.wikipedia.org/wiki/Gaussian_blur", "title_expected": "Gaussian blur（维基百科，英文）", "title_returned": "Gaussian blur - Wikipedia（含二维高斯、可分离性、归一化与离散化）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 14 章资源第 1 条（直取实抓；支撑核/归一化/可分离表述）。"},
+    {"chapter": "14", "url": "https://zh.wikipedia.org/wiki/%E9%AB%98%E6%96%AF%E6%A8%A1%E7%B3%8A", "title_expected": "高斯模糊（维基百科，中文）", "title_returned": "高斯模糊 - 维基百科，自由的百科全书（含“边界上的点通常采用复制周围的点”一句）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 14 章资源第 2 条（直取实抓；中文速览）。"},
+    {"chapter": "14", "url": "https://zh.wikipedia.org/wiki/%E5%8D%B7%E7%A7%AF", "title_expected": "卷积（维基百科，中文）", "title_returned": "卷积 - 维基百科，自由的百科全书", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 14 章资源第 3 条（直取实抓；含“滑动平均的推广”表述）。"},
+    {"chapter": "14", "url": "https://www.bilibili.com/video/BV1YA411K7pp/", "title_expected": "极棒的数字图像处理入门到进阶教程：Python OpenCV 实战数图（B站·有硬币就是土豪）", "title_returned": "极棒的数字图像处理入门到进阶教程：Python OpenCV实战数图（UP：有硬币就是土豪；分节 P20 图像中的卷积 14:14、P22 高斯模糊 6:45）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 14 章资源第 4 条（页面直取成功＋API 复核；代码演示卷积与模糊对照）。"},
+    {"chapter": "14", "url": "https://docs.opencv.org/4.x/d4/d13/tutorial_py_filtering.html", "title_expected": "Smoothing Images（OpenCV Python 教程，官方文档）", "title_returned": "Smoothing Images — OpenCV 4.13.0 官方教程（filter2D/GaussianBlur 等）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 14 章资源第 5 条（直取实抓；官方示例与参数含义）。"},
+    {"chapter": "15", "url": "https://en.wikipedia.org/wiki/Histogram_equalization", "title_expected": "Histogram equalization（维基百科，英文）", "title_returned": "Histogram equalization - Wikipedia（含通用公式与 8×8 示例）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 15 章资源第 1 条（直取实抓；公式与优缺点）。"},
+    {"chapter": "15", "url": "https://zh.wikipedia.org/wiki/%E7%9B%B4%E6%96%B9%E5%9B%BE%E5%9D%87%E8%A1%A1%E5%8C%96", "title_expected": "直方图均衡化（维基百科，中文）", "title_returned": "直方图均衡化 - 维基百科，自由的百科全书（含 h(78)=182 手算示例）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 15 章资源第 2 条（直取实抓；示例可手算对核）。"},
+    {"chapter": "15", "url": "https://www.bilibili.com/video/BV1cE411n7yG/", "title_expected": "数字图像处理 Guillermo Sapiro 杜克大学 Image and Video Processing 第二周（B站·筷_拨）", "title_returned": "【720P cc字幕】数字图像处理 Guillermo Sapiro 杜克大学Image and Video Processing 第二周（UP：筷_拨；分节 3 Histogram equalization 19:58）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 15 章资源第 3 条（页面直取成功＋API 复核；公开课推导 HE）。"},
+    {"chapter": "15", "url": "https://www.opencv.org.cn/opencvdoc/2.3.2/html/doc/tutorials/imgproc/histograms/histogram_equalization/histogram_equalization.html", "title_expected": "直方图均衡化（OpenCV 中文文档，2.3.2 版）", "title_returned": "直方图均衡化 — OpenCV 2.3.2 documentation（社区中文翻译；含“拉伸”解释与 equalizeHist 例程）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 15 章资源第 4 条（直取实抓；旧版中文文档，仅作入门）。"},
+    {"chapter": "15", "url": "https://www.cnblogs.com/wuyuan2011woaini/p/15656881.html", "title_expected": "OpenCV-Python 系列之直方图均衡（博客园）", "title_returned": "OpenCV-Python系列之直方图均衡 - qiaokuankuan - 博客园（2021-12-07）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 15 章资源第 5 条（直取实抓；灰度/彩色/YUV 与 CLAHE 对照）。"},
+    {"chapter": "unused", "url": "https://www.163.com/opencourse/detail/video-ZHM410TG9-XIAMLTU09", "title_expected": "黑马程序员 10 小时学会图像处理 OpenCV：37 直方图均衡化（网易公开课，候选）", "title_returned": "黑马程序员人工智能教程_10小时学会图像处理OpenCV入门教程 30.3.4 直方图均衡化（分节 37 直方图均衡化 05:34）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "未采用（候选备查）", "note": "第 15 章候选：页面直取成功且标题一致；因同主题已有 B 站公开课＋官方文档条目、本包每章 5 条上限未入表，记录备查。"},
+    {"chapter": "unused", "url": "https://blog.csdn.net/liandanba/article/details/122710013", "title_expected": "【个人笔记】OpenCV4 C++ 快速入门 26课（CSDN，候选）", "title_returned": "【个人笔记】OpenCV4 C++ 快速入门 26课_【个人笔记 - 目录】opencv c++ 快速入门 30讲-CSDN博客", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "未采用（候选备查）", "note": "第 15 章候选：页面直取成功；个人笔记型内容与已入表的博客园/官方文档同主题，未入表（备查）。"}
+  ],
+  "integrity_statement": "以上状态均来自本会话实际请求结果（2026-10-17）：入表 15 条全部为直取实抓（8 条维基＋2 条 OpenCV 文档＋1 条博客园＋4 条 B 站页面直取并附公开 API 复核）；未采用 2 条如实登记（页面直取成功、因主题重复/条目上限未入表）。未以检索结果标题冒充“在线核验通过”；B 站条目本会话页面级直取成功，故按规则登记为“在线核验通过”。核验为 2026-10-17 时间点快照。"
+}

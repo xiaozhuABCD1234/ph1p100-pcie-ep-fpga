@@ -1,0 +1,224 @@
+{
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "project_root": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+  "output_dir": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop",
+  "task_ids": [
+    "T10.a1-g2-2cyc"
+  ],
+  "package_id": "T10.a1-g2-2cyc",
+  "round": "r1",
+  "revision": "r1",
+  "continuation_of": "T10.a1-g2-2cyc r0-c (same package; first repair of the C-lite package, not P4 r11)",
+  "batch_size": 1,
+  "status": "finished",
+  "needs_user_input": false,
+  "result": {
+    "verdict": "blocked",
+    "g1": "PASS: P2 13/13, P3 20/20, 0 mismatch, vlog 0/0; 33 cases stream SHA/cycles identical to r10; 1080p 4,677,945 cycles; P2 comp 81.067 MB/s",
+    "g2": "synth SWNS +0.134 ns, STNS 0.000; route FAIL PHY-9053 slice 83072 > 71680; synth slice 72904/71680; ERAM 4/300; not Routed",
+    "decision": "r1 blocked by capacity; T10.a1-area-map r0 dispatched"
+  },
+  "operation": "spawn_agent",
+  "authorization": {
+    "quote": "同意 C-lite",
+    "date": "2026-10-22",
+    "type": "explicit_user_authorization_plus_current_freeze_request",
+    "basis": "用户已明确同意 C-lite，并在 r0-c 结果后要求裁决是否冻结 r1 = 2 会话/60 min（综合 ≤2、布线 ≤1）；当前只差 0.156 ns，修法确定且局部。规划批准 r1，视为对 C-lite 收口预算的授权。",
+    "round_accounting": "T10.a1-g2-2cyc r0/r0-c = first acceptance; r1 = first repair round of this package. T10.a1-eng-freeze remains r10 FAIL/⚠; P4 count is not reset.",
+    "limits_frozen_here": {
+      "td_sessions_max": 2,
+      "td_session_minutes_max": 60,
+      "td_total_minutes_max": 60,
+      "td_synth_attempts_max": 2,
+      "td_route_attempts_max": 1
+    },
+    "not_authorized": [
+      "A route (150 MHz + CDC/PLL/async FIFO)",
+      "C-full new match/hash microarchitecture",
+      "lowering 187.5 MHz or relaxing 5.333 ns",
+      "false path / multicycle / clock-group exceptions",
+      "seed sweep or blind re-run",
+      "bitgen / download / Flash / production integration",
+      "C / RK / PCIe / dual-camera / G4",
+      "protocol/port/frame semantics/CRC/length/abort/Bayer changes",
+      "changes outside a1_deflate_core.v lim2/s1_ok/htab address select",
+      "automatic r2"
+    ]
+  },
+  "r0c_state": {
+    "g1": "P2 13/13, P3 20/20, 0 mismatch, vlog 0/0; 13+20 stream SHA/run_cycles identical to r10; 1080p 4,677,945 cycles; P2 comp 81.067 MB/s",
+    "g2": "S3 WNS -0.156 ns, TNS -10.977 ns, 92/149,031 endpoints; 3/3 synthesis, 0/1 route; no rout/CDC/bit",
+    "critical_path": "s1_pos_r[4] -> s1_pos_r+2<blk_n (s1_ok) -> bypass select -> htab_rd_addr (fanout 1042) -> storage -> htab_rdata/htab_rvalid, 5.425 ns / 7 levels",
+    "candidate": {
+      "a1_deflate_core.v": "e3484a6072bd0fd9a3f82e15920b203f880363348436a0bcf257ede96f960aee",
+      "a1_frame_top.v": "18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+      "a1_small_top.sdc": "227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311",
+      "manifest": "T10.a1-g2-2cyc/CANDIDATE-MANIFEST-g2-2cyc.json"
+    },
+    "note": "S2 and S3 have identical core RTL (e3484a60); S2 -0.092 vs S3 -0.156 is synthesis-solution variance (S3 wall 24.3 min vs S2 8.1 min). r0-c frame_top dq_r path is gone."
+  },
+  "technical_scope": {
+    "primary": "Remove the 13-bit adder from s1_ok: precompute lim2 = blk_n - 2 in S_WAIT/block load, then s1_ok = (s1_pos_r <= lim2). Optionally remove s1_ok from the same-address bypass select (bypass uses address equality + registered hins_ok_r; insertion remains gated by s1_ok).",
+    "allowed_changes": [
+      "a1_deflate_core.v only: lim2 register, s1_ok comparison, htab address/bypass select.",
+      "No frame_top/SDC changes; no protocol/port/frame/CRC/length/abort/Bayer changes."
+    ],
+    "throughput_red_line": {
+      "average_cycles_per_byte_max": 2.4113,
+      "1080p_cycles_max": 6250000,
+      "target_97_2_cycles_max": 5000000,
+      "p2_comp_min_MBps": 77.76,
+      "current_cycles": 4677945,
+      "rule": "Measure actual cycles; if >6,250,000, stop. No correctness or protocol trade."
+    },
+    "invariants": [
+      "No change to protocol, ports, frame commit, raw/xform/stream length, CRC, abort, Bayer mapping, zlib/fixed/stored format, SDC.",
+      "Full-frame P3 must prove block boundaries, backpressure, abort/reset, stored fallback and A/B semantics unchanged.",
+      "Stream SHA/run_cycles must remain equivalent to r10/r0-c for the 1080p p1d1 case."
+    ]
+  },
+  "gates": {
+    "g1": {
+      "p2": "13/13 PASS",
+      "p3": "20/20 PASS",
+      "mismatch": 0,
+      "vlog": "Errors 0 / Warnings 0",
+      "p2_comp_min_MBps": 77.76,
+      "1080p_cycles_max": 6250000,
+      "target_97_2_cycles_max": 5000000,
+      "stream_sha": "equivalent to r10/r0-c 1080p p1d1; 0 mismatch",
+      "behavior_unchanged": "1080p p1d1/p1d2, stored, abort/reset, A/B frame semantics unchanged"
+    },
+    "g2_synth": {
+      "top": "a1_eng_top",
+      "device": "PH1P100SBG484 -3",
+      "clock_MHz": 187.5,
+      "period_ns": 5.333,
+      "wns_ns_min": 0.0,
+      "tns_ns_min": 0.0,
+      "violating_endpoints": 0,
+      "sdc_changed": false,
+      "false_path_or_multicycle": false
+    },
+    "g2_routed": {
+      "status": "Routed",
+      "wns_ns_min": 0.0,
+      "tns_ns_min": 0.0,
+      "hwns_ns_min": 0.0,
+      "htns_ns_min": 0.0,
+      "violating_endpoints": 0,
+      "resources": "within PH1P100SBG484",
+      "cdc_report": "report_cdc executed; no unsynchronized CDC; single-clock structure confirmed",
+      "bitgen": "not_run"
+    },
+    "forbidden_substitutions": [
+      "lowering clock frequency or relaxing the 5.333 ns constraint",
+      "false_path / multicycle / set_clock_groups exceptions",
+      "changing seed and re-running without a concrete RTL change",
+      "bitgen, download, Flash, efuse, SPI, svf",
+      "claiming G2 PASS from synthesis-only or unrouted results",
+      "using G0/G1 PASS to claim T10 complete",
+      "A route (150 MHz + CDC/PLL/async FIFO) or any package bypass",
+      "protocol/port/frame/CRC/length/abort/Bayer/SDC changes"
+    ]
+  },
+  "td_budget": {
+    "sessions": 2,
+    "session_minutes_max": 60,
+    "total_minutes_max": 60,
+    "synth_attempts_max": 2,
+    "route_attempts_max": 1,
+    "route_minutes_max": 50,
+    "used_before_r1": "3/3 synth, 0/1 route, ~38.8 min in r0/r0-c; r1 is a new round budget",
+    "why": "Only 0.156 ns remains and the fix removes a ~1.6 ns adder; 2 synth attempts cover solution variance; one route. Total 60 min keeps the round bounded.",
+    "no_seed_sweep": true,
+    "no_clock_change": true
+  },
+  "stop_conditions": [
+    "P2/P3 any mismatch, X, illegal BTYPE, or vlog warning -> stop before TD.",
+    "1080p cycles >6,250,000 or P2 comp <77.76 -> stop; do not enter TD.",
+    "Any needed change outside a1_deflate_core.v lim2/s1_ok/htab address select -> stop and return to planner.",
+    "S1 synthesis WNS<0 or TNS<0 -> do not route; at most one concrete retry S2 within the 2-synth cap.",
+    "S2 synthesis still WNS<0 or TNS<0 -> stop; no third synthesis.",
+    "Synthesis WNS>=0 -> route once in that session; route must finish within 50 min and the 60 min total.",
+    "Route not Routed, routed WNS/TNS<0, any violating endpoint, resource overflow, or CDC unsynchronized -> stop; no route retry.",
+    "After r1, if G2 fails -> keep blocked; NO r2 automation; return to planner/user.",
+    "No A route, no C-full, no bitgen/download, no false path/multicycle/seed sweep."
+  ],
+  "execution_limits": {
+    "batch_size": 1,
+    "dev_tool_calls_max": 40,
+    "dev_minutes_max": 60,
+    "tester_tool_calls_max": 30,
+    "tester_minutes_max": 45,
+    "planner_tool_calls_max": 30,
+    "planner_minutes_max": 15,
+    "read_search_seconds_max": 60,
+    "single_tb_minutes_max": 5,
+    "package_regression_minutes_max": 15,
+    "td_sessions_max": 2,
+    "td_session_minutes_max": 60,
+    "td_synth_attempts_max": 2,
+    "td_route_attempts_max": 1,
+    "td_route_minutes_max": 50,
+    "td_total_minutes_max": 60,
+    "retry_policy": "one concrete retry only; no seed sweep; no third synthesis"
+  },
+  "after_development": {
+    "sequence": [
+      "dev ready_for_test + frozen r1 manifest -> spawn_single_tester (same package tester contract, new session)",
+      "tester integrated verdict -> return_to_planner",
+      "dev blocked at P2/P3, cycles, synth, or route -> return_to_planner, no tester",
+      "r1 fail -> blocked; no r2; A/C only by explicit user decision"
+    ],
+    "rules": [
+      "New development session and new independent tester session; do not reuse P4 sessions.",
+      "Tester writes test-reports/T10.a1-g2-2cyc-r1-integrated.md with one unique verdict heading.",
+      "All G1/G2 evidence binds to the r1 manifest.",
+      "Tester independently re-runs P2/P3 and parses raw TD reports/hashes.",
+      "G2 PASS requires Routed with WNS/TNS>=0; synthesis-only cannot PASS."
+    ]
+  },
+  "write_scope": {
+    "modify_existing_run_owned": [
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v"
+    ],
+    "locked": [
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v (18d51b1b...1cbe)",
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_small_top.sdc (227dd39e...6311)"
+    ],
+    "create_new": [
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/** (new helper files only, if strictly needed)",
+      "upstream/ph1p100-pcie-ep-fpga/sim/tb/codec/**",
+      "upstream/ph1p100-pcie-ep-fpga/tools/codec/**",
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-g2-2cyc/r1/**"
+    ],
+    "td_project_dir": "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-g2-2cyc/r1/td/**",
+    "rules": [
+      "Only core lim2/s1_ok/htab address select may change; frame_top/SDC locked.",
+      "No protocol/port/frame semantics/CRC/length/abort/Bayer changes.",
+      "Never edit ph1p_pcie_ep_top.al, build.tcl, sim/compile_checked.f, constraints/, existing TB, production RTL.",
+      "TD artifacts stay under r1; never overwrite r0/r0-c manifests or reports."
+    ]
+  },
+  "protected": [
+    "all existing files outside a1_deflate_core.v and the allowed new directories",
+    "a1_frame_top.v 18d51b1b...1cbe and SDC 227dd39e...6311 (locked)",
+    "workflow/tasks.json",
+    "old runs/manifests/bit/CWC, production candidate b68c6e18…f9bf",
+    "board, Flash, PCIe/RK, camera configuration"
+  ],
+  "input_paths": [
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/dev-plan.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/handoff.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-g2-2cyc/p4/result-r0.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-g2-2cyc/r0/td/syn_gate_timing_s3.rpt",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-g2-2cyc/CANDIDATE-MANIFEST-g2-2cyc.json",
+    "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v",
+    "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v",
+    ".agents/skills/fpga-dev/SKILL.md",
+    ".agents/skills/fpga-tester/SKILL.md"
+  ],
+  "question_path": null,
+  "user_summary_path": "workflow/runs/20261020-0209_singleA_aplus_closedloop/user-summary.md"
+}

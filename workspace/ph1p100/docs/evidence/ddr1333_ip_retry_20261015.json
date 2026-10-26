@@ -1,0 +1,244 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-10-15T20:53:43.170115",
+  "status": "awaiting_manual_gui_entry",
+  "deliverable": false,
+  "retry_directory": "D:\\TD\\work\\csi2\\_validation\\iptool_retry_20261015_183510",
+  "manual_kit_directory": "D:\\TD\\work\\csi2\\_validation\\ddr1333_ip_20261015_190248",
+  "prepared_inputs_sha_verified": 197,
+  "preparation_manifest_sha256": "a94f894870c2c065c316c2679d64bdc5b48622ca751bc8cba77ad9224679bd64",
+  "installed_depot_unchanged": true,
+  "diagnostic": {
+    "initial_source_error": "Output filename construction was wrong in the first diagnostic Tcl; corrected, original evidence retained. Exit zero alone did not mean source succeeded.",
+    "corrected_tcl_probe_accepted": true,
+    "trace_enter_and_exit_verified": true,
+    "registered_generation_command": "create_dialog; no generate_ipinst found in active interpreter",
+    "help_verified": "GENERATION_COMMANDS {} PARAM_COMMANDS {set_param_value set_param_enable add_param report_params set_param}\ncreate_dialog 0 {The help info of create_dialog.\n\tcreate_dialog     //  To create the IP setting dialog then generate the IP instance.\n\t  -xml              //  To specify the XML file that contains the parameter info.\n\t  -gui_tcl          //  To specify the TCL file that contains the GUI layout info.\n}\ncreate_iplib 0 {The help info of create_iplib.\n\tcreate_iplib     //  To create a new IP library.\n\t  -path            //  To specify the library path;\n\t  -name          //  To specify the library name.\n}\nopen_iplib 0 {The help info of open_iplib.\n\topen_iplib         //  To open an existing IP library.\n\t    -path            //  To specify the directory of the IP library.\n}\nimport_ip 0 {The help info of import_ip.\n\timport_ip       //  To insert the IP core at specified path into current IP library.\n\t    -path         //  To specify the IP core path.\n}\ninfo_ip 0 {The help info of info_ip.\n\tinfo_ip           //  To show the detail info of specified IP core.\n\t  -vlnv           //  To specify the VLNV of the IP core.\n}\n"
+  },
+  "generation_attempts": [
+    {
+      "argv": [
+        "D:/downlaod/bin/IpTool.exe",
+        "D:/downlaod",
+        "-tcl",
+        "-user",
+        "D:/TD/work/csi2/_validation/ddr1333_ip_20261015_165740/source/ddrmc_x32/ddrmc_x32.xml",
+        "-gen",
+        "D:/TD/work/csi2/_validation/ddr1333_ip_20261015_165740/depot/Component.xml",
+        "-device",
+        "PH1P100SBG484",
+        "-export_to",
+        "D:/TD/work/csi2/_validation/ddr1333_ip_20261015_165740/output",
+        "-comp",
+        "ddrmc_1333",
+        "-use_value",
+        "copy"
+      ],
+      "pid": 40316,
+      "started": "2026-10-15T18:41:41.925234",
+      "timeout_seconds": 60,
+      "single_variable": "Add confirmed -tcl mode to previous copy-generation invocation",
+      "exit_code": 1,
+      "timed_out": false,
+      "ended": "2026-10-15T18:41:42.196256"
+    },
+    {
+      "argv": [
+        "D:/downlaod/bin/IpTool.exe",
+        "D:/downlaod",
+        "-tcl",
+        "-qcerr",
+        "-user",
+        "D:/TD/work/csi2/_validation/ddr1333_ip_20261015_165740/source/ddrmc_x32/ddrmc_x32.xml",
+        "-gen",
+        "D:/TD/work/csi2/_validation/ddr1333_ip_20261015_165740/depot/Component.xml",
+        "-device",
+        "PH1P100SBG484",
+        "-export_to",
+        "D:/TD/work/csi2/_validation/ddr1333_ip_20261015_165740/output",
+        "-comp",
+        "ddrmc_1333",
+        "-use_value",
+        "copy"
+      ],
+      "pid": 38744,
+      "started": "2026-10-15T18:44:18.324929",
+      "timeout_seconds": 20,
+      "purpose": "Enable executable qcerr diagnostic on natural-exit failure",
+      "exit_code": 1,
+      "timed_out": true,
+      "ended": "2026-10-15T18:44:38.346230"
+    }
+  ],
+  "manual_preflight": {
+    "prepared_inputs_sha_verified": 197,
+    "binding_positive_with_separate_trace": true,
+    "binding_negative_rejected": [
+      "Private generator binding mismatch; stop before generation",
+      "Private export path mismatch; stop before generation",
+      "Private component name mismatch; expected ddrmc_1333"
+    ],
+    "retention_file_directory_collision_passed": true,
+    "retention_root_outside_rejected": true,
+    "actual_gui_marker_absent": true,
+    "visible_gui_launched": false,
+    "generated_ip": false,
+    "deleted_files": false
+  },
+  "actual_gui_marker_absent": true,
+  "gui_launched": false,
+  "gui_entry_verified": false,
+  "output_files": 0,
+  "generated_ip": false,
+  "generated_bit": false,
+  "hardware_download": false,
+  "artifacts": {
+    "retry/diagnostic.tcl": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\iptool_retry_20261015_183510\\diagnostic.tcl",
+      "sha256": "5719c40d0c7a162b42388b779cf8b695f6c832cf90613f1d3ac32577c2f530c1",
+      "bytes": 372
+    },
+    "retry/diagnostic_trace.log": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\iptool_retry_20261015_183510\\diagnostic_trace.log",
+      "sha256": "85335599763ca4408cef4b0b54c102460e29dc86a8b0f13d3d6d473f5e0fed83",
+      "bytes": 333
+    },
+    "retry/diagnostic_v2.tcl": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\iptool_retry_20261015_183510\\diagnostic_v2.tcl",
+      "sha256": "4ce2cb5b4e28c5b01fbe87b0037f5c90289bc433b7b5cbbbd460bae24f07ae78",
+      "bytes": 398
+    },
+    "retry/execution.json": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\iptool_retry_20261015_183510\\execution.json",
+      "sha256": "746c8bd247a9f41a54c299421cee669c2a3eff8572caa837a87b45ab8fe5e3e1",
+      "bytes": 424
+    },
+    "retry/execution_v2.json": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\iptool_retry_20261015_183510\\execution_v2.json",
+      "sha256": "9f23818699db6726407b75737791d244c6c71887429ab9e1f13eed492a4fbacc",
+      "bytes": 361
+    },
+    "retry/generation_execution.json": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\iptool_retry_20261015_183510\\generation_execution.json",
+      "sha256": "182d294d9f82e8cd311109d8fb16ea6ce70877118c45e5d0253fd7f035074db0",
+      "bytes": 746
+    },
+    "retry/generation_stderr.log": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\iptool_retry_20261015_183510\\generation_stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "retry/generation_stdout.log": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\iptool_retry_20261015_183510\\generation_stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "retry/help_commands.log": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\iptool_retry_20261015_183510\\help_commands.log",
+      "sha256": "23be1c126fe564af8823b3cf5ea6e834296279ae766b71c7911328e83d357184",
+      "bytes": 1156
+    },
+    "retry/help_commands.tcl": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\iptool_retry_20261015_183510\\help_commands.tcl",
+      "sha256": "75a1d16625f2a1eb3b0ebf7d7b11f4979c3601a79685aa31fa1f2855f5d6fe1b",
+      "bytes": 367
+    },
+    "retry/help_execution.json": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\iptool_retry_20261015_183510\\help_execution.json",
+      "sha256": "087f4ef436e035fa524a111e484e18db96d2c0a51ca2226c4258f8aa4395a8da",
+      "bytes": 257
+    },
+    "retry/qcerr_execution.json": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\iptool_retry_20261015_183510\\qcerr_execution.json",
+      "sha256": "756b96e95918d06a24cc83b1d6540543ea4180a1a696d1e61d95eda774e85f38",
+      "bytes": 748
+    },
+    "retry/qcerr_stderr.log": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\iptool_retry_20261015_183510\\qcerr_stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "retry/qcerr_stdout.log": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\iptool_retry_20261015_183510\\qcerr_stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "retry/stderr.log": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\iptool_retry_20261015_183510\\stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "retry/stderr_v2.log": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\iptool_retry_20261015_183510\\stderr_v2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "retry/stdout.log": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\iptool_retry_20261015_183510\\stdout.log",
+      "sha256": "d6b3e23c1af670fda158e4780e3871a07c61eb2f311220af007db57d3a5f2b46",
+      "bytes": 145
+    },
+    "retry/stdout_v2.log": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\iptool_retry_20261015_183510\\stdout_v2.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "manual_kit/preparation.json": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr1333_ip_20261015_190248\\preparation.json",
+      "sha256": "a3cc9172286ce11e77c26849e0b73e2698378a51bfbefe8e3f5ec4ff445ae55e",
+      "bytes": 9424
+    },
+    "manual_kit/preparation_manifest.json": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr1333_ip_20261015_190248\\preparation_manifest.json",
+      "sha256": "a94f894870c2c065c316c2679d64bdc5b48622ca751bc8cba77ad9224679bd64",
+      "bytes": 26143
+    },
+    "manual_kit/manual_kit_preflight.json": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr1333_ip_20261015_190248\\manual_kit_preflight.json",
+      "sha256": "269c33af71c3ba3d49287ad791fd2dbda8abb024a9cb2c40b4a47cdee5b5b77c",
+      "bytes": 544
+    },
+    "manual_kit/manual_binding_guard.tcl": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr1333_ip_20261015_190248\\manual_binding_guard.tcl",
+      "sha256": "5ec51a75153dfa0cb9f7562877fa2c4f19e62b742109e221002c4cbe40a0e35d",
+      "bytes": 1136
+    },
+    "manual_kit/retain_ip_path.tcl": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr1333_ip_20261015_190248\\retain_ip_path.tcl",
+      "sha256": "9b151bee0f0f58cda124f95df7935c01f63be8bd166d8b94f21fec09a1c26fa6",
+      "bytes": 2128
+    },
+    "manual_kit/open_ddr1333_gui.cmd": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr1333_ip_20261015_190248\\open_ddr1333_gui.cmd",
+      "sha256": "4a140ab27b1fddd4604c07103bf302a4120ea551a39b7e71ffc932200a635f90",
+      "bytes": 438
+    },
+    "manual_kit/frozen_prepare_ddr1333_ip.py": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr1333_ip_20261015_190248\\frozen_prepare_ddr1333_ip.py",
+      "sha256": "81b4f29ac55ea4ef49a36676711493505323c0ffaea871891afc6951295c953c",
+      "bytes": 10020
+    }
+  },
+  "review_status": "independent static review passed; root integrity and negative controls passed; interactive GUI/complete generation still not verified",
+  "limits": [
+    "Only Tcl diagnostic entry is demonstrated.",
+    "Interactive launcher is prepared but has not been observed opening a GUI.",
+    "GUI must show expected private depot/output/name marker and final parameter values before Generate.",
+    "Generated IP must pass full integration checks before any bitstream delivery."
+  ],
+  "independent_review": {
+    "reviewer": "timing_ready_review",
+    "input_sha_count": 197,
+    "installed_depot_unchanged": true,
+    "active_delete_calls_remaining": false,
+    "component_name_guard": "ddrmc_1333 only",
+    "launcher_matches_record": true,
+    "actual_gui_marker_absent": true,
+    "output_files": 0,
+    "documentation_corrections": [
+      "Private Dependency references 245/843/886",
+      "IPUG034 PDF47 output files; PDF48 old-IP upgrade errors"
+    ],
+    "gui_executed": false
+  }
+}

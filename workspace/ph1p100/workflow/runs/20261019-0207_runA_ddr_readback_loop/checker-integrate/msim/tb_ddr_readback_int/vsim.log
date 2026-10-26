@@ -1,0 +1,60 @@
+# vsim -c -l vsim.log -do "run.do" tb_ddr_readback_int 
+# Start time: 14:06:47 on Oct 19,2026
+# Loading work.tb_ddr_readback_int
+# Loading work.ddr_readback_int
+# Loading work.ddr_frame_readback_checker
+# Loading work.ep_bar_win
+# do run.do
+# === A) 首帧自动校验（base=0x00100000, P=64）===
+# ok: A word9  status  = 0000003e
+# ok: A word10 words   = 00000400
+# ok: A word11 hdr_crc = 19be1028
+# ok: A word12 pay_crc = df0eee82
+# ok: A word13 runs    = 00000001
+# ok: A word14 smp1    = 5a5a1234
+# ok: A word15 smp2    = df0eee82
+# === B) base 变化 → 第二次校验读新区域 ===
+# ok: B word9  status  = 0000003e
+# ok: B word11 hdr_crc = 19be1028
+# ok: B word12 pay_crc = df0eee82
+# ok: B word13 runs    = 00000002
+# === C) 载荷 CRC 破坏 → payload_crc_ok=0 / err_code=3 ===
+# ok: C word9  status  = 0000032e
+# ok: C word10 words   = 00000400
+# ok: C word13 runs    = 00000003
+# === D) busy 重入（长帧 16384B 期间再发布 → 丢弃，不重启）===
+# ok: D word9  status  = 0000003e
+# ok: D word10 words   = 00001000
+# ok: D word13 runs    = 00000004
+# ok: D2 word9 status  = 0000003e
+# ok: D2 word13 runs   = 00000005
+# === E) 读仲裁（pusher 桩连续 64 次读 + checker 并发）===
+# ok: E pusher ok       = 00000040
+# ok: E pusher bad      = 00000000
+# ok: E word9  status   = 0000003e
+# ok: E word13 runs     = 00000006
+# ok: AR 计数 chk_ars=9 push_ars=64
+# === F) dbg 字库 word9..15 / 既有字不变 / DBG-off ===
+# ok: F w9  mirror  = 0000003e
+# ok: F w10 mirror  = 00000400
+# ok: F w11 mirror  = 12345678
+# ok: F w12 mirror  = 89abcdef
+# ok: F w13 mirror  = 00000007
+# ok: F w14 mirror  = cafe0001
+# ok: F w15 mirror  = cafe0002
+# ok: F old w0 MAGIC = 50434946
+# ok: F old w3 seq  = 00000007
+# ok: F old w4 base = 00100000
+# ok: F old w5 len  = 00279000
+# ok: F old w6 csi  = a1b2c3d4
+# ok: F prod w9 dead = deadbeef
+# ok: F prod w15 dead = deadbeef
+# ok: F mark w0     = 50434946
+# ok: F mark w9     = 0000003e
+# ok: F mark w15    = cafe0002
+# *** ALL PASS ***
+# tb_ddr_readback_int done
+# ** Note: $finish    : S:/sim/tb/tb_ddr_readback_int.v(536)
+#    Time: 107416 ns  Iteration: 1  Instance: /tb_ddr_readback_int
+# End time: 14:06:48 on Oct 19,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0

@@ -1,0 +1,586 @@
+============================================================
+   TD Release_2026.2
+   Copyright (c) 2012-2026 Anlogic Inc.
+   Executable = D:/anlogic/TD_Release_2026.2/bin/td_commands_prompt.exe
+   Build number = 6.2.3.210850
+   Built at =   11:35:58 Aug 19 2026
+   Run by =     czz
+   Run Date =   Mon Oct 19 19:14:27 2026
+
+   Run on =     LAPTOP-HE7N8DN4
+============================================================
+RUN-1002 : start command "create_project ph1p_pcie_integration ./ -family PH1 -device PH1P100SBG484 -speed 3 -force"
+PRJ-1005 : Command create_project success.
+RUN-1002 : start command "import_device ph1_100p.db -package PH1P100SBG484"
+RUN-1001 : Using default speed grade: 3
+ARC-1001 : Device Initialization.
+ARC-1001 : -------------------------------------------------------------
+ARC-1001 :           OPTION          |         IO         |   SETTING   
+ARC-1001 : -------------------------------------------------------------
+ARC-1001 :   non_jtag_persist(none)  |       35 IOs       |    gpio    
+ARC-1001 :            jtag           |  /V12/T13/R13/U13  |  dedicate  
+ARC-1001 : -------------------------------------------------------------
+RUN-1003 : finish command "import_device ph1_100p.db -package PH1P100SBG484" in  2.037516s wall, 1.562500s user + 0.187500s system = 1.750000s CPU (85.9%)
+
+RUN-1004 : used memory is 341 MB, reserved memory is 326 MB, peak memory is 374 MB
+RUN-1002 : start command "open_project ph1p_pcie_integration.al"
+PRJ-7003 CRITICAL-WARNING: Device speed "3" is invalid for PH1P100SBG484, auto change to default speed "-3".
+RUN-1002 : start command "commit_param -step design"
+RUN-1001 : Print Global Property
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :     Parameters    |   Settings   |  Default Values  |  Note  
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :    enable_seed    |     off      |       off        |        
+RUN-1001 :    hfn_to_clock   |  1000000000  |    1000000000    |        
+RUN-1001 :      message      |   standard   |     standard     |        
+RUN-1001 :    qor_monitor    |      on      |        on        |        
+RUN-1001 :   speedup_effort  |      0       |        0         |        
+RUN-1001 :    syn_ip_flow    |     off      |       off        |        
+RUN-1001 :       thread      |     auto     |       auto       |        
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 : Print Design Property
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :       Parameters       |  Settings  |  Default Values  |  Note  
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :   default_reg_initial  |    auto    |       auto       |        
+RUN-1001 :    hdl_warning_level   |   normal   |      normal      |        
+RUN-1001 :      tcl_afterstep     |            |                  |        
+RUN-1001 :     tcl_beforestep     |            |                  |        
+RUN-1001 : ----------------------------------------------------------------
+RUN-1002 : start command "commit_param -step design"
+RUN-1001 : Print Global Property
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :     Parameters    |   Settings   |  Default Values  |  Note  
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :    enable_seed    |     off      |       off        |        
+RUN-1001 :    hfn_to_clock   |  1000000000  |    1000000000    |        
+RUN-1001 :      message      |   standard   |     standard     |        
+RUN-1001 :    qor_monitor    |      on      |        on        |        
+RUN-1001 :   speedup_effort  |      0       |        0         |        
+RUN-1001 :    syn_ip_flow    |     off      |       off        |        
+RUN-1001 :       thread      |     auto     |       auto       |        
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 : Print Design Property
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :       Parameters       |  Settings  |  Default Values  |  Note  
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :   default_reg_initial  |    auto    |       auto       |        
+RUN-1001 :    hdl_warning_level   |   normal   |      normal      |        
+RUN-1001 :      tcl_afterstep     |            |                  |        
+RUN-1001 :     tcl_beforestep     |            |                  |        
+RUN-1001 : ----------------------------------------------------------------
+HDL-5007 WARNING: could not find top-level module/unit; aborting hierarchy tree creation
+PRJ-1401 : Successfully analyzed 0 source files.
+RUN-1003 : finish command "create_project ph1p_pcie_integration ./ -family PH1 -device PH1P100SBG484 -speed 3 -force" in  2.099767s wall, 1.578125s user + 0.203125s system = 1.781250s CPU (84.8%)
+
+RUN-1004 : used memory is 342 MB, reserved memory is 326 MB, peak memory is 374 MB
+RUN-1002 : start command "add_files S:/rtl/ep_side/img/ep_bar_win.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/img/img_regs.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/img/img_frame_src.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/debug/ph1p_pcie_ep_top_closedloop.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/common/ph1p_pcie_case_param.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/common/ph1p_pcie_rst_sync.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/common/uart/bps_setting.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/common/uart/pcie_uart.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/common/uart/pcie_uprotocol.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/common/uart/uart_cdc.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/common/uart/uart_rx_setting.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/common/uart/uart_tx_setting.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/common/ubus2hxt_apb.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/common/ubus2pcie_apb.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/pcie_ep_engine.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/pcie_ep_int_handle.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/ph1p_pcie_ep_top.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/ubus_bridge/ep_ubus_bridge.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/cam/clk_activity.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/cam/pulse2toggle.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/cam/auto_delay_ctl.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/cam/csi_rx_10bit_unpack.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/cam/csi_rx_byte_align.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/cam/csi_rx_clock_det.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/cam/csi_rx_hdr_ecc.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/cam/csi_rx_packet_handler.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/cam/csi_rx_word_align.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/cam/csi_rx_word_gear_box.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/cam/mipi_csi2_rx_ph1p.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/cam/rx_phy_ph1p.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/cam/sfifo.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/cam/wfifo.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/cam/ui_cfg_imx415.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/cam/ui_i2c.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/cam/ui_imx415_reg.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/checked/csi_rx_packet_integrity.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/checked/csi_rx_10bit_unpack_checked.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/cam/mipi_csi2_rx_ph1p_checked.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/ddr/ddr_frame_pusher.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/ddr/ddr_wr_arb.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/ddr/cam_ddr_writer.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/ddr/cam_r10f_writer.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/ddr/closedloop/ddr_closedloop_readback.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/img/algo/algo_diagnostic_sink.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/img/algo/algo_obuf.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/img/algo/algo_rowwin3.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/img/algo/algo_rowwin_reader.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/img/algo/bayer_raw10_demosaic4.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/img/algo/cam_algo_diagnostics.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/img/algo/csi_algo_roi_adapter.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/img/algo/gray8_gaussian3x3_frame.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/img/algo/gray8_gaussian3x3_stream.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/img/algo/gray8_he_cdfmin_frame.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/img/algo/img_algo_parallel_top.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/img/algo/rgb8_gray_stream.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/rtl/ep_side/ddr/ddr_frame_readback_checker.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/constraints/ph1p_pcie_case_ep.adc"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/constraints/ph1p_pcie_case_ep_closedloop.sdc"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/al_ip/pcie_ep_core/pcie_ep_core.xml"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/al_ip/pcie_pll_ep/pcie_pll_ep.xml"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/al_ip/ram/ram.xml"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files S:/al_ip/ddr3_mc_0/ddr3_mc_0.xml"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "top_module ph1p_pcie_ep_top_closedloop"
+PRJ-1501 : Current top model is ph1p_pcie_ep_top_closedloop.
+RUN-1002 : start command "launch_runs  syn_1  -jobs 4"
+PRJ-1403 : syn_1 is launched.
+PRJ-1404 : Run log file is T://ph1p_pcie_integration_Runs/syn_1/run.log.
+RUN-1002 : start command "wait_run syn_1 -quiet"
+PRJ-1405 : Waiting for run syn_1 to finish.
+PRJ-1409 : launch_runs syn_1  -jobs 4.
+PRJ-1009 : If you need the best result of runs copied into "T://ph1p_pcie_integration_Runs/best_result" , please execute "save_best_bits" in the Tcl console after all runs complete, or add "save_best_bits" in tcl script after "wait_run" command.
+PRJ-1406 : Run syn_1 finished.
+RUN-1003 : finish command "wait_run syn_1 -quiet" in  192.938313s wall, 0.218750s user + 1.812500s system = 2.031250s CPU (1.1%)
+
+RUN-1004 : used memory is 343 MB, reserved memory is 326 MB, peak memory is 374 MB
+RUN-1002 : start command "report_area -file syn_area.rpt"
+USR-8122 CRITICAL-WARNING: Design is unavailable. Please import a netlist first.
+RUN-1002 : start command "report_timing -file syn_timing.rpt"
+TMR-9002 WARNING: 'report_timing' is obsolete. Please use 'report_timing_summary' instead.
+RUN-1002 : start command "report_timing_summary -file syn_timing.rpt"
+RUN-1002 : start command "update_timing"
+RUN-1002 : start command "start_timer"
+USR-8001 ERROR: Cannot find top model.
+RUN-1002 : start command "launch_runs  phy_1  -step opt_route -jobs 4"
+PRJ-1403 : phy_1 is launched.
+PRJ-1404 : Run log file is T://ph1p_pcie_integration_Runs/phy_1/run.log.
+RUN-1002 : start command "wait_run phy_1 -quiet"
+PRJ-1405 : Waiting for run phy_1 to finish.
+PRJ-1411 : launch_runs phy_1 -step opt_route.
+PRJ-1009 : If you need the best result of runs copied into "T://ph1p_pcie_integration_Runs/best_result" , please execute "save_best_bits" in the Tcl console after all runs complete, or add "save_best_bits" in tcl script after "wait_run" command.
+PRJ-1406 : Run phy_1 finished.
+RUN-1003 : finish command "wait_run phy_1 -quiet" in  1434.078861s wall, 1.093750s user + 15.250000s system = 16.343750s CPU (1.1%)
+
+RUN-1004 : used memory is 3 MB, reserved memory is 326 MB, peak memory is 374 MB
+RUN-1002 : start command "close_project"
+RUN-1002 : start command "import_device ph1_100p.db -package PH1P100SBG484 -speed 3"
+ARC-1001 : Device Initialization.
+ARC-1001 : -------------------------------------------------------------
+ARC-1001 :           OPTION          |         IO         |   SETTING   
+ARC-1001 : -------------------------------------------------------------
+ARC-1001 :   non_jtag_persist(none)  |       35 IOs       |    gpio    
+ARC-1001 :            jtag           |  /V12/T13/R13/U13  |  dedicate  
+ARC-1001 : -------------------------------------------------------------
+RUN-1003 : finish command "import_device ph1_100p.db -package PH1P100SBG484 -speed 3" in  3.228145s wall, 1.875000s user + 0.578125s system = 2.453125s CPU (76.0%)
+
+RUN-1004 : used memory is 295 MB, reserved memory is 329 MB, peak memory is 374 MB
+RUN-1002 : start command "open_project ./ph1p_pcie_integration.prj -noanalyze"
+RUN-1002 : start command "import_db ./ph1p_pcie_integration_pr.db"
+RUN-1001 : Database version number 46207
+RUN-1001 : Importing database generated by Tang Dynasty, V6.2.3.210850.
+RUN-1001 : Import flow parameters
+RUN-1001 : Import netlist
+RUN-1001 : Constructing routing connections ...
+PHY-1001 : End build routing graph; 4.224682s wall, 18.375000s user + 0.781250s system = 19.156250s CPU (453.4%)
+
+RUN-1001 : Import phy database
+RUN-1001 : Import timing constraints
+RUN-1001 : Import IO constraints
+RUN-1001 : Import Inst constraints
+RUN-1001 : Import ChipWatcher
+RUN-1001 : Import design success TD_VERSION=Release_2026.2 , DB_VERSION=46207
+RUN-1003 : finish command "import_db ./ph1p_pcie_integration_pr.db" in  10.064362s wall, 22.265625s user + 1.343750s system = 23.609375s CPU (234.6%)
+
+RUN-1004 : used memory is 1974 MB, reserved memory is 2115 MB, peak memory is 2022 MB
+RUN-1002 : start command "phys_opt -post_route -effort low"
+RUN-1002 : start command "start_timer -keep_rs"
+USR-1002 : Derived clock:  create_generated_clock -name {u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll0/u_pll_inst.clkc[0]} -source [get_ports {sys_clk}] -multiply_by 2.0000 -duty_cycle 50.0000 [get_pins {u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll0/u_pll_inst.clkc[0]}]
+USR-1002 : Derived clock:  create_generated_clock -name {u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll0/u_pll_inst.clkc[1]} -source [get_ports {sys_clk}] -multiply_by 2.0000 -duty_cycle 50.0000 [get_pins {u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll0/u_pll_inst.clkc[1]}]
+USR-1002 : Derived clock:  create_generated_clock -name {u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll0/u_pll_inst.clkc[2]} -source [get_ports {sys_clk}] -multiply_by 8.0000 -duty_cycle 50.0000 [get_pins {u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll0/u_pll_inst.clkc[2]}]
+USR-1002 : Derived clock:  create_generated_clock -name {u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll0/u_pll_inst.clkc[3]} -source [get_ports {sys_clk}] -multiply_by 1.0000 -duty_cycle 50.0000 [get_pins {u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll0/u_pll_inst.clkc[3]}]
+USR-1002 : Derived clock:  create_generated_clock -name {u_top/u_pcie_pll_ep/ph1p_phy_pll_wrapper_Inst/u_PH1P_PHY_PLL.clkc[0]} -source [get_ports {sys_clk}] -multiply_by 1.2500 -duty_cycle 50.0000 [get_pins {u_top/u_pcie_pll_ep/ph1p_phy_pll_wrapper_Inst/u_PH1P_PHY_PLL.clkc[0]}]
+USR-1002 : Derived clock:  create_generated_clock -name {u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_pll_inst.clkc[0]} -source [get_pins {u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll0/u_pll_inst.clkc[0]}] -multiply_by 1.0000 -duty_cycle 50.0000 [get_pins {u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_pll_inst.clkc[0]}]
+USR-1002 : Derived clock:  create_generated_clock -name {u_top/u_csi_a/u_rx_phy/u_hs_clk_div.clkout} -source [get_ports {mipi_a_clk_hs_p}] -multiply_by 1 [get_pins {u_top/u_csi_a/u_rx_phy/u_hs_clk_div.clkout}]
+USR-1002 : Derived clock:  create_generated_clock -name {u_top/u_csi_b/u_rx_phy/u_hs_clk_div.clkout} -source [get_ports {mipi_b_clk_hs_p}] -multiply_by 1 [get_pins {u_top/u_csi_b/u_rx_phy/u_hs_clk_div.clkout}]
+RUN-1003 : finish command "start_timer -keep_rs" in  10.858167s wall, 10.531250s user + 0.203125s system = 10.734375s CPU (98.9%)
+
+RUN-1004 : used memory is 2699 MB, reserved memory is 2863 MB, peak memory is 2704 MB
+PHY-1001 : Processing 2 clock pins of DDR instance u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/ac_byte[0]$ac_byte_used$u_ddrphy_ac_byte_wrapper/u_ddrphy_byte, location = x77y90z0.
+PHY-1001 :   Placed ioclk instance u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/ioclk[0]$u_ioclk_1, location = x77y99z1.
+PHY-1001 :   Placed ioclk instance u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/ioclk[0]$u_ioclk_0, location = x77y99z0.
+PHY-1001 : Processing 2 clock pins of DDR instance u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/ac_byte[1]$ac_byte_used$u_ddrphy_ac_byte_wrapper/u_ddrphy_byte, location = x77y100z0.
+PHY-1001 :   Placed ioclk instance u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/ioclk[0]$u_ioclk_1, location = x77y99z1.
+PHY-1001 :   Placed ioclk instance u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/ioclk[0]$u_ioclk_0, location = x77y99z0.
+PHY-1001 : Processing 2 clock pins of DDR instance u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/ac_byte[2]$ac_byte_used$u_ddrphy_ac_byte_wrapper/u_ddrphy_byte, location = x77y110z0.
+PHY-1001 :   Placed ioclk instance u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/ioclk[0]$u_ioclk_1, location = x77y99z1.
+PHY-1001 :   Placed ioclk instance u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/ioclk[0]$u_ioclk_0, location = x77y99z0.
+PHY-1001 : Processing 2 clock pins of DDR instance u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/dx_byte[0]$dx_byte_used$u_ddrphy_dx_byte_wrapper/u_ddrphy_byte, location = x77y70z0.
+PHY-1001 :   Placed ioclk instance u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/ioclk[1]$u_ioclk_1, location = x77y59z1.
+PHY-1001 :   Placed ioclk instance u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/ioclk[1]$u_ioclk_0, location = x77y59z0.
+PHY-1001 : Processing 2 clock pins of DDR instance u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/dx_byte[1]$dx_byte_used$u_ddrphy_dx_byte_wrapper/u_ddrphy_byte, location = x77y50z0.
+PHY-1001 :   Placed ioclk instance u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/ioclk[1]$u_ioclk_1, location = x77y59z1.
+PHY-1001 :   Placed ioclk instance u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/ioclk[1]$u_ioclk_0, location = x77y59z0.
+PHY-1001 : Processing 2 clock pins of DDR instance u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/dx_byte[2]$dx_byte_used$u_ddrphy_dx_byte_wrapper/u_ddrphy_byte, location = x77y60z0.
+PHY-1001 :   Placed ioclk instance u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/ioclk[1]$u_ioclk_1, location = x77y59z1.
+PHY-1001 :   Placed ioclk instance u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/ioclk[1]$u_ioclk_0, location = x77y59z0.
+PHY-1001 : Processing 2 clock pins of DDR instance u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy/dx_byte[3]$dx_byte_used$u_ddrphy_dx_byte_wrapper/u_ddrphy_byte, location = x77y40z0.
+PHY-1001 :   Placed ioclk instance u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/ioclk[1]$u_ioclk_1, location = x77y59z1.
+PHY-1001 :   Placed ioclk instance u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/ioclk[1]$u_ioclk_0, location = x77y59z0.
+OPT-1001 : Total overflow 0.00 peak overflow 0.00
+OPT-1001 : Stage 1 | Optimize Path After Routing
+PHY-1034 : Refresh detailed routing grids ...
+PHY-1001 : Build lut bridge;  0.391784s wall, 0.343750s user + 0.015625s system = 0.359375s CPU (91.7%)
+
+PHY-1001 : Loading existing routes ...
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[0] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[1] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[2] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[3] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[4] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[5] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[6] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[7] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[8] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[9] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[10] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[11] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[12] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[13] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[14] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[15] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[16] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[17] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[18] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[19] with 1 non-virtual pins; routing is skipped.
+PHY-1032 Similar messages will be suppressed.
+RUN-1001 : Clock Statistics :
+RUN-1001 : -----------------------------------------------------------------------------------------------------------------
+RUN-1001 :   Index  |                                   Clock Net                                   |         Type          
+RUN-1001 : -----------------------------------------------------------------------------------------------------------------
+RUN-1001 :     1    |                     u_top/u_csi_a/u_rx_phy/w_byte_clk_div                     |       User GCLK       
+RUN-1001 :     2    |                     u_top/u_csi_b/u_rx_phy/w_byte_clk_div                     |       User GCLK       
+RUN-1001 :     3    | u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_to...  |       User GCLK       
+RUN-1001 :     4    |                         u_top/u_pcie_pll_ep/clk0_buf                          |       User GCLK       
+RUN-1001 :     5    |                                   cwc_jtck                                    |     Inferred GCLK     
+RUN-1001 :     6    | u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_to...  |     Inferred GCLK     
+RUN-1001 :     7    |                             mipi_a_clk_hs_p_dup_1                             |     User Regional     
+RUN-1001 :     8    |                             mipi_b_clk_hs_p_dup_1                             |     User Regional     
+RUN-1001 :     9    | u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_to...  |  User Multi-Regional  
+RUN-1001 :    10    | u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_to...  |  User Multi-Regional  
+RUN-1001 :    11    | u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_to...  |     User Regional     
+RUN-1001 :    12    | u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_to...  |     User Regional     
+RUN-1001 :    13    | u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_to...  |     User Regional     
+RUN-1001 :    14    | u_top/u_ddr3_mc_0/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_to...  |     User Regional     
+RUN-1001 : -----------------------------------------------------------------------------------------------------------------
+PHY-1001 : eco open net = 0
+TMR-1041 : Net delay calculation accelerates with 32 threads.
+TMR-2502 : Net delay update with mode: Routed
+TMR-1042 : Timing analysis accelerates with 32 threads.
+OPT-1001 : Start post-route optimization ...
+OPT-1001 : WNS -472 TNS -17246 NUM_FEPS 132
+OPT-1001 : Bail out post-route opt flow because bad initial timing, you can "set_param route postrt_opt_sanity_check off" to skip this check.
+OPT-1001 : End Stage 1 | Optimize Path After Routing; Time: 7.520512s wall, 24.031250s user + 1.015625s system = 25.046875s CPU (333.0%); Memory(MB): used = 3986, reserved = 4284, peak = 3986;
+
+OPT-1001 : End physical optimization;  19.022903s wall, 35.750000s user + 1.328125s system = 37.078125s CPU (194.9%)
+
+RUN-1001 : Post-route optimization summary
+RUN-1001 : ------------------------------------------
+RUN-1001 :   Metrics  |  Before  |  After   |  impr  
+RUN-1001 : ------------------------------------------
+RUN-1001 :    SWNS    |   -472   |   -472   |   0    
+RUN-1001 :    STNS    |  -17246  |  -17246  |   0    
+RUN-1001 :    FEPS    |   132    |   132    |   0    
+RUN-1001 : ------------------------------------------
+RUN-1001 : Attempt Statistics
+RUN-1001 : -----------------------------------------------------
+RUN-1001 :          Item         |  Total  |  Succ  |  Percent  
+RUN-1001 : -----------------------------------------------------
+RUN-1001 :   Attempt relocation  |    0    |   0    |    NA     
+RUN-1001 :    Attempt reroute    |    0    |   0    |    NA     
+RUN-1001 :       Attempt DR      |    0    |   0    |    NA     
+RUN-1001 : -----------------------------------------------------
+OPT-1001 : Total DR runtime: 0.000000
+OPT-1001 : Total UT runtime: 0.000284
+PHY-1001 : Stage 2 | Design Rule Check
+PHY-1001 : Stage 2.1 | Check And Add Lut-bridge
+PHY-1001 : End Stage 2.1 | Check And Add Lut-bridge; Time: 0.296924s wall, 0.296875s user + 0.000000s system = 0.296875s CPU (100.0%); Memory(MB): used = 3968, reserved = 4266, peak = 3986;
+
+RUN-1001 : Stage 2.2 | Run Pin Swap Checker
+RUN-1001 : End Stage 2.2 | Run Pin Swap Checker; Time: 0.130280s wall, 0.125000s user + 0.000000s system = 0.125000s CPU (95.9%); Memory(MB): used = 3968, reserved = 4266, peak = 3986;
+
+RUN-1001 : Stage 2.3 | Run Net Connection Checker
+RUN-1001 : End Stage 2.3 | Run Net Connection Checker; Time: 0.322091s wall, 0.328125s user + 0.000000s system = 0.328125s CPU (101.9%); Memory(MB): used = 3968, reserved = 4266, peak = 3986;
+
+RUN-1001 : Stage 2.4 | Run Lut Bridge Checker
+RUN-1001 : End Stage 2.4 | Run Lut Bridge Checker; Time: 0.789658s wall, 0.781250s user + 0.000000s system = 0.781250s CPU (98.9%); Memory(MB): used = 3968, reserved = 4266, peak = 3986;
+
+RUN-1001 : Stage 2.5 | Run Multi Drive Checker
+RUN-1001 : End Stage 2.5 | Run Multi Drive Checker; Time: 0.043979s wall, 0.046875s user + 0.000000s system = 0.046875s CPU (106.6%); Memory(MB): used = 3968, reserved = 4266, peak = 3986;
+
+RUN-1001 : Stage 2.6 | Run Clock Status Checker
+RUN-1001 : End Stage 2.6 | Run Clock Status Checker; Time: 0.060970s wall, 0.062500s user + 0.000000s system = 0.062500s CPU (102.5%); Memory(MB): used = 3968, reserved = 4266, peak = 3986;
+
+RUN-1001 : Stage 2.7 | Run Abnormal Path Checker
+RUN-1002 : start command "start_timer -keep_rs"
+RUN-1003 : finish command "start_timer -keep_rs" in  7.124148s wall, 6.843750s user + 0.250000s system = 7.093750s CPU (99.6%)
+
+RUN-1004 : used memory is 2773 MB, reserved memory is 3089 MB, peak memory is 3986 MB
+RUN-1001 : End Stage 2.7 | Run Abnormal Path Checker; Time: 12.535748s wall, 31.812500s user + 1.156250s system = 32.968750s CPU (263.0%); Memory(MB): used = 3777, reserved = 4081, peak = 3986;
+
+RUN-1001 : Stage 2.8 | Run Timing Status Checker
+RUN-1001 : End Stage 2.8 | Run Timing Status Checker; Time: 0.056425s wall, 0.046875s user + 0.000000s system = 0.046875s CPU (83.1%); Memory(MB): used = 3777, reserved = 4081, peak = 3986;
+
+RUN-1001 : Stage 2.9 | Report DRC
+DRC RTCLK-5078 WARNING: Detected clock net "cwc_jtck" driven by non-clock source instance utilizes local routing resource(s), which may degrade the timing performance in NOFILE(0).
+Driver instance pin: config_inst.cwc_tck_o (AL_PHY_CONFIG)
+Fanout(Local/Clock/Total)=1/1/1
+Sink pins with local routing (the first 5 ones):
+cwc_jtck_created_gclkinst.clkin[0]
+If the local routing on clock net is unexpected, please use below solutions to resolve it.1. Check DRC Error or Critical Warning messages and see if you have sub-optimal clocking structure that cannot use dedicated clock routing resources.2. Use "report_route_status -clock_local_fanout" command in Tcl Console after opening phy run. A "clock_local_fanout(_without_crosstalk).rpt" report file will be generated and it provides detailed information on local clock routing for analysis.
+DRC RTCLK-5079 CRITICAL-WARNING: Detected clock net "sys_clk_dup_1" driven by clock source instance utilizes local routing resource(s), which may degrade the timing performance in S:/rtl/ep_side/debug/ph1p_pcie_ep_top_closedloop.v(26).
+Driver instance pin: sys_clk_syn_2.di (AL_PHY_PAD:H4(GCLK IO))
+Fanout(Local/Clock/Total)=1/2/2
+Sink pins with local routing (the first 5 ones):
+u_top/u_pcie_pll_ep/ph1p_phy_pll_wrapper_Inst/u_PH1P_PHY_PLL.refclk
+If the local routing on clock net is unexpected, please use below solutions to resolve it.1. Check DRC Error or Critical Warning messages and see if you have sub-optimal clocking structure that cannot use dedicated clock routing resources.2. Use "report_route_status -clock_local_fanout" command in Tcl Console after opening phy run. A "clock_local_fanout(_without_crosstalk).rpt" report file will be generated and it provides detailed information on local clock routing for analysis.
+DRC TMST-7700 CRITICAL-WARNING: 6 SEVERE timing constraint issue(s) detected. Please refer to check_timing report for details and resolve the issue(s).
+RUN-1001 : End Stage 2.9 | Report DRC; Time: 0.001209s wall, 0.000000s user + 0.000000s system = 0.000000s CPU (n/a%); Memory(MB): used = 3777, reserved = 4081, peak = 3986;
+
+PHY-1001 : End Stage 2 | Design Rule Check; Time: 14.241241s wall, 33.500000s user + 1.156250s system = 34.656250s CPU (243.4%); Memory(MB): used = 3777, reserved = 4081, peak = 3986;
+
+RUN-1003 : finish command "phys_opt -post_route -effort low" in  33.586317s wall, 69.578125s user + 2.484375s system = 72.062500s CPU (214.6%)
+
+RUN-1004 : used memory is 3777 MB, reserved memory is 4081 MB, peak memory is 3986 MB
+RUN-1002 : start command "fix_hold"
+
+PHY-1001 : Stage 3 | Hold Fix
+PHY-1001 : Stage 3.1 | Load Design Data
+PHY-1034 : Refresh detailed routing grids ...
+PHY-1001 : Build lut bridge;  0.412394s wall, 0.406250s user + 0.015625s system = 0.421875s CPU (102.3%)
+
+PHY-1001 : Generate nets ...
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[0] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[1] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[2] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[3] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[4] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[5] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[6] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[7] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[8] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[9] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[10] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[11] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[12] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[13] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[14] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[15] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[16] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[17] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[18] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc3/wrapper_cwc_top/U_cwc_ram/doa_keep[19] with 1 non-virtual pins; routing is skipped.
+PHY-1032 Similar messages will be suppressed.
+PHY-1001 : eco open net = 0
+PHY-1001 : End Stage 3.1 | Load Design Data; Time: 2.613598s wall, 3.281250s user + 0.109375s system = 3.390625s CPU (129.7%); Memory(MB): used = 3965, reserved = 4273, peak = 3986;
+
+PHY-1001 : Stage 3.2 | Hold Fix Optimization
+RUN-1002 : start command "start_timer"
+RUN-1003 : finish command "start_timer" in  7.110898s wall, 7.015625s user + 0.093750s system = 7.109375s CPU (100.0%)
+
+RUN-1004 : used memory is 3022 MB, reserved memory is 3467 MB, peak memory is 3986 MB
+PHY-1001 : Timing info: SWNS -0.472ns | STNS -17.246ns | HWNS 0.020ns | HTNS 0.000ns.
+PHY-1001 : End timing refresh.  11.652532s wall, 29.609375s user + 0.828125s system = 30.437500s CPU (261.2%)
+
+PHY-1001 : End Stage 3.2 | Hold Fix Optimization; Time: 11.673774s wall, 29.906250s user + 0.843750s system = 30.750000s CPU (263.4%); Memory(MB): used = 3706, reserved = 4287, peak = 3986;
+
+PHY-1001 : End Stage 3 | Hold Fix; Time: 15.105740s wall, 33.968750s user + 0.968750s system = 34.937500s CPU (231.3%); Memory(MB): used = 3688, reserved = 4269, peak = 3986;
+
+RUN-1003 : finish command "fix_hold" in  15.161322s wall, 34.015625s user + 0.984375s system = 35.000000s CPU (230.9%)
+
+RUN-1004 : used memory is 3688 MB, reserved memory is 4269 MB, peak memory is 3986 MB
+RUN-1002 : start command "update_timing -mode final"
+RUN-1002 : start command "start_timer"
+RUN-1003 : finish command "start_timer" in  7.591583s wall, 7.250000s user + 0.296875s system = 7.546875s CPU (99.4%)
+
+RUN-1004 : used memory is 2581 MB, reserved memory is 3335 MB, peak memory is 3986 MB
+RUN-1003 : finish command "update_timing -mode final" in  12.001110s wall, 30.187500s user + 1.031250s system = 31.218750s CPU (260.1%)
+
+RUN-1004 : used memory is 3520 MB, reserved memory is 4101 MB, peak memory is 3986 MB
+RUN-1002 : start command "report_timing_status -file ph1p_pcie_integration_phy.ts"
+RUN-1002 : start command "report_timing_summary -file ph1p_pcie_integration_pr.timing"
+RUN-1002 : start command "report_timing_exception -file ph1p_pcie_integration_exception.timing"
+RUN-1003 : finish command "report_timing_exception -file ph1p_pcie_integration_exception.timing" in  1.434024s wall, 1.328125s user + 0.109375s system = 1.437500s CPU (100.2%)
+
+RUN-1004 : used memory is 3771 MB, reserved memory is 4451 MB, peak memory is 3986 MB
+RUN-1002 : start command "check_timing -verbose -file ph1p_pcie_integration_chk.timing"
+RUN-1003 : finish command "check_timing -verbose -file ph1p_pcie_integration_chk.timing" in  4.036277s wall, 3.968750s user + 0.078125s system = 4.046875s CPU (100.3%)
+
+RUN-1004 : used memory is 3789 MB, reserved memory is 4472 MB, peak memory is 3986 MB
+RUN-1002 : start command "report_area -io_info -file ph1p_pcie_integration_phy.area"
+SYN-4034 : The count of slices with lut is 20408.
+SYN-4035 : The count of slices with lut+ripple is 3978.
+RUN-1001 : standard
+***Report Model: ph1p_pcie_ep_top_closedloop Device: PH1P100SBG484***
+
+Design Statistics
+#IO                       107   out of    286   37.41%
+  #input                   24
+  #output                  37
+  #inout                   46
+#lut6                   28554   out of  71680   39.84%
+#reg                    40346
+  #slice reg            40346   out of 143360   28.14%
+  #pad reg                  0
+
+Utilization Statistics
+#slice                  35740   out of  71680   49.86%
+  #used ram              4168
+    #dram lut            3528
+    #shifter lut          640
+  #used logic           31572
+    #with luts          20408
+    #with adder          3978
+    #reg only            7186
+#feedthrough            19382
+#f7mux                    464   out of  35840    1.29%
+#f8mux                     75   out of  17920    0.42%
+#eram                     200   out of    300   66.67%
+  #eram20k                200
+  #fifo20k                  0
+#dsp                       14   out of    220    6.36%
+#pcie                       1   out of      1  100.00%
+#hxt quad                   1   out of      1  100.00%
+#ddr_byte                   7   out of     24   29.17%
+#pad                      107   out of    286   37.41%
+#pll                        3   out of     12   25.00%
+#gclk                       6   out of     32   18.75%
+#lclk                       2   out of     24    8.33%
+#sclk                      34   out of     96   35.42%
+#mlclk                      2   out of     24    8.33%
+#ioclk                      4   out of     24   16.67%
+
+
+DataNet Average Fanout:
+
+   Index     Fanout     Nets   
+    #1          1       59637  
+    #2          2       9838   
+    #3          3       5940   
+    #4          4       2335   
+    #5        5-10      8930   
+    #6        11-50     2262   
+    #7       51-100      174   
+    #8       101-500     20    
+  Average     2.62             
+
+RUN-1002 : start command "report_clock_utilization -file route_clock_utilization.txt"
+RUN-1002 : start command "export_db ph1p_pcie_integration_pr.db"
+RUN-1001 : Exported flow parameters
+RUN-1001 : Exported /
+RUN-1001 : Exported libs
+RUN-1001 : Exported entities
+RUN-1001 : Exported ports
+RUN-1001 : Exported pins
+RUN-1001 : Exported instances
+RUN-1001 : Exported nets
+RUN-1001 : Exported buses
+RUN-1001 : Exported models
+RUN-1001 : Exported phy database
+RUN-1001 : Exported packer
+RUN-1001 : Exported congestions
+RUN-1001 : Exported violations
+RUN-1001 : Exported ATMR Setting
+RUN-1001 : Exported timing constraints
+RUN-1001 : Exported IO constraints
+RUN-1001 : Exported Inst constraints
+RUN-1001 : Exported ChipWatcher
+RUN-1003 : finish command "export_db ph1p_pcie_integration_pr.db" in  3.290644s wall, 4.078125s user + 0.187500s system = 4.265625s CPU (129.6%)
+
+RUN-1004 : used memory is 4058 MB, reserved memory is 4632 MB, peak memory is 4090 MB
+RUN-1002 : start command "bitgen -bit ph1p_pcie_integration.bit"
+RUN-1002 : start command "export_bid ph1p_pcie_integration_inst.bid"
+BIT-1003 : Start to generate bitstream. 
+BIT-1002 : Bitgen processed 9 pll_pd instances.
+BIT-1002 : Init instances with 32 threads.
+BIT-1002 : Init instances completely, inst num: 37995
+BIT-1002 : Init pips with 32 threads.
+BIT-1002 : Init pips completely, net num: 66801, pip num: 703588
+BIT-1002 : Init feedthrough with 32 threads.
+BIT-1002 : Init feedthrough completely, num: 19382
+BIT-1003 : Multithreading accelaration with 32 threads.
+BIT-1003 : Generate bitstream completely, there are 2235774 bits set as '1'.
+BIT-1004 : Generate file ph1p_pcie_integration.bit.
+RUN-1003 : finish command "bitgen -bit ph1p_pcie_integration.bit" in  14.937374s wall, 184.437500s user + 12.812500s system = 197.250000s CPU (1320.5%)
+
+RUN-1004 : used memory is 3934 MB, reserved memory is 4725 MB, peak memory is 4176 MB
+RUN-1002 : start command "setup_debugger -prj ph1p_pcie_integration"
+KIT-1004 : Generate chipwatcher configuration file: cw/compiled.cwc
+KIT-1004 : Generate chipwatcher bit file: cw/compiled.bit

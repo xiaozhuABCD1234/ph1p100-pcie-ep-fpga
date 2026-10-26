@@ -15,7 +15,8 @@
 `include "../common/ph1p_pcie_case_param.v" 
  module ph1p_pcie_ep_top #(
     // T11 debug：仅 ph1p_pcie_ep_top_dbg 覆盖为 1'b1；生产/00_all 默认 0（行为不变）
-    parameter DBG_CTRL_DEFAULT_EN = 1'b0
+    parameter DBG_CTRL_DEFAULT_EN = 1'b0,
+    parameter CLOSEDLOOP_EN = 1'b0
 )(
 
     // serdes high speed pin
@@ -130,6 +131,11 @@ wire         tl_rst_user;
 wire         pl_link_up;
 wire         img_ddr_en;         // CTRL[5]
 
+// B01 debug-only exclusive reader and same-domain publication contract.
+wire [3:0] push_arid;wire [28:0] push_araddr;wire [7:0] push_arlen;
+wire [2:0] push_arsize;wire [1:0] push_arburst;wire push_arvalid,push_arready,push_rvalid,push_rready;
+wire [1:0] cl_release;wire cl_pub_valid;wire [31:0] cl_pub_seq,cl_pub_base,cl_pub_len,cl_pub_session,cl_writer_good,cl_writer_bad;
+wire cl_inject_abort;
 // ==== 图像通路（本移植新增：img_regs + img_frame_src）====
 wire [31:0]  img_fb_raddr;
 wire [31:0]  img_fb_rdata;
@@ -478,6 +484,11 @@ pcie_pll_ep u_pcie_pll_ep(
 
 assign  tl_cfg_pclk = tl_clk_user;
 
+// T11 r3（issue-02）：调试快照专用复位——与 PCIe 链路无关：板级 POR（pcie_power_on_rst 低有效）
+//   或 PLL 未锁时有效；无主机时链路未建立但本复位已释放。仅 debug 构建的 DBG 门控块消费；
+//   生产 DBG_CTRL_DEFAULT_EN=0 时该网络无消费者，生产行为不变。
+wire    dbg_por_rst = (~pcie_power_on_rst) | (~pcie_pll_locked);
+
 always@(posedge tl_clk_user or negedge pcie_power_on_rst )
 begin
     if(!pcie_power_on_rst )
@@ -640,6 +651,7 @@ pcie_ep_engine #(
     // Clock and Reset
     .tl_clk_user                             (tl_clk_user                             ),
     .tl_rst_user                             (tl_rst_user                             ),
+    .dbg_por_rst                             (dbg_por_rst                             ),
 
     // Rx interface
     .tl_rx_wait                              (tl_rx_wait                              ),
@@ -1516,6 +1528,7 @@ ddr3_mc_0 u_ddr3_mc_0 (
 //  正式顶层已改接本模块。
 // ====================================================================
 cam_r10f_writer #(
+    .CLOSEDLOOP_EN(CLOSEDLOOP_EN),
     .W           (CAMDDR_W          ),
     .H           (CAMDDR_H          ),
     .X0          (CAMDDR_X0         ),
@@ -1537,7 +1550,7 @@ cam_r10f_writer #(
     .cam_pix       (w_a_pixel       ),
     .cam_pix_valid (w_a_pixel_valid ),
     .cam_frame_good(w_a_frame_good  ),
-    .cam_frame_abort(w_a_frame_abort),
+    .cam_frame_abort(w_a_frame_abort | cl_inject_abort),
     .prot_en       (img_push_en     ),
     .rel_tgl0      (w_rel_tgl0      ),
     .rel_tgl1      (w_rel_tgl1      ),
@@ -1560,6 +1573,8 @@ cam_r10f_writer #(
     .ddr_cal_done  (w_ddrphy_rdy      ),
     .arm           (w_cam_ddr_want    ),
     .axi_busy      (w_camw_busy       ),
+    .cl_release(cl_release),.cl_pub_valid(cl_pub_valid),.cl_pub_seq(cl_pub_seq),.cl_pub_base(cl_pub_base),
+    .cl_pub_len(cl_pub_len),.cl_pub_session(cl_pub_session),.cl_good_count(cl_writer_good),.cl_bad_count(cl_writer_bad),
 
     .m_axi_awaddr  (w_camw_awaddr     ),
     .m_axi_awlen   (w_camw_awlen      ),
@@ -1709,7 +1724,7 @@ ddr_frame_pusher #(
     .clk_fb        (tl_clk_user       ),
     .rst_fb        (power_on_rst_dly ),
 
-    .push_en       (img_push_en       ),
+    .push_en       (CLOSEDLOOP_EN ? 1'b0 : img_push_en),
     .src_sel       (img_push_src      ),
     .fb_frame_cnt  (img_frame_cnt     ),
     .fb_rd_addr    (img_push_fb_addr  ),
@@ -1764,19 +1779,54 @@ ddr_frame_pusher #(
     .clk_ddr       (w_ddr_dhi_clk     ),
     .rst_ddr       (~w_ddrphy_rst_n   ),
 
-    .m_axi_arid    (w_ddr_arid        ),
-    .m_axi_araddr  (w_ddr_araddr      ),
-    .m_axi_arlen   (w_ddr_arlen       ),
-    .m_axi_arsize  (w_ddr_arsize      ),
-    .m_axi_arburst (w_ddr_arburst     ),
-    .m_axi_arvalid (w_ddr_arvalid     ),
-    .m_axi_arready (w_ddr_arready     ),
+    .m_axi_arid    (push_arid        ),
+    .m_axi_araddr  (push_araddr      ),
+    .m_axi_arlen   (push_arlen       ),
+    .m_axi_arsize  (push_arsize      ),
+    .m_axi_arburst (push_arburst     ),
+    .m_axi_arvalid (push_arvalid     ),
+    .m_axi_arready (push_arready     ),
     .m_axi_rid     (w_ddr_rid         ),
     .m_axi_rdata   (w_ddr_rdata       ),
     .m_axi_rresp   (w_ddr_rresp       ),
     .m_axi_rlast   (w_ddr_rlast       ),
-    .m_axi_rvalid  (w_ddr_rvalid      ),
-    .m_axi_rready  (w_ddr_rready      )
+    .m_axi_rvalid  (push_rvalid      ),
+    .m_axi_rready  (push_rready      )
 );
+
+
+generate if(CLOSEDLOOP_EN) begin:g_closedloop
+    assign push_arready=1'b0;assign push_rvalid=1'b0;
+    ddr_closedloop_readback u_readback(
+        .clk(w_ddr_dhi_clk),.rst(~w_ddrphy_rst_n),
+        .pub_valid(cl_pub_valid),.pub_seq(cl_pub_seq),.pub_base(cl_pub_base),.pub_len(cl_pub_len),.pub_session(cl_pub_session),
+        .writer_good(cl_writer_good),.writer_bad(cl_writer_bad),.abort(1'b0),.release_slot(cl_release),
+        .arid(w_ddr_arid),.araddr(w_ddr_araddr),.arlen(w_ddr_arlen),.arsize(w_ddr_arsize),.arburst(w_ddr_arburst),
+        .arvalid(w_ddr_arvalid),.arready(w_ddr_arready),.rid(w_ddr_rid),.rdata(w_ddr_rdata),.rresp(w_ddr_rresp),
+        .rlast(w_ddr_rlast),.rvalid(w_ddr_rvalid),.rready(w_ddr_rready));
+    cam_algo_diagnostics #(.W(CAMDDR_W),.H(CAMDDR_H),.X0(CAMDDR_X0),.Y0(CAMDDR_Y0),.SKIP_ROWS(CAMDDR_SKIP_ROWS),.PHASE(2'd3)) u_algo(
+        .clk(w_a_byte_clk),.rst_n(w_a_rst_out),.cam_vsync(w_a_vsync),.cam_in_frame(w_a_in_frame),.cam_in_line(w_a_in_line),
+        .cam_pix(w_a_pixel),.cam_pix_valid(w_a_pixel_valid),.cam_good(w_a_frame_good),.cam_abort(w_a_frame_abort|cl_inject_abort),.sink_ready(3'b111));
+    // One deliberate internal abort on the third real source frame. No sensor,
+    // I2C, link or external wire changes. It must reject RAW publication once.
+    reg vs_d, injected,inject_pulse;
+    (* MARK_DEBUG="true" *) reg [31:0] source_good,source_bad,source_crc,source_header,source_geometry,source_injected;
+    reg [2:0] fe_delay;
+    assign cl_inject_abort=inject_pulse;
+    always @(posedge w_a_byte_clk or negedge w_a_rst_out) begin
+        if(!w_a_rst_out) begin vs_d<=0;injected<=0;inject_pulse<=0;source_good<=0;source_bad<=0;source_crc<=0;source_header<=0;source_geometry<=0;source_injected<=0;fe_delay<=0;end
+        else begin
+            vs_d<=w_a_vsync;fe_delay<={fe_delay[1:0],w_a_frame_end};
+            inject_pulse<=0;
+            if(w_a_vsync&&!vs_d&&!injected&&(w_a_good_frm>=2)) begin injected<=1;inject_pulse<=1;source_injected<=source_injected+1'b1;end
+            if(fe_delay[2]) begin source_good<=w_a_good_frm;source_bad<=w_a_bad_frm;source_crc<=w_a_crc_err;source_header<=w_a_hdr_err;source_geometry<={w_a_last_lines,w_a_last_wc};end
+        end
+    end
+end else begin:g_original_reader
+    assign cl_release=0;assign cl_inject_abort=0;
+    assign w_ddr_arid=push_arid;assign w_ddr_araddr=push_araddr;assign w_ddr_arlen=push_arlen;
+    assign w_ddr_arsize=push_arsize;assign w_ddr_arburst=push_arburst;assign w_ddr_arvalid=push_arvalid;
+    assign push_arready=w_ddr_arready;assign push_rvalid=w_ddr_rvalid;assign w_ddr_rready=push_rready;
+end endgenerate
 
 endmodule

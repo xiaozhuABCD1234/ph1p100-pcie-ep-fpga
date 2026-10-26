@@ -1,0 +1,57 @@
+{
+  "prior_r1": {
+    "functions_exec": 2,
+    "native_operations": 2,
+    "conservative_calls_lower_bound": 4,
+    "conservative_calls_proven_upper_bound": 4,
+    "compiles": 0,
+    "cases": 0,
+    "original_edges_attempts": 0,
+    "failed_commands": 0,
+    "unknown_fields": []
+  },
+  "call_evidence": [
+    {
+      "call": 1,
+      "operation": "functions.exec -> exec_command",
+      "action": "Read formal r1 dispatch/input and summarize new manifest; actual start14:09:16Z",
+      "native": 1,
+      "conservative": 2
+    },
+    {
+      "call": 2,
+      "operation": "functions.exec -> exec_command",
+      "action": "Write window-start.json/input-review.txt; bounded read of skills, plan and source material only",
+      "native": 1,
+      "conservative": 2
+    },
+    {
+      "call": 3,
+      "operation": "functions.exec -> exec_command",
+      "action": "continue03 dispatch/input and restored count review; no experiment",
+      "native": 1,
+      "conservative": 2
+    },
+    {
+      "call": 4,
+      "operation": "functions.exec -> exec_command",
+      "action": "this accounting certification and targeted static source review only",
+      "native": 1,
+      "conservative": 2
+    }
+  ],
+  "current_r1_cumulative": {
+    "functions_exec": 4,
+    "native_operations": 4,
+    "conservative_calls": 8,
+    "remaining_calls": 22,
+    "remaining_compiles": 2,
+    "remaining_cases": 14,
+    "original_edges_remaining": 1
+  },
+  "certified": true,
+  "certification_basis": "Full retained original tester conversation shows all actual tool invocations. No compile or simulator was requested before quota interruption. Existing artifacts corroborate but do not alone determine counts.",
+  "new_activities_permitted": true,
+  "owned_processes": [],
+  "quota_interruption": "Parent reports actual usage-limit error after original two static tool calls; no automatic retry and no hidden tool results invented"
+}

@@ -1,0 +1,66 @@
+[
+  {
+    "case": "valid",
+    "consumer_all_checks": true,
+    "consumer_checks": {
+      "header_crc_ok": true,
+      "stream_crc_ok": true,
+      "zlib_ok": true,
+      "xform_len_ok": true,
+      "xform_crc_ok": true,
+      "raw_len_ok": true,
+      "raw_crc_ok": true,
+      "worstcase_ok": true
+    },
+    "independent_stored_parser": "accepted",
+    "zlib_unused_data": ""
+  },
+  {
+    "case": "extra_zero",
+    "consumer_all_checks": true,
+    "consumer_checks": {
+      "header_crc_ok": true,
+      "stream_crc_ok": true,
+      "zlib_ok": true,
+      "xform_len_ok": true,
+      "xform_crc_ok": true,
+      "raw_len_ok": true,
+      "raw_crc_ok": true,
+      "worstcase_ok": true
+    },
+    "independent_stored_parser": "rejected: exact one member with no trailing bytes",
+    "zlib_unused_data": "00"
+  },
+  {
+    "case": "nonzero_stored_padding",
+    "consumer_all_checks": true,
+    "consumer_checks": {
+      "header_crc_ok": true,
+      "stream_crc_ok": true,
+      "zlib_ok": true,
+      "xform_len_ok": true,
+      "xform_crc_ok": true,
+      "raw_len_ok": true,
+      "raw_crc_ok": true,
+      "worstcase_ok": true
+    },
+    "independent_stored_parser": "rejected: A+ v1 zero header alignment and one final stored block",
+    "zlib_unused_data": ""
+  },
+  {
+    "case": "bad_adler",
+    "consumer_all_checks": false,
+    "consumer_checks": {
+      "header_crc_ok": true,
+      "stream_crc_ok": true,
+      "zlib_ok": false,
+      "xform_len_ok": false,
+      "xform_crc_ok": false,
+      "raw_len_ok": false,
+      "raw_crc_ok": false,
+      "worstcase_ok": true
+    },
+    "independent_stored_parser": "rejected: Adler",
+    "zlib_unused_data": "zlib_rejected"
+  }
+]

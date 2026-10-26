@@ -1,0 +1,11 @@
+{
+  "mutation_id": "M1-pack-order",
+  "target": "fpga/csi2/pcie_integration/rtl/ep_side/ddr/cam_r10f_writer.v (隔离临时树内副本，未改冻结源)",
+  "change": "g4 = {cam_pix[31:30],cam_pix[21:20],cam_pix[11:10],cam_pix[1:0]} → {cam_pix[1:0],cam_pix[11:10],cam_pix[21:20],cam_pix[31:30]}",
+  "effect": "packed RAW10 第 5 字节的四个低 2bit 顺序被静默换反（P0→P3 变 P3→P0）",
+  "mutated_file_sha256": "5c2187ced88a000dd60235bed36b2c35388747e44eb8df0e42b9a8db90aac419",
+  "frozen_file_sha256": "d79f912a9e1fe37c34501bcebf49af4285046ba46e5674fec83a4d4c1c8c8328",
+  "run": "run_sim.ps1 -Root <隔离树> -Tb tb_t11_r10f_e2e -TbFiles tb/tb_t11_r10f_e2e.v -Defines MIPI_PHY_SIM_STUB",
+  "expected": "FAIL（host 内容/载荷 CRC 与独立模型不符）",
+  "observed_log": "vsim.log（本目录）"
+}

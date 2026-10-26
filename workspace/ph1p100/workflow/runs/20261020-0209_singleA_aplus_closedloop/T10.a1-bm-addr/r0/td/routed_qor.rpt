@@ -1,0 +1,37 @@
+-----------------------------------------------------------
+| QoR metrics               |         value               |
+-----------------------------------------------------------
+| Timing                    |                             |
+|     Setup WNS             |          -87                |
+|     Setup TNS             |        -1109                |
+|     Num of violated S-EP  |           27                |
+|     Hold WNS              |           23                |
+|     Hold TNS              |            0                |
+|     Num of violated H-EP  |            0                |
+-----------------------------------------------------------
+| Routing Resource          |                             |
+|     Wire length           |       995840                |
+-----------------------------------------------------------
+| Utilization               |                             |
+|     #slices               |         2993                |
+|     slices percentage     |        4.18%                |
+|     #RAMs                 |           26                |
+|     #DSPs                 |            0                |
+|     #DRAMHARDCON          |            4                |
+-----------------------------------------------------------
+Report route stage QoR done.
+
+QoR Evaluation
+-------------------------------------------------------------------------------------------------------------------------------------
+  ID        |  Priority  |  Description                                             |  Suggestion
+-------------------------------------------------------------------------------------------------------------------------------------
+  QOR-1301  |  HIGH      |  - Route SWNS -87ps smaller than 0, do not meet timing.  |  - Try following method to drive timing meet:
+            |            |                                                          |      set_param route post_route_opt high
+            |            |                                                          |      set_param route postrt_opt_extra_round 4
+-------------------------------------------------------------------------------------------------------------------------------------
+Note* (*) means this parameter has been set already.
+      (+) means this parameter has been set, suggest to upgrade higher effort level.
+Note** plesae resolve priority MUST FIX and HIGH issues firstly
+       because these have highly possible to block the timing convergence even stop the flow.
+Note*** some suggested settings are not suitable to use together
+        take care of using them separately if suggestion mentioned.

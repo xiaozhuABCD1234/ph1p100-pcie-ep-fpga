@@ -1,0 +1,38 @@
+{
+  "status": "EXPECTED_REJECTION",
+  "effective_original_top_negative": true,
+  "command": {
+    "argv": [
+      "D:/intelFPGA/18.1/modelsim_ase/win32aloem/vsim.exe",
+      "-c",
+      "-modelsimini",
+      "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/test-reports/T10.a1-abort-cdc-fix/old/modelsim.ini",
+      "-wlf",
+      "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/test-reports/T10.a1-abort-cdc-fix/old/bad-frame-slow/case.wlf",
+      "-l",
+      "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/test-reports/T10.a1-abort-cdc-fix/old/bad-frame-slow/transcript.log",
+      "work.tb_recovery",
+      "-gW=8",
+      "-gH=2",
+      "-gFIFO_AW=2",
+      "-gCAM_HALF=7.0",
+      "-gA1_PHASE=1.7",
+      "-gMAX_CYCLES=1500000",
+      "+CASE=3",
+      "+OUT=D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/test-reports/T10.a1-abort-cdc-fix/old/bad-frame-slow/capture.dec",
+      "+TRACE=D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/test-reports/T10.a1-abort-cdc-fix/old/bad-frame-slow/trace.txt",
+      "+STAT=D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/test-reports/T10.a1-abort-cdc-fix/old/bad-frame-slow/stats.txt",
+      "-do",
+      "do D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/test-reports/T10.a1-abort-cdc-fix/run.do"
+    ],
+    "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\test-reports\\T10.a1-abort-cdc-fix",
+    "timeout_seconds": 300,
+    "owned_pid": 61732,
+    "exit_code": 0,
+    "elapsed_seconds": 4.016
+  },
+  "trace_tail": "EVENT tag=start cycles=74 epoch=0 seed=0 raw_ingress=0 cmp_ingress=0 raw_aw=0 cmp_aw=0 aw=0 w=0 raw_active=0 raw_wcnt=0 cmp_active=0 cmp_wcnt=0 rawpub=0 enc=0 exp=0 geom=0 rawdrop=0 cmpdrop=0 err=0 fifo_full=0 rejected=0 slots0=0 slots1=0 fstate=0 pending=0 rvalid=0 response_epoch=0\nSOURCE seed=13 epoch=0 bad=1 cycles=74\nCROP_ABORT cycles=216 crop_valid=0 fifo_w_valid=0 fifo_w_ready=1\nSOURCE_END seed=13 epoch=0 bad=1 rejected_delta=0 cycles=296\nEVENT tag=fault_observed cycles=796 epoch=0 seed=13 raw_ingress=2 cmp_ingress=0 raw_aw=0 cmp_aw=0 aw=0 w=0 raw_active=1 raw_wcnt=2 cmp_active=0 cmp_wcnt=0 rawpub=0 enc=0 exp=0 geom=1 rawdrop=0 cmpdrop=0 err=0 fifo_full=0 rejected=0 slots0=1 slots1=0 fstate=0 pending=0 rvalid=0 response_epoch=0\n",
+  "mode": "old",
+  "name": "bad-frame",
+  "ratio": "slow"
+}

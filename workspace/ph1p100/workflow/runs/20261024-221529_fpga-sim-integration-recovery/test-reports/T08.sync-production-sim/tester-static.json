@@ -1,0 +1,78 @@
+{
+  "pass": true,
+  "mapping_entries": 86,
+  "unchanged_copies": 84,
+  "changed_copies": [
+    "rtl\\ep_side\\cam\\ui_cfg_imx415.v",
+    "rtl\\ep_side\\ph1p_pcie_ep_top.v"
+  ],
+  "checks": {
+    "sync_default_off": true,
+    "production_wait_24ms": true,
+    "production_divider": true,
+    "production_roi_default": true,
+    "unique_request_routing": true,
+    "pre_gate_sof_measurement": true,
+    "warmup_eight": true,
+    "real_dual_writer": true,
+    "legacy_config_body_exact": true
+  },
+  "compile_warning_count": 1,
+  "elaboration_warning_count": 37,
+  "missing_ports": [
+    "pcie_tx_p",
+    "pcie_tx_n",
+    "cam_a_mclk",
+    "cam_a_xclr_n",
+    "cam_b_mclk",
+    "cam_b_xclr_n",
+    "txd",
+    "debug_led",
+    "ddr_ck_p",
+    "ddr_ck_n",
+    "ddr_reset_n",
+    "ddr_cke",
+    "ddr_odt",
+    "ddr_cs_n",
+    "ddr_ras_n",
+    "ddr_cas_n",
+    "ddr_we_n",
+    "ddr_ba",
+    "ddr_addr",
+    "ddr_dqs_p",
+    "ddr_dqs_n",
+    "ddr_dq",
+    "ddr_dm",
+    "O_dbg_idx",
+    "O_dbg_busy",
+    "dbg_drop",
+    "cl_release",
+    "cl_pub_valid",
+    "cl_pub_seq",
+    "cl_pub_base",
+    "cl_pub_session",
+    "cl_pub_len",
+    "cl_good_count",
+    "cl_bad_count"
+  ],
+  "cl_release_uses": [
+    {
+      "line": 127,
+      "text": "input wire [1:0] cl_release,"
+    },
+    {
+      "line": 400,
+      "text": "wire rel0_evt = CLOSEDLOOP_EN ? cl_release[0] : (rel0_s2 ^ rel0_s3);"
+    },
+    {
+      "line": 401,
+      "text": "wire rel1_evt = CLOSEDLOOP_EN ? cl_release[1] : (rel1_s2 ^ rel1_s3);"
+    }
+  ],
+  "production_payload_bytes": 2592000,
+  "production_dma_bytes": 2592768,
+  "simulation_payload_bytes": 20,
+  "simulation_dma_bytes": 4096,
+  "python_version": "3.11.5 (tags/v3.11.5:cce6ba9, Aug 24 2023, 14:38:34) [MSC v.1936 64 bit (AMD64)]",
+  "scope": "static wiring/default/manifest audit only; no STA/CDC implementation qualification"
+}

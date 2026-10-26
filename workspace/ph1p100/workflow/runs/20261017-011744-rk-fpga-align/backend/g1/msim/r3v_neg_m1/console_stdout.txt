@@ -1,0 +1,32 @@
+project_root = C:\Users\czz\AppData\Local\Temp\opencode\r3negv
+== result (vsim exit 0) ==
+#   ERROR #16 @772000 :                                                                            payload_valid differs
+#   ERROR #17 @788000 :                                                                            payload_valid differs
+#   ERROR #18 @804000 :                                                                            payload_valid differs
+#   ERROR #19 @820000 :                                                                            payload_valid differs
+#   ERROR #20 @836000 :                                                                            payload_valid differs
+#   [P1] good=0 bad=1 crc=4 hdr=0 pkt_to=0 frm_to=0 wc=80 lines=4 pbeats=20
+# === P2 �?CRC（第 2 行）===
+#   [P2] good=0 bad=2 crc=8 hdr=0 pkt_to=0 frm_to=0 wc=80 lines=4 pbeats=40
+# === P3 WC 边界�?/10/15/80/�?�?0�?==
+#   [P3] good=0 bad=3 crc=14 hdr=0 pkt_to=0 frm_to=0 wc=80 lines=6 pbeats=40
+# === P4 行长/WC �?IMAGE_WC 不符 + 行数不对 ===
+#   [P4] good=0 bad=4 crc=17 hdr=0 pkt_to=0 frm_to=0 wc=80 lines=3 pbeats=40
+# === P5 包内 idle 超时 / 数据中途停 ===
+#   [P5] good=0 bad=5 crc=17 hdr=1 pkt_to=0 frm_to=0 wc=80 lines=3 pbeats=40
+# === P6 帧中途停住（帧超时参�?2000 拍）===
+#   [P6] good=0 bad=6 crc=18 hdr=1 pkt_to=0 frm_to=1 wc=80 lines=3 pbeats=60
+# === P7 坏头 ECC / 未知 DT / 非选中 VC / FE 无帧 ===
+#   [P7] good=0 bad=6 crc=18 hdr=3 pkt_to=0 frm_to=1 wc=80 lines=3 pbeats=60
+# === P8 abort 后恢复（FS 打断一�?�?新帧好）===
+#   [P8] good=0 bad=8 crc=24 hdr=3 pkt_to=0 frm_to=1 wc=80 lines=4 pbeats=100
+# === P9 随机流量�?00 包，含随机空�?随机�?CRC/WC/长度�?==
+#   [P9] good=0 bad=28 crc=123 hdr=81 pkt_to=5 frm_to=1 wc=80 lines=2 pbeats=260
+# === P10 复位后再跑一轮（隔离/恢复�?==
+#   [P10] good=0 bad=1 crc=4 hdr=0 pkt_to=0 frm_to=0 wc=80 lines=4 pbeats=280
+# payload beats compared = 280, payload mismatches = 0
+# FAIL: 507 mismatches
+# ** Note: $finish    : C:/Users/czz/AppData/Local/Temp/opencode/r3negv/fpga/csi2/pcie_integration/sim/tb/tb_csi_integrity_diff.v(354)
+#    Time: 68284 ns  Iteration: 1  Instance: /tb_csi_integrity_diff
+# End time: 07:12:20 on Oct 17,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0

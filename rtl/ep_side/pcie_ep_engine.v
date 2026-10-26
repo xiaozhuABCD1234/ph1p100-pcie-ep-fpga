@@ -26,6 +26,8 @@ module pcie_ep_engine #(
     // Clock and Reset
     input       wire                tl_clk_user            ,
     input       wire                tl_rst_user            ,
+    // T11 r3（issue-02）：调试快照复位（与链路无关；仅 debug 构建的 DBG 块使用，生产未用）
+    input       wire                dbg_por_rst            ,
 
     input       wire    [3:0]       tl_int_msix_trigger    ,
 
@@ -397,6 +399,7 @@ ep_bar_win #(
 ) u_ep_bar_win (
     .clk            (tl_clk_user            ),
     .rst            (tl_rst_user            ),
+    .dbg_por_rst    (dbg_por_rst            ),
     .rx_sop_ff      (tl_rx_sop_ff           ),
     .rx_data_ff     (tl_rx_data_ff          ),
     .mrdata_rd_data (mrdata_rd_data         ),

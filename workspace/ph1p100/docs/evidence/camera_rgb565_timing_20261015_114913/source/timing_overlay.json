@@ -1,0 +1,41 @@
+{
+  "base": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_wb_20261015_002820",
+  "baseline_manifest_sha256": "8f8e4efe9b9320cbc595f94e337395744dbd957630576123576ee2c357f9a1c8",
+  "input_count": 221,
+  "changes": {
+    "camera_ddr_capture_top.v": {
+      "reason": "Relocate ROM path; ROM contents unchanged",
+      "before_sha256": "339b652c33c73279d227f21fe774def45b9786a49d54cc038256552ab9c9d33b",
+      "sha256": "02fdda7a7e614f6e9cd154d224c617263bd2cb21408ffd5c30fb029ef3ead4bd"
+    },
+    "camera_rgb565_display_guarded.v": {
+      "reason": "Use existing synchronized user-domain release for enables; retain asynchronous ready-loss reset",
+      "before_sha256": "36b87f471faabaf2801a44245a1c9c4af4e0f57767cb1da8d176c1a9d964c1bf",
+      "sha256": "584bfa7c79cec04a4c78b2eff2c0b8349bf6c7a2c6090c18eddb52dc93b1df75"
+    },
+    "build_rgb565.tcl": {
+      "reason": "Official PH1 TimingUltra physical effort; same synthesis RTL and constraints",
+      "before_sha256": "5aa25fd23b3d73d061b86cf82092f8c35e7bc9ba3b8d2b769243f071129288f9",
+      "sha256": "a9cdc957be7283021b5a51dc50ce628bd1bb5435a014408fb1808644e6165f6f"
+    },
+    "route_rgb565.tcl": {
+      "reason": "Implementation-only additional setup reserve; restored to original nominal user uncertainty before signoff and DB export",
+      "before_sha256": "019db289dec71867c51af16b334c1e0efb19a4b1d57a3e4e5870e8c672bb5489",
+      "sha256": "aa1f21fba792522511d6205dcb8e2bde5624f92e7f2aaedb0bf5e993e4dc90b9"
+    }
+  },
+  "required_setup_ns": 0.3,
+  "physical_strategy": "TimingUltra",
+  "implementation_setup_reserve_ns": 0.3,
+  "implementation_guard_clocks": [
+    "ddr_user",
+    "mipi_a_byte_clk",
+    "pclkx1"
+  ],
+  "unchanged_constraints": {
+    "board.adc": "1cb30346fa17da6bb0e77802ca72c4b4bb4aecc1445711e19391cf4ee2271580",
+    "timing.sdc": "0c32c5f7a536bbc811901d5af254a4fddc270dcdd2b59c16caeb006ef0f7fe1c"
+  },
+  "hardware_verified": false,
+  "hardware_download": false
+}

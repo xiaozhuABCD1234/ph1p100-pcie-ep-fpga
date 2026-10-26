@@ -1,0 +1,91 @@
+{
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "project_root": "D:/fpga/ph1p100",
+  "output_dir": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix",
+  "task_ids": ["T10.b10-b9-fix"],
+  "parent_task_id": "T10",
+  "batch_size": 1,
+  "status": "ready",
+  "needs_user_input": false,
+  "frozen_candidate_root": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b9-rawstore/r0",
+  "new_isolated_root": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/r0",
+  "input_paths": [
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/dev-plan.md",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/fpga-design-guide.md",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/input-index.md",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/handoff.md",
+    "D:/fpga/ph1p100/docs/OpenCode_b9审核建议与验证清单_2026-10-25.md",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b9-rawstore/fpga-design-guide.md",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b9-rawstore/result-r0.md",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b9-rawstore/lessons-r0.md",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b9-rawstore/CANDIDATE-MANIFEST-b9-rawstore-r0.json",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b9-rawstore/r0/changed-src",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b9-rawstore/r0/td",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b9-rawstore/r0/sim",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b9-rawstore/r0/board",
+    "D:/fpga/ph1p100/work/b9-opencode-audit-20261025/tb_b9_arb_repro.sv",
+    "D:/fpga/ph1p100/work/b9-opencode-audit-20261025/run_repro.py",
+    "D:/fpga/ph1p100/work/b9-opencode-audit-20261025/analysis.md",
+    "D:/fpga/ph1p100/work/b9-opencode-audit-20261025/results.json",
+    "D:/fpga/ph1p100/work/b9-opencode-audit-20261025/sim_sts_64.log",
+    "D:/fpga/ph1p100/work/b9-opencode-audit-20261025/sim_sts_0.log",
+    "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/T10.a1-uart-descriptor-fix/candidate/a1_uart_export.v",
+    "D:/fpga/ph1p100/tools/td/open_td.ps1",
+    "D:/fpga/ph1p100/tools/td/PATH_CONTRACT.md"
+  ],
+  "write_scope": [
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/**"
+  ],
+  "protected": [
+    "D:/fpga/ph1p100/upstream/**",
+    "D:/fpga/ph1p100/fpga/csi2/src/**",
+    "D:/fpga/ph1p100/work/b9-opencode-audit-20261025/**",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b9-rawstore/**",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b8-crop-geom/**",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b7-cam-diag/**",
+    "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/**",
+    "D:/fpga/ph1p100/TD/**",
+    "D:/TD/work/csi2/**",
+    "any Flash/program path; shared bit/CWC/BID"
+  ],
+  "next_action": {
+    "operation": "subagent",
+    "agent": "fpga-dev",
+    "host_fallback": "spawn_agent (Codex); OpenCode uses subagent(agent=..., description=..., prompt=...)",
+    "task_id": "T10.b10-b9-fix",
+    "prompt_path": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/dev-plan.md",
+    "read_first": [
+      "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/fpga-design-guide.md",
+      "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/handoff.md",
+      "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/input-index.md"
+    ],
+    "input_status": "b9 r0 is the only frozen candidate: G1/G2 PASS (Routed SWNS +0.102, 0/24754 violations, bit 950b6e4a..., CWC b9515f79...), but COM8 went silent after the single SRAM download and no v3 packet was captured; root cause unconfirmed. Audit reproduced the B9-01 deadlock offline (STS_DIV=64 -> exported=1 then stall; STS_DIV=0 control completed 2 frames) and statically confirmed B9-02 (dq[0:1] with 2-bit pointers, double assignment of dq_cnt) and B9-03 (1080p overlap: RAW1 129600-259199 vs CMP0 131072-212156 / CMP1 212157-293241). This round: change only a1_uart_export.v, camera_a1_uart_top.v, a1_ddr_slot_store.v (if needed), p2_ddr_bridge.v (if needed); CMP_BASE 131072 -> 262144; write minimal R1/R2/R3 TBs first; after G1 green build 1 bitgen + 1 CWC; then one board round with download-first-then-listen (downloads <= 2).",
+    "required_outputs": [
+      "r0/changed-src/{a1_uart_export.v,camera_a1_uart_top.v,a1_ddr_slot_store.v} plus hash-frozen unchanged {a1_raw_crop.v,cam_diag_mailbox.v,a1_deflate_core.v} and r0/td/src/{p2_a1_board_top.v,p2_ddr_bridge.v} and r0/rtl-diff-r0.patch",
+      "r0/sim: B9-01 old-fails/new-passes control logs on the same TB, tick-vs-dequeue same-cycle arbitration, queueing during status transmission, >=12 accepted descriptors wrap, same-cycle push/pop, full/empty boundary, four-slot interval assertions and full-size dual-slot concurrency, >=3 consecutive frames with length/CRC/zlib checks, status packets only between frames with XOR correct, R1/R2/R3 minimal cases, P1 three goldens byte-identical",
+      "r0/td: 01_build.tcl pointing at this task's sources, Routed zero violations with WNS >= +0.05, TNS 0, hold/period 0, 1 bitgen + 1 CWC (hierarchical probes allowed, top ports unchanged)",
+      "r0/board: download first with COM8 closed then listen, B10_DL_OK log with bit SHA and BID, 180 s COM8 raw stream, parse_status_v3 counter deltas, and when exported>0 the 44 B header plus stream CRC plus zlib decode evidence",
+      "CANDIDATE-MANIFEST-b10-b9-fix-r0.json + r0/artifact-hashes.txt + result-r0.md (with DDR capacity check and actual download count) + lessons-r0.md"
+    ]
+  },
+  "after_development": {
+    "operation": "spawn_single_tester",
+    "role": "fpga-tester",
+    "task_id": "T10.b10-b9-fix",
+    "input": "same frozen manifest and package only; independent of dev; rerun the B9-01 old-vs-new negative control, the 12-descriptor wrap, same-cycle push/pop, full/empty, four-slot layout plus full-size dual-slot concurrency, multi-frame length/CRC/zlib, status-only-between-frames, R1/R2/R3 and the P1 three goldens; re-derive STA/CDC/resource and candidate binding from the same reports; re-parse the same COM8 capture and re-derive the board verdict; no TD rerun, no download, no Flash",
+    "budget": {
+      "minutes": 45,
+      "tool_calls": 30
+    }
+  },
+  "scope_limits": "Continuation of the same T10 in the same run: 3 formal work packages (W1 fix+sim / W2 TD / W3 board) in fixed order W1->G1->W2->G2->W3. Fix only B9-01/02/03 plus defects exposed by R1/R2/R3. Do not change the 44 B frame header, stream CRC, zlib, the no-insertion rule inside frames, UART divider, ports, SDC, pins, crop geometry, MIPI or display path. CMP_BASE may only move 131072 -> 262144; if the DDR capacity check fails the task is blocked, not guessed. No new run, no new parent ID, no bulk delete, no overwrite of b9 evidence.",
+  "execution_limits": {
+    "dev": { "minutes": 150, "tool_calls": 70 },
+    "td": { "sessions": 3, "synth": 3, "route": 2, "bitgen": 1, "cwc": 1, "download": 2, "flash": 0 },
+    "tester": { "minutes": 45, "tool_calls": 30, "td_rerun": 0, "download": 0 },
+    "retry": "first attempt plus at most one retry with new evidence or corrected parameters; two consecutive cycles without progress -> blocked; no auto scope/budget expansion, no third download"
+  },
+  "board_authorization": "User authorised continuous flashing: this round up to 2 SRAM downloads plus one 180 s COM8 capture window; order must be download first, then open COM8 (b9 proved that holding COM8 during the JTAG download makes hwserver fail usb_open). No Flash, no board swap, no rewiring/power/camera changes. Run tools/td/open_td.ps1 before TD; drive X: is forbidden. The actual cumulative download count must be written into result-r0.md.",
+  "question_path": null,
+  "user_summary_path": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/user-summary.md"
+}

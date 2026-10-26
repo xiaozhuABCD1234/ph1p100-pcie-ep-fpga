@@ -1,0 +1,1202 @@
+{
+  "date": "2026-10-13",
+  "kind": "Same camera/DDR activity with an output digital RGB reference strip",
+  "project": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_reference_20261013_215134",
+  "input_count": 202,
+  "input_manifest_sha256": "9c90553c05d740dff6a73450659792493e022e9153499e0a1dd3f6775d2c2e1f",
+  "parent": {
+    "project": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_20261013_161550",
+    "input_count": 193,
+    "bit_sha256": "6b94fb04649de5fbffc1075f50e5cc58182e221864b2fb924813fe5b66125f5f",
+    "feedback": "docs/evidence/rgb332_color_feedback_20261013.json"
+  },
+  "bit_generated": true,
+  "hardware_downloaded": false,
+  "hardware_verified": false,
+  "bit": {
+    "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_reference_20261013_215134\\camera_ddr_display.bit",
+    "bytes": 5224033,
+    "sha256": "5c8d3081ae5a56e8cd9c35de134ca75c7fece5f5379d33587b727d73a9ea35cd"
+  },
+  "checkpoint": {
+    "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_reference_20261013_215134\\csi_checked_debug_pr.db",
+    "sha256": "0861d93a676d755e2d0350f82563dd9f52daa3677a45e7269dbaaa80b6abb700"
+  },
+  "refinement_attempts": 0,
+  "timing": {
+    "setup_wns_ns": 0.005,
+    "setup_tns_ns": 0.0,
+    "hold_wns_ns": 0.02,
+    "hold_tns_ns": 0.0,
+    "period_wns_ns": 2.2,
+    "reimport_coverage_percent": 96.39,
+    "route_coverage_percent": 97.75
+  },
+  "timing_gate_passed": true,
+  "gray_skew_constraints": 4,
+  "gray_skew_min_slack_ns": 2.971,
+  "abnormal_endpoints_present": false,
+  "cdc": {
+    "u_fifo": {
+      "q_drivers": 54,
+      "same_bit_stage_links": 36,
+      "selected_slice_cells": 37
+    },
+    "u_display_fifo": {
+      "q_drivers": 54,
+      "same_bit_stage_links": 36,
+      "selected_slice_cells": 34
+    }
+  },
+  "checked_sync_functions": 72,
+  "netlist_sha256": "d57d93a1830266c4dd00cbe0a07480e3512c511b6c8201dfa841b5e50d8dd518",
+  "hdmi_parallel_inputs": [
+    {
+      "lane": 0,
+      "bits": 10,
+      "setup_wns_ns": 4.562,
+      "hold_wns_ns": 0.459
+    },
+    {
+      "lane": 1,
+      "bits": 10,
+      "setup_wns_ns": 5.17,
+      "hold_wns_ns": 0.265
+    },
+    {
+      "lane": 2,
+      "bits": 10,
+      "setup_wns_ns": 4.975,
+      "hold_wns_ns": 0.298
+    }
+  ],
+  "resource_counts": {
+    "lut6": 14926,
+    "reg": 25461,
+    "eram": 67,
+    "pll": 3
+  },
+  "warnings": [
+    "DRC RTCLK-5078 WARNING: Detected clock net \"cwc_jtck\" driven by data port utilizes 7 local routing resource(s):",
+    "DRC RTCLK-5079 CRITICAL-WARNING: Detected clock net \"sys_clk50m_dup_1\" driven by clock port utilizes 10 local routing resource(s):",
+    "HDL-7225 CRITICAL-WARNING: 'cap_frame_end' is already implicitly declared on line 122 in camera_ddr_display_top.v(184)",
+    "HDL-7225 CRITICAL-WARNING: 'ddr_de' is already implicitly declared on line 121 in camera_ddr_display_top.v(183)",
+    "HDL-7225 CRITICAL-WARNING: 'ddr_hs' is already implicitly declared on line 121 in camera_ddr_display_top.v(183)",
+    "HDL-7225 CRITICAL-WARNING: 'ddr_rgb' is already implicitly declared on line 121 in camera_ddr_display_top.v(183)",
+    "HDL-7225 CRITICAL-WARNING: 'ddr_vs' is already implicitly declared on line 121 in camera_ddr_display_top.v(183)",
+    "HDL-7225 CRITICAL-WARNING: 'display_de' is already implicitly declared on line 120 in camera_ddr_display_top.v(182)",
+    "HDL-7225 CRITICAL-WARNING: 'display_hs' is already implicitly declared on line 120 in camera_ddr_display_top.v(182)",
+    "HDL-7225 CRITICAL-WARNING: 'display_pclk' is already implicitly declared on line 120 in camera_ddr_display_top.v(182)",
+    "HDL-7225 CRITICAL-WARNING: 'display_rst_n' is already implicitly declared on line 120 in camera_ddr_display_top.v(182)",
+    "HDL-7225 CRITICAL-WARNING: 'display_vs' is already implicitly declared on line 120 in camera_ddr_display_top.v(182)",
+    "PHY-5010 WARNING: Net u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_alc_mc_top/page_ctrl[0]$u_page_ctrl/cas_dbuf_fifo_reg[3]_syn_10 is skipped due to 0 input or output",
+    "PHY-5010 WARNING: Net u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_alc_mc_top/page_ctrl[0]$u_page_ctrl/cas_dbuf_fifo_reg[3]_syn_11 is skipped due to 0 input or output",
+    "PHY-5010 WARNING: Net u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_alc_mc_top/page_ctrl[0]$u_page_ctrl/cas_dbuf_fifo_reg[3]_syn_12 is skipped due to 0 input or output",
+    "PHY-5010 WARNING: Net u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_alc_mc_top/page_ctrl[0]$u_page_ctrl/cas_dbuf_fifo_reg[3]_syn_3 is skipped due to 0 input or output",
+    "PHY-5010 WARNING: Net u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_alc_mc_top/page_ctrl[0]$u_page_ctrl/cas_dbuf_fifo_reg[3]_syn_4 is skipped due to 0 input or output",
+    "PHY-5010 WARNING: Net u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_alc_mc_top/page_ctrl[0]$u_page_ctrl/cas_dbuf_fifo_reg[3]_syn_5 is skipped due to 0 input or output",
+    "PHY-5010 WARNING: Net u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_alc_mc_top/page_ctrl[0]$u_page_ctrl/cas_dbuf_fifo_reg[3]_syn_6 is skipped due to 0 input or output",
+    "PHY-5010 WARNING: Net u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_alc_mc_top/page_ctrl[0]$u_page_ctrl/cas_dbuf_fifo_reg[3]_syn_7 is skipped due to 0 input or output",
+    "PHY-5010 WARNING: Net u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_alc_mc_top/page_ctrl[0]$u_page_ctrl/cas_dbuf_fifo_reg[3]_syn_8 is skipped due to 0 input or output",
+    "PHY-5010 WARNING: Net u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_alc_mc_top/page_ctrl[0]$u_page_ctrl/cas_dbuf_fifo_reg[3]_syn_9 is skipped due to 0 input or output",
+    "PHY-5016 WARNING: PLL clkc is driving an IO without location.",
+    "PHY-5060 CRITICAL-WARNING: Clock net candidate \"u_camera/u_camera_startup/I_mclk_syn_13\" in ../../camera/uisrc/01_rtl/camera_startup.v(8) has mixed fanouts of 2 clock pins; 1 data/ctrl pins. Example data/ctrl pins: ",
+    "PHY-5060 CRITICAL-WARNING: Clock net candidate \"u_camera/u_csi_a/u_packet/I_clock\" in ../../camera/uisrc/03_ip/mipi_csi_2/csi_rx_packet_integrity.v(9) has mixed fanouts of 6110 clock pins; 1 data/ctrl pins. Example data/ctrl pins: "
+  ],
+  "simulations": [
+    {
+      "label": "overlay_red",
+      "path": "D:\\TD\\work\\csi2\\_validation\\rgb332_reference_20261013_214930_970072",
+      "result": {
+        "test": "overlay",
+        "baseline": true,
+        "production": false,
+        "accepted": true,
+        "commands": [
+          {
+            "command": [
+              "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlib.exe",
+              "work"
+            ],
+            "cwd": "D:\\TD\\work\\csi2\\_validation\\rgb332_reference_20261013_214930_970072",
+            "log": "0.log",
+            "returncode": 0,
+            "reported_errors": [],
+            "expected_functional_failure": false,
+            "tool_error": false
+          },
+          {
+            "command": [
+              "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlog.exe",
+              "-sv",
+              "tb_rgb332_reference_overlay.sv",
+              "rgb332_reference_overlay.v"
+            ],
+            "cwd": "D:\\TD\\work\\csi2\\_validation\\rgb332_reference_20261013_214930_970072",
+            "log": "1.log",
+            "returncode": 0,
+            "reported_errors": [
+              0
+            ],
+            "expected_functional_failure": false,
+            "tool_error": false
+          },
+          {
+            "command": [
+              "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vsim.exe",
+              "-c",
+              "work.tb_rgb332_reference_overlay",
+              "-do",
+              "run -all; quit -f"
+            ],
+            "cwd": "D:\\TD\\work\\csi2\\_validation\\rgb332_reference_20261013_214930_970072",
+            "log": "2.log",
+            "returncode": 0,
+            "reported_errors": [
+              0
+            ],
+            "expected_functional_failure": true,
+            "tool_error": false
+          }
+        ],
+        "source_inputs": {
+          "run_rgb332_reference.py": {
+            "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\tools\\td\\run_rgb332_reference.py",
+            "sha256": "f69a1f01a7f0222838e6fa024eb3f032c133b5d8f54fd6f86357db72ca13f727"
+          },
+          "rgb332_reference_support.py": {
+            "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\tools\\td\\rgb332_reference_support.py",
+            "sha256": "f27b8860a67be697c553e1d4cfd3b2ded0e6b8d0307f37ccb79f2e1d7564ad81"
+          },
+          "tb_rgb332_reference_overlay.sv": {
+            "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\fpga\\csi2\\tb\\tb_rgb332_reference_overlay.sv",
+            "sha256": "628ae7658846e83821f45a77ef729e605879a50b7ce82ae5638051e34885c363"
+          }
+        },
+        "inputs": {
+          "tb_rgb332_reference_overlay.sv": "628ae7658846e83821f45a77ef729e605879a50b7ce82ae5638051e34885c363",
+          "rgb332_reference_overlay.v": "e38735df2b83fea0a0fcb13137ea5a924a18d8bc50ef31807c347fc6cf7db6f9"
+        },
+        "script_hashes": {
+          "run_rgb332_reference.py": "f69a1f01a7f0222838e6fa024eb3f032c133b5d8f54fd6f86357db72ca13f727",
+          "rgb332_reference_support.py": "f27b8860a67be697c553e1d4cfd3b2ded0e6b8d0307f37ccb79f2e1d7564ad81"
+        },
+        "snapshot_transforms": [
+          "Constructed passthrough stub; no product implementation yet.",
+          "Same-interface active-video camera_rgb passthrough stub with reset/blank black; require RGB332_REFERENCE_FAIL pixel, zero tool errors and zero exit codes."
+        ],
+        "product_implementation_present": false,
+        "compile_files": [
+          "tb_rgb332_reference_overlay.sv",
+          "rgb332_reference_overlay.v"
+        ],
+        "expected_marker": "RGB332_REFERENCE_FAIL pixel"
+      }
+    },
+    {
+      "label": "overlay_final",
+      "path": "D:\\TD\\work\\csi2\\_validation\\rgb332_reference_20261013_220014_184834",
+      "result": {
+        "test": "overlay",
+        "baseline": false,
+        "production": false,
+        "accepted": true,
+        "commands": [
+          {
+            "command": [
+              "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlib.exe",
+              "work"
+            ],
+            "cwd": "D:\\TD\\work\\csi2\\_validation\\rgb332_reference_20261013_220014_184834",
+            "log": "0.log",
+            "returncode": 0,
+            "reported_errors": [],
+            "expected_functional_failure": false,
+            "tool_error": false
+          },
+          {
+            "command": [
+              "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlog.exe",
+              "-sv",
+              "tb_rgb332_reference_overlay.sv",
+              "rgb332_reference_overlay.v"
+            ],
+            "cwd": "D:\\TD\\work\\csi2\\_validation\\rgb332_reference_20261013_220014_184834",
+            "log": "1.log",
+            "returncode": 0,
+            "reported_errors": [
+              0
+            ],
+            "expected_functional_failure": false,
+            "tool_error": false
+          },
+          {
+            "command": [
+              "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vsim.exe",
+              "-c",
+              "work.tb_rgb332_reference_overlay",
+              "-do",
+              "run -all; quit -f"
+            ],
+            "cwd": "D:\\TD\\work\\csi2\\_validation\\rgb332_reference_20261013_220014_184834",
+            "log": "2.log",
+            "returncode": 0,
+            "reported_errors": [
+              0
+            ],
+            "expected_functional_failure": false,
+            "tool_error": false
+          }
+        ],
+        "source_inputs": {
+          "run_rgb332_reference.py": {
+            "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\tools\\td\\run_rgb332_reference.py",
+            "sha256": "f69a1f01a7f0222838e6fa024eb3f032c133b5d8f54fd6f86357db72ca13f727"
+          },
+          "rgb332_reference_support.py": {
+            "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\tools\\td\\rgb332_reference_support.py",
+            "sha256": "f27b8860a67be697c553e1d4cfd3b2ded0e6b8d0307f37ccb79f2e1d7564ad81"
+          },
+          "tb_rgb332_reference_overlay.sv": {
+            "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\fpga\\csi2\\tb\\tb_rgb332_reference_overlay.sv",
+            "sha256": "56b5d905d1bae4b941c9d2b72dc98dcde9d1efcd5454484d141542de5ea3546c"
+          },
+          "rgb332_reference_overlay.v": {
+            "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\fpga\\csi2\\src\\mem\\rgb332_reference_overlay.v",
+            "sha256": "7f5640f755ce5cd37559fcc2f81a03fd4ab15d79d5691a6d6033ac880f469123"
+          }
+        },
+        "inputs": {
+          "tb_rgb332_reference_overlay.sv": "56b5d905d1bae4b941c9d2b72dc98dcde9d1efcd5454484d141542de5ea3546c",
+          "rgb332_reference_overlay.v": "7f5640f755ce5cd37559fcc2f81a03fd4ab15d79d5691a6d6033ac880f469123"
+        },
+        "script_hashes": {
+          "run_rgb332_reference.py": "f69a1f01a7f0222838e6fa024eb3f032c133b5d8f54fd6f86357db72ca13f727",
+          "rgb332_reference_support.py": "f27b8860a67be697c553e1d4cfd3b2ded0e6b8d0307f37ccb79f2e1d7564ad81"
+        },
+        "snapshot_transforms": [],
+        "compile_files": [
+          "tb_rgb332_reference_overlay.sv",
+          "rgb332_reference_overlay.v"
+        ],
+        "expected_marker": "RGB332_REFERENCE_PASS"
+      }
+    },
+    {
+      "label": "ddr_recovery",
+      "path": "D:\\TD\\work\\csi2\\_validation\\rgb332_reference_20261013_215013_467610",
+      "result": {
+        "test": "ddr",
+        "baseline": false,
+        "production": false,
+        "accepted": true,
+        "commands": [
+          {
+            "command": [
+              "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlib.exe",
+              "work"
+            ],
+            "cwd": "D:\\TD\\work\\csi2\\_validation\\rgb332_reference_20261013_215013_467610",
+            "log": "0.log",
+            "returncode": 0,
+            "reported_errors": [],
+            "expected_functional_failure": false,
+            "tool_error": false
+          },
+          {
+            "command": [
+              "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlog.exe",
+              "-sv",
+              "+define+GUARDED",
+              "tb_ddr_display.sv",
+              "capture_async_fifo.v",
+              "gray_frame_pack_guarded.v",
+              "ddr_frame_store.v",
+              "ddr_display_read.v",
+              "rgb332_display_pixels.v",
+              "camera_ddr_display_guarded.v",
+              "rgb332_reference_overlay.v"
+            ],
+            "cwd": "D:\\TD\\work\\csi2\\_validation\\rgb332_reference_20261013_215013_467610",
+            "log": "1.log",
+            "returncode": 0,
+            "reported_errors": [
+              0
+            ],
+            "expected_functional_failure": false,
+            "tool_error": false
+          },
+          {
+            "command": [
+              "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vsim.exe",
+              "-c",
+              "work.tb_ddr_display",
+              "-do",
+              "run -all; quit -f"
+            ],
+            "cwd": "D:\\TD\\work\\csi2\\_validation\\rgb332_reference_20261013_215013_467610",
+            "log": "2.log",
+            "returncode": 0,
+            "reported_errors": [
+              0
+            ],
+            "expected_functional_failure": false,
+            "tool_error": false
+          }
+        ],
+        "source_inputs": {
+          "run_rgb332_reference.py": {
+            "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\tools\\td\\run_rgb332_reference.py",
+            "sha256": "f69a1f01a7f0222838e6fa024eb3f032c133b5d8f54fd6f86357db72ca13f727"
+          },
+          "rgb332_reference_support.py": {
+            "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\tools\\td\\rgb332_reference_support.py",
+            "sha256": "f27b8860a67be697c553e1d4cfd3b2ded0e6b8d0307f37ccb79f2e1d7564ad81"
+          },
+          "base_input_manifest.json": {
+            "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_20261013_161550\\input_manifest.json",
+            "sha256": "d302ebed49ad133974ad9a73992c68232a34d9c87b68e2e886bf44d178710858"
+          },
+          "tb_ddr_display.sv": {
+            "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\fpga\\csi2\\tb\\tb_ddr_display.sv",
+            "sha256": "25daa623f967593ef80bc32656e0a7f61d09f79cea3bee26cde0f388a9bd4ca1"
+          },
+          "capture_async_fifo.v": {
+            "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_20261013_161550\\capture_async_fifo.v",
+            "sha256": "59dd6dcb5b7e7774f7d6518f50f56cafbc8be6b70e8ae1508236bac2b5af531d"
+          },
+          "gray_frame_pack_guarded.v": {
+            "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_20261013_161550\\gray_frame_pack_guarded.v",
+            "sha256": "ce365e1d09133a1346ba13987df8122619e54a3cf0a08bc7eefc19659bc46e92"
+          },
+          "ddr_frame_store.v": {
+            "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_20261013_161550\\ddr_frame_store.v",
+            "sha256": "c600420683a607a486661a678655a6fd23f13f29e1ae652fe1af8befe23a879a"
+          },
+          "ddr_display_read.v": {
+            "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_20261013_161550\\ddr_display_read.v",
+            "sha256": "fe53f761c49c374bee931f742e101dac63739b24f748ca3d1287e463a62d40b0"
+          },
+          "rgb332_display_pixels.v": {
+            "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_20261013_161550\\rgb332_display_pixels.v",
+            "sha256": "1893ff8242af8b04e725e0be3a9d281f53a9968bd8860524c3f40ccc08a79280"
+          },
+          "camera_ddr_display_guarded.v": {
+            "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_20261013_161550\\camera_ddr_display_guarded.v",
+            "sha256": "9f3677a2c4d00ba6b0023b3f41230c186458a2b05e15f9ad60b2a0bf002041a3"
+          },
+          "rgb332_reference_overlay.v": {
+            "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\fpga\\csi2\\src\\mem\\rgb332_reference_overlay.v",
+            "sha256": "7f5640f755ce5cd37559fcc2f81a03fd4ab15d79d5691a6d6033ac880f469123"
+          }
+        },
+        "inputs": {
+          "tb_ddr_display.sv": "6fa8c068f1d8f0868efd15da68f8d202384d0de03685eb4e99906b1a54c8ca07",
+          "capture_async_fifo.v": "59dd6dcb5b7e7774f7d6518f50f56cafbc8be6b70e8ae1508236bac2b5af531d",
+          "gray_frame_pack_guarded.v": "ce365e1d09133a1346ba13987df8122619e54a3cf0a08bc7eefc19659bc46e92",
+          "ddr_frame_store.v": "c600420683a607a486661a678655a6fd23f13f29e1ae652fe1af8befe23a879a",
+          "ddr_display_read.v": "fe53f761c49c374bee931f742e101dac63739b24f748ca3d1287e463a62d40b0",
+          "rgb332_display_pixels.v": "1893ff8242af8b04e725e0be3a9d281f53a9968bd8860524c3f40ccc08a79280",
+          "camera_ddr_display_guarded.v": "4add7a4faded326fa858daf556b9466e0ec1e471755f420492303943828a86bd",
+          "rgb332_reference_overlay.v": "7f5640f755ce5cd37559fcc2f81a03fd4ab15d79d5691a6d6033ac880f469123"
+        },
+        "script_hashes": {
+          "run_rgb332_reference.py": "f69a1f01a7f0222838e6fa024eb3f032c133b5d8f54fd6f86357db72ca13f727",
+          "rgb332_reference_support.py": "f27b8860a67be697c553e1d4cfd3b2ded0e6b8d0307f37ccb79f2e1d7564ad81"
+        },
+        "snapshot_transforms": [
+          "attach_reference(bytes) on frozen 161550 guarded module; preserve original pixel consumer and DDR logic.",
+          "Independent arithmetic RGB332 oracle below reference rows; fixed white/red/green/blue/cyan/magenta/yellow/black palette above.",
+          "Startup reference oracle, reference checks during fault frames, black underflow only below reference rows, and blanking black checks; original control alignment and #0.1 sampling retained."
+        ],
+        "base": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_20261013_161550",
+        "base_manifest_sha256": "d302ebed49ad133974ad9a73992c68232a34d9c87b68e2e886bf44d178710858",
+        "geometry": {
+          "sw": 64,
+          "sh": 16,
+          "reference_rows": 4
+        },
+        "compile_files": [
+          "tb_ddr_display.sv",
+          "capture_async_fifo.v",
+          "gray_frame_pack_guarded.v",
+          "ddr_frame_store.v",
+          "ddr_display_read.v",
+          "rgb332_display_pixels.v",
+          "camera_ddr_display_guarded.v",
+          "rgb332_reference_overlay.v"
+        ],
+        "expected_marker": "DDR_DISPLAY_PASS"
+      }
+    },
+    {
+      "label": "ddr_production",
+      "path": "D:\\TD\\work\\csi2\\_validation\\rgb332_reference_20261013_215011_915562",
+      "result": {
+        "test": "ddr",
+        "baseline": false,
+        "production": true,
+        "accepted": true,
+        "commands": [
+          {
+            "command": [
+              "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlib.exe",
+              "work"
+            ],
+            "cwd": "D:\\TD\\work\\csi2\\_validation\\rgb332_reference_20261013_215011_915562",
+            "log": "0.log",
+            "returncode": 0,
+            "reported_errors": [],
+            "expected_functional_failure": false,
+            "tool_error": false
+          },
+          {
+            "command": [
+              "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlog.exe",
+              "-sv",
+              "+define+GUARDED",
+              "tb_ddr_display.sv",
+              "capture_async_fifo.v",
+              "gray_frame_pack_guarded.v",
+              "ddr_frame_store.v",
+              "ddr_display_read.v",
+              "rgb332_display_pixels.v",
+              "camera_ddr_display_guarded.v",
+              "rgb332_reference_overlay.v"
+            ],
+            "cwd": "D:\\TD\\work\\csi2\\_validation\\rgb332_reference_20261013_215011_915562",
+            "log": "1.log",
+            "returncode": 0,
+            "reported_errors": [
+              0
+            ],
+            "expected_functional_failure": false,
+            "tool_error": false
+          },
+          {
+            "command": [
+              "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vsim.exe",
+              "-c",
+              "-gSW=960",
+              "-gSH=540",
+              "-gPRODUCTION=1",
+              "work.tb_ddr_display",
+              "-do",
+              "run -all; quit -f"
+            ],
+            "cwd": "D:\\TD\\work\\csi2\\_validation\\rgb332_reference_20261013_215011_915562",
+            "log": "2.log",
+            "returncode": 0,
+            "reported_errors": [
+              0
+            ],
+            "expected_functional_failure": false,
+            "tool_error": false
+          }
+        ],
+        "source_inputs": {
+          "run_rgb332_reference.py": {
+            "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\tools\\td\\run_rgb332_reference.py",
+            "sha256": "f69a1f01a7f0222838e6fa024eb3f032c133b5d8f54fd6f86357db72ca13f727"
+          },
+          "rgb332_reference_support.py": {
+            "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\tools\\td\\rgb332_reference_support.py",
+            "sha256": "f27b8860a67be697c553e1d4cfd3b2ded0e6b8d0307f37ccb79f2e1d7564ad81"
+          },
+          "base_input_manifest.json": {
+            "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_20261013_161550\\input_manifest.json",
+            "sha256": "d302ebed49ad133974ad9a73992c68232a34d9c87b68e2e886bf44d178710858"
+          },
+          "tb_ddr_display.sv": {
+            "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\fpga\\csi2\\tb\\tb_ddr_display.sv",
+            "sha256": "25daa623f967593ef80bc32656e0a7f61d09f79cea3bee26cde0f388a9bd4ca1"
+          },
+          "capture_async_fifo.v": {
+            "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_20261013_161550\\capture_async_fifo.v",
+            "sha256": "59dd6dcb5b7e7774f7d6518f50f56cafbc8be6b70e8ae1508236bac2b5af531d"
+          },
+          "gray_frame_pack_guarded.v": {
+            "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_20261013_161550\\gray_frame_pack_guarded.v",
+            "sha256": "ce365e1d09133a1346ba13987df8122619e54a3cf0a08bc7eefc19659bc46e92"
+          },
+          "ddr_frame_store.v": {
+            "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_20261013_161550\\ddr_frame_store.v",
+            "sha256": "c600420683a607a486661a678655a6fd23f13f29e1ae652fe1af8befe23a879a"
+          },
+          "ddr_display_read.v": {
+            "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_20261013_161550\\ddr_display_read.v",
+            "sha256": "fe53f761c49c374bee931f742e101dac63739b24f748ca3d1287e463a62d40b0"
+          },
+          "rgb332_display_pixels.v": {
+            "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_20261013_161550\\rgb332_display_pixels.v",
+            "sha256": "1893ff8242af8b04e725e0be3a9d281f53a9968bd8860524c3f40ccc08a79280"
+          },
+          "camera_ddr_display_guarded.v": {
+            "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_20261013_161550\\camera_ddr_display_guarded.v",
+            "sha256": "9f3677a2c4d00ba6b0023b3f41230c186458a2b05e15f9ad60b2a0bf002041a3"
+          },
+          "rgb332_reference_overlay.v": {
+            "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\fpga\\csi2\\src\\mem\\rgb332_reference_overlay.v",
+            "sha256": "7f5640f755ce5cd37559fcc2f81a03fd4ab15d79d5691a6d6033ac880f469123"
+          }
+        },
+        "inputs": {
+          "tb_ddr_display.sv": "6fa8c068f1d8f0868efd15da68f8d202384d0de03685eb4e99906b1a54c8ca07",
+          "capture_async_fifo.v": "59dd6dcb5b7e7774f7d6518f50f56cafbc8be6b70e8ae1508236bac2b5af531d",
+          "gray_frame_pack_guarded.v": "ce365e1d09133a1346ba13987df8122619e54a3cf0a08bc7eefc19659bc46e92",
+          "ddr_frame_store.v": "c600420683a607a486661a678655a6fd23f13f29e1ae652fe1af8befe23a879a",
+          "ddr_display_read.v": "fe53f761c49c374bee931f742e101dac63739b24f748ca3d1287e463a62d40b0",
+          "rgb332_display_pixels.v": "1893ff8242af8b04e725e0be3a9d281f53a9968bd8860524c3f40ccc08a79280",
+          "camera_ddr_display_guarded.v": "4add7a4faded326fa858daf556b9466e0ec1e471755f420492303943828a86bd",
+          "rgb332_reference_overlay.v": "7f5640f755ce5cd37559fcc2f81a03fd4ab15d79d5691a6d6033ac880f469123"
+        },
+        "script_hashes": {
+          "run_rgb332_reference.py": "f69a1f01a7f0222838e6fa024eb3f032c133b5d8f54fd6f86357db72ca13f727",
+          "rgb332_reference_support.py": "f27b8860a67be697c553e1d4cfd3b2ded0e6b8d0307f37ccb79f2e1d7564ad81"
+        },
+        "snapshot_transforms": [
+          "attach_reference(bytes) on frozen 161550 guarded module; preserve original pixel consumer and DDR logic.",
+          "Independent arithmetic RGB332 oracle below reference rows; fixed white/red/green/blue/cyan/magenta/yellow/black palette above.",
+          "Startup reference oracle, reference checks during fault frames, black underflow only below reference rows, and blanking black checks; original control alignment and #0.1 sampling retained."
+        ],
+        "base": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_20261013_161550",
+        "base_manifest_sha256": "d302ebed49ad133974ad9a73992c68232a34d9c87b68e2e886bf44d178710858",
+        "geometry": {
+          "sw": 960,
+          "sh": 540,
+          "reference_rows": 64
+        },
+        "compile_files": [
+          "tb_ddr_display.sv",
+          "capture_async_fifo.v",
+          "gray_frame_pack_guarded.v",
+          "ddr_frame_store.v",
+          "ddr_display_read.v",
+          "rgb332_display_pixels.v",
+          "camera_ddr_display_guarded.v",
+          "rgb332_reference_overlay.v"
+        ],
+        "expected_marker": "DDR_DISPLAY_PASS"
+      }
+    }
+  ],
+  "artifacts": {
+    "docs/evidence/rgb332_reference_20261013/input_manifest.json": {
+      "bytes": 23304,
+      "sha256": "9c90553c05d740dff6a73450659792493e022e9153499e0a1dd3f6775d2c2e1f"
+    },
+    "docs/evidence/rgb332_reference_20261013/reference_overlay.json": {
+      "bytes": 3477,
+      "sha256": "518808259294a76b4d8f587e5915b064d23129b0618133807dc4f1b30ddd1008"
+    },
+    "docs/evidence/rgb332_reference_20261013/selected_manifest.json": {
+      "bytes": 580,
+      "sha256": "0a034db5bb4a2b615a600779c9edaa3b7821460a9f76e1f67f433e303ea10695"
+    },
+    "docs/evidence/rgb332_reference_20261013/checker_manifest.json": {
+      "bytes": 509,
+      "sha256": "00032d1ff4b702d1ae050777676144e9227c478b8418852bd1f7d49f5d246281"
+    },
+    "docs/evidence/rgb332_reference_20261013/build_reference.tcl": {
+      "bytes": 3411,
+      "sha256": "23a86dfdf9d98bb98abd3fdd25ecc19923682b845545ed8351c89293d9840276"
+    },
+    "docs/evidence/rgb332_reference_20261013/route_reference.tcl": {
+      "bytes": 1150,
+      "sha256": "f714d9a22add13d1d819180d9d8aa4d6c9fcbf5f40384e70f960208c1101b6b1"
+    },
+    "docs/evidence/rgb332_reference_20261013/inspect_reference.tcl": {
+      "bytes": 82,
+      "sha256": "eba028057953932f2a2f281edd87211bf0cdc824b5460f0bf597828ee819fa9c"
+    },
+    "docs/evidence/rgb332_reference_20261013/inspect_rgb332_body.tcl": {
+      "bytes": 876,
+      "sha256": "48d386d89ec66b05be2ec2f1895359144fe33a1f2ad875d5c03fa3bccf18e73b"
+    },
+    "docs/evidence/rgb332_reference_20261013/bitgen_reference.tcl": {
+      "bytes": 81,
+      "sha256": "fcce5e2088e523a2b9b5f91633b172c411058cc382af8a2393d05e7af4d64201"
+    },
+    "docs/evidence/rgb332_reference_20261013/bitgen_rgb332_body.tcl": {
+      "bytes": 2421,
+      "sha256": "7999f5f75136f5c1aa893ad64737f3b861f666b26a3608a76cea07a94af21b31"
+    },
+    "docs/evidence/rgb332_reference_20261013/audit_hdmi_reference.tcl": {
+      "bytes": 683,
+      "sha256": "270409f59ad7abc116a646f9be67c7cf72b6cc990b9201a03c25b5da0f19f162"
+    },
+    "docs/evidence/rgb332_reference_20261013/frozen_prepare_rgb332_reference.py": {
+      "bytes": 3886,
+      "sha256": "e9e0e4fe913311287a19f711336cce262e581522487c46dfe392c2367add7c28"
+    },
+    "docs/evidence/rgb332_reference_20261013/frozen_rgb332_reference_support.py": {
+      "bytes": 914,
+      "sha256": "f27b8860a67be697c553e1d4cfd3b2ded0e6b8d0307f37ccb79f2e1d7564ad81"
+    },
+    "docs/evidence/rgb332_reference_20261013/reference_synthesis_console.txt": {
+      "bytes": 12907,
+      "sha256": "8a6ea30c38da24720abf9e3aee4be90ae2b3b4fd19cd2c255c664d102157610f"
+    },
+    "docs/evidence/rgb332_reference_20261013/reference_route_console.txt": {
+      "bytes": 250493,
+      "sha256": "e2ee710153be84bf58839f3c001f8cbe715a9e4e64f86da6398aa549d560940f"
+    },
+    "docs/evidence/rgb332_reference_20261013/reference_inspect_console.txt": {
+      "bytes": 24720,
+      "sha256": "7f4d029a6dde47c5066c5c7b6b69143eb206e02d0b4f2e459846ddf4c60acf21"
+    },
+    "docs/evidence/rgb332_reference_20261013/reference_hdmi_console.txt": {
+      "bytes": 23751,
+      "sha256": "098a4e3ca0810ab365ebd6787aeb0d99db478165ea4855d0a788ec7988d3327f"
+    },
+    "docs/evidence/rgb332_reference_20261013/reference_bitgen_console.txt": {
+      "bytes": 24650,
+      "sha256": "1d1f11767cc6683991a4d5e719168ed902edbf39cc0d81340c8421aaf8e327c0"
+    },
+    "docs/evidence/rgb332_reference_20261013/reference_cdc_functions_console.txt": {
+      "bytes": 508,
+      "sha256": "668261d0d1275e74a6ac4853660741efe5418eed8a62f2e92888be42c70ede0e"
+    },
+    "docs/evidence/rgb332_reference_20261013/reference_cdc_functions_fixed_console.txt": {
+      "bytes": 50,
+      "sha256": "3b13b7614dbdaa5ef9badd867e1835cab4ab8caae8ab96cdfabbe3e14a525013"
+    },
+    "docs/evidence/rgb332_reference_20261013/reference_cdc_origins_console.txt": {
+      "bytes": 62,
+      "sha256": "213acb2cba6185cccbd6e1536e3838fd827e152dda84784b5fa2f907fe03e927"
+    },
+    "docs/evidence/rgb332_reference_20261013/reference_error_cdc_console.txt": {
+      "bytes": 82,
+      "sha256": "301f5e1339c0b4e51a4f86d28ac41290b703b21eeb3b806547968b243fbd18f6"
+    },
+    "docs/evidence/rgb332_reference_20261013/candidate_timing.rpt": {
+      "bytes": 5592546,
+      "sha256": "9f75e7d29e7a10909fc3900241853390691a9a49171497ea74b60e5885a9bf61"
+    },
+    "docs/evidence/rgb332_reference_20261013/candidate_ignored.rpt": {
+      "bytes": 1192195,
+      "sha256": "f95e1e6a095470de6ec5c5ad7c5a52c62aa9bc75d28677be950e1dc7dee78d44"
+    },
+    "docs/evidence/rgb332_reference_20261013/candidate_skew.rpt": {
+      "bytes": 539928,
+      "sha256": "77922c50fe993cbf689868c083bc89bfb31041a22d9637d4bd365a1b09166405"
+    },
+    "docs/evidence/rgb332_reference_20261013/candidate_abnormal.rpt": {
+      "bytes": 122,
+      "sha256": "a4e5f4685518c9a537bd1f7fd5894808add6a2c61d0f75f02592300b77dc71da"
+    },
+    "docs/evidence/rgb332_reference_20261013/capture.area": {
+      "bytes": 57297,
+      "sha256": "15acae985b6f539cf0fccfbfc312698f8b399854a3e1f98971d253a8355ddcb8"
+    },
+    "docs/evidence/rgb332_reference_20261013/rgb332_reference_overlay.v": {
+      "bytes": 1103,
+      "sha256": "7f5640f755ce5cd37559fcc2f81a03fd4ab15d79d5691a6d6033ac880f469123"
+    },
+    "docs/evidence/rgb332_reference_20261013/camera_ddr_display_guarded.v": {
+      "bytes": 6102,
+      "sha256": "4add7a4faded326fa858daf556b9466e0ec1e471755f420492303943828a86bd"
+    },
+    "docs/evidence/rgb332_reference_20261013/hdmi_clocks.rpt": {
+      "bytes": 585,
+      "sha256": "33e13cb0fb5676d21800514f322e35e09691dd55bb799af03b576fc00b78c14e"
+    },
+    "docs/evidence/rgb332_reference_20261013/hdmi_data_paths.rpt": {
+      "bytes": 445433,
+      "sha256": "bf65993edd0747254665c49ec4a9b89ee572dc7455e99d197083b726305127c8"
+    },
+    "docs/evidence/rgb332_reference_20261013/hdmi_targets.txt": {
+      "bytes": 8097,
+      "sha256": "e3fe11751ace4ffe0d7dea9438d805bd4dd962def3483b62c627c210a23c07a7"
+    },
+    "docs/evidence/rgb332_reference_20261013/hdmi_pad_excerpt.v": {
+      "bytes": 6271,
+      "sha256": "ed4594aa8ef54eb8a452dfcbfd7ece7dd261563f4f282e9cb2d3c1e6d4e7098c"
+    },
+    "docs/evidence/rgb332_reference_20261013/u_fifo_cdc_audit.json": {
+      "bytes": 77595,
+      "sha256": "37bc9dadb2e74e9190c650b0de7b7b66c0ee2599266a5b5b9d4e1cf14abc67fe"
+    },
+    "docs/evidence/rgb332_reference_20261013/u_fifo_cdc_excerpt.v": {
+      "bytes": 45586,
+      "sha256": "289788601312381ed20ba1ab613f1838db8013a9e162cb63cfe05184e9ceba54"
+    },
+    "docs/evidence/rgb332_reference_20261013/u_display_fifo_cdc_audit.json": {
+      "bytes": 79207,
+      "sha256": "1b634464dda55dc2fa98f7a14ad8b0b8dec9083caf46d96af5dcb54f8283c4f9"
+    },
+    "docs/evidence/rgb332_reference_20261013/u_display_fifo_cdc_excerpt.v": {
+      "bytes": 43151,
+      "sha256": "772fa7328a87e9abe8cdb864781c514accf56e346dd7fc9b1a538fde0b4e9d5b"
+    },
+    "docs/evidence/rgb332_reference_20261013/display_cdc_functions.json": {
+      "bytes": 35581,
+      "sha256": "f9af20618f06d47bbead61bab4ce4e82e72395ad329d47dba87c23f39b7e6a74"
+    },
+    "docs/evidence/rgb332_reference_20261013/cdc_reset_clock_review.txt": {
+      "bytes": 19164,
+      "sha256": "314bd3a110910792828b0b9dce2e0cdd6e3e49feb801ac9b441fba8eb89d04ab"
+    },
+    "docs/evidence/rgb332_reference_20261013/cap_error_cdc_review.json": {
+      "bytes": 3140,
+      "sha256": "5bd6b5cd83a589954937edcccdecead391b8e74ac1f6469afb2822cc455f524e"
+    },
+    "docs/evidence/rgb332_reference_20261013/audit_display_cdc.py": {
+      "bytes": 6507,
+      "sha256": "7bd152c62dfca8da5a9898ba2c8d78d4c3fad182ae04a02dbdc65b42dfe2a52a"
+    },
+    "docs/evidence/rgb332_reference_20261013/review_display_cdc_functions.py": {
+      "bytes": 5247,
+      "sha256": "dce61e0d631b7bfdbf78409a83db9b2d5877c7851512875ff59d33e40a82043d"
+    },
+    "docs/evidence/rgb332_reference_20261013/review_display_cdc_origins.py": {
+      "bytes": 5433,
+      "sha256": "830bfca9c2fef27e54a87d1a377beed0b6cfdfff5bc439b9e3cd6b5a287beaee"
+    },
+    "docs/evidence/rgb332_reference_20261013/review_capture_error_cdc.py": {
+      "bytes": 2600,
+      "sha256": "4b5a66a5881011b098b1c14220e8b251bf1ca7f110b725b39b15f9e5756f3bd3"
+    },
+    "docs/evidence/rgb332_reference_20261013/test_display_cdc_reference.py": {
+      "bytes": 4296,
+      "sha256": "9ced5c18f3728dc97242f5bdf28aa9004d71fbac2ba5d150611b6dd9d0f63c0b"
+    },
+    "docs/evidence/rgb332_reference_20261013/synthesis_worker/run.txt": {
+      "bytes": 118971,
+      "sha256": "8fd02a8feef84e6ee83ef6a32828cc3fb7ec97a8dfee25e51365759301535150"
+    },
+    "docs/evidence/rgb332_reference_20261013/synthesis_worker/.opt_gate.end.f": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/evidence/rgb332_reference_20261013/route_timing_summary.txt": {
+      "bytes": 7487,
+      "sha256": "c9884411590edec08df3c5f50937190c05dc2aab78663e52da5d362c872a0d51"
+    },
+    "docs/evidence/rgb332_reference_20261013/overlay_red/result.json": {
+      "bytes": 3264,
+      "sha256": "53d054636ea48759abe7aceab0705a85bddf139a64de05fc9516d318532b2297"
+    },
+    "docs/evidence/rgb332_reference_20261013/overlay_red/0.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/evidence/rgb332_reference_20261013/overlay_red/1.txt": {
+      "bytes": 423,
+      "sha256": "2f1a23bad4870967c04f656c12977babeabb407a02a730abe3fc23acd9863ee9"
+    },
+    "docs/evidence/rgb332_reference_20261013/overlay_red/2.txt": {
+      "bytes": 574,
+      "sha256": "ace730ccbe939fe8a41e185e9badf16a62f0d27c4719cc39accc1effad88360b"
+    },
+    "docs/evidence/rgb332_reference_20261013/overlay_red/tb_rgb332_reference_overlay.sv": {
+      "bytes": 2206,
+      "sha256": "628ae7658846e83821f45a77ef729e605879a50b7ce82ae5638051e34885c363"
+    },
+    "docs/evidence/rgb332_reference_20261013/overlay_final/result.json": {
+      "bytes": 3313,
+      "sha256": "390c3977f068df96fcc4b8fc003182ddb39551774d9c3430f0e37f1ad73899ad"
+    },
+    "docs/evidence/rgb332_reference_20261013/overlay_final/0.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/evidence/rgb332_reference_20261013/overlay_final/1.txt": {
+      "bytes": 423,
+      "sha256": "20b4feae75f3cdda11cc11b8dadf8b66fab96cb7c35b6068cf732c1bc343a370"
+    },
+    "docs/evidence/rgb332_reference_20261013/overlay_final/2.txt": {
+      "bytes": 587,
+      "sha256": "11052cf4caff1914bf901833dc9526ab793a7ed93c1069677f1a8034eaeac5d6"
+    },
+    "docs/evidence/rgb332_reference_20261013/overlay_final/tb_rgb332_reference_overlay.sv": {
+      "bytes": 2462,
+      "sha256": "56b5d905d1bae4b941c9d2b72dc98dcde9d1efcd5454484d141542de5ea3546c"
+    },
+    "docs/evidence/rgb332_reference_20261013/ddr_recovery/result.json": {
+      "bytes": 6424,
+      "sha256": "bcf6f737768009c37610d9a81bb44b32e7dba1de8855ae477336e391b1db7c7c"
+    },
+    "docs/evidence/rgb332_reference_20261013/ddr_recovery/0.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/evidence/rgb332_reference_20261013/ddr_recovery/1.txt": {
+      "bytes": 790,
+      "sha256": "77f73e96a5adf77722d114044c21f2b5a84b42f3ede874870890ef21f191d1c6"
+    },
+    "docs/evidence/rgb332_reference_20261013/ddr_recovery/2.txt": {
+      "bytes": 796,
+      "sha256": "24697f73d19b94cdd97ce39d18b867e8c24bb704c455bc8ea88afbc9489b21e5"
+    },
+    "docs/evidence/rgb332_reference_20261013/ddr_recovery/tb_ddr_display.sv": {
+      "bytes": 8474,
+      "sha256": "6fa8c068f1d8f0868efd15da68f8d202384d0de03685eb4e99906b1a54c8ca07"
+    },
+    "docs/evidence/rgb332_reference_20261013/ddr_production/result.json": {
+      "bytes": 6492,
+      "sha256": "a079950f0bca963b3430e621766003104bb1b175a7dd59c1fd83395df4905daa"
+    },
+    "docs/evidence/rgb332_reference_20261013/ddr_production/0.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/evidence/rgb332_reference_20261013/ddr_production/1.txt": {
+      "bytes": 790,
+      "sha256": "ceaa4745bc4114ed89d84b5633f887fb16f89ca835d85fae3029f6342470bfe2"
+    },
+    "docs/evidence/rgb332_reference_20261013/ddr_production/2.txt": {
+      "bytes": 839,
+      "sha256": "03e07a20da6156c490d2ccf33535cf6d9929b2fc173cf36c835719e11f1afc0b"
+    },
+    "docs/evidence/rgb332_reference_20261013/ddr_production/tb_ddr_display.sv": {
+      "bytes": 8474,
+      "sha256": "6fa8c068f1d8f0868efd15da68f8d202384d0de03685eb4e99906b1a54c8ca07"
+    },
+    "docs/evidence/rgb332_reference_20261013/cdc_controls/result.json": {
+      "bytes": 7401,
+      "sha256": "2f9ce921e01e87ed9b8fb696248dda546d913a9ddc5da2f0ebb9e81fcef08aee"
+    },
+    "docs/evidence/rgb332_reference_20261013/cdc_controls/valid/0.txt": {
+      "bytes": 57,
+      "sha256": "079250ab7afe254f27b49278f9fc2e7206c287f029f427458584969793fb47b7"
+    },
+    "docs/evidence/rgb332_reference_20261013/cdc_controls/valid/1.txt": {
+      "bytes": 57,
+      "sha256": "c93e5d4b2f0a9f8cb6383e8562b94c50c5b897b64aa3fca51d3f1744d169d8cc"
+    },
+    "docs/evidence/rgb332_reference_20261013/cdc_controls/valid/2.txt": {
+      "bytes": 50,
+      "sha256": "3b13b7614dbdaa5ef9badd867e1835cab4ab8caae8ab96cdfabbe3e14a525013"
+    },
+    "docs/evidence/rgb332_reference_20261013/cdc_controls/valid/3.txt": {
+      "bytes": 62,
+      "sha256": "213acb2cba6185cccbd6e1536e3838fd827e152dda84784b5fa2f907fe03e927"
+    },
+    "docs/evidence/rgb332_reference_20261013/cdc_controls/wrong_truth/0.txt": {
+      "bytes": 57,
+      "sha256": "079250ab7afe254f27b49278f9fc2e7206c287f029f427458584969793fb47b7"
+    },
+    "docs/evidence/rgb332_reference_20261013/cdc_controls/wrong_truth/1.txt": {
+      "bytes": 57,
+      "sha256": "c93e5d4b2f0a9f8cb6383e8562b94c50c5b897b64aa3fca51d3f1744d169d8cc"
+    },
+    "docs/evidence/rgb332_reference_20261013/cdc_controls/wrong_truth/2.txt": {
+      "bytes": 584,
+      "sha256": "e1eb54ed6b98d6055719b93eb0c450c80c1f446309c0be55e3d70562d7fca9bb"
+    },
+    "docs/evidence/rgb332_reference_20261013/cdc_controls/wrong_bit/0.txt": {
+      "bytes": 57,
+      "sha256": "079250ab7afe254f27b49278f9fc2e7206c287f029f427458584969793fb47b7"
+    },
+    "docs/evidence/rgb332_reference_20261013/cdc_controls/wrong_bit/1.txt": {
+      "bytes": 344,
+      "sha256": "33d1de83749591033dbea17ad814b989fdbd57633d57f521ed00b636271db138"
+    },
+    "docs/evidence/rgb332_reference_20261013/cdc_controls/wrong_reset_domain/0.txt": {
+      "bytes": 57,
+      "sha256": "079250ab7afe254f27b49278f9fc2e7206c287f029f427458584969793fb47b7"
+    },
+    "docs/evidence/rgb332_reference_20261013/cdc_controls/wrong_reset_domain/1.txt": {
+      "bytes": 57,
+      "sha256": "c93e5d4b2f0a9f8cb6383e8562b94c50c5b897b64aa3fca51d3f1744d169d8cc"
+    },
+    "docs/evidence/rgb332_reference_20261013/cdc_controls/wrong_reset_domain/2.txt": {
+      "bytes": 50,
+      "sha256": "3b13b7614dbdaa5ef9badd867e1835cab4ab8caae8ab96cdfabbe3e14a525013"
+    },
+    "docs/evidence/rgb332_reference_20261013/cdc_controls/wrong_reset_domain/3.txt": {
+      "bytes": 417,
+      "sha256": "3bc00f8cd4ab0b973ef2f2fad496a286af369f66152a3b59f39e5319cbcc1046"
+    }
+  },
+  "cdc_negative_controls": {
+    "source": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_reference_20261013_215134",
+    "source_netlist_sha256": "d57d93a1830266c4dd00cbe0a07480e3512c511b6c8201dfa841b5e50d8dd518",
+    "checker_hashes": {
+      "audit_display_cdc.py": "7bd152c62dfca8da5a9898ba2c8d78d4c3fad182ae04a02dbdc65b42dfe2a52a",
+      "review_display_cdc_functions.py": "dce61e0d631b7bfdbf78409a83db9b2d5877c7851512875ff59d33e40a82043d",
+      "review_display_cdc_origins.py": "830bfca9c2fef27e54a87d1a377beed0b6cfdfff5bc439b9e3cd6b5a287beaee"
+    },
+    "cases": [
+      {
+        "case": "valid",
+        "expected": "pass",
+        "accepted": true,
+        "netlist_sha256": "67676bcfe8e6fdc1989cc6a5f9b55eebf5153e634745abde35a7b78c53d365fc",
+        "runs": [
+          {
+            "command": [
+              "C:\\Program Files\\Python311\\python.exe",
+              "-X",
+              "utf8",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\audit_display_cdc.py",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\valid",
+              "--fifo",
+              "u_fifo"
+            ],
+            "exit_code": 0,
+            "log": "valid/0.txt"
+          },
+          {
+            "command": [
+              "C:\\Program Files\\Python311\\python.exe",
+              "-X",
+              "utf8",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\audit_display_cdc.py",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\valid",
+              "--fifo",
+              "u_display_fifo"
+            ],
+            "exit_code": 0,
+            "log": "valid/1.txt"
+          },
+          {
+            "command": [
+              "C:\\Program Files\\Python311\\python.exe",
+              "-X",
+              "utf8",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\review_display_cdc_functions.py",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\valid"
+            ],
+            "exit_code": 0,
+            "log": "valid/2.txt"
+          },
+          {
+            "command": [
+              "C:\\Program Files\\Python311\\python.exe",
+              "-X",
+              "utf8",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\review_display_cdc_origins.py",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\valid"
+            ],
+            "exit_code": 0,
+            "log": "valid/3.txt"
+          }
+        ]
+      },
+      {
+        "case": "wrong_truth",
+        "expected": "rejection",
+        "accepted": true,
+        "netlist_sha256": "958cd9b155dcadfeda706594811f28ec37f7e85b6bcced4b6dffef2627938014",
+        "runs": [
+          {
+            "command": [
+              "C:\\Program Files\\Python311\\python.exe",
+              "-X",
+              "utf8",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\audit_display_cdc.py",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\wrong_truth",
+              "--fifo",
+              "u_fifo"
+            ],
+            "exit_code": 0,
+            "log": "wrong_truth/0.txt"
+          },
+          {
+            "command": [
+              "C:\\Program Files\\Python311\\python.exe",
+              "-X",
+              "utf8",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\audit_display_cdc.py",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\wrong_truth",
+              "--fifo",
+              "u_display_fifo"
+            ],
+            "exit_code": 0,
+            "log": "wrong_truth/1.txt"
+          },
+          {
+            "command": [
+              "C:\\Program Files\\Python311\\python.exe",
+              "-X",
+              "utf8",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\review_display_cdc_functions.py",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\wrong_truth"
+            ],
+            "exit_code": 1,
+            "log": "wrong_truth/2.txt"
+          }
+        ]
+      },
+      {
+        "case": "wrong_bit",
+        "expected": "rejection",
+        "accepted": true,
+        "netlist_sha256": "7080fb53c7edc575058d9e03b0d8df6e04895271e031146e55e111c58ce53f0c",
+        "runs": [
+          {
+            "command": [
+              "C:\\Program Files\\Python311\\python.exe",
+              "-X",
+              "utf8",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\audit_display_cdc.py",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\wrong_bit",
+              "--fifo",
+              "u_fifo"
+            ],
+            "exit_code": 0,
+            "log": "wrong_bit/0.txt"
+          },
+          {
+            "command": [
+              "C:\\Program Files\\Python311\\python.exe",
+              "-X",
+              "utf8",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\audit_display_cdc.py",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\wrong_bit",
+              "--fifo",
+              "u_display_fifo"
+            ],
+            "exit_code": 1,
+            "log": "wrong_bit/1.txt"
+          }
+        ]
+      },
+      {
+        "case": "wrong_reset_domain",
+        "expected": "rejection",
+        "accepted": true,
+        "netlist_sha256": "1f576ecb65559b4f2793ceeae05a8507ca7d8021c25af51787912ff174872bc8",
+        "runs": [
+          {
+            "command": [
+              "C:\\Program Files\\Python311\\python.exe",
+              "-X",
+              "utf8",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\audit_display_cdc.py",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\wrong_reset_domain",
+              "--fifo",
+              "u_fifo"
+            ],
+            "exit_code": 0,
+            "log": "wrong_reset_domain/0.txt"
+          },
+          {
+            "command": [
+              "C:\\Program Files\\Python311\\python.exe",
+              "-X",
+              "utf8",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\audit_display_cdc.py",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\wrong_reset_domain",
+              "--fifo",
+              "u_display_fifo"
+            ],
+            "exit_code": 0,
+            "log": "wrong_reset_domain/1.txt"
+          },
+          {
+            "command": [
+              "C:\\Program Files\\Python311\\python.exe",
+              "-X",
+              "utf8",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\review_display_cdc_functions.py",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\wrong_reset_domain"
+            ],
+            "exit_code": 0,
+            "log": "wrong_reset_domain/2.txt"
+          },
+          {
+            "command": [
+              "C:\\Program Files\\Python311\\python.exe",
+              "-X",
+              "utf8",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\review_display_cdc_origins.py",
+              "D:\\TD\\work\\csi2\\_validation\\reference_cdc_20261013_222723_421038\\wrong_reset_domain"
+            ],
+            "exit_code": 1,
+            "log": "wrong_reset_domain/3.txt"
+          }
+        ]
+      }
+    ],
+    "boundary": "Observed direct A*C AND and pixel_reset mapping. Invalid copies only; fail-fast chain, not separate coverage of each checker by every mutation."
+  },
+  "checker_revision": {
+    "initial_review_exit_code": 1,
+    "initial_rejection": "Exact local-reset-name list rejected pixel_reset[1].",
+    "change": "Accept only the exact pixel_reset[1] name; retain two-stage/reset-domain origin checks.",
+    "final_review_exit_codes": [
+      0,
+      0
+    ],
+    "control_harness_initial_error": "First harness could not match CRLF text; normalized parsing to checker universal-newline behavior, then actual4 cases passed."
+  },
+  "source": {
+    "commit": "912725398b98a60d7933f280fe71bf4bc87f5bc2",
+    "dirty": true,
+    "binding": "202 frozen inputs, separate selected/checker manifests; new RTL/tests/scripts uncommitted at execution."
+  },
+  "synthesis_anomaly": {
+    "manager_exit_code": 1,
+    "code": "PRJ-8806",
+    "worker_gate_end_marker_present": true,
+    "worker_error_lines": [],
+    "gate_db_bytes": 10018176,
+    "gate_db_sha256": "0b38e04af4fdbd495b5254ad794308ad580e1675ab0b35cecececbcdf38282d7",
+    "recovery": "Native standalone route imported the fully exported gate DB; manager success is not claimed."
+  },
+  "route_full_report_local": {
+    "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_reference_20261013_215134\\capture_timing.rpt",
+    "sha256": "a64602272636d553f1e23541e9adfed70ddaf557526ebc527eec2509352b08da",
+    "archive_scope": "First90 raw lines; complete final reimport report retained separately."
+  },
+  "execution": {
+    "tool": "TangDynasty Release_2026.1_SP2",
+    "program": "D:/downlaod/bin/td_commands_prompt.exe",
+    "cwd": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_reference_20261013_215134",
+    "started_at": null,
+    "ended_at": null,
+    "timestamp_note": "Native logs retained; central execution interval not captured.",
+    "phases": [
+      {
+        "arguments": [
+          "./build_reference.tcl"
+        ],
+        "exit_code": 1,
+        "marker": "RGB332_REFERENCE_SYNTHESIS_ERROR"
+      },
+      {
+        "arguments": [
+          "./route_reference.tcl"
+        ],
+        "exit_code": 0,
+        "marker": "RGB332_REFERENCE_ROUTE_RETURNED_CHECK_REPORTS_NO_BIT"
+      },
+      {
+        "arguments": [
+          "./inspect_reference.tcl"
+        ],
+        "exit_code": 0,
+        "marker": "CAPTURE_CDC_AUDIT_EXPORTED"
+      },
+      {
+        "arguments": [
+          "./audit_hdmi_reference.tcl"
+        ],
+        "exit_code": 0,
+        "marker": "HDMI_ROUTED_AUDIT_REPORTS_READY"
+      },
+      {
+        "arguments": [
+          "./bitgen_reference.tcl"
+        ],
+        "exit_code": 0,
+        "marker": "CAMERA_DDR_DISPLAY_CANDIDATE_GENERATED_NO_DOWNLOAD"
+      }
+    ]
+  },
+  "review": {
+    "independent_readonly": "No Critical/Important finding in frozen inputs, source/timing alignment, test identities or delivery flow.",
+    "deepseek": {
+      "task_id": "33ed551bd3b9455fa1c5e62689b2d13c",
+      "api_rounds": 1,
+      "api_tokens": 2975,
+      "scope": "Minimal RTL/TB excerpts, no full project/images/secrets; no native execution.",
+      "accepted_improvement": "Reset away from origin without another VS; primary added and ran final341-check bench."
+    }
+  },
+  "limits": "Bars bypass payload while original consumers remain active; no added pipeline cycle, but physical placement changes. Bars may show before camera ready/over top underflow. Correct bars alone prove neither Bayer/DDR correctness nor high-speed analog qualification. No new hardware/color/sparkle/temperature/long-run results. Selected CDC only; coverage gap and local clock warnings retained. New controls target current direct A*C/pixel-reset mapping; prior161550 controls remain historical.",
+  "next_step": "Manual SRAM download of this exact bit; compare fixed top white/R/G/B and live image below through both phases."
+}

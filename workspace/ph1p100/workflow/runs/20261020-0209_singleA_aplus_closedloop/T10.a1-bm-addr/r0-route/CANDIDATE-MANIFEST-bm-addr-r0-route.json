@@ -1,0 +1,206 @@
+{
+  "task_id": "T10.a1-bm-addr",
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "revision": "r0-route",
+  "round": "r0",
+  "continuation_of": "T10.a1-bm-addr r0 candidate 35ea7364 (G1 green; synth +0.113; route 0/1)",
+  "date": "2026-10-22",
+  "status": "blocked_at_routed_gate",
+  "ready_for_test": false,
+  "tester": null,
+  "status_reason": "Route-only on the unchanged candidate 35ea7364 (no synthesis, no RTL change) completed as Routed in 2m5s, but the routed gates fail: SWNS -0.087 ns / STNS -1.109 ns with 27 violating setup endpoints (report scheme 10 endpoints per group; 10 of the 20 reported endpoints are negative). HWNS +0.023 / HTNS 0.000, resources in device, one clock domain, reports written directly with -file, bitgen not_run and no .bit. Per the dispatch the +0.5 pre-route synth gate was waived for this one route-only attempt, but the routed zero-violation gate was explicitly not waived, so the package stops here and T10 closes as 3/4 PASS + 1 warning.",
+  "authorization": {
+    "quote": "请裁决最后一次 route-only：1. 豁免 +0.5 预布线门槛...",
+    "date": "2026-10-22",
+    "type": "final_one_time_pre_route_synth_margin_waiver_plus_route_only",
+    "source": "workflow/runs/20261020-0209_singleA_aplus_closedloop/dispatch-bm-addr-route.json",
+    "waiver_scope": "only the synth WNS >= +0.5 pre-route gate; routed WNS/TNS/HWNS/HTNS >= 0, 0 violations, resources, static CDC and bitgen-not_run were NOT waived",
+    "round_accounting": "r0 synth 1/2 used earlier; route 1/1 used here; no new round, no r1"
+  },
+  "candidate": {
+    "path_in_tree": "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v",
+    "sha256": "35ea736415c5fbfd28fabcf85b78e33275fb2507f8d30a070a95a17a41760942",
+    "bytes": 75877,
+    "package_copy": "T10.a1-bm-addr/r0/td/a1_deflate_core.v",
+    "unchanged_since_r0": true,
+    "note": "worktree holds 35ea7364 (the G1-green candidate); it was restored from r0/td before this route-only session so the .al sources and the syn_1 checkpoint match"
+  },
+  "frozen_inputs": {
+    "a1_frame_top.v": {"sha256": "18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe", "bytes": 23675, "unchanged": true},
+    "a1_small_top.sdc": {"sha256": "227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311", "bytes": 399, "unchanged": true},
+    "a1_eng_top.v": {"sha256": "544cecfc2eb34a3ab5c03ebf3965730b4ce60b2ff73ac4c2ec2d87772faaf9aa", "bytes": 2671},
+    "synthesis_checkpoint": "T10.a1-bm-addr/r0/td/a1_bm_addr_Runs/syn_1 (a1_bm_addr_gate.db, reused; no synthesis in this revision)",
+    "route_script": {"path": "T10.a1-bm-addr/r0/td/02_route_only.tcl", "sha256": "072f4c7d883a035c317c75890f52597d8c13d2aeaa09150504e56800e61dd94e"}
+  },
+  "route_execution": {
+    "sessions": 1,
+    "session_wall_seconds": 141,
+    "td_wall_seconds_outer": 142,
+    "synth_attempts": "0 (route-only)",
+    "route_attempts": "1/1",
+    "project": "T:/a1_bm_addr.al",
+    "harness": {
+      "import_device": "ph1_100p.db -package PH1P100SBG484 -speed 3",
+      "syn_settings_cfg": "device_name ph1_100p.db, package_name PH1P100SBG484 (non-empty)",
+      "early_failure_check": "OPT_PLACE_STARTED within 12 s; no PRJ-8001",
+      "stop_before_bitgen": "PHY_STOP_MARKER_SET at .opt_route.begin.f (40 s)",
+      "run_result": "PRJ-1406 Run phy_1 finished",
+      "bit_file": "NO_BIT_FILE"
+    },
+    "flow_times": {"place": "38 s", "route": "59 s", "phys_opt": "27 s", "fix_hold": "1 s", "total": "2m5s"}
+  },
+  "gates": {
+    "g1_functional": {
+      "verdict": "PASS",
+      "reused_from": "T10.a1-bm-addr r0 (same candidate hash 35ea7364)",
+      "p2": {"verdict": "PASS", "cases": 13, "pass": 13, "comp_cycles": 355261, "mismatch": 0, "x": 0, "vlog": "0/0"},
+      "p3": {"verdict": "PASS", "cases": 20, "pass": 20, "f1080p_len": 81707, "f1080p_sha256_stream": "b769cc666b33db310532ec980809f5decbbff197f0ff29eb10045f442beb08ff", "f1080p_cycles": 4677945, "mismatch": 0, "x": 0, "vlog": "0/0"},
+      "bit_identical_to_r2_baseline": {"cases_compared": 33, "differing_fields": 0}
+    },
+    "g2_synth": {
+      "verdict": "WAIVED_NOT_PASSED",
+      "wns_ns": 0.113,
+      "tns_ns": 0.0,
+      "gate_wns_required": 0.5,
+      "waiver": "one-time pre-route synth margin waiver granted for this route-only attempt",
+      "slice": 3085,
+      "eram": 26,
+      "core_eram": 22,
+      "eram_clk2q_startpoints_in_report": 0,
+      "evidence": "T10.a1-bm-addr/r0/td/syn_gate_timing_a1.rpt"
+    },
+    "g2_routed": {
+      "verdict": "FAIL",
+      "confidence": "Routed",
+      "corners": "Both (Slow and Fast)",
+      "crpr": "Yes",
+      "sta_coverage_pct": 96.41,
+      "sw_ns": -0.087,
+      "st_ns": -1.109,
+      "hw_ns": 0.023,
+      "ht_ns": 0.0,
+      "gate_ns_min": 0.0,
+      "violating_setup_endpoints": 27,
+      "total_endpoints": 4555,
+      "violating_hold_endpoints": 0,
+      "reported_endpoints": 20,
+      "reported_negative": 10,
+      "path_groups": ["clk -> clk (Self)"],
+      "cross_clock": "CC-From no / CC-To no",
+      "reported_negative_paths": [
+        {"slack": -0.087, "from": "u_dut/u_core/adler_red_st_reg[2]", "to": "u_dut/smem.addrb[12]", "levels": 6},
+        {"slack": -0.084, "from": "u_dut/u_core/pos_reg[4]", "to": "u_dut/u_core/raddr_reg[12].d", "levels": 5},
+        {"slack": -0.084, "from": "u_dut/u_core/sdata_ptr_reg[1]", "to": "u_dut/u_core/state_reg[3].ceb", "levels": 7},
+        {"slack": -0.080, "from": "u_dut/eidx_reg[0]", "to": "u_dut/u_core/bm_b.dia[0]", "levels": 3},
+        {"slack": -0.067, "from": "u_dut/u_core/dtot_r_reg[1]", "to": "u_dut/u_core/praddr_reg[10].d", "levels": 6},
+        {"slack": -0.067, "from": "u_dut/u_core/dtot_r_reg[1]", "to": "u_dut/u_core/praddr_reg[12].d", "levels": 6},
+        {"slack": -0.067, "from": "u_dut/u_core/dtot_r_reg[1]", "to": "u_dut/u_core/praddr_reg[9].d", "levels": 6},
+        {"slack": -0.061, "from": "u_dut/u_core/blk_final1_reg", "to": "u_dut/u_core/raddr_reg[0].ceb", "levels": 5},
+        {"slack": -0.058, "from": "u_dut/u_core/hp_r_reg[10]", "to": "u_dut/u_core/bm_a.addrb[12]", "levels": 6},
+        {"slack": -0.057, "from": "u_dut/u_core/pos_reg[1]", "to": "u_dut/u_core/bm_a.addrb[10]", "levels": 5}
+      ],
+      "eram_clk2q_occurrences_in_report": 0,
+      "target_cone_status": "CLEARED: the htab_p3v ERAM clk2q -> bm_b.addrb and pos -> w0/w1.ceb cones of the r2-waive report (-0.421/-0.362/-0.359/-0.347/-0.332) no longer appear; no ERAM clk2q begin point remains anywhere in the routed report",
+      "resources": {"slice": 2993, "slice_max": 71680, "lut6": 2912, "reg": 1664, "eram": 26, "eram_max": 300, "eram20k": 26, "dram_lut": 32, "io": 121, "io_max": 286, "dsp": 0, "dsp_max": 220, "in_device": true},
+      "decision": "FAIL -> stop; no re-route, no re-synthesis, no RTL change (route 1/1 used)"
+    },
+    "cdc_static": {
+      "verdict": "PASS_WITH_STATED_LIMITS",
+      "single_clock": true,
+      "clock": "clk 187.512 MHz (5.333 ns), fanout 1304, 1 GCLK + 4 SCLK from a single PH1P_PHY_HR_PAD source",
+      "cross_clock_paths": "none reported (CC-From no / CC-To no)",
+      "check_timing_high": "no clock 0; clock definition 0; invalid constraint 0; pll constraints 0; combinational loops 0; soft fifo exceptions 0; dummy node 1",
+      "check_timing_medium": "no path constraints 0; ignored exceptions 0; no input delay 47; no output delay 73 (bench-top boundary I/O without I/O constraints)",
+      "report_cdc": "not available in TD Release_2026.2 (invalid command name); never claimed as a report_cdc signoff",
+      "document": "T10.a1-bm-addr/r0-route/cdc-static.md"
+    },
+    "bitgen": "not_run; .bit/.cwc count under T10.a1-bm-addr = 0; no download"
+  },
+  "reports": {
+    "authoritative_dir": "T10.a1-bm-addr/r0/td/ (written directly by the tool with -file on the imported routed DB)",
+    "evidence_copies_dir": "T10.a1-bm-addr/r0-route/ (byte-identical copies, SHA256 below)",
+    "files": {
+      "routed_timing_summary.rpt": {"bytes": 164410, "sha256": "c3a68b5e89c8e1fd1fcc11e5e05e2be5952515a4cca7d41483d0577a6db1abc2"},
+      "routed_timing_status.rpt": {"bytes": 64, "sha256": "33d5933f63265a57480f00e444e78d9f3c7eb71f44e0780d88f64ebf781fe54e"},
+      "routed_area.rpt": {"bytes": 18865, "sha256": "423c06c189821a84fb648e0c717bf86d453c7777622e9bea6f3e29576cbaee6b"},
+      "routed_check_timing.rpt": {"bytes": 4865, "sha256": "21fa3e56ba3de6ab1fc393a08f66da290ebe1dc4e4ca9744c7389fe646ea29a7"},
+      "routed_clock_utilization.rpt": {"bytes": 17835, "sha256": "60a6b188a77f701f13a04a84e38c650befa55bb7bdd48fec4e89168e55cb1965"},
+      "routed_qor.rpt": {"bytes": 2662, "sha256": "33eb98bc571f4633487b373931d49fd8fc591e00e44bc9aea7c6522eb6b8511e"},
+      "routed_timing.rpt": {"bytes": 164410, "sha256": "66c4fc541539650321d6022c32a7bb3f35c4fe053164b7d876613b5ce7f0d2b8"},
+      "route_flow.status": {"bytes": 1615, "sha256": "96789690ed0759d8993baffd872b6554bf6778e909a6eedbace569f00445f3ed"},
+      "phy_pr_timing_flow.rpt": {"bytes": 164410, "sha256": "1a1fcc5f707376e0c28825057c1333435430a7fa00cdfa83bdb5da3d376305fe"},
+      "route_console.log": {"bytes": 27332, "sha256": "7e72423a07b9ecfdd96739a073ade6f775ca2def1ad36ae08fa0897bd5647e39"}
+    },
+    "cdc_not_available.rpt": "absent by design: report_cdc is an invalid command in TD Release_2026.2 (the failure text is in route_console.log)"
+  },
+  "budget_used": {
+    "dev_minutes_approx": 16,
+    "dev_tool_calls_approx": 11,
+    "td_sessions": "1/1",
+    "td_session_seconds": 141,
+    "route_minutes": 2.4,
+    "synth_attempts": "0/0",
+    "route_attempts": "1/1",
+    "deepseek_calls": 0,
+    "subagents": 0
+  },
+  "forbidden_actions_not_taken": [
+    "no synthesis",
+    "no RTL change",
+    "no QoR/seed/clock change",
+    "no false path / multicycle / clock group exception",
+    "no frame_top/SDC edit",
+    "no re-route after the failing WNS",
+    "no bitgen / .bit / download / Flash",
+    "no new round or new package"
+  ],
+  "artifacts": {
+    "result": "T10.a1-bm-addr/r0-route/result-r0-route.md",
+    "lessons": "T10.a1-bm-addr/r0-route/lessons-r0-route.md",
+    "manifest": "T10.a1-bm-addr/r0-route/CANDIDATE-MANIFEST-bm-addr-r0-route.json",
+    "cdc_static": "T10.a1-bm-addr/r0-route/cdc-static.md",
+    "reports": "T10.a1-bm-addr/r0-route/",
+    "route_script": "T10.a1-bm-addr/r0/td/02_route_only.tcl",
+    "routed_db": "T10.a1-bm-addr/r0/td/a1_bm_addr_Runs/phy_1/a1_bm_addr_pr.db",
+    "functional_evidence": ["T10.a1-bm-addr/r0/p2/result.json", "T10.a1-bm-addr/r0/p3/result.json"],
+    "previous_revision": ["T10.a1-bm-addr/r0/result-r0.md", "T10.a1-bm-addr/r0/CANDIDATE-MANIFEST-bm-addr-r0.json"]
+  },
+  "fallback": {
+    "best_g1_green": "35ea7364 (worktree; this candidate)",
+    "best_routed": "0b084317 (T10.a1-hit-pipe r0; routed -0.436, not G2 PASS)",
+    "bm_prefetch_routed": "df6124d4 r2-waive routed -0.421 / 178 violating endpoints"
+  },
+  "blocked": {
+    "reason_code": "LIMIT_REACHED",
+    "detail": "Routed SWNS -0.087 ns / STNS -1.109 ns with 27 violating setup endpoints after the one authorized route-only attempt (route 1/1). The routed zero-violation gate was not waived, the +0.5 synth waiver does not extend to routed timing, and the dispatch forbids a second route / re-synthesis / RTL change, so the package stops and T10 closes as 3/4 PASS + 1 warning.",
+    "done": [
+      "route-only 1/1 on the unchanged candidate 35ea7364 (no synthesis, no RTL change)",
+      "all required routed reports written directly by the tool with -file on the imported routed DB",
+      "static single-clock CDC evidence and check_timing coverage stated with limits",
+      "stop before bitgen; no .bit/.cwc; no download",
+      "target-cone comparison against r2-waive (SWNS -0.421 -> -0.087, 178 -> 27 endpoints, ERAM clk2q starts 3 -> 0)"
+    ],
+    "not_done": [
+      "routed zero violations (27 setup endpoints remain, worst -0.087 ns)",
+      "exhaustive ERAM clk2q endpoint enumeration (report_timing -from/-max_paths unsupported by TD 2026.2)",
+      "bitgen / .bit / board verification (not authorized)"
+    ],
+    "last_evidence": "T10.a1-bm-addr/r0-route/routed_timing_summary.rpt ; routed_timing_status.rpt ; route_flow.status ; T10.a1-bm-addr/r0-route/route_console.log ; cdc-static.md",
+    "minimal_next_step": "Planner closes T10 as 3/4 PASS + 1 warning and keeps r2 0b084317. The 27 remaining endpoints are NOT the address/CE cone: worst is u_core/adler_red_st_reg[2] -> u_dut/smem.addrb[12] (-0.087, core-to-frame boundary), then sdata_ptr -> state.ceb (-0.084), dtot_r -> praddr (-0.067x3), pos/hp_r -> bm_a.addrb (-0.057/-0.058). Any further attempt needs a new user authorization and a new package.",
+    "resume_entry": "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-bm-addr/r0-route/"
+  },
+  "retest": {
+    "tester_required": true,
+    "note": "dispatch after_development: routed gate failed -> dev returns to planner; a tester is only spawned if the planner still wants independent verification of the FAIL evidence. Verdict must stay FAIL; no PASS may be claimed.",
+    "required_dimensions": ["functional", "engineering", "system"],
+    "required_checks": [
+      "functional: re-run P2 13/13 + P3 20/20 on candidate 35ea7364 with an independently repaired strict decoder; require comp cycles exactly 355,261 and f1080p_p1d1 = 81,707 B / b769cc66...08ff",
+      "engineering: re-parse routed_timing_summary.rpt/-status.rpt (SWNS -0.087, STNS -1.109, HWNS +0.023, HTNS 0.000, 27 violating endpoints, single clk->clk group) and routed_area.rpt (slice 2,993, ERAM 26, IO 121)",
+      "engineering: verify the routed reports were produced with -file on the routed DB (hashes in this manifest) and that report_cdc is genuinely unavailable",
+      "system: no bitgen, no .bit/.cwc, no download; static single-clock CDC per cdc-static.md; throughput/no-board claims unchanged (81.067 MB/s at 187.5 MHz, comp path)"
+    ],
+    "report_paths": ["T10.a1-bm-addr/r0-route/", "T10.a1-bm-addr/r0/td/routed_*.rpt"],
+    "input_status": "frozen",
+    "candidate_sha256": "35ea736415c5fbfd28fabcf85b78e33275fb2507f8d30a070a95a17a41760942"
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "task_id": "T07.rk-align-backend",
+  "task_ids": ["T07.rk-align-backend"],
+  "round": 3,
+  "role": "developer",
+  "status": "ready_for_test",
+  "batch_size": 1,
+  "actual_repair_rounds": 3,
+  "fixed_in_this_round": [
+    "F1（functional r2 的 FAIL 主缺陷；engineering r2 F1 同）：tools/pcie_integration/run_sim.ps1 与 run_td.ps1 在文档化调用（powershell -File + PS5.1/ACP=936）下被按 ANSI 解码、吞换行（144→136 / 81→76 行），$doPath/$tclDst 语句被并进上一行中文注释，脚本在写 run.do / 复制 tcl 之前中止（WriteAllLines 空路径名非法），且 -File 下 exit 0。修复=前置 UTF-8 BOM（EF BB BF），内容**逐字节不变**：run_sim.ps1 33399210…→204d1706…（+3 B）、run_td.ps1 760c5524…→9b8492fc…（+3 B）",
+    "修复后按**文档化默认命令原样**重跑五个 TB（新证据 backend/g1/msim/r3_*）：全部 vlog Errors: 0 + run.do/vsim.log/vsim_stdout.log 齐备 + commands.log 有 cmd /c vsim + vsim exit=0 + ALL PASS（差分 680 拍 0 失配；pusher 20387 TLP）",
+    "两个负对照（本机实测）：①入口负对照 backend/g1/msim/r3_entry_before_fix/（修复前：无 run.do/vsim.log、stderr WriteAllLines 空路径、exit 0；decode_view.txt 记 PS 视图 136/76 行 vs 真值 144/81）；②oracle 负对照 backend/g1/msim/r3_neg_m1/（项目外隔离树注入 M1=crc_next 固定 4 字节推进，用修复后入口跑差分 TB → FAIL: 507 mismatches，与 functional r2 §5 同值；该目录 mutation.json 因原实例中断未落盘——新实例完整复跑见 r3v_neg_m1/，冻结 RTL 50b4c77b… 未动）",
+    "F2（engineering r2 §8）文档数字更正：round2 post-route TMST-7700 SEVERE 由误记 0 更正为 **5**（实物证据 phy_1/run.log L1796=5、place L1104=2；即 chk.timing 的 2 无根时钟网 + 3 local clock，与 round0 同类且已解释）；更正 change-report §8.4 表与 g2/README §3.5/§5 表；方法教训写入 §10.2",
+    "诚实补记（functional r2 §2 假设①）：round0–round2 开发侧实跑用的是「Get-Content -Raw 读正文 → Set-Content -Encoding UTF8 写 %TEMP% 副本（PS5.1 会加 BOM）→ -File 跑副本」，与文档命令不一致；本轮把 BOM 固化进冻结脚本，文档命令=实跑命令，不再需要 launcher/副本（change-report §10.1）",
+    "未修项登记（不影响判据）：F3 生产 RTL 头注释陈旧（END_PEND 字样）——改注释即改生产字节、破坏源↔位流绑定，按纪律不改；F4 backend/g1/crc16_upd4.generated.v 为早期中间产物（非生产件）——在 g1/README 就地标注；functional r2 §6.1 的 I_enable 包尾后 1 拍撤销覆盖缺口——仅诊断计数级、窗口极窄，登记为 T11/后续任务增补用例（TB 保持不变以复用 M1/M2 负对照证据）；engineering 观察 2 的仓库根 run2.do 不在本包范围",
+    "manifest 重生成（schema2/round3，68f9f4d0…4275；自检 232/0）+ 机械证明变更范围：自 r2 冻结时刻（06:04:56）起，232 条里仅 build_scripts 的 3 个文件变化（run_sim.ps1 / run_td.ps1 / gen_manifest.py），production 153 / tests 8 / rk 28 / artifacts 35 零变化（RTL 50b4c77b…、bit 0943cb36…8b0a 逐字节不变）",
+    "本轮由新修复实例接续执行（原实例上游请求超限失效；主重建，write_scope 不变）：对原实例全部 round3 产物逐项只读复核——两 .ps1 的 BOM/SHA、r3_* 五 TB 日志、r3_entry_before_fix、r3_neg_m1、manifest 232 条独立复算、bit 0943cb36…8b0a 重算、候选三树 0 晚写——结论全部成立",
+    "新实例独立复跑（文档化默认命令原样；新证据 backend/g1/msim/r3v_*）：五个 TB 全部 vlog Errors: 0 + run.do/vsim.log 齐备 + vsim exit=0 + ALL PASS（差分 680 拍 0 失配；pusher 20387 TLP；时间 07:10:26–07:10:47），与 r3_* 一致",
+    "负对照复跑：r3v_neg_m1（新建隔离树重注入 M1，shadow e0e08a86… 与原 run 相同 → FAIL: 507 mismatches，含 mutation.json / frozen 50b4c77b… 未动）；r3v_entry_before_fix（去 BOM 逐字节副本 = 修复前字节 33399210c389818a… 复现修复前中止：vlog Errors: 0 后无 run.do/vsim.log + WriteAllLines 空路径名 + exit 0；decode_view.txt / r3v_entry_ast.txt 佐证）",
+    "补齐原实例中断未落盘的产物：入口 AST 语义证据 r3v_entry_ast.txt（frozen→$doPath/$tclDst 赋值语句=1，no-BOM→0）；原 entry_ast_check.ps1 自身为 UTF-8 无 BOM、被同一缺陷击中未能产出（失败留痕 old_ast_script_attempt.txt），等价检查由纯 ASCII 脚本完成",
+    "manifest 重生成一次（07:14）与 06:51 冻结逐字节相同（68f9f4d0…4275；自检 232/0）；冻结边界复核：RTL/SDC/约束/bit/DB/测试输入零变化；新增复核内容全在 backend/g1/msim/r3v_* 与 backend 文档（均不在 manifest 条目内）"
+  ],
+  "artifact_paths": [
+    "fpga/csi2/pcie_integration/",
+    "tools/pcie_integration/",
+    "workflow/runs/20261017-011744-rk-fpga-align/backend/change-report.md",
+    "workflow/runs/20261017-011744-rk-fpga-align/backend/source-provenance.json",
+    "workflow/runs/20261017-011744-rk-fpga-align/backend/build-entry.md",
+    "workflow/runs/20261017-011744-rk-fpga-align/backend/actual-commands.json",
+    "workflow/runs/20261017-011744-rk-fpga-align/backend/hardware-ready.md",
+    "workflow/runs/20261017-011744-rk-fpga-align/backend/rk-change-list.md",
+    "workflow/runs/20261017-011744-rk-fpga-align/backend/patches/rka1-driver.patch",
+    "workflow/runs/20261017-011744-rk-fpga-align/backend/patches/apply-check-stat.txt",
+    "workflow/runs/20261017-011744-rk-fpga-align/backend/rk-driver-src/",
+    "workflow/runs/20261017-011744-rk-fpga-align/backend/g1/",
+    "workflow/runs/20261017-011744-rk-fpga-align/backend/g2/",
+    "workflow/runs/20261017-011744-rk-fpga-align/backend/manifest-selfcheck.json"
+  ],
+  "manifest_path": "workflow/runs/20261017-011744-rk-fpga-align/backend/candidate-manifest.json",
+  "manifest_sha256": "68f9f4d05dd219cf4f66009a5bed1bdd6c1dcc7e1a4a386a8974725b733a4275",
+  "test_input_paths": [
+    "fpga/csi2/pcie_integration/sim/tb/tb_ddr_frame_pusher_rka1.v",
+    "fpga/csi2/pcie_integration/sim/tb/tb_ep_bar_win_rka1.v",
+    "fpga/csi2/pcie_integration/sim/tb/tb_csi_checked.v",
+    "fpga/csi2/pcie_integration/sim/tb/tb_ddr_wr_arb_peer.v",
+    "fpga/csi2/pcie_integration/sim/tb/tb_csi_integrity_diff.v",
+    "fpga/csi2/pcie_integration/sim/tb/csi_rx_packet_integrity_ref.v",
+    "fpga/csi2/pcie_integration/sim/tb/top_elab_stubs.v",
+    "fpga/csi2/pcie_integration/sim/compile_checked.f",
+    "tools/pcie_integration/run_sim.ps1",
+    "tools/pcie_integration/run_td.ps1",
+    "tools/pcie_integration/gen_manifest.py",
+    "tools/pcie_integration/gen_crc16_flat.py",
+    "workflow/runs/20261017-011744-rk-fpga-align/backend/candidate/prj/",
+    "workflow/runs/20261017-011744-rk-fpga-align/backend/patches/rka1-driver.patch"
+  ],
+  "lessons_path": "workflow/runs/20261017-011744-rk-fpga-align/backend/lessons-learned.md",
+  "blocked": [],
+  "retest": {
+    "required_dimensions": ["functional", "engineering", "system"],
+    "input_status": "changed",
+    "input_changes": [
+      "tools/pcie_integration/run_sim.ps1（33399210…→204d1706…）：+UTF-8 BOM，内容逐字节不变",
+      "tools/pcie_integration/run_td.ps1（760c5524…→9b8492fc…）：+UTF-8 BOM，内容逐字节不变",
+      "tools/pcie_integration/gen_manifest.py：round3 文案 + rtl/checked 下新生成文件的来源判定小修",
+      "生产 RTL / SDC / 约束 / bit / DB / 测试输入：**零变化**（机械比对 232 条，仅上述 3 个 build_scripts 文件在 r2 冻结后有写入）"
+    ],
+    "reuse_decision_paths": [
+      "test-reports/T07.rk-align-backend-r2-engineering.md §10（**显式复用条件**：若仅 tool/doc 修复且不改 RTL/约束/bit，可复用其 r2 PASS 判定；生产输入/构建产物哈希不变时可复用，仅需对改动文件本身增补核对与新 manifest 绑定）——本轮满足：G2 数字/bit/DB/SDC 全部未变，仅 build_scripts 三文件与文档更正",
+      "test-reports/T07.rk-align-backend-r2-functional.md §9（下一动作：用文档化默认命令本身重跑五 TB、重生成 manifest、更新 actual-commands/build-entry/change-report/dev-result、停止修改后 ready_for_test）——本包已按此执行，证据 r3_*（新修复实例复核复跑 r3v_*）",
+      "test-reports/T07.rk-align-backend-r2-functional.md §5（差分负对照 M1/M2 证据）——**可复用**：sim/tb/tb_csi_integrity_diff.v 与 RTL 本轮零变化，故其负对照/有效性结论继续成立；本包另在隔离树复跑了 M1 得同值 FAIL: 507 mismatches（g1/msim/r3_neg_m1/）",
+      "test-reports/T07.rk-align-backend-r2-system.md §2/§5/§6（F1/F2/F3 复验与 RK 补丁结论）——RTL/bit/patch 未变，可复用，需绑定新 manifest；报告内引用「默认入口」的表述按 r3 更新（change-report §10.1）",
+      "workflow/runs/20261017-011744-rk-fpga-align/backend/change-report.md §10（round3 修复与登记：§10.1 入口、§10.2 数字更正、§10.3 未修项、§10.4 变更范围机械证明）",
+      "workflow/runs/20261017-011744-rk-fpga-align/backend/change-report.md §10.5（新修复实例交接补记：逐项复核结论、r3v_* 独立复跑/负对照复跑证据、manifest 重生成逐字节相同、补齐产物与冻结边界）"
+    ],
+    "evidence_refresh": [
+      "G1（新，**文档化默认命令原样**）：backend/g1/msim/r3_*/ 五个 TB——vlog Errors: 0、run.do/vsim.log 齐备、commands.log 有 cmd /c vsim + vsim exit=0、vsim ALL PASS（差分 680 拍 0 失配 / pusher 20387 TLP），时间 06:50:10–06:50:30 晚于全部输入修改",
+      "入口负对照：backend/g1/msim/r3_entry_before_fix/（修复前失败留痕 + decode_view.txt 136/76 vs 144/81）",
+      "oracle 负对照：backend/g1/msim/r3_neg_m1/（M1 注入 → FAIL: 507 mismatches；原始运行日志；mutation.json 因原实例中断未落盘，完整复跑见 r3v_neg_m1/）",
+      "G2：**未重跑**，沿用 r2 同一最终 DB（SWNS +0.107 / STNS 0.000 / 0 违例 / HWNS +0.020 / Routed；bit 0943cb36…8b0a 与 best_result 同 SHA）——生产/构建产物哈希本轮零变化",
+      "system：探针仍须按 change-report §7.2 接 pusher rel_tgl2/3 + BASE0B/BASE1B；bit/DB/patch 未变，可复用 r2 结论并绑定新 manifest",
+      "round3 复核（新修复实例）：backend/g1/msim/r3v_tb_*/（五个 TB 文档化命令原样复跑 ALL PASS）、r3v_neg_m1/（M1 完整复跑 FAIL: 507 mismatches + mutation.json）、r3v_entry_before_fix/（修复前入口失败复现 + AST 语义校验；含 decode_view.txt）",
+      "manifest 独立复算与重生成：232/232 0 失配、候选三树 0 晚写；重生成后 SHA 仍 68f9f4d0…4275（自检 232/0），三轮测试绑定的 manifest 不变"
+    ],
+    "blocked_dimension": null
+  },
+  "notices": [
+    "本包不操作硬件：不下载位流、不写 Flash、不发外部消息",
+    "G3/G4/G5 事前不适用（纯后端候选），不声称 DMA 实收",
+    "RK 补丁未改动（round3 未触碰 rk-driver-src/patches）；仍为离线 apply-check 状态",
+    "round0 的失败证据（三维报告 + eng-repro/system 证据）保留在 test-reports/，未被本包覆盖",
+    "round3 仅工具/文档修复：RTL/SDC/约束/bit/DB/测试输入零变化（逐条 mtime 比对证明仅 3 个 build_scripts 文件变化）",
+    "两个 .ps1 的 UTF-8 BOM 是功能性要求（PS5.1/ACP=936 下无 BOM 的 UTF-8 会被按 ANSI 误解码），改这两个文件时必须保留 BOM",
+    "round3 由新修复实例接续完成复核/复跑（原实例上游请求超限失效）：新增证据一律用 r3v_* 前缀，与 r3_* 并存、未覆盖原证据；manifest 未因复核而变化（同一 SHA 冻结，测试绑定不变）"
+  ]
+}

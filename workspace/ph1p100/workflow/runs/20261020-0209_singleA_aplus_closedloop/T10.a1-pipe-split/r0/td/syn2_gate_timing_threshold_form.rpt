@@ -1,0 +1,1417 @@
+Created by          : Tang Dynasty Release_2026.2
+                    : Copyright (c) 2012-2026 Anlogic Inc.
+Generated           : Thu Oct 22 23:42:07 2026
+
+Top Model           : a1_eng_top
+Device              : PH1P100SBG484
+Speed               : 3
+STA coverage        : 95.89%
+Constraint File     : C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-pipe-split/r0/td/a1_small_top.sdc;
+Confidence          : Synthesized
+Check Corner        : Both (Slow and Fast)
+CRPR Enabled        : Yes
+Report Scheme       : 10 end point(s) per path group, 1 path(s) per end point
+
+
+Check Status
+-------------
+
+Corner   | Max      Min     
+------------------------------------
+Slow     | yes      yes     
+Fast     | yes      yes     
+
+
+Timing Status
+--------------------
+	SWNS: -0.007ns, STNS: -0.007ns
+	HWNS: 0.000ns, HTNS: 0.000ns
+	Period Check WNS: 2.533ns
+
+
+Clock Summary
+--------------------
+
+       Clock-Id:       C-Freq       Fanout   Clock-Name
+--------------------------------------------------------------------------------
+           clk0:      187.512         1779   clk
+--------------------------------------------------------------------------------
+
+       Name            Type         Rise(ns)   Fall(ns)          C-Period(ns)     C-Freq(MHz)          R-Period(ns)     R-Freq(MHz)         SWNS(ns)   STNS(ns)         HWNS(ns)   HTNS(ns)         Skew(ns)           Fanout        Max-Level        CC-From    CC-To
+       clk0           local            0.000      2.667                 5.333         187.512                 5.340         187.266           -0.007     -0.007            0.000      0.000            0.000             1779                6             no       no
+
+Notes
+----------
+C-Period  :  constraint period
+C-Freq    :  constraint freq
+R-Period  :  report min period
+R-Freq    :  report fmax
+CC-From   :  has path(s) from cross-domain clock
+CC-To     :  has path(s) to cross-domain clock
+
+
+*   Clock R-Period data only takes intra-clock timing. SWNS/STNS/HWNS/HTNS take both intra-clock and inter-clock timing.
+*   If there is mismatch between R-Period and SWNS, check inter-clock timing of this clock as capture clock.
+*   SWNS/STNS/HWNS/HTNS of timing exception (SMCP/SMD) only counted in global Timing Status, not counted in Clock Summary.
+
+Intra clock domain timing
+--------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+Path Group     :     clk -> clk
+Type           :     Self
+From Clock     :     clk
+To Clock       :     clk
+Min Period     :     5.340ns
+Fmax           :     187.266MHz
+
+Statistics:
+Max            : SWNS     -0.007ns, STNS     -0.007ns,         1 Viol Endpoints,      4759 Total Endpoints
+Min            : HWNS      0.000ns, HTNS      0.000ns,         0 Viol Endpoints,         0 Total Endpoints
+----------------------------------------------------------------------------------------------------
+
+Max Paths
+----------------------------------------------------------------------------------------------------
+Slack               : -0.007ns
+Begin Point         : u_dut/u_core/htab_tag_syn_56.clkb (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/rng1_r_reg.d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.276ns (cell 3.493ns (66%), net 1.783ns (34%))
+Clock Skew          : 0.000ns
+Logic Level         : 5 ( LUT3=2  ADDER=2  LUT6=1 )
+Max Fanout          : 3
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=1747)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/htab_tag_syn_56.clkb
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+ERAM (clk2q)                            1.515    f     1.515          pin: u_dut/u_core/htab_tag_syn_56.dob[1]
+net (fo=1)                              0.506          2.021          net: u_dut/u_core/htab_q[25],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(477)
+                                                                      pin: u_dut/u_core/rng1_r_reg_syn_4.a
+LUT3                                    0.273    f     2.294       1  pin: u_dut/u_core/rng1_r_reg_syn_4.o
+net (fo=3)                              0.365          2.659          net: u_dut/u_core/hent_pos[1],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(480)
+                                                                      pin: u_dut/u_core/lt58_syn_62.ib
+ADDER                                   0.544    f     3.203       2  pin: u_dut/u_core/lt58_syn_62.fco
+net (fo=1)                              0.000          3.203          net: u_dut/u_core/lt58_syn_46,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(514)
+                                                                      pin: u_dut/u_core/lt58_syn_63.fci
+ADDER                                   0.052    r     3.255          pin: u_dut/u_core/lt58_syn_63.fco
+net (fo=1)                              0.000          3.255          net: u_dut/u_core/lt58_syn_48,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(514)
+                                                                      pin: u_dut/u_core/lt58_syn_64.fci
+ADDER                                   0.052    r     3.307          pin: u_dut/u_core/lt58_syn_64.fco
+net (fo=1)                              0.000          3.307          net: u_dut/u_core/lt58_syn_50,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(514)
+                                                                      pin: u_dut/u_core/lt58_syn_65.fci
+ADDER                                   0.052    r     3.359          pin: u_dut/u_core/lt58_syn_65.fco
+net (fo=1)                              0.000          3.359          net: u_dut/u_core/lt58_syn_52,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(514)
+                                                                      pin: u_dut/u_core/lt58_syn_66.fci
+ADDER                                   0.052    r     3.411          pin: u_dut/u_core/lt58_syn_66.fco
+net (fo=1)                              0.000          3.411          net: u_dut/u_core/lt58_syn_54,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(514)
+                                                                      pin: u_dut/u_core/lt58_syn_67.fci
+ADDER                                   0.052    r     3.463          pin: u_dut/u_core/lt58_syn_67.fco
+net (fo=1)                              0.000          3.463          net: u_dut/u_core/lt58_syn_56,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(514)
+                                                                      pin: u_dut/u_core/lt58_syn_68.fci
+ADDER                                   0.052    r     3.515          pin: u_dut/u_core/lt58_syn_68.fco
+net (fo=1)                              0.000          3.515          net: u_dut/u_core/lt58_syn_57,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(514)
+                                                                      pin: u_dut/u_core/lt58_syn_69.fci
+ADDER                                   0.220    r     3.735       3  pin: u_dut/u_core/lt58_syn_69.ofb
+net (fo=1)                              0.304          4.039          net: u_dut/u_core/rng1_n4,  NOFILE(0)
+                                                                      pin: u_dut/u_core/rng1_r_reg_syn_25.a
+LUT3                                    0.273    f     4.312       4  pin: u_dut/u_core/rng1_r_reg_syn_25.o
+net (fo=1)                              0.304          4.616          net: u_dut/u_core/rng1_r_reg_syn_26,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(858)
+                                                                      pin: u_dut/u_core/rng1_r_reg_syn_67.a
+LUT6                                    0.315    f     4.931       5  pin: u_dut/u_core/rng1_r_reg_syn_67.o
+net (fo=1)                              0.304          5.235          net: u_dut/u_core/rng1_r_reg_syn_3,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(858)
+                                                                      pin: u_dut/u_core/rng1_r_reg.d
+SEQ (reg)                               0.041    f     5.276               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.276               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=1747)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/rng1_r_reg.clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.007               
+
+Slack               : 0.341ns
+Begin Point         : u_dut/u_core/len_r_reg[2].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/cand_bits_reg[31].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 4.928ns (cell 2.156ns (43%), net 2.772ns (57%))
+Clock Skew          : 0.000ns
+Logic Level         : 6 ( LUT6=2  ADDER=2  LUT4=1  LUT2=1 )
+Max Fanout          : 19
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=1747)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/len_r_reg[2].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_core/len_r_reg[2].q
+net (fo=19)                             0.496          0.572          net: u_dut/u_core/len_r[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(119)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_9.c
+LUT4                                    0.273    f     0.845       1  pin: u_dut/u_core/pbit_off_b3[2]_syn_9.o
+net (fo=9)                              0.427          1.272          net: u_dut/u_core/pbit_off_b3[2]_syn_10,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_13.a
+LUT6                                    0.315    f     1.587       2  pin: u_dut/u_core/pbit_off_b3[2]_syn_13.o
+net (fo=10)                             0.432          2.019          net: u_dut/u_core/pbit_off_b3[2]_syn_14,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_21.a
+LUT2                                    0.273    f     2.292       3  pin: u_dut/u_core/pbit_off_b3[2]_syn_21.o
+net (fo=1)                              0.304          2.596          net: u_dut/u_core/pbit_off_b3[2]_syn_22,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_23.b
+LUT6                                    0.315    f     2.911       4  pin: u_dut/u_core/pbit_off_b3[2]_syn_23.o
+net (fo=3)                              0.365          3.276          net: u_dut/u_core/sel23_syn_90,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(760)
+                                                                      pin: u_dut/u_core/add8_syn_192.ic
+ADDER                                   0.435    r     3.711       5  pin: u_dut/u_core/add8_syn_192.fco
+net (fo=1)                              0.000          3.711          net: u_dut/u_core/add8_syn_160,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_193.fci
+ADDER                                   0.052    r     3.763          pin: u_dut/u_core/add8_syn_193.fco
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_161,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_194.fci
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_194.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_226,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_195.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_195.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_227,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_196.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_196.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_228,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_197.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_197.fco_f
+net (fo=1)                              0.074          3.837          net: u_dut/u_core/add8_syn_229,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_198.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_198.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_230,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_199.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_199.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_231,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_200.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_200.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_232,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_201.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_201.fco_f
+net (fo=1)                              0.074          3.911          net: u_dut/u_core/add8_syn_233,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_202.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_202.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_234,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_203.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_203.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_235,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_204.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_204.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_236,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_205.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_205.fco_f
+net (fo=1)                              0.074          3.985          net: u_dut/u_core/add8_syn_237,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_206.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_206.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_238,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_207.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_207.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_239,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_208.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_208.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_240,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_209.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_209.fco_f
+net (fo=1)                              0.074          4.059          net: u_dut/u_core/add8_syn_241,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_210.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_210.fco_f
+net (fo=1)                              0.000          4.059          net: u_dut/u_core/add8_syn_242,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_211.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_211.fco_f
+net (fo=1)                              0.000          4.059          net: u_dut/u_core/add8_syn_243,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_212.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_212.fco_f
+net (fo=1)                              0.000          4.059          net: u_dut/u_core/add8_syn_244,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_213.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_213.fco_f
+net (fo=1)                              0.074          4.133          net: u_dut/u_core/add8_syn_245,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_214.fci_f
+ADDER                                   0.000    f     4.133          pin: u_dut/u_core/add8_syn_214.fco_f
+net (fo=1)                              0.000          4.133          net: u_dut/u_core/add8_syn_246,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_215.fci_f
+ADDER                                   0.000    f     4.133          pin: u_dut/u_core/add8_syn_215.fco_f
+net (fo=1)                              0.000          4.133          net: u_dut/u_core/add8_syn_247,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_216.fci_f
+ADDER                                   0.000    f     4.133          pin: u_dut/u_core/add8_syn_216.fco_f
+net (fo=1)                              0.000          4.133          net: u_dut/u_core/add8_syn_248,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_217.fci_f
+ADDER                                   0.000    f     4.133          pin: u_dut/u_core/add8_syn_217.fco_f
+net (fo=1)                              0.074          4.207          net: u_dut/u_core/add8_syn_249,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_218.fci_f
+ADDER                                   0.052    r     4.259          pin: u_dut/u_core/add8_syn_218.fco
+net (fo=1)                              0.000          4.259          net: u_dut/u_core/add8_syn_186,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_219.fci
+ADDER                                   0.052    r     4.311          pin: u_dut/u_core/add8_syn_219.fco
+net (fo=1)                              0.000          4.311          net: u_dut/u_core/add8_syn_187,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_220.fci
+ADDER                                   0.052    r     4.363          pin: u_dut/u_core/add8_syn_220.fco
+net (fo=1)                              0.000          4.363          net: u_dut/u_core/add8_syn_188,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_221.fci
+ADDER                                   0.220    r     4.583       6  pin: u_dut/u_core/add8_syn_221.ofb
+net (fo=1)                              0.304          4.887          net: u_dut/u_core/cand_bits_b3[31],  NOFILE(0)
+                                                                      pin: u_dut/u_core/cand_bits_reg[31].d
+SEQ (reg)                               0.041    f     4.928               
+--------------------------------------------------------------------  ---------------
+Arrival                                                4.928               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=1747)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/cand_bits_reg[31].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.341               
+
+Slack               : 0.393ns
+Begin Point         : u_dut/u_core/len_r_reg[2].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/cand_bits_reg[30].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 4.876ns (cell 2.104ns (43%), net 2.772ns (57%))
+Clock Skew          : 0.000ns
+Logic Level         : 6 ( LUT6=2  ADDER=2  LUT4=1  LUT2=1 )
+Max Fanout          : 19
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=1747)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/len_r_reg[2].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_core/len_r_reg[2].q
+net (fo=19)                             0.496          0.572          net: u_dut/u_core/len_r[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(119)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_9.c
+LUT4                                    0.273    f     0.845       1  pin: u_dut/u_core/pbit_off_b3[2]_syn_9.o
+net (fo=9)                              0.427          1.272          net: u_dut/u_core/pbit_off_b3[2]_syn_10,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_13.a
+LUT6                                    0.315    f     1.587       2  pin: u_dut/u_core/pbit_off_b3[2]_syn_13.o
+net (fo=10)                             0.432          2.019          net: u_dut/u_core/pbit_off_b3[2]_syn_14,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_21.a
+LUT2                                    0.273    f     2.292       3  pin: u_dut/u_core/pbit_off_b3[2]_syn_21.o
+net (fo=1)                              0.304          2.596          net: u_dut/u_core/pbit_off_b3[2]_syn_22,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_23.b
+LUT6                                    0.315    f     2.911       4  pin: u_dut/u_core/pbit_off_b3[2]_syn_23.o
+net (fo=3)                              0.365          3.276          net: u_dut/u_core/sel23_syn_90,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(760)
+                                                                      pin: u_dut/u_core/add8_syn_192.ic
+ADDER                                   0.435    r     3.711       5  pin: u_dut/u_core/add8_syn_192.fco
+net (fo=1)                              0.000          3.711          net: u_dut/u_core/add8_syn_160,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_193.fci
+ADDER                                   0.052    r     3.763          pin: u_dut/u_core/add8_syn_193.fco
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_161,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_194.fci
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_194.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_226,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_195.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_195.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_227,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_196.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_196.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_228,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_197.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_197.fco_f
+net (fo=1)                              0.074          3.837          net: u_dut/u_core/add8_syn_229,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_198.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_198.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_230,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_199.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_199.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_231,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_200.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_200.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_232,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_201.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_201.fco_f
+net (fo=1)                              0.074          3.911          net: u_dut/u_core/add8_syn_233,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_202.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_202.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_234,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_203.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_203.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_235,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_204.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_204.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_236,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_205.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_205.fco_f
+net (fo=1)                              0.074          3.985          net: u_dut/u_core/add8_syn_237,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_206.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_206.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_238,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_207.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_207.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_239,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_208.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_208.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_240,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_209.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_209.fco_f
+net (fo=1)                              0.074          4.059          net: u_dut/u_core/add8_syn_241,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_210.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_210.fco_f
+net (fo=1)                              0.000          4.059          net: u_dut/u_core/add8_syn_242,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_211.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_211.fco_f
+net (fo=1)                              0.000          4.059          net: u_dut/u_core/add8_syn_243,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_212.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_212.fco_f
+net (fo=1)                              0.000          4.059          net: u_dut/u_core/add8_syn_244,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_213.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_213.fco_f
+net (fo=1)                              0.074          4.133          net: u_dut/u_core/add8_syn_245,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_214.fci_f
+ADDER                                   0.000    f     4.133          pin: u_dut/u_core/add8_syn_214.fco_f
+net (fo=1)                              0.000          4.133          net: u_dut/u_core/add8_syn_246,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_215.fci_f
+ADDER                                   0.000    f     4.133          pin: u_dut/u_core/add8_syn_215.fco_f
+net (fo=1)                              0.000          4.133          net: u_dut/u_core/add8_syn_247,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_216.fci_f
+ADDER                                   0.000    f     4.133          pin: u_dut/u_core/add8_syn_216.fco_f
+net (fo=1)                              0.000          4.133          net: u_dut/u_core/add8_syn_248,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_217.fci_f
+ADDER                                   0.000    f     4.133          pin: u_dut/u_core/add8_syn_217.fco_f
+net (fo=1)                              0.074          4.207          net: u_dut/u_core/add8_syn_249,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_218.fci_f
+ADDER                                   0.052    r     4.259          pin: u_dut/u_core/add8_syn_218.fco
+net (fo=1)                              0.000          4.259          net: u_dut/u_core/add8_syn_186,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_219.fci
+ADDER                                   0.052    r     4.311          pin: u_dut/u_core/add8_syn_219.fco
+net (fo=1)                              0.000          4.311          net: u_dut/u_core/add8_syn_187,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_220.fci
+ADDER                                   0.220    r     4.531       6  pin: u_dut/u_core/add8_syn_220.ofb
+net (fo=1)                              0.304          4.835          net: u_dut/u_core/cand_bits_b3[30],  NOFILE(0)
+                                                                      pin: u_dut/u_core/cand_bits_reg[30].d
+SEQ (reg)                               0.041    f     4.876               
+--------------------------------------------------------------------  ---------------
+Arrival                                                4.876               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=1747)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/cand_bits_reg[30].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.393               
+
+Slack               : 0.415ns
+Begin Point         : u_dut/u_core/len_r_reg[2].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/cand_bits_reg[27].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 4.854ns (cell 2.156ns (44%), net 2.698ns (56%))
+Clock Skew          : 0.000ns
+Logic Level         : 6 ( LUT6=2  ADDER=2  LUT4=1  LUT2=1 )
+Max Fanout          : 19
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=1747)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/len_r_reg[2].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_core/len_r_reg[2].q
+net (fo=19)                             0.496          0.572          net: u_dut/u_core/len_r[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(119)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_9.c
+LUT4                                    0.273    f     0.845       1  pin: u_dut/u_core/pbit_off_b3[2]_syn_9.o
+net (fo=9)                              0.427          1.272          net: u_dut/u_core/pbit_off_b3[2]_syn_10,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_13.a
+LUT6                                    0.315    f     1.587       2  pin: u_dut/u_core/pbit_off_b3[2]_syn_13.o
+net (fo=10)                             0.432          2.019          net: u_dut/u_core/pbit_off_b3[2]_syn_14,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_21.a
+LUT2                                    0.273    f     2.292       3  pin: u_dut/u_core/pbit_off_b3[2]_syn_21.o
+net (fo=1)                              0.304          2.596          net: u_dut/u_core/pbit_off_b3[2]_syn_22,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_23.b
+LUT6                                    0.315    f     2.911       4  pin: u_dut/u_core/pbit_off_b3[2]_syn_23.o
+net (fo=3)                              0.365          3.276          net: u_dut/u_core/sel23_syn_90,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(760)
+                                                                      pin: u_dut/u_core/add8_syn_192.ic
+ADDER                                   0.435    r     3.711       5  pin: u_dut/u_core/add8_syn_192.fco
+net (fo=1)                              0.000          3.711          net: u_dut/u_core/add8_syn_160,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_193.fci
+ADDER                                   0.052    r     3.763          pin: u_dut/u_core/add8_syn_193.fco
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_161,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_194.fci
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_194.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_226,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_195.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_195.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_227,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_196.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_196.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_228,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_197.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_197.fco_f
+net (fo=1)                              0.074          3.837          net: u_dut/u_core/add8_syn_229,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_198.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_198.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_230,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_199.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_199.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_231,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_200.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_200.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_232,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_201.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_201.fco_f
+net (fo=1)                              0.074          3.911          net: u_dut/u_core/add8_syn_233,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_202.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_202.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_234,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_203.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_203.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_235,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_204.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_204.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_236,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_205.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_205.fco_f
+net (fo=1)                              0.074          3.985          net: u_dut/u_core/add8_syn_237,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_206.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_206.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_238,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_207.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_207.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_239,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_208.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_208.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_240,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_209.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_209.fco_f
+net (fo=1)                              0.074          4.059          net: u_dut/u_core/add8_syn_241,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_210.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_210.fco_f
+net (fo=1)                              0.000          4.059          net: u_dut/u_core/add8_syn_242,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_211.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_211.fco_f
+net (fo=1)                              0.000          4.059          net: u_dut/u_core/add8_syn_243,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_212.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_212.fco_f
+net (fo=1)                              0.000          4.059          net: u_dut/u_core/add8_syn_244,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_213.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_213.fco_f
+net (fo=1)                              0.074          4.133          net: u_dut/u_core/add8_syn_245,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_214.fci_f
+ADDER                                   0.052    r     4.185          pin: u_dut/u_core/add8_syn_214.fco
+net (fo=1)                              0.000          4.185          net: u_dut/u_core/add8_syn_182,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_215.fci
+ADDER                                   0.052    r     4.237          pin: u_dut/u_core/add8_syn_215.fco
+net (fo=1)                              0.000          4.237          net: u_dut/u_core/add8_syn_183,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_216.fci
+ADDER                                   0.052    r     4.289          pin: u_dut/u_core/add8_syn_216.fco
+net (fo=1)                              0.000          4.289          net: u_dut/u_core/add8_syn_184,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_217.fci
+ADDER                                   0.220    r     4.509       6  pin: u_dut/u_core/add8_syn_217.ofb
+net (fo=1)                              0.304          4.813          net: u_dut/u_core/cand_bits_b3[27],  NOFILE(0)
+                                                                      pin: u_dut/u_core/cand_bits_reg[27].d
+SEQ (reg)                               0.041    f     4.854               
+--------------------------------------------------------------------  ---------------
+Arrival                                                4.854               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=1747)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/cand_bits_reg[27].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.415               
+
+Slack               : 0.445ns
+Begin Point         : u_dut/u_core/len_r_reg[2].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/cand_bits_reg[29].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 4.824ns (cell 2.052ns (42%), net 2.772ns (58%))
+Clock Skew          : 0.000ns
+Logic Level         : 6 ( LUT6=2  ADDER=2  LUT4=1  LUT2=1 )
+Max Fanout          : 19
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=1747)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/len_r_reg[2].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_core/len_r_reg[2].q
+net (fo=19)                             0.496          0.572          net: u_dut/u_core/len_r[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(119)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_9.c
+LUT4                                    0.273    f     0.845       1  pin: u_dut/u_core/pbit_off_b3[2]_syn_9.o
+net (fo=9)                              0.427          1.272          net: u_dut/u_core/pbit_off_b3[2]_syn_10,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_13.a
+LUT6                                    0.315    f     1.587       2  pin: u_dut/u_core/pbit_off_b3[2]_syn_13.o
+net (fo=10)                             0.432          2.019          net: u_dut/u_core/pbit_off_b3[2]_syn_14,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_21.a
+LUT2                                    0.273    f     2.292       3  pin: u_dut/u_core/pbit_off_b3[2]_syn_21.o
+net (fo=1)                              0.304          2.596          net: u_dut/u_core/pbit_off_b3[2]_syn_22,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_23.b
+LUT6                                    0.315    f     2.911       4  pin: u_dut/u_core/pbit_off_b3[2]_syn_23.o
+net (fo=3)                              0.365          3.276          net: u_dut/u_core/sel23_syn_90,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(760)
+                                                                      pin: u_dut/u_core/add8_syn_192.ic
+ADDER                                   0.435    r     3.711       5  pin: u_dut/u_core/add8_syn_192.fco
+net (fo=1)                              0.000          3.711          net: u_dut/u_core/add8_syn_160,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_193.fci
+ADDER                                   0.052    r     3.763          pin: u_dut/u_core/add8_syn_193.fco
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_161,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_194.fci
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_194.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_226,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_195.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_195.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_227,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_196.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_196.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_228,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_197.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_197.fco_f
+net (fo=1)                              0.074          3.837          net: u_dut/u_core/add8_syn_229,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_198.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_198.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_230,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_199.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_199.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_231,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_200.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_200.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_232,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_201.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_201.fco_f
+net (fo=1)                              0.074          3.911          net: u_dut/u_core/add8_syn_233,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_202.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_202.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_234,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_203.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_203.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_235,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_204.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_204.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_236,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_205.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_205.fco_f
+net (fo=1)                              0.074          3.985          net: u_dut/u_core/add8_syn_237,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_206.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_206.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_238,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_207.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_207.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_239,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_208.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_208.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_240,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_209.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_209.fco_f
+net (fo=1)                              0.074          4.059          net: u_dut/u_core/add8_syn_241,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_210.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_210.fco_f
+net (fo=1)                              0.000          4.059          net: u_dut/u_core/add8_syn_242,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_211.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_211.fco_f
+net (fo=1)                              0.000          4.059          net: u_dut/u_core/add8_syn_243,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_212.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_212.fco_f
+net (fo=1)                              0.000          4.059          net: u_dut/u_core/add8_syn_244,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_213.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_213.fco_f
+net (fo=1)                              0.074          4.133          net: u_dut/u_core/add8_syn_245,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_214.fci_f
+ADDER                                   0.000    f     4.133          pin: u_dut/u_core/add8_syn_214.fco_f
+net (fo=1)                              0.000          4.133          net: u_dut/u_core/add8_syn_246,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_215.fci_f
+ADDER                                   0.000    f     4.133          pin: u_dut/u_core/add8_syn_215.fco_f
+net (fo=1)                              0.000          4.133          net: u_dut/u_core/add8_syn_247,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_216.fci_f
+ADDER                                   0.000    f     4.133          pin: u_dut/u_core/add8_syn_216.fco_f
+net (fo=1)                              0.000          4.133          net: u_dut/u_core/add8_syn_248,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_217.fci_f
+ADDER                                   0.000    f     4.133          pin: u_dut/u_core/add8_syn_217.fco_f
+net (fo=1)                              0.074          4.207          net: u_dut/u_core/add8_syn_249,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_218.fci_f
+ADDER                                   0.052    r     4.259          pin: u_dut/u_core/add8_syn_218.fco
+net (fo=1)                              0.000          4.259          net: u_dut/u_core/add8_syn_186,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_219.fci
+ADDER                                   0.220    r     4.479       6  pin: u_dut/u_core/add8_syn_219.ofb
+net (fo=1)                              0.304          4.783          net: u_dut/u_core/cand_bits_b3[29],  NOFILE(0)
+                                                                      pin: u_dut/u_core/cand_bits_reg[29].d
+SEQ (reg)                               0.041    f     4.824               
+--------------------------------------------------------------------  ---------------
+Arrival                                                4.824               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=1747)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/cand_bits_reg[29].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.445               
+
+Slack               : 0.467ns
+Begin Point         : u_dut/u_core/len_r_reg[2].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/cand_bits_reg[26].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 4.802ns (cell 2.104ns (43%), net 2.698ns (57%))
+Clock Skew          : 0.000ns
+Logic Level         : 6 ( LUT6=2  ADDER=2  LUT4=1  LUT2=1 )
+Max Fanout          : 19
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=1747)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/len_r_reg[2].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_core/len_r_reg[2].q
+net (fo=19)                             0.496          0.572          net: u_dut/u_core/len_r[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(119)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_9.c
+LUT4                                    0.273    f     0.845       1  pin: u_dut/u_core/pbit_off_b3[2]_syn_9.o
+net (fo=9)                              0.427          1.272          net: u_dut/u_core/pbit_off_b3[2]_syn_10,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_13.a
+LUT6                                    0.315    f     1.587       2  pin: u_dut/u_core/pbit_off_b3[2]_syn_13.o
+net (fo=10)                             0.432          2.019          net: u_dut/u_core/pbit_off_b3[2]_syn_14,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_21.a
+LUT2                                    0.273    f     2.292       3  pin: u_dut/u_core/pbit_off_b3[2]_syn_21.o
+net (fo=1)                              0.304          2.596          net: u_dut/u_core/pbit_off_b3[2]_syn_22,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_23.b
+LUT6                                    0.315    f     2.911       4  pin: u_dut/u_core/pbit_off_b3[2]_syn_23.o
+net (fo=3)                              0.365          3.276          net: u_dut/u_core/sel23_syn_90,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(760)
+                                                                      pin: u_dut/u_core/add8_syn_192.ic
+ADDER                                   0.435    r     3.711       5  pin: u_dut/u_core/add8_syn_192.fco
+net (fo=1)                              0.000          3.711          net: u_dut/u_core/add8_syn_160,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_193.fci
+ADDER                                   0.052    r     3.763          pin: u_dut/u_core/add8_syn_193.fco
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_161,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_194.fci
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_194.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_226,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_195.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_195.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_227,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_196.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_196.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_228,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_197.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_197.fco_f
+net (fo=1)                              0.074          3.837          net: u_dut/u_core/add8_syn_229,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_198.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_198.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_230,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_199.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_199.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_231,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_200.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_200.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_232,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_201.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_201.fco_f
+net (fo=1)                              0.074          3.911          net: u_dut/u_core/add8_syn_233,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_202.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_202.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_234,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_203.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_203.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_235,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_204.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_204.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_236,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_205.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_205.fco_f
+net (fo=1)                              0.074          3.985          net: u_dut/u_core/add8_syn_237,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_206.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_206.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_238,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_207.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_207.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_239,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_208.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_208.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_240,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_209.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_209.fco_f
+net (fo=1)                              0.074          4.059          net: u_dut/u_core/add8_syn_241,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_210.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_210.fco_f
+net (fo=1)                              0.000          4.059          net: u_dut/u_core/add8_syn_242,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_211.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_211.fco_f
+net (fo=1)                              0.000          4.059          net: u_dut/u_core/add8_syn_243,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_212.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_212.fco_f
+net (fo=1)                              0.000          4.059          net: u_dut/u_core/add8_syn_244,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_213.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_213.fco_f
+net (fo=1)                              0.074          4.133          net: u_dut/u_core/add8_syn_245,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_214.fci_f
+ADDER                                   0.052    r     4.185          pin: u_dut/u_core/add8_syn_214.fco
+net (fo=1)                              0.000          4.185          net: u_dut/u_core/add8_syn_182,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_215.fci
+ADDER                                   0.052    r     4.237          pin: u_dut/u_core/add8_syn_215.fco
+net (fo=1)                              0.000          4.237          net: u_dut/u_core/add8_syn_183,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_216.fci
+ADDER                                   0.220    r     4.457       6  pin: u_dut/u_core/add8_syn_216.ofb
+net (fo=1)                              0.304          4.761          net: u_dut/u_core/cand_bits_b3[26],  NOFILE(0)
+                                                                      pin: u_dut/u_core/cand_bits_reg[26].d
+SEQ (reg)                               0.041    f     4.802               
+--------------------------------------------------------------------  ---------------
+Arrival                                                4.802               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=1747)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/cand_bits_reg[26].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.467               
+
+Slack               : 0.489ns
+Begin Point         : u_dut/u_core/len_r_reg[2].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/cand_bits_reg[23].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 4.780ns (cell 2.156ns (45%), net 2.624ns (55%))
+Clock Skew          : 0.000ns
+Logic Level         : 6 ( LUT6=2  ADDER=2  LUT4=1  LUT2=1 )
+Max Fanout          : 19
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=1747)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/len_r_reg[2].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_core/len_r_reg[2].q
+net (fo=19)                             0.496          0.572          net: u_dut/u_core/len_r[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(119)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_9.c
+LUT4                                    0.273    f     0.845       1  pin: u_dut/u_core/pbit_off_b3[2]_syn_9.o
+net (fo=9)                              0.427          1.272          net: u_dut/u_core/pbit_off_b3[2]_syn_10,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_13.a
+LUT6                                    0.315    f     1.587       2  pin: u_dut/u_core/pbit_off_b3[2]_syn_13.o
+net (fo=10)                             0.432          2.019          net: u_dut/u_core/pbit_off_b3[2]_syn_14,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_21.a
+LUT2                                    0.273    f     2.292       3  pin: u_dut/u_core/pbit_off_b3[2]_syn_21.o
+net (fo=1)                              0.304          2.596          net: u_dut/u_core/pbit_off_b3[2]_syn_22,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_23.b
+LUT6                                    0.315    f     2.911       4  pin: u_dut/u_core/pbit_off_b3[2]_syn_23.o
+net (fo=3)                              0.365          3.276          net: u_dut/u_core/sel23_syn_90,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(760)
+                                                                      pin: u_dut/u_core/add8_syn_192.ic
+ADDER                                   0.435    r     3.711       5  pin: u_dut/u_core/add8_syn_192.fco
+net (fo=1)                              0.000          3.711          net: u_dut/u_core/add8_syn_160,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_193.fci
+ADDER                                   0.052    r     3.763          pin: u_dut/u_core/add8_syn_193.fco
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_161,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_194.fci
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_194.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_226,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_195.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_195.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_227,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_196.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_196.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_228,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_197.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_197.fco_f
+net (fo=1)                              0.074          3.837          net: u_dut/u_core/add8_syn_229,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_198.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_198.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_230,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_199.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_199.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_231,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_200.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_200.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_232,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_201.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_201.fco_f
+net (fo=1)                              0.074          3.911          net: u_dut/u_core/add8_syn_233,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_202.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_202.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_234,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_203.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_203.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_235,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_204.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_204.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_236,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_205.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_205.fco_f
+net (fo=1)                              0.074          3.985          net: u_dut/u_core/add8_syn_237,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_206.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_206.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_238,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_207.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_207.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_239,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_208.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_208.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_240,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_209.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_209.fco_f
+net (fo=1)                              0.074          4.059          net: u_dut/u_core/add8_syn_241,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_210.fci_f
+ADDER                                   0.052    r     4.111          pin: u_dut/u_core/add8_syn_210.fco
+net (fo=1)                              0.000          4.111          net: u_dut/u_core/add8_syn_178,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_211.fci
+ADDER                                   0.052    r     4.163          pin: u_dut/u_core/add8_syn_211.fco
+net (fo=1)                              0.000          4.163          net: u_dut/u_core/add8_syn_179,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_212.fci
+ADDER                                   0.052    r     4.215          pin: u_dut/u_core/add8_syn_212.fco
+net (fo=1)                              0.000          4.215          net: u_dut/u_core/add8_syn_180,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_213.fci
+ADDER                                   0.220    r     4.435       6  pin: u_dut/u_core/add8_syn_213.ofb
+net (fo=1)                              0.304          4.739          net: u_dut/u_core/cand_bits_b3[23],  NOFILE(0)
+                                                                      pin: u_dut/u_core/cand_bits_reg[23].d
+SEQ (reg)                               0.041    f     4.780               
+--------------------------------------------------------------------  ---------------
+Arrival                                                4.780               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=1747)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/cand_bits_reg[23].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.489               
+
+Slack               : 0.497ns
+Begin Point         : u_dut/u_core/len_r_reg[2].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/cand_bits_reg[28].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 4.772ns (cell 2.000ns (41%), net 2.772ns (59%))
+Clock Skew          : 0.000ns
+Logic Level         : 6 ( LUT6=2  ADDER=2  LUT4=1  LUT2=1 )
+Max Fanout          : 19
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=1747)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/len_r_reg[2].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_core/len_r_reg[2].q
+net (fo=19)                             0.496          0.572          net: u_dut/u_core/len_r[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(119)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_9.c
+LUT4                                    0.273    f     0.845       1  pin: u_dut/u_core/pbit_off_b3[2]_syn_9.o
+net (fo=9)                              0.427          1.272          net: u_dut/u_core/pbit_off_b3[2]_syn_10,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_13.a
+LUT6                                    0.315    f     1.587       2  pin: u_dut/u_core/pbit_off_b3[2]_syn_13.o
+net (fo=10)                             0.432          2.019          net: u_dut/u_core/pbit_off_b3[2]_syn_14,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_21.a
+LUT2                                    0.273    f     2.292       3  pin: u_dut/u_core/pbit_off_b3[2]_syn_21.o
+net (fo=1)                              0.304          2.596          net: u_dut/u_core/pbit_off_b3[2]_syn_22,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_23.b
+LUT6                                    0.315    f     2.911       4  pin: u_dut/u_core/pbit_off_b3[2]_syn_23.o
+net (fo=3)                              0.365          3.276          net: u_dut/u_core/sel23_syn_90,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(760)
+                                                                      pin: u_dut/u_core/add8_syn_192.ic
+ADDER                                   0.435    r     3.711       5  pin: u_dut/u_core/add8_syn_192.fco
+net (fo=1)                              0.000          3.711          net: u_dut/u_core/add8_syn_160,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_193.fci
+ADDER                                   0.052    r     3.763          pin: u_dut/u_core/add8_syn_193.fco
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_161,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_194.fci
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_194.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_226,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_195.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_195.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_227,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_196.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_196.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_228,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_197.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_197.fco_f
+net (fo=1)                              0.074          3.837          net: u_dut/u_core/add8_syn_229,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_198.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_198.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_230,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_199.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_199.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_231,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_200.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_200.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_232,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_201.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_201.fco_f
+net (fo=1)                              0.074          3.911          net: u_dut/u_core/add8_syn_233,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_202.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_202.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_234,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_203.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_203.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_235,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_204.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_204.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_236,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_205.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_205.fco_f
+net (fo=1)                              0.074          3.985          net: u_dut/u_core/add8_syn_237,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_206.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_206.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_238,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_207.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_207.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_239,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_208.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_208.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_240,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_209.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_209.fco_f
+net (fo=1)                              0.074          4.059          net: u_dut/u_core/add8_syn_241,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_210.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_210.fco_f
+net (fo=1)                              0.000          4.059          net: u_dut/u_core/add8_syn_242,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_211.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_211.fco_f
+net (fo=1)                              0.000          4.059          net: u_dut/u_core/add8_syn_243,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_212.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_212.fco_f
+net (fo=1)                              0.000          4.059          net: u_dut/u_core/add8_syn_244,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_213.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_213.fco_f
+net (fo=1)                              0.074          4.133          net: u_dut/u_core/add8_syn_245,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_214.fci_f
+ADDER                                   0.000    f     4.133          pin: u_dut/u_core/add8_syn_214.fco_f
+net (fo=1)                              0.000          4.133          net: u_dut/u_core/add8_syn_246,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_215.fci_f
+ADDER                                   0.000    f     4.133          pin: u_dut/u_core/add8_syn_215.fco_f
+net (fo=1)                              0.000          4.133          net: u_dut/u_core/add8_syn_247,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_216.fci_f
+ADDER                                   0.000    f     4.133          pin: u_dut/u_core/add8_syn_216.fco_f
+net (fo=1)                              0.000          4.133          net: u_dut/u_core/add8_syn_248,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_217.fci_f
+ADDER                                   0.000    f     4.133          pin: u_dut/u_core/add8_syn_217.fco_f
+net (fo=1)                              0.074          4.207          net: u_dut/u_core/add8_syn_249,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_218.fci_f
+ADDER                                   0.220    r     4.427       6  pin: u_dut/u_core/add8_syn_218.ofb
+net (fo=1)                              0.304          4.731          net: u_dut/u_core/cand_bits_b3[28],  NOFILE(0)
+                                                                      pin: u_dut/u_core/cand_bits_reg[28].d
+SEQ (reg)                               0.041    f     4.772               
+--------------------------------------------------------------------  ---------------
+Arrival                                                4.772               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=1747)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/cand_bits_reg[28].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.497               
+
+Slack               : 0.519ns
+Begin Point         : u_dut/u_core/len_r_reg[2].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/cand_bits_reg[25].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 4.750ns (cell 2.052ns (43%), net 2.698ns (57%))
+Clock Skew          : 0.000ns
+Logic Level         : 6 ( LUT6=2  ADDER=2  LUT4=1  LUT2=1 )
+Max Fanout          : 19
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=1747)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/len_r_reg[2].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_core/len_r_reg[2].q
+net (fo=19)                             0.496          0.572          net: u_dut/u_core/len_r[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(119)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_9.c
+LUT4                                    0.273    f     0.845       1  pin: u_dut/u_core/pbit_off_b3[2]_syn_9.o
+net (fo=9)                              0.427          1.272          net: u_dut/u_core/pbit_off_b3[2]_syn_10,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_13.a
+LUT6                                    0.315    f     1.587       2  pin: u_dut/u_core/pbit_off_b3[2]_syn_13.o
+net (fo=10)                             0.432          2.019          net: u_dut/u_core/pbit_off_b3[2]_syn_14,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_21.a
+LUT2                                    0.273    f     2.292       3  pin: u_dut/u_core/pbit_off_b3[2]_syn_21.o
+net (fo=1)                              0.304          2.596          net: u_dut/u_core/pbit_off_b3[2]_syn_22,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pbit_off_b3[2]_syn_23.b
+LUT6                                    0.315    f     2.911       4  pin: u_dut/u_core/pbit_off_b3[2]_syn_23.o
+net (fo=3)                              0.365          3.276          net: u_dut/u_core/sel23_syn_90,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(760)
+                                                                      pin: u_dut/u_core/add8_syn_192.ic
+ADDER                                   0.435    r     3.711       5  pin: u_dut/u_core/add8_syn_192.fco
+net (fo=1)                              0.000          3.711          net: u_dut/u_core/add8_syn_160,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_193.fci
+ADDER                                   0.052    r     3.763          pin: u_dut/u_core/add8_syn_193.fco
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_161,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_194.fci
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_194.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_226,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_195.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_195.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_227,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_196.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_196.fco_f
+net (fo=1)                              0.000          3.763          net: u_dut/u_core/add8_syn_228,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_197.fci_f
+ADDER                                   0.000    f     3.763          pin: u_dut/u_core/add8_syn_197.fco_f
+net (fo=1)                              0.074          3.837          net: u_dut/u_core/add8_syn_229,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_198.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_198.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_230,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_199.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_199.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_231,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_200.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_200.fco_f
+net (fo=1)                              0.000          3.837          net: u_dut/u_core/add8_syn_232,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_201.fci_f
+ADDER                                   0.000    f     3.837          pin: u_dut/u_core/add8_syn_201.fco_f
+net (fo=1)                              0.074          3.911          net: u_dut/u_core/add8_syn_233,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_202.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_202.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_234,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_203.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_203.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_235,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_204.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_204.fco_f
+net (fo=1)                              0.000          3.911          net: u_dut/u_core/add8_syn_236,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_205.fci_f
+ADDER                                   0.000    f     3.911          pin: u_dut/u_core/add8_syn_205.fco_f
+net (fo=1)                              0.074          3.985          net: u_dut/u_core/add8_syn_237,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_206.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_206.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_238,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_207.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_207.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_239,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_208.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_208.fco_f
+net (fo=1)                              0.000          3.985          net: u_dut/u_core/add8_syn_240,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_209.fci_f
+ADDER                                   0.000    f     3.985          pin: u_dut/u_core/add8_syn_209.fco_f
+net (fo=1)                              0.074          4.059          net: u_dut/u_core/add8_syn_241,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_210.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_210.fco_f
+net (fo=1)                              0.000          4.059          net: u_dut/u_core/add8_syn_242,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_211.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_211.fco_f
+net (fo=1)                              0.000          4.059          net: u_dut/u_core/add8_syn_243,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_212.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_212.fco_f
+net (fo=1)                              0.000          4.059          net: u_dut/u_core/add8_syn_244,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_213.fci_f
+ADDER                                   0.000    f     4.059          pin: u_dut/u_core/add8_syn_213.fco_f
+net (fo=1)                              0.074          4.133          net: u_dut/u_core/add8_syn_245,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_214.fci_f
+ADDER                                   0.052    r     4.185          pin: u_dut/u_core/add8_syn_214.fco
+net (fo=1)                              0.000          4.185          net: u_dut/u_core/add8_syn_182,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1212)
+                                                                      pin: u_dut/u_core/add8_syn_215.fci
+ADDER                                   0.220    r     4.405       6  pin: u_dut/u_core/add8_syn_215.ofb
+net (fo=1)                              0.304          4.709          net: u_dut/u_core/cand_bits_b3[25],  NOFILE(0)
+                                                                      pin: u_dut/u_core/cand_bits_reg[25].d
+SEQ (reg)                               0.041    f     4.750               
+--------------------------------------------------------------------  ---------------
+Arrival                                                4.750               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=1747)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/cand_bits_reg[25].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.519               
+
+Slack               : 0.522ns
+Begin Point         : u_dut/u_core/dtot_r_reg[0].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/praddr_reg[3].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 4.747ns (cell 2.477ns (52%), net 2.270ns (48%))
+Clock Skew          : 0.000ns
+Logic Level         : 6 ( ADDER=4  LUT6=2 )
+Max Fanout          : 20
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=1747)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/dtot_r_reg[0].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_core/dtot_r_reg[0].q
+net (fo=2)                              0.383          0.459          net: u_dut/u_core/dtot_r[0],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(163)
+                                                                      pin: u_dut/u_core/add45_syn_190.ic
+ADDER                                   0.435    r     0.894       1  pin: u_dut/u_core/add45_syn_190.fco
+net (fo=1)                              0.000          0.894          net: u_dut/u_core/add45_syn_158,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_191.fci
+ADDER                                   0.052    r     0.946          pin: u_dut/u_core/add45_syn_191.fco
+net (fo=1)                              0.000          0.946          net: u_dut/u_core/add45_syn_159,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_192.fci
+ADDER                                   0.052    r     0.998          pin: u_dut/u_core/add45_syn_192.fco
+net (fo=1)                              0.000          0.998          net: u_dut/u_core/add45_syn_160,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_193.fci
+ADDER                                   0.052    r     1.050          pin: u_dut/u_core/add45_syn_193.fco
+net (fo=1)                              0.000          1.050          net: u_dut/u_core/add45_syn_161,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_194.fci
+ADDER                                   0.000    f     1.050          pin: u_dut/u_core/add45_syn_194.fco_f
+net (fo=1)                              0.000          1.050          net: u_dut/u_core/add45_syn_226,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_195.fci_f
+ADDER                                   0.000    f     1.050          pin: u_dut/u_core/add45_syn_195.fco_f
+net (fo=1)                              0.000          1.050          net: u_dut/u_core/add45_syn_227,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_196.fci_f
+ADDER                                   0.000    f     1.050          pin: u_dut/u_core/add45_syn_196.fco_f
+net (fo=1)                              0.000          1.050          net: u_dut/u_core/add45_syn_228,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_197.fci_f
+ADDER                                   0.000    f     1.050          pin: u_dut/u_core/add45_syn_197.fco_f
+net (fo=1)                              0.074          1.124          net: u_dut/u_core/add45_syn_229,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_198.fci_f
+ADDER                                   0.000    f     1.124          pin: u_dut/u_core/add45_syn_198.fco_f
+net (fo=1)                              0.000          1.124          net: u_dut/u_core/add45_syn_230,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_199.fci_f
+ADDER                                   0.000    f     1.124          pin: u_dut/u_core/add45_syn_199.fco_f
+net (fo=1)                              0.000          1.124          net: u_dut/u_core/add45_syn_231,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_200.fci_f
+ADDER                                   0.000    f     1.124          pin: u_dut/u_core/add45_syn_200.fco_f
+net (fo=1)                              0.000          1.124          net: u_dut/u_core/add45_syn_232,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_201.fci_f
+ADDER                                   0.000    f     1.124          pin: u_dut/u_core/add45_syn_201.fco_f
+net (fo=1)                              0.074          1.198          net: u_dut/u_core/add45_syn_233,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_202.fci_f
+ADDER                                   0.000    f     1.198          pin: u_dut/u_core/add45_syn_202.fco_f
+net (fo=1)                              0.000          1.198          net: u_dut/u_core/add45_syn_234,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_203.fci_f
+ADDER                                   0.000    f     1.198          pin: u_dut/u_core/add45_syn_203.fco_f
+net (fo=1)                              0.000          1.198          net: u_dut/u_core/add45_syn_235,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_204.fci_f
+ADDER                                   0.000    f     1.198          pin: u_dut/u_core/add45_syn_204.fco_f
+net (fo=1)                              0.000          1.198          net: u_dut/u_core/add45_syn_236,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_205.fci_f
+ADDER                                   0.000    f     1.198          pin: u_dut/u_core/add45_syn_205.fco_f
+net (fo=1)                              0.074          1.272          net: u_dut/u_core/add45_syn_237,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_206.fci_f
+ADDER                                   0.000    f     1.272          pin: u_dut/u_core/add45_syn_206.fco_f
+net (fo=1)                              0.000          1.272          net: u_dut/u_core/add45_syn_238,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_207.fci_f
+ADDER                                   0.000    f     1.272          pin: u_dut/u_core/add45_syn_207.fco_f
+net (fo=1)                              0.000          1.272          net: u_dut/u_core/add45_syn_239,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_208.fci_f
+ADDER                                   0.000    f     1.272          pin: u_dut/u_core/add45_syn_208.fco_f
+net (fo=1)                              0.000          1.272          net: u_dut/u_core/add45_syn_240,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_209.fci_f
+ADDER                                   0.000    f     1.272          pin: u_dut/u_core/add45_syn_209.fco_f
+net (fo=1)                              0.074          1.346          net: u_dut/u_core/add45_syn_241,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_210.fci_f
+ADDER                                   0.052    r     1.398          pin: u_dut/u_core/add45_syn_210.fco
+net (fo=1)                              0.000          1.398          net: u_dut/u_core/add45_syn_178,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_211.fci
+ADDER                                   0.052    r     1.450          pin: u_dut/u_core/add45_syn_211.fco
+net (fo=1)                              0.000          1.450          net: u_dut/u_core/add45_syn_179,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_212.fci
+ADDER                                   0.052    r     1.502          pin: u_dut/u_core/add45_syn_212.fco
+net (fo=1)                              0.000          1.502          net: u_dut/u_core/add45_syn_180,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/add45_syn_213.fci
+ADDER                                   0.220    r     1.722       2  pin: u_dut/u_core/add45_syn_213.ofb
+net (fo=1)                              0.304          2.026          net: u_dut/u_core/cand_abort_b[23],  NOFILE(0)
+                                                                      pin: u_dut/u_core/lt11_syn_149.ib
+ADDER                                   0.492    r     2.518       3  pin: u_dut/u_core/lt11_syn_149.fco_f
+net (fo=1)                              0.074          2.592          net: u_dut/u_core/lt11_syn_165,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/lt11_syn_150.fci_f
+ADDER                                   0.052    r     2.644          pin: u_dut/u_core/lt11_syn_150.fco
+net (fo=1)                              0.000          2.644          net: u_dut/u_core/lt11_syn_127,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/lt11_syn_151.fci
+ADDER                                   0.052    r     2.696          pin: u_dut/u_core/lt11_syn_151.fco
+net (fo=1)                              0.000          2.696          net: u_dut/u_core/lt11_syn_129,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/lt11_syn_152.fci
+ADDER                                   0.052    r     2.748          pin: u_dut/u_core/lt11_syn_152.fco
+net (fo=1)                              0.000          2.748          net: u_dut/u_core/lt11_syn_131,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1522)
+                                                                      pin: u_dut/u_core/lt11_syn_153.fci
+ADDER                                   0.115    f     2.863       4  pin: u_dut/u_core/lt11_syn_153.ofa
+net (fo=20)                             0.471          3.334          net: u_dut/u_core/cand_abort_n6,  NOFILE(0)
+                                                                      pin: u_dut/u_core/praddr_b2[12]_syn_18.a
+LUT6                                    0.315    f     3.649       5  pin: u_dut/u_core/praddr_b2[12]_syn_18.o
+net (fo=11)                             0.438          4.087          net: u_dut/u_core/praddr_b2[12]_syn_19,  NOFILE(0)
+                                                                      pin: u_dut/u_core/praddr_b2[3]_syn_5.b
+LUT6                                    0.315    f     4.402       6  pin: u_dut/u_core/praddr_b2[3]_syn_5.o
+net (fo=1)                              0.304          4.706          net: u_dut/u_core/praddr_b2[3],  NOFILE(0)
+                                                                      pin: u_dut/u_core/praddr_reg[3].d
+SEQ (reg)                               0.041    f     4.747               
+--------------------------------------------------------------------  ---------------
+Arrival                                                4.747               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=1747)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/praddr_reg[3].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.522               
+
+
+Period Check
+----------------------------------------------------------------------------------------------------
+    Type       Setting(ns)      Required(ns)         Slack(ns)   Point
+--------------------------------------------------------------------------------
+    DRAM             5.333             2.800             2.533   u_dut/u_core/opq_mem_syn_40.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/fifo_mem_syn_129.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/wq_mem_syn_25.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/wq_mem_syn_45.wclk
+
+Min Paths
+----------------------------------------------------------------------------------------------------
+
+Inter clock domain timing
+--------------------------------------------------
+
+IP timing
+--------------------------------------------------

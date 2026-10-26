@@ -1,0 +1,1497 @@
+
+B0150 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0150.v:529-541 SHA256 acc1eff329aa295d01b16123581fee48ef49d444efdce3b7fe62214555517405
+529:     a1_frame_top #(.W(W), .H(H)) u_a1 (
+530:         .clk (clk_a1), .rst_n (rst_n),
+531:         .in_pix (a1_in_pix), .in_valid (a1_in_valid), .in_ready (a1_in_ready),
+532:         .in_sof (a1_in_sof),
+533:         .prep_en (PREP), .pred_en (PRED), .abort (a1_abort),
+534:         .out_data (a1_out_data), .out_valid (a1_out_valid), .out_ready (a1_out_ready),
+535:         .out_keep (a1_out_keep), .out_last (a1_out_last),
+536:         .frame_commit (a1_commit), .frame_abort (a1_fabort),
+537:         .st_raw_len (a1_raw_len), .st_xform_len (a1_xlen), .st_stream_len (a1_slen),
+538:         .st_raw_crc (a1_raw_crc), .st_xform_crc (a1_xcrc), .st_stream_crc (a1_scrc),
+539:         .st_blocks (a1_blocks), .st_stall_cycles (a1_stall), .st_busy (a1_busy),
+540:         .dbg (a1_dbg)
+541:     );
+
+B0146 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0146.v:393-409 SHA256 0064607aceb20ae3ef14133f0aaf5f8b3f489943011a66a1ddc005350dba7109
+393:                 end else if (istate == I_EXP) begin
+394:                     b_t = (pix_r >> (byte_k * 8)) & 8'hFF;
+395:                     raw_crc_r <= crc32b(raw_crc_r, b_t);
+396:                     raw_len_r <= raw_len_r + 32'd1;
+397:                     if (byte_k != 3'd4) begin
+398:                         x_t     = (grp_in_row << 2) + byte_k;
+399:                         samp_t  = {b_t, 2'b00} | ((pix_r >> (32 + 2 * byte_k)) & 2'b11);
+400:                         if (prep_r) begin
+401:                             plane_t  = {row_in_blk[0], x_t[0]};
+402:                             waddr_t  = (wr_bank ? NSAMP : 0) + plane_t * HALFW +
+403:                                        (x_t >> 1);
+404:                         end else begin
+405:                             waddr_t  = (wr_bank ? NSAMP : 0) + row_in_blk * W + x_t;
+406:                         end
+407:                         smem_we_r    <= 1'b1;
+408:                         smem_waddr_r <= waddr_t;
+409:                         smem_wdata_r <= samp_t;
+
+B0150 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0150.v:837-860 SHA256 acc1eff329aa295d01b16123581fee48ef49d444efdce3b7fe62214555517405
+837: 
+838:     always @(posedge clk_a1) begin
+839:         if (!rst_n) begin
+840:             desc_push <= 1'b0;
+841:             d_raw_len <= 32'd0; d_xlen <= 32'd0; d_slen <= 32'd0;
+842:             d_raw_crc <= 32'd0; d_xcrc <= 32'd0; d_scrc <= 32'd0; d_fid <= 32'd0;
+843:         end else begin
+844:             desc_push <= 1'b0;
+845:             if (a1_commit) begin
+846:                 desc_push <= 1'b1;
+847:                 d_raw_len <= a1_raw_len; d_xlen <= a1_xlen; d_slen <= a1_slen;
+848:                 d_raw_crc <= a1_raw_crc; d_xcrc <= a1_xcrc; d_scrc <= a1_scrc;
+849:                 d_fid     <= cmp_id;   // store latched the incremented id at wr_begin
+850:             end
+851:         end
+852:     end
+853: 
+854:     a1_uart_export #(.W(W), .H(H), .UART_DIV(UART_DIV), .HB_DIV(HB_DIV),
+855:                      .STS_DIV(STS_DIV)) u_export (
+856:         .clk (clk_a1), .rst_n (rst_n),
+857:         .desc_push (desc_push),
+858:         .d_frame_id (d_fid), .d_raw_len (d_raw_len), .d_xform_len (d_xlen),
+859:         .d_stream_len (d_slen), .d_raw_crc (d_raw_crc), .d_xform_crc (d_xcrc),
+860:         .d_stream_crc (d_scrc),
+
+B0146 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0146.v:11-14 SHA256 0064607aceb20ae3ef14133f0aaf5f8b3f489943011a66a1ddc005350dba7109
+11: // - In bypass mode (prep_en=0) samples are written in raster order and
+12: //   repacked, so xform bytes are byte-identical to raw bytes.
+13: // - Abort / bad geometry / non-zero pred without prep never commit.
+14: // - A 32-bit output word is held stable while out_valid && !out_ready.
+
+B0146 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0146.v:171-187 SHA256 0064607aceb20ae3ef14133f0aaf5f8b3f489943011a66a1ddc005350dba7109
+171:     wire proto_abort = frame_active && in_valid && in_sof;
+172:     wire core_abort  = abort || proto_abort || core_flush;
+173: 
+174:     assign core_in_data       = (eb >> (eidx * 8)) & 8'hFF;
+175:     assign core_in_sop        = (dstate == D_EMIT) && first_byte && (eidx == 3'd0);
+176:     assign core_in_blk_end    = (dstate == D_EMIT) && (eidx == 3'd4) &&
+177:                                 (rd_s == n_samp);
+178:     assign core_in_stream_end = core_in_blk_end && (dblk == (NBLK - 1));
+179:     assign core_out_ready     = !svalid;
+180: 
+181: 
+182:     assign out_valid    = svalid;
+183:     assign out_data     = sdata;
+184:     assign out_keep     = skeep;
+185:     assign out_last     = svalid && slast && !killed;
+186:     assign frame_commit = svalid && out_ready && slast && !killed;
+187:     assign frame_abort  = frame_abort_r;
+
+B0146 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0146.v:326-341 SHA256 0064607aceb20ae3ef14133f0aaf5f8b3f489943011a66a1ddc005350dba7109
+326:             // ------------------------------------------------ frame-level abort
+327:             if (frame_active && (abort || proto_abort) &&
+328:                 !(svalid && out_ready && slast && !killed)) begin
+329:                 frame_abort_r <= 1'b1;
+330:                 killed        <= 1'b1;
+331:                 frame_active  <= 1'b0;
+332:                 istate        <= I_ABORT;
+333:                 dstate        <= D_IDLE;
+334:                 dblk          <= 16'd0;
+335:                 bank_busy     <= 2'b00;
+336:                 blk_idx       <= 16'd0;
+337:                 row_in_blk    <= 16'd0;
+338:                 grp_in_row    <= 16'd0;
+339:                 scnt          <= 2'd0;   // drop bytes not yet presented as a word
+340:                 // svalid (already published, not yet consumed) is left intact
+341:             end else begin
+
+B0146 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0146.v:542-556 SHA256 0064607aceb20ae3ef14133f0aaf5f8b3f489943011a66a1ddc005350dba7109
+542:                 if (svalid && out_ready) begin
+543:                     svalid <= 1'b0;
+544:                     if (slast) slast <= 1'b0;
+545:                     if (slast && !killed && frame_active) begin
+546:                         // complete frame published and consumed
+547:                         core_flush   <= 1'b1;   // P2 core leaves enc_busy set after the
+548:                                                 // last block; one abort cycle clears it
+549:                         frame_active <= 1'b0;
+550:                         cooldown     <= 1'b1;
+551:                         istate       <= I_IDLE;
+552:                         dstate       <= D_IDLE;
+553:                         dblk         <= 16'd0;
+554:                         blk_idx      <= 16'd0;
+555:                         bank_busy    <= 2'b00;
+556:                     end
+
+B0146 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0146.v:70-78 SHA256 0064607aceb20ae3ef14133f0aaf5f8b3f489943011a66a1ddc005350dba7109
+70:     localparam integer STRIDE  = (W * 5) / 4;   // bytes per row
+71:     localparam integer HALFW   = W / 2;         // samples per plane
+72:     localparam integer NSAMP   = 2 * W;         // samples per 2-row block
+73:     localparam integer MEMD    = 2 * NSAMP;     // two banks
+74:     localparam integer NBLK    = (H + 1) / 2;   // 2-row blocks
+75:     localparam integer TAIL    = H % 2;         // 1 = odd H, last block is 1 row
+76:     localparam integer MAXBLK  = 4800;          // a1_deflate_core block limit
+77:     localparam integer GEOOK   = (W >= 4) && ((W % 4) == 0) && (H >= 2) &&
+78:                                  ((2 * STRIDE) <= MAXBLK);
+
+B0146 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0146.v:416-422 SHA256 0064607aceb20ae3ef14133f0aaf5f8b3f489943011a66a1ddc005350dba7109
+416:                             if ((row_in_blk + 1) >=
+417:                                 (((TAIL != 0) && (blk_idx == (NBLK - 1))) ? 1 : 2)) begin
+418:                                 // block complete -> publish to the drain side
+419:                                 if (wr_bank) bank_ns1 <=
+420:                                     ((TAIL != 0 && blk_idx == (NBLK - 1)) ? W : (2 * W));
+421:                                 else bank_ns0 <=
+422:                                     ((TAIL != 0 && blk_idx == (NBLK - 1)) ? W : (2 * W));
+
+S05 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\T10.chain-transform-review\inputs\a1_pattern.py:88-165 SHA256 7d1df4ed32fd95476dda5de26179969374b4c24baa61e639b0551ac8d6fd2713
+88: def expected_xform(pat, prep=1, pred=1, geom=None):
+89:     """Transform-domain byte stream fed to the A+ core (profile prep/pred)."""
+90:     g = dict(GEOM_DEFAULT)
+91:     if geom:
+92:         g.update(geom)
+93:     w, h = g["w"], g["h"]
+94:     rows = roi_samples(pat, g)
+95:     out = bytearray()
+96:     halfw = w // 2
+97:     for b in range((h + 1) // 2):
+98:         y0 = 2 * b
+99:         two = (y0 + 1) < h
+100:         if prep:
+101:             planes = []
+102:             for p in range(4):
+103:                 y = y0 + (p >> 1)
+104:                 if y >= h:
+105:                     planes.append([0] * halfw)
+106:                     continue
+107:                 acc = []
+108:                 prev = 0
+109:                 for k in range(halfw):
+110:                     s = rows[y][2 * k + (p & 1)]
+111:                     d = s if (k == 0 or not pred) else ((s - prev) & 1023)
+112:                     prev = s
+113:                     acc.append(d)
+114:                 planes.append(acc)
+115:             seq = planes[0] + planes[1] + planes[2] + planes[3]
+116:         else:
+117:             n = (2 * w) if two else w
+118:             seq = [rows[y0][x] for x in range(w)]
+119:             if two:
+120:                 seq += [rows[y0 + 1][x] for x in range(w)]
+121:             seq = seq[:n]
+122:         for i in range(0, len(seq), 4):
+123:             q = seq[i:i + 4]
+124:             out += pack_group(q[0], q[1], q[2], q[3])
+125:     return bytes(out)
+126: 
+127: 
+128: def inverse_xform(xform, prep=1, pred=1, w=1920, h=1080):
+129:     """Inverse of the A+ frame transform: transform bytes -> packed raster RAW."""
+130:     halfw = w // 2
+131:     rows = [[0] * w for _ in range(h)]
+132:     pos = 0
+133:     for b in range((h + 1) // 2):
+134:         y0 = 2 * b
+135:         two = (y0 + 1) < h
+136:         if prep:
+137:             for p in range(4):
+138:                 y = y0 + (p >> 1)
+139:                 prev = 0
+140:                 for k in range(halfw // 4):
+141:                     s0, s1, s2, s3 = unpack_group(xform[pos:pos + 5])
+142:                     pos += 5
+143:                     for j, d in enumerate((s0, s1, s2, s3)):
+144:                         idx = k * 4 + j
+145:                         v = d if (idx == 0 or not pred) else ((prev + d) & 1023)
+146:                         prev = v
+147:                         if y < h:
+148:                             rows[y][2 * idx + (p & 1)] = v
+149:         else:
+150:             n = (2 * w) if two else w
+151:             gi = 0
+152:             while gi * 4 < n:
+153:                 q = unpack_group(xform[pos:pos + 5])
+154:                 pos += 5
+155:                 for j, v in enumerate(q):
+156:                     idx = gi * 4 + j
+157:                     if idx >= n:
+158:                         break
+159:                     if idx < w:
+160:                         rows[y0][idx] = v
+161:                     else:
+162:                         rows[y0 + 1][idx - w] = v
+163:                 gi += 1
+164:     out = bytearray()
+165:     for y in range(h):
+
+B0054 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0054.py:82-86 SHA256 4df8eccf84da446066cdb09fb60b18fc13ce3dff803f96edfb33c3c66818f096
+82:         len_ok = (len(xf) == h["xform_len"])
+83:         xf_crc_ok = (zlib.crc32(xf) & 0xFFFFFFFF) == h["xform_crc"]
+84:         raw = inverse_xform(xf, prep, pred, h["width"], h["height"]) if zd_ok else b""
+85:         raw_len_ok = (len(raw) == h["raw_len"])
+86:         raw_crc_ok = (zlib.crc32(raw) & 0xFFFFFFFF) == h["raw_crc"]
+
+B0145 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0145.v:488-495 SHA256 a91c2ed82fbef654c4e065b64ae1cc268ca232feaa26fdd313c58d8740f81b3e
+488:     function [31:0] stored_cost;
+489:         input [3:0]  off;
+490:         input [12:0] n;
+491:         reg [4:0]    pad;
+492:         begin
+493:             pad = (5'd8 - ({1'b0, off} + 5'd3)) & 5'd7;
+494:             stored_cost = 32'd3 + {27'd0, pad} + 32'd32 + ({19'd0, n} << 3);
+495:         end
+
+B0145 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0145.v:719-727 SHA256 a91c2ed82fbef654c4e065b64ae1cc268ca232feaa26fdd313c58d8740f81b3e
+719:     wire [7:0]  opq_value = opq_mem[opq_rptr][7:0];
+720:     wire [3:0]  opq_bits  = opq_mem[opq_rptr][11:8];
+721:     wire        opq_last  = opq_mem[opq_rptr][12];
+722:     wire [15:0] op_mask = (16'd1 << opq_bits) - 16'd1;
+723:     wire [15:0] op_word = oacc | (({8'd0, opq_value} & op_mask) << obits);
+724:     wire [4:0]  op_tot  = {1'b0, obits} + {1'b0, opq_bits};
+725:     wire        op_byte_ready = (op_tot >= 5'd8);
+726:     wire        opq_accept = op_en && (opq_count < 3'd4);
+727:     wire        op_go = (opq_count != 3'd0) && out_space;
+
+B0145 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0145.v:1322-1343 SHA256 a91c2ed82fbef654c4e065b64ae1cc268ca232feaa26fdd313c58d8740f81b3e
+1322:             // ------------------------------------------- stream bit push/fifo
+1323:             // Enqueue the FSM's next output byte into the 4-entry skid FIFO.
+1324:             if (opq_accept) begin
+1325:                 opq_mem[opq_wptr] <= {op_last, op_bits, op_value};
+1326:                 opq_wptr <= opq_wptr + 2'd1;
+1327:                 opq_bit_off <= (opq_bit_off + {1'b0, op_bits}) & 4'h7;
+1328:             end
+1329:             // Drain the skid FIFO through the bit packer into fifo_mem.
+1330:             if (op_go) begin
+1331:                 if (op_byte_ready) begin
+1332:                     fifo_mem[fifo_wptr] <= {opq_last, op_word[7:0]};
+1333:                     fifo_wptr <= fifo_wptr + 4'd1;
+1334:                     oacc      <= op_word >> 8;
+1335:                     obits     <= op_tot[2:0];
+1336:                 end else begin
+1337:                     oacc  <= op_word;
+1338:                     obits <= op_tot[2:0];
+1339:                 end
+1340:                 opq_rptr <= opq_rptr + 2'd1;
+1341:             end
+1342:             opq_count <= opq_count + (opq_accept ? 3'd1 : 3'd0)
+1343:                                    - (op_go ? 3'd1 : 3'd0);
+
+B0145 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0145.v:1371-1397 SHA256 a91c2ed82fbef654c4e065b64ae1cc268ca232feaa26fdd313c58d8740f81b3e
+1371:                 S_WAIT: begin
+1372:                     if (blk_avail && htab_clr_done) begin
+1373:                         // r1 (bm-prefetch): prime the bm_a prefetch one cycle
+1374:                         // before S_BHDR.  The extra read-data stage makes the
+1375:                         // S_PRE lookup address use x1_r, whose value at
+1376:                         // pre_cnt=2 comes from the address issued during
+1377:                         // S_BHDR; without this seed that address is the stale
+1378:                         // previous-block praddr (out-of-block read).
+1379:                         praddr      <= 13'd1;
+1380:                         enc_bank    <= sel_is_b0 ? 1'b0 : 1'b1;
+1381:                         blk_n       <= sel_len;
+1382:                         lim2        <= (sel_len > 13'd2) ? (sel_len - 13'd2) : 13'd0;
+1383:                         lim1        <= (sel_len > 13'd1) ? (sel_len - 13'd1) : 13'd0;
+1384:                         lim3        <= (sel_len > 13'd3) ? (sel_len - 13'd3) : 13'd0;
+1385:                         last_a      <= (sel_len > 13'd0) ? (sel_len - 13'd1) : 13'd0;
+1386:                         blk_last    <= sel_final;
+1387:                         blk_tag     <= blk_tag + 16'd1;
+1388:                         stored_bits <= stored_cost(obits, sel_len);
+1389:                         rem_blk     <= sel_len;
+1390:                         thresh_base <= stored_cost(obits, sel_len)
+1391:                                        - ({19'd0, sel_len} << 3);
+1392:                         thresh_lit  <= stored_cost(obits, sel_len)
+1393:                                        - ({19'd0, sel_len} << 3) + 32'd8;
+1394:                         thresh_lit8 <= stored_cost(obits, sel_len)
+1395:                                        - ({19'd0, sel_len} << 3);
+1396:                         thresh_lit9 <= stored_cost(obits, sel_len)
+1397:                                        - ({19'd0, sel_len} << 3) - 32'd1;
+
+B0145 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0145.v:1642-1654 SHA256 a91c2ed82fbef654c4e065b64ae1cc268ca232feaa26fdd313c58d8740f81b3e
+1642:                 S_DECIDE: begin
+1643:                     if (cand_abort || (cand_bits >= stored_bits) ||
+1644:                         (cwptr > 13'd2700)) begin
+1645:                         stat_stored <= stat_stored + 32'd1;
+1646:                         slen_idx    <= 4'd0;
+1647:                         state       <= S_SHDR;
+1648:                     end else begin
+1649:                         stat_fixed  <= stat_fixed + 32'd1;
+1650:                         rb_word     <= 13'd0;
+1651:                         rb_half     <= 1'b0;
+1652:                         rbits_left  <= cand_bits[15:0];
+1653:                         state       <= S_REPLAY_R;
+1654:                     end
+
+B0145 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0145.v:1668-1677 SHA256 a91c2ed82fbef654c4e065b64ae1cc268ca232feaa26fdd313c58d8740f81b3e
+1668:                 S_REPLAY_E: begin
+1669:                     if (opq_accept) begin
+1670:                         if (rbits_left <= 16'd8) begin
+1671:                             rbits_left <= 16'd0;
+1672:                             if (blk_last) begin
+1673:                                 state <= S_TRAIL;
+1674:                             end else begin
+1675:                                 enc_busy <= 1'b0;
+1676:                                 state    <= S_WAIT;
+1677:                             end
+
+B0150 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0150.v:124-138 SHA256 acc1eff329aa295d01b16123581fee48ef49d444efdce3b7fe62214555517405
+124:     localparam integer GROUPS   = (W * H) / 4;                 // 518,400
+125:     localparam integer RAW_WORDS = (GROUPS + 3) / 4;           // 129,600
+126:     localparam integer EXP_RAW_BYTES = (W * H * 10) / 8;       // 2,592,000
+127:     localparam integer CMP_WORDS = 81085;                      // >= 2,594,706/32
+128:     // T10.b10 B9-03: real DDR capacity, read from the TD DDR IP configuration
+129:     //   td/src/vendor/ip/ddrmc_x32/{ddrmc_x32.v,.params_ddrmc_x32.txt}
+130:     //   DDR3-1600 x32: ROW_WIDTH=14, COL_WIDTH=10, BA_WIDTH=3, CS=1
+131:     //     -> 2^14 * 2^10 * 2^3 * 32 bit = 4 Gbit = 512 MiB = 2^24 256-bit words
+132:     //   AXI_ADDR_WIDTH=29 (byte address) -> 2^29 B = 512 MiB, consistent;
+133:     //   PAXI/MC_ADDR_WIDTH=27 word address, port is 26:0.
+134:     // 2^24 words is the binding (smaller) capacity and is used here.
+135:     localparam integer DDR_WORDS = 16777216;                   // 2^24 x 256 bit
+136:     localparam [31:0] GROUPS32 = GROUPS;
+137:     localparam        PREP = (PREP_EN != 0);
+138:     localparam        PRED = (PRED_EN != 0);
+
+B0054 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0054.py:67-95 SHA256 4df8eccf84da446066cdb09fb60b18fc13ce3dff803f96edfb33c3c66818f096
+67:         hc = zlib.crc32(data[off:off + 40]) & 0xFFFFFFFF
+68:         hdr_ok = (hc == h["header_crc"])
+69:         pay = data[off + HDR: off + HDR + h["stream_len"]]
+70:         if len(pay) != h["stream_len"]:
+71:             raise ValueError("truncated payload: want %d got %d" % (h["stream_len"], len(pay)))
+72:         prep = h["flags"] & 1
+73:         pred = (h["flags"] >> 1) & 1
+74:         st_crc_ok = (zlib.crc32(pay) & 0xFFFFFFFF) == h["stream_crc"]
+75:         try:
+76:             xf = zlib.decompress(pay)
+77:             zd_ok = True
+78:         except Exception as exc:                                  # pragma: no cover
+79:             xf = b""
+80:             zd_ok = False
+81:             h["zlib_error"] = str(exc)
+82:         len_ok = (len(xf) == h["xform_len"])
+83:         xf_crc_ok = (zlib.crc32(xf) & 0xFFFFFFFF) == h["xform_crc"]
+84:         raw = inverse_xform(xf, prep, pred, h["width"], h["height"]) if zd_ok else b""
+85:         raw_len_ok = (len(raw) == h["raw_len"])
+86:         raw_crc_ok = (zlib.crc32(raw) & 0xFFFFFFFF) == h["raw_crc"]
+87:         rec = dict(h)
+88:         rec.update(dict(prep=prep, pred=pred,
+89:                         header_crc_ok=hdr_ok, stream_crc_ok=st_crc_ok,
+90:                         zlib_ok=zd_ok, xform_len_ok=len_ok, xform_crc_ok=xf_crc_ok,
+91:                         raw_len_ok=raw_len_ok, raw_crc_ok=raw_crc_ok,
+92:                         stream_sha256=hashlib.sha256(pay).hexdigest(),
+93:                         xform_sha256=hashlib.sha256(xf).hexdigest(),
+94:                         raw_sha256=hashlib.sha256(raw).hexdigest(),
+95:                         worstcase_ok=(h["stream_len"] <= WORST_CASE_EXPANSION)))
+
+S02 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\T10.chain-transform-review\inputs\a1_inflate_strict.py:1-16 SHA256 8db2b6886f77fcec52f34d5f4aa5ae15b7922592e312c625c022ef0031027e88
+1: #!/usr/bin/env python3
+2: # -*- coding: utf-8 -*-
+3: """T10 A+ v1 independent strict DEFLATE/zlib parser (P1, test-only).
+4: 
+5: Subset: zlib header 0x78 0x9C, stored (BTYPE=00), fixed Huffman (BTYPE=01),
+6: Adler-32. Dynamic Huffman is intentionally rejected. This module does not
+7: import a1_ref.py and does not call zlib; it is the second, independent decoder
+8: used by tools/codec/a1_p1_verify.py.
+9: 
+10: Strictness:
+11:   * exactly one zlib member, no trailing bytes;
+12:   * header FCHECK/FDICT checks;
+13:   * stored LEN/NLEN and LEN<=4800;
+14:   * block-header and final padding bits must be zero;
+15:   * distance 1..2048 and never beyond current output;
+16:   * fixed symbols 286/287 and distance symbols 30/31 rejected;
+
+S02 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\T10.chain-transform-review\inputs\a1_inflate_strict.py:247-295 SHA256 8db2b6886f77fcec52f34d5f4aa5ae15b7922592e312c625c022ef0031027e88
+247: def inflate(data, expected_len=None):
+248:     """Parse one zlib member. Returns (out_bytes, stats). Raises A1Error."""
+249:     br = BitReader(data)
+250:     cmf = br.bits(8)
+251:     flg = br.bits(8)
+252:     if (cmf & 0x0F) != 8:
+253:         raise A1Error(E_BAD_ZLIB_HEADER, "CM=%d" % (cmf & 0x0F))
+254:     if (cmf >> 4) > 7:
+255:         raise A1Error(E_BAD_ZLIB_HEADER, "CINFO=%d" % (cmf >> 4))
+256:     if ((cmf << 8) | flg) % 31 != 0:
+257:         raise A1Error(E_BAD_ZLIB_HEADER, "FCHECK")
+258:     if flg & 0x20:
+259:         raise A1Error(E_FDICT_SET, "FDICT=1")
+260: 
+261:     out = bytearray()
+262:     stats = {"blocks": 0, "stored_blocks": 0, "fixed_blocks": 0,
+263:              "literals": 0, "matches": 0, "stored_bytes": 0}
+264:     while True:
+265:         stats["blocks"] += 1
+266:         if stats["blocks"] > 100000:
+267:             raise A1Error(E_OUTPUT_LIMIT, "too many blocks")
+268:         bfinal = br.bits(1)
+269:         btype = br.bits(2)
+270:         if btype == 0:
+271:             stats["stored_blocks"] += 1
+272:             stats["stored_bytes"] += _stored_block(br, out)
+273:         elif btype == 1:
+274:             stats["fixed_blocks"] += 1
+275:             r = _fixed_block(br, out)
+276:             stats["literals"] += r["literals"]
+277:             stats["matches"] += r["matches"]
+278:         elif btype == 2:
+279:             raise A1Error(E_BAD_BTYPE_DYNAMIC, "dynamic Huffman not in v1 subset")
+280:         else:
+281:             raise A1Error(E_BAD_BTYPE_RESERVED, "BTYPE=3")
+282:         if bfinal:
+283:             break
+284: 
+285:     br.align_zero()
+286:     adler = int.from_bytes(br.read_bytes(4), "big")
+287:     if br.pos != br.nbits:
+288:         raise A1Error(E_TRAILING_BYTES, "pos=%d nbits=%d" % (br.pos, br.nbits))
+289:     calc = adler32(out)
+290:     if adler != calc:
+291:         raise A1Error(E_BAD_ADLER, "stored=%08X calc=%08X" % (adler, calc))
+292:     if expected_len is not None and len(out) != expected_len:
+293:         raise A1Error(E_LENGTH_MISMATCH, "got=%d expected=%d" % (len(out), expected_len))
+294:     stats["out_len"] = len(out)
+295:     return bytes(out), stats
+
+B0027 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0027.v:4-9 SHA256 c358174f56aeb2d4a64a2b7484c53ea9feed2f6cd857ac06c315250110a55dd6
+4: // Frozen semantics (must match parallel/algorithms/image_algorithms_ref.py and
+5: // the retained worktree candidate gray8_gaussian3x3_frame.v):
+6: //   * kernel [1 2 1; 2 4 2; 1 2 1], one rounding (sum + 8) >> 4, replicate
+7: //     borders with the same CFA-parity-preserving clamp rules as the demosaic
+8: //     front end (left of column 0 is column 1, right of column W-1 is column
+9: //     W-2, up of row 0 is row 1, down of row H-1 is row H-2);
+
+B0027 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0027.v:83-95 SHA256 c358174f56aeb2d4a64a2b7484c53ea9feed2f6cd857ac06c315250110a55dd6
+83:     wire pipe_en = !(m_valid && !m_ready);
+84: 
+85:     algo_rowwin3 #(.MAX_WORDS(MAX_WORDS), .DW(32), .PARITY_CLAMP(0)) u_row (
+86:         .clk(clk), .rst_n(rst_n),
+87:         .cfg_width(r_width), .cfg_height(r_height), .cfg_ok(cfg_ok),
+88:         .s_valid(s_valid), .s_ready(s_ready), .s_data(s_data),
+89:         .s_sof(s_sof), .s_eol(s_eol), .s_eof(s_eof), .s_abort(s_abort),
+90:         .en(pipe_en),
+91:         .prod_valid(prod_valid), .prod_y(prod_y), .prod_j(prod_j),
+92:         .prod_first(prod_first), .prod_last(prod_last), .prod_abort(prod_abort),
+93:         .win_c(win_c), .win_u(win_u), .win_d(win_d),
+94:         .evt_good(evt_good), .evt_abort(evt_abort)
+95:     );
+
+B0023 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0023.v:220-251 SHA256 46a6ceb10844b9ccb2054b8b2a911624dc04db0ca167ef72b8b86c9e08571384
+220:     // ---- window assembly: columns 4j-1 .. 4j+4 with frozen clamp rules ----
+221:     // Lane/sample convention (project csi_rx_10bit_unpack_checked.v): the first
+222:     // (leftmost) pixel of the 4-sample word is bits [SW-1:0].  Window layout:
+223:     // win[6*SW-1 -: SW] = column 4j-1 (left edge), then samples 0..3, then the
+224:     // right edge at win[SW-1:0] (column 4j+4).
+225:     // par=1: CFA-parity clamps (demosaic: left of col 0 is col 1, right of col
+226:     // W-1 is col W-2); par=0: plain replicate (left/right edge is the centre).
+227:     localparam PAR = (PARITY_CLAMP != 0) ? 1'b1 : 1'b0;
+228: 
+229:     function [59:0] asm40;
+230:         input [39:0] din, r1, r2;
+231:         input        first, last, par;
+232:         begin
+233:             asm40[59:50] = first ? (par ? r1[19:10] : r1[9:0]) : r2[39:30];
+234:             asm40[49:40] = r1[9:0];
+235:             asm40[39:30] = r1[19:10];
+236:             asm40[29:20] = r1[29:20];
+237:             asm40[19:10] = r1[39:30];
+238:             asm40[9:0]   = last  ? (par ? r1[29:20] : r1[39:30]) : din[9:0];
+239:         end
+240:     endfunction
+241: 
+242:     function [47:0] asm32;
+243:         input [31:0] din, r1, r2;
+244:         input        first, last, par;
+245:         begin
+246:             asm32[47:40] = first ? (par ? r1[15:8] : r1[7:0]) : r2[31:24];
+247:             asm32[39:32] = r1[7:0];
+248:             asm32[31:24] = r1[15:8];
+249:             asm32[23:16] = r1[23:16];
+250:             asm32[15:8]  = r1[31:24];
+251:             asm32[7:0]   = last  ? (par ? r1[23:16] : r1[31:24]) : din[7:0];
+
+B0028 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0028.v:21-23 SHA256 df84b8a49c95bd784e6dd618a5dbc5772200df70f83d35784c381db35629034b
+21: // Frame-end work (merge + 256-entry divide + bank clear) stalls the input for a
+22: // bounded number of cycles (<= ~3.3k, see algo/change-report.md).
+23: // No hardware/timing claims in this package (G1 simulation; G2 small top).
+
+B0028 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0028.v:456-519 SHA256 df84b8a49c95bd784e6dd618a5dbc5772200df70f83d35784c381db35629034b
+456:                 ST_LUTGEN: begin
+457:                     case (lut_ph)
+458:                         4'd0: begin
+459:                             // the cdf read is issued in the always block below;
+460:                             // derive the span and pre-shifted denominators here
+461:                             // (registered: the 32-bit subtract and the shifts are
+462:                             // one short path)
+463:                             den32_r  <= npix - cdf_min;
+464:                             den_half <= (npix - cdf_min) >> 1;
+465:                             den_s    <= (npix - cdf_min) << 7;
+466:                             lut_ph   <= 4'd1;
+467:                         end
+468:                         4'd1: begin
+469:                             // re-register the ERAM output (short path)
+470:                             cdf_v  <= cdf_rd;
+471:                             lut_ph <= 4'd2;
+472:                         end
+473:                         4'd2: begin
+474:                             if (den32_r == 32'd0) begin
+475:                                 // empty histogram span: identity mapping
+476:                                 q_r    <= lut_a[7:0];
+477:                                 lut_ph <= 4'd13;
+478:                             end else begin
+479:                                 cdf_d  <= (cdf_v >= cdf_min) ? (cdf_v - cdf_min) : 32'd0;
+480:                                 lut_ph <= 4'd3;
+481:                             end
+482:                         end
+483:                         4'd3: begin
+484:                             num_r  <= cdf_d * 32'd255;
+485:                             lut_ph <= 4'd4;
+486:                         end
+487:                         4'd4: begin
+488:                             rem    <= num_r + den_half;
+489:                             q_r    <= 8'd0;
+490:                             i_r    <= 4'd7;
+491:                             lut_ph <= 4'd5;
+492:                         end
+493:                         4'd5, 4'd6, 4'd7, 4'd8, 4'd9, 4'd10, 4'd11, 4'd12: begin
+494:                             if (rem >= den_s) begin
+495:                                 rem <= rem - den_s;
+496:                                 q_r <= q_r | (8'd1 << i_r);
+497:                             end
+498:                             den_s  <= den_s >> 1;
+499:                             i_r    <= i_r - 4'd1;
+500:                             if (i_r == 4'd0) lut_ph <= 4'd13;
+501:                         end
+502:                         4'd13: begin
+503:                             if (act_bank) begin
+504:                                 lut_a0[lut_a[7:0]] <= q_r;
+505:                                 lut_a1[lut_a[7:0]] <= q_r;
+506:                                 lut_a2[lut_a[7:0]] <= q_r;
+507:                                 lut_a3[lut_a[7:0]] <= q_r;
+508:                             end else begin
+509:                                 lut_b0[lut_a[7:0]] <= q_r;
+510:                                 lut_b1[lut_a[7:0]] <= q_r;
+511:                                 lut_b2[lut_a[7:0]] <= q_r;
+512:                                 lut_b3[lut_a[7:0]] <= q_r;
+513:                             end
+514:                             if (lut_a == 12'd255) begin
+515:                                 st <= ST_PUB;
+516:                             end else begin
+517:                                 lut_a  <= lut_a + 12'd1;
+518:                                 lut_ph <= 4'd0;
+519:                             end
+
+B0031 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0031.v:25-63 SHA256 1a64fa21339a25a9f34ca8206c0fd643b5232baed26028d8d337144374be928e
+25:     // stage 1: registered products + sidebands
+26:     reg [16:0] p_r, p_g, p_b;
+27:     reg        v1, sof1, last1;
+28: 
+29:     wire [17:0] sum2 = {1'b0, p_r} + {1'b0, p_g} + {1'b0, p_b} + 18'd128;
+30: 
+31:     assign s_ready = rst_n && (!m_valid || m_ready);
+32: 
+33:     always @(posedge clk or negedge rst_n) begin
+34:         if (!rst_n) begin
+35:             v1    <= 1'b0;
+36:             sof1  <= 1'b0;
+37:             last1 <= 1'b0;
+38:             p_r   <= 17'd0;
+39:             p_g   <= 17'd0;
+40:             p_b   <= 17'd0;
+41:         end else if (s_ready) begin
+42:             v1    <= s_valid;
+43:             sof1  <= s_sof;
+44:             last1 <= s_last;
+45:             p_r   <= 17'd77  * {9'd0, s_r};
+46:             p_g   <= 17'd150 * {9'd0, s_g};
+47:             p_b   <= 17'd29  * {9'd0, s_b};
+48:         end
+49:     end
+50: 
+51:     // stage 2: sum / shift -> output register
+52:     always @(posedge clk or negedge rst_n) begin
+53:         if (!rst_n) begin
+54:             m_valid <= 1'b0;
+55:             m_y     <= 8'd0;
+56:             m_sof   <= 1'b0;
+57:             m_last  <= 1'b0;
+58:         end else if (s_ready) begin
+59:             m_valid <= v1;
+60:             m_sof   <= sof1;
+61:             m_last  <= last1;
+62:             if (v1) m_y <= sum2[15:8];
+63:         end
+
+B0027 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0027.v:133-186 SHA256 c358174f56aeb2d4a64a2b7484c53ea9feed2f6cd857ac06c315250110a55dd6
+133:     function [10:0] hsum;
+134:         input [7:0] l, m, r;
+135:         begin
+136:             hsum = {3'b0, l} + ({3'b0, m} << 1) + {3'b0, r};
+137:         end
+138:     endfunction
+139: 
+140:     wire [10:0] h0t = hsum(u0, u1, u2), h0m = hsum(c0, c1, c2), h0b = hsum(d0, d1, d2);
+141:     wire [10:0] h1t = hsum(u1, u2, u3), h1m = hsum(c1, c2, c3), h1b = hsum(d1, d2, d3);
+142:     wire [10:0] h2t = hsum(u2, u3, u4), h2m = hsum(c2, c3, c4), h2b = hsum(d2, d3, d4);
+143:     wire [10:0] h3t = hsum(u3, u4, u5), h3m = hsum(c3, c4, c5), h3b = hsum(d3, d4, d5);
+144: 
+145:     reg [10:0] r0t, r0m, r0b, r1t, r1m, r1b, r2t, r2m, r2b, r3t, r3m, r3b;
+146:     reg        r_valid, r_abort, r_sof, r_eol, r_eof;
+147:     always @(posedge clk or negedge rst_n) begin
+148:         if (!rst_n) begin
+149:             r0t <= 11'd0; r0m <= 11'd0; r0b <= 11'd0;
+150:             r1t <= 11'd0; r1m <= 11'd0; r1b <= 11'd0;
+151:             r2t <= 11'd0; r2m <= 11'd0; r2b <= 11'd0;
+152:             r3t <= 11'd0; r3m <= 11'd0; r3b <= 11'd0;
+153:             r_valid <= 1'b0; r_abort <= 1'b0;
+154:             r_sof <= 1'b0; r_eol <= 1'b0; r_eof <= 1'b0;
+155:         end else if (pipe_en) begin
+156:             r0t <= h0t; r0m <= h0m; r0b <= h0b;
+157:             r1t <= h1t; r1m <= h1m; r1b <= h1b;
+158:             r2t <= h2t; r2m <= h2m; r2b <= h2b;
+159:             r3t <= h3t; r3m <= h3m; r3b <= h3b;
+160:             r_valid <= p_valid; r_abort <= p_abort;
+161:             r_sof <= p_sof; r_eol <= p_eol; r_eof <= p_eof;
+162:         end
+163:     end
+164: 
+165:     // ---------------- stage M2/output: vertical combine + round ----------------
+166:     function [7:0] vcomb;
+167:         input [10:0] t, m, b;
+168:         reg [12:0] s;
+169:         begin
+170:             s = {2'b0, t} + ({2'b0, m} << 1) + {2'b0, b} + 13'd8;
+171:             vcomb = s[11:4];
+172:         end
+173:     endfunction
+174: 
+175:     reg [31:0] o_data;
+176:     reg        o_valid, o_abort, o_sof, o_eol, o_eof;
+177:     always @(posedge clk or negedge rst_n) begin
+178:         if (!rst_n) begin
+179:             o_data <= 32'd0;
+180:             o_valid <= 1'b0; o_abort <= 1'b0;
+181:             o_sof <= 1'b0; o_eol <= 1'b0; o_eof <= 1'b0;
+182:         end else if (pipe_en) begin
+183:             o_data  <= {vcomb(r3t, r3m, r3b), vcomb(r2t, r2m, r2b),
+184:                         vcomb(r1t, r1m, r1b), vcomb(r0t, r0m, r0b)};
+185:             o_valid <= r_valid; o_abort <= r_abort;
+186:             o_sof <= r_sof; o_eol <= r_eol; o_eof <= r_eof;
+
+B0028 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0028.v:97-114 SHA256 df84b8a49c95bd784e6dd618a5dbc5772200df70f83d35784c381db35629034b
+97:     // ---------------- histogram banks (lane i -> bank i) ----------------
+98:     reg [23:0] hb0 [0:255];
+99:     reg [23:0] hb1 [0:255];
+100:     reg [23:0] hb2 [0:255];
+101:     reg [23:0] hb3 [0:255];
+102:     reg [31:0] cdf_ram [0:255];
+103: 
+104:     // ---------------- LUT banks: 2 banks x 4 lanes ----------------
+105:     reg [7:0] lut_a0 [0:255];
+106:     reg [7:0] lut_a1 [0:255];
+107:     reg [7:0] lut_a2 [0:255];
+108:     reg [7:0] lut_a3 [0:255];
+109:     reg [7:0] lut_b0 [0:255];
+110:     reg [7:0] lut_b1 [0:255];
+111:     reg [7:0] lut_b2 [0:255];
+112:     reg [7:0] lut_b3 [0:255];
+113:     reg       act_bank;
+114:     reg       lut_pub;
+
+B0028 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0028.v:232-274 SHA256 df84b8a49c95bd784e6dd618a5dbc5772200df70f83d35784c381db35629034b
+232:     wire [1:0] inc0 = {1'b0, ((a_px[0] == px_p[0])  && we1)} +
+233:                       {1'b0, ((a_px[0] == px_pp[0]) && we2)} + 2'd1;
+234:     wire [1:0] inc1 = {1'b0, ((a_px[1] == px_p[1])  && we1)} +
+235:                       {1'b0, ((a_px[1] == px_pp[1]) && we2)} + 2'd1;
+236:     wire [1:0] inc2 = {1'b0, ((a_px[2] == px_p[2])  && we1)} +
+237:                       {1'b0, ((a_px[2] == px_pp[2]) && we2)} + 2'd1;
+238:     wire [1:0] inc3 = {1'b0, ((a_px[3] == px_p[3])  && we1)} +
+239:                       {1'b0, ((a_px[3] == px_pp[3]) && we2)} + 2'd1;
+240:     wire [23:0] eff0 = hb0_rd + {22'd0, inc0};
+241:     wire [23:0] eff1 = hb1_rd + {22'd0, inc1};
+242:     wire [23:0] eff2 = hb2_rd + {22'd0, inc2};
+243:     wire [23:0] eff3 = hb3_rd + {22'd0, inc3};
+244:     wire        we_now = cnt_en_d && en;
+245: 
+246:     always @(posedge clk or negedge rst_n) begin
+247:         if (!rst_n) begin
+248:             cnt_en_d <= 1'b0;
+249:             we1 <= 1'b0; we2 <= 1'b0; we_w <= 1'b0;
+250:             wd0 <= 24'd0; wd1 <= 24'd0; wd2 <= 24'd0; wd3 <= 24'd0;
+251:             wa0 <= 8'd0; wa1 <= 8'd0; wa2 <= 8'd0; wa3 <= 8'd0;
+252:         end else if (en) begin
+253:             cnt_en_d <= cnt_en;
+254:             we1      <= we_now;
+255:             we2      <= we1;
+256:             we_w     <= we_now;
+257:             if (we_now) begin
+258:                 wd0 <= eff0; wd1 <= eff1; wd2 <= eff2; wd3 <= eff3;
+259:                 wa0 <= a_px[0]; wa1 <= a_px[1]; wa2 <= a_px[2]; wa3 <= a_px[3];
+260:             end
+261:         end
+262:     end
+263: 
+264:     always @(posedge clk) begin
+265:         if (we_w && en) begin
+266:             hb0[wa0] <= wd0;
+267:             hb1[wa1] <= wd1;
+268:             hb2[wa2] <= wd2;
+269:             hb3[wa3] <= wd3;
+270:         end else if (st == ST_CLEAR) begin
+271:             hb0[clr_a[7:0]] <= 24'd0;
+272:             hb1[clr_a[7:0]] <= 24'd0;
+273:             hb2[clr_a[7:0]] <= 24'd0;
+274:             hb3[clr_a[7:0]] <= 24'd0;
+
+B0028 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0028.v:309-327 SHA256 df84b8a49c95bd784e6dd618a5dbc5772200df70f83d35784c381db35629034b
+309:     // ---------------- output stage (data + abort marker, single driver) ----------------
+310:     always @(posedge clk or negedge rst_n) begin
+311:         if (!rst_n) begin
+312:             o_data <= 32'd0;
+313:             o_valid <= 1'b0; o_sof <= 1'b0; o_eol <= 1'b0; o_eof <= 1'b0;
+314:             o_abort <= 1'b0;
+315:             mk_d <= 1'b0;
+316:         end else if (en) begin
+317:             if (lut_pub) o_data <= {lut_r[3], lut_r[2], lut_r[1], lut_r[0]};
+318:             else         o_data <= {a_px[3], a_px[2], a_px[1], a_px[0]};
+319:             // the abort marker rides the data pipeline as a valid entry with
+320:             // o_abort=1 (the output buffer converts it to a one-cycle port event)
+321:             o_valid <= cnt_en_d | mk_d;
+322:             o_abort <= mk_d;
+323:             o_sof   <= cnt_en_d && s_sof_d;
+324:             o_eol   <= cnt_en_d && s_eol_d;
+325:             o_eof   <= cnt_en_d && s_eof_d;
+326:             mk_d    <= mk_evt;
+327:         end
+
+B0028 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0028.v:395-429 SHA256 df84b8a49c95bd784e6dd618a5dbc5772200df70f83d35784c381db35629034b
+395:                 ST_ACTIVE: begin
+396:                     if (abort_evt) begin
+397:                         good_d <= 1'b0;   // aborted frame: never publishes
+398:                         st <= ST_FW;
+399:                     end else if (eof_evt) begin
+400:                         // latch the frame-end decision exactly once (the ST_FW
+401:                         // takes two cycles, so a continuously refreshed flag
+402:                         // would be cleared before the decision is taken)
+403:                         good_d <= good_evt;
+404:                         if (good_evt) begin
+405:                             beats <= beats_c;
+406:                             rows  <= rows_c;
+407:                         end else begin
+408:                             cnt_rej <= cnt_rej + 16'd1;
+409:                         end
+410:                         st <= ST_FW;
+411:                     end else if (accept) begin
+412:                         beats <= beats_c;
+413:                         if (s_eol) rows <= rows_c;
+414:                     end
+415:                 end
+416:                 ST_FW: begin
+417:                     // two cycles: the last two histogram writes (registered
+418:                     // write data) land during this state, so the merge/clear
+419:                     // reads and writes must not start earlier
+420:                     mrg_a   <= 12'd0;
+421:                     cdf_acc <= 32'd0;
+422:                     cdf_min <= 32'd0;
+423:                     cdf_min_v <= 1'b0;
+424:                     clr_a   <= 12'd0;
+425:                     if (fw_d) begin
+426:                         fw_d <= 1'b0;
+427:                         st   <= good_d ? ST_MERGE : ST_CLEAR;
+428:                     end else begin
+429:                         fw_d <= 1'b1;
+
+B0028 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0028.v:473-533 SHA256 df84b8a49c95bd784e6dd618a5dbc5772200df70f83d35784c381db35629034b
+473:                         4'd2: begin
+474:                             if (den32_r == 32'd0) begin
+475:                                 // empty histogram span: identity mapping
+476:                                 q_r    <= lut_a[7:0];
+477:                                 lut_ph <= 4'd13;
+478:                             end else begin
+479:                                 cdf_d  <= (cdf_v >= cdf_min) ? (cdf_v - cdf_min) : 32'd0;
+480:                                 lut_ph <= 4'd3;
+481:                             end
+482:                         end
+483:                         4'd3: begin
+484:                             num_r  <= cdf_d * 32'd255;
+485:                             lut_ph <= 4'd4;
+486:                         end
+487:                         4'd4: begin
+488:                             rem    <= num_r + den_half;
+489:                             q_r    <= 8'd0;
+490:                             i_r    <= 4'd7;
+491:                             lut_ph <= 4'd5;
+492:                         end
+493:                         4'd5, 4'd6, 4'd7, 4'd8, 4'd9, 4'd10, 4'd11, 4'd12: begin
+494:                             if (rem >= den_s) begin
+495:                                 rem <= rem - den_s;
+496:                                 q_r <= q_r | (8'd1 << i_r);
+497:                             end
+498:                             den_s  <= den_s >> 1;
+499:                             i_r    <= i_r - 4'd1;
+500:                             if (i_r == 4'd0) lut_ph <= 4'd13;
+501:                         end
+502:                         4'd13: begin
+503:                             if (act_bank) begin
+504:                                 lut_a0[lut_a[7:0]] <= q_r;
+505:                                 lut_a1[lut_a[7:0]] <= q_r;
+506:                                 lut_a2[lut_a[7:0]] <= q_r;
+507:                                 lut_a3[lut_a[7:0]] <= q_r;
+508:                             end else begin
+509:                                 lut_b0[lut_a[7:0]] <= q_r;
+510:                                 lut_b1[lut_a[7:0]] <= q_r;
+511:                                 lut_b2[lut_a[7:0]] <= q_r;
+512:                                 lut_b3[lut_a[7:0]] <= q_r;
+513:                             end
+514:                             if (lut_a == 12'd255) begin
+515:                                 st <= ST_PUB;
+516:                             end else begin
+517:                                 lut_a  <= lut_a + 12'd1;
+518:                                 lut_ph <= 4'd0;
+519:                             end
+520:                         end
+521:                         default: lut_ph <= 4'd0;
+522:                     endcase
+523:                 end
+524:                 ST_PUB: begin
+525:                     act_bank <= ~act_bank;
+526:                     lut_pub  <= 1'b1;
+527:                     cnt_pub  <= cnt_pub + 16'd1;
+528:                     clr_a    <= 12'd0;
+529:                     st       <= ST_CLEAR;
+530:                 end
+531:                 ST_CLEAR: begin
+532:                     if (clr_a == 12'd255) st <= ST_IDLE;
+533:                     else                  clr_a <= clr_a + 12'd1;
+
+B0029 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0029.v:5-30 SHA256 7f1e05443e7432df0069297f515bf96b293022c957f7f05ceda2452f60101811
+5: // Structure (frozen, see algo/change-report.md):
+6: //
+7: //   RAW10 4px/beat + sidebands
+8: //        |
+9: //        v
+10: //   bayer_raw10_demosaic4            (Bayer -> RGB8 4px, 3-bank row window)
+11: //        |  4 x RGB8 lanes
+12: //        v
+13: //   4 x rgb8_gray_stream (worktree candidate, provenance in
+14: //        fpga/csi2/src/img/PROVENANCE.md)   -> Y8 4px stream (grayscale result)
+15: //        |
+16: //        +----------------------------+---------------------------+
+17: //        v (gray output)              v (Gaussian branch)         v (HE branch)
+18: //     y8_* 4px stream        gray8_gaussian3x3_stream     gray8_he_cdfmin_frame
+19: //                            (3x3, own row banks)         (4-bank histogram,
+20: //                                                          ping-pong CDF-min LUT)
+21: //
+22: // The two remaining algorithms run as independent hardware branches on the same
+23: // shared 4px stream; all three outputs are produced concurrently, one 4-pixel
+24: // beat per accepted input beat plus the fixed frame flush.  Backpressure: any
+25: // output ready low stalls the shared stream (single input stream design); the
+26: // arithmetic units themselves are independent and never serialise.
+27: //
+28: // Sidebands: y8_/gau_/he_ *_sof/_eol/_eof are aligned with their data beats;
+29: // *_abort is a one-cycle marker emitted after the beats accepted before an
+30: // aborted frame have drained (the frame never gets an eof).
+
+B0029 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0029.v:129-187 SHA256 7f1e05443e7432df0069297f515bf96b293022c957f7f05ceda2452f60101811
+129:     // Y8 stream ready = the output buffer + both branch inputs can accept.
+130:     // A beat is presented to all three consumers only when all can take it
+131:     // (single shared stream: all-or-nothing transfer, no loss, no duplicates).
+132:     wire y8_stream_ready = y8_fifo_ready && gau_s_ready && he_s_ready;
+133:     wire y8_xfer         = g0_valid && y8_stream_ready;
+134: 
+135:     assign f_ready = g0_s_ready && g1_s_ready && g2_s_ready && g3_s_ready;
+136: 
+137:     rgb8_gray_stream u_g0 (
+138:         .clk(clk), .rst_n(rst_n),
+139:         .s_valid(f_valid), .s_ready(g0_s_ready),
+140:         .s_r(f_r[7:0]), .s_g(f_g[7:0]), .s_b(f_b[7:0]),
+141:         .s_sof(f_sof), .s_last(f_eol),
+142:         .m_valid(g0_valid), .m_ready(y8_stream_ready),
+143:         .m_y(g0_y), .m_sof(g0_sof), .m_last(g0_last)
+144:     );
+145:     rgb8_gray_stream u_g1 (
+146:         .clk(clk), .rst_n(rst_n),
+147:         .s_valid(f_valid), .s_ready(g1_s_ready),
+148:         .s_r(f_r[15:8]), .s_g(f_g[15:8]), .s_b(f_b[15:8]),
+149:         .s_sof(f_sof), .s_last(f_eol),
+150:         .m_valid(g1_valid), .m_ready(y8_stream_ready),
+151:         .m_y(g1_y), .m_sof(), .m_last()
+152:     );
+153:     rgb8_gray_stream u_g2 (
+154:         .clk(clk), .rst_n(rst_n),
+155:         .s_valid(f_valid), .s_ready(g2_s_ready),
+156:         .s_r(f_r[23:16]), .s_g(f_g[23:16]), .s_b(f_b[23:16]),
+157:         .s_sof(f_sof), .s_last(f_eol),
+158:         .m_valid(g2_valid), .m_ready(y8_stream_ready),
+159:         .m_y(g2_y), .m_sof(), .m_last()
+160:     );
+161:     rgb8_gray_stream u_g3 (
+162:         .clk(clk), .rst_n(rst_n),
+163:         .s_valid(f_valid), .s_ready(g3_s_ready),
+164:         .s_r(f_r[31:24]), .s_g(f_g[31:24]), .s_b(f_b[31:24]),
+165:         .s_sof(f_sof), .s_last(f_eol),
+166:         .m_valid(g3_valid), .m_ready(y8_stream_ready),
+167:         .m_y(g3_y), .m_sof(), .m_last()
+168:     );
+169: 
+170:     // eof/abort are two cycles behind the demosaic output (rgb8_gray_stream
+171:     // latency, round1 pipelining): a two-stage delay matched to the module
+172:     reg y8_eof_r, y8_abort_r, y8_eof_r1, y8_abort_r1;
+173:     always @(posedge clk or negedge rst_n) begin
+174:         if (!rst_n) begin
+175:             y8_eof_r   <= 1'b0;
+176:             y8_abort_r <= 1'b0;
+177:             y8_eof_r1  <= 1'b0;
+178:             y8_abort_r1 <= 1'b0;
+179:         end else if (!(g0_valid && !y8_stream_ready)) begin
+180:             y8_eof_r1   <= f_eof;
+181:             y8_abort_r1 <= f_abort;
+182:             y8_eof_r    <= y8_eof_r1;
+183:             y8_abort_r  <= y8_abort_r1;
+184:         end
+185:     end
+186: 
+187:     wire [31:0] y8_data_i = {g3_y, g2_y, g1_y, g0_y};
+
+B0111 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0111.v:27-44 SHA256 0f9aba424e7d82a8f95fa744b5fd73974dacbb4665c680dbf348351ecb1567c4
+27:     csi_algo_roi_adapter #(.W(W),.H(H),.X0(X0),.Y0(Y0),.SKIP_ROWS(SKIP_ROWS),.FIFO_AW(FIFO_AW)) u_adapter (
+28:         .clk(clk),.rst_n(rst_n),.cam_vsync(cam_vsync),.cam_in_frame(cam_in_frame),.cam_in_line(cam_in_line),
+29:         .cam_pix(cam_pix),.cam_pix_valid(cam_pix_valid),.cam_good(cam_good),.cam_abort(cam_abort),
+30:         .configured(configured&&!ce),.outputs_done(all_done),
+31:         .s_valid(sv),.s_ready(sr),.s_data(sd),.s_sof(ss),.s_eol(sl),.s_eof(se),.s_abort(sa),
+32:         .accepted_frames(accepted),.rejected_frames(rejected),.overflow_frames(overflow),.accepted_beats(inbeats),.busy(busy)
+33:     );
+34:     img_algo_parallel_top #(.MAX_WORDS(512)) u_algorithms (
+35:         .clk(clk),.rst_n(rst_n),.cfg_valid(cr),.cfg_ready(cr),.cfg_width(W[11:0]),.cfg_height(H[11:0]),.cfg_phase(PHASE),.cfg_error(ce),
+36:         .s_valid(sv),.s_ready(sr),.s_data(sd),.s_sof(ss),.s_eol(sl),.s_eof(se),.s_abort(sa),
+37:         .y8_valid(ov[0]),.y8_ready(sink_ready[0]),.y8_data(od0),.y8_sof(os[0]),.y8_eol(ol[0]),.y8_eof(oe[0]),.y8_abort(oa[0]),
+38:         .gau_valid(ov[1]),.gau_ready(sink_ready[1]),.gau_data(od1),.gau_sof(os[1]),.gau_eol(ol[1]),.gau_eof(oe[1]),.gau_abort(oa[1]),
+39:         .he_valid(ov[2]),.he_ready(sink_ready[2]),.he_data(od2),.he_sof(os[2]),.he_eol(ol[2]),.he_eof(oe[2]),.he_abort(oa[2]),
+40:         .st_frames_good(),.st_frames_abort(),.st_he_published(),.st_he_rejected(),.st_gau_abort(),.he_lut_addr(8'd0),.he_lut_data()
+41:     );
+42:     algo_diagnostic_sink u_y8(.clk(clk),.rst_n(rst_n),.valid(ov[0]&&sink_ready[0]),.data(od0),.sof(os[0]),.eol(ol[0]),.eof(oe[0]),.abort(oa[0]),.terminal(terminal[0]),.completed(complete0),.rejected(reject0),.last_crc(crc0),.last_beats(beats0));
+43:     algo_diagnostic_sink u_gau(.clk(clk),.rst_n(rst_n),.valid(ov[1]&&sink_ready[1]),.data(od1),.sof(os[1]),.eol(ol[1]),.eof(oe[1]),.abort(oa[1]),.terminal(terminal[1]),.completed(complete1),.rejected(reject1),.last_crc(crc1),.last_beats(beats1));
+44:     algo_diagnostic_sink u_he(.clk(clk),.rst_n(rst_n),.valid(ov[2]&&sink_ready[2]),.data(od2),.sof(os[2]),.eol(ol[2]),.eof(oe[2]),.abort(oa[2]),.terminal(terminal[2]),.completed(complete2),.rejected(reject2),.last_crc(crc2),.last_beats(beats2));
+
+B0256 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0256.v:1798-1809 SHA256 7b4be3e4dbc437212b619c43e20a875526f5ec0bd4824b4c994054baa7b24435
+1798: generate if(CLOSEDLOOP_EN) begin:g_closedloop
+1799:     assign push_arready=1'b0;assign push_rvalid=1'b0;
+1800:     ddr_closedloop_readback u_readback(
+1801:         .clk(w_ddr_dhi_clk),.rst(~w_ddrphy_rst_n),
+1802:         .pub_valid(cl_pub_valid),.pub_seq(cl_pub_seq),.pub_base(cl_pub_base),.pub_len(cl_pub_len),.pub_session(cl_pub_session),
+1803:         .writer_good(cl_writer_good),.writer_bad(cl_writer_bad),.abort(1'b0),.release_slot(cl_release),
+1804:         .arid(w_ddr_arid),.araddr(w_ddr_araddr),.arlen(w_ddr_arlen),.arsize(w_ddr_arsize),.arburst(w_ddr_arburst),
+1805:         .arvalid(w_ddr_arvalid),.arready(w_ddr_arready),.rid(w_ddr_rid),.rdata(w_ddr_rdata),.rresp(w_ddr_rresp),
+1806:         .rlast(w_ddr_rlast),.rvalid(w_ddr_rvalid),.rready(w_ddr_rready));
+1807:     cam_algo_diagnostics #(.W(CAMDDR_W),.H(CAMDDR_H),.X0(CAMDDR_X0),.Y0(CAMDDR_Y0),.SKIP_ROWS(CAMDDR_SKIP_ROWS),.PHASE(2'd3)) u_algo(
+1808:         .clk(w_a_byte_clk),.rst_n(w_a_rst_out),.cam_vsync(w_a_vsync),.cam_in_frame(w_a_in_frame),.cam_in_line(w_a_in_line),
+1809:         .cam_pix(w_a_pixel),.cam_pix_valid(w_a_pixel_valid),.cam_good(w_a_frame_good),.cam_abort(w_a_frame_abort|cl_inject_abort),.sink_ready(3'b111));
+
+B0155 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0155.al:71-86 SHA256 9a627146616af3312ebbefbb6b07835b9128797c9b5381cd75c65d0a50bbfb25
+71:             <File Path="Y:/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b15-ddr-pace/r0/changed-src/a1_frame_top.v">
+72:                 <FileInfo>
+73:                     <Attr Name="UsedInSyn" Val="true"/>
+74:                     <Attr Name="UsedInP&R" Val="true"/>
+75:                     <Attr Name="BelongTo" Val="design_1"/>
+76:                     <Attr Name="CompileOrder" Val="8"/>
+77:                 </FileInfo>
+78:             </File>
+79:             <File Path="Y:/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b15-ddr-pace/r0/changed-src/a1_deflate_core.v">
+80:                 <FileInfo>
+81:                     <Attr Name="UsedInSyn" Val="true"/>
+82:                     <Attr Name="UsedInP&R" Val="true"/>
+83:                     <Attr Name="BelongTo" Val="design_1"/>
+84:                     <Attr Name="CompileOrder" Val="9"/>
+85:                 </FileInfo>
+86:             </File>
+
+B0150 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0150.v:529-541 SHA256 acc1eff329aa295d01b16123581fee48ef49d444efdce3b7fe62214555517405
+529:     a1_frame_top #(.W(W), .H(H)) u_a1 (
+530:         .clk (clk_a1), .rst_n (rst_n),
+531:         .in_pix (a1_in_pix), .in_valid (a1_in_valid), .in_ready (a1_in_ready),
+532:         .in_sof (a1_in_sof),
+533:         .prep_en (PREP), .pred_en (PRED), .abort (a1_abort),
+534:         .out_data (a1_out_data), .out_valid (a1_out_valid), .out_ready (a1_out_ready),
+535:         .out_keep (a1_out_keep), .out_last (a1_out_last),
+536:         .frame_commit (a1_commit), .frame_abort (a1_fabort),
+537:         .st_raw_len (a1_raw_len), .st_xform_len (a1_xlen), .st_stream_len (a1_slen),
+538:         .st_raw_crc (a1_raw_crc), .st_xform_crc (a1_xcrc), .st_stream_crc (a1_scrc),
+539:         .st_blocks (a1_blocks), .st_stall_cycles (a1_stall), .st_busy (a1_busy),
+540:         .dbg (a1_dbg)
+541:     );
+
+B0146 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0146.v:1-19 SHA256 0064607aceb20ae3ef14133f0aaf5f8b3f489943011a66a1ddc005350dba7109
+1: // =============================================================================
+2: // a1_frame_top.v -- T10 A+ v1 frame-level codec top (test-only, P3)
+3: //
+4: // Raw packed RAW10 (40 bit = 4 px) in -> declared RGGB phase-0 2x2 Bayer
+5: // plane reorder (+ optional per-plane modulo-1024 prediction) -> one
+6: // transform-domain block per 2-row pair -> a1_deflate_core -> zlib bytes out.
+7: //
+8: // - 2-row pair buffer is ping-ponged (2 banks) so block assembly and encoder
+9: //   feed overlap; sustained input rate is 5 cycles per 40-bit group
+10: //   (= 1 byte/cycle), the encoder core remains the bottleneck (~2.15 c/B).
+11: // - In bypass mode (prep_en=0) samples are written in raster order and
+12: //   repacked, so xform bytes are byte-identical to raw bytes.
+13: // - Abort / bad geometry / non-zero pred without prep never commit.
+14: // - A 32-bit output word is held stable while out_valid && !out_ready.
+15: //
+16: // Field order of in_pix: [7:0]=b0, [15:8]=b1, [23:16]=b2, [31:24]=b3,
+17: // [39:32]=b4 (b0..b3 = px[9:2], b4 = four 2-bit LSBs, b4[1:0]=P0).
+18: //
+19: // No dynamic Huffman, no cross-block references, no production integration.
+
+B0004 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0004.md:39-53 SHA256 96da69508e9caf965d408f869d1960f608f5d2bc6e3f39acdceb3b0e1a5fa397
+39: ### 3.1 R10F与BPR1：可组合，但尚未实现互通
+40: 
+41: 当前`frame_contract.py`只实现非压缩payload，`parse_frame`按`format_id`直接解RAW，要求`raw_bytes<=payload_bytes`，没有BPR1解码分支。因此原独立文档的“互补不冲突”只能作为封装方向，不能写成已经兼容。
+42: 
+43: 保留R10F v1非压缩样例，不无提示改变其长度定义。**压缩传输扩展候选**暂按两层封装评审：
+44: 
+45: ```text
+46: R10F传输头(128B) | BPR1完整封包(36B内头 + 行块) | DMA对齐零填充
+47: ```
+48: 
+49: 设BPR1内层`payload_bytes=P`，该字段仅计内头之后的行块数据；**完整BPR1长度为36+P**。若沿用R10F外层含填充长度，则外层长度为`align32(36+P)`，不能把P直接当外层载荷或完整封包长度。解码前须校验范围和内层头CRC，再提取精确36+P字节；BPR1解码器会拒绝多余尾字节。
+50: 
+51: 建议扩展中：外层`raw_crc32`表示恢复后的packed RAW，`payload_crc32`覆盖实际传输payload及其零填充；内层各CRC按BPR1自身定义检查。R10F头CRC为清零0x58字段后覆盖128B；BPR1头CRC覆盖其前32B，不能混用。`codec_id`枚举、版本升级、压缩时字段语义与RK消费合同须共同冻结，**本次不分配正式codec枚举，不宣称adapter存在**。
+52: 
+53: 本次以1920×1全零RAW实测：BPR1共774B、对齐后800B，直接交现有R10F解析器出现`raw_bytes > payload_bytes`和短载荷错误，CRC结果也不成立。这是缺少adapter的实证。
+
+B0277 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0277.csv:1-6 SHA256 940ece5948d0d4ecb64ea257348e5a5492cb7d59b705868dab0e377bd6d6ff70
+1: row,run_id,content,pacing,sink,S_ss,L_cold,tail_mean,tail_frac_pct,sink_limited,overlap_gain_vs_R1,capacity_MBps,margin_0_pct,margin_25_pct,G0,source,note
+2: R1,r1,C1,slot-free,SINK=1 (93.75 MB/s max frozen),4677970.0,6449446,163506.0,3.4952340438267027,False,0.0,103.89121777181127,33.604961126300495,6.883968901040394,G0_feasible_for_scope,measured this run,"S_ss 4677970.0 <= 6,250,000 (measured)"
+3: R2,r2,C1,strict-serial,SINK=1 (93.75 MB/s max frozen),6449405.0,6449446,163506.0,2.5352106124518463,False,1771435.0,75.35578863476553,-3.091835603439397,-22.473468482751514,G0_not_closed,measured this run,"S_ss 6449405.0 > 6,250,000; gap 199405.0 cycles (3.092%)"
+4: R3,r3,C2,slot-free,SINK=1 (93.75 MB/s max frozen),5189503.0,11476032,5700448.0,109.84574052659764,True,511533.0,93.65058657832937,20.43542512645238,-3.6516598988381,G0_not_proven,measured this run,sink_limited (tail 109.8% of S_ss); sink-limited S_ss is not G0 evidence
+5: R4,r4,C3_C7,slot-free,SINK=1 (93.75 MB/s max frozen),5928286.0,9234076,1697820.0,28.639306538179838,False,1250316.0,81.97985049979033,5.426762474010194,-15.658590020791841,G0_feasible_for_scope,measured this run,"S_ss 5928286.0 <= 6,250,000 (measured)"
+6: P3-R3(control),p3_r3f,C3-C7,slot-free,SINK=1 (same frozen TB lineage),5928286.0,9234076,1697820.0,28.639306538179838,False,,81.97985049979033,5.426762474010194,-15.658590020791841,G0_feasible_for_scope,P3 r3_frozen (read-only comparison),P3 G0 pseudo-closure run; R4 must reproduce this S_ss within +/-0.5%
+
+B0285 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0285.md:13-59 SHA256 d5366b963dc5a6123f8fe2c495ba918c4ce2fa5ea7d8df3c21a0ec4ce492d071
+13: 
+14: ## 四轮矩阵（P4，全部实测）
+15: 
+16: | run | 内容 | 流水 | `S_ss` | 结果 |
+17: |---|---|---|---:|---|
+18: | **R1** | C1 `f1080p_p1d1` 全帧合成 raw（81,707 B/帧） | slot-free | **4,677,970** | 40.0815 fps / 103.891 MB/s / **G0 +33.605%** → 过（scope 内） |
+19: | **R2** | C1 同 R1 | strict-serial | **6,449,405** | 29.0724 fps / 75.356 MB/s / **G0 −3.092%** → 不过 |
+20: | **R3** | C2 `f1080p_rand` 全帧 raw（2,594,706 B/帧） | slot-free | 5,189,503 | tail 109.85% → **sink_limited** → **`G0_not_proven`**（算术 +20.4% 是 sink 服务率，不是容量） |
+21: | **R4** | comp 代理（848,864 B/帧） | slot-free | **5,928,286** | 31.628 fps / 81.980 MB/s / **G0 +5.427%** → 过（复现 P3，Δ=0） |
+22: 
+23: - **R2−R1 = 1,771,435 cycles（37.87%）**：strict-serial 的代价（含相机串行化，是上界）；**slot-free 是 G0 的必要条件**。
+24: - **R3**：冻结 TB 的 sink 上限 **93.75 MB/s**（2 clk/B）；raw band 每帧 2,594,706 B 的导出时间几乎等于 `S_ss`，所以 tail 109.85%、`sink_limited=true`，**不能判 G0**。生产 sink 需求：**≥77.84 MB/s（G0）/ ≥103.79 MB/s（25 ms）**，目前 `not_proven`。
+25: - **R4** 与 P3 R3 逐值相同（Δ=0 cycles；测试者独立重跑 1,234 s 也 Δ=0），说明新 TB 可信。
+26: - 预算：4 次全尺寸共 **79.0 min ≤120**；0 TD/板卡；P4 manifest `d353c61a…`，68 artifacts。
+27: 
+28: ## 最终 headline 与 scope（已收窄）
+29: 
+30: **`G0_feasible_for_scope`**，范围是：
+31: 
+32: - 内容：**C1 全帧合成 packed RAW10**（`f1080p_p1d1`）或 **P3 comp 代理**；C2 rand raw band **`G0_not_proven`**；全是 `full_frame_raw_synthetic` / `proxy_not_natural` / `proxy_not_worst`。
+33: - 流水：**slot-free / overlapped**；strict-serial 只作保守视图（R2 不过）。
+34: - sink：**实测 93.75 MB/s 冻结仿真 sink**；对 C1/comp 不限速；raw band 生产需求 ≥77.84/103.79 MB/s 仍 `not_proven`；93.75 不能写成 ≥103.79。
+35: - DDR：行为 256-bit PAXI；单核单路、**187.5 MHz**、per-stream；无 TD/板级。
+36: 
+37: ## 能说 / 不能说
+38: 
+39: **能说**
+40: 
+41: - C1 全帧合成 raw slot-free：**G0 +33.605%**；comp 代理 slot-free：**G0 +5.427%**（R4 复现 P3）。
+42: - **slot-free 是必要条件**：strict-serial R2 **−3.092%**，R2−R1 **1,771,435**。
+43: - **sink 是第二约束**：R3 `sink_limited` → `G0_not_proven`；生产 sink 需 ≥77.84（G0）/ ≥103.79（25 ms）。
+44: - P1 的 6.421M 是冷启动；P2 的 infeasible 口径已撤回/降级。
+45: 
+46: **不能说**
+47: 
+48: - 不能说自然图像/全内容/最坏 1080p30 已过（内容全是合成/代理）。
+49: - 不能说 strict-serial C1/comp 过 G0（R2 不过；P3 comp serial 只是 assumed）。
+50: - 不能说 C2 rand raw band G0 过（R3 是 sink 限速，算术 +20.4% 不算）。
+51: - 不能说双路 1080p30 已过（`c2s2=C` 只是假设，共享 PAXI/时序未证）。
+52: - 不能说 93.75 MB/s 对 raw band 足够 / 生产 sink ≥103.79 已实现 / 板级、真实 DDR、PCIe、RK 已通。
+53: 
+54: ## 还差什么
+55: 
+56: 1. **真实自然/低照/噪声/最坏内容 4 帧**（最高优先）：现在只有合成 C1/C2 与 comp 代理，A2 仍是外推。
+57: 2. **生产 slot-free 实现**：R1/R4 是 TB slot-free，真实 CMP 槽所有权/pacing 还没做；R2 只是上界。
+58: 3. **生产 sink ≥103.79 MB/s**：冻结 TB 上限 93.75；raw band tail 27.7 ms（83%）；PCIe 未做。
+59: 4. **双核共享 PAXI/资源/时序**：231/289、4 客户仲裁、Routed 未证。
+
+B0168 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0168.md:44-52 SHA256 6a07dfde14e5fe670d7c81676a9dc3426f482ff1547b87cae95aaa524bfbfbb4
+44: ## 4. 重建（`r0/td`）
+45: 
+46: | 项 | 值 |
+47: |---|---|
+48: | 综合（1 次） | `SWNS=0.004`、slice 18,687、ERAM 72 |
+49: | 布线（1 次） | **SWNS=+0.012 ns、STNS=0、HWNS=+0.020、HTNS=0、Period 2.200 ns、0 违例端点** |
+50: | 资源 | slice 24,970/71,680（34.84%）、reg 29,162、**ERAM+CWC 102/300**、DSP 0 |
+51: | bit/CWC | 1 bitgen + 1 CWC（`P2_BITGEN_STA_SETUP=0.012/0.000 HOLD=0.020/0.000 PERIOD=2.200`，`P2_MATCHING_CWC_EXPORTED_NO_DOWNLOAD`）|
+52: | 时序裁决 | `+0.012` 落在 dev-plan §6 的 **+0.003…+0.05** 带 → **`timing_caveat=thin_margin_+0.012`，仅诊断候选、非生产签核**（b13 r1 为 +0.023，属同一量级） |
+
+B0140 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0140.md:7-13 SHA256 6961f639adf27cfc117cbea967bde6ac0d592038a92897f845efab8a7a922c10
+7: Manifest: `C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261019-0212_codex_fpga_closedloop_b2\recovery01\B01\timing-continuation01\remaining-attempts01\candidate\manifest.json`
+8: SHA256: `c7a40897166467f2beafb096701dba9cf836e1007d77ae03d90009d06f80d757`; 699 entries, independent before/after hash drift=0.
+9: Candidate working tree: `C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\upstream\ph1p100-pcie-ep-fpga`; HEAD `b0282d2a8dfdf11e6e63779510fe380dfffb5e83`; top ph1p_pcie_ep_top_closedloop, PH1P100SBG484 speed3. Dirty baseline preserved; git-status.json records the actual tree. No production source, manifest, old evidence or hardware modified by tester. Developer activities stopped before testing; all tester-owned simulations have ended.
+10: 
+11: ## Scope and result
+12: dimension=integrated; round=0; actual repair rounds=0. functional=PASS (G0/G1), engineering=PASS (G0/G2), system=PASS for this planned offline integration/entry boundary. G3=not_applicable to B01 per dev-plan: separate T02 performs required real single-A board evidence. G4=not_run/deferred by user; G5=not_applicable (no push). This report cannot mark parent T06/T02 hardware closure done.
+13: 
+
+B0140 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0140.md:35-45 SHA256 6961f639adf27cfc117cbea967bde6ac0d592038a92897f845efab8a7a922c10
+35: ## Independent source and reuse review
+36: Reviewed actual row-window state/bank scheduling, conservative demosaic enable, RGB/branch queues, gray pipeline, EOF/abort transport, CSI ROI adapter/sinks, DDR reader skid/drain/ownership, active top wiring and reset domains. Maximum gray sum77*255+150*255+29*255+128=65408 fits16bits;18bit partial sums preserve exact formula and bit15:8. Data/valid/markers use the same enabled3 stages. Each2slot queue has count0..2, registered room, pop on actual acceptance and no full overwrite; branch broadcasting is all-or-none; abort notification is transfer-gated. Row read registers alone lack reset; valid/state/config/sideband resets remain and valid production starts after initialized rows. Actual synthesis has6 ordinary failed ERAM inference/fallback warnings, ERAM200/300; no claim all banks became ERAM. Stale invalid payloads are not valid tokens.
+37: 
+38: 11 historical regressions accepted using independently rehashed previous result/log and exact ModelSim loaded-module file closure; all old/current SHA equal. `reuse-decision.json` binds every decision to this current manifest; they were not rerun. This includes full1080p writer->memory model->real checker (words648192,header_crc56ba381a,payload_crcac1b6fe1,flags8000000f,pass1,fail0), checker negative cases, controller20-case ownership/skid/timeout/RID/RLAST/abort/drain/session/reset, pusher, arbiter, CSI, BAR debug and end-to-end regressions. Changed algorithm modules are absent from these elaborated closures. `input-audit.json` includes exact logs and loaded modules. Five source changes versus the old415 manifest are confined to four allowed algo files and the dedicated closedloop stage; no protected oracle/reference/IP/ADC/SDC/T08 change appears in that intersection. Current699 entries and build inputs independently hash correctly.
+39: 
+40: ## Same final DB engineering and selected CDC
+41: Final DB SHA `931d71540451887142d915436c374364ab0ce474f8553fa3e5e82a4d6431cd12`.
+42: Final timing SHA `752c513459c02bc2b0a938f0d527e6a9e8df4c9e01ffa0829b671286035e5800`.
+43: Routed; both Slow/Fast and max/min checked. SWNS+0.100ns,HWNS+0.020ns,STNS0,HTNS0; all68 reported max/min endpoint-group statistics have0 violations. CameraA/B5.332ns,DHI10ns,TL16ns unchanged. Global metrics include timing exceptions; all clock rows remain nonnegative. Resources all18 categories within capacity: LUT28349/71680,regs40359/143360,slices35502/71680,ERAM200/300,DSP14/220. Area retains real u_algorithms/u_g0/u_gau/u_he and actual clock-domain probes; not stubs or constant/unused inputs.
+44: 
+45: STA coverage97.62% is not100%. Exact final no-clock2 (PLL.lock status/PCIe CE),local-clock4,and73 input/87 output missing-delay node sets independently equal baseline. Original dedicated SDC equals protected `_dbg.sdc` byte-for-byte. Final invalid constraints,PLL constraints/frequency,loops,no-path,shadowed/ignored and partial/abnormal delay checks are0. Physical stage emits6 inherited severe constraint findings corresponding to these explicit boundaries; synthesis critical-warning check is0. Dummy groups are20 inherited PHY pad control outputs and unused LSLICE alternate outputs (actual final names include Gaussian terminal_reg_syn_3.ofa and generated watcher bus_data_r_bclk_reg[519]_syn_2.ofa); they do not justify a generic waiver. The source Gaussian terminal is consumed by all_done and full-frame counters are retained/tested. Existing DDR/IP source-synchronous and external serial/low-speed electrical margins are outside this selected internal STA claim and remain for T02/physical qualification.
+
+B0283 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0283.md:33-40 SHA256 c129fe3d4798750814ddf695b75fe1e6b9df8ab4c750f354de99073111e22e14
+33: - **降级**：系统级 `1080p30 per-stream` → **`not_proven`**（A1/A2 内容跨界）；A2 行仍 `infeasible`（G0 −2.6694%）。
+34: - A1 **103.9009**（G0 +33.6174%、G25 +6.8939%）；A2 **75.6843**（assumed；comp 核级 81.067 是 core-only，不是 A2 链级；−2.6694%/−22.1355%）；A3 **154.2198**（assumed；+98.33%/+58.66%）；A4=b6 冷延迟 6,421,414，仅参照。
+35: - DDR：**5,332 / 6,400** 双列；主路径 809.034 MB/s、gate 1,011.2925；required_eff **15.1732%/12.6412%**、gate_eff **18.9665%/15.8014%**。
+36: - UART：真实 115200 = **11,520 B/s**（40,032 B→3.475 s，104.25×；2,594,706 B→225.235 s，6,757×）；sim sink 18.75 MB/s（1,628×）；`transport=not_proven`。
+37: - 双核：`c2s2=C`（非 2C）；`assumed_from_single_core` + `paaxi_shared_unproven`；231/289；Routed unproven；永不 feasible。
+38: - C1–C9：P2 `out/corrections.csv` / `verdict-r1.md`。
+39: 
+40: ## 4. P3：comp proxy 的 G0 收口
+
+B0146 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0146.v:189-195 SHA256 0064607aceb20ae3ef14133f0aaf5f8b3f489943011a66a1ddc005350dba7109
+189:     assign st_raw_len      = raw_len_r;
+190:     assign st_xform_len    = xlen_r;
+191:     assign st_stream_len   = slen_r;
+192:     assign st_raw_crc      = ~raw_crc_r;
+193:     assign st_xform_crc    = ~xf_crc_r;
+194:     assign st_stream_crc   = ~str_crc_r;
+195:     assign st_blocks       = blocks_r;
+
+B0146 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0146.v:393-409 SHA256 0064607aceb20ae3ef14133f0aaf5f8b3f489943011a66a1ddc005350dba7109
+393:                 end else if (istate == I_EXP) begin
+394:                     b_t = (pix_r >> (byte_k * 8)) & 8'hFF;
+395:                     raw_crc_r <= crc32b(raw_crc_r, b_t);
+396:                     raw_len_r <= raw_len_r + 32'd1;
+397:                     if (byte_k != 3'd4) begin
+398:                         x_t     = (grp_in_row << 2) + byte_k;
+399:                         samp_t  = {b_t, 2'b00} | ((pix_r >> (32 + 2 * byte_k)) & 2'b11);
+400:                         if (prep_r) begin
+401:                             plane_t  = {row_in_blk[0], x_t[0]};
+402:                             waddr_t  = (wr_bank ? NSAMP : 0) + plane_t * HALFW +
+403:                                        (x_t >> 1);
+404:                         end else begin
+405:                             waddr_t  = (wr_bank ? NSAMP : 0) + row_in_blk * W + x_t;
+406:                         end
+407:                         smem_we_r    <= 1'b1;
+408:                         smem_waddr_r <= waddr_t;
+409:                         smem_wdata_r <= samp_t;
+
+B0146 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0146.v:487-529 SHA256 0064607aceb20ae3ef14133f0aaf5f8b3f489943011a66a1ddc005350dba7109
+487:                     D_EMIT: begin
+488:                         if (core_in_ready) begin
+489:                             xf_crc_r   <= crc32b(xf_crc_r, core_in_data);
+490:                             xlen_r     <= xlen_r + 32'd1;
+491:                             first_byte <= 1'b0;
+492:                             if (eidx == 3'd4) begin
+493:                                 if (rd_s == n_samp) begin
+494:                                     blocks_r <= blocks_r + 32'd1;
+495:                                     bank_busy[drain_bank] <= 1'b0;
+496:                                     rd_bank <= ~rd_bank;
+497:                                     dblk    <= dblk + 16'd1;
+498:                                     if (dblk == (NBLK - 1)) dstate <= D_FIN;
+499:                                     else begin
+500:                                         gcnt   <= 2'd0;
+501:                                         dstate <= D_IDLE;   // re-pick bank + n_samp
+502:                                     end
+503:                                 end else begin
+504:                                     gcnt     <= 2'd0;
+505:                                     primed   <= 1'b1;
+506:                                     rd_issue <= rd_s + 16'd1; // 2nd sample of next group
+507:                                     dstate   <= D_GATH;
+508:                                 end
+509:                             end else begin
+510:                                 eidx <= eidx + 3'd1;
+511:                             end
+512:                         end
+513:                     end
+514:                     default: ; // D_FIN
+515:                 endcase
+516: 
+517:                 // ------------------------------------------------- output packing
+518:                 if (core_out_valid && core_out_ready) begin
+519:                     case (scnt)
+520:                         2'd0: sdata[7:0]   <= core_out_data;
+521:                         2'd1: sdata[15:8]  <= core_out_data;
+522:                         2'd2: sdata[23:16] <= core_out_data;
+523:                         default: sdata[31:24] <= core_out_data;
+524:                     endcase
+525:                     str_crc_r <= crc32b(str_crc_r, core_out_data);
+526:                     slen_r    <= slen_r + 32'd1;
+527:                     if ((scnt == 2'd3) || core_out_last) begin
+528:                         svalid <= 1'b1;
+529:                         slast  <= core_out_last;
+
+B0054 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0054.py:67-95 SHA256 4df8eccf84da446066cdb09fb60b18fc13ce3dff803f96edfb33c3c66818f096
+67:         hc = zlib.crc32(data[off:off + 40]) & 0xFFFFFFFF
+68:         hdr_ok = (hc == h["header_crc"])
+69:         pay = data[off + HDR: off + HDR + h["stream_len"]]
+70:         if len(pay) != h["stream_len"]:
+71:             raise ValueError("truncated payload: want %d got %d" % (h["stream_len"], len(pay)))
+72:         prep = h["flags"] & 1
+73:         pred = (h["flags"] >> 1) & 1
+74:         st_crc_ok = (zlib.crc32(pay) & 0xFFFFFFFF) == h["stream_crc"]
+75:         try:
+76:             xf = zlib.decompress(pay)
+77:             zd_ok = True
+78:         except Exception as exc:                                  # pragma: no cover
+79:             xf = b""
+80:             zd_ok = False
+81:             h["zlib_error"] = str(exc)
+82:         len_ok = (len(xf) == h["xform_len"])
+83:         xf_crc_ok = (zlib.crc32(xf) & 0xFFFFFFFF) == h["xform_crc"]
+84:         raw = inverse_xform(xf, prep, pred, h["width"], h["height"]) if zd_ok else b""
+85:         raw_len_ok = (len(raw) == h["raw_len"])
+86:         raw_crc_ok = (zlib.crc32(raw) & 0xFFFFFFFF) == h["raw_crc"]
+87:         rec = dict(h)
+88:         rec.update(dict(prep=prep, pred=pred,
+89:                         header_crc_ok=hdr_ok, stream_crc_ok=st_crc_ok,
+90:                         zlib_ok=zd_ok, xform_len_ok=len_ok, xform_crc_ok=xf_crc_ok,
+91:                         raw_len_ok=raw_len_ok, raw_crc_ok=raw_crc_ok,
+92:                         stream_sha256=hashlib.sha256(pay).hexdigest(),
+93:                         xform_sha256=hashlib.sha256(xf).hexdigest(),
+94:                         raw_sha256=hashlib.sha256(raw).hexdigest(),
+95:                         worstcase_ok=(h["stream_len"] <= WORST_CASE_EXPANSION)))
+
+B0029 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0029.v:191-244 SHA256 7f1e05443e7432df0069297f515bf96b293022c957f7f05ceda2452f60101811
+191:     // ---------------- output buffers (one per port; see algo_obuf.v) ----------------
+192:     algo_obuf #(.DW(32), .DEPTH(8)) u_obuf_y8 (
+193:         .clk(clk), .rst_n(rst_n),
+194:         .w_valid(y8_xfer), .w_ready(y8_fifo_ready), .w_data(y8_data_i),
+195:         .w_sof(g0_sof), .w_eol(g0_last), .w_eof(y8_eof_r), .w_abort(y8_abort_r),
+196:         .r_valid(y8_valid), .r_ready(y8_ready), .r_data(y8_data),
+197:         .r_sof(y8_sof), .r_eol(y8_eol), .r_eof(y8_eof), .r_abort(y8_abort)
+198:     );
+199: 
+200:     algo_obuf #(.DW(32), .DEPTH(8)) u_obuf_gau (
+201:         .clk(clk), .rst_n(rst_n),
+202:         .w_valid(gau_w_valid), .w_ready(gau_fifo_ready), .w_data(gau_w_data),
+203:         .w_sof(gau_w_sof), .w_eol(gau_w_eol), .w_eof(gau_w_eof), .w_abort(gau_w_abort),
+204:         .r_valid(gau_valid), .r_ready(gau_ready), .r_data(gau_data),
+205:         .r_sof(gau_sof), .r_eol(gau_eol), .r_eof(gau_eof), .r_abort(gau_abort)
+206:     );
+207: 
+208:     algo_obuf #(.DW(32), .DEPTH(8)) u_obuf_he (
+209:         .clk(clk), .rst_n(rst_n),
+210:         .w_valid(he_w_valid), .w_ready(he_fifo_ready), .w_data(he_w_data),
+211:         .w_sof(he_w_sof), .w_eol(he_w_eol), .w_eof(he_w_eof), .w_abort(he_w_abort),
+212:         .r_valid(he_valid), .r_ready(he_ready), .r_data(he_data),
+213:         .r_sof(he_sof), .r_eol(he_eol), .r_eof(he_eof), .r_abort(he_abort)
+214:     );
+215: 
+216:     // ---------------- Gaussian branch ----------------
+217:     wire [15:0] gau_good_unused;
+218: 
+219:     gray8_gaussian3x3_stream #(.MAX_WORDS(MAX_WORDS)) u_gau (
+220:         .clk(clk), .rst_n(rst_n),
+221:         .cfg_valid(cfg_valid), .cfg_ready(a_cfg_ready),
+222:         .cfg_width(cfg_width), .cfg_height(cfg_height),
+223:         .cfg_error(a_cfg_error),
+224:         .s_valid(y8_xfer), .s_ready(gau_s_ready), .s_data(y8_data_i),
+225:         .s_sof(g0_sof), .s_eol(g0_last), .s_eof(y8_eof_r), .s_abort(y8_abort_r),
+226:         .m_valid(gau_w_valid), .m_ready(gau_fifo_ready), .m_data(gau_w_data),
+227:         .m_sof(gau_w_sof), .m_eol(gau_w_eol), .m_eof(gau_w_eof), .m_abort(gau_w_abort),
+228:         .st_frames_good(gau_good_unused), .st_frames_abort(st_gau_abort)
+229:     );
+230: 
+231:     // ---------------- HE branch ----------------
+232:     wire [15:0] he_good_unused;
+233: 
+234:     gray8_he_cdfmin_frame u_he (
+235:         .clk(clk), .rst_n(rst_n),
+236:         .cfg_valid(cfg_valid), .cfg_ready(h_cfg_ready),
+237:         .cfg_width(cfg_width), .cfg_height(cfg_height),
+238:         .cfg_error(h_cfg_error),
+239:         .s_valid(y8_xfer), .s_ready(he_s_ready), .s_data(y8_data_i),
+240:         .s_sof(g0_sof), .s_eol(g0_last), .s_eof(y8_eof_r), .s_abort(y8_abort_r),
+241:         .m_valid(he_w_valid), .m_ready(he_fifo_ready), .m_data(he_w_data),
+242:         .m_sof(he_w_sof), .m_eol(he_w_eol), .m_eof(he_w_eof), .m_abort(he_w_abort),
+243:         .st_published(st_he_published), .st_rejected(st_he_rejected),
+244:         .lut_rd_addr(he_lut_addr), .lut_rd_data(he_lut_data)
+
+B0022 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0022.v:39-83 SHA256 07404282d02256541cabf282087499e2540ef800580387de29e3871515c8de81
+39:     output wire          r_abort
+40: );
+41:     localparam AW = 3;   // pointer width: DEPTH must be 2**AW (8 here)
+42: 
+43:     reg [DW+3:0] mem [0:DEPTH-1];   // {marker, eof, eol, sof, data} = DW+4 bits
+44:     reg [AW-1:0] wr_ptr, rd_ptr;
+45:     reg [AW:0]   count;
+46: 
+47:     wire full  = (count == DEPTH[AW:0]);
+48:     wire empty = (count == {AW+1{1'b0}});
+49:     // a marker is written as a valid entry with w_abort=1, so the push is a
+50:     // normal transfer (w_valid && !full) - never level-triggered by w_abort
+51:     wire push  = w_valid && !full;
+52:     wire head_marker = mem[rd_ptr][DW+3];
+53:     wire pop   = !empty && (head_marker || r_ready);
+54: 
+55:     assign w_ready = !full;
+56:     assign r_valid = !empty && !head_marker;
+57:     assign r_data  = mem[rd_ptr][DW-1:0];
+58:     assign r_sof   = mem[rd_ptr][DW];
+59:     assign r_eol   = mem[rd_ptr][DW+1];
+60:     assign r_eof   = mem[rd_ptr][DW+2];
+61:     assign r_abort = !empty && head_marker;
+62: 
+63:     always @(posedge clk or negedge rst_n) begin
+64:         if (!rst_n) begin
+65:             wr_ptr <= {AW{1'b0}};
+66:             rd_ptr <= {AW{1'b0}};
+67:             count  <= {(AW+1){1'b0}};
+68:         end else begin
+69:             if (push) begin
+70:                 mem[wr_ptr] <= {w_abort, w_eof, w_eol, w_sof, w_data};
+71:                 wr_ptr <= wr_ptr + {{(AW-1){1'b0}}, 1'b1};
+72:             end
+73:             if (pop) begin
+74:                 rd_ptr <= rd_ptr + {{(AW-1){1'b0}}, 1'b1};
+75:             end
+76:             case ({push, pop})
+77:                 2'b10: count <= count + {{AW{1'b0}}, 1'b1};
+78:                 2'b01: count <= count - {{AW{1'b0}}, 1'b1};
+79:                 default: count <= count;
+80:             endcase
+81:         end
+82:     end
+83: endmodule
+
+B0026 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0026.v:1-7 SHA256 d5b14c597401313d25d9096a59f94d101e97fcf090198d04c5b0ef2dccbd86ee
+1: // Correctness prototype: bounded frame Gaussian with three Y8 row banks.
+2: // Kernel outer([1,2,1],[1,2,1]), replicated borders, round once (sum+8)>>4.
+3: // Input row loading and output row emission are separate phases: s_ready is
+4: // low throughout output, including sink stalls. There is no continuous CSI
+5: // service or dual-1080p30 throughput guarantee. Nine asynchronous sample
+6: // reads per result are intentional here; production RAM ports/inference,
+7: // pipelining, timing and resources require a separate implementation study.
+
+B0145 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0145.v:121-121 SHA256 a91c2ed82fbef654c4e065b64ae1cc268ca232feaa26fdd313c58d8740f81b3e
+121:     reg [15:0] blk_tag;
+
+B0145 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0145.v:519-524 SHA256 a91c2ed82fbef654c4e065b64ae1cc268ca232feaa26fdd313c58d8740f81b3e
+519:     wire        s1_bytes = hent_v && (hent[65:50] == blk_tag) &&
+520:                            (hent[23:16] == s1_b0) &&
+521:                            (hent[15:8]  == s1_b1) &&
+522:                            (hent[7:0]   == s1_b2);
+523:     wire        s1_ok = (s1_pos_r < lim2);
+524:     // T10.a1-pipe-split r0: stage-1 form of the distance/range test,
+
+B0145 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0145.v:598-640 SHA256 a91c2ed82fbef654c4e065b64ae1cc268ca232feaa26fdd313c58d8740f81b3e
+598:     // Hash-table write ports: one enable/address/data per array, no reset.
+599:     // htab_p3v also carries valid, so the post-reset sweep clears it through
+600:     // this same single write port.
+601:     wire htab_p3v_we = htab_clr_act | htab_we;
+602:     wire [9:0] htab_p3v_waddr = htab_clr_act ? htab_clr_cnt : s1_ins_addr;
+603:     wire [13:0] htab_p3v_wdata = htab_clr_act ? 14'd0
+604:                                                : {1'b1, (s1_pos_r + 13'd3)};
+605:     always @(posedge clk) begin
+606:         if (htab_we) htab_tag[s1_ins_addr] <= blk_tag;
+607:     end
+608:     always @(posedge clk) begin
+609:         if (htab_p3v_we) htab_p3v[htab_p3v_waddr] <= htab_p3v_wdata;
+610:     end
+611:     always @(posedge clk) begin
+612:         if (htab_we) htab_pos[s1_ins_addr] <= s1_pos_r;
+613:     end
+614:     always @(posedge clk) begin
+615:         if (htab_we) htab_b[s1_ins_addr] <= {s1_b0, s1_b1, s1_b2};
+616:     end
+617:     // b3 = the stream byte one past the 3-byte window (bm_a_rd2 is the byte
+618:     // after x1_r in every htab_pref phase because the bm_a stream advances by
+619:     // one byte per cycle there).  Written by the same insert enable/address as
+620:     // htab_b; entries cleared by the valid sweep have htab_p3v[13] = 0, so a
+621:     // stale b3 is never used.  Bank contents are stable while a block is
+622:     // encoded, so this byte is exactly the bm[ref+3] that r4 read from bm_b.
+623:     always @(posedge clk) begin
+624:         if (htab_we) htab_b3[s1_ins_addr] <= bm_a_rd2;
+625:     end
+626: 
+627:     // Valid-clear sweep: 1024 entries after every reset.  The encoder waits in
+628:     // S_WAIT until it finishes, so the first block sees an all-invalid table
+629:     // exactly like the old valid-bit reset (a fixed 1024-cycle start-up latency,
+630:     // not a per-byte cost).
+631:     always @(posedge clk) begin
+632:         if (!rst_n) begin
+633:             htab_clr_cnt  <= 10'd0;
+634:             htab_clr_act  <= 1'b1;
+635:             htab_clr_done <= 1'b0;
+636:         end else if (htab_clr_act) begin
+637:             htab_clr_cnt <= htab_clr_cnt + 10'd1;
+638:             if (htab_clr_cnt == 10'h3FF) begin
+639:                 htab_clr_act  <= 1'b0;
+640:                 htab_clr_done <= 1'b1;
+
+B0145 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0145.v:921-921 SHA256 a91c2ed82fbef654c4e065b64ae1cc268ca232feaa26fdd313c58d8740f81b3e
+921:             blk_tag        <= 16'd0;
+
+B0145 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0145.v:1022-1080 SHA256 a91c2ed82fbef654c4e065b64ae1cc268ca232feaa26fdd313c58d8740f81b3e
+1022:         end else if (abort) begin
+1023:             state          <= S_IDLE;
+1024:             stream_active  <= 1'b0;
+1025:             enc_busy       <= 1'b0;
+1026:             blk_full0      <= 1'b0;
+1027:             blk_full1      <= 1'b0;
+1028:             ld_bank        <= 1'b0;
+1029:             ld_ptr         <= 13'd0;
+1030:             fifo_wptr      <= 4'd0;
+1031:             fifo_rptr      <= 4'd0;
+1032:             fifo_count     <= 5'd0;
+1033:             oacc           <= 16'd0;
+1034:             obits          <= 4'd0;
+1035:             cacc           <= 32'd0;
+1036:             pbit_off       <= 4'd0;
+1037:             cstage         <= 16'd0;
+1038:             clane          <= 1'b0;
+1039:             cwptr          <= 13'd0;
+1040:             p0_valid       <= 1'b0;
+1041:             p0_value       <= 16'd0;
+1042:             p0_nbits       <= 5'd0;
+1043:             p0_off         <= 4'd0;
+1044:             p0_rst         <= 1'b0;
+1045:             p1_valid       <= 1'b0;
+1046:             p1_pshift      <= 32'd0;
+1047:             p1_nbits       <= 5'd0;
+1048:             p1_off         <= 4'd0;
+1049:             p1_rst         <= 1'b0;
+1050:             p2_wdata       <= 16'd0;
+1051:             p2_we          <= 1'b0;
+1052:             wq_wptr        <= 2'd0;
+1053:             wq_rptr        <= 2'd0;
+1054:             wq_count       <= 3'd0;
+1055:             done           <= 1'b0;
+1056:             cand_abort     <= 1'b0;
+1057:             cq_r           <= 8'd0;
+1058:             ext_rem        <= 13'd0;
+1059:             ext_first      <= 1'b0;
+1060:             s1_vld_r       <= 1'b0;
+1061:             hb_r           <= 1'b0;
+1062:             rng1_r         <= 1'b0;
+1063:             s1_ok_r        <= 1'b0;
+1064:             s1_last_r      <= 1'b0;
+1065:             ext_mis_r      <= 1'b0;
+1066:             rem_blk        <= 13'd0;
+1067:             thresh_base    <= 32'd0;
+1068:             thresh_lit     <= 32'd0;
+1069:             thresh_lit8    <= 32'd0;
+1070:             thresh_lit9    <= 32'd0;
+1071:             cand_after_len <= 32'd0;
+1072:             thresh_match_r <= 32'd0;
+1073:             adler_data_r   <= 8'd0;
+1074:             adler_sop_r    <= 1'b0;
+1075:             adler_pend     <= 1'b0;
+1076:             adler_blk_q    <= 1'b0;
+1077:             adler_red_st   <= 2'd0;
+1078:             adler_a_w      <= 22'd1;
+1079:             adler_b_w      <= 35'd0;
+1080:         end else begin
+
+B0145 D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\baseline\snapshot\0145.v:1380-1388 SHA256 a91c2ed82fbef654c4e065b64ae1cc268ca232feaa26fdd313c58d8740f81b3e
+1380:                         enc_bank    <= sel_is_b0 ? 1'b0 : 1'b1;
+1381:                         blk_n       <= sel_len;
+1382:                         lim2        <= (sel_len > 13'd2) ? (sel_len - 13'd2) : 13'd0;
+1383:                         lim1        <= (sel_len > 13'd1) ? (sel_len - 13'd1) : 13'd0;
+1384:                         lim3        <= (sel_len > 13'd3) ? (sel_len - 13'd3) : 13'd0;
+1385:                         last_a      <= (sel_len > 13'd0) ? (sel_len - 13'd1) : 13'd0;
+1386:                         blk_last    <= sel_final;
+1387:                         blk_tag     <= blk_tag + 16'd1;
+1388:                         stored_bits <= stored_cost(obits, sel_len);

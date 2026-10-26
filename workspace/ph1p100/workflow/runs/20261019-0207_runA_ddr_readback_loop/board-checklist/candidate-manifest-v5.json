@@ -1,0 +1,178 @@
+{
+  "schema": "fpga-task-candidate-manifest-v1",
+  "task_id": "T11.runC-board-checklist",
+  "run_id": "20261019-0207_runA_ddr_readback_loop",
+  "generated_at": "2026-10-19T21:55:00+08:00",
+  "version": "v5",
+  "supersedes": {
+    "path": "workflow\\runs\\20261019-0207_runA_ddr_readback_loop\\board-checklist\\candidate-manifest-v4.json",
+    "sha256": "feae4e0aade3cb3758cf1db6c0582b38d2cf027c5da798243a2cb9f0deb92981",
+    "bytes": 12032,
+    "policy": "append-only：v1（d5c25421…）、v2（67e3e7bd…）、v3（91eff207…）、v4（feae4e0a…）均原样保留未改；v5 以全量工件清单 + 追加字段取代其“当前有效”地位"
+  },
+  "author_role": "fpga-dev (opencode subagent, 0207 runC P4 round0 续接轮 4)",
+  "runtime": "opencode",
+  "project_root": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+  "repo": "upstream\\ph1p100-pcie-ep-fpga-wt0207（只读；本包零写入）",
+  "branch": "opencode/runC-0207",
+  "base_head": "b0282d2a8dfdf11e6e63779510fe380dfffb5e83",
+  "commit_sha": null,
+  "commit_status": "worktree-only（本包未 commit/未 push；worktree 未改动）",
+  "pushed": false,
+  "frozen": true,
+  "status": "awaiting_user_gui",
+  "scope": "P4 续接轮 4：诊断用户运行 preload_fixed.bwcmd 的 PRG-8000 路径失败（根因=BW 反斜杠转义）→ 修正为正斜杠脚本；只读复测遇 usb_open() failed（5555 上两个 hwserver，落在未持 FTDI 的实例）→ 未下载、不重试；追加记录冻结 v5，并给出用户逐条命令",
+  "diagnosis_v5": {
+    "symptom": "download -bit D:\\anlogic\\runa_runC\\20261019_192056\\compiled.bit → PRG-8000 ERROR: File path: ?1019_192056compiled.bit invalid（0.0003 s，无写入）",
+    "root_cause": "BW 命令解析器对脚本行的反斜杠做类 Tcl 转义：\\a→BEL、\\r→CR、\\n→LF、\\2→STX、\\c→c；Windows 单反斜杠路径被破坏。非编码/BOM/中文问题（脚本为纯 ASCII、UTF-8 no BOM、CRLF，hex 已验证）",
+    "evidence": {
+      "script_hex": "preload_fixed.bwcmd 含 44 3A 5C 61 6E 6C 6F 67 69 63 5C 72 75 6E 61 5F 72 75 6E 43 5C 32 30 32 36…（= D:\\anlogic\\runa_runC\\2026…）",
+      "parsed_command_in_bw_log": "download -bit D:?nlogic?una_runC?61019_192056compiled.bit -mode jtag -spd 7 -cable 0",
+      "user_run_logs": [
+        { "path": "D:\\anlogic\\runa_runC\\20261019_192056\\log\\bw_2026-10-19_21-44-07.log", "sha256": "ef1471858e0a99e4ca6d38e09c402923f05fcca111809745c06bffe00900aa18", "bytes": 1217 },
+        { "path": "D:\\anlogic\\runa_runC\\20261019_192056\\log\\bw_2026-10-19_21-46-04.log", "sha256": "2e03c4d3146f57573721a1831b02e9ffab9f88b1682726f1f5257ce87673392c", "bytes": 1218 }
+      ]
+    },
+    "fix": [
+      "脚本内 Windows 路径一律用正斜杠 /（BW 自身 banner 即 D:/downlaod/bin/…）；本包生成 download_v5.bwcmd 与 read_id_v5.bwcmd",
+      "备选：cwd 设为暂存目录后使用相对文件名 compiled.bit（本包未采用，保留为二线方案）"
+    ]
+  },
+  "attempt_v5": {
+    "result": "not_executed_usb_open_failed",
+    "download_count": 0,
+    "probe": {
+      "at": "2026-10-19T21:48:47+08:00",
+      "script": "read_id_v5.bwcmd（connect → read_device_id → close；无路径参数）",
+      "connect_cable": "ok, 0.0166 s",
+      "read_device_id": "Error @ mpsse.cpp:90 : usb_open() failed；PRG-8000 ERROR: transfer failed（6.8 s）",
+      "rc": 0,
+      "duration_s": 7.1,
+      "log": "D:\\anlogic\\runa_runC\\20261019_192056\\read_id_v5.log（sha256 eddf190b…8f49，1552 B）",
+      "bw_log": "D:\\anlogic\\runa_runC\\20261019_192056\\log\\bw_2026-10-19_21-48-47.log（sha256 596368a2…6c42）"
+    },
+    "download_gate": "未取得 PH1P100 → download_v5.bwcmd 未执行（fail-closed）",
+    "on_site_state": {
+      "port_5555_listeners": [
+        { "pid": 45596, "started": "21:19:57", "cmd": "D:/downlaod/bin/hwserver.exe -r -f 1 -s 5555", "note": "未持 FTDI 的疑似重复实例（非本角色启动，未触碰）" },
+        { "pid": 74620, "started": "21:46:04", "cmd": "D:/downlaod/bin/hwserver.exe -r -f 1 -s 5555", "note": "用户手动启动；控制台显示 Open device vid=0x0403 pid=0x6042 / Enable mpsse / 1 MHz / Start remote bitbang server at :5555" }
+      ],
+      "td_gui": "td.exe PID 45416 未触碰",
+      "judgement": "usb_open() failed 与“会话落在未持有 FTDI 的 hwserver”一致；板卡供电/线缆状态未变（仍 unknown）"
+    },
+    "user_actions": {
+      "precondition": "确保 5555 只保留持有 FTDI 的 hwserver（控制台打印 Open device vid=0x0403 pid=0x6042）；由用户关闭另一重复实例/窗口（勿结束 td.exe 45416）",
+      "commands": [
+        "cd /d D:\\anlogic\\runa_runC\\20261019_192056",
+        "D:\\downlaod\\bin\\bw_commands_prompt.exe read_id_v5.bwcmd < NUL",
+        "D:\\downlaod\\bin\\bw_commands_prompt.exe download_v5.bwcmd < NUL"
+      ],
+      "criteria": "第一条含 PH1P100；第二条 PRG-2014 + 100% + rc=0 + 时长≈28–40 s；失败不重试。成功后按 board-checklist.md §3 点两下（§4 期望值）"
+    },
+    "safety_audit": [
+      "download 0 次；零 flash/efuse/SPI/svf；无 GUI 自动化",
+      "未结束/未重启任何他人进程（含两个 hwserver、td.exe 45416）；未启动新 hwserver",
+      "未写工作树/未 commit/push/未碰共享树/无批量删除"
+    ]
+  },
+  "change_log_v5": [
+    { "file": "board-checklist.md", "change": "§2 预加载命令改为 read_id_v5.bwcmd + download_v5.bwcmd（正斜杠路径），并注明 BW 反斜杠转义根因；§1 增加“同一 5555 只保留持有 FTDI 的 hwserver / usb_open() failed 处置”提示", "unchanged": "预期值表 §4、偏移/位域、G3 tier 口径、异常分流/两分支未改" },
+    { "file": "lessons.md", "change": "追加第 8/9 条（BW 反斜杠转义、5555 多 hwserver 导致 usb_open() failed）", "unchanged": "既有 1—7 条未改" }
+  ],
+  "evidence_chain": {
+    "script": "workflow\\runs\\20261019-0207_runA_ddr_readback_loop\\board-checklist\\recompute-hash-chain.ps1",
+    "raw_log": "workflow\\runs\\20261019-0207_runA_ddr_readback_loop\\board-checklist\\hash-chain-recompute.txt",
+    "index": "workflow\\runs\\20261019-0207_runA_ddr_readback_loop\\board-checklist\\evidence-index.md",
+    "generated_at": "2026-10-19T19:21:46+08:00",
+    "total": 56,
+    "mismatch": 0,
+    "missing": 0,
+    "note": "v5 未重算链（本轮未改任何链上冻结件/候选/报告）；tester 可复跑同一脚本核对"
+  },
+  "artifacts": [
+    { "path": "workflow\\runs\\20261019-0207_runA_ddr_readback_loop\\board-checklist\\evidence-index.md", "sha256": "747f9e7c93bae4a969d300f2b4d2a7629aea5a4c050e434baf3b7e564b208105", "bytes": 5325 },
+    { "path": "workflow\\runs\\20261019-0207_runA_ddr_readback_loop\\board-checklist\\board-checklist.md", "sha256": "e0c2f56cdf5c3d09791bde514cdc524938ba1a7e42723e229036899174b2c480", "bytes": 12036 },
+    { "path": "workflow\\runs\\20261019-0207_runA_ddr_readback_loop\\board-checklist\\rollback.md", "sha256": "38cb0508706b8b4855d65f51729c8c7871592136691d447cc9610c90c92093ff", "bytes": 3720 },
+    { "path": "workflow\\runs\\20261019-0207_runA_ddr_readback_loop\\board-checklist\\preload-record.md", "sha256": "6dd34fffef7391a22375e40caa8f2779443030c56a1122cf6035f14bef845907", "bytes": 4706 },
+    { "path": "workflow\\runs\\20261019-0207_runA_ddr_readback_loop\\board-checklist\\preload-record-v3.md", "sha256": "119acabe074fa02d4bdad007cccffa568e7c9524c07b1a64e8a79c01957fabe5", "bytes": 3235 },
+    { "path": "workflow\\runs\\20261019-0207_runA_ddr_readback_loop\\board-checklist\\preload-record-v4.md", "sha256": "8de170185a23075e46b34f56e83d3a252aef5d56d45cd148abc45c2cdbc543fa", "bytes": 4111 },
+    { "path": "workflow\\runs\\20261019-0207_runA_ddr_readback_loop\\board-checklist\\preload-record-v5.md", "sha256": "6683daf7fda39fdecbf17b90e782ae8d68e3e8e554df7476dd15800fd98e8b92", "bytes": 5219 },
+    { "path": "workflow\\runs\\20261019-0207_runA_ddr_readback_loop\\board-checklist\\dev-result.md", "sha256": "41b79925093c62a4d527595145f23c8b5a3f293b10d803b4b582c7a4e0adf3a4", "bytes": 5837 },
+    { "path": "workflow\\runs\\20261019-0207_runA_ddr_readback_loop\\board-checklist\\lessons.md", "sha256": "6828ecbbaa0005450688767fbb23d77fc71148366c6278373a3cfa768824a3d8", "bytes": 3403 },
+    { "path": "workflow\\runs\\20261019-0207_runA_ddr_readback_loop\\board-checklist\\hash-chain-recompute.txt", "sha256": "58748152787bf4542fc7d829f0e206c44dd0542db374c90c017f1f36b3a5a34d", "bytes": 8721 },
+    { "path": "workflow\\runs\\20261019-0207_runA_ddr_readback_loop\\board-checklist\\recompute-hash-chain.ps1", "sha256": "9c7d1729f887e3f762a91794d5c59c1e49998e027d953bace58158a19b2e2986", "bytes": 15090 }
+  ],
+  "artifact_notes": "v1—v4 manifest 均原样保留；freeze-verify*.txt 为各版冻结后复算记录（不入 artifacts）；dev-notes 合并入 dev-result.md §6",
+  "prestage": {
+    "dir": "D:\\anlogic\\runa_runC\\20261019_192056",
+    "download_executed": false,
+    "files_core": [
+      { "name": "compiled.bit", "sha256": "5b67a8f5925327ba9d0442d9e4228fcfd254c80a2f86d921ceda70ecae111d52", "bytes": 5224027 },
+      { "name": "compiled.cwc", "sha256": "8dda54d4efa8e6be728a6ebb34686f25de90a36b039eda6f831dfb9c346c664f", "bytes": 143444 }
+    ],
+    "scripts": [
+      { "name": "download_v5.bwcmd", "sha256": "7eda37c2e18778bf1a10fa59f4678aa3c02769762384818313d23b4ddfdb2a5c", "bytes": 177, "note": "修正版（正斜杠；未执行）" },
+      { "name": "read_id_v5.bwcmd", "sha256": "07ffe8129f8d2da43c288d99ad61b2a68d02804d60ad5a4f03492092a179dbc2", "bytes": 85, "note": "只读检查（已执行一次）" },
+      { "name": "preload_fixed.bwcmd", "sha256": "0947d7c173163b0ddbd6cd760a65e05085e3136e85d1c248e81de89c71a4188d", "bytes": 177, "note": "反斜杠版本（已实测失败，勿用）" },
+      { "name": "download_fixed.bwcmd", "sha256": "0947d7c173163b0ddbd6cd760a65e05085e3136e85d1c248e81de89c71a4188d", "bytes": 177, "note": "同反斜杠版本（勿用）" },
+      { "name": "preload.bwcmd", "sha256": "9e278f3b6c2b7f9ec8e01811593a6916f7fd711e93fe38531b1cbe379decb785", "bytes": 204, "note": "v1 版本（含空 -usr_args，勿用）" },
+      { "name": "download.bwcmd", "sha256": "11f150643b0a2f49f975bcec826d7b11dccfa8331a56abca9aec24c89cc120ab", "bytes": 188, "note": "v1 版本（勿用）" },
+      { "name": "read_id.bwcmd", "sha256": "e4b496807879f5fd6996f9ce59e07859548650043a093b14d68481b1e444005a", "bytes": 96, "note": "v1 版本（USR-8011，勿用）" },
+      { "name": "read_id_fixed.bwcmd", "sha256": "07ffe8129f8d2da43c288d99ad61b2a68d02804d60ad5a4f03492092a179dbc2", "bytes": 85 }
+    ],
+    "logs": [
+      { "name": "read_id.log", "sha256": "9159192a0d065bda8a5c3974027df53f87b7c3ffa388a5efb9e33c280da948b9", "bytes": 168, "note": "USR-8011（19:45）" },
+      { "name": "read_id2.log", "sha256": "b49fd1368b86c9b3bea197005461417dd069c803edbe702dca90be33689b55a9", "bytes": 1184, "note": "PRG-8000（19:45）" },
+      { "name": "read_id3.log", "sha256": "21c07ef9f73778ee28fb102b510b04b3c97a765c0132c849afa7155abe46692f", "bytes": 1186, "note": "PRG-8000（21:20）" },
+      { "name": "read_id_v5.log", "sha256": "eddf190b755e6355587623cbfe1f6356bee82158117499a512f5e64e82028f49", "bytes": 1552, "note": "usb_open() failed + PRG-8000（21:48）" },
+      { "name": "staging-record.txt", "sha256": "397cb627c75d55ff135098a4d78e3052b8f47ccdb35145b925bfd3657406c301", "bytes": 783 }
+    ],
+    "bw_logs": [
+      { "name": "log\\bw_2026-10-19_21-44-07.log", "sha256": "ef1471858e0a99e4ca6d38e09c402923f05fcca111809745c06bffe00900aa18", "bytes": 1217, "note": "用户运行；路径被转义" },
+      { "name": "log\\bw_2026-10-19_21-46-04.log", "sha256": "2e03c4d3146f57573721a1831b02e9ffab9f88b1682726f1f5257ce87673392c", "bytes": 1218, "note": "用户运行；PRG-8000 file path invalid" },
+      { "name": "log\\bw_2026-10-19_21-48-47.log", "sha256": "596368a2217ba751670277d20832319adfa703da849b5b50870ff73faa256c42", "bytes": 1007, "note": "本角色只读复测；usb_open() failed" }
+    ]
+  },
+  "g0": "pass（v1 证据链 56/0/0 未变；v5 诊断/修正/追加记录完整；预期值未改）",
+  "g1": "继承（本包零 RTL/TB 改动）",
+  "g2": "继承（P2 PASS；本包不复算）",
+  "g3": "not_run（未取得 PH1P100；未下载、未采样）",
+  "g4": "not_run",
+  "protected_audit": [
+    { "path": "board-checklist manifest v1/v2/v3/v4", "sha256": "d5c25421… / 67e3e7bd… / 91eff207… / feae4e0a…", "unchanged": true },
+    { "path": "P1/P2/P3 冻结件与 test-reports", "unchanged": true },
+    { "path": "旧候选 bit bfafdf97… / CWC 8d2998b9…", "unchanged": true },
+    { "path": "upstream\\ph1p100-pcie-ep-fpga-wt0207", "unchanged": true },
+    { "path": "upstream\\ph1p100-pcie-ep-fpga（共享树，0212）", "unchanged": true, "note": "零写入" },
+    { "path": "td.exe 45416 / hwserver 45596 / hwserver 74620", "unchanged": true, "note": "未结束/未重启/未改参数" },
+    { "path": "workflow\\tasks.json", "unchanged": true }
+  ],
+  "rollback": [
+    "丢弃 run board-checklist\\** 与 D:\\anlogic\\runa_runC\\20261019_192056\\ 即可回退（默认不删）",
+    "板上恢复：按 rollback.md §2 重下旧 bit（SRAM，≈30–40 s）或断电；不写 Flash",
+    "worktree 无改动、无 commit/push，无需 git 回退"
+  ],
+  "board_expected": [
+    ["word0/1/2（身份/长度/CTRL）", "同基线命中 50434946 / 31414B52 / 00010000（CTRL 以 GUI 实读为准）"],
+    ["word3", "推进"],
+    ["word6", "good 增长（相机活）；bad/hdr/crc=0"],
+    ["word9 CHECK_STATUS", "稳态 0x3E；校验中可采样 0x01（可解释，重采一次）"],
+    ["word10 CHECK_WORDS_READ", "0x0009E400（648,192；1080p 满帧）"],
+    ["word13 CHECK_RUNS", "≥1 且增量≈word3 增量"],
+    ["word11/12 CRC32", "原文记录；与 word14/15（smp1=head[20]/smp2=head[21]）对照如 GUI 保留"],
+    ["CWC 观察面", "新 CWC 16 字（word0..15）；实例 auto_created_cwc1；GUI Watch 以 TD 实际 16 节点为准"]
+  ],
+  "observations": [
+    "用户侧两次 preload_fixed.bwcmd 运行均因路径转义在 0.0003 s 失败、无写入（PRG-8000 file path invalid）——与板卡无关",
+    "只读复测显示 5555 同时有两个 hwserver（45596/21:19:57 与 74620/21:46:04）；后者为用户手动启动且控制台显示 FTDI 打开；本角色会话遇到 usb_open() failed，判定落在未持 FTDI 实例",
+    "未结束/未重启任何 hwserver；未启动新 hwserver；td.exe 45416 未触碰",
+    "bw 客户端在错误后 close 正常（本轮 rc=0，7.1 s）；此前 close 挂起仅发生在无响应 server/PRG-8000 场景"
+  ],
+  "notes": [
+    "本轮预算：≤20 calls / ≤20 min（实际 9 calls；21:44–21:56）",
+    "状态保持 awaiting_user_gui；未等待点击；用户可按 §6 命令自行执行（我可在下一次续接时复核结果）",
+    "父任务 T11 不置 done；G3 仍 not_run",
+    "v5 manifest 自身不列入 artifacts（自哈希由 tester 复算）；freeze-verify-v5.txt 为冻结后复算记录"
+  ],
+  "repair_round": 0
+}

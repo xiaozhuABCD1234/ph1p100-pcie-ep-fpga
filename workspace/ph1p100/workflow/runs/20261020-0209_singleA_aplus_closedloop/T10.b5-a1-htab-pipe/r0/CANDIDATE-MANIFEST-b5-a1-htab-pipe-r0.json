@@ -1,0 +1,167 @@
+{
+  "task_id": "T10.b5-a1-htab-pipe",
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "round": "r0",
+  "role": "developer",
+  "date": "2026-10-24",
+  "status": "blocked_on_board_device",
+  "status_detail": "offline candidate complete and frozen (P1 identical, synth+route+bit+CWC); the single authorised SRAM download and the COM8 120 s capture could NOT be executed because the board is not attached to this PC any more (no FTDI USB device, COM8 absent, hwserver gone). The 1-download budget is UNSPENT (0/1).",
+  "change": {
+    "scope": "exactly one register level on htab_p3v_q[12:0] -> htab_q[49:37] -> bm_raddr_b -> bm_b.addrb",
+    "file": "r0/changed-src/a1_deflate_core.v",
+    "upstream_source": "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v (sha256 d4b799612519d4cb6c32a0c0e87807be84dec711fc01e2146b054d464d1b88de, NOT modified)",
+    "mechanism": "new flop bm_b_spec_q[12:0] captures the htab read data (hent[49:37], or htab_byp_data[49:37] for the write-first bypass) on every s1_en cycle; the bm_b port address for the scan-phase speculative read is that flop (s1_en ? bm_b_spec_q : S_EXT ? ext_faddr : raddr). No htab ERAM clk2q output drives a bm_b ERAM address any more.",
+    "option_used": "variant of approved option 3 (bm_b read data registered, hit consume delayed one beat) because option 1/2 were infeasible inside the single allowed cone: issuing the htab address one cycle earlier needs the position pos+3 hash bytes, whose third byte is bm_a_rd (an ERAM clk2q output, the path r0 bm-prefetch had just removed), and registering htab_p3v_q without shifting the consumer keeps the same-cycle dependence.",
+    "consume_realignment": "hit cycle H registers cq_r = bm[pos+3]; S_EXT gets one wait cycle that (a) registers the k=0 compare (cq_r vs bm[ref+3]) and (b) advances ext_raddr/ext_faddr to pos+4/ref+4, so from the first decision cycle on the compare/advance stream is byte-for-byte the old one; only the decision (and therefore len_r) is one cycle later. ext_zero_r/len_cap_r keep the values loaded by the hit during the wait cycle.",
+    "untouched": [
+      "htab_p3v write encoding {valid, pos+3[12:0]}, htab/bm sizes, enc_bank layout, htab_b/tag/pos fields",
+      "bm prefetch depth (bm_a_rd/bm_a_rd2/x1_r), bm window chain, S_PRE/S_REPOS seeding",
+      "match/threshold selection, candidate packer, stored fallback, frame/CRC/byte order/length/DDR layout",
+      "SDC, pin constraints, clocks, reset semantics; no false path, no multicycle, no seed sweep, no clock change",
+      "UART bypass + heartbeat: fpga/csi2/src/a1/a1_uart_export.v 3dad065f2ff5d8ccf5ff1b0182b4a6091476bada48a948ff4f1b09c62440c15f, camera_a1_uart_top.v b10416762bcae2de19d3ad36b73591ae607effc4667a5c8e07c6a56499c2e6eb, r0 top .HB_DIV(4194304) / .UART_DIV(1628)",
+      "upstream/**, r3/r4 evidence, P1 r6 manifest, workflow/tasks.json"
+    ]
+  },
+  "artifacts": {
+    "changed_core": {
+      "path": "r0/changed-src/a1_deflate_core.v",
+      "sha256": "29b1e3e1a66abef78c228c4189322b0139a266d43bf02827dd1ebe498cdc9828",
+      "bytes": 79788
+    },
+    "rtl_diff": {
+      "path": "r0/rtl-diff-r0.patch",
+      "sha256": "99e169047be6c2a959fe636e5efb075fd73e62a8e6d682faeb8eb33a1a19a7d0"
+    },
+    "td_project": {
+      "a1_board.al": "r0/td/a1_board.al sha256 acd587ad0441073975e2479064b5510253dac4c6bce4cd74c25e30ef7922fe21; vs the r4 .al the only design-file difference is the core <File Path> -> Y:/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b5-a1-htab-pipe/r0/changed-src/a1_deflate_core.v; TD also regenerated the Project Path/UCode attributes and dropped r4's later-added postrt_opt_loc 40 / extra_round 12 user params (01_build.tcl recreates the Runs block)",
+      "01_build.tcl": "r0/td/01_build.tcl sha256 c111b5ed0cc1a12c3336ebcb698cf9785b3c155e4e9c55d70a9e7629772abd97 (single add_files line for the local core; create_project -force regenerates the .al, so the redirect lives there)",
+      "02_bitgen.tcl": "r0/td/02_bitgen.tcl sha256 ea7e8689339c5d4b18d4f6475c6ca3e73605c55127b446728abd4172e7e6caf0 (r4 byte-identical, fail-closed)",
+      "03_cwc.tcl": "r0/td/03_cwc.tcl sha256 2e1c71d1dc2d87d7d2770174b461b884a47e96fd712f8e8ad2291aeaec8257f0 (r4 byte-identical)",
+      "p2_board.sdc": "r0/td/p2_board.sdc sha256 9284982452c37f308fc4dcd396eb94b8da4962337bdd5740a23ce830d3856d95 (r4 byte-identical)",
+      "board_p2.adc": "r0/td/board_p2.adc sha256 1cb30346fa17da6bb0e77802ca72c4b4bb4aecc1445711e19391cf4ee2271580 (r4 byte-identical)",
+      "p2_a1_board_top.v": "r0/td/src/p2_a1_board_top.v sha256 b782dd0c55fe5918786619bdd9fa0049489ccc22e3b05875f58436492d3ab1bc (r4 byte-identical)"
+    },
+    "bit": {
+      "path": "r0/td/a1_board.bit",
+      "sha256": "e00c5f06655c71e4038a962b8cf8dff590ff05e89ddd752722fda843f7fd2ad5",
+      "bytes": 5224022,
+      "compiled_bit_identical": true,
+      "compiled_bit_sha256": "e00c5f06655c71e4038a962b8cf8dff590ff05e89ddd752722fda843f7fd2ad5"
+    },
+    "cwc": {
+      "path": "r0/td/a1_board.cwc",
+      "sha256": "e2269eeda20507b72488960eb3d381e039491abb886f262b1c5eedc48ba5393a",
+      "bytes": 110168
+    },
+    "bid": {
+      "path": "r0/td/a1_board_inst.bid",
+      "sha256": "12daf16819d7915cb1ac94da5ebc592d8a6e4109ebb8bb378f898e273045a8ba",
+      "bytes": 95905
+    },
+    "p1_regression": "r0/p1-regression-r0.json sha256 8a2dcca9d0fdc99f123fff1cfb056ff1dfe85aba50883758768f295dd414ef54",
+    "artifact_hashes": "r0/artifact-hashes.txt",
+    "board_scripts": {
+      "capture_com8.py": "r0/board/capture_com8.py sha256 87ec9394a6ff3c7a7db93d056e0c9fee09c0e8e410549dcd590d28809d791e38 (r4 byte-identical)",
+      "resync_decode.py": "r0/board/resync_decode.py sha256 76678f4eeae9a29a7abff20077067a5a6cdb8436a45f2126a02272a9e3de30b2 (r4 byte-identical)",
+      "download_sram_r0.tcl": "r0/board/download_sram_r0.tcl sha256 d7d4b33e7192abd759ea0cfb9632c0e4347831b9bcf86d6d5a3434e01eaea159 (-mode jtag = SRAM, no program_spi)",
+      "ping_cable.tcl": "r0/board/ping_cable.tcl sha256 2b973455eea2e830cf1b5d9aa47e43e6a674d09f12043e7d4c5de4bd0f54872b (read-only probe)",
+      "README": "r0/board/README-r0-board.md"
+    }
+  },
+  "gates": [
+    {
+      "gate": "P1 sim byte-identical (micro8x2 / mid64x8 / full_grad)",
+      "target": "identical to r4 captures, raw_drop=cmp_drop=geom=err=dup=0, exported=1, exp_bytes=40032, cap_bytes=40076, no X/half frame, vlog 0/0",
+      "result": "PASS",
+      "evidence": "sha256 fa513a2b…edef / ee61e620…9789 / b992a8ad…ada9 identical to r4; micro8x2 63 B, mid64x8 150 B, full_grad 40076 B; stats raw_drop=0 cmp_drop=0 geom=0 err=0 dup_words=0 exported=1 exp_bytes=40032 cap_bytes=40076; vlog 0 errors 0 warnings"
+    },
+    {
+      "gate": "cycle-neutral (<= +2% vs r4 3809 / 5172 / 6421414)",
+      "target": "<= 2%",
+      "result": "PASS",
+      "evidence": "3809 (+0.000%) / 5178 (+0.116%) / 6421438 (+0.0004%); the +1 cycle per candidate hit is absorbed by the camera-feed-limited block stream"
+    },
+    {
+      "gate": "synthesis SWNS >= +0.3, STNS >= 0, 0 violated endpoints",
+      "target": "+0.3 / 0 / 0",
+      "result": "FAIL",
+      "evidence": "syn_1: SWNS +0.222 ns, STNS 0.000 ns, 0 violating endpoints, 15062 endpoints, STA coverage 95.36%; LUT #lut 22575 (lut6 8437), reg 16026, ERAM 71, slices 16719. Synth-critical path is now u_core/len_r_reg[2] -> u_core/cand_bits_reg[31].d (6 levels, 5.047 ns data path), i.e. NOT the htab->bm_b cone (that cone is gone at the gate stage too).",
+      "note": "the +0.3 synth proxy cannot be reached by the single allowed RTL change: the new worst path belongs to the match-length/candidate-bit counter, outside the released cone. No second/third synthesis attempt was spent because TD synthesis is deterministic for a fixed netlist (r4: three bit-identical routes; the build script has no legal non-seed knob left). Deviation submitted to the planner instead of silently relaxing the threshold. NOTE r4 itself reported synth +0.256 (< +0.3) and was routed; the fail-closed release gate in the plan is the Routed STA."
+    },
+    {
+      "gate": "Routed: 0 violations, SWNS >= +0.2 (floor +0.05 with explicit caveat), HWNS >= 0, hold WNS >= 0 / TNS 0, 0 comb loops, 0 unclocked",
+      "target": "0 / >= +0.2 (floor +0.05)",
+      "result": "PASS_WITH_CAVEAT",
+      "evidence": "phy_1 attempt 1: SWNS +0.100 ns, STNS 0.000 ns, 0 violating endpoints / 19659; HWNS +0.020 ns, HTNS 0.000; Period Check WNS +2.200 ns; 0 combinational loops; 0 clock pins without clock; STA coverage 96.87%; LUT6 18751, reg 25122, ERAM 101/300 (71 design + 30 CWC), slices 22516 (31.41%).",
+      "caveat": "SWNS +0.100 ns is above the +0.05 floor but below the preferred +0.2. Accepted only with this explicit caveat (plan §58.4). Routed worst paths are now u_core/sdata_ptr_reg[10] -> praddr_b2[*]/pbit_off_b3[*] clock-enables at +0.100; the htab_p3v -> bm_b.addrb group (23 endpoints in r4) has 0 violations.",
+      "attempts": 1,
+      "strategy": "post_route_opt ultra + postrt_opt_loc 20 + postrt_opt_extra_round 4 (the frozen 01_build.tcl group; r4 showed the 40/12 hi group is bit-identical, so the hi variant 01e_route_hi.tcl was not needed)",
+      "attempt_2_skipped_because": "r4 showed three bit-identical TD routes (deterministic placement), and attempt 1 already satisfies the acceptance floor with 0 violations; a retry cannot be expected to change the result."
+    },
+    {
+      "gate": "1 bitgen + 1 CWC, fail-closed release, hashes recorded",
+      "target": "1 / 1",
+      "result": "PASS",
+      "evidence": "02_bitgen.tcl STA at release: setup 0.100/0.000, hold 0.020/0.000, period 2.200, candidate_abnormal.rpt has 0 endpoints -> bit generated. 03_cwc.tcl: compiled.bit == a1_board.bit (byte identical, sha256 e00c5f06…2ad5), cwc 110168 B. bit/CWC/BID hashes in artifacts."
+    },
+    {
+      "gate": "1 SRAM download + COM8 115200 120 s + PC decode/CRC",
+      "target": "1 download, >= 1 frame, 4 CRC true, decoded_trailing=0, no half frame",
+      "result": "NOT_EXECUTED_BLOCKED",
+      "evidence": "board not attached: [System.IO.Ports.SerialPort]::GetPortNames() = COM3,COM4 (no COM8); no FTDI USB PnP device; hwserver process gone. Read-only cable probe r0/board/console_ping_r0.log: connect_cable to 127.0.0.1:5555 returned read_device_id 'PRG-8000 ERROR: transfer failed' -> no cable path. Download budget 0/1 used."
+    }
+  ],
+  "frozen_inputs_check": {
+    "upstream_core_before": "d4b799612519d4cb6c32a0c0e87807be84dec711fc01e2146b054d464d1b88de (unchanged on disk)",
+    "a1_frame_top": "c8b24775fa70793f682f1a640be175ec53f304722539cbd89550e0d4aefca65b (unchanged)",
+    "a1_ddr_slot_store": "8bab440d528a192d558081ab0b52f96d9116d3bb5713c821e2fa74a97f74d09a (unchanged)",
+    "a1_raw_crop": "ca2f5d1656cd3b247707e3abd86b2d543e4b0da518cd835513308bd6ff6ebd01 (unchanged)",
+    "a1_ddr_arb2": "6513ad839dee02e932c49bdfd5afa3d62c382d4a144b8e74d5574273804afdc6 (unchanged)",
+    "capture_async_fifo": "59dd6dcb5b7e7774f7d6518f50f56cafbc8be6b70e8ae1508236bac2b5af531d (unchanged)",
+    "a1_uart_export": "3dad065f2ff5d8ccf5ff1b0182b4a6091476bada48a948ff4f1b09c62440c15f (r4 bypass, unchanged)",
+    "camera_a1_uart_top": "b10416762bcae2de19d3ad36b73591ae607effc4667a5c8e07c6a56499c2e6eb (r4, unchanged)",
+    "upstream_written": false
+  },
+  "test_input_paths": [
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b5-a1-htab-pipe\\r0\\changed-src\\a1_deflate_core.v",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b5-a1-htab-pipe\\r0\\rtl-diff-r0.patch",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b5-a1-htab-pipe\\r0\\p1-regression-r0.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b5-a1-htab-pipe\\r0\\artifact-hashes.txt",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b5-a1-htab-pipe\\r0\\td",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b5-a1-htab-pipe\\r0\\sim",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b5-a1-htab-pipe\\r0\\board",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b5-a1-htab-pipe\\r0\\result-r0.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b5-a1-htab-pipe\\r0\\lessons-r0.md"
+  ],
+  "reuse_decision_paths": [
+    "T10.b2-a1-uart-impl/r4/p1-regression-r4.json (byte-identical P1 baseline)",
+    "T10.b2-a1-uart-impl/r4/td/01_build.tcl, 02_bitgen.tcl, 03_cwc.tcl (verbatim campaign flow)",
+    "T10.b2-a1-uart-impl/r4/board/capture_com8.py, resync_decode.py (verbatim PC decode chain)"
+  ],
+  "retest": {
+    "required_dimensions": ["integrated", "functional", "engineering", "system"],
+    "required_checks": [
+      "hash/diff check: r0/changed-src core 29b1e3e1…c9828, rtl diff = one flop + bm_raddr_b mux + S_EXT wait cycle; all other artifacts per artifact-hashes.txt",
+      "P1 rerun: three cases, HB_DIV=0, UART_DIV=1, byte-identical to r4 sha256, stats/vlog as listed",
+      "engineering: syn_1 +0.222 (gate MISS documented), phy_1 routed 0 violations +0.100 with caveat, hold +0.020, ERAM 101/300, no loops/unclocked; confirm the r4 htab->bm_b endpoint group no longer appears in routed_timing.rpt",
+      "bit/CWC/BID hashes and compiled.bit identity (e00c5f06…2ad5)",
+      "system: NOT RUN — board absent (see blocked), 0/1 download spent; must be re-dispatched with the board attached"
+    ],
+    "input_status": "changed (r0/changed-src/a1_deflate_core.v); everything else same as r4"
+  },
+  "blocked": {
+    "reason": "board_device_absent",
+    "detail": "no FTDI USB device, COM8 missing (only COM3/COM4), hwserver not running; read_device_id returns PRG-8000 transfer failed. Cannot perform the single authorised SRAM download nor the 120 s COM8 capture.",
+    "downloads_used": 0,
+    "downloads_max": 1,
+    "resume_procedure": [
+      "attach/power the board so the FTDI COM port returns as COM8 (or re-scan once and note the new port)",
+      "start hwserver -r -s 5555 -f 12 -v -w 5556 -i 0 as a separate process",
+      "cd r0/board && td_commands_prompt.exe ./ping_cable.tcl   (expect R5_PING_DEVICE=...)",
+      "td_commands_prompt.exe ./download_sram_r0.tcl            (the ONE SRAM download, -mode jtag)",
+      "python capture_com8.py --port COM8 --baud 115200 --secs 120 --outdir <r0>/captures",
+      "python resync_decode.py <r0>/captures/com8_120s.bin <r0>/decode",
+      "no Flash, no second download, no re-bitgen"
+    ]
+  }
+}

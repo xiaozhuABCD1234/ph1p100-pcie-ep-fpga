@@ -1,0 +1,656 @@
+{
+  "schema_version": 1,
+  "task_id": "T10.dual-aplus-service-verdict",
+  "run_id": "20261025-195604_fpga-dual-aplus-core-feasibility",
+  "round": "r0",
+  "repair_round": 1,
+  "status": "ready_for_test",
+  "stopped_modifying": true,
+  "active_commands": 0,
+  "freeze_time_utc": "2026-10-25T14:36:43+00:00",
+  "write_scope": "workflow/runs/20261025-195604_fpga-dual-aplus-core-feasibility/T10.dual-aplus-service-verdict/**",
+  "worktree": "D:/fpga/ph1p100",
+  "round1_fixes": {
+    "F1": "frontier.csv now carries margin_chain_pct and margin_core_pct; margin_pct and gate_25 are same-source with capacity_basis (core_only_comp -> core margin 25.1036/28.7074/4.2530; full_chain_* -> chain margin). check_outputs asserts source pairing and scenario-table equality.",
+    "F2": "out/overhead-sensitivity.csv added (43 scenarios x 3 tiers = 129 rows; 1080p fixed to the measured anchor, applies=false; verdict re-derived per tier). Report discloses 1600x900@30 = 36.1774% at the primary tier and 21.0486% at 1,000,000 cycles (conditional), and adds the all-tier-robust alternate 1440x810@30 (worst 42.9485%).",
+    "F3": "scenarios.csv gained required_clock_chain_25_mhz / required_clock_core_25_mhz / required_clock_chain_0_mhz; frontier.csv gained chain/core required clocks. Report section 9 states them for every recommendation (1600x900: 172.1100/156.1206; 1440x810: 142.4471/126.4577; 1080p@20: 160.5353/149.8757 MHz).",
+    "regression": "43 rows and counts (8/22/13) unchanged; dual-core feasible 0; 1080p30 feasible 0; 5 negative-control fixtures still rejected; P1 manifest and b6 core SHA unchanged."
+  },
+  "p1_dependency": {
+    "manifest": "D:/fpga/ph1p100/workflow/runs/20261025-195604_fpga-dual-aplus-core-feasibility/T10.dual-core-resource-baseline/r0/manifest-r0.json",
+    "sha256": "228531e7c16bca1a14898966c150b31bce464d7413f58078ae0bd724e894bdd0",
+    "tester_report": "workflow/runs/20261025-195604_fpga-dual-aplus-core-feasibility/test-reports/T10.dual-core-resource-baseline-r1-integrated.md"
+  },
+  "inputs": [
+    {
+      "id": "p1_manifest",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-core-resource-baseline\\r0\\manifest-r0.json",
+      "bytes": 23644,
+      "sha256": "228531e7c16bca1a14898966c150b31bce464d7413f58078ae0bd724e894bdd0",
+      "role": "anchor"
+    },
+    {
+      "id": "p1_dual_core_budget",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-core-resource-baseline\\r0\\dual-core-budget.csv",
+      "bytes": 3684,
+      "sha256": "f62c9b03ff911e4fb77888abea5cad2710693cae3b5b1c13de569c39312ab76d",
+      "role": "anchor"
+    },
+    {
+      "id": "p1_resource_baseline",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-core-resource-baseline\\r0\\resource-baseline.md",
+      "bytes": 17322,
+      "sha256": "7bb108e32af930f5a6188e48ecdef10666cecceb93ea998a4c027b37669cf07a",
+      "role": "anchor"
+    },
+    {
+      "id": "p1_resource_table",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-core-resource-baseline\\r0\\resource-table.csv",
+      "bytes": 16125,
+      "sha256": "4375f0721c7e33c33131c14cdc74308ae156e6494acfb5114dbc28b7d538153f",
+      "role": "anchor"
+    },
+    {
+      "id": "p1_result",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-core-resource-baseline\\r0\\result-r0.md",
+      "bytes": 8084,
+      "sha256": "d52054c74a81fab507e713f12e44e657b1634c787c0d8eb7777659746e32d877",
+      "role": "anchor"
+    },
+    {
+      "id": "p1_tester_report",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\test-reports\\T10.dual-core-resource-baseline-r1-integrated.md",
+      "bytes": 13627,
+      "sha256": "6d85a7fd71aca3a42c7d7837ccd047369c6a0f93c7a00612ca09a32f338196a7",
+      "role": "anchor"
+    },
+    {
+      "id": "b6_core",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\changed-src\\a1_deflate_core.v",
+      "bytes": 80196,
+      "sha256": "6797db053cfc47497540d6345e3a46b7e79cc1d34fa25da5a4c501505fbf35bb",
+      "role": "anchor"
+    },
+    {
+      "id": "b6_manifest",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\CANDIDATE-MANIFEST-b6-a1-htab-nw-r0.json",
+      "bytes": 24443,
+      "sha256": "2e9fd356824084813e3415af11757c1b56f774c9b6dd45f3b2a111647ad08880",
+      "role": "anchor"
+    },
+    {
+      "id": "b6_tester_report",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\test-reports\\T10.b6-a1-htab-nw-r0-integrated.md",
+      "bytes": 20624,
+      "sha256": "53f7fa65d0e073c911ca4b7475d6456f157fb5abf1c94cc5589c22d1f758a21f",
+      "role": "anchor"
+    },
+    {
+      "id": "b10_result_r1",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b10-b9-fix\\result-r1.md",
+      "bytes": 14270,
+      "sha256": "675da40c225c508674a4ca41fcbb12c75206fcdeaa13ed0fbd1987ca8072e614",
+      "role": "anchor"
+    },
+    {
+      "id": "device_doc",
+      "path": "D:\\fpga\\ph1p100\\docs\\双目首版_整链路方案与团队交付.md",
+      "bytes": 26083,
+      "sha256": "c4b2b89d1752f7b7346eba1c6c53b58aafe12689e8e13ce33ceb6fb05b7a762d",
+      "role": "anchor"
+    },
+    {
+      "id": "b11_result_r0",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b11-aplus-read\\r0\\result-r0.md",
+      "bytes": 5781,
+      "sha256": "4aea08711870d1d042c3c8223e86a39fddb41b487df35197509155f3e27ce3ce",
+      "role": "snapshot"
+    },
+    {
+      "id": "t08_result_r0",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T08.dual-local-closure\\result-r0.md",
+      "bytes": 4417,
+      "sha256": "7fee383b27aff2cf4b2e1d6b9769b479a0d4dfbf1ae5f2c00bda2263b16a32b6",
+      "role": "snapshot"
+    },
+    {
+      "id": "t10_result_r0",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10.dual-aplus-scheduler\\result-r0.md",
+      "bytes": 6310,
+      "sha256": "67d001f6387946e24f473ea45a2586b7a066abe92961295180e04423177cec23",
+      "role": "snapshot"
+    },
+    {
+      "id": "c180900_design_guide",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\fpga-design-guide.md",
+      "bytes": 10350,
+      "sha256": "94e41354002cf3d7f09d345667baa5df907ff3f70cec09fd690a2e007c336f65",
+      "role": "snapshot"
+    },
+    {
+      "id": "p2_request",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\request.md",
+      "bytes": 3773,
+      "sha256": "ccae12f4a7c391164e3f7434dd8ab6bb1b5da874db7b277811478bb2c64a8bc7",
+      "role": "snapshot"
+    },
+    {
+      "id": "p2_input_index",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\input-index.md",
+      "bytes": 16377,
+      "sha256": "d257d2dbb27b5897fb0310fbbbfdd9044f775ee1f9ab3e0c6ca4795fe6bd42e0",
+      "role": "snapshot"
+    },
+    {
+      "id": "p2_design_guide",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\fpga-design-guide.md",
+      "bytes": 28629,
+      "sha256": "077e8c4947c29667fc84cb58b04e9372546c0b92d4d6d7a0723537ad7797b4dd",
+      "role": "snapshot"
+    },
+    {
+      "id": "p2_dev_plan",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\dev-plan.md",
+      "bytes": 27876,
+      "sha256": "da741959203c04b2c5cde839dd96947adf126d4f5b2c698e4d4a2c848acd1f16",
+      "role": "snapshot"
+    },
+    {
+      "id": "b5_full_grad_stats",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b5-a1-htab-pipe\\r0\\sim\\captures\\full_grad.stats",
+      "bytes": 158,
+      "sha256": "7a5207a59342ad4a44dbdb25c22344c6afa92484823bc14b09abaa2225dd5506",
+      "role": "snapshot"
+    },
+    {
+      "id": "tb_camera_a1_uart_top",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b1-a1-uart-integ\\r0\\sim\\tb_camera_a1_uart_top.v",
+      "bytes": 11420,
+      "sha256": "d47e7a1dbe6674ff18f04fb79b68e2233066f078f3980ab11cee1cb00e79e994",
+      "role": "snapshot"
+    },
+    {
+      "id": "ddr_doc",
+      "path": "D:\\fpga\\ph1p100\\docs\\DDR1333集成与1333vs1600对比_2026-10-17.md",
+      "bytes": 34258,
+      "sha256": "3f273ee4c63744d3685362ac91bfbaa336bfbce0cddf6870345126a90725c6ad",
+      "role": "snapshot"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\commands.jsonl",
+      "rel": "commands.jsonl",
+      "bytes": 6392,
+      "sha256": "17479c38a9ac922d53ff083531b79ee4d420fd9888c84715d058a796b816a561"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\feasibility-report.md",
+      "rel": "feasibility-report.md",
+      "bytes": 28952,
+      "sha256": "82c2669ee2376a7252cf9e5537c62e35974b2277f6b87b25309af37118195355"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\input-verified.json",
+      "rel": "input-verified.json",
+      "bytes": 39066,
+      "sha256": "fcceedb599b7eb76cd78e6967e2d67171d77a73ef9fd2df3e7a355b63b111ae2"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\inputs\\frozen-inputs.json",
+      "rel": "inputs/frozen-inputs.json",
+      "bytes": 6918,
+      "sha256": "888d3f3361aada77c77fc87140d6469b052d4dac2c63466e2007cfbf973a0f59"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\lessons.md",
+      "rel": "lessons.md",
+      "bytes": 5986,
+      "sha256": "83c6f35218da9e96de0989ea290509a558d8b0f20000036509efa37d3f0e1bce"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\logs\\check_outputs.out.txt",
+      "rel": "logs/check_outputs.out.txt",
+      "bytes": 9914,
+      "sha256": "67528b8f16b9f624b166364364502cf2d00784acd1bc5a4510a96437ceb0bd7d"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\logs\\gen_tables.out.txt",
+      "rel": "logs/gen_tables.out.txt",
+      "bytes": 732,
+      "sha256": "8128ff0cc5da2102b49dad0f3f049e6fd82a9d79d2886ff066f3fefcffd4659e"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\logs\\render_report.out.txt",
+      "rel": "logs/render_report.out.txt",
+      "bytes": 270,
+      "sha256": "fa72034aa39d47a28b2ec4de66785ce062df0004761e80f5da845526be9dcbf8"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\logs\\report.sha256",
+      "rel": "logs/report.sha256",
+      "bytes": 94,
+      "sha256": "65a4a444462f3b664937a8cdd4c059120b992f8a6f5847ce36f1859e725c2cf0"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\logs\\test_calc.out.txt",
+      "rel": "logs/test_calc.out.txt",
+      "bytes": 9432,
+      "sha256": "32ec4e8d42f006266aae3cde481e67c6613eb75a0df121ab4632ad00a2d03c1b"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\model\\calc.py",
+      "rel": "model/calc.py",
+      "bytes": 32610,
+      "sha256": "9eea41f56586d6cdd18f50433d607870aa725396e1688d5ce97ecd0c67f9bd2c"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\model\\check_outputs.py",
+      "rel": "model/check_outputs.py",
+      "bytes": 23486,
+      "sha256": "141f488e59b90df8ba14ac27627c674dc093e7fbbe967daa55950b1129fcdb80"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\model\\gen_tables.py",
+      "rel": "model/gen_tables.py",
+      "bytes": 19281,
+      "sha256": "32b084f985b4e34525ebdbfee13ae6acffecf577c9bdda1239e8cb80ad986031"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\model\\mk_manifest.py",
+      "rel": "model/mk_manifest.py",
+      "bytes": 10359,
+      "sha256": "f31c838e8399a69e6290c218580730c7751b602bc4a013d68f3da5daf70f5fd8"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\model\\render_report.py",
+      "rel": "model/render_report.py",
+      "bytes": 35334,
+      "sha256": "ec2e65a799c3fa6334543afc6f855ec247ae4e11f3aca0feaaba0524a312ee88"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\model\\rules.json",
+      "rel": "model/rules.json",
+      "bytes": 7639,
+      "sha256": "fdaae351c56d29cc97cdf3a66a393422854e61e95b24828b9ff3182ab1e42f4d"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\model\\test_calc.py",
+      "rel": "model/test_calc.py",
+      "bytes": 18689,
+      "sha256": "8d90a601a9a56e82d991b7ee88cc488d136b367ad404506b2fbb5e2eb2170535"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\out\\content-sensitivity.csv",
+      "rel": "out/content-sensitivity.csv",
+      "bytes": 745,
+      "sha256": "50b81124c334107781d7dbd6e99b992967276e69f6b60585b9c48a3383927b69"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\out\\ddr-budget.csv",
+      "rel": "out/ddr-budget.csv",
+      "bytes": 1777,
+      "sha256": "2c83c227bc31569318b9aef0a750a63ef33311dd3c268dbc156f59b2d61f4fb9"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\out\\frontier.csv",
+      "rel": "out/frontier.csv",
+      "bytes": 4079,
+      "sha256": "cdd7e5040f3bb59c1500f8f45f21c094fe88d4332ab488f80e552781958899b4"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\out\\overhead-sensitivity.csv",
+      "rel": "out/overhead-sensitivity.csv",
+      "bytes": 24190,
+      "sha256": "e4d6f8d9962006f6609be4a1a2a2bbef09ccbb18f250dfab141af42f6c6967f4"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\out\\scenarios.csv",
+      "rel": "out/scenarios.csv",
+      "bytes": 21150,
+      "sha256": "2d8065998c765e64a336461b6029dafe121b2da3b111048405ed6077bf125f50"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0\\result-r0.md",
+      "rel": "result-r0.md",
+      "bytes": 13742,
+      "sha256": "818f4da6a73402348ced6fc1928306720f3c6126aee4e0249a96439ae9e6555f"
+    }
+  ],
+  "tools": {
+    "python": "3.11.5",
+    "td_invocations": 0,
+    "synthesis": 0,
+    "place_route": 0,
+    "bitgen": 0,
+    "cwc": 0,
+    "download": 0,
+    "board": 0,
+    "modelsim": 0,
+    "network": 0,
+    "rk": 0
+  },
+  "commands": [
+    {
+      "seq": 1,
+      "argv": [
+        "python",
+        "model/gen_tables.py"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0",
+      "exit": 0,
+      "timeout_s": 120,
+      "time_utc": "2026-10-25T13:55:39+00:00",
+      "purpose": "freeze inputs + generate CSVs",
+      "result": "GEN_OK scenarios=43 content=3 ddr=7 frontier=15 mismatch=0"
+    },
+    {
+      "argv": [
+        "python",
+        "model/check_outputs.py"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0",
+      "exit": 1,
+      "timeout_s": 120,
+      "time_utc": "2026-10-25T13:57:41+00:00",
+      "purpose": "independent CSV/report consistency + frontier + negative controls",
+      "result": "CHECK_FAIL fails=1",
+      "seq": 2
+    },
+    {
+      "argv": [
+        "python",
+        "model/check_outputs.py"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0",
+      "exit": 0,
+      "timeout_s": 120,
+      "time_utc": "2026-10-25T13:58:03+00:00",
+      "purpose": "independent CSV/report consistency + frontier + negative controls",
+      "result": "CHECK_OK total=85 fail=0",
+      "seq": 3
+    },
+    {
+      "seq": 4,
+      "argv": [
+        "python",
+        "model/gen_tables.py"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0",
+      "exit": 0,
+      "timeout_s": 120,
+      "time_utc": "2026-10-25T13:59:34+00:00",
+      "purpose": "freeze inputs + generate CSVs",
+      "result": "GEN_OK scenarios=43 content=3 ddr=7 frontier=15 mismatch=0"
+    },
+    {
+      "argv": [
+        "python",
+        "model/check_outputs.py"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0",
+      "exit": 0,
+      "timeout_s": 120,
+      "time_utc": "2026-10-25T13:59:34+00:00",
+      "purpose": "independent CSV/report consistency + frontier + negative controls",
+      "result": "CHECK_OK total=85 fail=0",
+      "seq": 5
+    },
+    {
+      "seq": 6,
+      "argv": [
+        "python",
+        "model/gen_tables.py"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0",
+      "exit": 0,
+      "timeout_s": 120,
+      "time_utc": "2026-10-25T14:00:30+00:00",
+      "purpose": "freeze inputs + generate CSVs",
+      "result": "GEN_OK scenarios=43 content=3 ddr=7 frontier=15 mismatch=0"
+    },
+    {
+      "argv": [
+        "python",
+        "model/check_outputs.py"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0",
+      "exit": 0,
+      "timeout_s": 120,
+      "time_utc": "2026-10-25T14:00:30+00:00",
+      "purpose": "independent CSV/report consistency + frontier + negative controls",
+      "result": "CHECK_OK total=85 fail=0",
+      "seq": 7
+    },
+    {
+      "seq": 8,
+      "argv": [
+        "python",
+        "model/gen_tables.py"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0",
+      "exit": 0,
+      "timeout_s": 120,
+      "time_utc": "2026-10-25T14:01:17+00:00",
+      "purpose": "freeze inputs + generate CSVs",
+      "result": "GEN_OK scenarios=43 content=3 ddr=7 frontier=15 mismatch=0"
+    },
+    {
+      "argv": [
+        "python",
+        "model/check_outputs.py"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0",
+      "exit": 0,
+      "timeout_s": 120,
+      "time_utc": "2026-10-25T14:01:17+00:00",
+      "purpose": "independent CSV/report consistency + frontier + negative controls",
+      "result": "CHECK_OK total=85 fail=0",
+      "seq": 9
+    },
+    {
+      "seq": 10,
+      "argv": [
+        "python",
+        "model/gen_tables.py"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0",
+      "exit": 0,
+      "timeout_s": 120,
+      "time_utc": "2026-10-25T14:04:43+00:00",
+      "purpose": "freeze inputs + generate CSVs",
+      "result": "GEN_OK scenarios=43 content=3 ddr=7 frontier=15 mismatch=0"
+    },
+    {
+      "argv": [
+        "python",
+        "model/test_calc.py",
+        "--journal"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0",
+      "exit": 0,
+      "timeout_s": 120,
+      "time_utc": "2026-10-25T14:04:43+00:00",
+      "purpose": "known-value / boundary / 3-negative-control unit tests",
+      "result": "TEST_SUMMARY total=128 pass=128 fail=0",
+      "seq": 11
+    },
+    {
+      "argv": [
+        "python",
+        "model/render_report.py",
+        "--journal"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0",
+      "exit": 0,
+      "timeout_s": 120,
+      "time_utc": "2026-10-25T14:04:43+00:00",
+      "purpose": "render feasibility-report.md from the CSVs",
+      "result": "REPORT_OK lines=223 bytes=25309",
+      "seq": 12
+    },
+    {
+      "argv": [
+        "python",
+        "model/check_outputs.py",
+        "--journal"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0",
+      "exit": 0,
+      "timeout_s": 120,
+      "time_utc": "2026-10-25T14:04:43+00:00",
+      "purpose": "independent CSV/report consistency + frontier + negative controls",
+      "result": "CHECK_OK total=85 fail=0",
+      "seq": 13
+    },
+    {
+      "seq": 14,
+      "argv": [
+        "python",
+        "model/gen_tables.py"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0",
+      "exit": 0,
+      "timeout_s": 120,
+      "time_utc": "2026-10-25T14:36:33+00:00",
+      "purpose": "freeze inputs + generate CSVs",
+      "result": "GEN_OK scenarios=43 content=3 ddr=7 frontier=16 mismatch=0"
+    },
+    {
+      "argv": [
+        "python",
+        "model/test_calc.py",
+        "--journal"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0",
+      "exit": 0,
+      "timeout_s": 120,
+      "time_utc": "2026-10-25T14:36:33+00:00",
+      "purpose": "known-value / boundary / 3-negative-control unit tests",
+      "result": "TEST_SUMMARY total=146 pass=146 fail=0",
+      "seq": 15
+    },
+    {
+      "argv": [
+        "python",
+        "model/render_report.py",
+        "--journal"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0",
+      "exit": 0,
+      "timeout_s": 120,
+      "time_utc": "2026-10-25T14:36:33+00:00",
+      "purpose": "render feasibility-report.md from the CSVs",
+      "result": "REPORT_OK lines=239 bytes=28952",
+      "seq": 16
+    },
+    {
+      "argv": [
+        "python",
+        "model/check_outputs.py",
+        "--journal"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0",
+      "exit": 0,
+      "timeout_s": 120,
+      "time_utc": "2026-10-25T14:36:33+00:00",
+      "purpose": "independent CSV/report consistency + frontier + negative controls",
+      "result": "CHECK_OK total=117 fail=0",
+      "seq": 17
+    },
+    {
+      "seq": 18,
+      "argv": [
+        "python",
+        "model/mk_manifest.py"
+      ],
+      "cwd": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\T10.dual-aplus-service-verdict\\r0",
+      "exit": 0,
+      "timeout_s": 120,
+      "time_utc": "2026-10-25T14:36:43+00:00",
+      "purpose": "hash artifacts/inputs and write manifest-r0.json",
+      "result": "MANIFEST_WRITTEN; the final manifest SHA256 is recorded in logs/mk_manifest.out.txt (self-reference excluded)"
+    }
+  ],
+  "gate_summary": {
+    "G0": "pass (22 inputs frozen: 11 anchors + 11 snapshots; 97 assertions, 0 mismatch)",
+    "G1": "pass (pure-function model, 43-row grid reproducible, 129-row overhead sensitivity, 146 unit checks, 117 output checks, 5/5 negative-control fixtures rejected)",
+    "G2": "not_applicable (no RTL/synthesis/route/candidate)",
+    "G3": "not_applicable (no bitgen/CWC)",
+    "G4": "not_applicable (no download/board)"
+  },
+  "local_checks": {
+    "gen_assertions": 97,
+    "gen_mismatch": 0,
+    "test_calc": "146/146 PASS",
+    "check_outputs": "117/117 PASS",
+    "negative_controls": [
+      "NEG-01a RAW12 PACKING_PROFILE_REJECTED",
+      "NEG-01b RAW10 1.0x PACKING_MISMATCH",
+      "NEG-02a aggregate 2C AGGREGATE_CAPACITY_FOR_PER_STREAM",
+      "NEG-02b chain-margin claim FEASIBLE_CLAIM_BELOW_PER_STREAM_GATE",
+      "NEG-03 synth STAGE_MIX_SYNTH_IN_FIT"
+    ],
+    "scenario_rows": 43,
+    "verdict_counts": {
+      "infeasible": 13,
+      "conditional": 22,
+      "feasible": 8
+    },
+    "frontier_rows": 16,
+    "overhead_sensitivity_rows": 129,
+    "dual_core_feasible_rows": 0,
+    "feasible_1080p30_rows": 0,
+    "primary": "1600x900-30fps-c1s1-187.5MHz",
+    "primary_tier_status": "feasible at 426385 cycles (36.1774%); conditional at 1000000 cycles (21.0486%)",
+    "alternates": [
+      "1440x810-30fps-c1s1-187.5MHz",
+      "1920x1080-20fps-c1s1-187.5MHz"
+    ],
+    "report_table_rows": 43,
+    "report_sha256": "82c2669ee2376a7252cf9e5537c62e35974b2277f6b87b25309af37118195355"
+  },
+  "boundary_resolutions": {
+    "full_grad": "1080p full frame (TB default W/H, STAT read_words=129600); .dec 180,425 B is a decimal text capture of 40,076 bytes, not payload",
+    "1440x810": "H=810 is not a multiple of 4; valid because W=1440 -> 1,800 B stride and 291,600 integral groups, no padding; model requires W%4==0 and W*H%4==0"
+  },
+  "excluded": {
+    "manifest-r0.json": "manifest does not hash itself",
+    "logs/mk_manifest.out.txt": "freeze log written after the manifest with its SHA256",
+    "__pycache__/**": "transient interpreter cache"
+  },
+  "test_input_paths": [
+    "input-verified.json",
+    "inputs/frozen-inputs.json",
+    "model/calc.py",
+    "model/rules.json",
+    "model/test_calc.py",
+    "model/gen_tables.py",
+    "model/render_report.py",
+    "model/check_outputs.py",
+    "out/scenarios.csv",
+    "out/content-sensitivity.csv",
+    "out/ddr-budget.csv",
+    "out/frontier.csv",
+    "out/overhead-sensitivity.csv",
+    "feasibility-report.md",
+    "commands.jsonl",
+    "logs/gen_tables.out.txt",
+    "logs/test_calc.out.txt",
+    "logs/render_report.out.txt",
+    "logs/check_outputs.out.txt",
+    "logs/report.sha256"
+  ],
+  "caveats": [
+    "Natural-image / low-light / noise content unmeasured: comp is not a strict upper bound; no 'guarantee' claim.",
+    "Chain overhead 426,385 cycles is assumed constant across content; only full_grad content measured.",
+    "The 1600x900@30 primary is feasible only at the primary overhead tier (36.1774%); at 1,000,000 cycles it is 21.0486% (conditional). The all-tier-robust 30 fps tier is 1440x810 (worst 42.9485%).",
+    "1-core/2-stream rows use the single-chain 187/300 ERAM bound; a second stream bridge+fabric (+21 -> about 208/300) is not added; still <=270 and verdict unchanged (conservative-low assumption).",
+    "Dual-core Routed timing unproven: no dual-core build; 200 MHz also unproven.",
+    "DDR uses theoretical 6,400 MB/s peak; sustained bandwidth / PAXI arbitration / single-beat efficiency unproven.",
+    "Second full CSI is not in the routed netlist; +773/340/1,474 -> LUT6 26,822, REG 35,815, SLICE ~32,083, ERAM unchanged.",
+    "Exact LUT4 not reported by TD (2xLUT6 upper bound); second-stream FIFO ERAM mapping and post-CWC ERAM unproven.",
+    "Frame-level drop lower bound only; no cycle-level scheduler / one-outstanding reader / PAXI simulation.",
+    "No TD, no synthesis, no route, no bitgen/CWC, no download, no board, no RK: G2-G4 not_applicable; P2 PASS is not a dual-stream system completion."
+  ]
+}

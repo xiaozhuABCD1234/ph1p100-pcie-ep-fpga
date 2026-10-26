@@ -1,0 +1,145 @@
+--- frozen tb_dual.sv
++++ private tb_integrated.sv
+@@ -1,8 +1,8 @@
+ `timescale 1ns/1ps
+-module tb_dual #(parameter integer W=64,H=8,CASE=0,PREP=0,MUT=0,CAP=W*H*5/4+5*((H+1)/2)+134);
++module tb_dual #(parameter integer W=64,H=8,CASE=0,PREP=0,PRED=-1,MUT=0,CAP=W*H*5/4+5*((H+1)/2)+134);
+ localparam integer RAW=W*H*5/4,DMA=((RAW+128+4095)/4096)*4096;
+ reg clk=0;always #5 clk=~clk;
+-reg rst_n=0;reg [31:0] current_epoch=1;reg prep_en=PREP,pred_en=PREP,abort=0,sink_enable=1;
++reg rst_n=0;reg [31:0] current_epoch=1;reg prep_en=PREP,pred_en=(PRED<0)?PREP:PRED,abort=0,sink_enable=1;
+ reg a_desc_valid=0;wire a_desc_ready;reg a_desc_camera_id=0,a_desc_slot_id=0;
+ reg [31:0] a_desc_epoch=0;
+ reg [31:0] a_desc_session=0;
+@@ -10,7 +10,7 @@
+ reg [31:0] a_desc_base=0;
+ reg [31:0] a_desc_dma_bytes=0;
+ reg [31:0] a_desc_raw_bytes=0;
+-wire [15:0] a_desc_width=W,a_desc_height=H;reg [1:0] a_desc_bayer_phase=3;
++reg [15:0] a_desc_width=W,a_desc_height=H;reg [1:0] a_desc_bayer_phase=3;
+ reg b_desc_valid=0;wire b_desc_ready;reg b_desc_camera_id=1,b_desc_slot_id=0;
+ reg [31:0] b_desc_epoch=0;
+ reg [31:0] b_desc_session=0;
+@@ -33,8 +33,8 @@
+ reg pending=0,holdar=0,holdr=0;integer latency=0,idx=0,off=0,rcount=0,ccount=0,selcount=0;
+ integer i,j,fd,mf,tf,logfd,seqno,relfails=0,safe0=0,seen[0:127];
+ integer acam[0:1],aslot[0:1],ae[0:1],ase[0:1],aq[0:1];reg [1:0] ackpending=0;reg ackenable=1;
+-string outdir,hpath,fpath;integer tick=0;reg [31:0] seed=32'h12345678;
+-integer startcycle=0,startwords=0,startgroups=0,badacks=0;
++string outdir,hpath,fpath;integer tick=0;reg [31:0] seed=32'h8c71de39;
++reg force_rel_hold=0,force_sink_hold=0; integer startcycle=0,startwords=0,startgroups=0,badacks=0;
+ reg oldcmpstall=0,last_cmp_take=0;reg [292:0] oldcmp;
+ wire [292:0] cmp_bundle={cmp_slot,cmp_camera_id,cmp_source_slot_id,cmp_epoch,cmp_session,cmp_capture_seq,cmp_raw_len,cmp_xform_len,cmp_stream_len,cmp_raw_crc,cmp_xform_crc,cmp_stream_crc,cmp_prep,cmp_pred};
+ integer hit_take_commit=0,hit_ack_commit=0,hit_take_refill=0;
+@@ -48,7 +48,7 @@
+ end
+ task automatic ack_one(input integer sl,badkind);begin
+  @(negedge clk);ack_slot=sl;ack_camera_id=acam[sl];ack_source_slot_id=aslot[sl];ack_epoch=ae[sl];ack_session=ase[sl];ack_capture_seq=aq[sl];
+- if(badkind==1)ack_camera_id=!acam[sl];if(badkind==2)ack_epoch=ae[sl]-1;if(badkind==3)ack_capture_seq=aq[sl]+1;
++ if(badkind==1)ack_camera_id=!acam[sl];if(badkind==2)ack_epoch=ae[sl]-1;if(badkind==3)ack_capture_seq=aq[sl]+1;if(badkind==4)ack_source_slot_id=!aslot[sl];if(badkind==5)ack_session=ase[sl]+1;
+  ack_valid=1;@(negedge clk);ack_valid=0;if(badkind==0)ackpending[sl]=0;repeat(2)@(negedge clk);
+ end endtask
+ wire [39:0] corrupted_group=((dut.group_count*5)%32>=28)?{dut.fifo[39:8],(dut.fifo[7:0]^8'h01)}:dut.fifo[39:0];
+@@ -63,9 +63,9 @@
+  if(k<4)byte_at=sam(ix/2,srcseq[ix],x+k,y)>>2;
+  else begin b=0;for(v=0;v<4;v=v+1)b=b|((sam(ix/2,srcseq[ix],x+v,y)&3)<<(2*v));byte_at=b;end
+  end else byte_at=0;
+- if(srcfault[ix]==1&&ofs==0)byte_at=byte_at^1;
++ if(srcfault[ix]==1&&ofs==88)byte_at=byte_at^1;
+  if(srcfault[ix]==2&&ofs==128+RAW-1)byte_at=byte_at^1;
+- if(srcfault[ix]==3&&ofs==10)byte_at=byte_at^1;
++ // Identity faults are precomputed with a correct header CRC.
+ end endfunction
+ task die(input [1023:0] why);begin $display("ASSERT_FAIL %0s t=%0t state=%0d",why,$time,dut.state);$fatal(1);end endtask
+ task reset_all;begin
+@@ -88,7 +88,7 @@
+  tick<=tick+1;
+  if(!rst_n)begin pending<=0;rvalid<=0;raw_owned<=0;ackpending<=0;ack_valid<=0;end
+  else begin
+- seed<=seed^(seed<<13)^(seed>>17)^(seed<<5);sink_enable<=((tick%11)!=3)&&((tick%11)!=4);rel_ready<=((tick%9)!=4);
++ seed<=seed^(seed<<13)^(seed>>17)^(seed<<5);sink_enable<=!force_sink_hold&&((seed&7)!=0);rel_ready<=!force_rel_hold&&((seed&3)!=0);
+  if(arvalid&&arready)begin
+  if(arid!=3||arlen!=0||arsize!=5||arburst!=1||araddr[4:0]!=0)die("AXI fields");
+  if(araddr>=29'h1900000)begin idx=3;off=araddr-29'h1900000;end
+@@ -143,10 +143,35 @@
+  oldin<=rst_n&&dut.in_valid&&!dut.in_ready&&!dut.bad&&!abort;oldpix<=dut.in_pix;oldsof<=dut.in_sof;
+  oldout<=rst_n&&dut.out_valid&&!dut.out_ready&&!dut.bad&&!abort;olddata<={dut.out_data,dut.out_keep,dut.out_last};
+ end
++
++ reg oldrelstall=0;reg [101:0] oldrelbundle;wire [101:0] relbundle={rel_camera_id,rel_slot_id,rel_epoch,rel_session,rel_capture_seq,rel_status};
++ reg [45:0] oldarbundle;wire [45:0] arbundle={araddr,arid,arlen,arsize,arburst};
++ integer ddrfd,handfd,fair_run=0,fair_max=0,prevfair=-1;reg selected_both=0;integer xtake_refill=0,xlast=0,xstallrel=0,xstallcmp=0;
++ always @(posedge clk)begin
++  if(rst_n&&oldrelstall&&(!rel_valid||relbundle!==oldrelbundle))die("independent release all fields changed under stall");
++  if(rst_n&&oldar&&arbundle!==oldarbundle)die("independent AR all fields changed under stall");
++  oldrelstall<=rst_n&&rel_valid&&!rel_ready;oldrelbundle<=relbundle;oldarbundle<=arbundle;
++  if(rst_n)begin
++   if(dut.state==0&&(dut.queued[0]||dut.queued[1])&&(dut.queued[2]||dut.queued[3])&&(dut.cs[0]==0||dut.cs[1]==0)&&!dut.core_busy&&!dut.codec_reset)selected_both<=1;
++   else if(dut.state==0)selected_both<=0;
++   if(select_valid)begin
++    $fdisplay(handfd,"FAIR %0d %0d %0d",select_camera,select_seq,selected_both);
++    if(CASE==6)begin
++     if(selected_both)begin if(prevfair==select_camera)die("independent sustained fairness repeat");fair_run=fair_run+1;prevfair=select_camera;if(fair_run>fair_max)fair_max=fair_run;end
++     else begin if(fair_run<8)fair_run=0;prevfair=-1;end
++    end
++   end
++   if(rvalid&&rready)$fdisplay(ddrfd,"R %0d %0d %0d %0d %0d %064h",idx,srcseq[idx],off,rid,rresp,rdata);
++   if(dut.in_valid&&dut.in_ready&&rvalid&&rready)xtake_refill=xtake_refill+1;
++   if(dut.out_valid&&dut.out_ready&&dut.out_last)begin xlast=xlast+1;$fdisplay(handfd,"LAST %0d %0d %0h",dut.active,dut.group_count,dut.out_keep);end
++   if(rel_valid&&!rel_ready)xstallrel=xstallrel+1;if(cmp_valid&&!cmp_ready)xstallcmp=xstallcmp+1;
++  end
++ end
++
+ initial begin
+  if(!$value$plusargs("OUT=%s",outdir)||!$value$plusargs("HDR=%s",hpath))die("missing paths");
+  fd=$fopen(hpath,"r");if(!fd)die("header open failed");$fclose(fd);
+- $readmemh(hpath,headers);fpath={outdir,"/metadata.csv"};mf=$fopen(fpath,"w");if(!mf)die("metadata open failed");fpath={outdir,"/events.log"};logfd=$fopen(fpath,"w");if(!logfd)die("events open failed");
++ fpath={outdir,"/ddr.log"};ddrfd=$fopen(fpath,"w");fpath={outdir,"/handshakes.log"};handfd=$fopen(fpath,"w");if(!ddrfd||!handfd)die("independent evidence open");$readmemh(hpath,headers);fpath={outdir,"/metadata.csv"};mf=$fopen(fpath,"w");if(!mf)die("metadata open failed");fpath={outdir,"/events.log"};logfd=$fopen(fpath,"w");if(!logfd)die("events open failed");
+  for(i=0;i<128;i=i+1)seen[i]=0;for(i=0;i<4;i=i+1)begin srcseq[i]=0;srcfault[i]=0;end
+  reset_all();
+  if(CASE==0)begin
+@@ -181,7 +206,10 @@
+  safe0=rcount;send(0,0,seqno,seqno);wait(locked);if(!raw_owned[0]||rcount!=safe0)die("RID/RLAST invalid release");
+  $display("HIT PROTOCOL_LOCK_%0d",seqno);reset_all();
+  end
+- send(0,0,12,12);wait_rel(rcount+1);$display("HIT OLD_EPOCH_REJECT");
++ for(seqno=22;seqno<=25;seqno=seqno+1)begin
++  safe0=rcount;send(0,0,seqno,16);wait_rel(safe0+1);if(ccount!=0)die("identity fault published CMP");$display("HIT ISOLATED_HEADER_ID_%0d",seqno);
++  end
++  send(0,0,12,12);wait_rel(rcount+1);$display("HIT OLD_EPOCH_REJECT");
+  pair(0,20);wait_rel(rcount+2);pair(1,21);wait_rel(rcount+2);if(ccount!=4)die("recovery CMP total");
+  // Deliberate duplicate/old/wrong-source ACKs after successful free.
+  ackenable=0;repeat(20)@(negedge clk);ack_slot=0;ack_camera_id=1;ack_source_slot_id=0;ack_epoch=current_epoch-1;ack_session=0;ack_capture_seq=0;ack_valid=1;@(negedge clk);ack_valid=0;repeat(3)@(negedge clk);if(reject_acks==0)die("bad ACK accepted");$display("HIT STALE_DUPLICATE_ACK_REJECT RECOVERY_GOOD4");
+@@ -207,9 +235,31 @@
+  if(ccount!=8||relfails!=0||hit_take_commit==0||hit_ack_commit==0||hit_take_refill==0)die("CMP matrix hit totals");
+  $display("HIT CMP_TAKE_REFILL_ACK_COMMIT_REAL_CORE GOOD8");
+  end
++ 
++ else if(CASE==6)begin
++  pair(0,1);pair(1,2);
++  fork
++   begin for(integer q=3;q<=8;q=q+1)begin wait(!raw_owned[(q-1)%2]);send(0,(q-1)%2,q,0);end end
++   begin for(integer q=3;q<=8;q=q+1)begin wait(!raw_owned[2+(q-1)%2]);send(1,(q-1)%2,q,0);end end
++  join
++  wait_rel(16);if(ccount!=16||fair_run<8)die("continuous dual pending fairness coverage");$display("HIT CONTINUOUS_DUAL_PENDING_ALTERNATE8");
++ end else if(CASE==8)begin
++  ackenable=0;force_rel_hold=1;pair(0,1);wait(rel_valid);repeat(30)@(negedge clk);
++  if(!raw_owned[0]||a_desc_ready)die("held RAW release protection");
++  @(negedge clk);a_desc_capture_seq=31;a_desc_valid=1;repeat(12)@(negedge clk);if(a_desc_ready)die("occupied duplicate descriptor accepted");a_desc_valid=0;
++  force_rel_hold=0;wait_rel(2);wait(ccount==2);
++  ack_one(0,4);ack_one(0,5);if(reject_acks!=2||dut.cs[0]!=3)die("wrong source/session ACK accepted");
++  ack_one(0,0);ack_one(0,0);if(reject_acks!=3)die("duplicate ACK accepted");ack_one(1,0);
++  @(negedge clk);cmp_ready=0;send(0,1,3,0);wait_rel(3);wait(cmp_valid);repeat(12)@(negedge clk);reset_all();
++  repeat(4)@(negedge clk);if(cmp_valid||rel_valid||dut.owned!=0||pending)die("reset phantom pending");
++  ack_one(0,2);if(reject_acks!=1)die("reset old ACK accepted");
++  holdr=1;send(0,0,4,0);wait(pending);reset_all();cmp_ready=1;ackenable=1;
++  pair(0,5);wait_rel(5);wait(ccount==4);if(locked)die("common reset recovery");$display("HIT RELEASE_STALL_DUP_DESC_ACK_SOURCE_SESSION_DUP_RESET_PENDING_GOOD2");
++ end else if(CASE==9)begin send(0,0,1,11);wait_rel(1);if(ar_words!=0||ccount!=0||relfails!=1)die("pred without prep accepted");$display("HIT PRED_WITHOUT_PREP_REJECT");end
++
+  repeat(30)@(negedge clk);
+  $fdisplay(logfd,"STATS cycles=%0d ar_words=%0d groups=%0d peak=%0d completed=%0d failed=%0d",cycles,ar_words,groups,queue_peak,completed,failed);
+- $fclose(mf);$fclose(logfd);$display("TB_DONE case=%0d W=%0d H=%0d cmp=%0d rel=%0d",CASE,W,H,ccount,rcount);$finish;
++ $fdisplay(handfd,"HITS refill=%0d last=%0d relstall=%0d cmpstall=%0d fairmax=%0d",xtake_refill,xlast,xstallrel,xstallcmp,fair_max);$fclose(ddrfd);$fclose(handfd);$fclose(mf);$fclose(logfd);$display("TB_DONE case=%0d W=%0d H=%0d cmp=%0d rel=%0d",CASE,W,H,ccount,rcount);$finish;
+ end
+ initial begin repeat(90000000)@(posedge clk);die("cycle watchdog");end
+ endmodule

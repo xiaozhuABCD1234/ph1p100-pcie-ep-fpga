@@ -1,0 +1,12 @@
+﻿# run_sim.ps1 2026-10-17T07:21:43.2544355+08:00
+root        = C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道
+mapped_root = T:\
+tb          = tb_csi_checked
+outdir      = C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261017-011744-rk-fpga-align\test-reports\T07-functional-r3\msim-default\tb_csi_checked
+defines     = MIPI_PHY_SIM_STUB
+vlib work
+vlog +define+MIPI_PHY_SIM_STUB -f abs.f  (cwd=T:\workflow\runs\20261017-011744-rk-fpga-align\test-reports\T07-functional-r3\msim-default\tb_csi_checked)
+vlog exit=0
+cmd /c "vsim -c -l vsim.log -do run.do tb_csi_checked"  (cwd=T:\workflow\runs\20261017-011744-rk-fpga-align\test-reports\T07-functional-r3\msim-default\tb_csi_checked)
+vsim exit=0
+subst T: removed

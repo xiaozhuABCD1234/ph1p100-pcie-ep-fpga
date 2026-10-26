@@ -1,0 +1,275 @@
+{
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "project_root": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+  "output_dir": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop",
+  "task_ids": [
+    "T10.a1-htab-eram"
+  ],
+  "package_id": "T10.a1-htab-eram",
+  "round": "r1",
+  "continuation_of": "T10.a1-htab-eram r0 (same package; final micro-fix, not a new package)",
+  "batch_size": 1,
+  "status": "finished",
+  "needs_user_input": false,
+  "result": {
+    "verdict": "blocked",
+    "g1": "PASS functional equivalence: P2 13/13, P3 20/20, 0 mismatch, 0 X, vlog 0/0; P2 comp 355,261 cycles=81.067 MB/s; 1080p <=4.87M",
+    "synth": "2/2 used; s1 -0.722, s2 -0.245; TNS -0.465; 3/4640 endpoints; slice 3,030; ERAM 26",
+    "worst_path": "bm_b ERAM clk2q -> S_EXT byte compare -> ext_zero_r_reg.d, 5.514 ns",
+    "route": "0/1; WNS<0 gate",
+    "prj_8806": "wait_run exception but raw run.log/flow.status/gate reports complete; verify",
+    "decision": "T10.a1-htab-eram r2 dispatched for S_EXT flag micro-fix"
+  },
+  "operation": "spawn_agent",
+  "authorization": {
+    "quote": "请冻结最后微修包；预算 2 会话/75 min；建议综合 WNS>=0 即可布线",
+    "date": "2026-10-22",
+    "type": "explicit_user_request_to_freeze_final_micro_fix",
+    "basis": "用户明确要求冻结最后微修包，并给出范围、布线门槛、预算与功能/吞吐门槛；规划选择同一包 r1（最窄范围），不需再确认。",
+    "round_accounting": "T10.a1-htab-eram r0 blocked at -0.144 with htab ERAM done; r1 is a repair round of this package, not a new package and not a reset.",
+    "limits_frozen_here": {
+      "td_sessions_max": 2,
+      "td_session_minutes_max": 75,
+      "td_total_minutes_max": 75,
+      "td_synth_attempts_max": 2,
+      "td_route_attempts_max": 1
+    },
+    "not_authorized": [
+      "A route (150 MHz + CDC/PLL/async FIFO)",
+      "larger device or board change",
+      "QoR strategy changes",
+      "lowering 187.5 MHz or relaxing 5.333 ns",
+      "false path / multicycle / clock-group exceptions",
+      "seed sweep or blind re-run",
+      "bitgen / download / Flash / production integration",
+      "C / RK / PCIe / dual-camera / G4",
+      "protocol/port/frame semantics/CRC/length/abort/Bayer/SDC changes"
+    ]
+  },
+  "r0_state": {
+    "g1": "PASS functional equivalence: P2 13/13, P3 20/20, 0 mismatch, 0 X, vlog 0/0; P2 comp 355,261 cycles=81.067 MB/s; 1080p 4,677,945-4,866,587; 13/13 stream SHA/len identical",
+    "synth": "2/2 used; s1 -0.144, s2 -0.146; TNS -5.151/-4.909; slice 2,955; ERAM 26; reg 1,562; core DRAM LUT 32",
+    "worst_path": "w0_reg -> litlen -> 32-bit (cand_bits+litlen) adder -> thresh_lit compare -> state.ce, 5.412 ns / 7 levels, 4 ADDERs",
+    "candidate": {
+      "a1_deflate_core.v": "b374f6fcc161ffe0b9c8fd703cc04fb3fab0411a674a8e0cf1ad06e64173fb6d",
+      "a1_frame_top.v": "18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+      "a1_small_top.sdc": "227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311",
+      "manifest": "T10.a1-htab-eram/CANDIDATE-MANIFEST-htab-eram.json"
+    },
+    "route": "0/1; 00_syn_then_route.tcl #dram regexp already fixed; phy_1 empty"
+  },
+  "why_this_round": {
+    "problem": "Only -0.144 ns remains; worst path is a pure fabric 32-bit add+compare, not a DRAM long line. htab is already 4x ERAM (ERAM 26) and core DRAM LUT is 32.",
+    "solution": "Narrow/precompute the 32-bit cand_bits+litlen vs thresh_lit compare. MAX_BLOCK=4800 => values < 2^16; use 16-bit split/parallel carry or precompute litlen/threshold one cycle earlier.",
+    "route_gate": "WNS>=0 (no longer +0.5). Rationale: the +0.5 gate was to absorb the 1.22 ns DRAM combinational long-line gap; that gap class is gone (DRAM LUT 1184->32, htab ERAM). The remaining path is fabric arithmetic (5.412 ns vs 5.333 ns), so WNS>=0 is a reasonable route gate; target +0.3.",
+    "throughput": "P2 comp <=370,370 cycles (77.76); current 355,261. Functional equivalence unchanged. 1080p <=6.25M."
+  },
+  "input_paths": [
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/dev-plan.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/handoff.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-htab-eram/p4/result-r0.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-htab-eram/r0/td/syn_gate_timing_s2.rpt",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-htab-eram/CANDIDATE-MANIFEST-htab-eram.json",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-htab-eram/r0/td/00_syn_then_route.tcl",
+    "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v",
+    "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v",
+    "upstream/ph1p100-pcie-ep-fpga/tools/codec/run_p2_htab_eram.ps1",
+    "upstream/ph1p100-pcie-ep-fpga/tools/codec/run_p3_htab_eram.ps1",
+    "tools/td/td_env.ps1",
+    "tools/td/PATH_CONTRACT.md",
+    ".agents/skills/fpga-dev/SKILL.md",
+    ".agents/skills/fpga-tester/SKILL.md"
+  ],
+  "write_scope": {
+    "modify_existing_run_owned": [
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v (only the 32-bit cand_bits+litlen/thresh_lit path)"
+    ],
+    "must_not_modify": [
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v (locked 18d51b1b...1cbe)",
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_small_top.sdc (locked 227dd39e...6311)"
+    ],
+    "create_new": [
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/** (new helper files only, if strictly needed)",
+      "upstream/ph1p100-pcie-ep-fpga/sim/tb/codec/**",
+      "upstream/ph1p100-pcie-ep-fpga/tools/codec/**",
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-htab-eram/r1/**"
+    ],
+    "td_project_dir": "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-htab-eram/r1/td/**",
+    "path_contract": {
+      "td": "T: = current run td, Y: = project root; run tools/td/td_env.ps1 before TD; never map X: to project root",
+      "sim": "P: = project root, W: = current sim run",
+      "doc": "tools/td/PATH_CONTRACT.md"
+    },
+    "rules": [
+      "Only the 32-bit literal threshold add/compare path may change; no other core logic, no frame/SDC changes.",
+      "Functional equivalence + P2 comp <=370,370 + 1080p <=6.25M are hard gates.",
+      "Route only after synth WNS>=0; one route only; report_cdc/check_timing separately after route; bitgen not_run.",
+      "TD artifacts stay under r1; never overwrite r0 manifests/reports.",
+      "Follow T:/Y: TD and P:/W: simulation."
+    ]
+  },
+  "protected": [
+    "all files outside a1_deflate_core.v and allowed new directories",
+    "a1_frame_top.v (locked 18d51b1b...1cbe)",
+    "a1_small_top.sdc (locked 227dd39e...6311)",
+    "workflow/tasks.json",
+    "old runs/manifests/bit/CWC, production candidate b68c6e18…f9bf",
+    "board, Flash, PCIe/RK, camera configuration"
+  ],
+  "next_action": "spawn_agent",
+  "next_action_detail": {
+    "role": "fpga-dev",
+    "skill_path": ".agents/skills/fpga-dev/SKILL.md",
+    "task": "T10.a1-htab-eram r1：复用 b374f6fc，只改 32 位 cand_bits+litlen 与 thresh_lit 比较（16 位拆分/并行进位或提前一拍 litlen）；功能等价+吞吐复跑；综合 WNS>=0 才布线 1 次；布线后单独 report_cdc/check_timing。",
+    "must_read": [
+      "dev-plan.md §28",
+      "p4/result-r0.md §3-§6",
+      "r0/td/syn_gate_timing_s2.rpt",
+      "tools/td/PATH_CONTRACT.md"
+    ],
+    "first_checks": [
+      "确认 core hash = b374f6fcc161ffe0b9c8fd703cc04fb3fab0411a674a8e0cf1ad06e64173fb6d",
+      "确认 frame hash = 18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+      "确认 SDC hash = 227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311",
+      "改动前复跑 P2/P3 基线；0 mismatch/0 X/vlog 0/0"
+    ]
+  },
+  "technical_scope": {
+    "primary": "Narrow/precompute the 32-bit cand_bits+litlen vs thresh_lit comparison. MAX_BLOCK=4800 => cand_bits/thresh_lit < 2^16. Use a 16-bit split/parallel carry (sum_lo/sum_hi) or register litlen one cycle earlier. Only this path.",
+    "five_steps": [
+      "Prove cand_bits/thresh_lit < 2^16 including abort/stored boundaries; document the range.",
+      "Implement 16-bit split/parallel-carry compare or one-cycle-earlier litlen precompute; preserve exact compare semantics.",
+      "P2/P3 functional equivalence: 0 mismatch/0 X/vlog 0/0; P2 comp <=370,370; 1080p <=6.25M; stored bound unchanged.",
+      "Synth checkpoint: WNS>=0 (target +0.3), TNS>=0, slice<=71,680, ERAM consistent; route only if WNS>=0.",
+      "Route once; Routed WNS/TNS/HWNS/HTNS>=0, 0 violations, resources; report_cdc/check_timing separately after route; bitgen not_run; freeze manifest/result/rollback."
+    ],
+    "throughput_red_line": {
+      "p2_comp_cycles_max": 370370,
+      "p2_comp_current_cycles": 355261,
+      "p2_comp_min_MBps": 77.76,
+      "1080p_cycles_max": 6250000,
+      "target_97_2_cycles_max": 5000000,
+      "rule": "Functional equivalence; no per-symbol bubble; no throughput trade."
+    },
+    "invariants": [
+      "No change to protocol, ports, frame commit, raw/xform/stream length, CRC, abort, Bayer mapping, zlib/fixed/stored format, SDC.",
+      "Full-frame P3 must prove block boundaries, backpressure, abort/reset, stored fallback and A/B semantics unchanged.",
+      "Worst-case stored bound must not grow; 0 mismatch with independent zlib + self strict decoder."
+    ]
+  },
+  "gates": {
+    "g1": {
+      "p2": "13/13 PASS, 0 mismatch, 0 X, vlog 0/0",
+      "p3": "20/20 PASS, 0 mismatch, 0 X, vlog 0/0",
+      "decode": "independent zlib 1.2.13 + self strict decoder; negative cases correct",
+      "p2_comp_cycles_max": 370370,
+      "p2_comp_min_MBps": 77.76,
+      "1080p_cycles_max": 6250000,
+      "target_97_2_cycles_max": 5000000,
+      "sha_cycles": "diagnostic only; report deltas"
+    },
+    "g2_synth": {
+      "top": "a1_eng_top",
+      "device": "PH1P100SBG484 -3",
+      "clock_MHz": 187.5,
+      "period_ns": 5.333,
+      "wns_ns_min": 0.0,
+      "wns_target_ns": 0.3,
+      "tns_ns_min": 0.0,
+      "slice_max": 71680,
+      "eram": "consistent with htab/bm/cmem/smem instances"
+    },
+    "g2_routed": {
+      "status": "Routed",
+      "wns_ns_min": 0.0,
+      "tns_ns_min": 0.0,
+      "hwns_ns_min": 0.0,
+      "htns_ns_min": 0.0,
+      "violating_endpoints": 0,
+      "resources": "within PH1P100SBG484",
+      "cdc_report": "report_cdc actually executed after route in a separate command; not via bitgen flow end",
+      "check_timing": "actually executed",
+      "bitgen": "not_run; no .bit/download"
+    }
+  },
+  "td_budget": {
+    "sessions_max": 2,
+    "session_minutes_max": 75,
+    "total_minutes_max": 75,
+    "synth_attempts_max": 2,
+    "route_attempts_max": 1,
+    "route_minutes_max": 60,
+    "dev_minutes_max": 75,
+    "dev_tool_calls_max": 40,
+    "tester_minutes_max": 45,
+    "tester_tool_calls_max": 30,
+    "why": "Single arithmetic path micro-fix; 2 synth attempts cover equivalent implementations; one route. 2/75 per user.",
+    "no_qor_strategy_change": true,
+    "no_clock_change": true
+  },
+  "stop_conditions": [
+    "P2/P3 any mismatch, X, illegal BTYPE, or vlog warning -> stop before TD.",
+    "P2 comp cycles >370,370 or <77.76 MB/s -> stop; do not enter TD.",
+    "1080p any mode >6,250,000 cycles -> stop; do not enter TD.",
+    "Synth WNS <0 or TNS<0 -> do not route; target +0.3.",
+    "Synth slice >71,680 or ERAM not consistent -> do not route; report evidence.",
+    "Route not Routed, routed WNS/TNS<0, any violating endpoint, resource overflow -> stop; single route used.",
+    "report_cdc or check_timing not actually executed -> G2 cannot PASS; record evidence gap.",
+    "2 sessions/75 min or 2 synth attempts exhausted -> stop; no third synth.",
+    "Any needed change outside the 32-bit literal threshold path -> stop and return to planner.",
+    "Any request for larger device, QoR strategy, clock change, false path/multicycle, seed sweep, bitgen/download -> stop and return to planner."
+  ],
+  "after_development": {
+    "sequence": [
+      "dev ready_for_test + frozen r1 manifest -> spawn_single_tester (one new integrated tester)",
+      "tester integrated verdict -> return_to_planner",
+      "dev blocked at P2/P3, throughput, synth, route, or CDC -> return_to_planner, no tester",
+      "r1 fail -> blocked; no automatic next round"
+    ],
+    "rules": [
+      "New development and new independent tester session; do not reuse prior sessions.",
+      "Tester writes test-reports/T10.a1-htab-eram-r1-integrated.md with one unique verdict heading.",
+      "All G1/G2/resource/CDC evidence binds to the r1 manifest.",
+      "Tester independently re-runs P2/P3, decodes with zlib+self strict, recomputes P2 comp/1080p cycles, parses raw TD reports/hashes, verifies slice/ERAM/route/CDC/check_timing.",
+      "G2 PASS requires Routed WNS/TNS>=0, 0 violations, slice<=71,680, and report_cdc actually executed; synthesis-only cannot PASS."
+    ]
+  },
+  "scope_limits": {
+    "main_goal": "Final micro-fix of the 32-bit literal threshold compare; route at 187.5 with functional equivalence and throughput.",
+    "in_scope": [
+      "32-bit cand_bits+litlen/thresh_lit narrow/parallel compare or one-cycle litlen precompute",
+      "P2/P3 functional equivalence and throughput",
+      "two synth checkpoints + one route",
+      "separate report_cdc/check_timing after route",
+      "r1 manifest/result/rollback",
+      "one independent integrated tester"
+    ],
+    "out_of_scope": [
+      "any other core logic or frame/SDC changes",
+      "A route or clock change",
+      "larger device or QoR strategy",
+      "C-full new compression/microarchitecture",
+      "production integration, bit/CWC, download/Flash, bitgen",
+      "new run or P4 repair-count change"
+    ],
+    "deferred_themes": [
+      {
+        "theme": "larger device / QoR strategy",
+        "status": "requires_separate_planner_authorization",
+        "conditions": ["this micro-fix fails", "explicit finite experiment", "same candidate binding"]
+      },
+      {
+        "theme": "A route / clock change",
+        "status": "not_selected",
+        "conditions": ["only if this micro-fix fails", "explicit user consent"]
+      },
+      {
+        "theme": "board/real-data dependency package",
+        "status": "blocked_awaiting_hardware_awaiting_user",
+        "conditions": ["routed A+ bit", "non-PCIe export transport", "board window and user"]
+      }
+    ]
+  },
+  "question_path": null,
+  "user_summary_path": "workflow/runs/20261020-0209_singleA_aplus_closedloop/user-summary.md"
+}

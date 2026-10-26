@@ -1,0 +1,167 @@
+{
+  "run_id": "20261025-180900_fpga-dual-offline-closure",
+  "project_root": "D:/fpga/ph1p100",
+  "output_dir": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure",
+  "task_ids": [
+    "T08.dual-local-closure",
+    "T10.dual-aplus-scheduler"
+  ],
+  "batch_size": 1,
+  "status": "ready",
+  "needs_user_input": false,
+  "stage": "awaiting actual original-role returns; no repeated dispatch",
+  "next_action": [],
+  "no_dispatch": true,
+  "input_paths": [
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\user-feedback-continue02.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\continuation02-policy.md"
+  ],
+  "write_scope": [],
+  "question_path": null,
+  "user_summary_path": null,
+  "receive_events": {
+    "mode": "original role completion/return events only",
+    "native_wait": "wait_agent",
+    "single_wait_max_ms": 60000,
+    "aborted_wait_is_not_role_failure": true,
+    "no_directory_or_status_polling": true,
+    "no_progress_inquiries": true,
+    "no_cancellation_or_replacement": true
+  },
+  "awaiting_callbacks": [
+    {
+      "task_id": "T08.dual-local-closure",
+      "original_developer": "/root/fpga_dev_dual_local_180900",
+      "original_tester": "/root/fpga_tester_dual_local_180900",
+      "prior_dispatch": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\dispatch-T08-repair-r1.json",
+      "developer_absolute_deadline": "2026-10-25T21:02:49.045073+08:00",
+      "preserve_round0": {
+        "verdict": "FAIL",
+        "report_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T08.dual-local-closure-r0-integrated.md",
+        "report_sha256": "2bddce8c19cd71727609eaee04bfedc141d280f0b87b55fccc837d183aa86fa6",
+        "manifest_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T08.dual-local-closure\\manifest-r0.json",
+        "manifest_sha256": "264b067bc4f363cb835616ce7f15fa4db996f0a0621ab3c7a6725ab7ff72058e",
+        "developer_compiles": 4,
+        "developer_case_processes": 19,
+        "developer_historical_tool_calls": "not fully recorded in artifact; original developer must recover actual value, never0 by assumption",
+        "tester_conservative_tool_calls": 44,
+        "tester_tool_call_limit": 45,
+        "tester_compiles": 2,
+        "tester_case_processes": 20,
+        "tester_deadline_asia_shanghai": "2026-10-25T19:57:00+08:00",
+        "actual_completed_repairs": 0,
+        "supplement_opportunities_added": 0
+      },
+      "on_valid_ready_for_test": {
+        "when": "ready_for_test, new r1 manifest, stopped_modifying=true and active_commands=0",
+        "operation": "followup_task",
+        "role": "fpga-tester",
+        "target": "/root/fpga_tester_dual_local_180900",
+        "prompt_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T08-repair-r1-plan.md",
+        "inputs_from_developer_return": [
+          "manifest_path",
+          "test_input_paths",
+          "artifact_paths",
+          "lessons_path",
+          "retest",
+          "actual current/cumulative counts"
+        ],
+        "write_scope": [
+          "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T08.dual-local-closure\\r1/**",
+          "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T08.dual-local-closure-r1-integrated.md"
+        ],
+        "never_spawn_new_tester": true
+      },
+      "on_blocked": {
+        "operation": "return_to_planner",
+        "target": "/root/fpga_plan_dual_offline",
+        "payload": "Actual report/verdict/three dimensions/manifest/retest/blocked and old+new counts; no autonomous extra case or next repair."
+      },
+      "repeat_developer_dispatch": false
+    },
+    {
+      "task_id": "T10.dual-aplus-scheduler",
+      "original_developer": "/root/fpga_dev_dual_scheduler_180900",
+      "prior_dispatch": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\dispatch-T10-resume01.json",
+      "developer_absolute_deadline": "2026-10-25T19:55:19.126669+08:00",
+      "preserved_limits": {
+        "read_search_timeout_seconds": 60,
+        "compile_static_small_case_timeout_seconds": 300,
+        "full_size_t10_case_timeout_seconds": 600,
+        "max_search_rounds_per_problem": 3,
+        "same_failed_command_total_attempts": 2,
+        "retry_requires_new_evidence": true,
+        "no_progress_cycles_before_stop": 2,
+        "development_calls": 60,
+        "development_minutes": 90,
+        "development_compiles": 4,
+        "tester_calls": 45,
+        "tester_minutes": 60,
+        "tester_compiles": 2,
+        "max_case_processes_per_role_per_dispatch": 20,
+        "max_actual_repair_rounds": 3,
+        "td": 0,
+        "hardware": 0,
+        "download": 0,
+        "flash": 0,
+        "reason": "Real production top/I2C readback and real codec full-size two-frame runs require bounded additional offline preparation; limits frozen before dispatch.",
+        "specific_exception": {
+          "task_id": "T10.dual-aplus-scheduler",
+          "role": "original developer only",
+          "case": "faults",
+          "previous_total_limit": 2,
+          "new_total_limit": 3,
+          "additional_attempts": 1,
+          "authorization_quote": "允许额外复跑 1 次",
+          "authorization_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\user-feedback-T10-retry01.md",
+          "other_limits_unchanged": true
+        },
+        "original_development_absolute_deadline_asia_shanghai": "2026-10-25T19:55:19.126669+08:00",
+        "original_development_absolute_deadline_utc": "2026-10-25T11:55:19.126669Z"
+      },
+      "last_returned_counts_only": {
+        "tool_calls": 37,
+        "tool_call_limit": 60,
+        "compile": 3,
+        "compile_limit": 4,
+        "case_processes": 9,
+        "case_limit": 20,
+        "faults_attempts": 2,
+        "faults_attempt_limit": 3,
+        "integrated_round0_started": false,
+        "actual_post_acceptance_repairs": 0
+      },
+      "on_valid_ready_for_test": {
+        "task_id": "T10.dual-aplus-scheduler",
+        "when": "ready_for_test AND actual manifest provided AND stopped_modifying=true AND active_commands=0",
+        "operation": "spawn_single_tester",
+        "role": "fpga-tester",
+        "skill_path": "D:\\fpga\\ph1p100\\.agents\\skills\\fpga-tester\\SKILL.md",
+        "task_name": "fpga_tester_dual_scheduler_180900",
+        "fork_turns": "none",
+        "prompt_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\inputs\\T10.dual-aplus-scheduler-tester.md",
+        "inputs_from_developer_return": [
+          "manifest_path",
+          "test_input_paths",
+          "artifact_paths",
+          "lessons_path"
+        ],
+        "write_scope": [
+          "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler/**",
+          "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler-r<round>-integrated.md"
+        ],
+        "one_new_tester_only": true
+      },
+      "on_blocked": {
+        "operation": "return_to_planner",
+        "target": "/root/fpga_plan_dual_offline",
+        "payload": "Exact developer result, actual counters, manifest/evidence paths and stable problem metadata; do not retry automatically."
+      },
+      "repeat_developer_dispatch": false,
+      "faults_fourth_attempt_authorized": false
+    }
+  ],
+  "no_new_technical_result": true,
+  "new_budget_or_scope_authorization": false,
+  "policy_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\continuation02-policy.md"
+}

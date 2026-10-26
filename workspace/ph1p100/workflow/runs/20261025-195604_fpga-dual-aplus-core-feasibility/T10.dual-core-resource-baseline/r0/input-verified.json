@@ -1,0 +1,380 @@
+{
+  "task_id": "T10.dual-core-resource-baseline",
+  "run_id": "20261025-195604_fpga-dual-aplus-core-feasibility",
+  "round": "r0",
+  "generated_at_utc": "2026-10-25T13:14:56+00:00",
+  "generator": "gen_baseline.py (read-only over inputs)",
+  "tool_versions": {
+    "python": "3.11.5",
+    "td_report_header": "Tang Dynasty Release_2026.2",
+    "td_version_line": "TD V6.2.3.210850",
+    "device": "PH1P100SBG484",
+    "speed": "3",
+    "sta_confidence": "Routed"
+  },
+  "report_read_time_utc": "2026-10-25T13:14:56+00:00",
+  "hard_assertions": [
+    {
+      "id": "b6_core_sha256",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\changed-src\\a1_deflate_core.v",
+      "expected_sha256": "6797db053cfc47497540d6345e3a46b7e79cc1d34fa25da5a4c501505fbf35bb",
+      "actual_sha256": "6797db053cfc47497540d6345e3a46b7e79cc1d34fa25da5a4c501505fbf35bb",
+      "expected_bytes": 80196,
+      "actual_bytes": 80196,
+      "match": true
+    },
+    {
+      "id": "b6_manifest_sha256",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\CANDIDATE-MANIFEST-b6-a1-htab-nw-r0.json",
+      "expected_sha256": "2e9fd356824084813e3415af11757c1b56f774c9b6dd45f3b2a111647ad08880",
+      "actual_sha256": "2e9fd356824084813e3415af11757c1b56f774c9b6dd45f3b2a111647ad08880",
+      "expected_bytes": 24443,
+      "actual_bytes": 24443,
+      "match": true
+    },
+    {
+      "id": "b6_manifest_node_matches_core",
+      "expected_sha256": "6797db053cfc47497540d6345e3a46b7e79cc1d34fa25da5a4c501505fbf35bb",
+      "actual_sha256": "6797db053cfc47497540d6345e3a46b7e79cc1d34fa25da5a4c501505fbf35bb",
+      "expected_bytes": 80196,
+      "actual_bytes": 80196,
+      "match": true
+    },
+    {
+      "id": "b6_report_carries_manifest_sha",
+      "expected_sha256": "2e9fd356824084813e3415af11757c1b56f774c9b6dd45f3b2a111647ad08880",
+      "match": true
+    },
+    {
+      "id": "b6_report_carries_core_sha_short_form",
+      "expected_sha256": "6797db053cfc47497540d6345e3a46b7e79cc1d34fa25da5a4c501505fbf35bb",
+      "match": true,
+      "detail": "report prints the frozen core hash in abbreviated 6797db05...35bb form"
+    },
+    {
+      "id": "b6_area_qor_consistent",
+      "match": true,
+      "detail": {
+        "slices": 22608,
+        "rams": 102,
+        "qor_wns_ps": 119,
+        "timing_wns_ns": 0.119
+      }
+    },
+    {
+      "id": "b6_timing_endpoints_consistent",
+      "match": true,
+      "detail": {
+        "viol": 0,
+        "total": 19779,
+        "hold_viol": 0,
+        "hold_total": 19779
+      }
+    },
+    {
+      "id": "b10_area_qor_consistent",
+      "match": true,
+      "detail": {
+        "slices": 24368,
+        "rams": 102,
+        "qor_wns_ps": 103,
+        "timing_wns_ns": 0.103
+      }
+    },
+    {
+      "id": "b10_timing_endpoints_consistent",
+      "match": true,
+      "detail": {
+        "viol": 0,
+        "total": 24665,
+        "hold_viol": 0,
+        "hold_total": 24665
+      }
+    },
+    {
+      "id": "b11_area_qor_consistent",
+      "match": true,
+      "detail": {
+        "slices": 24844,
+        "rams": 102,
+        "qor_wns_ps": 15,
+        "timing_wns_ns": 0.015
+      }
+    },
+    {
+      "id": "b11_timing_endpoints_consistent",
+      "match": true,
+      "detail": {
+        "viol": 0,
+        "total": 25627,
+        "hold_viol": 0,
+        "hold_total": 25627
+      }
+    }
+  ],
+  "mismatch_count": 0,
+  "inputs": [
+    {
+      "id": "b6_core",
+      "role": "single A+ core RTL (frozen b6)",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\changed-src\\a1_deflate_core.v",
+      "exists": true,
+      "bytes": 80196,
+      "sha256": "6797db053cfc47497540d6345e3a46b7e79cc1d34fa25da5a4c501505fbf35bb",
+      "read_only": true
+    },
+    {
+      "id": "b6_manifest",
+      "role": "b6 candidate manifest (frozen)",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\CANDIDATE-MANIFEST-b6-a1-htab-nw-r0.json",
+      "exists": true,
+      "bytes": 24443,
+      "sha256": "2e9fd356824084813e3415af11757c1b56f774c9b6dd45f3b2a111647ad08880",
+      "read_only": true
+    },
+    {
+      "id": "b6_routed_area",
+      "role": "b6 routed area report",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\routed_area.rpt",
+      "exists": true,
+      "bytes": 76288,
+      "sha256": "27edfb90a36a7d9d8ba3440e6f16f3203375466a731d466ac9bbcf7688ef0f34",
+      "read_only": true
+    },
+    {
+      "id": "b6_routed_qor",
+      "role": "b6 routed QoR report",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\routed_qor.rpt",
+      "exists": true,
+      "bytes": 1313,
+      "sha256": "22423cbb09ad44f3af3846147fdb977317301e418a1afa35f2ae28239783f8f2",
+      "read_only": true
+    },
+    {
+      "id": "b6_routed_timing",
+      "role": "b6 routed timing report",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\routed_timing.rpt",
+      "exists": true,
+      "bytes": 5747710,
+      "sha256": "d933d185418ca2120e51ed5f2b932e6966ffa4f9025f1fa3548906d4d19b2e50",
+      "read_only": true
+    },
+    {
+      "id": "b6_syn_area",
+      "role": "b6 synthesized area report (checkpoint only)",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\syn_gate_area.rpt",
+      "exists": true,
+      "bytes": 39656,
+      "sha256": "6182f5fced6c76832a5203a4b67b1ecf1603f17f8e0656446104a78616401c83",
+      "read_only": true
+    },
+    {
+      "id": "b6_build_console",
+      "role": "b6 TD build console",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\build_console_r0.log",
+      "exists": true,
+      "bytes": 58074,
+      "sha256": "9bceea7c4e176af0d1ad76351cc526c4584c7ffccdb71b18e613f6b003d41de9",
+      "read_only": true
+    },
+    {
+      "id": "b6_report",
+      "role": "b6 independent integrated test report",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\test-reports\\T10.b6-a1-htab-nw-r0-integrated.md",
+      "exists": true,
+      "bytes": 20624,
+      "sha256": "53f7fa65d0e073c911ca4b7475d6456f157fb5abf1c94cc5589c22d1f758a21f",
+      "read_only": true
+    },
+    {
+      "id": "b10_routed_area",
+      "role": "b10 r1 routed area report",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b10-b9-fix\\r0\\td\\routed_area.rpt",
+      "exists": true,
+      "bytes": 77621,
+      "sha256": "d58e834b0185c30f1975a0317e3b41978575b8f2e13d08c56ad03e91ef570ebd",
+      "read_only": true
+    },
+    {
+      "id": "b10_routed_qor",
+      "role": "b10 r1 routed QoR report",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b10-b9-fix\\r0\\td\\routed_qor.rpt",
+      "exists": true,
+      "bytes": 1313,
+      "sha256": "0325223890b6f15745cd5f50ff5bf7aac5c822cf70363898fb1f632e987c4708",
+      "read_only": true
+    },
+    {
+      "id": "b10_routed_timing",
+      "role": "b10 r1 routed timing report",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b10-b9-fix\\r0\\td\\routed_timing.rpt",
+      "exists": true,
+      "bytes": 5652070,
+      "sha256": "ca4b184eeeb956bf2329a1e53cdbf81ca35200efdf9211a65417168eba8e84f7",
+      "read_only": true
+    },
+    {
+      "id": "b10_syn_area",
+      "role": "b10 r1 synthesized area report (checkpoint only)",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b10-b9-fix\\r0\\td\\syn_gate_area.rpt",
+      "exists": true,
+      "bytes": 41259,
+      "sha256": "cbd412f026837ea050c4eca90b175a20b52b4012de3532338459d991e70de9f9",
+      "read_only": true
+    },
+    {
+      "id": "b10_build_console",
+      "role": "b10 r1 TD build console",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b10-b9-fix\\r0\\td\\build_console_b10_r1.log",
+      "exists": true,
+      "bytes": 58858,
+      "sha256": "9d34c14a6dba9fdb66d87b38a5cf19f0af3448f3f37db178a7c6814939bb2904",
+      "read_only": true
+    },
+    {
+      "id": "b10_result",
+      "role": "b10 r1 development result",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b10-b9-fix\\result-r1.md",
+      "exists": true,
+      "bytes": 14270,
+      "sha256": "675da40c225c508674a4ca41fcbb12c75206fcdeaa13ed0fbd1987ca8072e614",
+      "read_only": true
+    },
+    {
+      "id": "b10_manifest",
+      "role": "b10 r1 candidate manifest",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b10-b9-fix\\CANDIDATE-MANIFEST-b10-b9-fix-r1.json",
+      "exists": true,
+      "bytes": 12205,
+      "sha256": "df94f2dff56245a630ba21889f80d46511018423a5ba2bbcbede7f4aef68a140",
+      "read_only": true
+    },
+    {
+      "id": "b11_routed_area",
+      "role": "b11 r0 routed area report (parallel, cross-check)",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b11-aplus-read\\r0\\td\\routed_area.rpt",
+      "exists": true,
+      "bytes": 78111,
+      "sha256": "47c097725e47c9c6ca93151e39a1921bc52c84cd18f47ab285c36649e414b99b",
+      "read_only": true
+    },
+    {
+      "id": "b11_routed_qor",
+      "role": "b11 r0 routed QoR report (parallel, cross-check)",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b11-aplus-read\\r0\\td\\routed_qor.rpt",
+      "exists": true,
+      "bytes": 1313,
+      "sha256": "365a7b3628785c31f2937a3d4acd4f1276ac0583fcb787cb40a1b0efbfa2ed54",
+      "read_only": true
+    },
+    {
+      "id": "b11_routed_timing",
+      "role": "b11 r0 routed timing report (parallel, cross-check)",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b11-aplus-read\\r0\\td\\routed_timing.rpt",
+      "exists": true,
+      "bytes": 5904421,
+      "sha256": "168155eb5ac2954a1547ccac4d870519b5b587278e0644be3b2242af069a5ad9",
+      "read_only": true
+    },
+    {
+      "id": "b11_syn_area",
+      "role": "b11 r0 synthesized area report (checkpoint only)",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b11-aplus-read\\r0\\td\\syn_gate_area.rpt",
+      "exists": true,
+      "bytes": 41488,
+      "sha256": "17763099582e4d93a0d7c77c3c4c7526b1ca30e282086f9e87f33fd56e576f86",
+      "read_only": true
+    },
+    {
+      "id": "b11_build_console",
+      "role": "b11 r0 TD build console",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b11-aplus-read\\r0\\td\\build_console_b11.log",
+      "exists": true,
+      "bytes": 58966,
+      "sha256": "ae811ce4dbd00ef557b4b8c87c555fc53c8af4aad1bf338480204d2e9e4ffba0",
+      "read_only": true
+    },
+    {
+      "id": "b11_result",
+      "role": "b11 r0 development result (diagnosis_only)",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b11-aplus-read\\r0\\result-r0.md",
+      "exists": true,
+      "bytes": 5781,
+      "sha256": "4aea08711870d1d042c3c8223e86a39fddb41b487df35197509155f3e27ce3ce",
+      "read_only": true
+    },
+    {
+      "id": "p1_request",
+      "role": "this run's user request",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\request.md",
+      "exists": true,
+      "bytes": 3773,
+      "sha256": "ccae12f4a7c391164e3f7434dd8ab6bb1b5da874db7b277811478bb2c64a8bc7",
+      "read_only": true
+    },
+    {
+      "id": "p1_input_index",
+      "role": "this run's planner input index",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\input-index.md",
+      "exists": true,
+      "bytes": 16377,
+      "sha256": "d257d2dbb27b5897fb0310fbbbfdd9044f775ee1f9ab3e0c6ca4795fe6bd42e0",
+      "read_only": true
+    },
+    {
+      "id": "p1_design_guide",
+      "role": "this run's frozen FPGA design guide",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\fpga-design-guide.md",
+      "exists": true,
+      "bytes": 28629,
+      "sha256": "077e8c4947c29667fc84cb58b04e9372546c0b92d4d6d7a0723537ad7797b4dd",
+      "read_only": true
+    },
+    {
+      "id": "p1_dev_plan",
+      "role": "this run's development/acceptance plan",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\dev-plan.md",
+      "exists": true,
+      "bytes": 24181,
+      "sha256": "91c3ec2e7c27b694e6c96f1cf67ad34bca7a55075e6a92c254a6e2454df52e54",
+      "read_only": true
+    },
+    {
+      "id": "p1_dispatch",
+      "role": "this task's dispatch record",
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-195604_fpga-dual-aplus-core-feasibility\\dispatch.json",
+      "exists": true,
+      "bytes": 13451,
+      "sha256": "67d15eec1c7dafa6433dd528a243ef37e819c4f0ad5755d9ff1e613287504fe7",
+      "read_only": true
+    },
+    {
+      "id": "device_doc",
+      "role": "dual-camera link plan (device totals 300/129024/143360/220/12)",
+      "path": "D:\\fpga\\ph1p100\\docs\\双目首版_整链路方案与团队交付.md",
+      "exists": true,
+      "bytes": 26083,
+      "sha256": "c4b2b89d1752f7b7346eba1c6c53b58aafe12689e8e13ce33ceb6fb05b7a762d",
+      "read_only": true
+    }
+  ],
+  "constants": {
+    "device_totals": {
+      "ERAM20K": 300,
+      "LUT4": 129024,
+      "DFF": 143360,
+      "DSP": 220,
+      "PLL": 12,
+      "SLICE": 71680,
+      "LUT6_SITES": 71680
+    },
+    "logic_quota_210": 210,
+    "margin_target_270": 270,
+    "clock_mhz": 187.5
+  },
+  "notes": [
+    "All three routed reports have Report Model p2_a1_board_top (same top).",
+    "ERAM_total = #eram + #DRAMHARDCON: 102 + 85 = 187 per QoR and b10 result-r1.",
+    "Synth ERAM 72 excludes 2x15 CWC debug RAMs inserted at routed; synth is checkpoint only."
+  ]
+}

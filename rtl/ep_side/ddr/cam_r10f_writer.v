@@ -83,6 +83,7 @@ module cam_r10f_writer #(
     parameter [1:0]   SRC_BAYER_PHASE  = 2'd0,     // 有效源相位（占位；板证前不得称已验证）
     parameter [31:0]  MODE_ID          = 32'd1,
     // ---- 帧内停滞兜底超时（丢标记/帧中止时的收口；仿真可调小）----
+    parameter integer CLOSEDLOOP_EN = 0, // debug-only DHI ownership; default preserves legacy
     parameter [20:0]  TMO_LIMIT        = 21'h1F_FFFF
 )(
     // ---------------- MIPI CSI-2 字节时钟域（187.5MHz）----------------
@@ -121,6 +122,13 @@ module cam_r10f_writer #(
     input  wire          ddr_cal_done,
     input  wire          arm,              // 1 = 本模块拥有 DDR 写口（顶层 sel_eff）
     output wire          axi_busy,
+
+    // All closedloop ports are clk_ddr-domain; no multi-bit control CDC.
+    input wire [1:0] cl_release,
+    output reg cl_pub_valid,
+    output reg [31:0] cl_pub_seq, cl_pub_base, cl_pub_session,
+    output wire [31:0] cl_pub_len,
+    output reg [31:0] cl_good_count, cl_bad_count,
 
     // ---------------- AXI4 写通道 ----------------
     output reg  [28:0]   m_axi_awaddr,
@@ -389,9 +397,11 @@ module cam_r10f_writer #(
     reg  [31:0] sess_s1, sess_s2;
     reg  [31:0] frame_idx;
 
-    wire rel0_evt = rel0_s2 ^ rel0_s3;
-    wire rel1_evt = rel1_s2 ^ rel1_s3;
-    wire blk_locked = prot_en_s2 & (frame_idx[0] ? protect1 : protect0);
+    wire rel0_evt = CLOSEDLOOP_EN ? cl_release[0] : (rel0_s2 ^ rel0_s3);
+    wire rel1_evt = CLOSEDLOOP_EN ? cl_release[1] : (rel1_s2 ^ rel1_s3);
+    wire protect_enabled = CLOSEDLOOP_EN || prot_en_s2;
+    wire blk_locked = protect_enabled & (frame_idx[0] ? protect1 : protect0);
+    assign cl_pub_len = DMA_BYTES32;
     wire skip_frm_done = st_skip_done;
 
     // ---- 发布握手/裁决（块 B）----
@@ -830,8 +840,12 @@ module cam_r10f_writer #(
             err_cnt       <= 16'd0;
             protect0      <= 1'b0;
             protect1      <= 1'b0;
+            cl_pub_valid <= 1'b0;
+            cl_pub_seq <= 0; cl_pub_base <= 0; cl_pub_session <= 0;
+            cl_good_count <= 0; cl_bad_count <= 0;
         end else begin
             frame_close <= 1'b0;
+            cl_pub_valid <= 1'b0;
 
             if (rel0_evt) protect0 <= 1'b0;
             if (rel1_evt) protect1 <= 1'b0;
@@ -850,6 +864,7 @@ module cam_r10f_writer #(
                             pub_tgl  <= ~pub_tgl;
                             err_cnt  <= err_cnt + 16'd1;
                             c_bad    <= c_bad + 16'd1;
+                            cl_bad_count <= cl_bad_count + 1'b1;
                         end else begin
                             c_notack <= (c_notack == 16'hFFFF) ? c_notack : (c_notack + 16'd1);
                         end
@@ -886,8 +901,19 @@ module cam_r10f_writer #(
                             pub_err  <= err_cnt + ((~verdict_bad) ? 16'd0 : 16'd1);
                             pub_tgl  <= ~pub_tgl;
                             err_cnt  <= err_cnt + ((~verdict_bad) ? 16'd0 : 16'd1);
-                            if (verdict_bad) c_bad <= c_bad + 16'd1;
-                            if (prot_en_s2 && ~verdict_bad) begin
+                            if (verdict_bad) begin
+                                c_bad <= c_bad + 16'd1;
+                                cl_bad_count <= cl_bad_count + 1'b1;
+                            end else begin
+                                cl_good_count <= cl_good_count + 1'b1;
+                                if (CLOSEDLOOP_EN) begin
+                                    cl_pub_valid <= 1'b1;
+                                    cl_pub_seq <= f_seq;
+                                    cl_pub_base <= base_r;
+                                    cl_pub_session <= f_sess;
+                                end
+                            end
+                            if (protect_enabled && ~verdict_bad) begin
                                 if (pub_par) protect1 <= 1'b1;
                                 else         protect0 <= 1'b1;
                             end

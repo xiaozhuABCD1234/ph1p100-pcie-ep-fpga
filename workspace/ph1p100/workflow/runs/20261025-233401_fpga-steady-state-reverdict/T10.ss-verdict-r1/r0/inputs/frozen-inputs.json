@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "task_id": "T10.ss-verdict-r1",
+  "run_id": "20261025-233401_fpga-steady-state-reverdict",
+  "round": "r0",
+  "role": "fpga-dev (offline model; no TD/RTL/board/RK)",
+  "generated_by": "hand-frozen before model implementation; every number re-derived by model/calc.py and asserted by model/test_calc.py + model/check_outputs.py",
+  "units": {
+    "MB": "10^6 bytes (decimal; 2,592,000 B x 30 fps = 77.76 MB/s)",
+    "MHz": "10^6 Hz",
+    "cycles": "clk_a1 cycles at clock_hz",
+    "margin_0_pct": "100*(capacity/demand - 1)  -- nominal headroom",
+    "margin_25_pct": "100*(capacity/(1.25*demand) - 1) -- headroom against the 1.25x design gate"
+  },
+  "clock_hz": 187500000,
+  "clock_mhz": 187.5,
+  "frame": {
+    "W": 1920,
+    "H": 1080,
+    "pixels": 2073600,
+    "bytes_per_px": 1.25,
+    "raw_bytes": 2592000,
+    "raw_slot_words": 129600,
+    "raw_slot_bytes": 4147200,
+    "raw_slot_expansion": 1.6,
+    "content_header_bytes": 128,
+    "content_bytes": 2592128,
+    "dma_align_bytes": 4096,
+    "dma_bytes": 2592768,
+    "a1u1_header_bytes": 44,
+    "cmp_payload_bytes": 2594706,
+    "cmp_total_bytes": 2594750,
+    "cmp_slot_bytes": 8388608,
+    "fps_target": 30.0,
+    "frame_period_s": 0.03333333333333333
+  },
+  "gates": {
+    "G0": {
+      "id": "G0",
+      "name": "nominal_per_stream_30fps",
+      "demand_1080p30_MBps": 77.76,
+      "rule": "per_stream_capacity >= demand (0% margin; arithmetic control only for the design gate)",
+      "pass_label": "meets_nominal",
+      "fail_label": "misses_nominal"
+    },
+    "G25": {
+      "id": "G25",
+      "name": "design_margin_25",
+      "demand_1080p30_MBps": 97.2,
+      "rule": "per_stream_capacity >= 1.25 * demand (project design gate; never relaxed)",
+      "pass_label": "meets_25",
+      "fail_label": "below_25"
+    },
+    "design_margin": 0.25
+  },
+  "p1_binding": {
+    "task_id": "T10.ss-steady-anchor",
+    "manifest_sha256": "39f3e3d6d115afbdcda9753b254f6971a10eb75df88d5718eb9ea5a247199f9a",
+    "steady_state_json_sha256": "a0945e1f60d9e7651d3db2d1a4d939b665d4fe451e9206537fb3b7d0c5430023",
+    "ss4_stats_sha256": "29bd31851804714bf65df6d5f4aa29f9daddccebe4d858e08dbfed2e937981a5",
+    "run4_log_sha256": "dc215e0b46e4d87271cd6f1ff736eea5bfc2bb3b301431d1c663dcab925e6cda",
+    "tb_ss_anchor_sha256": "ddd9e02ca71aa3b81e86f4cc0f151498fd48bf9a4dbbcc042b59c97d9f15d1ff",
+    "L_cold_cycles": 6766434,
+    "S_2_cycles": 4677535,
+    "S_23_cycles": 4677535,
+    "S_34_cycles": 4677535,
+    "S_ss_cycles": 4677535,
+    "S_band_cycles": [4677535, 4677535],
+    "S_ss_spread_pct": 0.0,
+    "capacity_MBps": 103.90087941618823,
+    "fps": 40.085215824146694,
+    "margin_0_pct": 33.61738608048896,
+    "margin_25_pct": 6.893908864391185,
+    "f_req_0_MHz": 140.32605,
+    "f_req_25_MHz": 175.4075625,
+    "startup_cycles": 2088899,
+    "startup_pct": 44.65811586658357,
+    "export_tail_cycles": 480930,
+    "export_tail_constant": true,
+    "export_cost_ideal_cycles": 400320,
+    "sink_limited": false,
+    "c_excl_export_MBps": 103.90087941618823,
+    "capacity_is_lower_bound": false,
+    "counters": {
+      "cap": 4, "enc": 4, "exported": 4, "read": 518400, "exp_bytes": 160136,
+      "cap_bytes": 160312, "raw_drop": 0, "cmp_drop": 0, "dup": 0, "geom": 0, "err": 0, "wd": 0
+    },
+    "validity_all_true": true,
+    "s_avg2_event_cycles": 5721984.5,
+    "s_avg2_stats_cycles": 5722994.0
+  },
+  "anchors_1080p": {
+    "A1": {
+      "id": "A1",
+      "name": "grad_chain_ss",
+      "cycles_per_frame": 4677535,
+      "band_cycles": [4677535, 4677535],
+      "label": "measured",
+      "is_throughput_anchor": true,
+      "source": "T10.ss-steady-anchor/r0/out/steady-state.json (a0945e1f...); S_ss=(S_23+S_34)/2, band 0.00%",
+      "content": "single smooth pattern smp(x,y)=(x*3+y*5+((x^y)&7)*17)&1023",
+      "geometry": "b11 1920x1080 ROI of CAM 3864x2192; LINE_GAP=16; FRAME_GAP=400",
+      "sink": "sim-only UART_DIV=1, clk_uart=clk_a1=187.5 MHz -> 18.75 MB/s",
+      "ddr": "behavioral 256-bit PAXI (AR_GAP=2, R_GAP=3), single beat, no contention model",
+      "scope": "per-stream only; single content class; NOT extrapolable to natural images/low light/noise or dual-stream 1080p30",
+      "notes": "primary measured anchor; export_tail=480,930 constant, sink_limited=false, C_excl_export=C_ss; startup_pct=44.66% proves L_cold is not throughput"
+    },
+    "A2": {
+      "id": "A2",
+      "name": "comp_core_scaled_plus_overhead",
+      "core_cycles_per_frame": 5995029.375,
+      "overhead_cycles": 426385,
+      "cycles_per_frame": 6421414.375,
+      "label": "assumed",
+      "is_throughput_anchor": true,
+      "source": "comp strip 355,261 cycles / 153,600 B = 2.3128971354166667 cycles/B x 2,592,000 B + 426,385",
+      "notes": "conservative content bound by area scaling from a 1920x64 strip; NO full-frame comp measurement exists. A2 == A4 + 0.375 by construction: overhead := 6,421,414 - 5,995,029.375, so A2 is NOT independent evidence for 6.42M"
+    },
+    "A3": {
+      "id": "A3",
+      "name": "rand_core_scaled_plus_overhead",
+      "core_cycles_per_frame": 2724961.5,
+      "overhead_cycles": 426385,
+      "cycles_per_frame": 3151346.5,
+      "label": "assumed",
+      "is_throughput_anchor": true,
+      "source": "rand strip 161,479 cycles / 153,600 B = 1.051296875 cycles/B x 2,592,000 B + 426,385",
+      "notes": "optimistic content bound; fastest measured vector, never the worst case; same affine overhead assumption as A2"
+    },
+    "A4": {
+      "id": "A4",
+      "name": "b6_cold_single_frame_latency",
+      "cycles_per_frame": 6421414,
+      "label": "measured_but_not_throughput",
+      "is_throughput_anchor": false,
+      "source": "b6 full_grad.stats cap=1 cycles=6,421,414 (217058d8...)",
+      "notes": "single-frame cold latency under a DIFFERENT geometry (CAM 3840x2160, ROI 960/540, LINE_GAP=40) and 1 GHz UART; latency, not a frame interval; must never be used in a capacity or gate computation"
+    }
+  },
+  "core_anchors": {
+    "comp": {
+      "input_bytes": 153600,
+      "cycles": 355261,
+      "cycles_per_byte": 2.3128971354166667,
+      "rate_MBps": 81.067159,
+      "label": "measured",
+      "source": "b6 independent rerun fixed vector, 1920x64 strip"
+    },
+    "rand": {
+      "input_bytes": 153600,
+      "cycles": 161479,
+      "cycles_per_byte": 1.051296875,
+      "rate_MBps": 178.351365,
+      "label": "measured",
+      "source": "b6 manifest/independent report, 1920x64 strip"
+    }
+  },
+  "overhead": {
+    "primary_cycles": 426385,
+    "anchor_tier_cycles": 426385,
+    "sensitivity_tiers": [0, 426385, 1000000],
+    "label": "assumed",
+    "anchor_implied_cycles": 426384.625,
+    "notes": "overhead := 6,421,414 - 5,995,029.375 (circular with A2/A4); 1080p uses the A1 measured anchor shifted by (tier - 426,385), other geometry uses cycles_core(W,H) + tier"
+  },
+  "ddr": {
+    "peak_MBps_main": 5332,
+    "peak_MBps_fallback": 6400,
+    "peak_main_basis": "1333 MT/s x 32 bit / 8 = 5,332 MB/s (ADC/PHY DDR1333); user domain 166.65 MHz x 32 B = 5,333 MB/s",
+    "peak_fallback_basis": "1600 MT/s x 32 bit / 8 = 6,400 MB/s (DOC-1 rollback tier; NOT the current mainline)",
+    "raw_slot_expansion": 1.6,
+    "layout_main": "20B_payload_per_32B_word",
+    "doc1_section8_GBps": [1.2, 2.33, 3.4],
+    "doc1_section8_note": "800E~1.2 / 1333~2.33 / 1600~3.4 GB/s stated in the DDR doc is NOT reproducible from data_rate*width/8 (1333 would be 5.332 GB/s); listed for disclosure only, never adopted, never used to move the gate",
+    "efficiency_caveat": "average bandwidth inside peak != sustained DDR satisfied: refresh/bank/row/arbitration/single-outstanding remain unproven",
+    "label": "derived"
+  },
+  "uart": {
+    "real_bps": 11520,
+    "real_note": "115200 8N1 = 11,520 B/s; diagnostic/forensic only (DOC-2)",
+    "b11_sim_sink_bytes_per_s": 18750000,
+    "b6_sim_sink_bytes_per_s": 100000000,
+    "b11_sim_sink_note": "UART_DIV=1 with clk_uart=clk_a1=187.5 MHz -> 10 clk_uart cycles/byte = 18.75 MB/s; sim-only",
+    "b6_sim_sink_note": "UART_DIV=1 with clk_uart=1 GHz -> 100 MB/s; sim-only",
+    "export_cost_ideal_cycles": 400320,
+    "export_cost_measured_note": "40,032 B x 10 cycles = 400,320 cycles ideal; P1 measured export_tail = 480,930 cycles/frame (+80,590) and constant",
+    "export_tail_measured_cycles": 480930,
+    "sink_limited": false,
+    "transport": "not_proven"
+  },
+  "resources": {
+    "single_chain_b10_r1_routed": {"eram_total": 187, "eram_headroom": 113, "wns_ns": 0.103, "viol_ep": 0, "label": "measured (b10 r1 routed)"},
+    "dual_marginal": {"eram_total": 231, "eram_headroom": 69, "label": "derived (P1 228531e7...bdd0)"},
+    "dual_conservative": {"eram_total": 289, "eram_headroom": 11, "headroom_pct": 3.6667, "label": "derived upper bound"},
+    "eram_device": 300,
+    "eram_fit_pass_max": 270
+  },
+  "timing": {
+    "single_core_proven_max_mhz": 187.5,
+    "single_core_basis": "b6 routed WNS +0.119 / b10 r1 routed +0.103 at 187.5 MHz",
+    "above_187p5": "unproven",
+    "dual_core": "unproven",
+    "routed_dual_core_evidence": "none"
+  },
+  "packing": {
+    "profile_allowed": "RAW10_packed_20B32B",
+    "forbidden_profiles": ["RAW12", "RAW10_1.0x"],
+    "label": "frozen"
+  },
+  "labels_summary": {
+    "measured": "read from a frozen artifact (P1 steady-state.json, b6/b11 STAT, routed report row)",
+    "derived": "computed by the frozen formulas in model/calc.py from measured values",
+    "assumed": "model assumption with no direct measurement (content scaling, overhead constancy, dual-core capacity from single core)",
+    "unproven": "no evidence at all (natural-image content, DDR sustained/arbitration, shared PAXI 4-client arbitration, dual-core Routed timing, PCIe/real UART transport, board)"
+  }
+}

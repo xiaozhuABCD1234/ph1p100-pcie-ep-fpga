@@ -1,0 +1,424 @@
+{
+  "date": "2026-10-12",
+  "status": "User-reported initial board functional acceptance on 2026-10-12: green sparkles disappeared and LEDs match expectations. Not sustained or instrumented qualification.",
+  "candidate_project": "D:\\TD\\work\\csi2\\prj\\camera_ddr_display_20261012_003550",
+  "scope": "A-camera 960x540 grayscale tap -> triple-frame DDR -> repeated-row reader -> async display FIFO -> 2x pixels -> 1080p60 HDMI",
+  "bit": {
+    "path": "D:\\TD\\work\\csi2\\prj\\camera_ddr_display_20261012_003550\\camera_ddr_display.bit",
+    "bytes": 5224033,
+    "sha256": "000ffd6436ad04a1b595f8fd345215531af4c63bb156ba0c0d7b50e585d30f07",
+    "downloaded": true,
+    "hardware_verified": true,
+    "hardware_verification_level": "user_report_initial_functional_only"
+  },
+  "configuration": {
+    "sensor": "IMX415 4K30 RAW10, 4 lanes x 891Mbps, MCLK27MHz",
+    "stored_payload_bytes": 518400,
+    "payload_words": 16200,
+    "footer_words": 1,
+    "slots": 3,
+    "display": "1920x1080p60, 2x2 grayscale duplication",
+    "capture_fps": 30,
+    "display_payload_budget_MBps": 62.208,
+    "budget_is_measured": false,
+    "crc": "CRC32/IEEE, reflected EDB88320, initFFFFFFFF, final inverted, low byte first",
+    "crc_boundary": "Runtime diagnostic; display can start before full-frame CRC finishes."
+  },
+  "build": {
+    "tool": "TD Release_2026.1_SP2 / 6.2.2.200067",
+    "strategy": "TimingHigh physical implementation, unchanged soft CSI PHY",
+    "setup_wns_ns": 0.049,
+    "setup_tns_ns": 0.0,
+    "hold_wns_ns": 0.02,
+    "hold_tns_ns": 0.0,
+    "period_wns_ns": 2.2,
+    "candidate_coverage_percent": 95.7,
+    "route_child_coverage_percent": 97.32,
+    "coverage_difference": "Only Generated and STA coverage header lines differ; 40637 lines each. Cause unresolved; not complete constraint coverage.",
+    "input_files_verified": 177,
+    "input_manifest_boundary": "Includes copied but unselected legacy capture files; selected files are defined in build.tcl.",
+    "vendor_files_verified_against_pinned_original": 91,
+    "database_sha256": "7e7afe678fb36f1b485bf993d347236208d75346a147d5be0f1a3cb3daa2ba9d",
+    "native_route_exit": 0,
+    "native_bitgen_gate_exit": 0,
+    "abnormal_targets_empty": true,
+    "slice": 17099,
+    "lut6": 13210,
+    "reg": 19459,
+    "eram": 55,
+    "pll": 3,
+    "pcie": 0,
+    "prior_candidate_eram": 266,
+    "exceptions_review": "Independent camera, DDR and pixel PLL domains async; four Gray skew constraints retained, startup enable-only exception and inherited DDR/debug exceptions reviewed. No synchronous display data false path added.",
+    "warnings": "RTCLK-5079 sys_clk50m reference local routing and RTCLK-5078 debug JTAG local routing remain; STA is not board electrical validation."
+  },
+  "physical_cdc": {
+    "q_drivers": 108,
+    "same_bit_stage_links": 72,
+    "selected_sync_ff_functions_checked": 72,
+    "capture_direct_links": 36,
+    "display_direct_links": 36,
+    "skew_requirement_ns": 4.0,
+    "skew_actual_ns": [
+      0.973,
+      1.074,
+      1.133,
+      1.02
+    ],
+    "skew_slack_ns": [
+      3.027,
+      2.926,
+      2.867,
+      2.98
+    ],
+    "reset_clock_review": "docs/evidence/camera_ddr_display_20261012_cdc_reset_clock_review.txt",
+    "negative_tests": "docs/evidence/camera_ddr_display_20261012_cdc_negative_tests.json",
+    "boundary": "Numeric AND functions, Q mappings, reset aliases, clocks, registered request/ACK sources and routed skew reviewed; not formal CDC or quantified MTBF."
+  },
+  "simulations": {
+    "stub_red": {
+      "directory": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_003938_802953_a3cb23",
+      "log": "docs/evidence/camera_ddr_display_20261012_stub_red.txt",
+      "expected_marker": "DDR_DISPLAY_FAIL",
+      "result_lines": [
+        "# DDR_DISPLAY_FAIL video control alignment cycles=42 checks=0 pub=0 pass=0 bad=0 under=0"
+      ],
+      "inputs": "docs/evidence/camera_ddr_display_20261012_stub_red_inputs.json"
+    },
+    "small_green": {
+      "directory": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_003945_642303_20cc05",
+      "log": "docs/evidence/camera_ddr_display_20261012_small_green.txt",
+      "expected_marker": "DDR_DISPLAY_PASS",
+      "result_lines": [
+        "# DDR_DISPLAY_PASS size=64x16 pixels=65536 reads=870 writes=198 crc=5 rejected=0 underflows=3 shown=4"
+      ],
+      "inputs": "docs/evidence/camera_ddr_display_20261012_small_green_inputs.json",
+      "note": "Earlier positive evidence; final address-sensitive runs are listed separately."
+    },
+    "production_green": {
+      "directory": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_003940_381450_09fb9f",
+      "log": "docs/evidence/camera_ddr_display_20261012_production_green.txt",
+      "expected_marker": "DDR_DISPLAY_PASS",
+      "result_lines": [
+        "# DDR_DISPLAY_PASS size=960x540 pixels=2073600 reads=32402 writes=16201 crc=1 rejected=0 underflows=0 shown=1"
+      ],
+      "inputs": "docs/evidence/camera_ddr_display_20261012_production_green_inputs.json",
+      "note": "Earlier positive evidence; final address-sensitive runs are listed separately."
+    },
+    "rlast_red": {
+      "directory": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_003342_144301_813515",
+      "log": "docs/evidence/camera_ddr_display_20261012_rlast_red.txt",
+      "expected_marker": "DDR_DISPLAY_FAIL",
+      "result_lines": [
+        "# DDR_DISPLAY_FAIL 2x2 pixel/old-frame residue cycles=106223 checks=45056 pub=2 pass=1 bad=0 under=2"
+      ]
+    },
+    "pack_green": {
+      "directory": "D:\\TD\\work\\csi2\\_validation\\capture\\20261012_003552_815016_21fa04",
+      "log": "docs/evidence/camera_ddr_display_20261012_pack_green.txt",
+      "expected_marker": "CAPTURE_PACK_PASS",
+      "result_lines": [
+        "# CAPTURE_PACK_PASS good=5 aborts=3 checks=73"
+      ]
+    },
+    "tap_green": {
+      "directory": "D:\\TD\\work\\csi2\\_validation\\capture\\20261012_003558_154900_0f4531",
+      "log": "docs/evidence/camera_ddr_display_20261012_tap_green.txt",
+      "expected_marker": "CAPTURE_TAP_PASS",
+      "result_lines": [
+        "# CAPTURE_TAP_PASS read_only=0 checks=217 display_pixels=128"
+      ]
+    },
+    "store_green": {
+      "directory": "D:\\TD\\work\\csi2\\_validation\\ddr_frame\\20261012_003603_075688_e2552de0",
+      "log": "docs/evidence/camera_ddr_display_20261012_store_green.txt",
+      "expected_marker": "DDR_FRAME_PASS",
+      "result_lines": [
+        "# DDR_FRAME_PASS checks=77 writes=56 reads=25 published=8 errors=5"
+      ]
+    },
+    "address_sensitive_production_green": {
+      "directory": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_134522_564328_7202d1",
+      "log": "docs/evidence/camera_ddr_display_20261012_address_sensitive_production_green.txt",
+      "inputs": "docs/evidence/camera_ddr_display_20261012_address_sensitive_production_green_inputs.json",
+      "result_lines": [
+        "# DDR_DISPLAY_PASS size=960x540 pixels=2073600 reads=32402 writes=16201 crc=1 rejected=0 underflows=0 shown=1"
+      ],
+      "interpretation": "Final address-sensitive positive regression"
+    },
+    "address_sensitive_small_green": {
+      "directory": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_134538_742089_8f4496",
+      "log": "docs/evidence/camera_ddr_display_20261012_address_sensitive_small_green.txt",
+      "inputs": "docs/evidence/camera_ddr_display_20261012_address_sensitive_small_green_inputs.json",
+      "result_lines": [
+        "# DDR_DISPLAY_PASS size=64x16 pixels=65536 reads=870 writes=198 crc=5 rejected=0 underflows=3 shown=4"
+      ],
+      "interpretation": "Final address-sensitive positive regression"
+    },
+    "address_alias_rejected": {
+      "directory": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_134524_953438_81b1bf",
+      "log": "docs/evidence/camera_ddr_display_20261012_address_alias_rejected.txt",
+      "inputs": "docs/evidence/camera_ddr_display_20261012_address_alias_rejected_inputs.json",
+      "result_lines": [
+        "# DDR_DISPLAY_FAIL 2x2 pixel/old-frame residue cycles=966481 checks=1024 pub=1 pass=0 bad=0 under=0"
+      ],
+      "interpretation": "Expected rejection of word-address bit4 stuck-low model"
+    },
+    "old_pattern_alias_missed": {
+      "directory": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_134451_425612_9615e4",
+      "log": "docs/evidence/camera_ddr_display_20261012_old_pattern_alias_missed.txt",
+      "inputs": "docs/evidence/camera_ddr_display_20261012_old_pattern_alias_missed_inputs.json",
+      "result_lines": [
+        "# DDR_DISPLAY_PASS size=960x540 pixels=2073600 reads=32402 writes=16201 crc=1 rejected=0 underflows=0 shown=1"
+      ],
+      "interpretation": "Known test blindness: mutated address still passed old periodic pattern; negative runner exit1 correctly rejected missing expected FAIL."
+    }
+  },
+  "source_hashes": {
+    "fpga/csi2/src/mem/camera_ddr_display.v": "430f307feec422d93de7e7fe24aaef751e3b98af151aeff148de48d415202f30",
+    "fpga/csi2/src/mem/capture_async_fifo.v": "59dd6dcb5b7e7774f7d6518f50f56cafbc8be6b70e8ae1508236bac2b5af531d",
+    "fpga/csi2/src/mem/ddrmc_display_top.v": "d0e27fc5e17a57004a7bd1e9b58ad929b2c91a3f55391da3df5b06a66059ccbd",
+    "fpga/csi2/src/mem/ddr_display_read.v": "fe53f761c49c374bee931f742e101dac63739b24f748ca3d1287e463a62d40b0",
+    "fpga/csi2/src/mem/ddr_frame_store.v": "c600420683a607a486661a678655a6fd23f13f29e1ae652fe1af8befe23a879a",
+    "fpga/csi2/src/mem/gray_display_pixels.v": "4387ebed791aacc38ff647fa16443e1c05a57366992dde177b8ef8afe05a4616",
+    "fpga/csi2/src/mem/gray_frame_pack.v": "173ff085e5f41b77f2871b2ab0ddd769e6f417e7e53f4d976e2e2d0f3b639138",
+    "fpga/csi2/src/cam/f9p_camera_display_core.v": "7953dd8fcd88bdb6f1362299d8e15571bc0c66114f3c7d080e07dc5c22a537fa",
+    "fpga/csi2/src/cam/cam_preview_capture.v": "f06b85a2958c54b8f1777bedbeb6e773818fba9bfeee4dceaba06637efae91ed",
+    "fpga/csi2/tb/tb_ddr_display.sv": "5d8c5f1d5539129ab1029c7952ba4d3130cf26608d1da372807c9e0b2c1128b6",
+    "fpga/csi2/tb/ddr_display_stub.v": "05b3068812f96023f53173826ffe2df5d474b4105538fb1fd5787797723b8edc",
+    "tools/td/bitgen_camera_ddr_display.tcl": "7999f5f75136f5c1aa893ad64737f3b861f666b26a3608a76cea07a94af21b31",
+    "tools/td/inspect_camera_ddr_display.tcl": "48d386d89ec66b05be2ec2f1895359144fe33a1f2ad875d5c03fa3bccf18e73b",
+    "tools/td/prepare_camera_ddr_display.py": "62d336c7eddb3fe276e5809485bc24b6b194425436a0a239e12e9e65ec69de9d",
+    "tools/td/run_ddr_display.py": "81ed7f170b15879d2c148e5687b44df97892eee110d36ec74fa0115dd8a71c04",
+    "tools/td/audit_display_cdc.py": "e1d67889439fe4356cef60002fe30127f066fc29e1a8e82ad6627861b9840317",
+    "tools/td/review_display_cdc_functions.py": "d9e7f3624cca0248668ace8e8a357e442105e4186fba696386824943bbef2874"
+  },
+  "artifacts": {
+    "docs/evidence/camera_ddr_display_20261012_stub_red.txt": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_003938_802953_a3cb23\\regression.log",
+      "bytes": 1149,
+      "sha256": "44907a4e7edf4190c768efdb5577b6db13affabc072db79985fd58ccb56fa45f"
+    },
+    "docs/evidence/camera_ddr_display_20261012_stub_red_inputs.json": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_003938_802953_a3cb23\\inputs.json",
+      "bytes": 343,
+      "sha256": "ed51fb4b8eaa65fdd558957b44bb29c9e2262a9243ad5d17177c66b4f50da4b5"
+    },
+    "docs/evidence/camera_ddr_display_20261012_small_green.txt": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_003945_642303_20cc05\\regression.log",
+      "bytes": 2017,
+      "sha256": "6bd3c80e9ee78728b6cd4a8c65704377acec638eb06ea994481389c8b7593881"
+    },
+    "docs/evidence/camera_ddr_display_20261012_small_green_inputs.json": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_003945_642303_20cc05\\inputs.json",
+      "bytes": 1238,
+      "sha256": "9ff2500a9b3e6cbe7da5d142dee3931e54becbe396d405ca37b7c04a8ffca816"
+    },
+    "docs/evidence/camera_ddr_display_20261012_production_green.txt": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_003940_381450_09fb9f\\regression.log",
+      "bytes": 2060,
+      "sha256": "09514b8795586bb28595a33db6e5ead43d5f95685d7b8e7a73571e7c62111776"
+    },
+    "docs/evidence/camera_ddr_display_20261012_production_green_inputs.json": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_003940_381450_09fb9f\\inputs.json",
+      "bytes": 1238,
+      "sha256": "9ff2500a9b3e6cbe7da5d142dee3931e54becbe396d405ca37b7c04a8ffca816"
+    },
+    "docs/evidence/camera_ddr_display_20261012_rlast_red.txt": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_003342_144301_813515\\regression.log",
+      "bytes": 2437,
+      "sha256": "caaa3f888938e8a7c8cf87b49fa2b9286bc0f1c37296eb8e3932eca62d5089e4"
+    },
+    "docs/evidence/camera_ddr_display_20261012_pack_green.txt": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\capture\\20261012_003552_815016_21fa04\\regression.log",
+      "bytes": 1482,
+      "sha256": "90a7c53fbf342e634d4613c6d0021a2bc1d93bc6df07235b648ca387c37f3101"
+    },
+    "docs/evidence/camera_ddr_display_20261012_tap_green.txt": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\capture\\20261012_003558_154900_0f4531\\regression.log",
+      "bytes": 1396,
+      "sha256": "77090313fd087349a9ec102c0087db6f922985c2e2e13b32a25b03a8ee9ed2b8"
+    },
+    "docs/evidence/camera_ddr_display_20261012_store_green.txt": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr_frame\\20261012_003603_075688_e2552de0\\regression.log",
+      "bytes": 1296,
+      "sha256": "c41bcf630ae3a924fb32603ea2acbeb1790792d3fe185cd8bc37bd3527acc529"
+    },
+    "docs/evidence/camera_ddr_display_20261012_cdc_negative_tests.json": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\cdc_negative_20261012_005541\\results.json",
+      "bytes": 610,
+      "sha256": "222c21adc388c500012036ff9e072639418bc8d419f83659fa6bb42aae89f606"
+    },
+    "docs/evidence/camera_ddr_display_20261012_cdc_wrong_source_bit_rejection.txt": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\cdc_negative_20261012_005541\\wrong_source_bit\\rejection.txt",
+      "bytes": 549,
+      "sha256": "d2b54904b19dc11e51c3fd7764d1ebc426fe499b2e419a4befa0fc3631de4c37"
+    },
+    "docs/evidence/camera_ddr_display_20261012_cdc_wrong_sync_function_rejection.txt": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\cdc_negative_20261012_005541\\wrong_sync_function\\rejection.txt",
+      "bytes": 630,
+      "sha256": "ea9bb1c7aaf211ea76065f450bbc51a0bfa584142cce5f1a0151d736a1f8c2c1"
+    },
+    "docs/evidence/camera_ddr_display_20261012_candidate_timing.rpt": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_ddr_display_20261012_003550\\candidate_timing.rpt",
+      "bytes": 5409092,
+      "sha256": "18fd1b834c0a190635293c2b4b91b5836062b78d7da66e60c40e66c8a984b65d"
+    },
+    "docs/evidence/camera_ddr_display_20261012_candidate_skew.rpt": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_ddr_display_20261012_003550\\candidate_skew.rpt",
+      "bytes": 538055,
+      "sha256": "2f64c6b92ddf4ce804fdbe546cd52a4db15f0f466b33526e86f416319cd21e0e"
+    },
+    "docs/evidence/camera_ddr_display_20261012_candidate_ignored.rpt": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_ddr_display_20261012_003550\\candidate_ignored.rpt",
+      "bytes": 1153749,
+      "sha256": "c60523b5d5703e6e1d29e9eaccc4bfbc960a6cc529b69f83281f3096fc94bd87"
+    },
+    "docs/evidence/camera_ddr_display_20261012_candidate_abnormal.rpt": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_ddr_display_20261012_003550\\candidate_abnormal.rpt",
+      "bytes": 122,
+      "sha256": "a4e5f4685518c9a537bd1f7fd5894808add6a2c61d0f75f02592300b77dc71da"
+    },
+    "docs/evidence/camera_ddr_display_20261012_resources.txt": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_ddr_display_20261012_003550\\capture.area",
+      "bytes": 55007,
+      "sha256": "8c1acde242ad864ef30d716f65f3b036f746786b6b38a584eb7cee478e66039d"
+    },
+    "docs/evidence/camera_ddr_display_20261012_inputs.json": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_ddr_display_20261012_003550\\input_manifest.json",
+      "bytes": 20794,
+      "sha256": "695f4049c43083c45a04d076bf0defaf0786290e856e4008455bdb01ead4747a"
+    },
+    "docs/evidence/camera_ddr_display_20261012_capture_cdc_audit.json": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_ddr_display_20261012_003550\\u_fifo_cdc_audit.json",
+      "bytes": 76514,
+      "sha256": "13dd43349b110b14480cc8dfb3e37b202995847579ea7277b0fa2654a45e128c"
+    },
+    "docs/evidence/camera_ddr_display_20261012_capture_cdc_excerpt.v": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_ddr_display_20261012_003550\\u_fifo_cdc_excerpt.v",
+      "bytes": 43800,
+      "sha256": "27beff310d873ffb2c64caecc648f16dfcac6446d65c8db0dade146183dae4b1"
+    },
+    "docs/evidence/camera_ddr_display_20261012_display_cdc_audit.json": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_ddr_display_20261012_003550\\u_display_fifo_cdc_audit.json",
+      "bytes": 79268,
+      "sha256": "c799e90d35e290fa404dd97b806783c12b7a920327b7006b073f7c5e1b43f029"
+    },
+    "docs/evidence/camera_ddr_display_20261012_display_cdc_excerpt.v": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_ddr_display_20261012_003550\\u_display_fifo_cdc_excerpt.v",
+      "bytes": 43115,
+      "sha256": "bf212cda2b53b035e90efaabc4ac9477c10e6bf25e3c17777ae0f589602cf0ba"
+    },
+    "docs/evidence/camera_ddr_display_20261012_cdc_functions.json": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_ddr_display_20261012_003550\\display_cdc_functions.json",
+      "bytes": 35419,
+      "sha256": "accb7cb7cf540fb6eca65ecae270f8b25239a16b2f147c9878455ff7c6b5cb52"
+    },
+    "docs/evidence/camera_ddr_display_20261012_cdc_reset_clock_review.txt": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_ddr_display_20261012_003550\\display_cdc_reset_clock_review.txt",
+      "bytes": 17036,
+      "sha256": "db09c7193bd1e0132f1373970b17bb8d9c0b97bc9b717b9b61288a63415c4b9a"
+    },
+    "docs/evidence/camera_ddr_display_20261012_cdc_objects.txt": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_ddr_display_20261012_003550\\capture_cdc_objects.txt",
+      "bytes": 5840,
+      "sha256": "6225b9581cb39a237058f1edaf6c2b72ae1e6480b0d798bc7bd3a3f72e328926"
+    },
+    "docs/evidence/camera_ddr_display_20261012_bitgen.txt": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_ddr_display_20261012_003550\\bitgen_display_run.txt",
+      "bytes": 24172,
+      "sha256": "53f81356fdffd3e76d86bb4e07d43eeb85960d608254e06f98e943bce052948b"
+    },
+    "docs/evidence/camera_ddr_display_20261012_route.txt": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_ddr_display_20261012_003550\\camera_ddr_display_Runs\\phy_1\\run.log",
+      "bytes": 231183,
+      "sha256": "d9f9c5c88e0cf36943476ec9e93fe990ad056caa81244bd31a1c79e73430e75a"
+    },
+    "docs/evidence/camera_ddr_display_20261012_rlast_before_fix.v": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_ddr_display_20261012_002904\\ddr_display_read.v",
+      "bytes": 4276,
+      "sha256": "9ff5870c7ccff73b0715e4fc8ba0b5cd6911d77a5d47d7dfabe7a84b6624d8ec"
+    },
+    "docs/evidence/camera_ddr_display_20261012_first_route_timing.rpt": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_ddr_display_20261012_002904\\capture_timing.rpt",
+      "bytes": 17690,
+      "sha256": "02f94ecb1abb697987f98ad179cb8084d9d4ddf50be7a96066f5a4dffa752fdd",
+      "source_bytes": 5535316,
+      "source_sha256": "7a924a822695f8a3bb8e97f161cab309e704c94aa65ae04ccc6e059d0060f4e0",
+      "retention": "Explicit first-160-line excerpt; full original remains D drive. Final candidate timing is archived in full."
+    },
+    "docs/evidence/camera_ddr_display_20261012_address_sensitive_production_green.txt": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_134522_564328_7202d1\\regression.log",
+      "bytes": 2060,
+      "sha256": "261767507c86b01e7ce5a2b2ef9138e56ecc7b6ab31f4d85a964e65197ad9066"
+    },
+    "docs/evidence/camera_ddr_display_20261012_address_sensitive_production_green_inputs.json": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_134522_564328_7202d1\\inputs.json",
+      "bytes": 1238,
+      "sha256": "45e94bc17b6196142ffefb878848326251c51c85c802108f6eb542644f047cc0"
+    },
+    "docs/evidence/camera_ddr_display_20261012_address_sensitive_small_green.txt": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_134538_742089_8f4496\\regression.log",
+      "bytes": 2017,
+      "sha256": "896f37b62304939c1e8677d0b16f43406d7e71f29ac991113e227fc5d5ce644d"
+    },
+    "docs/evidence/camera_ddr_display_20261012_address_sensitive_small_green_inputs.json": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_134538_742089_8f4496\\inputs.json",
+      "bytes": 1238,
+      "sha256": "45e94bc17b6196142ffefb878848326251c51c85c802108f6eb542644f047cc0"
+    },
+    "docs/evidence/camera_ddr_display_20261012_address_alias_rejected.txt": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_134524_953438_81b1bf\\regression.log",
+      "bytes": 2109,
+      "sha256": "8620955c43020060af0f6501cc64bfc35fca41f7dfa02916bd9f27db41a8d1e9"
+    },
+    "docs/evidence/camera_ddr_display_20261012_address_alias_rejected_inputs.json": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_134524_953438_81b1bf\\inputs.json",
+      "bytes": 1238,
+      "sha256": "45e94bc17b6196142ffefb878848326251c51c85c802108f6eb542644f047cc0"
+    },
+    "docs/evidence/camera_ddr_display_20261012_old_pattern_alias_missed.txt": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_134451_425612_9615e4\\regression.log",
+      "bytes": 2078,
+      "sha256": "3aa56ab10e27b5266a61c6e3272fa2fde32c80539d479f3cc012db5dbbca4602"
+    },
+    "docs/evidence/camera_ddr_display_20261012_old_pattern_alias_missed_inputs.json": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_134451_425612_9615e4\\inputs.json",
+      "bytes": 1238,
+      "sha256": "a95bb472eef38e704d2c3a682d0d1504e4d35ceece2077132f19bdd995fec323"
+    },
+    "docs/evidence/camera_ddr_display_20261012_old_pattern_address_fault_tb.sv": {
+      "source": "D:\\TD\\work\\csi2\\_validation\\ddr_display\\20261012_134451_425612_9615e4\\sources\\tb_ddr_display.sv",
+      "bytes": 7212,
+      "sha256": "0f7de812fddcf6c147ee933a5c8345e451347c37ee0a72a3169a857271f20827"
+    }
+  },
+  "known_limits": [
+    "Production size simulation uses compact blank intervals, not full 2200x1125 VTC or vendor electrical model.",
+    "Reset/ready loss recovery assumes DDR controller flushes pending responses.",
+    "No sustained counters, throughput, multi-camera, PCIe image DMA or RK integration qualification.",
+    "Initial board acceptance is user-reported; no independent download log, observation duration or sustained counters.",
+    "Prior green sparkles no longer observed per user; root cause and electrical margin are not established.",
+    "CSI CRC16 and bad-frame propagation, full-resolution RAW10 storage and formal dual-camera synchronization are not implemented."
+  ],
+  "rollback": {
+    "path": "D:/TD/work/csi2/prj/camera_ddr_capture_20261011_225520/camera_ddr_capture.bit",
+    "sha256": "6fe4d9b1d03f4f281f91fcd23226729b6800447a152afb11b52c9e402ba9f002",
+    "scope": "User-reported real image and at-least-one DDR CRC pass; HDMI reads ERAM."
+  },
+  "file_management": "No deletions. Final/rollback projects retained; failed prep and diagnostic rounds classified separately.",
+  "github_style": "Behavior, architecture, reproducible commands, validation evidence and unresolved limits; continue this style for future checkpoints.",
+  "validation_followup": "Address-sensitive pattern added after final RTL build. Old word-bit4 alias test missed by 256-byte periodic pattern; new pattern detects at x1024,y0. Final small and production tests pass. Production RTL/input manifest and bit unchanged.",
+  "hardware_feedback": {
+    "date": "2026-10-12",
+    "source": "User message in current conversation",
+    "quote": "绿色亮点消失且现在的亮灯情况和预期相同",
+    "candidate_identity": "Associated with the last supplied 003550 candidate; no independently captured BitWriter identity/log.",
+    "led_interpretation": "D37 blinking / D38 on / D39 off / D40 on, inferred from user statement matching the published expectation.",
+    "duration_seconds": null,
+    "sustained_counters": false,
+    "root_cause_of_prior_sparkles_proven": false,
+    "dual_cameras_connected_and_powered": true,
+    "dual_connection_followup": "User confirmed power off and B-camera disconnection on 2026-10-12; A-only testing until role/shared-sync validation."
+  }
+}

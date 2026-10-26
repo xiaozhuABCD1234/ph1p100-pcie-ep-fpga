@@ -1,0 +1,126 @@
+{
+  "accepted": true,
+  "hardware_verified": false,
+  "project": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_timing_20261015_103222",
+  "manifest_sha256": "df57694677271b779ce1f83fa7c0d6bfcbba7a080ec37bd069d547f36b7b85bb",
+  "manifest_inputs": 221,
+  "suite": "ddr",
+  "production": true,
+  "fault": "none",
+  "sources": {
+    "tb_rgb565_ddr_display.sv": {
+      "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\fpga\\csi2\\tb\\tb_rgb565_ddr_display.sv",
+      "sha256": "d41f38f4919f49e1524e45936238bd733fd55b6979cde05fa711a0c1e3cef458"
+    },
+    "capture_async_fifo.v": {
+      "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_timing_20261015_103222\\capture_async_fifo.v",
+      "sha256": "59dd6dcb5b7e7774f7d6518f50f56cafbc8be6b70e8ae1508236bac2b5af531d"
+    },
+    "ddr_frame_store.v": {
+      "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_timing_20261015_103222\\ddr_frame_store.v",
+      "sha256": "c600420683a607a486661a678655a6fd23f13f29e1ae652fe1af8befe23a879a"
+    },
+    "rgb565_frame_pack_guarded.v": {
+      "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_timing_20261015_103222\\rgb565_frame_pack_guarded.v",
+      "sha256": "313832ed6acaa83a8393b5818bc7b2cd46bb6467c873b0792ba18600668d272b"
+    },
+    "rgb565_display_read.v": {
+      "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_timing_20261015_103222\\rgb565_display_read.v",
+      "sha256": "5d4b12d1b3934dec7b391471aa3c97f3e5a6237698a33b3ec97f6bbd9b9a3f66"
+    },
+    "rgb565_display_pixels.v": {
+      "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_timing_20261015_103222\\rgb565_display_pixels.v",
+      "sha256": "8b2c528a25222d5632906e8be154656a99031ccec0117aabe411259f7cfc18e9"
+    },
+    "camera_rgb565_display_guarded.v": {
+      "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_timing_20261015_103222\\camera_rgb565_display_guarded.v",
+      "sha256": "584bfa7c79cec04a4c78b2eff2c0b8349bf6c7a2c6090c18eddb52dc93b1df75"
+    }
+  },
+  "commands": [
+    {
+      "command": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlib.exe",
+        "work"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.063,
+      "errors": [],
+      "warnings": [],
+      "log": "0.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlog.exe",
+        "-sv",
+        "+define+GUARDED",
+        "tb_rgb565_ddr_display.sv",
+        "capture_async_fifo.v",
+        "ddr_frame_store.v",
+        "rgb565_frame_pack_guarded.v",
+        "rgb565_display_read.v",
+        "rgb565_display_pixels.v",
+        "camera_rgb565_display_guarded.v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.203,
+      "errors": [
+        0
+      ],
+      "warnings": [
+        0
+      ],
+      "log": "1.log",
+      "sha256": "a57a4509dd89020478d43e7f6230ea3a5de510c42c48815e762c346397b4190e"
+    },
+    {
+      "command": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vsim.exe",
+        "-c",
+        "-gSW=960",
+        "-gSH=540",
+        "-gPRODUCTION=1",
+        "work.tb_rgb565_ddr_display",
+        "-do",
+        "run -all; quit -f"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 45.032,
+      "errors": [
+        0
+      ],
+      "warnings": [
+        0
+      ],
+      "log": "2.log",
+      "sha256": "a60974929b0718a65d748387b1a0a9b62571a8d8fa6e620ea5aad50086c65e22"
+    }
+  ],
+  "scope": "Real frozen frame pack/FIFOs/store/reader/pixels; DDR controller modeled with response-flush contract",
+  "golden": {
+    "method": "Python zlib.crc32 of independent RGB565 fixture, little endian",
+    "values": [
+      3214501412,
+      2239720732,
+      1711277909,
+      3333587840,
+      2866906095,
+      4246471311
+    ],
+    "sha256": "6a2dd4fcf66acf59b72959f9b82054e9453426a2e5fa71ac122f39795503d9e4"
+  },
+  "simulation_markers": [
+    "RGB565_DDR_PASS size=960x540 pixels=2073600 reads=64802 writes=32401 crc=1 rejected=0 underflows=0 shown=1"
+  ],
+  "executed_inputs": {
+    "tb_rgb565_ddr_display.sv": "d41f38f4919f49e1524e45936238bd733fd55b6979cde05fa711a0c1e3cef458",
+    "capture_async_fifo.v": "59dd6dcb5b7e7774f7d6518f50f56cafbc8be6b70e8ae1508236bac2b5af531d",
+    "ddr_frame_store.v": "c600420683a607a486661a678655a6fd23f13f29e1ae652fe1af8befe23a879a",
+    "rgb565_frame_pack_guarded.v": "313832ed6acaa83a8393b5818bc7b2cd46bb6467c873b0792ba18600668d272b",
+    "rgb565_display_read.v": "5d4b12d1b3934dec7b391471aa3c97f3e5a6237698a33b3ec97f6bbd9b9a3f66",
+    "rgb565_display_pixels.v": "8b2c528a25222d5632906e8be154656a99031ccec0117aabe411259f7cfc18e9",
+    "camera_rgb565_display_guarded.v": "584bfa7c79cec04a4c78b2eff2c0b8349bf6c7a2c6090c18eddb52dc93b1df75"
+  },
+  "runner_sha256": "e218551c49c8a6aaafe96ce67085976dd2395821f67e82c3228df4b03c4c4271"
+}

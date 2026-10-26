@@ -1,0 +1,69 @@
+{
+  "lease_id": "20261019-2117_runD_batch2_continue:T02:recovery01-draft",
+  "status": "draft_waiting_server_cleanup",
+  "generated_at": "2026-10-19T22:43:39+0800",
+  "candidate": {
+    "manifest_sha256": "c7a40897166467f2beafb096701dba9cf836e1007d77ae03d90009d06f80d757",
+    "entries": 699,
+    "bit_sha256": "b68c6e183e97eb0d465db77078f5049feca3a947fac51f99633621dd99b3f9bf",
+    "cwc_sha256": "b28e3d4ee476731b118da0b12c3bad8dcca1dadfbd9b7ae4dc418c4d225a74ce",
+    "bid_sha256": "4dcdc26382f6b49e7ed9b95a40a1d57c05191c0130050812a74b853c16b38f33",
+    "probe_map_sha256": "96eb210bb0c55eed110b2a35a8ae0d3ccd3d8823c3d4286a635f9f9dd46d888a"
+  },
+  "process_snapshot": {
+    "listeners_5555": 0,
+    "hwserver": [
+      {
+        "pid": 37440,
+        "parent_pid": 45596,
+        "parent_alive": false,
+        "has_ftdi": false,
+        "has_endpoints": false
+      }
+    ],
+    "td": [
+      {
+        "pid": 45416,
+        "action": "untouched"
+      },
+      {
+        "pid": 23384,
+        "action": "closed by user before this check"
+      }
+    ],
+    "ftdi_pnp": "VID_0403/PID_6042/COM8 OK"
+  },
+  "parallel_0207": {
+    "board_held_by": "0207 candidate 5B67A8F5...1D52",
+    "samples": [
+      "board-samples-01.md",
+      "board-samples-02.md"
+    ],
+    "r0_report": "T11.runC-board-checklist-r0-integrated.md",
+    "t02_overwrote": false,
+    "release_confirmed_by_user": false
+  },
+  "gate": {
+    "read_id_allowed_only_if": "exactly one 5555 LISTENING PID and it holds FTDI",
+    "download_allowed_only_if": [
+      "read_id returns PH1P100",
+      "user explicitly chooses A or B",
+      "fresh lease written",
+      "no active 0207 download"
+    ],
+    "downloads_this_dispatch": 0
+  },
+  "phase_b_draft": {
+    "bwcmd": "board/t02/recovery01/download_v6.draft.bwcmd",
+    "bit_path": "must be filled with an ASCII path; placeholder keeps the draft non-runnable",
+    "deadline_seconds": 180,
+    "attempts_max": 1
+  },
+  "safety": {
+    "flash": 0,
+    "cli_readback": 0,
+    "gui_automation": 0,
+    "foreign_processes_killed": 0,
+    "commit_push": 0
+  }
+}

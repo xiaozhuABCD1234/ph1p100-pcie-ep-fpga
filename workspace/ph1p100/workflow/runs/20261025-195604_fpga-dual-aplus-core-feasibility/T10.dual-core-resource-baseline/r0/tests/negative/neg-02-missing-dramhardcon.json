@@ -1,0 +1,24 @@
+{
+  "fixture_id": "NEG-02-missing-dramhardcon",
+  "kind": "budget_rows",
+  "description": "ERAM_total omits the 85 DRAM hard controllers (146 instead of 231).",
+  "expected_reject": "MISSING_DRAMHARDCON",
+  "rows": [
+    {
+      "case_id": "marginal",
+      "column": "marginal",
+      "ERAM_logic": 146,
+      "DRAM_HARDCON_per_ddr": 85,
+      "ddr_controllers": 1,
+      "ERAM_total": 146
+    },
+    {
+      "case_id": "conservative",
+      "column": "conservative",
+      "ERAM_logic": 204,
+      "DRAM_HARDCON_per_ddr": 85,
+      "ddr_controllers": 1,
+      "ERAM_total": 289
+    }
+  ]
+}

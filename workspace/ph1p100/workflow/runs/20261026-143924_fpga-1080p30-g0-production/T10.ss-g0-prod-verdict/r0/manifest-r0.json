@@ -1,0 +1,150 @@
+{
+  "task_id": "T10.ss-g0-prod-verdict",
+  "run": "20261026-143924_fpga-1080p30-g0-production",
+  "round": 0,
+  "repair_round": 0,
+  "role": "fpga-dev",
+  "created": "2026-10-26",
+  "candidate_root": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-143924_fpga-1080p30-g0-production\\T10.ss-g0-prod-verdict\\r0",
+  "write_scope": [
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-143924_fpga-1080p30-g0-production\\T10.ss-g0-prod-verdict\\r0\\**",
+    "%TEMP%\\opencode\\ss-g0-prod-verdict\\**"
+  ],
+  "stopped_modifying": true,
+  "active_commands": 0,
+  "active_commands_note": "no command of this task is running at freeze time; build is a single local python run that exits before manifest is written",
+  "status": "ready_for_test",
+  "headline": "G0_not_closed",
+  "headline_scope": "declared scope tuple only (proxy content, TB slot-free, 93.75 TB sink, behavioural DDR, single core @187.5 MHz, single stream)",
+  "evidence_rounds": {
+    "vsim": 0,
+    "td": 0,
+    "synthesis": 0,
+    "place_route": 0,
+    "bitgen": 0,
+    "download": 0,
+    "flash": 0,
+    "board": 0,
+    "network": 0,
+    "full_size_runs": 0,
+    "note": "0 sim / 0 TD / 0 board / 0 network; only local SHA-256 recomputation over frozen evidence"
+  },
+  "upstream_manifests": [
+    {
+      "package": "P1",
+      "path": "T10.ss-g0-prod-content/r0/manifest-r1.json",
+      "sha256": "e306ed42ed47dbcec6127bf2faee88925a9a88ae8a5ef07ecbda8dda91fe1fd9",
+      "artifacts": 70,
+      "verified": true
+    },
+    {
+      "package": "P2",
+      "path": "T10.ss-g0-prod-coregap/r0/manifest-r1.json",
+      "sha256": "803d3efb0104376004eb46c2b633d9b19577ba746190edadea802f81e3b92a66",
+      "artifacts": 49,
+      "verified": true
+    },
+    {
+      "package": "P3",
+      "path": "T10.ss-g0-prod-sink/r0/manifest-r0.json",
+      "sha256": "de8a5cffb8044828d2c4eb0ae72d1959c5267a06744a4002bf60a413995aa139",
+      "artifacts": 5,
+      "verified": true
+    }
+  ],
+  "artifact_count": 9,
+  "artifacts": [
+    {
+      "path": "commands.jsonl",
+      "bytes": 1822,
+      "sha256": "84d83fe2d8afadcbcf50889cef0acafdc73416e39a859f99f3513ea1e6e353db"
+    },
+    {
+      "path": "final-summary.md",
+      "bytes": 3204,
+      "sha256": "ded04f9bc37b6e3c42a9c6d3868dfc4d81d2d478ccdc5497240e0325babb39e2"
+    },
+    {
+      "path": "g0-production-verdict.json",
+      "bytes": 19227,
+      "sha256": "4f98a48f834d6df5a8a294e59d75b2d39819e275296f67ed00058b5fa7342ff7"
+    },
+    {
+      "path": "handoff.md",
+      "bytes": 4012,
+      "sha256": "39bc2f7dd186e3b32e7841f5dcb04961131f1df5f25475d953fa2ea990be537c"
+    },
+    {
+      "path": "lessons-r0.md",
+      "bytes": 2373,
+      "sha256": "3a660cfa04a084018140e646e9fd1509942cc8cbef86233c0a049bbd962563cb"
+    },
+    {
+      "path": "out/evidence-binding.json",
+      "bytes": 6011,
+      "sha256": "16d98a34d679a3039931f4a62036687abf6f7e09799e20a216e3fd1962133956"
+    },
+    {
+      "path": "result-r0.md",
+      "bytes": 15148,
+      "sha256": "45a574c8d76b74468d4badff0a7fca7d933fd512cfe5a70da9cb7436f01342ce"
+    },
+    {
+      "path": "tools/build_verdict.py",
+      "bytes": 34204,
+      "sha256": "9177fcc27d7539e928c0b76b745576eb655cbee2467d802e27395607e1230138"
+    },
+    {
+      "path": "user-summary.md",
+      "bytes": 2830,
+      "sha256": "5a0d44b0da37fb8aababefa8bc531aa54cca36313a924c0463ff969a0b6d988e"
+    }
+  ],
+  "commands": "commands.jsonl",
+  "budget": {
+    "limit_calls": 25,
+    "used_calls_upper_bound": 31,
+    "limit_minutes": 45,
+    "used_minutes_upper_bound": 45,
+    "vsim": 0,
+    "td": 0,
+    "board": 0,
+    "network": 0
+  },
+  "reproduce": [
+    "python tools/build_verdict.py verify   # re-verifies 124 upstream artifacts and rewrites this candidate deterministically"
+  ],
+  "retest": {
+    "required_dimensions": [
+      "integrated"
+    ],
+    "required_checks": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D6",
+      "D7",
+      "D8",
+      "D9",
+      "D10"
+    ],
+    "report_paths": [
+      "test-reports/T10.ss-g0-prod-verdict-r0-integrated.md"
+    ],
+    "input_status": "frozen",
+    "reuse_decision_paths": [
+      "T10.ss-g0-prod-content/r0/manifest-r1.json",
+      "T10.ss-g0-prod-coregap/r0/manifest-r1.json",
+      "T10.ss-g0-prod-sink/r0/manifest-r0.json",
+      "T10.ss-g0-prod-verdict/r0/manifest-r0.json"
+    ],
+    "note": "0-sim integrated review only; no full-size rerun, no TD/board; do not rewrite upstream reports"
+  },
+  "rollback": "delete or ignore T10.ss-g0-prod-verdict/** only; P1/P2/P3 frozen sets and run-level planning files are untouched",
+  "notes": [
+    "process deviation: P4 dev used 31 calls > 25 (6 over) because of build-script path/rounding fixes and adding lessons-r0.md; 0 sim / 0 TD, no evidence increment and no acceptance impact; disclosed for the tester",
+    "0-sim merge only: all values are read from frozen P1/P2/P3 JSON and re-asserted; upstream reports are not rewritten"
+  ]
+}

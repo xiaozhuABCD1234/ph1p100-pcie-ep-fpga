@@ -1,0 +1,202 @@
+﻿{
+    "task_id":  "T10.b1-a1-uart-integ",
+    "run_id":  "20261020-0209_singleA_aplus_closedloop",
+    "revision":  "r2",
+    "date":  "2026-10-23",
+    "status":  "blocked",
+    "ready_for_test":  false,
+    "tester":  null,
+    "package_type":  "bounded closeout of P1: header_crc timing fix + 8x2 reference/crop diagnostic + root-cause isolation of the full-frame mismatch; no TD/bitgen/download",
+    "status_reason":  "header_crc is fixed and verified (true on 8x2 and 64x8 frames); the 8x2 micro geometry proves both the reference ROI convention and a1_raw_crop are correct (DUT raw == reference, origin (2,4)). The remaining full-frame difference is one duplicated 256-bit word at the start of the raw read-back (raw[i]==exp[i-20] for all 2,591,980 bytes with i\u003e=20; DDR model memory content is correct, so the defect is in the read/feed path). The fixing files (a1_ddr_slot_store.v read FSM, a1_ddr_arb2.v read grant, camera_a1_uart_top.v feeder) are NOT in r2 write_scope -\u003e BLOCKED by design, no out-of-scope edit made.",
+    "r2_fixes":  [
+                     {
+                         "change":  "crc_fin precomputed at hdr_idx==39 together with folding byte 39",
+                         "file":  "a1_uart_export.v",
+                         "verified_by":  "8x2 and 64x8 frames header_crc_ok=true"
+                     }
+                 ],
+    "r2_diagnostics":  {
+                           "micro8x2":  {
+                                            "dut_raw_equals_reference":  true,
+                                            "header_crc_ok":  true,
+                                            "all_crc_ok":  true,
+                                            "origin":  "(2,4)",
+                                            "geometry":  "CAM 32x4 ROI(4,2) W8 H2"
+                                        },
+                           "mid64x8":  {
+                                           "blk0_eq_blk1":  true,
+                                           "shift_20_match":  "620/620",
+                                           "shift_0_match":  "116/640",
+                                           "header_crc_ok":  true,
+                                           "geometry":  "CAM 128x16 ROI(0,0) W64 H8"
+                                       },
+                           "ddr_mem_probe":  {
+                                                 "mem1":  "35302b2600211c1712002f2a2520001b16110c",
+                                                 "waddr":  31,
+                                                 "conclusion":  "written data and DDR content correct; duplication is on the read/feed side",
+                                                 "rd_words":  32,
+                                                 "rd_idx":  25,
+                                                 "mem0":  "29241f1a0015100b0600231e1914000f0a0500"
+                                             },
+                           "full_frame_r1_analysis":  {
+                                                          "rule":  "raw[i]==exp[i-20] for i\u003e=20",
+                                                          "meaning":  "exactly one extra 20-byte (4-group) word at frame start",
+                                                          "zero_shift_match":  514100,
+                                                          "matched":  "2591980/2591980"
+                                                      }
+                       },
+    "open_defect":  {
+                        "proposed_fix":  "feeder take-on-latch (assert rd_take when latching wbuf) plus an AR-once guard in the store, after adding read/dup counters",
+                        "symptom":  "first 256-bit word read twice, last word never read; frame shifts by 20 B",
+                        "location":  "a1_ddr_slot_store.v read FSM / a1_ddr_arb2.v read grant / camera_a1_uart_top.v feeder",
+                        "in_r2_scope":  false
+                    },
+    "not_run":  {
+                    "evidence_boundary":  "not_run",
+                    "mode2_semantics":  "not_run (mismatch blocks meaningful fault evidence)",
+                    "mode1_or_maxlength":  "not_run",
+                    "full_1080p_rerun":  "not_run"
+                },
+    "boundaries":  {
+                       "td":  0,
+                       "core_unchanged":  true,
+                       "bitgen":  0,
+                       "download":  0,
+                       "frame_unchanged":  true,
+                       "thresholds_relaxed":  false,
+                       "sdc_untouched":  true
+                   },
+    "artifacts":  [
+                      {
+                          "path":  "fpga/csi2/src/a1/a1_raw_crop.v",
+                          "sha256":  "ca2f5d1656cd3b247707e3abd86b2d543e4b0da518cd835513308bd6ff6ebd01",
+                          "bytes":  5229
+                      },
+                      {
+                          "path":  "fpga/csi2/src/a1/a1_ddr_slot_store.v",
+                          "sha256":  "5196c07aed52a8a32f0b36eecfaa1ea069c1674776ebe93f2b13485538160958",
+                          "bytes":  10134
+                      },
+                      {
+                          "path":  "fpga/csi2/src/a1/a1_ddr_arb2.v",
+                          "sha256":  "6513ad839dee02e932c49bdfd5afa3d62c382d4a144b8e74d5574273804afdc6",
+                          "bytes":  3739
+                      },
+                      {
+                          "path":  "fpga/csi2/src/a1/a1_uart_export.v",
+                          "sha256":  "1d7ea9aa0d11574e2691347ae22165bed6921ed82ed97174fc36759bd3f7df91",
+                          "bytes":  12286
+                      },
+                      {
+                          "path":  "fpga/csi2/src/a1/camera_a1_uart_top.v",
+                          "sha256":  "e88de0910ff0ff6513bd4f7961f4939bd1510a38906672ba526ab03e6a8d7bf8",
+                          "bytes":  18898
+                      },
+                      {
+                          "path":  "tools/a1/a1_pattern.py",
+                          "sha256":  "7d1df4ed32fd95476dda5de26179969374b4c24baa61e639b0551ac8d6fd2713",
+                          "bytes":  6022
+                      },
+                      {
+                          "path":  "tools/a1/pc_decode.py",
+                          "sha256":  "4df8eccf84da446066cdb09fb60b18fc13ce3dff803f96edfb33c3c66818f096",
+                          "bytes":  5161
+                      },
+                      {
+                          "path":  "tools/a1/verify_p1.py",
+                          "sha256":  "bb87c889ba3e02bebd5c2730e434553d33f087615b523a559d4849899a1788a2",
+                          "bytes":  6919
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r0/sim/tb_camera_a1_uart_top.v",
+                          "sha256":  "0667dffa0deee31e214440d387b5f4f5e04b0e5fad358dc25236cfee3085d714",
+                          "bytes":  10891
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r0/sim/a1_ddr_model.v",
+                          "sha256":  "bbb41b89361d5235b11718a245443cd5ddd6dbe025a9f5eee70a5ad1205dc8b9",
+                          "bytes":  2509
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r0/run_p1.ps1",
+                          "sha256":  "7eaa6c0a12546f7f17cd2a5c33cf3f598ab72219ef6f8d99352341e2cead51cb",
+                          "bytes":  4975
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r2/memprobe.do",
+                          "sha256":  "4614a07cc93d05362775c031d5bb26e889c6375b667cafbcbc0fbcc79892c012",
+                          "bytes":  540
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r2/result-r2.md",
+                          "sha256":  "d5b22ee821a48b4daf7167b52d4bcbb6b74f102548b310608bf28c9f38d93d1c",
+                          "bytes":  5910
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r2/lessons-r2.md",
+                          "sha256":  "eec1dcb74eeb7dd737e2dbbe290806a46e8c628430bbc31da7becaeccf173a7d",
+                          "bytes":  1672
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r2/micro8x2_diag.json",
+                          "sha256":  "5251e5d3bbbd623da8a3840f0a47f02f104d120f78b809fe95778e4255cda62c",
+                          "bytes":  346
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r2/captures/micro8x2.dec",
+                          "sha256":  "fa513a2b5a7f268be9f29d62aea6c44aaab796d0f23256b0e1049f50acceedef",
+                          "bytes":  249
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r2/captures/micro8x2.stats",
+                          "sha256":  "eb789ab04596284dfd229c9f40f20accea5b9eb04b58bcce8f759ba96262789f",
+                          "bytes":  119
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r2/captures/mid64x8.dec",
+                          "sha256":  "dc87b8cb80ffeb387544934495d9cb6543dba65a92053cf6b5e5f2b60defdfe6",
+                          "bytes":  1021
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r2/captures/mid64x8.stats",
+                          "sha256":  "5b9ed93714b828e67f0689a24fd7d3ade0124e1b348c89e55b574680de0e6b24",
+                          "bytes":  121
+                      },
+                      {
+                          "path":  "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v",
+                          "sha256":  "bf6af3903f123d753391358ab003cd6ae4ec4a6a281a09dfa6e33b67798b1080",
+                          "bytes":  78627
+                      },
+                      {
+                          "path":  "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v",
+                          "sha256":  "18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+                          "bytes":  23675
+                      },
+                      {
+                          "path":  "fpga/csi2/src/mem/capture_async_fifo.v",
+                          "sha256":  "59dd6dcb5b7e7774f7d6518f50f56cafbc8be6b70e8ae1508236bac2b5af531d",
+                          "bytes":  2044
+                      }
+                  ],
+    "result":  "result-r2.md",
+    "lessons":  "lessons-r2.md",
+    "budget":  {
+                   "wall_min":  "~30/40",
+                   "sub_timebox_note":  "root-cause probe overran the 8 min diagnostic box by ~2 min for the DDR memory forensics",
+                   "calls":  "14/25"
+               },
+    "blocked":  {
+                    "detail":  "root cause proven but its fix location is outside the r2 authorized write scope",
+                    "minimal_next_step":  "authorize a1_ddr_slot_store.v / a1_ddr_arb2.v / camera_a1_uart_top.v for the read-back duplicate fix, then MODE=2 semantics + MODE=1/max-length + full 1080p 0 mismatch",
+                    "reason_code":  "SCOPE_CLARIFICATION",
+                    "last_evidence":  "T10.b1-a1-uart-integ/r2/result-r2.md §3"
+                },
+    "retest":  {
+                   "tester_required":  false,
+                   "required_dimensions":  [
+                                               "integrated"
+                                           ],
+                   "note":  "blocked; no PASS",
+                   "input_status":  "changed (a1_uart_export.v only this round); core/frame/SDC unchanged"
+               }
+}

@@ -1,0 +1,241 @@
+{
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "project_root": "D:\\fpga\\ph1p100",
+  "output_dir": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop",
+  "task_ids": [
+    "T10.b3-board-bringup"
+  ],
+  "package_id": "T10.b3-board-bringup",
+  "package_type": "P3 authorized short board bring-up: 1 SRAM download of frozen P2 bit, real A frame capture/compress/save/readback/UART/PC decode; TPG-into-A+ not available (boundary); no Flash",
+  "same_run": true,
+  "new_run": false,
+  "batch_size": 1,
+  "status": "ready",
+  "needs_user_input": false,
+  "question_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\question-board-chain.md",
+  "round": "r0",
+  "next_action": "spawn_agent",
+  "next_role": "fpga-dev",
+  "authorization": {
+    "quote": "该给的权限我给，该上电的我都上了，剩余按默认或者你做好判断，我也基本都是符合的，开始执行吧（我现在另一个对话想把目前文件夹里的工程全部搬运到D盘统一维护，后续生成工程文件也需要再D盘，这些都要注意，如发现工程路径出现问题，先不要停止）。",
+    "date": "2026-10-24",
+    "type": "explicit_user_authorization_and_default_confirmation_for_p3",
+    "defaults_confirmed": [
+      "board window/presence: powered and authorized; A camera connected, B disconnected, BANK13 1.8V (default)",
+      "lens/exposure/scene fixed; ROI center 1920x1080 2x2 aligned; Bayer RGGB phase-0",
+      "UART: auto-detect COM; host Python3+pyserial+zlib",
+      "order: TPG first, real A second; failure stop; no automatic second download",
+      "Q9 boundary: accept boundary; unrun items recorded, do not block P3",
+      "scope: one SRAM download only; no Flash/efuse/SPI/svf; no PCIe/RK; no dual/G4"
+    ],
+    "one_sram_download": {
+      "bit": "d1ac8726e84f6584d49979dd223d6e8c484e559bf2a3ad3b2302972c58efc142",
+      "cwc": "37b608540f7924f60a09db5ba2b543334db1259ef69f2a1c982cf161cbc8b25c",
+      "bid": "3de68e686e419e20cd85a332e40caa740b9aae55d666c3e8816ef7033d04f213",
+      "count": 1,
+      "no_flash": true,
+      "no_second_download": true
+    },
+    "not_authorized": [
+      "second SRAM download",
+      "Flash/efuse/SPI/svf",
+      "PCIe/RK/dual/G4",
+      "bit/CWC rebuild or change",
+      "faking TPG or board PASS"
+    ]
+  },
+  "path_migration": {
+    "date": "2026-10-24",
+    "status": "done_by_user_session_before_dispatch",
+    "old_root": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+    "old_root_exists": false,
+    "new_root": "D:\\fpga\\ph1p100",
+    "mapping": [
+      {
+        "old": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+        "new": "D:\\fpga\\ph1p100"
+      },
+      {
+        "old": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop",
+        "new": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop"
+      },
+      {
+        "old": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b2-a1-uart-impl\\r3\\td\\a1_board.bit",
+        "new": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b2-a1-uart-impl\\r3\\td\\a1_board.bit"
+      },
+      {
+        "old": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\upstream\\ph1p100-pcie-ep-fpga",
+        "new": "D:\\fpga\\ph1p100\\upstream\\ph1p100-pcie-ep-fpga"
+      },
+      {
+        "old": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\tools\\a1\\pc_decode.py",
+        "new": "D:\\fpga\\ph1p100\\tools\\a1\\pc_decode.py"
+      }
+    ],
+    "nested_duplicate": {
+      "path": "D:\\fpga\\ph1p100\\workflow\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop",
+      "content": "搬运残留，仅 test-reports/ 下 5 个 2026-10-22 日志文件（exitcodes.txt、gen.err、gen.log、vlog.log、_info）；无 bit/CWC/报告",
+      "policy": "只读、不删除、不作为主源；不得从此副本取候选、证据或路径",
+      "main_source": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop"
+    },
+    "path_issue_rule": "旧 C: 路径一律按本映射改到新根；新根下找不到时使用 P3 workdir 的冻结 bit/CWC/manifest/PC 解码器副本继续；先记录、不停止、不批量删除。"
+  },
+  "artifact_verification": {
+    "verified_at": "2026-10-24",
+    "verified_by": "planner",
+    "method": "Get-FileHash -Algorithm SHA256 against new root files",
+    "manifest_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b2-a1-uart-impl\\r3\\CANDIDATE-MANIFEST-b2-a1-uart-impl-r3.json",
+    "bit": {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b2-a1-uart-impl\\r3\\td\\a1_board.bit",
+      "sha256": "d1ac8726e84f6584d49979dd223d6e8c484e559bf2a3ad3b2302972c58efc142",
+      "bytes": 5224022,
+      "match_manifest": true
+    },
+    "cwc": {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b2-a1-uart-impl\\r3\\td\\a1_board.cwc",
+      "sha256": "37b608540f7924f60a09db5ba2b543334db1259ef69f2a1c982cf161cbc8b25c",
+      "bytes": 110248,
+      "match_manifest": true
+    },
+    "bid": {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b2-a1-uart-impl\\r3\\td\\a1_board_inst.bid",
+      "sha256": "3de68e686e419e20cd85a332e40caa740b9aae55d666c3e8816ef7033d04f213",
+      "bytes": 96832,
+      "match_manifest": true
+    },
+    "p1_r6_manifest": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b1-a1-uart-integ\\CANDIDATE-MANIFEST-b1-a1-uart-integ-r6.json",
+    "p2_tester_report": "D:\\fpga\\ph1p100\\test-reports\\T10.b2-a1-uart-impl-r3-integrated.md",
+    "note": "P2 tester report lives at project-root test-reports/, not under the run directory; use the absolute path above."
+  },
+  "path_convention": {
+    "source_tree": "D:\\fpga\\ph1p100",
+    "p3_workdir_default": "D:\\fpga_work\\20261020-0209_singleA_aplus_closedloop\\P3",
+    "p3_workdir_create": "create if missing; verify writable before copying",
+    "fallback_if_D_unavailable": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b3-board-bringup\\r0",
+    "fallback_rule": "If D:\\fpga_work cannot be created or written, use the fallback run dir, record workdir_used and fallback_reason in the P3 result; do not stop.",
+    "copy_to_p3_workdir": [
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b2-a1-uart-impl\\r3\\td\\a1_board.bit",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b2-a1-uart-impl\\r3\\td\\a1_board.cwc",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b2-a1-uart-impl\\r3\\td\\a1_board_inst.bid",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b2-a1-uart-impl\\r3\\CANDIDATE-MANIFEST-b2-a1-uart-impl-r3.json",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b2-a1-uart-impl\\r3\\artifact-hashes.txt",
+      "D:\\fpga\\ph1p100\\tools\\a1\\pc_decode.py",
+      "D:\\fpga\\ph1p100\\tools\\a1\\a1_pattern.py",
+      "D:\\fpga\\ph1p100\\tools\\a1\\verify_p1.py",
+      "D:\\fpga\\ph1p100\\test-reports\\T10.b2-a1-uart-impl-r3-integrated.md",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b1-a1-uart-integ\\CANDIDATE-MANIFEST-b1-a1-uart-integ-r6.json"
+    ],
+    "copy_verify": "after copying, re-hash in the P3 workdir and require the same SHA256 (bit d1ac8726…c142, CWC 37b60854…b25c, BID 3de68e68…f213)",
+    "td_env": "Y: = D:\\fpga\\ph1p100; T: = P3 TD workdir (under the chosen P3 workdir); X: reserved for TD, never map the project root to X:. New root is short ASCII, so subst is compatibility-only; record the actual mapping.",
+    "sim_env": "P: = D:\\fpga\\ph1p100; W: = current sim run",
+    "no_batch_delete": true
+  },
+  "p3_scope": [
+    {
+      "step": 1,
+      "name": "Prepare D: P3 workdir and verify frozen artifacts",
+      "content": "Create D:\\fpga_work\\20261020-0209_singleA_aplus_closedloop\\P3 (fallback run dir if D: unavailable; record which). Copy frozen bit/CWC/BID/manifest/PC decoder from the new-root paths listed in path_convention.copy_to_p3_workdir; verify SHA256 against the P2 r3 manifest (bit d1ac8726…c142, CWC 37b60854…b25c, BID 3de68e68…f213). Record workdir_used, path mapping and hashes.",
+      "timebox_min": 10
+    },
+    {
+      "step": 2,
+      "name": "One SRAM download + reset",
+      "content": "Use TD BitWriter, AL-LINK-FT, SRAM only. Download exactly once; verify BID 3de68e68…f213 and bit hash; power/reset the board. Do not write Flash. If download fails, stop and keep logs; no second download.",
+      "timebox_min": 15
+    },
+    {
+      "step": 3,
+      "name": "UART host + real A frame",
+      "content": "Auto-detect COM. Frozen bit UART_DIV=1628 at 187.5 MHz = 115.172 kbaud; use 115200 8N1. 921600 is NOT supported by the frozen bit and would require a new bit/CWC (out of scope); record this. Capture one complete real A frame through camera->DDR->A+->compressed store->readback->UART; save raw UART bytes/header/stream/raw/decoded under the P3 workdir; PC zlib decode + inverse; record CRC/length/throughput.",
+      "timebox_min": 45
+    },
+    {
+      "step": 4,
+      "name": "TPG boundary handling",
+      "content": "The frozen P2 bit has no TPG source into the A+ chain; HDMI TPG is display-only. Do NOT fake a TPG A+ frame. Record tpg_a_plus=not_available/boundary. If the user later requires TPG, stop and request a new bit (out of scope). The real A frame is the P3 primary evidence.",
+      "timebox_min": 5
+    },
+    {
+      "step": 5,
+      "name": "Record + finalize",
+      "content": "Record bit/CWC/BID hashes, COM/baud, frame count, header/CRC/length, PC decode/restore, reset/recovery, no half-frame, path migration mapping, workdir_used, and all boundaries. Write P3 result/manifest under the D: P3 workdir (or fallback). No Flash; no second download.",
+      "timebox_min": 15
+    }
+  ],
+  "gates": {
+    "board": "one complete real A frame: PC zlib decode success; raw CRC match; stream length/CRC; no half-frame; reset/recovery; throughput recorded",
+    "tpg": "tpg_a_plus=not_available (HDMI TPG only); recorded as boundary; not claimed as PASS",
+    "artifacts": "bit/CWC/BID hashes unchanged; 1 SRAM download max; no Flash",
+    "path": "D: workdir used or fallback recorded; old->new mapping recorded; nested duplicate never used as source"
+  },
+  "budget": {
+    "board_minutes_max": 90,
+    "downloads_max": 1,
+    "td_sessions": 0,
+    "bitgen": 0,
+    "cwc": 0,
+    "flash": 0,
+    "dev_minutes_max": 90,
+    "dev_calls_max": 50,
+    "p4_tester_minutes_max": 60,
+    "p4_tester_calls_max": 40
+  },
+  "stop_conditions": [
+    "Download fails or BID/bit hash mismatch -> stop; no second download.",
+    "No complete real frame or PC decode/CRC failure -> stop; keep logs; no second download.",
+    "Any half-frame publish, bit/CWC change, Flash/PCIe/RK/dual/G4 -> stop.",
+    "TPG-into-A+ unavailable is recorded as boundary, not a reason to fake or stop by itself.",
+    "Path issue: use path_migration mapping; if new-root source is missing use frozen P3 workdir copies; record and continue, never stop for path issues.",
+    "90 min board or 90 min/50 calls dev budget exhausted -> stop with evidence."
+  ],
+  "p4": {
+    "package": "T10.b4-integrated-verify",
+    "trigger": "after P3 completes (PASS or PASS-with-boundary)",
+    "role": "new independent tester",
+    "budget": "60 min/40 calls; no TD/download",
+    "scope": "verify P3 evidence, PC decode, hashes, no half-frame, path mapping, boundaries"
+  },
+  "path_contract": {
+    "board": "TD BitWriter + AL-LINK-FT; SRAM only; no Flash",
+    "sim": "P: = project root (D:\\fpga\\ph1p100), W: = current sim run",
+    "doc": "D:\\fpga\\ph1p100\\tools\\td\\PATH_CONTRACT.md"
+  },
+  "write_scope": {
+    "create_new": [
+      "D:\\fpga_work\\20261020-0209_singleA_aplus_closedloop\\P3\\**",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b3-board-bringup\\r0\\** (fallback only)"
+    ],
+    "must_not_modify": [
+      "P2 bit/CWC/BID/manifest",
+      "P1 r6 evidence/manifest",
+      "old runs/manifests",
+      "D:\\fpga\\ph1p100\\workflow\\workflow\\** (nested duplicate, read-only)",
+      "source RTL/tools outside the P3 workdir",
+      "board Flash/PCIe/RK",
+      "no batch delete"
+    ]
+  },
+  "next_action_detail": {
+    "role": "fpga-dev",
+    "skill_path": "D:\\fpga\\ph1p100\\.agents\\skills\\fpga-dev\\SKILL.md",
+    "task": "T10.b3-board-bringup r0: create D: P3 workdir, copy/verify frozen bit/CWC/BID/decoder from D:\\fpga\\ph1p100, 1 SRAM download, reset, UART 115200 (frozen bit; 921600 unsupported), one real A frame through the chain + PC decode/CRC; record TPG-into-A+ not_available boundary; no Flash/second download; use path_migration mapping and never stop for path issues.",
+    "must_read": [
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\dev-plan.md §57",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\dispatch-b3.json",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\question-board-chain.md",
+      "D:\\fpga\\ph1p100\\test-reports\\T10.b2-a1-uart-impl-r3-integrated.md",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b2-a1-uart-impl\\r3\\CANDIDATE-MANIFEST-b2-a1-uart-impl-r3.json",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b1-a1-uart-integ\\CANDIDATE-MANIFEST-b1-a1-uart-integ-r6.json",
+      "D:\\fpga\\ph1p100\\tools\\a1\\pc_decode.py",
+      "D:\\fpga\\ph1p100\\tools\\td\\PATH_CONTRACT.md"
+    ],
+    "first_checks": [
+      "D: workdir created (or fallback recorded) and bit/CWC/BID SHA verified in the workdir",
+      "BID/bit hash match before download",
+      "UART 115200 (not 921600) because UART_DIV=1628",
+      "TPG-into-A+ unavailable; do not fake",
+      "nested duplicate workflow\\workflow never used as source"
+    ]
+  },
+  "user_summary_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\user-summary.md"
+}

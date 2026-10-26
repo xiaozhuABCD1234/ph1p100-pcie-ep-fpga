@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "kind": "td2026_b_run2",
+  "workpackage": "T01.tool-D-B-run2 (second independent reproduction: preparation + post-GUI verification + adjudication)",
+  "recorded_at": "2026-10-17T14:4x+08:00",
+  "status": "complete - two independent reproductions established",
+  "run2_dir": "D:\\TD\\work\\csi2\\_validation\\td2026_b_run2_20261017_143128",
+  "prep": {
+    "method": "same frozen recipe as run1 (CLI create + full 1333 parameter injection, stopped before Generate); GUI Generate by the user (session ~14:36)",
+    "project": {"file": "ddr1333_proj_boot2.al", "pre_gui_sha256": "FA3577D44CE6AE3BA7711134FB4CAF3EAC2E172EEF9D2D8F132ECCCC1032044D", "post_gui_sha256": "E8C0D526ABCEDBB6C294BAC63AA7C6291437F7160F2FE4A65EC07B69B6B260EF", "post_gui_bytes": 2020},
+    "input_adc": {"sha256": "F09042381856BF55DE58F89DEBF70167A2956904528D92FD71C6993C08DB33DA", "source": "read-only copy from ddr1333_ip_20261015_190248"},
+    "pre_gui_manifest": {"file": "pre_gui_manifest_run2.json", "bytes": 4400, "sha256": "AC84C64A5067F60BCF37724086E118DF74E7E6516B8B3C8A6D25ABB97C396C5E", "file_count": 17},
+    "staging_pre_state": {"drc_log_sha256": "A84710540EE484F6A7AB74625F6CDA3B0AAAD3FE357961AFC54FB3D35D3CBAF0", "note": "byte-identical to run1's pre-GUI staging drc log"}
+  },
+  "gui_session_result": {
+    "completion_markers": ["ipgen_gui_click_push_button StandardProgressDialog GenOptionDialog.Generate", "StandardMessageBox '#IP Gen Succeeded' -> Ok", "#GUI-2000 : The IP files have been generated successfully. :{PH1P100SBG484(D:/TD/work/csi2/_validation/td2026_b_run2_20261017_143128/ip_out/ddrmc_x32/ddrmc_x32.xml)}"],
+    "post_gui_diff": {
+      "new_files": "66 files incl. ip_out/ddrmc_x32_adc.log (5988 B), ddrmc_x32_proc.log (391 B), the full src/rtl tree, src/adc, src/sdc, sim/fileset, wrapper (ddrmc_x32.v + ddrmc_x32_ph1p_ddrmc_wrapper.v), run.bat, multirun_script.tcl",
+      "changed": [".al (FA3577D4 -> E8C0D526)", "ddrmc_x32_drc_check.log (2F06.. -> 757219756351EE532625BB7DEF55D6E08DC0C42CABD37C77D0974B952E68537E)", ".m_params (.. -> 6401066A5CF41AAE3DB87D687EADDDD0BBCA2089EA49723D72A8B9D2B8A40FFB)", ".params (9B9FFAE3 -> A38A3D18382C1559..)", "ddrmc_x32.xml (.. -> 4173782D9540CA17..)", "Design.xml (.. -> B231A8E8010B53AC..)"],
+      "removed": ["ip_out/.IpToolIpDataBackupDir_ddrmc_x32 staging dir (cleaned by the GUI flow, same as run1)"]
+    },
+    "key_logs": {
+      "log/ipgen.log": {"bytes": 2091, "sha256": "D2DA86840312AD2BA21D1792EACD3F94D79EBC5697262CA9FDD7E2E2B0DC87D8"},
+      "ip_out/ddrmc_x32_adc.log": {"bytes": 5988, "sha256": "C50695DF67A6902A17CB52036E1D03534DFA308CA788BF7197FA42F5ADC229FF", "note": "byte-identical to run1 adc.log"},
+      "ip_out/ddrmc_x32_drc_check.log": {"bytes": 489, "sha256": "757219756351EE532625BB7DEF55D6E08DC0C42CABD37C77D0974B952E68537E", "note": "byte-identical to run1"},
+      "ip_out/ddrmc_x32_proc.log": {"bytes": 391, "sha256": "9C1CDF4B2F89604C9189C6504ECB8485BE1AEF658B05807012687EB72026686F", "note": "byte-identical to run1"}
+    }
+  },
+  "run2_verification": {
+    "pincompare": {"file": "run2_pincompare_result.json", "bytes": 190, "sha256": "27C375C7A767F856A8ED000FD59BD50DAD0D66733D0CF79BAAFE145A13F5E6DC", "golden": 71, "generated": 70, "matched": 70, "mismatched": 0, "missing": "ddr_addr[14] (expected exclusion, ADR_WIDTH=14)", "extras": 0},
+    "run2_manifest": {"file": "run2_candidate_manifest.json", "bytes": 11027, "sha256": "9B3E5D002B6C433726AE2FE703EE40F9F1CE933E494F95712CC3173ACD09D716", "file_count": 64}
+  },
+  "run1_vs_run2": {
+    "method": "full recursive byte compare (run2_verify.py) + field-level semantic comparison (semantic_diff.py: XML attribute-order/whitespace-insensitive + per-run-dir + timestamp normalization)",
+    "summary": {"files_total": 64, "byte_identical": 60, "differing": 4, "only_run1": 0, "only_run2": 0, "core_missing": []},
+    "differing_files_analysis": [
+      {"rel": "ddrmc_x32/.params_ddrmc_x32.txt", "cause": "only the PH1P_IO_ASSIGN value string differs: <run1 dir>/input_pins.adc vs <run2 dir>/input_pins.adc", "proof": "after normalizing the two run-directory strings the files are byte-identical (semantic_diff.py normalized_equal=true)", "impact": "none - same ADC content (both F0904238...); the generated adc.log is byte-identical"},
+      {"rel": "ddrmc_x32/Design.xml", "cause": "only the same PH1P_IO_ASSIGN path string", "proof": "XML semantic diff after normalization = 0", "impact": "none"},
+      {"rel": "ddrmc_x32/ddrmc_x32.v", "cause": "only the 'Gen time' header timestamp (Oct 17 2026 14:23:00 vs 14:36:19)", "proof": "timestamp-normalized files are byte-identical", "impact": "none"},
+      {"rel": "ddrmc_x32/ddrmc_x32.xml", "cause": "XML attribute order / formatting only (xmlns:xsi vs xmlns:ipxact order; designRef/designConfigurationRef attribute order)", "proof": "XML semantic diff = 0 (attribute-order-insensitive compare)", "impact": "none"}
+    ],
+    "artifacts": {
+      "run1_run2_diff_report.json": {"bytes": 12252, "sha256": "579BE12AF6092CF13B38C390A71E329D3F67E1B40B66E0FCDD3FA56E3FE3C8CB"},
+      "semantic_diff_result.json": {"bytes": 390, "sha256": "9B30DF6584FA42EC848C7D17159D8A0488E42F08997DA9791859A8E17C6C15EF"}
+    }
+  },
+  "adjudication": {
+    "two_independent_reproductions": "ESTABLISHED (PASS)",
+    "basis": ["both reproductions produced the full closure with the same completion marker (#IP Gen Succeeded)",
+              "60/64 files byte-identical outright - including ALL RTL sources, src/adc, src/sdc, .m_params, .ports, DesignConfiguration.xml, the ph1p wrapper, and the adc/drc/proc logs (the adc.log and drc_check.log are byte-identical, the strongest possible pin-map equivalence proof)",
+              "the 4 differing files are each proven non-substantive by field-level analysis: two contain only the per-run input_pins.adc directory string (same file content), one only the generation timestamp, one only XML attribute ordering (semantic diff 0)"],
+    "not_claimed": "no headless success (the generation mechanism is CLI-bootstrap + user-attended GUI Generate, as established); no bit, no board actions"
+  },
+  "t01_next_entry": {
+    "recommended_candidate": "run1 closure: D:\\TD\\work\\csi2\\_validation\\td2026_gui_bootstrap_20261017_000935\\ip_out (manifest candidate_manifest.json, sha256 D71057F3E3B859AD34BBEC477232938A8AA6DE8BBDDF04AE1C75605074C08434, 64 files)",
+    "mirror_candidate": "run2 closure: D:\\TD\\work\\csi2\\_validation\\td2026_b_run2_20261017_143128\\ip_out (manifest run2_candidate_manifest.json, sha256 9B3E5D002B6C433726AE2FE703EE40F9F1CE933E494F95712CC3173ACD09D716, 64 files)",
+    "integration_inputs": ["the 64-file ip_out closure (instance xml/params + src/rtl + src/adc + src/sdc + wrapper + logs)",
+                           "project bootstrap files of either run dir (ddr1333_proj_boot*.al + input_pins.adc F0904238...) for reference",
+                           "note: PH1P_IO_ASSIGN inside .params/Design.xml points at the respective run dir's input_pins.adc; the localized src/adc/ddrmc_x32.adc is self-contained for integration"],
+    "boundary": "T01 follow-on work (integration, synthesis, STA, bit, CWC) is out of scope for this run; no bit generation, no board actions here"
+  },
+  "boundaries": {"no_gui_started_by_dev": true, "run1_existing_dirs_untouched": true, "no_downlaod_changes": true, "no_batch_deletes": true, "no_hardware": true}
+}

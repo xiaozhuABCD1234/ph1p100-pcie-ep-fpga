@@ -1,0 +1,564 @@
+{
+  "task_id": "T02.chain-input-review",
+  "round": 0,
+  "findings": [
+    {
+      "finding_id": "T02-F01",
+      "severity": "high",
+      "kind": "confirmed_issue",
+      "claim": "冻结的b15源工程连接把4×10bit样本向量直接传给要求五字节packed RAW10的A+入口；缺少边界重打包。该结论不声明旧bit实际像素已测坏。",
+      "evidence_refs": [
+        {
+          "source_id": "P_UNPACK",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T02.chain-input-review\\inputs\\csi_rx_10bit_unpack_checked.v",
+          "sha256": "9b5421c55b0f09871f8a939fb3381d4c7d5726286b30f9d5450cc09404065a12",
+          "line_start": 23,
+          "line_end": 31,
+          "reason": "输出拼接为P3/P2/P1/P0四个10bit样本"
+        },
+        {
+          "source_id": "S0151",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0151.v",
+          "sha256": "c9de0d9c176e830df35833eff7e91b811d954fb5480bc13e1fb122ef23305089",
+          "line_start": 376,
+          "line_end": 382,
+          "reason": "相机tap直接传递解包输出"
+        },
+        {
+          "source_id": "S0147",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0147.v",
+          "sha256": "33a6fee77fd1aa67a31cacf26dd5530e5e2ea474ee655cbd5f1d98d887c5d72d",
+          "line_start": 148,
+          "line_end": 161,
+          "reason": "crop只复制40bit而不变换格式"
+        },
+        {
+          "source_id": "S0150",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0150.v",
+          "sha256": "acc1eff329aa295d01b16123581fee48ef49d444efdce3b7fe62214555517405",
+          "line_start": 344,
+          "line_end": 360,
+          "reason": "43bit CDC sideband携带原样40bit"
+        },
+        {
+          "source_id": "S0150",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0150.v",
+          "sha256": "acc1eff329aa295d01b16123581fee48ef49d444efdce3b7fe62214555517405",
+          "line_start": 434,
+          "line_end": 452,
+          "reason": "捕获skid原样接收"
+        },
+        {
+          "source_id": "S0144",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+          "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+          "line_start": 156,
+          "line_end": 163,
+          "reason": "raw store按40bit原样拼接"
+        },
+        {
+          "source_id": "S0150",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0150.v",
+          "sha256": "acc1eff329aa295d01b16123581fee48ef49d444efdce3b7fe62214555517405",
+          "line_start": 687,
+          "line_end": 694,
+          "reason": "feeder按40bit原样切片"
+        },
+        {
+          "source_id": "S0146",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0146.v",
+          "sha256": "0064607aceb20ae3ef14133f0aaf5f8b3f489943011a66a1ddc005350dba7109",
+          "line_start": 393,
+          "line_end": 399,
+          "reason": "A+按字节和末字节LSB解读"
+        }
+      ],
+      "reproduction": "python -B -X utf8 witness/check_input_contract.py --out <tester允许目录>；[0,1,2,3]的wire字=e400000000，解包字=00c0200400，消费者读成[0,16,128,768]。",
+      "impact": "图像样本值和Bayer平面输入语义错误；压缩/解压及CRC相互一致仍可掩盖“起始像素已经解释错”的问题。",
+      "recommendation": "后续在唯一边界明确选择packed bytes或sample lanes；若保留A+合同，参考RAW writer的显式重打包，并补跨真实checked解包到解码后像素的端到端检查。此包不改RTL。",
+      "expected_benefit": "恢复正确样本语义；不以压缩比或代码行数估算收益。",
+      "tradeoff": "增加或移动组合打包边界；须复核时序、字节CRC、已有golden来源和模式元数据。",
+      "validation": "独立测试者用不同判据解析concat/或直接运行真实unpack并对比源样本；混合LSB/高位、0/1023、lane顺序、所有keep尾部；后续绑定新候选做G2及板上原图比对。",
+      "disposition": "correctness_first; implementation_deferred"
+    },
+    {
+      "finding_id": "T02-F02",
+      "severity": "high",
+      "kind": "confirmed_issue",
+      "claim": "b15顶层将相机cap_frame_end/good/abort悬空，A+捕获仅依据ROI计数out_last，无法接收CSI随后产生的坏帧撤销。",
+      "evidence_refs": [
+        {
+          "source_id": "S0152",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0152.v",
+          "sha256": "48881d574352fd2c61f7587d3687f215bb11ea18d5b5d0b4772820a938de561b",
+          "line_start": 108,
+          "line_end": 127,
+          "reason": "三个裁决输出全部悬空"
+        },
+        {
+          "source_id": "P_MIPI",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T02.chain-input-review\\inputs\\mipi_csi2_rx_ph1p.v",
+          "sha256": "798fc8957479663c91a0fa30c42f88c432c43c6b0002a15a14fd96b5f384c036",
+          "line_start": 121,
+          "line_end": 150,
+          "reason": "完整性层产生裁决且像素先流出"
+        },
+        {
+          "source_id": "P_CSI",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T02.chain-input-review\\inputs\\csi_rx_packet_integrity.v",
+          "sha256": "9e46297e4e1bfee5462657112544f509fe2eec83644edf5d07aedc4df990ac08",
+          "line_start": 92,
+          "line_end": 105,
+          "reason": "CRC/超时发现晚于已流出的payload"
+        },
+        {
+          "source_id": "S0147",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0147.v",
+          "sha256": "33a6fee77fd1aa67a31cacf26dd5530e5e2ea474ee655cbd5f1d98d887c5d72d",
+          "line_start": 142,
+          "line_end": 159,
+          "reason": "ROI完成置done并禁用后续frame_fall abort"
+        },
+        {
+          "source_id": "S0150",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0150.v",
+          "sha256": "acc1eff329aa295d01b16123581fee48ef49d444efdce3b7fe62214555517405",
+          "line_start": 317,
+          "line_end": 318,
+          "reason": "FIFO abort仅来自crop/overflow"
+        }
+      ],
+      "reproduction": "见witness/run-r0/result.json late_verdict_trace；最后ROI组在源行第722组，后面还有243组，再有该行CRC和后续FE；该行CRC错误不能通过悬空端口撤销A+捕获。",
+      "impact": "ROI最后行的坏CRC、ROI完成后错误或缺FE不构成A+发布门槛；不能以crop_groups/raw_pub作为完整源好帧证明。DDR本身是否能完成发布是另一包问题。",
+      "recommendation": "后续使捕获事务持有到明确采用的完整性裁决，跨域携带同帧good/abort/epoch；明确“整源帧合格”或“逐ROI行合格”的策略并据此定义最后发布点。",
+      "expected_benefit": "防止坏帧被当作有效输入；保留不可反压流入的恢复能力。",
+      "tradeoff": "等待裁决会延长slot占用；只把abort线OR到旧ROI last之后不足以撤销已发布帧。",
+      "validation": "注入最后ROI行CRC错、坏FE、缺FE、重复FS和timeout，验证零发布及后续正常帧恢复；测试必须经过真实checked CSI到捕获门槛。",
+      "disposition": "correctness_first; do_not_close_hardware_task"
+    },
+    {
+      "finding_id": "T02-F03",
+      "severity": "medium",
+      "kind": "confirmed_issue",
+      "claim": "crop声明最后ROI行也需完整CG组，但done在最后ROI像素即置1，使该行后缀的短/长行无法再触发几何检查；这是局部合同与实现不一致。",
+      "evidence_refs": [
+        {
+          "source_id": "S0147",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0147.v",
+          "sha256": "33a6fee77fd1aa67a31cacf26dd5530e5e2ea474ee655cbd5f1d98d887c5d72d",
+          "line_start": 13,
+          "line_end": 18,
+          "reason": "注释声明至最后ROI行都要求精确组数"
+        },
+        {
+          "source_id": "S0147",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0147.v",
+          "sha256": "33a6fee77fd1aa67a31cacf26dd5530e5e2ea474ee655cbd5f1d98d887c5d72d",
+          "line_start": 132,
+          "line_end": 145,
+          "reason": "new_line/frame_fall检查均受!done限制"
+        },
+        {
+          "source_id": "S0147",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0147.v",
+          "sha256": "33a6fee77fd1aa67a31cacf26dd5530e5e2ea474ee655cbd5f1d98d887c5d72d",
+          "line_start": 148,
+          "line_end": 161,
+          "reason": "组计数/last在行结束前完成"
+        }
+      ],
+      "reproduction": "本候选GX=243、OG=480、CG=966：最后ROI组=722，尚余243组。将最后ROI行在第723组之后提前结束，ROI last已经发出，done使后续检查关闭。witness记录该算术和条件。",
+      "impact": "总像素ROI数量正确不证明所依赖源行几何完整；最后一行缩短到ROI右边界仍被视为ROI完成。",
+      "recommendation": "统一F02的提交裁决与最后行检查；若有意忽略ROI外后缀，修改未来合同并证明CRC覆盖/相位策略，不能只删除检查。",
+      "expected_benefit": "消除最后ROI行的边界盲区，减少误导性计数结论。",
+      "tradeoff": "需要存留pending-last与裁决状态，保持abort优先和队列顺序。",
+      "validation": "最小几何正例/末行缺后缀/多后缀/坏CRC/帧早停负例，独立核对last和最终发布；不是重新跑完整1080p长仿真。",
+      "disposition": "share_validation_with_F02"
+    },
+    {
+      "finding_id": "T02-F04",
+      "severity": "medium",
+      "kind": "evidence_gap",
+      "claim": "A+ raw_id仅在成功准入的SOF增加，是admission序号；未见每个源FS递增并穿过CDC/导出的capture_seq或会话epoch绑定。",
+      "evidence_refs": [
+        {
+          "source_id": "S0150",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0150.v",
+          "sha256": "acc1eff329aa295d01b16123581fee48ef49d444efdce3b7fe62214555517405",
+          "line_start": 197,
+          "line_end": 223,
+          "reason": "源frame计数只用于诊断"
+        },
+        {
+          "source_id": "S0150",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0150.v",
+          "sha256": "acc1eff329aa295d01b16123581fee48ef49d444efdce3b7fe62214555517405",
+          "line_start": 310,
+          "line_end": 360,
+          "reason": "FIFO仅abort/last/sof/40bit"
+        },
+        {
+          "source_id": "S0150",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0150.v",
+          "sha256": "acc1eff329aa295d01b16123581fee48ef49d444efdce3b7fe62214555517405",
+          "line_start": 415,
+          "line_end": 460,
+          "reason": "raw_id仅成功begin分支增加"
+        },
+        {
+          "source_id": "S0088",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0088.v",
+          "sha256": "2de28bdff08903f38ecd496e37026500edf0b8449abf8bf871710d3b809c113c",
+          "line_start": 20,
+          "line_end": 24,
+          "reason": "隔离同步mailbox的全事件序号是另一合同"
+        }
+      ],
+      "reproduction": "结构对比：连续三个源SOF，中间一次begin被拒；raw_id只见两次递增，不能从下游ID恢复该源丢帧位置。",
+      "impact": "采集丢帧、准入丢帧和重试无法只凭输出序号区分；双路对齐不能用该序号推定相同曝光。",
+      "recommendation": "后续区分capture_seq/admission_id/export_id与epoch，在源SOF计数并按同帧事务传播，保留拒绝原因。",
+      "expected_benefit": "提升丢帧与配对可观测性；对吞吐无直接承诺。",
+      "tradeoff": "增加元数据位宽与回绕/复位合同，需跨消费者版本验证。",
+      "validation": "丢SOF/中间帧拒绝/复位/序号回绕后，用独立事件日志核对源计数、准入和导出关系。",
+      "disposition": "followup_observability"
+    },
+    {
+      "finding_id": "T02-F05",
+      "severity": "high",
+      "kind": "evidence_gap",
+      "claim": "b15两路各自自动配置并启动，且只把A接入A+；共用MCLK/XCLR不能证明双路曝光同步。SOF配对/重锁仅存在于独立离线轨道证据。",
+      "evidence_refs": [
+        {
+          "source_id": "S0151",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0151.v",
+          "sha256": "c9de0d9c176e830df35833eff7e91b811d954fb5480bc13e1fb122ef23305089",
+          "line_start": 112,
+          "line_end": 116,
+          "reason": "共用启动时钟/复位"
+        },
+        {
+          "source_id": "S0151",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0151.v",
+          "sha256": "c9de0d9c176e830df35833eff7e91b811d954fb5480bc13e1fb122ef23305089",
+          "line_start": 215,
+          "line_end": 239,
+          "reason": "独立配置器"
+        },
+        {
+          "source_id": "P_TABLE",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T02.chain-input-review\\inputs\\ui_imx415_reg.v",
+          "sha256": "60f1ac9a0b8cb0a542312d27ee43bd8d0fbbc29f333f61638907b0739651a843",
+          "line_start": 49,
+          "line_end": 52,
+          "reason": "表内XMASTER=0"
+        },
+        {
+          "source_id": "P_CFG",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T02.chain-input-review\\inputs\\ui_cfg_imx415.v",
+          "sha256": "5fa2f1c3eb9ce7e724bd8e57a22a9aa537ca4cababa6ff41ad9a8c9c9349135c",
+          "line_start": 105,
+          "line_end": 128,
+          "reason": "各自退出standby并启动"
+        },
+        {
+          "source_id": "S0152",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0152.v",
+          "sha256": "48881d574352fd2c61f7587d3687f215bb11ea18d5b5d0b4772820a938de561b",
+          "line_start": 325,
+          "line_end": 337,
+          "reason": "A-only压缩接入"
+        },
+        {
+          "source_id": "S0089",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0089.v",
+          "sha256": "c5f98789188ba372bb8e255aa09173cd63003208bbba0651720477f2356e3260",
+          "line_start": 13,
+          "line_end": 40,
+          "reason": "按控制域接收时刻窗口配对和重锁"
+        },
+        {
+          "source_id": "S0187",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0187.md",
+          "sha256": "172b0ecccab6660bd78b470c1a30f55a939af6022c7d6373637a3edbf8334385",
+          "line_start": 3,
+          "line_end": 7,
+          "reason": "离线隔离候选的交付资格"
+        }
+      ],
+      "reproduction": "搜索冻结b15工程文件列表与top：无sync_offline实例；另读sync_start_ctrl、mailbox/pairer及隔离gate/config源；这些不在b15编译清单。",
+      "impact": "不能将“双路收到帧”“SOF skew落窗”或离线PASS写成板级同曝光配对已完成。",
+      "recommendation": "保留离线同步候选身份；后续迁入真实双路链后绑定角色寄存器、物理同步连接与曝光观测，明确SOF时间戳的CDC延迟误差。",
+      "expected_benefit": "把序号配对、起流控制、曝光同步三个门槛分开，避免错误关闭父T08。",
+      "tradeoff": "新增真实同步线/传感器副作用和板窗验证；不由本包获取设备授权。",
+      "validation": "先核对真实I2C角色写值/等待与失路清理，再测物理曝光与SOF、丢路重锁/全局reset及稳定性。",
+      "disposition": "awaiting_future_hardware_authorization; audit_not_blocked"
+    },
+    {
+      "finding_id": "T02-F06",
+      "severity": "medium",
+      "kind": "evidence_gap",
+      "claim": "FIFO本身有各域同步释放；crop与相机侧诊断却直接使用在clk_a1域释放的a1_rst_n，且未与PHY O_rst_out共同定义恢复契约。现有SDC不等于该释放已签核。",
+      "evidence_refs": [
+        {
+          "source_id": "S0152",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0152.v",
+          "sha256": "48881d574352fd2c61f7587d3687f215bb11ea18d5b5d0b4772820a938de561b",
+          "line_start": 258,
+          "line_end": 269,
+          "reason": "A1域复位生成"
+        },
+        {
+          "source_id": "S0150",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0150.v",
+          "sha256": "acc1eff329aa295d01b16123581fee48ef49d444efdce3b7fe62214555517405",
+          "line_start": 169,
+          "line_end": 180,
+          "reason": "crop直接rst_n"
+        },
+        {
+          "source_id": "S0147",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0147.v",
+          "sha256": "33a6fee77fd1aa67a31cacf26dd5530e5e2ea474ee655cbd5f1d98d887c5d72d",
+          "line_start": 109,
+          "line_end": 117,
+          "reason": "crop为同步采样reset"
+        },
+        {
+          "source_id": "S0036",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0036.v",
+          "sha256": "59dd6dcb5b7e7774f7d6518f50f56cafbc8be6b70e8ae1508236bac2b5af531d",
+          "line_start": 8,
+          "line_end": 10,
+          "reason": "FIFO各域复位释放"
+        },
+        {
+          "source_id": "S0157",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0157.sdc",
+          "sha256": "9284982452c37f308fc4dcd396eb94b8da4962337bdd5740a23ce830d3856d95",
+          "line_start": 35,
+          "line_end": 57,
+          "reason": "异步分组与Gray skew约束"
+        }
+      ],
+      "reproduction": "结构检查；未运行reset相位/停byteclk再恢复的真实DUT或恢复recovery/removal分析。",
+      "impact": "时钟停顿时同步reset可能未被crop采到，释放时元稳/旧状态清理缺乏本候选证据；不据此声称已板测失败。",
+      "recommendation": "后续定义相机域本地assert/release和PHY重锁epoch，检查计数、crop、FIFO、abort事务的一致复位，不只替换一处reset线。",
+      "expected_benefit": "减少复位后旧帧混入/恢复不确定性。",
+      "tradeoff": "改变恢复时序，可能影响SOF丢弃与warmup；需真实DUT和CDC/STA。",
+      "validation": "停clk_cam期间全局reset、PHY-only reset、DDR掉ready、任意相位释放，检查首帧完整性与无旧事务发布。",
+      "disposition": "engineering_gate_gap"
+    },
+    {
+      "finding_id": "T02-F07",
+      "severity": "medium",
+      "kind": "evidence_gap",
+      "claim": "本候选以手动tap46和软PHY对齐运行；包层只主张逐包同步、严格ECC拒错而非纠错。已有+0.012ns诊断余量和旧收包记录不能替代当前物理链路/完整CDC签核。",
+      "evidence_refs": [
+        {
+          "source_id": "S0151",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0151.v",
+          "sha256": "c9de0d9c176e830df35833eff7e91b811d954fb5480bc13e1fb122ef23305089",
+          "line_start": 124,
+          "line_end": 129,
+          "reason": "手动tap配置"
+        },
+        {
+          "source_id": "P_PHY",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T02.chain-input-review\\inputs\\rx_phy_ph1p.v",
+          "sha256": "ac711c853a345bf747d539edb7e0093cd315d90a362d62512289c3e396d967ef",
+          "line_start": 61,
+          "line_end": 104,
+          "reason": "恢复byteclk和tap选择"
+        },
+        {
+          "source_id": "P_WORD",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T02.chain-input-review\\inputs\\csi_rx_word_align.v",
+          "sha256": "310bef19ca967197ba81a9a45cbc6da8b2f2212146bb76d070e2965e9b4526dd",
+          "line_start": 55,
+          "line_end": 57,
+          "reason": "四lane有效共同成立"
+        },
+        {
+          "source_id": "P_CSI",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T02.chain-input-review\\inputs\\csi_rx_packet_integrity.v",
+          "sha256": "9e46297e4e1bfee5462657112544f509fe2eec83644edf5d07aedc4df990ac08",
+          "line_start": 1,
+          "line_end": 7,
+          "reason": "逐包同步支持范围"
+        },
+        {
+          "source_id": "S0168",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0168.md",
+          "sha256": "6a07dfde14e5fe670d7c81676a9dc3426f482ff1547b87cae95aaa524bfbfbb4",
+          "line_start": 44,
+          "line_end": 52,
+          "reason": "旧诊断候选薄余量"
+        }
+      ],
+      "reproduction": "冻结源码和旧结果资格审查；未做电气、眼图、连续HS或新STA。",
+      "impact": "换板/线速/温压后不能以tap值和旧STA推断稳定接收；支持范围必须约束数据源。",
+      "recommendation": "保留逐包同步profile，后续以实际lane速率/数据源绑定采样窗口和错误率、完整CDC/时序。",
+      "expected_benefit": "明确链路适用范围，避免将协议模型结果外推物理层。",
+      "tradeoff": "重新扫tap与稳定性需要明确硬件授权/时间窗。",
+      "validation": "真实设备绑定bit/source/约束，测错误计数和恢复；连续HS若需求出现需单独协议验证。",
+      "disposition": "future_G2_G5"
+    },
+    {
+      "finding_id": "T02-F08",
+      "severity": "low",
+      "kind": "redundancy_candidate",
+      "claim": "b15工程清单仍列cam_preview_capture及旧FIFO源，实际camera core已改为HDMI测试图；手动tap模式下自动扫描不参与tap选择。仅存在/列入清单不能证明资源浪费。",
+      "evidence_refs": [
+        {
+          "source_id": "S0155",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0155.al",
+          "sha256": "9a627146616af3312ebbefbb6b07835b9128797c9b5381cd75c65d0a50bbfb25",
+          "line_start": 15,
+          "line_end": 210,
+          "reason": "编译文件列表"
+        },
+        {
+          "source_id": "S0151",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0151.v",
+          "sha256": "c9de0d9c176e830df35833eff7e91b811d954fb5480bc13e1fb122ef23305089",
+          "line_start": 350,
+          "line_end": 374,
+          "reason": "预览被测试图替换、cap_data有效常量0"
+        },
+        {
+          "source_id": "P_PHY",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T02.chain-input-review\\inputs\\rx_phy_ph1p.v",
+          "sha256": "ac711c853a345bf747d539edb7e0093cd315d90a362d62512289c3e396d967ef",
+          "line_start": 102,
+          "line_end": 104,
+          "reason": "手动选择tap"
+        },
+        {
+          "source_id": "P_PHY",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T02.chain-input-review\\inputs\\rx_phy_ph1p.v",
+          "sha256": "ac711c853a345bf747d539edb7e0093cd315d90a362d62512289c3e396d967ef",
+          "line_start": 158,
+          "line_end": 173,
+          "reason": "自动扫描仅保留状态输出"
+        }
+      ],
+      "reproduction": "静态列单/实例差异；本包未生成网表/资源diff。",
+      "impact": "旧注释和未实例文件易误导当前链路图；是否有可裁剪逻辑需先查实际消费者/网表。",
+      "recommendation": "后续先整理源码入口和注释，自动扫描只有证明调试消费者不再需要且测得净表资源后才考虑删。",
+      "expected_benefit": "更清楚的工程入口；资源/功耗收益未知，不报节省百分比。",
+      "tradeoff": "删除调试能力可能损害换板定位；综合已裁掉的模块不会带来资源收益。",
+      "validation": "对比真实编译实例/综合网表/资源和调试消费者，保留回退；不能仅按文本重复删模块。",
+      "disposition": "low_priority_no_deletion_authorized"
+    },
+    {
+      "finding_id": "T02-F09",
+      "severity": "medium",
+      "kind": "evidence_gap",
+      "claim": "ROI偶数起点保持相对CFA相位，但不证明绝对RGGB；b15与RAW生产参考采用不同ROI/skip合同。传感器几何、CFA和方向必须随候选元数据绑定。",
+      "evidence_refs": [
+        {
+          "source_id": "S0147",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0147.v",
+          "sha256": "33a6fee77fd1aa67a31cacf26dd5530e5e2ea474ee655cbd5f1d98d887c5d72d",
+          "line_start": 30,
+          "line_end": 36,
+          "reason": "b15几何3864×2192、972/556、1920×1080"
+        },
+        {
+          "source_id": "S0147",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0147.v",
+          "sha256": "33a6fee77fd1aa67a31cacf26dd5530e5e2ea474ee655cbd5f1d98d887c5d72d",
+          "line_start": 81,
+          "line_end": 90,
+          "reason": "几何合法性约束"
+        },
+        {
+          "source_id": "P_TABLE",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T02.chain-input-review\\inputs\\ui_imx415_reg.v",
+          "sha256": "60f1ac9a0b8cb0a542312d27ee43bd8d0fbbc29f333f61638907b0739651a843",
+          "line_start": 70,
+          "line_end": 81,
+          "reason": "方向/窗口表字段"
+        },
+        {
+          "source_id": "S0146",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0146.v",
+          "sha256": "0064607aceb20ae3ef14133f0aaf5f8b3f489943011a66a1ddc005350dba7109",
+          "line_start": 4,
+          "line_end": 17,
+          "reason": "消费者声明RGGB phase0"
+        },
+        {
+          "source_id": "S0123",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0123.v",
+          "sha256": "7b4be3e4dbc437212b619c43e20a875526f5ec0bd4824b4c994054baa7b24435",
+          "line_start": 105,
+          "line_end": 116,
+          "reason": "RAW生产参考不同ROI/skip"
+        }
+      ],
+      "reproduction": "算术：972 mod4=0，556 mod2=0；相对于同一源阵列相位未变；未使用实际标靶/传感器权威CFA证据确认绝对颜色。",
+      "impact": "长度正确或packed互逆不能证明CFA正确；不同源ROI参数不能混用为同一图像候选。",
+      "recommendation": "后续为每分支固定源有效阵列、active origin、ROI/skip、CFA/方向和精确字节端序，原图端到端标靶核对。",
+      "expected_benefit": "避免颜色/空间错位与候选混拼。",
+      "tradeoff": "需要传感器/解码消费者共同解释metadata；无性能收益主张。",
+      "validation": "以实拍颜色/棋盘或权威模式数据比对CFA，覆盖偶数ROI和方向切换，绑定输出头。",
+      "disposition": "metadata_and_sensor_evidence_gap"
+    },
+    {
+      "finding_id": "T02-F10",
+      "severity": "info",
+      "kind": "no_issue_found",
+      "claim": "在静态检查的合同范围内，checked层提供VC0/RAW10/ECC/CRC/keep与有界超时；CDC FIFO原子携带数据和sideband，满时有sticky abort，不能删除这些保护以追求简化。",
+      "evidence_refs": [
+        {
+          "source_id": "P_CSI",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T02.chain-input-review\\inputs\\csi_rx_packet_integrity.v",
+          "sha256": "9e46297e4e1bfee5462657112544f509fe2eec83644edf5d07aedc4df990ac08",
+          "line_start": 23,
+          "line_end": 42,
+          "reason": "包筛选与CRC/keep生成"
+        },
+        {
+          "source_id": "P_CSI",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T02.chain-input-review\\inputs\\csi_rx_packet_integrity.v",
+          "sha256": "9e46297e4e1bfee5462657112544f509fe2eec83644edf5d07aedc4df990ac08",
+          "line_start": 57,
+          "line_end": 105,
+          "reason": "FS/FE与错误/超时裁决"
+        },
+        {
+          "source_id": "P_UNPACK",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T02.chain-input-review\\inputs\\csi_rx_10bit_unpack_checked.v",
+          "sha256": "9b5421c55b0f09871f8a939fb3381d4c7d5726286b30f9d5450cc09404065a12",
+          "line_start": 12,
+          "line_end": 31,
+          "reason": "低字节keep和五字节组装"
+        },
+        {
+          "source_id": "S0150",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0150.v",
+          "sha256": "acc1eff329aa295d01b16123581fee48ef49d444efdce3b7fe62214555517405",
+          "line_start": 303,
+          "line_end": 360,
+          "reason": "独立abort token、sticky loss及43bit FIFO"
+        },
+        {
+          "source_id": "S0036",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0036.v",
+          "sha256": "59dd6dcb5b7e7774f7d6518f50f56cafbc8be6b70e8ae1508236bac2b5af531d",
+          "line_start": 16,
+          "line_end": 34,
+          "reason": "接受事件、预取和stall保持"
+        }
+      ],
+      "reproduction": "源码合同核对；本包数值见证验证解包格式，未重跑完整CSI/FIFO RTL矩阵。",
+      "impact": "单点静态未发现问题不等于DUT证明；F01/F02的边界问题仍然成立。",
+      "recommendation": "保留错误检测/原子sideband/粘滞abort和计数；只在有消费者等价证明后考虑简化。",
+      "expected_benefit": "维护可恢复的不可反压入口。",
+      "tradeoff": "保留必要状态；资源开销未在本包重测。",
+      "validation": "后续真实DUT覆盖尾keep、stall同拍take/refill、丢SOF/LAST、满FIFO abort重试及reset。",
+      "disposition": "static_no_issue_only"
+    }
+  ]
+}

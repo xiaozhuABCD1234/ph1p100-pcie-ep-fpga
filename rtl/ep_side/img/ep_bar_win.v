@@ -138,6 +138,8 @@ module ep_bar_win #(
 )(
     input  wire         clk,
     input  wire         rst,
+    // T11 r3（issue-02）：调试快照专用复位（与 PCIe 链路无关；仅 DBG 门控块使用，生产未用）
+    input  wire         dbg_por_rst,
 
     // 引擎 rx 流水线（同时钟域）
     input  wire         rx_sop_ff,
@@ -472,8 +474,18 @@ module ep_bar_win #(
             (* MARK_DEBUG="true" *) reg [31:0] dbg_mark_word7;
             (* MARK_DEBUG="true" *) reg [31:0] dbg_mark_word8;
 
-            always @(posedge clk or posedge rst) begin
-                if (rst) begin
+            // T11 r3（issue-02）：快照复位与 PCIe 链路解耦——dbg_por_rst（板级 POR / PLL 未锁）
+            //   异步置位、本域同步释放；tl_rst_user 在无主机时恒有效，不能用于本块。
+            //   快照时钟仍为 clk=tl_clk_user（CWC 采样时钟=同一 tl_clk_user 网络，H2 显式一致）。
+            reg [1:0] dbg_por_sync;
+            always @(posedge clk or posedge dbg_por_rst) begin
+                if (dbg_por_rst) dbg_por_sync <= 2'b11;
+                else             dbg_por_sync <= {dbg_por_sync[0], 1'b0};
+            end
+            wire dbg_snap_rst = dbg_por_sync[1];
+
+            always @(posedge clk or posedge dbg_snap_rst) begin
+                if (dbg_snap_rst) begin
                     dbg_mark_word0 <= 32'd0;
                     dbg_mark_word1 <= 32'd0;
                     dbg_mark_word2 <= 32'd0;

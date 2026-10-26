@@ -1,0 +1,166 @@
+{
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "project_root": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+  "output_dir": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop",
+  "task_ids": [
+    "T10.b2-a1-uart-impl"
+  ],
+  "package_id": "T10.b2-a1-uart-impl",
+  "package_type": "P2 implementation: full board constraints/187.5 MHz/CDC/STA/resources + 1 bitgen + 1 CWC; freeze candidate, no download",
+  "same_run": true,
+  "new_run": false,
+  "batch_size": 1,
+  "status": "finished",
+  "needs_user_input": false,
+  "round": "r0",
+  "result": {
+    "verdict": "BLOCKED at TD elaboration (multiple drivers); P2 r1 dispatched",
+    "failure": "HDL-8007 raw_rd_close_r multiple drivers in camera_a1_uart_top.v (r3 hash 873cb98c...); same file raw_rd_open/raw_rd_take also duplicated; ModelSim tolerated it, TD rejected it",
+    "fix": "remove duplicate assignments at lines 162 and 166-167 (3-line ownership cleanup; sequencer owns these signals); no logic change",
+    "hash_conflict": "r4 manifest listed stale prefixes e88de0910ff0/5196c07aed52; actual r3 hashes are 873cb98c/8bab440d; no file with the stale digests exists; documentation conflict, not drift; r4 manifest corrected",
+    "budget": "dev 67/60 calls; TD 1/3 sessions, synth 1/3 (elaboration fail), route 0/2, bitgen 0/1, CWC 0/1; no download",
+    "decision": "P2 r1: fix duplicate drivers, rerun P1 8x2/64x8/full 1080p and refreeze P1 hash, resume P2 with 2 synth/2 route/1 bitgen/1 CWC; dev 90/50, TD 2 sessions/120 min; no auto r2"
+  },
+  "operation": "spawn_agent",
+  "next_role": "fpga-dev",
+  "authorization": {
+    "quote": "冻结 P2 `T10.b2-a1-uart-impl`：完整约束/187.5 MHz/CDC/STA/资源 + 1 次 bitgen + 1 次 CWC，冻结候选，不下载；预算 TD ≤3 会话/150 min、综合 ≤3、布线 ≤2；门槛 Routed 零违例（保留余量）、资源、CDC/复位、bit/CWC 哈希、无下载/Flash。",
+    "date": "2026-10-23",
+    "type": "explicit_user_authorization_for_p2_implementation_bitgen_cwc",
+    "basis": "P1 core accepted PASS-with-boundary (full 1080p 0 mismatch/four CRCs/dup=0); fault/max-length/mode1/tail are P3 pre-board items. P2 may proceed to implementation/bitgen/CWC without board download.",
+    "bitgen_download": {
+      "bitgen": "1 candidate only, after Routed zero violations/CDC/resource pass; no download",
+      "cwc": "1 candidate only, paired with the same bit; hash recorded",
+      "download": "0 in P2; P3 requires explicit one-SRAM-download authorization with the frozen bit SHA and Q1-Q6"
+    },
+    "round_accounting": "P1 core PASS-with-boundary; P2 is a new package; old repair counts not reset; P3 awaits user/hardware"
+  },
+  "p1_base": {
+    "status": "core PASS-with-boundary",
+    "manifest": "T10.b1-a1-uart-integ/r3/CANDIDATE-MANIFEST-b1-a1-uart-integ-r3.json",
+    "r4_manifest": "T10.b1-a1-uart-integ/r4/CANDIDATE-MANIFEST-b1-a1-uart-integ-r4.json",
+    "core_evidence": "8x2/64x8/full 1920x1080 all 0 mismatch; header/stream/xform/raw all true; zlib_ok; dup=0; full read_words=129,600; raw_len=2,592,000; stream_len=40,032; 6,383,945 cycles; raw_sha256=2f34e253...d355e830",
+    "boundary": "MODE=2 bad-frame/overflow counters not exercised (geom=0/raw_drop=0; reset clears counters); reset mid-write at FRAME_CYC/2 times out; MODE=3/4, store-only 2,594,706 B, MODE=1 shortened, W=8,H=3 tail not run (shell TOOL_UNAVAILABLE). These are P3 pre-board items.",
+    "rtl_note": "P2 must verify all P1 RTL hashes against the r3/r4 manifest; any drift stops. A+ core bf6af390...1080 and frame 18d51b1b must remain unchanged; SDC 227dd39e unchanged."
+  },
+  "p2_scope": [
+    {
+      "step": 1,
+      "name": "Implementation wrapper + full constraints",
+      "content": "Create a derived implementation project under T10.b2-a1-uart-impl/r0. Add the 187.5 MHz A+ clock/PLL, camera byte clock 111.375 MHz, DDR user clock, HDMI 148.5/742.5 MHz, UART 115200 clock; full board.adc/timing.sdc plus new top pins. Add clock/reset/CDC wrappers only; do not change A+ core/frame/DEFLATE/CRC/frame semantics.",
+      "timebox": "within TD session 1"
+    },
+    {
+      "step": 2,
+      "name": "STA/CDC/resources closure",
+      "content": "Routed zero violations; setup WNS > 0 with recorded margin (target >= +0.2 ns; 0<WNS<+0.2 is thin-margin caveat, negative is fail); hold >=0; resources within PH1P100SBG484; single-clock/static CDC evidence, reset synchronization, no combinational loops, I/O constrained; reports direct -file.",
+      "timebox": "sessions 1-2"
+    },
+    {
+      "step": 3,
+      "name": "1 bitgen + 1 CWC",
+      "content": "After STA/CDC/resource pass, run exactly 1 bitgen and 1 CWC for the same frozen candidate. Record bit/CWC SHA256, BID, bitgen/CWC logs. No download, no Flash. If CWC cannot be produced by the tool, stop BLOCKED (do not silently skip).",
+      "timebox": "after route"
+    },
+    {
+      "step": 4,
+      "name": "Freeze P2 manifest",
+      "content": "Write CANDIDATE-MANIFEST-b2-a1-uart-impl-r0.json with RTL/tcl/constraints/bit/CWC hashes, STA/CDC/resource summaries, and the P1 boundary carried forward. No board access.",
+      "timebox": "final 10 min"
+    }
+  ],
+  "gates": {
+    "routed": "Routed zero violations; setup WNS > 0; record margin; target >= +0.2 ns (robustness, not a substitute for zero violations); hold >= 0; STNS = 0",
+    "resources": "slice/LUT/reg/ERAM/DSP/IO within PH1P100SBG484",
+    "cdc_reset": "static single-clock/CDC evidence; reset synchronized; no combinational loops; no cross-domain retiming moves; CC-From/To = no/no",
+    "io": "all top ports constrained; no unconstrained I/O in the A+/camera/DDR/UART/HDMI domains",
+    "artifacts": "1 bitgen + 1 CWC; bit/CWC SHA256 and BID recorded; bitgen/CWC logs; no .bit download",
+    "forbidden": "false path/multicycle/seed sweep/clock change-that-relaxes-187.5; Flash/download/PCIe/RK/dual/G4; A+ core/frame/DEFLATE/CRC/SDC changes"
+  },
+  "td_budget": {
+    "sessions_max": 3,
+    "session_minutes_max": 75,
+    "total_minutes_max": 150,
+    "synth_attempts_max": 3,
+    "route_attempts_max": 2,
+    "bitgen": 1,
+    "cwc": 1,
+    "download": 0,
+    "dev_minutes_max": 120,
+    "dev_calls_max": 60,
+    "note": "No seed sweep; no extra route beyond 2; bitgen/CWC only after STA/CDC/resource pass."
+  },
+  "stop_conditions": [
+    "Any P1 RTL hash drift or A+ core/frame/SDC change -> stop immediately.",
+    "Routed negative slack / hold violation / resource overflow / CDC or reset failure -> stop; no bitgen.",
+    "Setup WNS >0 but <+0.2 ns -> record thin-margin caveat; do not call robust; planner decides.",
+    "CWC cannot be generated or bit/CWC pair mismatches -> stop BLOCKED; do not skip CWC.",
+    "Any download/Flash/PCIe/RK/dual/G4, seed sweep, false path/multicycle, or protocol/frame/CRC change -> stop.",
+    "3 sessions/150 min, 3 synth, 2 route, 1 bitgen, or 1 CWC exhausted -> stop; no extra attempt."
+  ],
+  "write_scope": {
+    "modify_existing": [
+      "fpga/csi2/src/a1/** (clock/reset/CDC wrapper only; no protocol/frame/CRC/DEFLATE change)",
+      "fpga/csi2/constraints/** (P2 copy only; SDC 227dd39e source must remain unchanged)",
+      "T10.b2-a1-uart-impl/r0/td/** (new project/tcl)"
+    ],
+    "create_new": [
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r0/**"
+    ],
+    "must_not_modify": [
+      "a1_deflate_core.v (bf6af390)",
+      "a1_frame_top.v (18d51b1b)",
+      "SDC 227dd39e source",
+      "P1 frozen evidence/manifests",
+      "old runs",
+      "board/Flash/PCIe/RK"
+    ]
+  },
+  "p3_prerequisites": [
+    "shell permission restored: run MODE=3/4, store-only 2,594,706 B max-length, MODE=1 shortened, W=8,H=3 tail",
+    "P1 core evidence re-bound to the P2 candidate hash",
+    "P2 Routed zero violations/CDC/resources pass; bit/CWC hashes frozen",
+    "user Q1-Q6: board window/presence; camera A/B/BANK13; lens/exposure; one SRAM download authorization with bit SHA; UART COM/baud/host; ROI/Bayer; range confirmation",
+    "one SRAM download max; no Flash/PCIe/RK/dual/G4"
+  ],
+  "after_development": {
+    "sequence": [
+      "P2 ready_for_test + frozen manifest -> new independent engineering tester (STA/CDC/resources/bit/CWC) -> planner",
+      "P2 PASS -> P3 remains awaiting_user until missing tests + Q1-Q6 + one-download authorization",
+      "P2 FAIL/BLOCKED -> return to planner; no board download"
+    ],
+    "rules": [
+      "New tester per package; do not reuse prior testers.",
+      "Tester independently parses raw STA/CDC/area reports and bit/CWC hashes; no TD rerun unless planner authorizes.",
+      "Do not claim tool CDC signoff; TD 2026.2 lacks report_cdc."
+    ]
+  },
+  "path_contract": {
+    "td": "T: = current run td, Y: = project root; run tools/td/td_env.ps1; never map X: to project root",
+    "sim": "P: = project root, W: = current sim run",
+    "doc": "tools/td/PATH_CONTRACT.md"
+  },
+  "next_action": "spawn_agent",
+  "next_action_detail": {
+    "role": "fpga-dev",
+    "skill_path": ".agents/skills/fpga-dev/SKILL.md",
+    "task": "T10.b2-a1-uart-impl r0: implement the P1 core candidate with full board constraints and 187.5 MHz/CDC/reset wrappers; close Routed zero violations/hold/resources; 1 bitgen + 1 CWC; freeze bit/CWC/RTL hashes; no download/Flash. TD <=3 sessions/150 min, synth <=3, route <=2.",
+    "must_read": [
+      "dev-plan.md §52",
+      "T10.b1-a1-uart-integ/r3/CANDIDATE-MANIFEST-b1-a1-uart-integ-r3.json",
+      "T10.b1-a1-uart-integ/r4/CANDIDATE-MANIFEST-b1-a1-uart-integ-r4.json",
+      "T10.b1-a1-uart-integ/r3/result-r3.md",
+      "T10.b1-a1-uart-integ/r4/result-r4.md",
+      "fpga/csi2/constraints/board.adc",
+      "fpga/csi2/prj/camera_ddr_display/timing.sdc",
+      "tools/td/PATH_CONTRACT.md"
+    ],
+    "first_checks": [
+      "verify P1 RTL hashes unchanged; any drift stops",
+      "confirm A+ core bf6af390 / frame 18d51b1b / SDC 227dd39e",
+      "confirm 187.5 MHz PLL/clock and all top I/O constraints before synth",
+      "no bitgen until Routed/CDC/resource pass"
+    ]
+  },
+  "user_summary_path": "workflow/runs/20261020-0209_singleA_aplus_closedloop/user-summary.md"
+}

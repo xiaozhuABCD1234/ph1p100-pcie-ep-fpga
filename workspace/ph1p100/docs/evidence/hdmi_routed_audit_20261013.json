@@ -1,0 +1,125 @@
+{
+  "date": "2026-10-13",
+  "kind": "Read-only audit of unchanged222159 routed checkpoint; no RTL fix or bitstream generation",
+  "user_observation": {
+    "result": "Sparkles persist after replacing HDMI cable and display",
+    "source": "User text plus attached photograph",
+    "exact_swap_sequence": null,
+    "power_continuity_independently_confirmed": false,
+    "new_D39_observation": null,
+    "prior_D39": "off",
+    "photo_local_path": "C:\\Users\\czz\\OneDrive\\xwechat_files\\wxid_98vfoyksookg22_1e44\\temp\\RWTemp\\2026-10\\82cfae60a90644cc32f1275fdcdf20ed\\559a6b24e6ba82ecfc1dd99615d692f7.jpg",
+    "photo_sha256": "d1d6ff61ff8fe21e87fdee43534f2f0c9443d827b46b7c16d5304a4e677dd21c",
+    "photo_published": false,
+    "image_limit": "Overall photographed blue cast does not independently establish a channel fault"
+  },
+  "candidate": {
+    "bit_path": "D:\\TD\\work\\csi2\\prj\\camera_csi_integrity_20261012_222159\\camera_ddr_display.bit",
+    "bit_sha256": "379bd654d0730f22f5fe775cb8ee26fe7fb7ab2daba3c7adaddc3a1a45cf5f85",
+    "checkpoint_sha256": "6ed7c9b4d81054f43e72e715105367e3c8a301c606bf23077ef6817d81987e78",
+    "input_manifest_verified": 184
+  },
+  "sta": {
+    "tool_exit_code": 0,
+    "marker": "HDMI_ROUTED_AUDIT_REPORTS_READY",
+    "selected_pad_cells": 4,
+    "data_endpoints": 30,
+    "reset_endpoints": 4,
+    "paths": 68,
+    "data_setup_wns_ns": 4.646,
+    "data_hold_wns_ns": 0.201,
+    "by_lane": [
+      {
+        "lane": 0,
+        "data_bits": 10,
+        "setup_wns_ns": 4.646,
+        "hold_wns_ns": 0.425
+      },
+      {
+        "lane": 1,
+        "data_bits": 10,
+        "setup_wns_ns": 5.402,
+        "hold_wns_ns": 0.201
+      },
+      {
+        "lane": 2,
+        "data_bits": 10,
+        "setup_wns_ns": 4.921,
+        "hold_wns_ns": 0.213
+      }
+    ],
+    "coverage_percent": 96.4,
+    "scope": "Parallel encoded TMDS data and reset into output PAD; not serial line eye, output rate qualification, OSCLK/OPCLK internal phase guarantee or thermal validation"
+  },
+  "source_constraints": {
+    "pixel_mhz": 148.5,
+    "serializer_mhz": 742.5,
+    "per_data_lane_mbps": 1485,
+    "iostandard": "LVDS33_E",
+    "serialized_width": 10,
+    "serializer_mode": "DDRX5",
+    "board_adc": "D:/TD/work/csi2/prj/camera_csi_integrity_20261012_222159/board.adc:75-78",
+    "pll_rtl": "fpga/csi2/prj/camera_peer/uisrc/01_rtl/raw10_display60_clocks.v:3-22",
+    "mapped_pad_cells_verified": 4
+  },
+  "local_document_limits": {
+    "path": "D:\\TD\\03_F9P_CA05_PH1P50_PH1P100\\V2026\\HW-MLK-F9P-CA05-PH1P100\\02_hardware\\HW-MLK-F9P-CA05-PH1P100\\HW-MLK-F9P-CA05-\u5b89\u8def-20260525\\06_\u82af\u7247\u624b\u518c\\01_FPGA\\\u5b89\u8def\\DS1300_PH1P_Datasheet_1.2.1.pdf",
+    "sha256": "4fc9c3eaf69c4b7780deaba7cbb383466c1e522e93efe1dbbecf0cb9f8efa1be",
+    "version": "DS1300_1.2.1",
+    "clock_table": {
+      "pdf_page": 84,
+      "printed_page": 78,
+      "table": "3-44",
+      "IOCLK_mhz": 650,
+      "MLCLK_mhz": 650
+    },
+    "output_table": {
+      "pdf_page": 90,
+      "printed_page": 84,
+      "table": "3-52",
+      "LVDS33_E_mbps": 332,
+      "TMDS33_mbps": 1250
+    },
+    "older_1_2_agrees": true,
+    "visually_verified_table_pages": true,
+    "limits": "Documented values; no vendor exception or newer device-specific qualification obtained"
+  },
+  "counter_evidence": {
+    "board_manual": "HDMI pin table uses LVDS33_E; PDF19/printed15",
+    "vendor_demo_manual": "Claims1080p60; PDF81 and93; generalized example includes PH1A_HP selection",
+    "local_course_rtl": "D:/TD/work/course/25_rgb2hdmi_out; PH1P, PLL137.5/687.5MHz, totals2068x1108, inferred60.00845Hz; not identical to standard148.5/742.5MHz candidate",
+    "course_fps_calculated": 60.0084491896459
+  },
+  "root_cause": "Undetermined. A documented clock/output rate conflict is established, but causality of hardware sparkles is not proved.",
+  "next_step": "See hdmi_loaded_probe_20261013.json: diagnostic implemented and simulated, two physical efforts unchanged at -0.036ns/18 setup endpoints, no bit generated; stop repeated routing and review DDR-ready enable timing while retaining unresolved vendor rate qualification.",
+  "artifacts": {
+    "docs/evidence/hdmi_routed_audit_20261013/audit.tcl": {
+      "bytes": 793,
+      "sha256": "43e583765a2822672974e9014c3ee0e57e76d818c4ec8bdf4646048f288ee882"
+    },
+    "docs/evidence/hdmi_routed_audit_20261013/console.txt": {
+      "bytes": 21506,
+      "sha256": "f0bc241c3c45b76c19810ff3ff49acd90e7d38c3027e3db1f5624b0a9d42e1e3"
+    },
+    "docs/evidence/hdmi_routed_audit_20261013/hdmi_clocks.rpt": {
+      "bytes": 585,
+      "sha256": "48048810c4f318a4840743aff1bfb5dc4cc4dc20984f88290edb06260929f3e1"
+    },
+    "docs/evidence/hdmi_routed_audit_20261013/hdmi_data_paths.rpt": {
+      "bytes": 445435,
+      "sha256": "31086bada323a21148c7cbb10ebb608b14d5a03156ec67bb74de578464596cfe"
+    },
+    "docs/evidence/hdmi_routed_audit_20261013/hdmi_targets.txt": {
+      "bytes": 8097,
+      "sha256": "e3fe11751ace4ffe0d7dea9438d805bd4dd962def3483b62c627c210a23c07a7"
+    },
+    "docs/evidence/hdmi_routed_audit_20261013/hdmi_pad_excerpt.v": {
+      "bytes": 6434,
+      "sha256": "52861c7c336e716b1af5c3fd6210e7ff74a1a149ac31cfa3781ac0bd26f380fc"
+    }
+  },
+  "user_board_specific_vendor_confirmation": {
+    "confirmed": false,
+    "basis": "User reports package/tutorial claims only; no board-specific1080p60 stability confirmation"
+  }
+}

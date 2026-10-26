@@ -73,3 +73,19 @@ tb/csi_rx_packet_integrity_ref.v
 # ---- T11.runB-debug-rtl：debug 顶层包装（仅 debug 构建入口 00_all_debug 使用；
 #      此处纳入编译仅做语法检查，无 TB 例化；不改任何既有 TB 行为）----
 ../rtl/ep_side/debug/ph1p_pcie_ep_top_dbg.v
+
+# B01 closedloop production integration
+../rtl/ep_side/ddr/closedloop/ddr_closedloop_readback.v
+../rtl/ep_side/img/algo/algo_diagnostic_sink.v
+../rtl/ep_side/img/algo/algo_obuf.v
+../rtl/ep_side/img/algo/algo_rowwin3.v
+../rtl/ep_side/img/algo/algo_rowwin_reader.v
+../rtl/ep_side/img/algo/bayer_raw10_demosaic4.v
+../rtl/ep_side/img/algo/cam_algo_diagnostics.v
+../rtl/ep_side/img/algo/csi_algo_roi_adapter.v
+../rtl/ep_side/img/algo/gray8_gaussian3x3_frame.v
+../rtl/ep_side/img/algo/gray8_gaussian3x3_stream.v
+../rtl/ep_side/img/algo/gray8_he_cdfmin_frame.v
+../rtl/ep_side/img/algo/img_algo_parallel_top.v
+../rtl/ep_side/img/algo/rgb8_gray_stream.v
+../rtl/ep_side/debug/ph1p_pcie_ep_top_closedloop.v

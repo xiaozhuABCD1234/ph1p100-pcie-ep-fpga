@@ -1,0 +1,73 @@
+{
+  "marker": "INDEPENDENT_ORDER_COMPLETE",
+  "method": "Breadth-first generation of legal two-slot transactions; chronological successful-publication FIFO oracle; no imported developer trace/result. Abstract reads may take arbitrary finite time before close. Not cycle-accurate RTL simulation.",
+  "production_semantics": {
+    "counterexample": [
+      {
+        "event": "begin",
+        "slot": 0,
+        "id": 0
+      },
+      {
+        "event": "abort",
+        "slot": 0,
+        "id": 0
+      },
+      {
+        "event": "begin",
+        "slot": 0,
+        "id": 1
+      },
+      {
+        "event": "publish",
+        "slot": 0,
+        "id": 1
+      },
+      {
+        "event": "begin",
+        "slot": 1,
+        "id": 2
+      },
+      {
+        "event": "publish",
+        "slot": 1,
+        "id": 2
+      },
+      {
+        "event": "open",
+        "selected": 2,
+        "fifo_expected": 1,
+        "state": [
+          [
+            "Q",
+            1,
+            1
+          ],
+          [
+            "Q",
+            0,
+            2
+          ]
+        ],
+        "pub": 1,
+        "rd_expect": 0,
+        "fifo": [
+          1,
+          2
+        ]
+      }
+    ],
+    "states_explored": 43,
+    "open_checks": 12,
+    "depth": 7
+  },
+  "commit_toggle_mutation": {
+    "counterexample": null,
+    "states_explored": 282,
+    "open_checks": 117,
+    "max_depth": 12
+  },
+  "source": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+  "source_sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+  "descriptor_effect": "If CMP consumer has deferred claim, chosen id differs from queued descriptor. Full-size top scheduling reachability remains unproven."
+}

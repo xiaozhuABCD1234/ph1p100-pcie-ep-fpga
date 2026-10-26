@@ -1,0 +1,807 @@
+{
+  "task_id": "T06.chain-storage-review",
+  "round": 0,
+  "findings": [
+    {
+      "finding_id": "T06-F01",
+      "severity": "high",
+      "kind": "confirmed_issue",
+      "claim": "b15内部256bit字下标在唯一PAXI边界缺少同份原生参考要求的左移3位适配；这是源码合同差异，未定位板上缺R根因。",
+      "evidence_refs": [
+        {
+          "source_id": "B0144",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_slot_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+          "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+          "line_start": 178,
+          "line_end": 206
+        },
+        {
+          "source_id": "B0143",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_arb2.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0143.v",
+          "sha256": "b84019bda057afe82ff558e0848d6171fa12732bd8cdb7c6239cb71b3f81d6ba",
+          "line_start": 70,
+          "line_end": 82
+        },
+        {
+          "source_id": "B0153",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\p2_ddr_bridge.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0153.v",
+          "sha256": "eb9df41f9404e40cd31dbf12bc65f29ed965a9fc6c2e604f027aa9ad158954e3",
+          "line_start": 97,
+          "line_end": 105
+        },
+        {
+          "source_id": "B0153",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\p2_ddr_bridge.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0153.v",
+          "sha256": "eb9df41f9404e40cd31dbf12bc65f29ed965a9fc6c2e604f027aa9ad158954e3",
+          "line_start": 343,
+          "line_end": 345
+        },
+        {
+          "source_id": "B0153",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\p2_ddr_bridge.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0153.v",
+          "sha256": "eb9df41f9404e40cd31dbf12bc65f29ed965a9fc6c2e604f027aa9ad158954e3",
+          "line_start": 390,
+          "line_end": 397
+        },
+        {
+          "source_id": "B0166",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\td\\src\\vendor\\rtl\\mtest\\paxi_stg_cmd_gen.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0166.v",
+          "sha256": "d0687cca2231c46c46aabeec20721626c71b1726683fb426ff0400a02e603383",
+          "line_start": 83,
+          "line_end": 99
+        },
+        {
+          "source_id": "B0040",
+          "source_path": "D:\\fpga\\ph1p100\\fpga\\csi2\\src\\mem\\ddr_frame_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0040.v",
+          "sha256": "e9e95f970abc8cfc35931131b63fb43d8f3e146311bc57153327212bd4b68771",
+          "line_start": 32,
+          "line_end": 56
+        }
+      ],
+      "reproduction": "连续字0/1经桥为PAXI0/1，参考为0/8；条件模型addr>>3时不同图样会别名。",
+      "impact": "像素/压缩内容存在错址覆盖风险；不把条件模型误差称真实MC已测坏。",
+      "recommendation": "保留内部字单位，仅在范围检查后的一个边界转换；归b17后续授权。",
+      "expected_benefit": "恢复参考地址步长；不估计性能百分比。",
+      "tradeoff": "原生地址低位/容量与所有消费者必须共同核验。",
+      "validation": "小图样多地址读回；地址适配正对照和低3位/越界负例；真实IP与新候选绑定。",
+      "disposition": "review_only; no production change; independent acceptance pending"
+    },
+    {
+      "finding_id": "T06-F02",
+      "severity": "high",
+      "kind": "confirmed_issue",
+      "claim": "b15完整写mask恒全1，与同份mtest完整写mask=0相反；生成wrapper只重排未取反。",
+      "evidence_refs": [
+        {
+          "source_id": "B0153",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\p2_ddr_bridge.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0153.v",
+          "sha256": "eb9df41f9404e40cd31dbf12bc65f29ed965a9fc6c2e604f027aa9ad158954e3",
+          "line_start": 343,
+          "line_end": 348
+        },
+        {
+          "source_id": "B0167",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\td\\src\\vendor\\rtl\\mtest\\ph1p_ddrmc_mtest.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0167.v",
+          "sha256": "a6e9b81d5a31b6dfd9b2cd1f5e6474e9a562fb084d4b81fada6d6bab106d57a9",
+          "line_start": 431,
+          "line_end": 452
+        },
+        {
+          "source_id": "B0165",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\td\\src\\vendor\\ip\\ddrmc_x32\\src\\rtl\\top\\ph1p_ddrmc_top.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0165.v",
+          "sha256": "71052c4328b753cd6387c4e0be284d3eed96ef7e839a8162e1ff6c549cd56727",
+          "line_start": 384,
+          "line_end": 392
+        },
+        {
+          "source_id": "B0040",
+          "source_path": "D:\\fpga\\ph1p100\\fpga\\csi2\\src\\mem\\ddr_frame_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0040.v",
+          "sha256": "e9e95f970abc8cfc35931131b63fb43d8f3e146311bc57153327212bd4b68771",
+          "line_start": 49,
+          "line_end": 55
+        }
+      ],
+      "reproduction": "写全字时桥送ffffffff；参考送00000000。条件模型1=屏蔽时两字均未更新。",
+      "impact": "原生完整写合同不一致；加密MC内部极性仍需厂商/板证，不能宣称已证实旧bit全写屏蔽。",
+      "recommendation": "按同版本原生mask合同适配，模型执行逐字节mask；不按AXI名称猜语义。",
+      "expected_benefit": "消除写掩码误用风险。",
+      "tradeoff": "需要与生成IP绑定而非泛化所有PAXI。",
+      "validation": "固定图样/逐字节部分mask/全mask正反对照和真实读回。",
+      "disposition": "review_only; no production change; independent acceptance pending"
+    },
+    {
+      "finding_id": "T06-F03",
+      "severity": "high",
+      "kind": "evidence_gap",
+      "claim": "一笔AR在途不等于AW/AR共享命令互斥；b15写/读引擎可同拍握手，而厂商参考以单cmd_type与共同ready选命令。",
+      "evidence_refs": [
+        {
+          "source_id": "B0143",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_arb2.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0143.v",
+          "sha256": "b84019bda057afe82ff558e0848d6171fa12732bd8cdb7c6239cb71b3f81d6ba",
+          "line_start": 59,
+          "line_end": 85
+        },
+        {
+          "source_id": "B0153",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\p2_ddr_bridge.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0153.v",
+          "sha256": "eb9df41f9404e40cd31dbf12bc65f29ed965a9fc6c2e604f027aa9ad158954e3",
+          "line_start": 338,
+          "line_end": 407
+        },
+        {
+          "source_id": "B0167",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\td\\src\\vendor\\rtl\\mtest\\ph1p_ddrmc_mtest.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0167.v",
+          "sha256": "a6e9b81d5a31b6dfd9b2cd1f5e6474e9a562fb084d4b81fada6d6bab106d57a9",
+          "line_start": 441,
+          "line_end": 454
+        }
+      ],
+      "reproduction": "WF和AF均有请求、AR空闲、路径空且AW/W/ARready同时为1。",
+      "impact": "若原生MC不能双接纳，则可能丢命令；本审查没有MC逐事务接纳证据。",
+      "recommendation": "将读写同时接纳合同列为必须证明项；保守串行只作未来诊断对照。",
+      "expected_benefit": "区分地址/mask/仲裁根因，避免继续仅改重试。",
+      "tradeoff": "串行化可能降低服务率，需预算验证。",
+      "validation": "同拍三ready端口轨迹与分开ready对照；原生MC实际接纳和响应对应。",
+      "disposition": "review_only; no production change; independent acceptance pending"
+    },
+    {
+      "finding_id": "T06-F04",
+      "severity": "high",
+      "kind": "evidence_gap",
+      "claim": "RAW/CMP在最后数据进入桥WF时置READY；没有最终写可见确认或跨WF/AF fence，独立读引擎可在写仍阻塞时发AR。",
+      "evidence_refs": [
+        {
+          "source_id": "B0144",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_slot_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+          "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+          "line_start": 174,
+          "line_end": 184
+        },
+        {
+          "source_id": "B0144",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_slot_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+          "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+          "line_start": 301,
+          "line_end": 318
+        },
+        {
+          "source_id": "B0153",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\p2_ddr_bridge.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0153.v",
+          "sha256": "eb9df41f9404e40cd31dbf12bc65f29ed965a9fc6c2e604f027aa9ad158954e3",
+          "line_start": 97,
+          "line_end": 110
+        },
+        {
+          "source_id": "B0153",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\p2_ddr_bridge.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0153.v",
+          "sha256": "eb9df41f9404e40cd31dbf12bc65f29ed965a9fc6c2e604f027aa9ad158954e3",
+          "line_start": 338,
+          "line_end": 407
+        },
+        {
+          "source_id": "B0040",
+          "source_path": "D:\\fpga\\ph1p100\\fpga\\csi2\\src\\mem\\ddr_frame_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0040.v",
+          "sha256": "e9e95f970abc8cfc35931131b63fb43d8f3e146311bc57153327212bd4b68771",
+          "line_start": 85,
+          "line_end": 114
+        }
+      ],
+      "reproduction": "一字小帧最后flush已入WF、PAXI写ready保持0但读ready为1；读取同槽可先于实际写。",
+      "impact": "存在read-before-visible允许轨迹；是否真实调度触发/MC排序可避免仍缺证据。raw_pub只能证明enqueue，不证明内存内容正确。",
+      "recommendation": "补充完整发布点合同：native写完成/有资格的ordering fence后才READY；与晚CSI裁决同时满足。",
+      "expected_benefit": "防消费者读取尚未落地的新帧。",
+      "tradeoff": "需确认PAXI写完成定义；可能延长占槽，不能简单多等固定周期。",
+      "validation": "witness发布轨迹；独立队列/RTL可控stall判据；后续真实最后写/首读相关证据。",
+      "disposition": "review_only; no production change; independent acceptance pending"
+    },
+    {
+      "finding_id": "T06-F05",
+      "severity": "high",
+      "kind": "confirmed_issue",
+      "claim": "slot_seq/pub_tgl在每次begin翻转，abort消耗序号；oldest_slot一位排序在合法store接口轨迹下可选新槽，违反发布顺序。",
+      "evidence_refs": [
+        {
+          "source_id": "B0144",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_slot_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+          "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+          "line_start": 145,
+          "line_end": 148
+        },
+        {
+          "source_id": "B0144",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_slot_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+          "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+          "line_start": 268,
+          "line_end": 297
+        },
+        {
+          "source_id": "B0144",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_slot_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+          "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+          "line_start": 328,
+          "line_end": 344
+        },
+        {
+          "source_id": "B0148",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_uart_export.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0148.v",
+          "sha256": "f8f9e4e354b5bdbcce56321cacb22981f1283565ec6c40479a90d0625ce76b61",
+          "line_start": 314,
+          "line_end": 332
+        },
+        {
+          "source_id": "B0148",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_uart_export.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0148.v",
+          "sha256": "f8f9e4e354b5bdbcce56321cacb22981f1283565ec6c40479a90d0625ce76b61",
+          "line_start": 384,
+          "line_end": 415
+        }
+      ],
+      "reproduction": "合法store接口轨迹：A槽0发布并open；B槽1发布；close A；C槽0 begin后abort；D槽0发布，消费者在此期间未open B。此时B和D seq均1，rd_expect=1，oldest_slot优先槽0取D，发布FIFO仍B,D。",
+      "impact": "模块发布顺序缺陷已见证；若CMP消费者延迟领取使此轨迹可达，可用B描述符配D内容，E_OPEN仅计错继续输出。当前默认整机调度下该完整轨迹可达性未证明，不声称板上已发生。",
+      "recommendation": "未来修复应使用真实发布队列/可证明代际顺序，abort不得制造排序歧义；本包不改RTL。",
+      "expected_benefit": "保持commit顺序与descriptor-slot一一对应。",
+      "tradeoff": "不能只把begin翻转挪到某一分支而不验证并发发布/领取/abort。",
+      "validation": "witness顺序轨迹；测试者用独立FIFO oracle或真实store微仿真复核；整机另验消费者pacing可达性。",
+      "disposition": "review_only; no production change; independent acceptance pending"
+    },
+    {
+      "finding_id": "T06-F06",
+      "severity": "high",
+      "kind": "confirmed_issue",
+      "claim": "T02晚CSI裁决缺口延伸到store：ROI last即READY；wr_abort只影响wr_active的WRITING，无法撤销READY或已READING的帧。",
+      "evidence_refs": [
+        {
+          "source_id": "B0152",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\p2_a1_board_top.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0152.v",
+          "sha256": "48881d574352fd2c61f7587d3687f215bb11ea18d5b5d0b4772820a938de561b",
+          "line_start": 108,
+          "line_end": 111
+        },
+        {
+          "source_id": "B0150",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\camera_a1_uart_top.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0150.v",
+          "sha256": "acc1eff329aa295d01b16123581fee48ef49d444efdce3b7fe62214555517405",
+          "line_start": 480,
+          "line_end": 493
+        },
+        {
+          "source_id": "B0144",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_slot_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+          "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+          "line_start": 174,
+          "line_end": 180
+        },
+        {
+          "source_id": "B0144",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_slot_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+          "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+          "line_start": 282,
+          "line_end": 318
+        },
+        {
+          "source_id": "B0144",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_slot_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+          "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+          "line_start": 328,
+          "line_end": 344
+        }
+      ],
+      "reproduction": "ROI完成先于源行后缀CRC/FE；晚abort在wr_active=0时到来，abort_now为0。",
+      "impact": "坏帧可能已被编码/导出领取。不能把格式错误当DDR错，不能只OR晚abort。",
+      "recommendation": "发布必须等待选定good/EOF裁决和最终写可见性；重新定义pending-verdict所有权。",
+      "expected_benefit": "防坏帧/半事务公开。",
+      "tradeoff": "等待裁决增加持槽时间，需要完整吞吐和满队列策略。",
+      "validation": "沿T02-F02/F03源链，末ROI CRC/后缀短长/缺FE/晚abort与消费者抢先领取测试。",
+      "disposition": "review_only; no production change; independent acceptance pending"
+    },
+    {
+      "finding_id": "T06-F07",
+      "severity": "high",
+      "kind": "evidence_gap",
+      "claim": "purge/有限guard能排空窗口内旧R，但无响应tag/epoch；旧R延迟超过guard并落在新ar_busy窗口时可被当新响应。",
+      "evidence_refs": [
+        {
+          "source_id": "B0153",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\p2_ddr_bridge.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0153.v",
+          "sha256": "eb9df41f9404e40cd31dbf12bc65f29ed965a9fc6c2e604f027aa9ad158954e3",
+          "line_start": 173,
+          "line_end": 205
+        },
+        {
+          "source_id": "B0153",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\p2_ddr_bridge.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0153.v",
+          "sha256": "eb9df41f9404e40cd31dbf12bc65f29ed965a9fc6c2e604f027aa9ad158954e3",
+          "line_start": 275,
+          "line_end": 336
+        },
+        {
+          "source_id": "B0153",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\p2_ddr_bridge.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0153.v",
+          "sha256": "eb9df41f9404e40cd31dbf12bc65f29ed965a9fc6c2e604f027aa9ad158954e3",
+          "line_start": 396,
+          "line_end": 426
+        },
+        {
+          "source_id": "B0144",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_slot_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+          "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+          "line_start": 187,
+          "line_end": 215
+        },
+        {
+          "source_id": "B0150",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\camera_a1_uart_top.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0150.v",
+          "sha256": "acc1eff329aa295d01b16123581fee48ef49d444efdce3b7fe62214555517405",
+          "line_start": 630,
+          "line_end": 647
+        }
+      ],
+      "reproduction": "旧AR超时→purge/guard结束→新AR握手ar_busy=1→旧R才到；rf_push仅按ar_busy判归属。",
+      "impact": "有限时间窗不是无界延迟下的新会话隔离证明；reset前后响应同类。未声称板上实际出现。",
+      "recommendation": "明确控制器flush/最大响应生命周期保证，或设计可验证代际隔离；不靠加大guard称证明。",
+      "expected_benefit": "阻止旧数据污染retry/新帧。",
+      "tradeoff": "PAXI无ID时需厂商特定排空/重置协议及性能代价。",
+      "validation": "窗口内、边界、窗口外并跨retry/新帧/业务reset的晚R负例。",
+      "disposition": "review_only; no production change; independent acceptance pending"
+    },
+    {
+      "finding_id": "T06-F08",
+      "severity": "medium",
+      "kind": "confirmed_issue",
+      "claim": "top F_WAIT watchdog要求rd_close释放槽，但store仅R_HOLD处理rd_close；AR长期未接纳时R_AR不退出，且raw_rd_timeout在R_AR不触发。",
+      "evidence_refs": [
+        {
+          "source_id": "B0150",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\camera_a1_uart_top.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0150.v",
+          "sha256": "acc1eff329aa295d01b16123581fee48ef49d444efdce3b7fe62214555517405",
+          "line_start": 661,
+          "line_end": 684
+        },
+        {
+          "source_id": "B0144",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_slot_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+          "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+          "line_start": 187,
+          "line_end": 195
+        },
+        {
+          "source_id": "B0144",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_slot_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+          "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+          "line_start": 346,
+          "line_end": 381
+        },
+        {
+          "source_id": "B0144",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_slot_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+          "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+          "line_start": 407,
+          "line_end": 418
+        }
+      ],
+      "reproduction": "保持ddr_arready=0超过WD_LIMIT=16777216个A1周期；top退F_IDLE并脉冲close，store仍R_AR/READING。",
+      "impact": "watchdog声明的干净释放不能成立；raw_rd_open_ready持续0可阻塞后续帧。",
+      "recommendation": "未来把取消/释放合同覆盖AR未接纳与R等待，保持真实在途响应隔离。",
+      "expected_benefit": "恢复长AR stall后的可用性。",
+      "tradeoff": "不得未经排空就把旧响应归属清除。",
+      "validation": "独立状态判据验证R_AR+rd_close无转移；缩短受控watchdog的RTL负例和恢复测试。",
+      "disposition": "review_only; no production change; independent acceptance pending"
+    },
+    {
+      "finding_id": "T06-F09",
+      "severity": "medium",
+      "kind": "evidence_gap",
+      "claim": "固定槽默认布局不重叠，但store没有waddr<SLOT_WORDS/累计字节硬截止；EXPECT_BYTES只在wr_last检查，MODE1 keep需连续低位且非末字全4B。",
+      "evidence_refs": [
+        {
+          "source_id": "B0150",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\camera_a1_uart_top.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0150.v",
+          "sha256": "acc1eff329aa295d01b16123581fee48ef49d444efdce3b7fe62214555517405",
+          "line_start": 124,
+          "line_end": 162
+        },
+        {
+          "source_id": "B0144",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_slot_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+          "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+          "line_start": 151,
+          "line_end": 184
+        },
+        {
+          "source_id": "B0144",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_slot_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+          "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+          "line_start": 301,
+          "line_end": 325
+        },
+        {
+          "source_id": "B0144",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_slot_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+          "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+          "line_start": 198,
+          "line_end": 206
+        }
+      ],
+      "reproduction": "过长流或缺last持续写；MODE0第129601字进入下一槽，MODE1超过81085字跨槽；稀疏keep计数与紧凑读长度不等价。",
+      "impact": "当前正常固定几何/编码上界路径需由生产者证明；恶化输入可越槽。非断言已在当前正常帧触发。",
+      "recommendation": "在未来接口合同明确最大字/精确长度/keep前缀、tail清零和越界拒整帧；编码膨胀上界归T10。",
+      "expected_benefit": "防超长和非规范keep破坏相邻持有帧。",
+      "tradeoff": "边界保护需含已排队写的处置。",
+      "validation": "长度SLOT_WORDS边界±1、无last、keep0/稀疏/非末partial、32bit加法溢出负例。",
+      "disposition": "review_only; no production change; independent acceptance pending"
+    },
+    {
+      "finding_id": "T06-F10",
+      "severity": "medium",
+      "kind": "evidence_gap",
+      "claim": "FIFO各域有同步复位释放，但bridge DDR FSM/occupancy直接用A1释放复位；新增rf_pop_gray跨域未见对应skew约束。",
+      "evidence_refs": [
+        {
+          "source_id": "B0036",
+          "source_path": "D:\\fpga\\ph1p100\\fpga\\csi2\\src\\mem\\capture_async_fifo.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0036.v",
+          "sha256": "59dd6dcb5b7e7774f7d6518f50f56cafbc8be6b70e8ae1508236bac2b5af531d",
+          "line_start": 8,
+          "line_end": 34
+        },
+        {
+          "source_id": "B0152",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\p2_a1_board_top.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0152.v",
+          "sha256": "48881d574352fd2c61f7587d3687f215bb11ea18d5b5d0b4772820a938de561b",
+          "line_start": 387,
+          "line_end": 403
+        },
+        {
+          "source_id": "B0153",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\p2_ddr_bridge.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0153.v",
+          "sha256": "eb9df41f9404e40cd31dbf12bc65f29ed965a9fc6c2e604f027aa9ad158954e3",
+          "line_start": 229,
+          "line_end": 272
+        },
+        {
+          "source_id": "B0153",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\p2_ddr_bridge.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0153.v",
+          "sha256": "eb9df41f9404e40cd31dbf12bc65f29ed965a9fc6c2e604f027aa9ad158954e3",
+          "line_start": 350,
+          "line_end": 378
+        },
+        {
+          "source_id": "B0157",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\td\\p2_board.sdc",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0157.sdc",
+          "sha256": "9284982452c37f308fc4dcd396eb94b8da4962337bdd5740a23ce830d3856d95",
+          "line_start": 35,
+          "line_end": 57
+        }
+      ],
+      "reproduction": "A1 reset释放相对DDR时钟任意相位；Gray多位路由偏斜未受该新增总线专门约束。",
+      "impact": "不能据FIFO reset同步或异步切组声明整个bridge CDC签核。",
+      "recommendation": "本域reset同步与完整Gray约束/复位计数一致性审计，保持T02-F06。",
+      "expected_benefit": "减少恢复/occupancy误判风险；不是当前缺R根因结论。",
+      "tradeoff": "需新候选STA/CDC证明，不能本轮改约束。",
+      "validation": "真实生成路径Gray skew/max-delay与复位释放检查，边界reset/stall模型。",
+      "disposition": "review_only; no production change; independent acceptance pending"
+    },
+    {
+      "finding_id": "T06-F11",
+      "severity": "high",
+      "kind": "confirmed_issue",
+      "claim": "b15行为模型直接用低19位字下标、忽略mask且独立接纳读写；写数组仅同拍AW/W成立，没有覆盖桥分开AW/W接纳。",
+      "evidence_refs": [
+        {
+          "source_id": "B0154",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\sim\\p2_paxi_model_b15.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0154.v",
+          "sha256": "74d4cad362c35c4d5162489ba817134818337d85aee805e7bf3ad26d39cfa2a4",
+          "line_start": 88,
+          "line_end": 102
+        },
+        {
+          "source_id": "B0154",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\sim\\p2_paxi_model_b15.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0154.v",
+          "sha256": "74d4cad362c35c4d5162489ba817134818337d85aee805e7bf3ad26d39cfa2a4",
+          "line_start": 170,
+          "line_end": 220
+        },
+        {
+          "source_id": "B0154",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\sim\\p2_paxi_model_b15.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0154.v",
+          "sha256": "74d4cad362c35c4d5162489ba817134818337d85aee805e7bf3ad26d39cfa2a4",
+          "line_start": 241,
+          "line_end": 242
+        },
+        {
+          "source_id": "B0153",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\p2_ddr_bridge.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0153.v",
+          "sha256": "eb9df41f9404e40cd31dbf12bc65f29ed965a9fc6c2e604f027aa9ad158954e3",
+          "line_start": 343,
+          "line_end": 373
+        }
+      ],
+      "reproduction": "不同地址低3位、mask翻转、AW先W后、同拍AW/AR；宽松模型不能拒绝原生误用。",
+      "impact": "旧整帧CRC/zlib PASS不能证明原生MC地址/mask/命令合同；也不能证明L_max=1。",
+      "recommendation": "模型独立执行原生合同并覆盖AW/W分别保持、全位越界、并发拒绝或明确接纳规则。",
+      "expected_benefit": "提高失败判别力，停止循环假设自证。",
+      "tradeoff": "条件模型仍非厂商MC，不能用它最终归因板上缺R。",
+      "validation": "witness五种小图样条件模型与外部adapter正对照；真实IP合同另验。",
+      "disposition": "review_only; no production change; independent acceptance pending"
+    },
+    {
+      "finding_id": "T06-F12",
+      "severity": "high",
+      "kind": "evidence_gap",
+      "claim": "DDR预算必须包含RAW每20B占32B和RAW写/读+CMP写/读；两槽深度不是服务率。现有单路TB slot-free和93.75MB/s sink证据不证明生产双路。",
+      "evidence_refs": [
+        {
+          "source_id": "B0144",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_slot_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+          "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+          "line_start": 16,
+          "line_end": 18
+        },
+        {
+          "source_id": "B0150",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\camera_a1_uart_top.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0150.v",
+          "sha256": "acc1eff329aa295d01b16123581fee48ef49d444efdce3b7fe62214555517405",
+          "line_start": 124,
+          "line_end": 135
+        },
+        {
+          "source_id": "B0284",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-233401_fpga-steady-state-reverdict\\test-reports\\T10.ss-4run-matrix-r0-integrated.md",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0284.md",
+          "sha256": "887023ad7b4fc32cdbb62a726105bd06f9ca99efd2e32f71a3fb33872a80743a",
+          "line_start": 20,
+          "line_end": 28
+        },
+        {
+          "source_id": "B0284",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-233401_fpga-steady-state-reverdict\\test-reports\\T10.ss-4run-matrix-r0-integrated.md",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0284.md",
+          "sha256": "887023ad7b4fc32cdbb62a726105bd06f9ca99efd2e32f71a3fb33872a80743a",
+          "line_start": 65,
+          "line_end": 73
+        }
+      ],
+      "reproduction": "1080p30，RAW129600字/帧，CMP按81085字容量预算；单路四次搬运404.5152MB/s，双路809.0304MB/s，未计额外开销与重试。",
+      "impact": "仅77.76/155.52MB/s payload可能低估共享DDR需求；缓存加深不能补长期服务不足。",
+      "recommendation": "用最坏膨胀/真实native服务/生产slot-free/sink/双路资源联合签核；其他活动run仍只读。",
+      "expected_benefit": "建立可审计最坏服务下界，无空报性能提升百分比。",
+      "tradeoff": "容量预算不自动成为已证明编码上界，25%仅参考。",
+      "validation": "独立重算witness预算；实际持续读写、仲裁空窗、恢复和每路服务上界后续验收。",
+      "disposition": "review_only; no production change; independent acceptance pending"
+    },
+    {
+      "finding_id": "T06-F13",
+      "severity": "info",
+      "kind": "no_issue_found",
+      "claim": "限定静态范围内，b15正常begin只选FREE、abort抑制同拍flush；同读在途的owner路由及FIFO持数机制应保留。",
+      "evidence_refs": [
+        {
+          "source_id": "B0144",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_slot_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+          "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+          "line_start": 141,
+          "line_end": 180
+        },
+        {
+          "source_id": "B0144",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_slot_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+          "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+          "line_start": 268,
+          "line_end": 318
+        },
+        {
+          "source_id": "B0143",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\changed-src\\a1_ddr_arb2.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0143.v",
+          "sha256": "b84019bda057afe82ff558e0848d6171fa12732bd8cdb7c6239cb71b3f81d6ba",
+          "line_start": 75,
+          "line_end": 109
+        },
+        {
+          "source_id": "B0036",
+          "source_path": "D:\\fpga\\ph1p100\\fpga\\csi2\\src\\mem\\capture_async_fifo.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0036.v",
+          "sha256": "59dd6dcb5b7e7774f7d6518f50f56cafbc8be6b70e8ae1508236bac2b5af531d",
+          "line_start": 16,
+          "line_end": 34
+        }
+      ],
+      "reproduction": "依赖成对内部AW/Wready、有限原生响应长度、稳定producer及正常边界。",
+      "impact": "未见应直接删除slot/owner/skid/CRC的依据；F04/F05/F07不被此局部核对覆盖。",
+      "recommendation": "保留保护；优化须证明接受事件/恢复/所有权等价。",
+      "expected_benefit": "避免把保护状态误作冗余。",
+      "tradeoff": "局部静态no_issue不是任意故障或板级证明。",
+      "validation": "真实DUT随机stall/abort/reset及描述符顺序scoreboard。",
+      "disposition": "review_only; no production change; independent acceptance pending"
+    },
+    {
+      "finding_id": "T06-F14",
+      "severity": "medium",
+      "kind": "evidence_gap",
+      "claim": "upstream RAW/R10F AXI分支含B响应后发布/保护位/ARM-TX-HELD与session ACK；它与b15不同。FIFO满可丢EOF标记、响应跨reset/session排空仍需该候选证据。",
+      "evidence_refs": [
+        {
+          "source_id": "B0098",
+          "source_path": "D:\\fpga\\ph1p100\\upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\ddr\\cam_r10f_writer.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0098.v",
+          "sha256": "b6c5ab12f77f36cbb409882fa0847d1e5b34e4c64090a5161d26866c5ed3488e",
+          "line_start": 292,
+          "line_end": 345
+        },
+        {
+          "source_id": "B0098",
+          "source_path": "D:\\fpga\\ph1p100\\upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\ddr\\cam_r10f_writer.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0098.v",
+          "sha256": "b6c5ab12f77f36cbb409882fa0847d1e5b34e4c64090a5161d26866c5ed3488e",
+          "line_start": 392,
+          "line_end": 405
+        },
+        {
+          "source_id": "B0098",
+          "source_path": "D:\\fpga\\ph1p100\\upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\ddr\\cam_r10f_writer.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0098.v",
+          "sha256": "b6c5ab12f77f36cbb409882fa0847d1e5b34e4c64090a5161d26866c5ed3488e",
+          "line_start": 887,
+          "line_end": 977
+        },
+        {
+          "source_id": "B0101",
+          "source_path": "D:\\fpga\\ph1p100\\upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\ddr\\ddr_frame_pusher.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0101.v",
+          "sha256": "e0dd673cd19dd09c0343dd5811a6bc4efbfab48ece2ab5e59396a17ef6f57a5b",
+          "line_start": 397,
+          "line_end": 429
+        },
+        {
+          "source_id": "B0101",
+          "source_path": "D:\\fpga\\ph1p100\\upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\ddr\\ddr_frame_pusher.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0101.v",
+          "sha256": "e0dd673cd19dd09c0343dd5811a6bc4efbfab48ece2ab5e59396a17ef6f57a5b",
+          "line_start": 711,
+          "line_end": 808
+        },
+        {
+          "source_id": "B0101",
+          "source_path": "D:\\fpga\\ph1p100\\upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\ddr\\ddr_frame_pusher.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0101.v",
+          "sha256": "e0dd673cd19dd09c0343dd5811a6bc4efbfab48ece2ab5e59396a17ef6f57a5b",
+          "line_start": 974,
+          "line_end": 1025
+        },
+        {
+          "source_id": "B0139",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261019-0212_codex_fpga_closedloop_b2\\test-reports\\T06.codex-ddr-readback-int-r0-integrated.md",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0139.md",
+          "sha256": "e285fd7e6efd68a2b3992e9a16527fe4f7aecf572151a03497de99685678f6d4",
+          "line_start": 7,
+          "line_end": 12
+        },
+        {
+          "source_id": "B0140",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261019-0212_codex_fpga_closedloop_b2\\test-reports\\T09.codex-production-int-r0-integrated.md",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0140.md",
+          "sha256": "6961f639adf27cfc117cbea967bde6ac0d592038a92897f845efab8a7a922c10",
+          "line_start": 36,
+          "line_end": 47
+        }
+      ],
+      "reproduction": "EOF被满FIFO阻塞时走帧内timeout；ARM前旧R/跨session取消需DRAIN和控制器契约；不能移用预览replace READY策略。",
+      "impact": "源码有保护不是当前b15集成或整板通过；旧离线closedloop report仅原候选可复用。",
+      "recommendation": "分清native与AXI mask/byte地址，保留事务保护与ACK；后续T11检查DMA完整外传。",
+      "expected_benefit": "防分支混拼和把预览策略用于生产DMA。",
+      "tradeoff": "本包仅相邻存储契约，PCIe完整外传细节归T11。",
+      "validation": "绑定旧候选检查EOF丢失/timeout、cancel drain/held ACK错误session/迟到R和不可覆盖。",
+      "disposition": "review_only; no production change; independent acceptance pending"
+    },
+    {
+      "finding_id": "T06-F15",
+      "severity": "low",
+      "kind": "redundancy_candidate",
+      "claim": "仓库P1默认store/arb与b15 changed-src、旧td/src bridge并存；未选中副本可做未来来源收口候选，不能按文件数推导硬件资源浪费。",
+      "evidence_refs": [
+        {
+          "source_id": "B0155",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\td\\a1_board.al",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0155.al",
+          "sha256": "9a627146616af3312ebbefbb6b07835b9128797c9b5381cd75c65d0a50bbfb25",
+          "line_start": 23,
+          "line_end": 35
+        },
+        {
+          "source_id": "B0155",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\td\\a1_board.al",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0155.al",
+          "sha256": "9a627146616af3312ebbefbb6b07835b9128797c9b5381cd75c65d0a50bbfb25",
+          "line_start": 95,
+          "line_end": 109
+        },
+        {
+          "source_id": "B0009",
+          "source_path": "D:\\fpga\\ph1p100\\fpga\\csi2\\src\\a1\\a1_ddr_arb2.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0009.v",
+          "sha256": "6513ad839dee02e932c49bdfd5afa3d62c382d4a144b8e74d5574273804afdc6",
+          "line_start": 1,
+          "line_end": 7
+        },
+        {
+          "source_id": "B0010",
+          "source_path": "D:\\fpga\\ph1p100\\fpga\\csi2\\src\\a1\\a1_ddr_slot_store.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0010.v",
+          "sha256": "8bab440d528a192d558081ab0b52f96d9116d3bb5713c821e2fa74a97f74d09a",
+          "line_start": 1,
+          "line_end": 19
+        },
+        {
+          "source_id": "B0163",
+          "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b15-ddr-pace\\r0\\td\\src\\p2_ddr_bridge.v",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0163.v",
+          "sha256": "bff1a3589bd254aa2aaef1050804411095c41c03b6d43fa2a31b6f4e72d49731",
+          "line_start": 1,
+          "line_end": 18
+        }
+      ],
+      "reproduction": "以仓库同名文件或stale td/src bridge当b15实际编译实现。",
+      "impact": "容易审错版本；删除可能破坏旧候选重现。",
+      "recommendation": "优先清晰source-map/构建白名单；归档/删除需另授权，当前禁止删除。",
+      "expected_benefit": "降低版本误读，暂无可量化ERAM/slice收益。",
+      "tradeoff": "必须保留历史manifest可复现性与消费者。",
+      "validation": "编译入口闭包/全部引用扫描后再考虑归档。",
+      "disposition": "review_only; no production change; independent acceptance pending"
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "checked_at": "2026-10-26T19:30:18",
+  "r0": {
+    "manifest_sha256": "e55e79659981e3a7f87696aec67d46b02011c3d8fe527c4ecdaf7b39553d9a74",
+    "count": 49,
+    "drift": [],
+    "stopped_modifying": true,
+    "active_commands": 0
+  },
+  "r1": {
+    "manifest_sha256": "e306ed42ed47dbcec6127bf2faee88925a9a88ae8a5ef07ecbda8dda91fe1fd9",
+    "count": 70,
+    "drift": [],
+    "stopped_modifying": true,
+    "active_commands": 0
+  },
+  "matches_r1_verification": {
+    "r0": true,
+    "r1": true
+  },
+  "caps_files": [
+    "l-r1.evt",
+    "l-r1.hdr",
+    "l-r1.stats",
+    "l.evt",
+    "l.hdr",
+    "l.stats",
+    "n-r1.evt",
+    "n-r1.hdr",
+    "n-r1.stats",
+    "n.evt",
+    "n.hdr",
+    "n.stats",
+    "precheck.evt",
+    "precheck.hdr",
+    "precheck.stats"
+  ],
+  "new_r1b_artifacts": [],
+  "r1_evidence_mtime": {
+    "l-r1.evt": "2026-10-26 18:11:35",
+    "l-r1.hdr": "2026-10-26 18:11:35",
+    "l-r1.stats": "2026-10-26 18:11:35",
+    "n-r1.evt": "2026-10-26 17:39:32",
+    "n-r1.hdr": "2026-10-26 17:39:32",
+    "n-r1.stats": "2026-10-26 17:39:32"
+  },
+  "tb_sha": {
+    "tb_ss_4run.v": "7f5cc29405001e4a5da868e8129819e0068715965999c7e81082e38e20947f81",
+    "tb_ss_4run_wd.v": "785c3ef1d044f8529b7232ae37ed3a67172b6c4cd512c47a713103675090b79a"
+  },
+  "tb_expected": {
+    "tb_ss_4run.v": "7f5cc29405001e4a5da868e8129819e0068715965999c7e81082e38e20947f81",
+    "tb_ss_4run_wd.v": "785c3ef1d044f8529b7232ae37ed3a67172b6c4cd512c47a713103675090b79a"
+  },
+  "tb_ok": true,
+  "dut_vs_p4": {
+    "a1_ddr_arb2.v": true,
+    "a1_ddr_model.v": true,
+    "a1_ddr_slot_store.v": true,
+    "a1_deflate_core.v": true,
+    "a1_frame_top.v": true,
+    "a1_raw_crop.v": true,
+    "a1_uart_export.v": true,
+    "camera_a1_uart_top.v": true,
+    "cam_diag_mailbox.v": true,
+    "capture_async_fifo.v": true,
+    "p2_ddr_bridge.v": true,
+    "p2_paxi_model_b11.v": true
+  },
+  "dut_all_same": true,
+  "dup_src": {
+    "280": "                        st_read_words <= st_read_words + 32'd1;",
+    "281": "                        if (rd_prev_v && (ddr_rdata === rd_prev))",
+    "282": "                            st_dup_words <= st_dup_words + 32'd1;",
+    "283": "                        rd_prev   <= ddr_rdata;",
+    "284": "                        rd_prev_v <= 1'b1;"
+  },
+  "dup_src_sha": "86d626465dc8d0643a7bb62e952e79ee89215c2e0c02719fc348a04c4363ed84"
+}

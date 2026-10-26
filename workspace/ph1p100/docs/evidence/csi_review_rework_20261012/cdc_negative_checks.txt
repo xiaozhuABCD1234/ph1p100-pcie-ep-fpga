@@ -1,0 +1,13 @@
+truth REJECTED
+Traceback (most recent call last):
+  File "C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\tools\td\audit_display_cdc.py", line 61, in <module>
+    assert (truth,selector) in mapping,('Reset AND truth table/selectors',key,letter)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('Reset AND truth table/selectors', 'wq1_rgray[6]', 'B')
+
+source REJECTED
+Traceback (most recent call last):
+  File "C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\tools\td\audit_display_cdc.py", line 63, in <module>
+    assert gpins.get(source_pin)==source,('Reset gate source bit',key,gpins)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('Reset gate source bit', 'wq1_rgray[6]', {'ie': 'u_ddrmc_test_top/u_capture/u_fifo/rgray[5]', 'imb': 'u_ddrmc_test_top/u_capture/u_pack/rst_n_dup_2661', 'ofb': 'u_ddrmc_test_top/u_capture/u_fifo/wq1_rgray_b[6]'})

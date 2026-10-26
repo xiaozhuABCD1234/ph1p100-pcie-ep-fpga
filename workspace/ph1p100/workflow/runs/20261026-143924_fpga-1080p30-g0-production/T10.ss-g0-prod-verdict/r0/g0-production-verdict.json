@@ -1,0 +1,511 @@
+{
+  "schema": "g0-production-verdict/1",
+  "task_id": "T10.ss-g0-prod-verdict",
+  "run": "20261026-143924_fpga-1080p30-g0-production",
+  "round": 0,
+  "repair_round": 0,
+  "created": "2026-10-26",
+  "role": "fpga-dev (candidate author; not acceptance)",
+  "status": "ready_for_test",
+  "headline": "G0_not_closed",
+  "headline_zh": "本轮 G0 未闭合：自然内容 N 与低照 L 均有实测稳态缺口，两类主瓶颈均为 core_interval；没有任何实现/TD/板级证据。",
+  "headline_basis": [
+    "N S_ss=7,475,240 > 6,250,000 (margin -16.3906%), busy=44.88% < 0.95",
+    "L S_ss=6,986,952 > 6,250,000 (margin -10.5475%), busy=61.72% < 0.95",
+    "both bottleneck_attribution=core_interval"
+  ],
+  "sink_limited_clarification": {
+    "old_flag_rule": "tail_frac >= 0.50 remains a DIAGNOSTIC FLAG that must be reported",
+    "blocking_rule": "G0_not_proven is blocked only by sink busy rate busy = export_time / S_ss >= 0.95",
+    "why": "tail_frac>=50% alone mislabels a quantifiable core gap as unprovable capacity; sink backpressure also slows t_enc, so export_time>=core_interval is not used",
+    "per_class": {
+      "N": {
+        "S_ss": 7475240,
+        "tail_frac_pct": 44.8783,
+        "export_time_cycles": 3354672,
+        "busy": 0.448771,
+        "busy_pct": 44.8771,
+        "old_G0_as_written": "G0_not_closed",
+        "run_level_G0": "G0_not_closed",
+        "margin_G0_pct": -16.390644
+      },
+      "L": {
+        "S_ss": 6986952,
+        "tail_frac_pct": 61.7249,
+        "export_time_cycles": 4312600,
+        "busy": 0.617236,
+        "busy_pct": 61.7236,
+        "old_G0_as_written": "G0_not_proven",
+        "run_level_G0": "G0_not_closed",
+        "margin_G0_pct": -10.54754
+      }
+    },
+    "l_reclassification": {
+      "from": "G0_not_proven",
+      "to": "G0_not_closed",
+      "margin_G0_pct": -10.5475,
+      "reason": "busy 61.72% < 0.95; sink is not the gate; core_interval 6,986,951 vs export 4,312,600"
+    },
+    "report_headline_correction": {
+      "statement": "P1 r1b report/content-verdict-r1.json and P3 r0 report wrote headline G0_not_proven under the frozen 50% proxy; the run-level headline is corrected by this clarification to G0_not_closed. P2 headline is already G0_not_closed (its headline_detail still echoes the old per-class flag). Values, evidence, thresholds and G0 formulas are unchanged; original reports are NOT rewritten by this package.",
+      "numbers_unchanged": true,
+      "original_reports_rewritten": false
+    },
+    "backward_compat": {
+      "R3_rand": "busy=5,189,412/5,189,503=99.998% -> still sink_limited / G0_not_proven",
+      "R1_R2_R4": "busy=3.50%/2.54%/28.64% -> unaffected",
+      "historical_verdicts_changed": false
+    }
+  },
+  "per_class": {
+    "N": {
+      "content_labels": [
+        "natural_scene_image",
+        "proxy_not_natural_raw",
+        "not_sensor_raw",
+        "proxy_not_worst",
+        "display_referred"
+      ],
+      "S_ss_cycles": 7475240.0,
+      "S_spread_pct": 0.0,
+      "t_exp_1_4": [
+        12440157,
+        19914239,
+        27389479,
+        34864719
+      ],
+      "L_cold_cycles": 12440137,
+      "L_cold_over_G0": 1.99042192,
+      "L_cold_note": "reported separately; not in S_ss; neither G0 failure nor G0 pass",
+      "tail_mean_cycles": 3354764.0,
+      "tail_frac_pct": 44.8783450431023,
+      "sink_limited_flag_tail_50pct": false,
+      "export_time_mean_cycles": 3354672.0,
+      "busy_export_over_S_ss": 0.448771,
+      "busy_pct": 44.8771,
+      "busy_gate_0_95": false,
+      "core_interval_mean_cycles": 7475238.0,
+      "bottleneck_attribution": "core_interval",
+      "capacity_MBps": 65.01463498161932,
+      "fps": 25.08280670587165,
+      "margin_G0_pct": -16.39064431376116,
+      "margin_G25_pct_reference_only": -33.11251545100893,
+      "steady_comp_bytes_per_frame": 1677336,
+      "compression_ratio": 1.5453075591294767,
+      "dup_words_record_only": 3896,
+      "ss_pass_frozen_tb_dup_clause": 0,
+      "G0_run_level": "G0_not_closed",
+      "source": "T10.ss-g0-prod-content/r0/out/content-verdict-r1.json#/content_classes/N"
+    },
+    "L": {
+      "content_labels": [
+        "low_light_natural_scene",
+        "proxy_not_natural_raw",
+        "not_sensor_raw",
+        "proxy_not_worst",
+        "display_referred"
+      ],
+      "S_ss_cycles": 6986952.0,
+      "S_spread_pct": 8.587435551296188e-05,
+      "t_exp_1_4": [
+        12901635,
+        19887447,
+        26874402,
+        33861351
+      ],
+      "L_cold_cycles": 12901615,
+      "L_cold_over_G0": 2.0642584,
+      "L_cold_note": "reported separately; not in S_ss; neither G0 failure nor G0 pass",
+      "tail_mean_cycles": 4312692.0,
+      "tail_frac_pct": 61.724941004317756,
+      "sink_limited_flag_tail_50pct": true,
+      "export_time_mean_cycles": 4312600.0,
+      "busy_export_over_S_ss": 0.617236,
+      "busy_pct": 61.7236,
+      "busy_gate_0_95": false,
+      "core_interval_mean_cycles": 6986950.7,
+      "bottleneck_attribution": "core_interval",
+      "capacity_MBps": 69.55822796549911,
+      "fps": 26.835736097800584,
+      "margin_G0_pct": -10.547546340664715,
+      "margin_G25_pct_reference_only": -28.438037072531774,
+      "steady_comp_bytes_per_frame": 2156300,
+      "compression_ratio": 1.2020590826879376,
+      "dup_words_record_only": 568,
+      "ss_pass_frozen_tb_dup_clause": 0,
+      "G0_run_level": "G0_not_closed",
+      "source": "T10.ss-g0-prod-content/r0/out/content-verdict-r1.json#/content_classes/L"
+    }
+  },
+  "coregap": {
+    "closable_at_187_5": "conditional",
+    "headline": "G0_not_closed",
+    "probe_cycles": {
+      "N": 7476245,
+      "L": 6979811
+    },
+    "matrix_cycles_per_frame": {
+      "A": 7223675,
+      "B": 7384642,
+      "C": 7384642,
+      "D": 7476245,
+      "E": 7476245,
+      "F": 7476245,
+      "G": 7476245,
+      "H": 6260648
+    },
+    "single_H": {
+      "cycles": 6260648,
+      "cycles_per_byte": 2.4154,
+      "margin_vs_G0_pct": -0.17,
+      "sufficient_alone": false
+    },
+    "a_plus_h": {
+      "cycles": 6008078,
+      "cycles_per_byte": 2.3179,
+      "margin_vs_G0_pct": 4.027,
+      "arithmetic_closure_at_187_5": true,
+      "g0_closure": false,
+      "implemented": false,
+      "prototype_exists": false,
+      "td_run": false,
+      "conditional_reason": "envelope uncertainty 45.034% (3,970,580-7,223,675) from an unimplemented matcher/emit structure; no prototype/TD"
+    },
+    "scheme_envelope": {
+      "best_case_cycles": 3970580,
+      "conservative_cycles": 7223675,
+      "headline_cycles": 6008078,
+      "uncertainty_pct": 45.034,
+      "json_rounded_field": 45.0
+    },
+    "clock_only": {
+      "b11_routed_wns_ns_at_187_5": 0.015,
+      "implied_max_mhz_approx": 188.0,
+      "clock_rows_209_6_224_3": "not within b11 timing capability; need re-pipelining + TD",
+      "224_3_arithmetic_margin_pct": 0.006,
+      "viable_path": false
+    },
+    "dual_core": {
+      "per_stream_cycles_unchanged": 7476245,
+      "per_stream_MBps": 75.684,
+      "ERAM_range_of_300": [
+        231,
+        289
+      ],
+      "timing": "unproven",
+      "raises_per_stream": false
+    },
+    "source": "T10.ss-g0-prod-coregap/r0/out/coregap-verdict.json (manifest-r1 803d3efb...)"
+  },
+  "sink": {
+    "comp_demand_MBps": {
+      "N": {
+        "33_3333ms": 50.32008,
+        "25_0ms": 67.09344
+      },
+      "L": {
+        "33_3333ms": 64.689,
+        "25_0ms": 86.252
+      }
+    },
+    "tightest": {
+      "class": "L",
+      "window": "25.0ms",
+      "MBps": 86.252,
+      "util_of_93_75_pct": 92.0,
+      "headroom_pct": 8.69
+    },
+    "raw_band": {
+      "bytes_per_frame": 2594706,
+      "need_at_30fps_MBps": 77.84118,
+      "need_at_25ms_MBps": 103.78824,
+      "at_93_75_cycles": 5189412,
+      "at_93_75_ms": 27.676864,
+      "at_93_75_pct_G0": 83.030592,
+      "shortfall_at_25ms_pct": 10.707456,
+      "shortfall_at_25ms_ms": 2.676864,
+      "implemented": false,
+      "proven": false,
+      "applicability": "RAW fallback / all-stored path only; not applicable to measured comp streams"
+    },
+    "production_sink": {
+      "implemented": false,
+      "proven": false,
+      "existing_export": "115200 UART approx 11.52 kB/s (guide section 2 frozen value, not re-measured here)"
+    },
+    "source": "T10.ss-g0-prod-sink/r0/out/sink-headroom.json (manifest-r0 de8a5cff...)"
+  },
+  "six_statements": [
+    {
+      "id": 1,
+      "text_zh": "当前 core + 187.5 MHz 不能闭合自然内容：N 7,475,240（-16.3906%）、L 6,986,952（-10.5475%），两类 core-bound。",
+      "values": {
+        "N_S_ss": 7475240,
+        "N_margin_G0_pct": -16.390644,
+        "L_S_ss": 6986952,
+        "L_margin_G0_pct": -10.54754,
+        "N_bottleneck": "core_interval",
+        "L_bottleneck": "core_interval",
+        "G0_target": 6250000
+      },
+      "sources": [
+        "content-verdict-r1.json#/content_classes/N",
+        "content-verdict-r1.json#/content_classes/L",
+        "test-reports/T10.ss-g0-prod-content-r1b-integrated.md"
+      ]
+    },
+    {
+      "id": 2,
+      "text_zh": "A+H 6,008,078 / 2.3179 cycles/B / +4.027% 仅是 187.5 MHz 的算术闭合，包络 45.034% -> conditional；不是 G0 闭合、不是已实现；单 H 6,260,648（-0.17%）仍不够。",
+      "values": {
+        "A_plus_H_cycles": 6008078,
+        "A_plus_H_cycles_per_byte": 2.3179,
+        "A_plus_H_margin_pct": 4.027,
+        "envelope_uncertainty_pct": 45.034,
+        "envelope_range_cycles": [
+          3970580,
+          7223675
+        ],
+        "single_H_cycles": 6260648,
+        "single_H_margin_pct": -0.17,
+        "closable_at_187_5": "conditional",
+        "implemented": false
+      },
+      "sources": [
+        "coregap-verdict.json#/combinations[0]",
+        "coregap-verdict.json#/scheme_envelope",
+        "coregap-verdict.json#/scheme_matrix[H]"
+      ]
+    },
+    {
+      "id": 3,
+      "text_zh": "仅提时钟 209.6/224.3 MHz 不在 b11 时序能力内（WNS +0.015 ns @187.5 约 188.0 MHz；224.3 仅 0.006% 算术余量），不是可行路径。",
+      "values": {
+        "wns_ns_at_187_5": 0.015,
+        "implied_max_mhz_approx": 188.0,
+        "clock_rows": [
+          209.6,
+          224.3
+        ],
+        "224_3_arithmetic_margin_pct": 0.006
+      },
+      "sources": [
+        "coregap-verdict.json#/scheme_matrix[D,E]",
+        "T10.ss-g0-prod-coregap/r0/result-r1.md"
+      ]
+    },
+    {
+      "id": 4,
+      "text_zh": "双核不提高 per-stream：单路仍 7,476,245 cycles（链级 75.684 MB/s），ERAM 231-289/300、时序 unproven。",
+      "values": {
+        "per_stream_cycles": 7476245,
+        "per_stream_MBps": 75.684,
+        "ERAM_range": [
+          231,
+          289
+        ],
+        "ERAM_limit": 300,
+        "timing": "unproven"
+      },
+      "sources": [
+        "coregap-verdict.json#/scheme_matrix[F]"
+      ]
+    },
+    {
+      "id": 5,
+      "text_zh": "P3：93.75 对实测 comp 有余量（最紧 L@25 ms 86.25，占 92.0%）；raw band >=103.79 未实现/未证，只对 RAW fallback，不得把 93.75 写成 103.79。",
+      "values": {
+        "L_25ms_MBps": 86.252,
+        "util_pct": 92.0,
+        "raw_need_25ms_MBps": 103.78824,
+        "raw_shortfall_pct": 10.707456,
+        "raw_band_implemented": false,
+        "raw_band_applicability": "RAW fallback only"
+      },
+      "sources": [
+        "sink-headroom.json#/comp_stream",
+        "sink-headroom.json#/raw_band",
+        "sink-headroom.json#/headline"
+      ]
+    },
+    {
+      "id": 6,
+      "text_zh": "用户坚持 1080p30、不降档；需决定：① core 结构改版（A+H，原型+TD+板级）；② 换核/换算法；③ 接受 G0_not_closed 边界。降档需用户明确，本判定不主推。",
+      "values": {
+        "user_keeps_1080p30": true,
+        "downgrade_requires_explicit_user_decision": true,
+        "g25_used_for_downgrade": false
+      },
+      "sources": [
+        "p4-release-ruling.md section 3.1(6)",
+        "dev-plan.md section 5",
+        "user directive recorded by planner (not a measurement)"
+      ]
+    }
+  ],
+  "scope_tuple": {
+    "content": "P1 natural-scene / low-light image-derived Bayer (proxy_not_natural_raw, not_sensor_raw, proxy_not_worst, display_referred) - NOT sensor RAW",
+    "pacing": "TB wait_slot_free (NOT production free-run)",
+    "sink": "93.75 MB/s TB proxy (NOT production sink)",
+    "ddr": "behavioural 256-bit PAXI model",
+    "core_clock": "single a1 core @187.5 MHz",
+    "stream": "single stream"
+  },
+  "can_say": [
+    "under the frozen scope (derived natural content + TB slot-free + 93.75 sink), natural-content 4-frame measurement misses G0 and the gap is quantified and reproducible",
+    "core throughput is the primary constraint; sink is not",
+    "A+H is a conditional arithmetic candidate only; current single-core 187.5 MHz does not close",
+    "production sink, raw band, real DDR, PCIe/UART sustained and board results remain unimplemented/unproven"
+  ],
+  "cannot_say": [
+    "G0 is closed or the scope is met",
+    "A+H is implemented or has been proven by TD/board",
+    "natural/full/worst-case content passes",
+    "real sensor RAW, noise or optics were exercised",
+    "production sink >=103.79 MB/s exists",
+    "real DDR/PAXI/PCIe/UART sustained, board, bitstream or Flash were tested",
+    "dual-stream or RK/NPU",
+    "G25 justifies a downgrade"
+  ],
+  "g25_reference_only": {
+    "margin_G25_pct": {
+      "N": -33.112515,
+      "L": -28.438
+    },
+    "role": "reference column only",
+    "used_for_headline": false,
+    "used_for_downgrade": false
+  },
+  "user_decision": {
+    "constraint": "user insists on 1080p30 and does not downgrade",
+    "options": [
+      {
+        "id": 1,
+        "option": "fund core structural rewrite A+H (2-position scan + 2 B/cycle replay): prototype, then TD/STA at 187.5 MHz (209.6 fallback), then 4-frame N/L re-measurement and board",
+        "arithmetic_margin_pct": 4.027,
+        "envelope_uncertainty_pct": 45.034
+      },
+      {
+        "id": 2,
+        "option": "replace the core/algorithm (separate task with its own TD/board budget)"
+      },
+      {
+        "id": 3,
+        "option": "accept the G0_not_closed boundary for the declared scope/content"
+      }
+    ],
+    "downgrade": {
+      "requires_explicit_user_decision": true,
+      "promoted_by_this_package": false
+    }
+  },
+  "remaining_risks": [
+    "content is image-derived proxy: no sensor RAW, noise or optics; L has no noise injection; worst/full content unproven",
+    "A+H envelope 45.034% comes from unimplemented matcher/emit structure estimates; B/C have no matcher evidence; any implementation needs prototype + TD + 4-frame rerun",
+    "production pacing, production sink (115200 UART approx 11.52 kB/s), real DDR sustained, board and dual-stream are untested; conclusion covers declared scope only",
+    "P2 r1 overwrote 7 r0 documents in place (OBS-8): only r1 is reproducible; r0 documents are not claimed reproducible",
+    "0 TD in this package: A+H timing/resources and any timing headroom beyond b11 WNS are not verified here"
+  ],
+  "not_proven": [
+    "G0 closure for natural content at 187.5 MHz single core",
+    "A+H or any structural rewrite implementation, timing closure and resource fit",
+    "sensor RAW / noise / optical realism; worst-case or full content",
+    "production slot-free pacing and production sink >=103.79 MB/s",
+    "real DDR/PAXI, PCIe/UART sustained bandwidth, board-level behaviour, bitstream/Flash",
+    "dual-stream operation and RK/NPU"
+  ],
+  "rejection_list": [
+    {
+      "id": "claim_closure",
+      "reason": "N/L measured gaps -16.3906% / -10.5475%; no implementation exists"
+    },
+    {
+      "id": "claim_AH_done",
+      "reason": "A+H is an arithmetic estimate with 45.034% envelope and zero RTL/TD work"
+    },
+    {
+      "id": "claim_sensor_raw",
+      "reason": "content is image-derived Bayer with proxy_not_natural_raw / not_sensor_raw labels"
+    },
+    {
+      "id": "claim_production_sink",
+      "reason": "93.75 is a TB proxy; production sink and >=103.79 MB/s are not implemented/proven"
+    },
+    {
+      "id": "claim_board_or_real_ddr",
+      "reason": "0 board / 0 TD / behavioural DDR only"
+    },
+    {
+      "id": "claim_dual_stream",
+      "reason": "scope is single stream; dual core does not raise per-stream"
+    },
+    {
+      "id": "claim_g25_downgrade",
+      "reason": "G25 is a reference column only; downgrade requires explicit user decision"
+    },
+    {
+      "id": "claim_synthetic_override",
+      "reason": "synthetic anchors/C1 do not override natural-content measurements"
+    }
+  ],
+  "recovery": {
+    "codex": "$fpga-orchestrator 恢复：D:\\fpga\\ph1p100\\workflow\\runs\\20261026-143924_fpga-1080p30-g0-production；本轮目标：<目标>",
+    "opencode": "/fpga-orchestrator 恢复：D:\\fpga\\ph1p100\\workflow\\runs\\20261026-143924_fpga-1080p30-g0-production；本轮目标：<目标>",
+    "baseline_manifests": {
+      "P1": {
+        "path": "T10.ss-g0-prod-content/r0/manifest-r1.json",
+        "sha256": "e306ed42ed47dbcec6127bf2faee88925a9a88ae8a5ef07ecbda8dda91fe1fd9"
+      },
+      "P2": {
+        "path": "T10.ss-g0-prod-coregap/r0/manifest-r1.json",
+        "sha256": "803d3efb0104376004eb46c2b633d9b19577ba746190edadea802f81e3b92a66",
+        "note": "r1 only"
+      },
+      "P3": {
+        "path": "T10.ss-g0-prod-sink/r0/manifest-r0.json",
+        "sha256": "de8a5cffb8044828d2c4eb0ae72d1959c5267a06744a4002bf60a413995aa139"
+      }
+    }
+  },
+  "evidence_binding": {
+    "path": "out/evidence-binding.json",
+    "packages": [
+      {
+        "package": "P1",
+        "manifest": "T10.ss-g0-prod-content/r0/manifest-r1.json",
+        "sha256": "e306ed42ed47dbcec6127bf2faee88925a9a88ae8a5ef07ecbda8dda91fe1fd9",
+        "artifacts": 70,
+        "verified": true
+      },
+      {
+        "package": "P2",
+        "manifest": "T10.ss-g0-prod-coregap/r0/manifest-r1.json",
+        "sha256": "803d3efb0104376004eb46c2b633d9b19577ba746190edadea802f81e3b92a66",
+        "artifacts": 49,
+        "verified": true
+      },
+      {
+        "package": "P3",
+        "manifest": "T10.ss-g0-prod-sink/r0/manifest-r0.json",
+        "sha256": "de8a5cffb8044828d2c4eb0ae72d1959c5267a06744a4002bf60a413995aa139",
+        "artifacts": 5,
+        "verified": true
+      }
+    ],
+    "total_artifacts_verified": 124,
+    "mismatches": 0
+  },
+  "acceptance_selfcheck": {
+    "note": "developer self-check only; independent integrated tester must judge D1-D10. See result-r0.md section 12.",
+    "D1": "out/evidence-binding.json (124 artifacts, 0 mismatch) + source pointers",
+    "D2": "headline=G0_not_closed",
+    "D3": "six_statements above with values and sources",
+    "D4": "coregap.a_plus_h implements/td/g0_closure all false; closable=conditional",
+    "D5": "clock_only / dual_core / sink sections",
+    "D6": "scope_tuple + can_say/cannot_say + remaining_risks + recovery",
+    "D7": "P2 bound to manifest-r1 803d3efb",
+    "D8": "no closure/implementation claim; proxy content labelled; no board/real DDR/RK claim",
+    "D9": "sink_limited_clarification with L reclassification and no-rewrite statement",
+    "D10": "0 sim / 0 TD / 0 board / 0 network; write scope only T10.ss-g0-prod-verdict/**; upstream hashes stable"
+  }
+}

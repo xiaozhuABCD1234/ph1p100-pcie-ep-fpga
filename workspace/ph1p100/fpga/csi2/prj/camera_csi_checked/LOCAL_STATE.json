@@ -1,0 +1,99 @@
+{
+  "date": "2026-10-12",
+  "project": "D:/TD/work/csi2/prj/camera_csi_checked_20261012_142857",
+  "bit": {
+    "path": "D:/TD/work/csi2/prj/camera_csi_checked_20261012_142857/camera_ddr_display.bit",
+    "bytes": 5224033,
+    "sha256": "dd63fc84d394b133c1c4096676fb5fb260b6710598d357c796df7f026a920c78",
+    "downloaded": true,
+    "hardware_verified": false,
+    "camera_scope": "A only; B physically disconnected by user after power-off",
+    "hardware_verification_level": "user_report_initial_functional_only",
+    "initial_functional_verified": true,
+    "stability_verified": false
+  },
+  "status": "Initial A-camera functional feedback received; subsequent same-bit sustained-power color sparkle recurrence, stability not passed.",
+  "implementation": {
+    "td": "2026.1 SP2 (6.2.2.200067)",
+    "checkpoint": "D:\\TD\\work\\csi2\\prj\\camera_csi_checked_20261012_142857\\csi_checked_debug_pr.db",
+    "checkpoint_sha256": "a1c5cb70715289f75bda471792662e4b72bb8086b62da488fdfe2a64eeb2038a",
+    "input_files_verified": 180,
+    "strategy": "TimingHigh loaded from phy_1; native place/route with physical insert_debugger",
+    "setup_wns_ns": 0.003,
+    "hold_wns_ns": 0.02,
+    "setup_tns_ns": 0.0,
+    "hold_tns_ns": 0.0,
+    "period_wns_ns": 2.2,
+    "corners": "slow and fast, max and min",
+    "route_sta_coverage_percent": 97.31,
+    "reimport_sta_coverage_percent": 95.7,
+    "coverage_boundary": "Coverage differs after DB reimport; unresolved. Positive reported STA does not prove unconstrained/exempt paths or external IO margin.",
+    "path_skew_constraints": 4,
+    "abnormal_endpoints": 0,
+    "lut6": 13214,
+    "slice_registers": 19465,
+    "slices": 17113,
+    "eram20k": 55,
+    "pll": 3,
+    "route_drc_warnings": [
+      "RTCLK-5078: cwc_jtck data-port clock uses local resources",
+      "RTCLK-5079 CRITICAL-WARNING: sys_clk50m_dup_1 clock uses local routing resources"
+    ],
+    "route_drc_source": "route_with_debug_final_console.log (requested separate DRC report was not emitted)",
+    "diagnostic_history": "PRJ-8818 before physical launch; ASCII CLI required. First direct route omitted physical debugger insertion and is diagnostic only. Final route restored insert_debugger; earlier reports/checkpoint retained separately."
+  },
+  "evidence_index": "docs/evidence/csi_review_rework_20261012.json",
+  "rollback": "D:/TD/work/csi2/prj/camera_ddr_display_20261012_003550/camera_ddr_display.bit",
+  "rollback_sha256": "000ffd6436ad04a1b595f8fd345215531af4c63bb156ba0c0d7b50e585d30f07",
+  "remaining": [
+    "CSI CRC16 and late bad-frame rejection/FE geometry contract",
+    "continuous-HS back-to-back packets and actual PHY packet-list validation",
+    "full-resolution RAW10 address widths and frame geometry",
+    "layered counters and exhaustive recovery/service-gap budget",
+    "HDMI electrical guarantee and STA coverage difference",
+    "PCIe real data transfer and RK deliverable confirmation",
+    "processing/compression and stereo exposure pairing"
+  ],
+  "hardware_feedback": {
+    "date": "2026-10-12",
+    "quote": "OK无异常，符合预期效果和闪灯情况，现在继续尝试优化和闭环",
+    "identity": "Associated with the immediately preceding 142857 download instructions; no independent BitWriter record.",
+    "observed": "User reports expected image and LED behavior, no observed anomaly.",
+    "observation_duration_seconds": null,
+    "sustained_counters_measured": false,
+    "crc16_proven": false,
+    "b_camera": "Disconnected after power-off; not reconnected in this turn.",
+    "followup": {
+      "date": "2026-10-12",
+      "identity": "User explicitly confirms same142857, no program change",
+      "observed": "Red/green moving sparkles near bright/high-contrast edges recur after sustained power-on. Earlier apparently clean programs can also show it; power off and wait then power on clears temporarily.",
+      "root_cause": "Undetermined; thermal, power/signal margin and reset/state effects not isolated.",
+      "elapsed_time_minutes": null,
+      "measured_temperature_c": null,
+      "powered_comparison": [
+        {
+          "step": "Camera running with sparkles, powered SRAM switch to stripe",
+          "result": "No sparkles reported in stripe",
+          "duration_seconds": null
+        },
+        {
+          "step": "Powered SRAM switch back to same camera bit",
+          "result": "Sparkles remain"
+        },
+        {
+          "step": "Short power-off then power-on and reload same camera bit",
+          "result": "Sparkles still present",
+          "off_duration_seconds": null
+        },
+        {
+          "step": "Prior longer power-off and later power-on",
+          "result": "A prior temporarily clean period reported",
+          "off_duration_seconds": null,
+          "repeated_controlled_recovery": false
+        }
+      ],
+      "evidence_index": "docs/evidence/sparkle_followup_20261012.json"
+    },
+    "stability_verified": false
+  }
+}

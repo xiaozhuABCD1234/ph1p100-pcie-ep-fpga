@@ -24,6 +24,7 @@ module tb_ep_bar_win_debug;
 
     reg         clk = 0;
     reg         rst = 1;
+    reg         dbg_por_rst = 1;        // T11 r3：调试快照复位（与链路无关，上电后释放）
     always #8 clk = ~clk;              // 62.5MHz（tl_clk_user）
 
     integer errors = 0;
@@ -56,7 +57,7 @@ module tb_ep_bar_win_debug;
         .PTR_BYTES(32'h0004_B000), .CLK_MHZ(9'd62),
         .DBG_CTRL_DEFAULT_EN(1'b1)
     ) u_dbg (
-        .clk(clk), .rst(rst),
+        .clk(clk), .rst(rst), .dbg_por_rst(dbg_por_rst),
         .rx_sop_ff(rx_sop_d), .rx_data_ff(rx_data_d),
         .mrdata_rd_data(mrdata_d), .memrd_addr_lo(memrd_lo_d),
         .ddr_ro_b(128'd0), .cam_diag_b(32'd0),
@@ -98,7 +99,7 @@ module tb_ep_bar_win_debug;
         .MAGIC(32'h5043_4946), .VERSION(32'h0002_0000),
         .PTR_BYTES(32'h0004_B000), .CLK_MHZ(9'd62)
     ) u_prod (
-        .clk(clk), .rst(rst),
+        .clk(clk), .rst(rst), .dbg_por_rst(1'b0),
         .rx_sop_ff(rx_sop_p), .rx_data_ff(rx_data_p),
         .mrdata_rd_data(mrdata_p), .memrd_addr_lo(memrd_lo_p),
         .ddr_ro_b(128'd0), .cam_diag_b(32'd0),
@@ -227,7 +228,26 @@ module tb_ep_bar_win_debug;
     localparam [31:0] VER_V   = 32'h0001_0000;
 
     initial begin
-        #50 rst = 0;
+        // ---------- 0) 无链路复位场景（issue-02）：rst 恒 1 时 CWC 探针仍可读 ----------
+        $display("=== 0) 无 PCIe 链路（rst 恒 1）：常量/CTRL 快照非零、计数可动 ===");
+        #50 dbg_por_rst = 0;                 // 上电复位释放（与链路无关）
+        repeat (4) @(negedge clk);
+        chk("no-link word0 MAGIC ", u_dbg.g_dbg_mark.dbg_mark_word0, MAGIC_V);
+        chk("no-link word1 RKA1  ", u_dbg.g_dbg_mark.dbg_mark_word1, RKA1_V);
+        chk("no-link word2 VER   ", u_dbg.g_dbg_mark.dbg_mark_word2, VER_V);
+        chk("no-link word8 CTRL  ", u_dbg.g_dbg_mark.dbg_mark_word8, 32'h0000_0021);
+        ddr_ro_r = {32'h0027_9000, 32'h0001_0018, 32'h0010_0000, 32'h0000_0007};
+        csi_a_r  = 32'hA1B2_C3D4;  csi_a2_r = 32'h0000_0438;
+        repeat (2) @(negedge clk);
+        chk("no-link word3 SEQ   ", u_dbg.g_dbg_mark.dbg_mark_word3, 32'h0000_0007);
+        chk("no-link word4 BASE  ", u_dbg.g_dbg_mark.dbg_mark_word4, 32'h0010_0000);
+        chk("no-link word5 LEN   ", u_dbg.g_dbg_mark.dbg_mark_word5, 32'h0027_9000);
+        chk("no-link word6 CSI   ", u_dbg.g_dbg_mark.dbg_mark_word6, 32'hA1B2_C3D4);
+        chk("no-link word7 CSI2  ", u_dbg.g_dbg_mark.dbg_mark_word7, 32'h0000_0438);
+        // 负例（DBG 关）：u_prod 无快照逻辑，ctrl 复位值仍为 0（生产行为不变）
+        if (ctrl_en_p !== 1'b0) begin $display("ERROR: DBG-off u_prod ctrl_enable 应保持 0"); errors=errors+1; end
+        // 释放 tl_rst_user，进入既有全量检查
+        rst = 0;
         repeat (5) @(negedge clk);
 
         // ---------- 1) debug-only CTRL 默认：u_dbg bit0/bit5=1、其余 0；u_prod 全 0 ----------

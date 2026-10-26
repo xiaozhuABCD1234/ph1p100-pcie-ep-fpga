@@ -1,0 +1,149 @@
+{
+  "task_id": "T10.b5-a1-htab-pipe",
+  "round": "r1-diag",
+  "role": "fpga-dev (general delegate; fpga-dev agent unavailable)",
+  "date": "2026-10-24",
+  "purpose": "DIAGNOSTIC ONLY. Replace the 0x55 idle heartbeat with a 35-byte status packet carrying the eight camera_a1_uart_top counters, rebuild the r0 candidate, download once over SRAM, capture COM8 for 60 s and locate which stage (raw publish / A+ read+commit / compressed publish+export) is stuck. Not a production candidate.",
+  "parent_round": "T10.b5-a1-htab-pipe r0 (offline PASS, board blocked)",
+  "write_scope": [
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b5-a1-htab-pipe/r1-diag/**"
+  ],
+  "rtl_changes": {
+    "files_changed": 2,
+    "redirected_files": {
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b5-a1-htab-pipe/r1-diag/changed-src/a1_uart_export.v": "ae3c6eef14578d074b98fe947432880bbf9d541681939687027d3477dad8b1c8 (18740 B)",
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b5-a1-htab-pipe/r1-diag/changed-src/camera_a1_uart_top.v": "8eb47a57695bf35d6047d5b28a0d91f8aab930dfa1a81ca027f8af3cf178b171 (20606 B)"
+    },
+    "patches": [
+      "r1-diag/rtl-diff-a1_uart_export.patch",
+      "r1-diag/rtl-diff-camera_a1_uart_top.patch"
+    ],
+    "summary": "a1_uart_export: new STS_DIV parameter (default 0), eight sts_* counter inputs, 35-byte packet FSM latched snapshot, XOR over bytes 0..33, frame-start arbitration (packet only in E_IDLE with empty queue; E_IDLE cannot open a frame while the packet is on the wire). camera_a1_uart_top: STS_DIV=187500000 default (1.000 s at 187.5 MHz), wires the eight counters (identical expressions to o_st_*) into the exporter, st_errors_all factors o_st_errors.",
+    "not_changed": "A+ core (r0 copy 29b1e3e1...), a1_frame_top.v, a1_ddr_slot_store.v, a1_ddr_arb2.v, a1_raw_crop.v, capture_async_fifo.v, p2_a1_board_top.v, p2_ddr_bridge.v, p2_a1_pll.v, p2_board.sdc, board_p2.adc, frame header/CRC/byte order/DDR layout, UART_DIV=1628. No false path, no multicycle, no seed change, no clock change."
+  },
+  "status_packet_contract": {
+    "period_cycles": 187500000,
+    "period_seconds_at_187p5MHz": 1.0,
+    "emit_condition": "estate == E_IDLE && dq_cnt == 0 && !desc_push && !tx_valid_r && tx_ready",
+    "length_bytes": 35,
+    "layout": [
+      {"off": 0, "size": 1, "name": "magic0", "value": "0xA5"},
+      {"off": 1, "size": 1, "name": "magic1", "value": "0x5A"},
+      {"off": 2, "size": 4, "name": "cap_frames", "endian": "little"},
+      {"off": 6, "size": 4, "name": "raw_pub", "endian": "little"},
+      {"off": 10, "size": 4, "name": "enc_frames", "endian": "little"},
+      {"off": 14, "size": 4, "name": "exported", "endian": "little"},
+      {"off": 18, "size": 4, "name": "raw_drop", "endian": "little"},
+      {"off": 22, "size": 4, "name": "cmp_drop", "endian": "little"},
+      {"off": 26, "size": 4, "name": "errors", "endian": "little"},
+      {"off": 30, "size": 4, "name": "read_words", "endian": "little"},
+      {"off": 34, "size": 1, "name": "xor", "value": "XOR of bytes 0..33"}
+    ],
+    "counter_sources": "crop_frames, raw_st_pub, cmp_st_pub, exp_exported, raw_st_drop, cmp_st_drop, (raw_st_err+cmp_st_err+exp_err), raw_st_read -- the same expressions as o_st_cap_frames/o_st_raw_pub/o_st_enc_frames/o_st_exported/o_st_raw_drop/o_st_cmp_drop/o_st_errors/o_st_read_words",
+    "heartbeat": "legacy 0x55 beacon is disabled when STS_DIV > 0 (hb_en = HB_DIV>0 && STS_DIV==0); the frozen top's HB_DIV=4194304 is therefore inert in this build"
+  },
+  "frozen_inputs": {
+    "a1_deflate_core_r0_copy": "29b1e3e1a66abef78c228c4189322b0139a266d43bf02827dd1ebe498cdc9828 (79788 B)",
+    "p2_a1_board_top.v": "b782dd0c55fe5918786619bdd9fa0049489ccc22e3b05875f58436492d3ab1bc (13744 B)",
+    "p2_board.sdc": "9284982452c37f308fc4dcd396eb94b8da4962337bdd5740a23ce830d3856d95 (3989 B)",
+    "board_p2.adc": "1cb30346fa17da6bb0e77802ca72c4b4bb4aecc1445711e19391cf4ee2271580 (7154 B)",
+    "repo_a1_uart_export_untouched": "3dad065f2ff5d8ccf5ff1b0182b4a6091476bada48a948ff4f1b09c62440c15f (14547 B)",
+    "repo_camera_a1_uart_top_untouched": "b10416762bcae2de19d3ad36b73591ae607effc4667a5c8e07c6a56499c2e6eb (19376 B)"
+  },
+  "build": {
+    "flow": "r1-diag/td/01_build.tcl, 02_bitgen.tcl, 03_cwc.tcl (copied from r0 unchanged except the two add_files redirects)",
+    "td": "T: = r1-diag/td, Y: = D:/fpga/ph1p100",
+    "synthesis": {
+      "attempts": 1,
+      "sw": 0.431,
+      "stns": 0.000,
+      "violating_endpoints": 0,
+      "slice": 16874,
+      "reg": 16307,
+      "eram": 71,
+      "evidence": "td/syn_gate_timing.rpt, td/syn_gate_area.rpt, td/build_console_r1diag.log"
+    },
+    "route": {
+      "attempts": 1,
+      "wns": 0.173,
+      "tns": 0.000,
+      "violating_endpoints": 0,
+      "total_endpoints": 20288,
+      "fast_corner_wns": 0.000,
+      "hold_wns": 0.020,
+      "hold_tns": 0.000,
+      "period_check_wns": 2.200,
+      "lut6": 18902,
+      "reg": 25427,
+      "eram": 101,
+      "eram_limit": 300,
+      "slice": 23109,
+      "comb_loops": 0,
+      "unclocked_pins": 0,
+      "worst_path": "clk_a1->clk_a1 0.173 ns, endpoint u_a1/u_raw_store/st_dup_words_reg[16]_syn_2.cea (stat counter CE, unrelated to this round)",
+      "r4_htab_to_bm_b_endpoints": 0,
+      "gate": "0 violations PASS; WNS +0.173 >= +0.05 PASS; below preferred +0.2 -> CAVEAT recorded",
+      "evidence": "td/routed_timing_summary.rpt, td/routed_area.rpt, td/routed_check_timing.rpt"
+    },
+    "bitgen": {
+      "attempts": 1,
+      "sta_at_release": "setup 0.173/0.000 hold 0.020/0.000 period 2.200",
+      "bit": "da858e62e8d6e8c3fca879a6152e0e565a14942cf87ab80266b05480885d3bd8 (5224022 B)",
+      "bid": "99f298cac51e177b8f55729428da8a2d13da662a82ebac74edddcff709567c81 (95905 B)"
+    },
+    "cwc": {
+      "attempts": 1,
+      "cwc": "cb7dae992a5e27bb5dcb656a89d6a64a8bab1ca3584b93605e12b834a978e595 (110168 B)",
+      "compiled_bit_identical": true,
+      "compiled_cwc_identical": true
+    }
+  },
+  "sim_check": {
+    "tb": "sim/tb_status_pkt.v",
+    "log": "sim/vsim_status.log",
+    "dump": "sim/status_bytes.txt",
+    "parse": "sim/status_parse.txt",
+    "result": "6 packets, 210 bytes, 0 stop-bit errors, 0 bad XOR; all eight constants reproduced in little-endian order"
+  },
+  "board": {
+    "downloads_allowed": 1,
+    "downloads_used": 1,
+    "download_log": "board/download_r1diag.log",
+    "download_facts": "R1D_DL_DEVICE=PH1P100; PRG-2014 Chip validation success; R1D_DL_OK mode=jtag(sram); 33.8 s; one benign 'Error @ mpsse.cpp:90 usb_open() failed' line from the hwserver channel probe before validation; no Flash",
+    "capture": "COM8 115200 8N1, 60.3 s, bytes=2135, magic_a1u1=0, byte_0x55=0, sha256=e46ad484428dfd861cc281282edff1865d0cfce4703c3e37beff3c788296d73b (captures/com8_60s.bin)",
+    "status_packets": 61,
+    "bad_xor": 0,
+    "packet_period_observed_s": 1.01,
+    "packet_parse": "captures/status_60s.txt",
+    "counters_first": {
+      "cap_frames": 0,
+      "raw_pub": 0,
+      "enc_frames": 0,
+      "exported": 0,
+      "raw_drop": 0,
+      "cmp_drop": 0,
+      "errors": 0,
+      "read_words": 0
+    },
+    "counters_last": {
+      "cap_frames": 0,
+      "raw_pub": 0,
+      "enc_frames": 0,
+      "exported": 0,
+      "raw_drop": 0,
+      "cmp_drop": 0,
+      "errors": 0,
+      "read_words": 0
+    },
+    "verdict": "All eight counters are 0 for the whole 60 s. The status packet proves clk_a1, a1_rst_n (PLL+DDR ready), UART TX and the pin are alive. cap_frames=0 (complete-ROI counter in a1_raw_crop) puts the blocker in the camera front end (MIPI RX / f9p A tap / crop), upstream of the raw store, the A+ core and the exporter. This run does NOT prove or disprove A+ core behaviour on silicon: it was never reached."
+  },
+  "test_input_paths": [
+    "r1-diag/changed-src/a1_uart_export.v",
+    "r1-diag/changed-src/camera_a1_uart_top.v",
+    "r1-diag/rtl-diff-a1_uart_export.patch",
+    "r1-diag/rtl-diff-camera_a1_uart_top.patch",
+    "r1-diag/td/01_build.tcl",
+    "r1-diag/board/parse_status.py",
+    "r1-diag/sim/tb_status_pkt.v"
+  ]
+}

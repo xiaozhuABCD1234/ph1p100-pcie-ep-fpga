@@ -144,21 +144,28 @@ module ddr_frame_readback_checker #(
     reg  [31:0]  tmo_cnt;
     reg          tmo_r;          // 超时粘滞（收尾判码用；下次 start 清）
     reg          axi_err_r;
+    reg          abort_r;
 
     // ========================================================================
     //  组合量
     // ========================================================================
     wire [31:0]  beats_total = (frame_bytes + 32'd31) >> 5;
-    wire [31:0]  burst_first = (beats_total >= BURST_BEATS) ? BURST_BEATS : beats_total;
+    wire [31:0] first_page_beats = (32'd4096 - {20'd0,base[11:0]}) >> 5;
+    wire [31:0] first_limit = first_page_beats < BURST_BEATS ? first_page_beats : BURST_BEATS;
+    wire [31:0] burst_first = beats_total < first_limit ? beats_total : first_limit;
 
     wire         bad_param   = (frame_bytes == 32'd0) ||
                                (frame_bytes > MAX_FRAME_BYTES) ||
                                (base[63:29] != 35'd0) ||
-                               (base[4:0]   != 5'd0);
+                               (base[4:0]   != 5'd0) || (frame_bytes[4:0] != 0) ||
+                               (base >= 64'h10000000) ||
+                               ({1'b0,base}+{33'd0,frame_bytes} > 65'h010000000);
 
     wire [31:0]  beats_left_nxt = beats_left - burst_beats_q;
-    wire [31:0]  burst_nxt      = (beats_left_nxt >= BURST_BEATS) ? BURST_BEATS : beats_left_nxt;
-    wire [28:0]  addr_nxt       = addr_q + (burst_beats_q << 5);
+    wire [28:0] addr_nxt = addr_q + (burst_beats_q << 5);
+    wire [31:0] next_page_beats = (32'd4096 - {20'd0,addr_nxt[11:0]}) >> 5;
+    wire [31:0] next_limit = next_page_beats < BURST_BEATS ? next_page_beats : BURST_BEATS;
+    wire [31:0] burst_nxt = beats_left_nxt < next_limit ? beats_left_nxt : next_limit;
 
     wire         abort_now = busy && abort;
 
@@ -169,7 +176,7 @@ module ddr_frame_readback_checker #(
 
     wire         go_fin  = (st != ST_FIN) && (abort_now | tmo_hit | tmo_r | quad_done);
 
-    wire [7:0]   e_final = abort_now      ? E_ABORT   :
+    wire [7:0]   e_final = (abort_now | abort_r)      ? E_ABORT   :
                            tmo_r          ? E_TIMEOUT :
                            axi_err_r      ? E_AXI     :
                            !magic_ok      ? E_MAGIC   :
@@ -237,11 +244,13 @@ module ddr_frame_readback_checker #(
             tmo_cnt      <= 32'd0;
             tmo_r        <= 1'b0;
             axi_err_r    <= 1'b0;
+            abort_r <= 1'b0;
             m_axi_araddr <= 29'd0;
             m_axi_arlen  <= 8'd0;
             m_axi_arvalid<= 1'b0;
         end else begin
 
+            if (abort_now) abort_r <= 1'b1;
             // ---------------- (A) ST_PROC 字处理（每周期一字）----------------
             if (st == ST_PROC) begin
                 if (in_hdr) begin
@@ -256,7 +265,7 @@ module ddr_frame_readback_checker #(
                         hdr_crc_ok      <= (hdr_field_q == ~crc_hdr_upd);
                         length_ok       <= (pbytes_q != 32'd0) &&
                                            (fbytes_q[11:0] == 12'd0) &&
-                                           (fbytes_q >= (32'd128 + pbytes_q)) &&
+                                           (fbytes_q >= 32'd128) && (pbytes_q <= fbytes_q - 32'd128) &&
                                            ((fbytes_q - (32'd128 + pbytes_q)) < TAIL_MAX);
                     end
                 end
@@ -321,6 +330,7 @@ module ddr_frame_readback_checker #(
                                 tmo_cnt     <= 32'd0;
                                 tmo_r       <= 1'b0;
                                 axi_err_r   <= 1'b0;
+                                abort_r     <= 1'b0;
                                 hdr_crc_q   <= 32'hFFFF_FFFF;
                                 pay_crc_q   <= 32'hFFFF_FFFF;
                                 pbytes_q    <= 32'd0;
@@ -352,10 +362,10 @@ module ddr_frame_readback_checker #(
                         if (m_axi_rvalid) begin
                             rd_beat     <= m_axi_rdata;
                             lane        <= 3'd0;
-                            rlast_done  <= m_axi_rlast | ((rbeat_cnt + 32'd1) == burst_beats_q);
+                            rlast_done  <= ((rbeat_cnt + 32'd1) == burst_beats_q);
                             if (m_axi_rlast !== ((rbeat_cnt + 32'd1) == burst_beats_q))
                                 axi_err_r <= 1'b1;
-                            if (m_axi_rresp != 2'b00) axi_err_r <= 1'b1;
+                            if ((m_axi_rresp != 2'b00) || (m_axi_rid != 4'd0)) axi_err_r <= 1'b1;
                             rbeat_cnt   <= rbeat_cnt + 32'd1;
                             tmo_cnt     <= 32'd0;
                             st          <= ST_PROC;

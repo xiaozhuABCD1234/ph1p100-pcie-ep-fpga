@@ -1,0 +1,92 @@
+﻿{
+    "task_id":  "T10.b2-a1-uart-impl",
+    "run_id":  "20261020-0209_singleA_aplus_closedloop",
+    "revision":  "r3",
+    "date":  "2026-10-23",
+    "status":  "ready_for_test",
+    "ready_for_test":  true,
+    "tester":  null,
+    "package_type":  "P2 r3 option A: P1 r6 reset-mux cleanup + preview-free P2 board candidate with bridge output register and synchronized resets; routed zero violations, hold positive, 1 bitgen + 1 CWC; no download",
+    "p1_hashes":  {
+                      "a1_deflate_core":  "d4b799612519d4cb6c32a0c0e87807be84dec711fc01e2146b054d464d1b88de",
+                      "a1_frame_top":  "c8b24775fa70793f682f1a640be175ec53f304722539cbd89550e0d4aefca65b",
+                      "camera_a1_uart_top":  "17793341f717ddac3476d9c129a96b87a745f553dbdbee59efb1f29966baac88",
+                      "manifest":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/CANDIDATE-MANIFEST-b1-a1-uart-integ-r6.json"
+                  },
+    "route":  {
+                  "sw_ns":  0.012,
+                  "st_ns":  0,
+                  "hw_ns":  0.02,
+                  "ht_ns":  0,
+                  "viol_ep":  0,
+                  "total_ep":  19754,
+                  "fmax_mhz":  187.935,
+                  "thin_margin":  true,
+                  "target_ns":  0.2,
+                  "route1":  "HWNS -5.248/4 EP reset removal; fixed by sys_rst_n async reset on A1 sync flops; route2 hold +0.020"
+              },
+    "resources":  {
+                      "lut6":  18698,
+                      "reg":  25200,
+                      "eram":  "102/300 (design 72 + CWC 30)",
+                      "dsp":  "0/220",
+                      "io":  "110/286",
+                      "slice":  22498
+                  },
+    "cdc":  {
+                "cc_from":  "no",
+                "cc_to":  "no",
+                "comb_loops":  0,
+                "unclocked_clocks":  0,
+                "report_cdc":  "unavailable in TD 2026.2",
+                "clocks":  "clk_a1 187.5 / ddr_user 200 / mipi 111.408 / mcu 50 / pclkx1 148.5 / sys 50 / pclkx5 742.5 / mclk27"
+            },
+    "artifacts":  {
+                      "bit":  {
+                                  "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r3/td/a1_board.bit",
+                                  "sha256":  "d1ac8726e84f6584d49979dd223d6e8c484e559bf2a3ad3b2302972c58efc142",
+                                  "bytes":  5224022
+                              },
+                      "cwc":  {
+                                  "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r3/td/a1_board.cwc",
+                                  "sha256":  "37b608540f7924f60a09db5ba2b543334db1259ef69f2a1c982cf161cbc8b25c",
+                                  "bytes":  110248
+                              },
+                      "bid":  {
+                                  "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r3/td/a1_board_inst.bid",
+                                  "sha256":  "3de68e686e419e20cd85a332e40caa740b9aae55d666c3e8816ef7033d04f213",
+                                  "bytes":  96832
+                              },
+                      "compiled":  "cw/compiled.bit and cw/compiled.cwc byte-identical",
+                      "tool":  "TD Release_2026.2 / 6.2.3.210850; PH1P100SBG484 -3"
+                  },
+    "artifact_hashes_file":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r3/artifact-hashes.txt",
+    "no_download":  true,
+    "boundaries":  {
+                       "aplus_core":  "authorized reset-mux cleanup only",
+                       "frame":  "authorized reset-mux cleanup + rd_addr separate block",
+                       "sdc_227dd39e_unchanged":  true,
+                       "protocol_crc_ddr_layout_unchanged":  true,
+                       "download":  0,
+                       "flash":  0
+                   },
+    "retest":  {
+                   "tester_required":  true,
+                   "required_dimensions":  [
+                                               "integrated",
+                                               "functional",
+                                               "engineering",
+                                               "system"
+                                           ],
+                   "required_checks":  [
+                                           "parse routed_timing_summary.rpt/routed_timing_status.rpt/phy_pr_timing_flow.rpt: SWNS +0.012/STNS 0, HWNS +0.020/HTNS 0, 0/19,754, CC-From/To no/no, 0 comb loops; record the +0.012 thin-margin caveat (\u003c+0.2 target)",
+                                           "resources LUT6 18,698/reg 25,200/ERAM 102 (72+30)/DSP 0/IO 110; no overflow",
+                                           "re-run P1 r6 8x2/64x8/full 1080p: 0 mismatch, four CRC, dup=0, raw_len 2,592,000, stream_len 40,032; verify hashes",
+                                           "verify bit/CWC/BID and compiled-bit equality; no download/Flash",
+                                           "static reset/CDC structure: a1_rst_sync uses sys_rst_n async reset; bridge uses a1_rst_n; no reset false path"
+                                       ],
+                   "input_status":  "changed (P1 r6 core/frame; P2 r3 wrappers/constraints)"
+               },
+    "result":  "result-r3.md",
+    "lessons":  "lessons-r3.md"
+}

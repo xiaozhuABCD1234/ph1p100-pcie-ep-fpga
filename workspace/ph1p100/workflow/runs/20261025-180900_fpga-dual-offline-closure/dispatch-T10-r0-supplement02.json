@@ -1,0 +1,132 @@
+{
+  "run_id": "20261025-180900_fpga-dual-offline-closure",
+  "project_root": "D:\\fpga\\ph1p100",
+  "output_dir": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure",
+  "task_ids": [
+    "T10.dual-aplus-scheduler"
+  ],
+  "batch_size": 1,
+  "status": "ready",
+  "needs_user_input": false,
+  "question_path": null,
+  "user_summary_path": null,
+  "stage": "final same-problem coverage return2/2 and fixture compile corrected retry2/2; no implementation repair",
+  "input_paths": [
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10-r0-supplement02-input.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10-r0-supplement02-audit.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\supplement01\\compile.log",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\supplement01\\execution-accounting.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\supplement01\\tb_same_edge.sv",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\supplement01\\reuse-decision.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10.dual-aplus-scheduler\\cmp-stall-fix01\\static-closeout02\\manifest-cmp-stall-fix01.json"
+  ],
+  "manifest_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10.dual-aplus-scheduler\\cmp-stall-fix01\\static-closeout02\\manifest-cmp-stall-fix01.json",
+  "manifest_sha256": "5db2b0ddf42c60426dd5a10a72614abf2bbe2306a3464be01474f7683e87f03b",
+  "write_scope": [
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\supplement02/**"
+  ],
+  "protected": [
+    "All old r0/supplement01 evidence, failed sources/logs, reports and canonical indexes",
+    "All DUT/manifest/developer source and faults3/3",
+    "T08 PASS and parent states; production/OpenCode/TD/hardware/global config"
+  ],
+  "next_action": {
+    "operation": "followup_task",
+    "target": "/root/fpga_tester_dual_scheduler_180900",
+    "role": "fpga-tester",
+    "prompt_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10-r0-supplement02-input.md",
+    "same_model": true,
+    "no_new_role": true
+  },
+  "execution_limits": {
+    "additional_conservative_calls": 16,
+    "minutes": 15,
+    "absolute_deadline": "record actual followup receipt/first observable entry+15min before commands, retaining prior deadlines",
+    "additional_compile_attempts": 1,
+    "additional_case_processes": 1,
+    "prior_cumulative": {
+      "calls": 57,
+      "compiles": 3,
+      "cases": 19
+    },
+    "new_cumulative_caps": {
+      "calls": 73,
+      "compiles": 4,
+      "cases": 20
+    },
+    "same_failed_fixture_compile_attempts_total_limit": 2,
+    "failed_fixture_compile_attempts_used": 1,
+    "no_third_compile_for_this_failure": true,
+    "no_second_case_in_this_window": true,
+    "read_search_seconds": 60,
+    "compile_case_seconds": 300,
+    "TB_watchdog_required": true,
+    "no_progress_cycles": 2,
+    "search_rounds_per_problem": 3,
+    "fairness_additional_attempts": 0,
+    "developer_faults_additional": 0,
+    "TD": 0,
+    "build": 0,
+    "hardware": 0,
+    "download": 0,
+    "Flash": 0,
+    "mapping": 0,
+    "external_messages": 0
+  },
+  "budget_basis": "Original necessary reversible offline acceptance remains authorized. Last finite same-problem opportunity, with explicit new declaration-order evidence and only one unexecuted original case. New bounded tool/compile supplement is separate history, not reset or retrospective compliance.",
+  "problem": {
+    "problem_id": "T10.dual-aplus-scheduler:LIMIT_REACHED:descriptor-release-same-edge-coverage",
+    "reason_code": "LIMIT_REACHED",
+    "new_information": true,
+    "evidence_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\supplement01\\compile.log",
+    "requested_action": "Original sole tester moves its same_edge_manual declaration before first reference in a new private copy, executes the one corrected compile retry and only the unconsumed twentieth case; retains all prior failures/counters and same DUT.",
+    "resume_input_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10-r0-supplement02-input.md"
+  },
+  "problem_opportunities": {
+    "used_before": 1,
+    "this": 2,
+    "limit": 2,
+    "no_automatic_third_opportunity": true
+  },
+  "same_failure_retry": {
+    "first_failure": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\supplement01\\compile.log",
+    "new_evidence": "undefined module reg declaration order",
+    "permitted_correction": "declaration moved before first reference, same init and test expectations",
+    "attempt_now": 2,
+    "limit": 2
+  },
+  "scope_limits": {
+    "formal_round": 0,
+    "actual_post_acceptance_repairs": 0,
+    "DUT_changes": 0,
+    "full_suite_reruns": 0,
+    "developer_faults_limit": 3,
+    "developer_faults_used": 3,
+    "new_tasks": 0,
+    "new_roles": 0,
+    "T08_changes": 0
+  },
+  "report_policy": {
+    "current_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\supplement02\\T10.dual-aplus-scheduler-r0-integrated.md",
+    "canonical_index": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\supplement02\\canonical-report.json",
+    "historical_FAILs_immutable": [
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler-r0-integrated.md",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\supplement01\\T10.dual-aplus-scheduler-r0-integrated.md"
+    ],
+    "same_input_round0_only": true,
+    "no_fake_r1": true
+  },
+  "after_any_return_or_error": {
+    "operation": "return_to_planner",
+    "target": "/root/fpga_plan_dual_offline",
+    "pass_real_evidence_actual_counts_and_complete_problem": true,
+    "automatic_retry_or_model_change": false
+  },
+  "on_actual_ID_error": {
+    "operation": "return_to_planner",
+    "target": "/root/fpga_plan_dual_offline",
+    "preemptive_replacement": false
+  },
+  "run_finished": false,
+  "T08_status": "closed offline r1 PASS unchanged"
+}

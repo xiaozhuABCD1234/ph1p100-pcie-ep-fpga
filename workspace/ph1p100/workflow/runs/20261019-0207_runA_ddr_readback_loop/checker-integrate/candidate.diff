@@ -1,0 +1,1293 @@
+diff --git a/rtl/ep_side/img/ep_bar_win.v b/rtl/ep_side/img/ep_bar_win.v
+index 43f1b10..0387437 100644
+--- a/rtl/ep_side/img/ep_bar_win.v
++++ b/rtl/ep_side/img/ep_bar_win.v
+@@ -138,6 +138,8 @@ module ep_bar_win #(
+ )(
+     input  wire         clk,
+     input  wire         rst,
++    // T11 r3（issue-02）：调试快照专用复位（与 PCIe 链路无关；仅 DBG 门控块使用，生产未用）
++    input  wire         dbg_por_rst,
+ 
+     // 引擎 rx 流水线（同时钟域）
+     input  wire         rx_sop_ff,
+@@ -203,7 +205,16 @@ module ep_bar_win #(
+     input  wire [31:0]  csi_diag_a,
+     input  wire [31:0]  csi_diag_a2,
+     input  wire [31:0]  csi_diag_b,
+-    input  wire [31:0]  csi_diag_b2
++    input  wire [31:0]  csi_diag_b2,
++    // T11.runC（N1）：DDR 读回校验调试字（tl 域两级同步快照；仅 DBG 通道有值，
++    //   生产 DBG_CTRL_DEFAULT_EN=0 时字库读回 DEAD_BEEF，读 mux 行为不变）
++    input  wire [31:0]  chk_status,
++    input  wire [31:0]  chk_words,
++    input  wire [31:0]  chk_hdr_crc,
++    input  wire [31:0]  chk_pay_crc,
++    input  wire [31:0]  chk_runs,
++    input  wire [31:0]  chk_smp1,
++    input  wire [31:0]  chk_smp2
+ );
+ 
+     // 引擎的数据字段是“首字节在高位”，而主机按小端读 → 每个 dw 都要翻转字节序
+@@ -429,12 +440,15 @@ module ep_bar_win #(
+     end
+ 
+     // ------------------------------------------------------------------
+-    // T11 debug 字库 dbg_bank：A 组 9 字只读组合镜像（288 bit，word0..word8）
++    // T11 debug 字库 dbg_bank：word0..word8（288 bit，T11.runB）+ word9..word15（224 bit，
++    //   T11.runC N1 checker 字）= 16 字 512 bit；word9..15 仅 DBG 通道展开，生产恒
++    //   DEAD_BEEF（与 default 读值一致 → 生产读行为不变）
+     //   · 无副作用：纯 wire 组合映像，不驱动任何控制/总线/外发路径；
+     //   · 供 ChipWatcher 探针（单实例、tl_clk_user 域）；字序冻结见 run
+     //     debug-spec/probe-map.md §2（word0..word8 ↔ 0x040/0x118/0x11C/0x0A0/
+-    //     0x0A4/0x0AC/0x120/0x124/0x044）；读 mux 新增 0x140..0x160（见下），
+-    //     不改任何既有偏移读值（default 保持 32'hDEAD_BEEF）。
++    //     0x0A4/0x0AC/0x120/0x124/0x044；word9..15 ↔ 0x164..0x17C，见 T11.runC
++    //     checker-integrate 字表）；读 mux 新增 0x140..0x17C（见下），不改任何
++    //     既有偏移读值（default 保持 32'hDEAD_BEEF）。
+     // ------------------------------------------------------------------
+     wire [31:0] dbg_bank_word0 = MAGIC;                 // 0x040 MAGIC
+     wire [31:0] dbg_bank_word1 = MAGIC_RKA1;            // 0x118 EXT_MAGIC
+@@ -447,9 +461,20 @@ module ep_bar_win #(
+     wire [31:0] dbg_bank_word8 =                        // 0x044 CTRL 读回字（位序与 0x44 逐位一致）
+         {23'd0, ctrl_cam_ab, ctrl_push_src, ctrl_push_en, ctrl_ddr_en,
+          1'b0, ctrl_pattern_r, ctrl_trigger, ctrl_enable};
+-    wire [287:0] dbg_bank = {dbg_bank_word8, dbg_bank_word7, dbg_bank_word6,
+-                             dbg_bank_word5, dbg_bank_word4, dbg_bank_word3,
+-                             dbg_bank_word2, dbg_bank_word1, dbg_bank_word0};
++    // T11.runC N1：DDR 读回校验字（tl 域两级同步；生产恒 DEAD_BEEF）
++    wire [31:0] dbg_bank_word9  = DBG_CTRL_DEFAULT_EN ? chk_status  : 32'hDEAD_BEEF; // 0x164 CHECK_STATUS
++    wire [31:0] dbg_bank_word10 = DBG_CTRL_DEFAULT_EN ? chk_words   : 32'hDEAD_BEEF; // 0x168 CHECK_WORDS_READ
++    wire [31:0] dbg_bank_word11 = DBG_CTRL_DEFAULT_EN ? chk_hdr_crc : 32'hDEAD_BEEF; // 0x16C CHECK_HDR_CRC32
++    wire [31:0] dbg_bank_word12 = DBG_CTRL_DEFAULT_EN ? chk_pay_crc : 32'hDEAD_BEEF; // 0x170 CHECK_PAYLOAD_CRC32
++    wire [31:0] dbg_bank_word13 = DBG_CTRL_DEFAULT_EN ? chk_runs    : 32'hDEAD_BEEF; // 0x174 CHECK_RUNS
++    wire [31:0] dbg_bank_word14 = DBG_CTRL_DEFAULT_EN ? chk_smp1    : 32'hDEAD_BEEF; // 0x178 CHECK_SMP1=head[20]
++    wire [31:0] dbg_bank_word15 = DBG_CTRL_DEFAULT_EN ? chk_smp2    : 32'hDEAD_BEEF; // 0x17C CHECK_SMP2=head[21]
++    wire [479:0] dbg_bank = {dbg_bank_word15, dbg_bank_word14, dbg_bank_word13,
++                             dbg_bank_word12, dbg_bank_word11, dbg_bank_word10,
++                             dbg_bank_word9, dbg_bank_word8, dbg_bank_word7,
++                             dbg_bank_word6, dbg_bank_word5, dbg_bank_word4,
++                             dbg_bank_word3, dbg_bank_word2, dbg_bank_word1,
++                             dbg_bank_word0};
+ 
+     // ------------------------------------------------------------------
+     // T11 P1-fix：ChipWatcher 探针（TD 真实流程：RTL MARK_DEBUG → 流程
+@@ -458,7 +483,7 @@ module ep_bar_win #(
+     //     → 生产/00_all 参数=0，generate 关闭，生产网表与行为不受影响；
+     //   · 打一拍寄存：保证是可综合、不可折叠的真实触发器（MAGIC 等常量字也保留）；
+     //     值为字库字 1 拍快照——稳定量逐位相等；计数类最多滞后 1 拍，按跨时刻记录；
+-    //   · 9 个 32 bit = 288 bit，全部在 tl_clk_user（clk）域，单实例。
++    //   · 16 个 32 bit = 512 bit（word0..15），全部在 tl_clk_user（clk）域，单实例。
+     // ------------------------------------------------------------------
+     generate
+         if (DBG_CTRL_DEFAULT_EN) begin : g_dbg_mark
+@@ -471,9 +496,26 @@ module ep_bar_win #(
+             (* MARK_DEBUG="true" *) reg [31:0] dbg_mark_word6;
+             (* MARK_DEBUG="true" *) reg [31:0] dbg_mark_word7;
+             (* MARK_DEBUG="true" *) reg [31:0] dbg_mark_word8;
++            (* MARK_DEBUG="true" *) reg [31:0] dbg_mark_word9;
++            (* MARK_DEBUG="true" *) reg [31:0] dbg_mark_word10;
++            (* MARK_DEBUG="true" *) reg [31:0] dbg_mark_word11;
++            (* MARK_DEBUG="true" *) reg [31:0] dbg_mark_word12;
++            (* MARK_DEBUG="true" *) reg [31:0] dbg_mark_word13;
++            (* MARK_DEBUG="true" *) reg [31:0] dbg_mark_word14;
++            (* MARK_DEBUG="true" *) reg [31:0] dbg_mark_word15;
+ 
+-            always @(posedge clk or posedge rst) begin
+-                if (rst) begin
++            // T11 r3（issue-02）：快照复位与 PCIe 链路解耦——dbg_por_rst（板级 POR / PLL 未锁）
++            //   异步置位、本域同步释放；tl_rst_user 在无主机时恒有效，不能用于本块。
++            //   快照时钟仍为 clk=tl_clk_user（CWC 采样时钟=同一 tl_clk_user 网络，H2 显式一致）。
++            reg [1:0] dbg_por_sync;
++            always @(posedge clk or posedge dbg_por_rst) begin
++                if (dbg_por_rst) dbg_por_sync <= 2'b11;
++                else             dbg_por_sync <= {dbg_por_sync[0], 1'b0};
++            end
++            wire dbg_snap_rst = dbg_por_sync[1];
++
++            always @(posedge clk or posedge dbg_snap_rst) begin
++                if (dbg_snap_rst) begin
+                     dbg_mark_word0 <= 32'd0;
+                     dbg_mark_word1 <= 32'd0;
+                     dbg_mark_word2 <= 32'd0;
+@@ -483,6 +525,13 @@ module ep_bar_win #(
+                     dbg_mark_word6 <= 32'd0;
+                     dbg_mark_word7 <= 32'd0;
+                     dbg_mark_word8 <= 32'd0;
++                    dbg_mark_word9 <= 32'd0;
++                    dbg_mark_word10 <= 32'd0;
++                    dbg_mark_word11 <= 32'd0;
++                    dbg_mark_word12 <= 32'd0;
++                    dbg_mark_word13 <= 32'd0;
++                    dbg_mark_word14 <= 32'd0;
++                    dbg_mark_word15 <= 32'd0;
+                 end else begin
+                     dbg_mark_word0 <= dbg_bank_word0;
+                     dbg_mark_word1 <= dbg_bank_word1;
+@@ -493,6 +542,13 @@ module ep_bar_win #(
+                     dbg_mark_word6 <= dbg_bank_word6;
+                     dbg_mark_word7 <= dbg_bank_word7;
+                     dbg_mark_word8 <= dbg_bank_word8;
++                    dbg_mark_word9 <= dbg_bank_word9;
++                    dbg_mark_word10 <= dbg_bank_word10;
++                    dbg_mark_word11 <= dbg_bank_word11;
++                    dbg_mark_word12 <= dbg_bank_word12;
++                    dbg_mark_word13 <= dbg_bank_word13;
++                    dbg_mark_word14 <= dbg_bank_word14;
++                    dbg_mark_word15 <= dbg_bank_word15;
+                 end
+             end
+         end
+@@ -576,7 +632,7 @@ module ep_bar_win #(
+             12'h124: rd_dw_comb = csi_diag_a2;            // CSI_DIAG_A2
+             12'h128: rd_dw_comb = csi_diag_b;             // CSI_DIAG_B
+             12'h12C: rd_dw_comb = csi_diag_b2;            // CSI_DIAG_B2
+-            // ---- T11 debug 字库读回（0x140..0x160，只读镜像，字序见上）----
++            // ---- T11 debug 字库读回（0x140..0x17C，只读镜像，字序见上）----
+             12'h140: rd_dw_comb = dbg_bank_word0;
+             12'h144: rd_dw_comb = dbg_bank_word1;
+             12'h148: rd_dw_comb = dbg_bank_word2;
+@@ -586,6 +642,13 @@ module ep_bar_win #(
+             12'h158: rd_dw_comb = dbg_bank_word6;
+             12'h15C: rd_dw_comb = dbg_bank_word7;
+             12'h160: rd_dw_comb = dbg_bank_word8;
++            12'h164: rd_dw_comb = dbg_bank_word9;   // CHECK_STATUS
++            12'h168: rd_dw_comb = dbg_bank_word10;  // CHECK_WORDS_READ
++            12'h16C: rd_dw_comb = dbg_bank_word11;  // CHECK_HDR_CRC32
++            12'h170: rd_dw_comb = dbg_bank_word12;  // CHECK_PAYLOAD_CRC32
++            12'h174: rd_dw_comb = dbg_bank_word13;  // CHECK_RUNS
++            12'h178: rd_dw_comb = dbg_bank_word14;  // CHECK_SMP1=head[20]
++            12'h17C: rd_dw_comb = dbg_bank_word15;  // CHECK_SMP2=head[21]
+             default: rd_dw_comb = 32'hDEAD_BEEF;
+         endcase
+     end
+diff --git a/rtl/ep_side/pcie_ep_engine.v b/rtl/ep_side/pcie_ep_engine.v
+index 7363f9c..d882120 100644
+--- a/rtl/ep_side/pcie_ep_engine.v
++++ b/rtl/ep_side/pcie_ep_engine.v
+@@ -26,6 +26,16 @@ module pcie_ep_engine #(
+     // Clock and Reset
+     input       wire                tl_clk_user            ,
+     input       wire                tl_rst_user            ,
++    // T11 r3（issue-02）：调试快照复位（与链路无关；仅 debug 构建的 DBG 块使用，生产未用）
++    input       wire                dbg_por_rst            ,
++    // T11.runC（N1）：DDR 读回校验调试字（tl 域两级同步快照；仅 debug 通道非零）
++    input       wire    [31:0]      chk_status             ,
++    input       wire    [31:0]      chk_words              ,
++    input       wire    [31:0]      chk_hdr_crc            ,
++    input       wire    [31:0]      chk_pay_crc            ,
++    input       wire    [31:0]      chk_runs               ,
++    input       wire    [31:0]      chk_smp1               ,
++    input       wire    [31:0]      chk_smp2               ,
+ 
+     input       wire    [3:0]       tl_int_msix_trigger    ,
+ 
+@@ -397,6 +407,14 @@ ep_bar_win #(
+ ) u_ep_bar_win (
+     .clk            (tl_clk_user            ),
+     .rst            (tl_rst_user            ),
++    .dbg_por_rst    (dbg_por_rst            ),
++    .chk_status     (chk_status             ),
++    .chk_words      (chk_words              ),
++    .chk_hdr_crc    (chk_hdr_crc            ),
++    .chk_pay_crc    (chk_pay_crc            ),
++    .chk_runs       (chk_runs               ),
++    .chk_smp1       (chk_smp1               ),
++    .chk_smp2       (chk_smp2               ),
+     .rx_sop_ff      (tl_rx_sop_ff           ),
+     .rx_data_ff     (tl_rx_data_ff          ),
+     .mrdata_rd_data (mrdata_rd_data         ),
+diff --git a/rtl/ep_side/ph1p_pcie_ep_top.v b/rtl/ep_side/ph1p_pcie_ep_top.v
+index 3bd928a..92144a5 100644
+--- a/rtl/ep_side/ph1p_pcie_ep_top.v
++++ b/rtl/ep_side/ph1p_pcie_ep_top.v
+@@ -478,6 +478,26 @@ pcie_pll_ep u_pcie_pll_ep(
+ 
+ assign  tl_cfg_pclk = tl_clk_user;
+ 
++// T11 r3（issue-02）：调试快照专用复位——与 PCIe 链路无关：板级 POR（pcie_power_on_rst 低有效）
++//   或 PLL 未锁时有效；无主机时链路未建立但本复位已释放。仅 debug 构建的 DBG 门控块消费；
++//   生产 DBG_CTRL_DEFAULT_EN=0 时该网络无消费者，生产行为不变。
++wire    dbg_por_rst = (~pcie_power_on_rst) | (~pcie_pll_locked);
++
++// ==== T11.runC（N1）DDR 读回校验集成线网（仅 debug 通道 DBG_CTRL_DEFAULT_EN=1 有活动逻辑）====
++//  调试字（tl 域两级同步；生产分支恒 0 → ep_bar_win 字库读回 DEAD_BEEF，行为不变）
++wire [31:0] chk_status, chk_words, chk_hdr_crc, chk_pay_crc, chk_runs, chk_smp1, chk_smp2;
++//  推帧引擎原 AXI4 读口改名 w_push_*，经读仲裁（debug）或直通（生产）进入 u_ddr3_mc_0
++wire [3:0]   w_push_arid;
++wire [28:0]  w_push_araddr;
++wire [7:0]   w_push_arlen;
++wire [2:0]   w_push_arsize;
++wire [1:0]   w_push_arburst;
++wire         w_push_arvalid, w_push_arready;
++wire [3:0]   w_push_rid;
++wire [255:0] w_push_rdata;
++wire [1:0]   w_push_rresp;
++wire         w_push_rlast, w_push_rvalid, w_push_rready;
++
+ always@(posedge tl_clk_user or negedge pcie_power_on_rst )
+ begin
+     if(!pcie_power_on_rst )
+@@ -640,6 +660,14 @@ pcie_ep_engine #(
+     // Clock and Reset
+     .tl_clk_user                             (tl_clk_user                             ),
+     .tl_rst_user                             (tl_rst_user                             ),
++    .dbg_por_rst                             (dbg_por_rst                             ),
++    .chk_status                              (chk_status                              ),
++    .chk_words                               (chk_words                               ),
++    .chk_hdr_crc                             (chk_hdr_crc                             ),
++    .chk_pay_crc                             (chk_pay_crc                             ),
++    .chk_runs                                (chk_runs                                ),
++    .chk_smp1                                (chk_smp1                                ),
++    .chk_smp2                                (chk_smp2                                ),
+ 
+     // Rx interface
+     .tl_rx_wait                              (tl_rx_wait                              ),
+@@ -1764,19 +1792,94 @@ ddr_frame_pusher #(
+     .clk_ddr       (w_ddr_dhi_clk     ),
+     .rst_ddr       (~w_ddrphy_rst_n   ),
+ 
+-    .m_axi_arid    (w_ddr_arid        ),
+-    .m_axi_araddr  (w_ddr_araddr      ),
+-    .m_axi_arlen   (w_ddr_arlen       ),
+-    .m_axi_arsize  (w_ddr_arsize      ),
+-    .m_axi_arburst (w_ddr_arburst     ),
+-    .m_axi_arvalid (w_ddr_arvalid     ),
+-    .m_axi_arready (w_ddr_arready     ),
+-    .m_axi_rid     (w_ddr_rid         ),
+-    .m_axi_rdata   (w_ddr_rdata       ),
+-    .m_axi_rresp   (w_ddr_rresp       ),
+-    .m_axi_rlast   (w_ddr_rlast       ),
+-    .m_axi_rvalid  (w_ddr_rvalid      ),
+-    .m_axi_rready  (w_ddr_rready      )
++    .m_axi_arid    (w_push_arid       ),
++    .m_axi_araddr  (w_push_araddr     ),
++    .m_axi_arlen   (w_push_arlen      ),
++    .m_axi_arsize  (w_push_arsize     ),
++    .m_axi_arburst (w_push_arburst    ),
++    .m_axi_arvalid (w_push_arvalid    ),
++    .m_axi_arready (w_push_arready    ),
++    .m_axi_rid     (w_push_rid        ),
++    .m_axi_rdata   (w_push_rdata      ),
++    .m_axi_rresp   (w_push_rresp      ),
++    .m_axi_rlast   (w_push_rlast      ),
++    .m_axi_rvalid  (w_push_rvalid     ),
++    .m_axi_rready  (w_push_rready     )
+ );
+ 
++// ====================================================================
++//  T11.runC（N1）：DDR 读回校验集成（仅 debug 通道）
++//   · 触发：tl 域 SEQ_A 变化 → 锁存 BASE/LEN（base[28:0] 须 32B 对齐）
++//   · checker：dhi_clk，AXI4 读主；复位 ~ddrphy_rst_n（与 PCIe 链路无关）
++//   · 读仲裁：pusher(m0) / checker(m1) 互斥轮流；checker 不抢占、不阻塞推帧
++//   · 生产（DBG_CTRL_DEFAULT_EN=0）：不例化本模块，读口直通 = r3 行为
++// ====================================================================
++generate
++    if (DBG_CTRL_DEFAULT_EN) begin : g_chk_rd
++        ddr_readback_int u_ddr_readback_int (
++            .clk_tl        (tl_clk_user       ),
++            .rst_tl        (power_on_rst_dly  ),
++            .seq_in        (w_camddr_seq      ),
++            .base_in       (w_camddr_base     ),
++            .len_in        (w_camddr_len      ),
++            .o_status      (chk_status        ),
++            .o_words       (chk_words         ),
++            .o_hdr_crc     (chk_hdr_crc       ),
++            .o_pay_crc     (chk_pay_crc       ),
++            .o_runs        (chk_runs          ),
++            .o_smp1        (chk_smp1          ),
++            .o_smp2        (chk_smp2          ),
++            .clk_dhi       (w_ddr_dhi_clk     ),
++            .rst_dhi       (~w_ddrphy_rst_n   ),
++            .m0_arid       (w_push_arid       ),
++            .m0_araddr     (w_push_araddr     ),
++            .m0_arlen      (w_push_arlen      ),
++            .m0_arsize     (w_push_arsize     ),
++            .m0_arburst    (w_push_arburst    ),
++            .m0_arvalid    (w_push_arvalid    ),
++            .m0_arready    (w_push_arready    ),
++            .m0_rid        (w_push_rid        ),
++            .m0_rdata      (w_push_rdata      ),
++            .m0_rresp      (w_push_rresp      ),
++            .m0_rlast      (w_push_rlast      ),
++            .m0_rvalid     (w_push_rvalid     ),
++            .m0_rready     (w_push_rready     ),
++            .s_arid        (w_ddr_arid        ),
++            .s_araddr      (w_ddr_araddr      ),
++            .s_arlen       (w_ddr_arlen       ),
++            .s_arsize      (w_ddr_arsize      ),
++            .s_arburst     (w_ddr_arburst     ),
++            .s_arvalid     (w_ddr_arvalid     ),
++            .s_arready     (w_ddr_arready     ),
++            .s_rid         (w_ddr_rid         ),
++            .s_rdata       (w_ddr_rdata       ),
++            .s_rresp       (w_ddr_rresp       ),
++            .s_rlast       (w_ddr_rlast       ),
++            .s_rvalid      (w_ddr_rvalid      ),
++            .s_rready      (w_ddr_rready      )
++        );
++    end else begin : g_no_chk_rd
++        assign w_ddr_arid    = w_push_arid;
++        assign w_ddr_araddr  = w_push_araddr;
++        assign w_ddr_arlen   = w_push_arlen;
++        assign w_ddr_arsize  = w_push_arsize;
++        assign w_ddr_arburst = w_push_arburst;
++        assign w_ddr_arvalid = w_push_arvalid;
++        assign w_push_arready= w_ddr_arready;
++        assign w_push_rid    = w_ddr_rid;
++        assign w_push_rdata  = w_ddr_rdata;
++        assign w_push_rresp  = w_ddr_rresp;
++        assign w_push_rlast  = w_ddr_rlast;
++        assign w_push_rvalid = w_ddr_rvalid;
++        assign w_ddr_rready  = w_push_rready;
++        assign chk_status    = 32'd0;
++        assign chk_words     = 32'd0;
++        assign chk_hdr_crc   = 32'd0;
++        assign chk_pay_crc   = 32'd0;
++        assign chk_runs      = 32'd0;
++        assign chk_smp1      = 32'd0;
++        assign chk_smp2      = 32'd0;
++    end
++endgenerate
++
+ endmodule
+diff --git a/sim/compile_checked.f b/sim/compile_checked.f
+index 8dfae17..35b12c5 100644
+--- a/sim/compile_checked.f
++++ b/sim/compile_checked.f
+@@ -69,6 +69,8 @@ tb/csi_rx_packet_integrity_ref.v
+ ../rtl/common/uart/uart_rx_setting.v
+ ../rtl/common/uart/uart_tx_setting.v
+ ../rtl/ep_side/ddr/ddr_frame_readback_checker.v
++# T11.runC（N1）：读回校验集成（触发 CDC + checker + 读仲裁；debug 通道例化）
++../rtl/ep_side/ddr/ddr_readback_int.v
+ 
+ # ---- T11.runB-debug-rtl：debug 顶层包装（仅 debug 构建入口 00_all_debug 使用；
+ #      此处纳入编译仅做语法检查，无 TB 例化；不改任何既有 TB 行为）----
+diff --git a/sim/tb/tb_ep_bar_win_debug.v b/sim/tb/tb_ep_bar_win_debug.v
+index 9f084b5..58e11d4 100644
+--- a/sim/tb/tb_ep_bar_win_debug.v
++++ b/sim/tb/tb_ep_bar_win_debug.v
+@@ -13,7 +13,7 @@
+ //
+ //  覆盖：9 字逐位镜像（正常帧 + 3 组边界帧）+ 0x160==0x44 多次写 CTRL 后一致
+ //  （含 trigger 自清、bit4 保留位）+ 只读/无副作用（写 bank 无效、ptr/scratch/
+-//  last_wr/tap 不变、读不产生 req_wr、bank 读不推进 ptr）+ 负例（0x13C/0x164/
++//  last_wr/tap 不变、读不产生 req_wr、bank 读不推进 ptr）+ 负例（0x13C/0x180/
+ //  0x1F0=DEAD_BEEF；0x158 不得等于 csi_diag_b；u_prod 默认 0）。
+ //
+ //  打包/读回时序与基线 tb_ep_bar_win_rka1.v 逐条相同（sop 拍锁地址、下一拍组合出数）。
+@@ -24,6 +24,7 @@ module tb_ep_bar_win_debug;
+ 
+     reg         clk = 0;
+     reg         rst = 1;
++    reg         dbg_por_rst = 1;        // T11 r3：调试快照复位（与链路无关，上电后释放）
+     always #8 clk = ~clk;              // 62.5MHz（tl_clk_user）
+ 
+     integer errors = 0;
+@@ -56,7 +57,7 @@ module tb_ep_bar_win_debug;
+         .PTR_BYTES(32'h0004_B000), .CLK_MHZ(9'd62),
+         .DBG_CTRL_DEFAULT_EN(1'b1)
+     ) u_dbg (
+-        .clk(clk), .rst(rst),
++        .clk(clk), .rst(rst), .dbg_por_rst(dbg_por_rst),
+         .rx_sop_ff(rx_sop_d), .rx_data_ff(rx_data_d),
+         .mrdata_rd_data(mrdata_d), .memrd_addr_lo(memrd_lo_d),
+         .ddr_ro_b(128'd0), .cam_diag_b(32'd0),
+@@ -98,7 +99,7 @@ module tb_ep_bar_win_debug;
+         .MAGIC(32'h5043_4946), .VERSION(32'h0002_0000),
+         .PTR_BYTES(32'h0004_B000), .CLK_MHZ(9'd62)
+     ) u_prod (
+-        .clk(clk), .rst(rst),
++        .clk(clk), .rst(rst), .dbg_por_rst(1'b0),
+         .rx_sop_ff(rx_sop_p), .rx_data_ff(rx_data_p),
+         .mrdata_rd_data(mrdata_p), .memrd_addr_lo(memrd_lo_p),
+         .ddr_ro_b(128'd0), .cam_diag_b(32'd0),
+@@ -227,7 +228,26 @@ module tb_ep_bar_win_debug;
+     localparam [31:0] VER_V   = 32'h0001_0000;
+ 
+     initial begin
+-        #50 rst = 0;
++        // ---------- 0) 无链路复位场景（issue-02）：rst 恒 1 时 CWC 探针仍可读 ----------
++        $display("=== 0) 无 PCIe 链路（rst 恒 1）：常量/CTRL 快照非零、计数可动 ===");
++        #50 dbg_por_rst = 0;                 // 上电复位释放（与链路无关）
++        repeat (4) @(negedge clk);
++        chk("no-link word0 MAGIC ", u_dbg.g_dbg_mark.dbg_mark_word0, MAGIC_V);
++        chk("no-link word1 RKA1  ", u_dbg.g_dbg_mark.dbg_mark_word1, RKA1_V);
++        chk("no-link word2 VER   ", u_dbg.g_dbg_mark.dbg_mark_word2, VER_V);
++        chk("no-link word8 CTRL  ", u_dbg.g_dbg_mark.dbg_mark_word8, 32'h0000_0021);
++        ddr_ro_r = {32'h0027_9000, 32'h0001_0018, 32'h0010_0000, 32'h0000_0007};
++        csi_a_r  = 32'hA1B2_C3D4;  csi_a2_r = 32'h0000_0438;
++        repeat (2) @(negedge clk);
++        chk("no-link word3 SEQ   ", u_dbg.g_dbg_mark.dbg_mark_word3, 32'h0000_0007);
++        chk("no-link word4 BASE  ", u_dbg.g_dbg_mark.dbg_mark_word4, 32'h0010_0000);
++        chk("no-link word5 LEN   ", u_dbg.g_dbg_mark.dbg_mark_word5, 32'h0027_9000);
++        chk("no-link word6 CSI   ", u_dbg.g_dbg_mark.dbg_mark_word6, 32'hA1B2_C3D4);
++        chk("no-link word7 CSI2  ", u_dbg.g_dbg_mark.dbg_mark_word7, 32'h0000_0438);
++        // 负例（DBG 关）：u_prod 无快照逻辑，ctrl 复位值仍为 0（生产行为不变）
++        if (ctrl_en_p !== 1'b0) begin $display("ERROR: DBG-off u_prod ctrl_enable 应保持 0"); errors=errors+1; end
++        // 释放 tl_rst_user，进入既有全量检查
++        rst = 0;
+         repeat (5) @(negedge clk);
+ 
+         // ---------- 1) debug-only CTRL 默认：u_dbg bit0/bit5=1、其余 0；u_prod 全 0 ----------
+@@ -325,9 +345,9 @@ module tb_ep_bar_win_debug;
+         end else $display("  OK  req_wr 计数 = %0d+3（仅 3 次显式写，读 0 写）", wmark);
+ 
+         // ---------- 6) 负例：未占用相邻偏移 / legacy ----------
+-        $display("=== 6) 负例：0x13C/0x164/0x1F0 仍 DEAD_BEEF ===");
++        $display("=== 6) 负例：0x13C/0x180/0x1F0 仍 DEAD_BEEF ===");
+         rd_dbg(12'h13C, v1); chk("0x13C (bank 前一字) ", v1, 32'hDEAD_BEEF);
+-        rd_dbg(12'h164, v2); chk("0x164 (bank 后一字) ", v2, 32'hDEAD_BEEF);
++        rd_dbg(12'h180, v2); chk("0x180 (bank 后一字) ", v2, 32'hDEAD_BEEF);
+         rd_dbg(12'h1F0, v3); chk("0x1F0 (legacy)      ", v3, 32'hDEAD_BEEF);
+         rd_prod(12'h13C, v4); chk("u_prod 0x13C        ", v4, 32'hDEAD_BEEF);
+ 
+diff --git a/tools/pcie_integration/td/00_all_debug.tcl b/tools/pcie_integration/td/00_all_debug.tcl
+index 1efd00c..4c2fe69 100644
+--- a/tools/pcie_integration/td/00_all_debug.tcl
++++ b/tools/pcie_integration/td/00_all_debug.tcl
+@@ -78,6 +78,10 @@ add_files $PRJ_ROOT/rtl/ep_side/ddr/ddr_wr_arb.v
+ add_files $PRJ_ROOT/rtl/ep_side/ddr/cam_ddr_writer.v
+ # T11：正式 RAW10→R10F 写者
+ add_files $PRJ_ROOT/rtl/ep_side/ddr/cam_r10f_writer.v
++# T11.runC（N1）：DDR 读回校验集成（checker + 触发 CDC + 读仲裁；仅 debug 通道
++#   DBG_CTRL_DEFAULT_EN=1 例化；生产 00_all 不含此二文件且不例化）
++add_files $PRJ_ROOT/rtl/ep_side/ddr/ddr_frame_readback_checker.v
++add_files $PRJ_ROOT/rtl/ep_side/ddr/ddr_readback_int.v
+ # ---- 约束 ----
+ # T11 P1-fix：debug 构建使用 debug SDC 变体（生产 SDC 一字不动；仅 u_top/ 前缀，
+ #   由 run debug-fix/gen_validate_dbg_sdc.ps1 机械生成并 fail-closed 校验通过）。
+
+diff --git a/rtl/ep_side/ddr/ddr_readback_int.v b/rtl/ep_side/ddr/ddr_readback_int.v
+new file mode 100644
+index 0000000..aff7f9f
+--- /dev/null
++++ b/rtl/ep_side/ddr/ddr_readback_int.v
+@@ -0,0 +1,272 @@
++///////////////////////////////////////////////////////////////////////////////
++//  ddr_readback_int.v — T11.runC N1：DDR 读回校验集成（debug 通道专用）
++//
++//  仅由 ph1p_pcie_ep_top 在 DBG_CTRL_DEFAULT_EN=1（debug 顶层）时例化；
++//  生产 00_all（默认 0）不例化本模块，DBG-off 路径与 r3 等价。
++//
++//  组成（tl 域触发/回读 + dhi 域 checker + 读口仲裁）：
++//   1) 发布触发：tl 域检测 DDR_SEQ_A(seq_in) 变化 → 锁存 BASE/LEN → toggle 两级
++//      同步到 dhi 域 → 稳定后采 base/len，再出单拍 start；busy 重入由 checker
++//      契约拒绝（不重启、不清进度，该次触发丢弃）。
++//   2) ddr_frame_readback_checker 实例（AXI4 读主 256bit/INCR，时钟 dhi_clk）。
++//   3) 结果两级同步回 tl 域（o_status/o_words/o_hdr_crc/o_pay_crc/o_runs/
++//      o_smp1/o_smp2），供 ep_bar_win 调试字库 word9..word15 只读镜像。
++//   4) 读口仲裁：m0=推帧引擎（原唯一读者）、m1=checker。互斥占用，每笔突发到
++//      R 通道末拍(rlast)才换手；双请求时 round-robin（初值先给 m0），单请求直通。
++//      不改变任何写口/推帧/MWr 语义；checker 低优先（不抢占），不会被饿死。
++//  复位：rst_tl=power_on_rst_dly（tl 域）、rst_dhi=~ddrphy_rst_n（dhi 域），均不
++//  依赖 PCIe 链路。
++///////////////////////////////////////////////////////////////////////////////
++`timescale 1ns/1ps
++
++module ddr_readback_int (
++    // ---- tl_clk_user 域（发布字来自 cam_r10f_writer A 路；调试字输出）----
++    input  wire         clk_tl,
++    input  wire         rst_tl,
++    input  wire [31:0]  seq_in,
++    input  wire [31:0]  base_in,
++    input  wire [31:0]  len_in,
++    output wire [31:0]  o_status,
++    output wire [31:0]  o_words,
++    output wire [31:0]  o_hdr_crc,
++    output wire [31:0]  o_pay_crc,
++    output wire [31:0]  o_runs,
++    output wire [31:0]  o_smp1,
++    output wire [31:0]  o_smp2,
++
++    // ---- dhi_clk 域 ----
++    input  wire         clk_dhi,
++    input  wire         rst_dhi,
++
++    // ---- AXI4 读 m0：推帧引擎（原读者，行为不变）----
++    input  wire [3:0]   m0_arid,
++    input  wire [28:0]  m0_araddr,
++    input  wire [7:0]   m0_arlen,
++    input  wire [2:0]   m0_arsize,
++    input  wire [1:0]   m0_arburst,
++    input  wire         m0_arvalid,
++    output wire         m0_arready,
++    output wire [3:0]   m0_rid,
++    output wire [255:0] m0_rdata,
++    output wire [1:0]   m0_rresp,
++    output wire         m0_rlast,
++    output wire         m0_rvalid,
++    input  wire         m0_rready,
++
++    // ---- AXI4 读 slave：DDR MC 用户侧读口 ----
++    output wire [3:0]   s_arid,
++    output wire [28:0]  s_araddr,
++    output wire [7:0]   s_arlen,
++    output wire [2:0]   s_arsize,
++    output wire [1:0]   s_arburst,
++    output wire         s_arvalid,
++    input  wire         s_arready,
++    input  wire [3:0]   s_rid,
++    input  wire [255:0] s_rdata,
++    input  wire [1:0]   s_rresp,
++    input  wire         s_rlast,
++    input  wire         s_rvalid,
++    output wire         s_rready
++);
++
++    // ========================================================================
++    //  1) tl 域：发布触发锁存（seq 变化 = 新帧发布）
++    // ========================================================================
++    reg  [31:0] seq_q, base_q, len_q;
++    reg         req_tgl;
++
++    always @(posedge clk_tl or posedge rst_tl) begin
++        if (rst_tl) begin
++            seq_q   <= 32'd0;
++            base_q  <= 32'd0;
++            len_q   <= 32'd0;
++            req_tgl <= 1'b0;
++        end else if (seq_in != seq_q) begin
++            seq_q   <= seq_in;
++            base_q  <= base_in;
++            len_q   <= len_in;
++            req_tgl <= ~req_tgl;
++        end
++    end
++
++    // ========================================================================
++    //  dhi 域：toggle 两级同步 + 边沿；base/len 稳定后采样，再出单拍 start
++    // ========================================================================
++    reg  [1:0]  tgl_sync;
++    wire        tgl_edge = tgl_sync[1] ^ tgl_sync[0];
++    reg  [31:0] base_hold, len_hold;
++    reg         chk_start;
++
++    always @(posedge clk_dhi or posedge rst_dhi) begin
++        if (rst_dhi) begin
++            tgl_sync  <= 2'b00;
++            base_hold <= 32'd0;
++            len_hold  <= 32'd0;
++            chk_start <= 1'b0;
++        end else begin
++            tgl_sync  <= {tgl_sync[0], req_tgl};
++            if (tgl_edge) begin
++                base_hold <= base_q;
++                len_hold  <= len_q;
++            end
++            chk_start <= tgl_edge;
++        end
++    end
++
++    // ========================================================================
++    //  2) checker 实例
++    // ========================================================================
++    wire         chk_busy, chk_done, chk_magic_ok, chk_hdr_ok, chk_pay_ok, chk_len_ok;
++    wire [7:0]   chk_err;
++    wire [31:0]  chk_words, chk_hdrcrc, chk_paycrc, chk_smp1, chk_smp2;
++    wire [3:0]   c1_arid;
++    wire [28:0]  c1_araddr;
++    wire [7:0]   c1_arlen;
++    wire [2:0]   c1_arsize;
++    wire [1:0]   c1_arburst;
++    wire         c1_arvalid, c1_arready;
++    wire [3:0]   c1_rid;
++    wire [255:0] c1_rdata;
++    wire [1:0]   c1_rresp;
++    wire         c1_rlast, c1_rvalid, c1_rready;
++
++    ddr_frame_readback_checker u_chk (
++        .clk_dhi         (clk_dhi),
++        .rst_dhi         (rst_dhi),
++        .start           (chk_start),
++        .base            ({35'd0, base_hold[28:0]}),
++        .frame_bytes     (len_hold),
++        .abort           (1'b0),
++        .busy            (chk_busy),
++        .done            (chk_done),
++        .magic_ok        (chk_magic_ok),
++        .hdr_crc_ok      (chk_hdr_ok),
++        .payload_crc_ok  (chk_pay_ok),
++        .length_ok       (chk_len_ok),
++        .err_code        (chk_err),
++        .rd_header_crc32 (chk_hdrcrc),
++        .rd_payload_crc32(chk_paycrc),
++        .words_read      (chk_words),
++        .smp0            (),
++        .smp1            (chk_smp1),
++        .smp2            (chk_smp2),
++        .smp3            (),
++        .smp4            (),
++        .smp5            (),
++        .m_axi_arid      (c1_arid),
++        .m_axi_araddr    (c1_araddr),
++        .m_axi_arlen     (c1_arlen),
++        .m_axi_arsize    (c1_arsize),
++        .m_axi_arburst   (c1_arburst),
++        .m_axi_arvalid   (c1_arvalid),
++        .m_axi_arready   (c1_arready),
++        .m_axi_rid       (c1_rid),
++        .m_axi_rdata     (c1_rdata),
++        .m_axi_rresp     (c1_rresp),
++        .m_axi_rlast     (c1_rlast),
++        .m_axi_rvalid    (c1_rvalid),
++        .m_axi_rready    (c1_rready)
++    );
++
++    // 完成计数（dhi 域 done 上升沿；每次完成校验 +1）
++    reg  [31:0] runs_cnt;
++    reg         done_q;
++    always @(posedge clk_dhi or posedge rst_dhi) begin
++        if (rst_dhi) begin
++            runs_cnt <= 32'd0;
++            done_q   <= 1'b0;
++        end else begin
++            done_q <= chk_done;
++            if (chk_done & ~done_q) runs_cnt <= runs_cnt + 32'd1;
++        end
++    end
++
++    // ========================================================================
++    //  3) 结果两级同步回 tl 域（调试字）
++    //   word9  = {16'd0, err[7:0], 2'b00, length_ok, payload_crc_ok,
++    //             hdr_crc_ok, magic_ok, done, busy}
++    // ========================================================================
++    wire [31:0] status_w = {16'd0, chk_err, 2'b00, chk_len_ok, chk_pay_ok,
++                            chk_hdr_ok, chk_magic_ok, chk_done, chk_busy};
++
++    reg  [31:0] s1_status, s2_status, s1_words, s2_words;
++    reg  [31:0] s1_hdrcrc, s2_hdrcrc, s1_paycrc, s2_paycrc;
++    reg  [31:0] s1_runs, s2_runs, s1_smp1, s2_smp1, s1_smp2, s2_smp2;
++
++    always @(posedge clk_tl) begin
++        s1_status <= status_w;    s2_status <= s1_status;
++        s1_words  <= chk_words;   s2_words  <= s1_words;
++        s1_hdrcrc <= chk_hdrcrc;  s2_hdrcrc <= s1_hdrcrc;
++        s1_paycrc <= chk_paycrc;  s2_paycrc <= s1_paycrc;
++        s1_runs   <= runs_cnt;    s2_runs   <= s1_runs;
++        s1_smp1   <= chk_smp1;    s2_smp1   <= s1_smp1;
++        s1_smp2   <= chk_smp2;    s2_smp2   <= s1_smp2;
++    end
++
++    assign o_status  = s2_status;
++    assign o_words   = s2_words;
++    assign o_hdr_crc = s2_hdrcrc;
++    assign o_pay_crc = s2_paycrc;
++    assign o_runs    = s2_runs;
++    assign o_smp1    = s2_smp1;
++    assign o_smp2    = s2_smp2;
++
++    // ========================================================================
++    //  4) 读口仲裁（dhi 域）：m0=pusher / m1=checker
++    //     互斥占用（AR 接受起 → R 末拍 rlast 止），双请求 round-robin
++    // ========================================================================
++    reg         rd_busy;    // 有未完成读事务
++    reg         rd_cur;     // 当前占用者：0=m0，1=m1（rd_busy=1 时有效）
++    reg         last_m1;    // 上一次授权者（1=m1）→ round-robin 记忆；初值 1：双请求先给 m0
++
++    wire        arb_idle  = ~rd_busy;
++    wire        both_req  = m0_arvalid & c1_arvalid;
++    wire        pick_m1   = arb_idle & (both_req ? ~last_m1 : c1_arvalid);
++    wire        pick_m0   = arb_idle & m0_arvalid & ~pick_m1;
++
++    wire        s_arvalid_w = rd_busy ? (rd_cur ? c1_arvalid : m0_arvalid)
++                                      : (pick_m1 ? c1_arvalid : (pick_m0 ? m0_arvalid : 1'b0));
++    wire        ar_hs   = s_arvalid_w & s_arready;
++    wire        s_rready_w = rd_cur ? c1_rready : m0_rready;
++    wire        r_fin   = rd_busy & s_rvalid & s_rlast & s_rready_w;
++
++    always @(posedge clk_dhi or posedge rst_dhi) begin
++        if (rst_dhi) begin
++            rd_busy <= 1'b0;
++            rd_cur  <= 1'b0;
++            last_m1 <= 1'b1;
++        end else if (arb_idle && ar_hs) begin
++            rd_busy <= 1'b1;
++            rd_cur  <= pick_m1;
++            last_m1 <= pick_m1;
++        end else if (r_fin) begin
++            rd_busy <= 1'b0;
++        end
++    end
++
++    wire        sel_m1 = rd_busy ? rd_cur : pick_m1;   // AR 拍必须按“本拍授权”选，不能看 rd_cur
++    assign s_arid    = sel_m1 ? c1_arid    : m0_arid;
++    assign s_araddr  = sel_m1 ? c1_araddr  : m0_araddr;
++    assign s_arlen   = sel_m1 ? c1_arlen   : m0_arlen;
++    assign s_arsize  = sel_m1 ? c1_arsize  : m0_arsize;
++    assign s_arburst = sel_m1 ? c1_arburst : m0_arburst;
++    assign s_arvalid = s_arvalid_w;
++
++    assign m0_arready = pick_m0 & s_arready;
++    assign c1_arready = pick_m1 & s_arready;
++
++    assign m0_rid    = s_rid;
++    assign m0_rdata  = s_rdata;
++    assign m0_rresp  = s_rresp;
++    assign m0_rlast  = s_rlast;
++    assign m0_rvalid = rd_busy & ~rd_cur & s_rvalid;
++
++    assign c1_rid    = s_rid;
++    assign c1_rdata  = s_rdata;
++    assign c1_rresp  = s_rresp;
++    assign c1_rlast  = s_rlast;
++    assign c1_rvalid = rd_busy & rd_cur & s_rvalid;
++
++    assign s_rready  = s_rready_w;
++
++endmodule
+
+diff --git a/sim/tb/tb_ddr_readback_int.v b/sim/tb/tb_ddr_readback_int.v
+new file mode 100644
+index 0000000..f000471
+--- /dev/null
++++ b/sim/tb/tb_ddr_readback_int.v
+@@ -0,0 +1,547 @@
++///////////////////////////////////////////////////////////////////////////////
++//  tb_ddr_readback_int.v — T11.runC N1 新 TB：DDR 读回校验集成 + 字库
++//
++//  覆盖：
++//   A) 触发/正例：tl 域 SEQ 变化 → 锁存 base/len → checker 读回 → 全 ok 位、
++//      words_read/CRC/runs/smp1/smp2 与预置帧字段逐位一致；
++//   B) 基址变化：新 SEQ + 新 base 生效（第二次校验读新区域）；
++//   C) 负例：载荷 CRC 破坏 → payload_crc_ok=0、err_code=3（不产生假 PASS）；
++//   D) busy 重入：长帧校验期间再来一次发布 → 该次触发被丢弃（不重启不清进度），
++//      本次结果仍属于旧 base；完成后再发布可正常校验；
++//   E) 读仲裁：pusher 桩持续请求时 checker 仍完成（不饿死），两路数据均正确；
++//   F) 字库：ep_bar_win DBG-on 新字 word9..15 逐位=输入、既有字 word0..8 不变；
++//      DBG-off 新字读值恒 DEAD_BEEF（生产读行为不变）。
++//  运行：tools/pcie_integration/run_sim.ps1 -Tb tb_ddr_readback_int \
++//        -OutDir <dir> -TbFiles tb/tb_ddr_readback_int.v -Defines MIPI_PHY_SIM_STUB
++///////////////////////////////////////////////////////////////////////////////
++`timescale 1ns/1ps
++
++module tb_ddr_readback_int;
++
++    integer errors = 0;
++
++    // ---------------- 时钟/复位 ----------------
++    reg clk_dhi = 0;   // 100 MHz
++    reg clk_tl  = 0;   // 62.5 MHz
++    reg rst_dhi = 1;
++    reg rst_tl  = 1;
++    always #5 clk_dhi = ~clk_dhi;
++    always #8 clk_tl  = ~clk_tl;
++
++    task chk32;
++        input [255:0] label;
++        input [31:0]  got;
++        input [31:0]  exp;
++        begin
++            if (got !== exp) begin
++                $display("ERROR: %0s got=%08h exp=%08h", label, got, exp);
++                errors = errors + 1;
++            end else begin
++                $display("ok: %0s = %08h", label, got);
++            end
++        end
++    endtask
++
++    // ---------------- 存储模型（低 16 位字节地址 → 32bit 字）----------------
++    reg [31:0] mem [0:16383];
++    integer    mi;
++
++    function [31:0] crc32_byte;
++        input [31:0] c;
++        input [7:0]  b;
++        integer k;
++        reg [31:0] x;
++        begin
++            x = c ^ {24'd0, b};
++            for (k = 0; k < 8; k = k + 1)
++                x = x[0] ? ((x >> 1) ^ 32'hEDB88320) : (x >> 1);
++            crc32_byte = x;
++        end
++    endfunction
++
++    function [31:0] crc32_word;   // 小端字节序 b0,b1,b2,b3
++        input [31:0] c;
++        input [31:0] w;
++        begin
++            crc32_word = crc32_byte(crc32_byte(crc32_byte(crc32_byte(
++                         c, w[7:0]), w[15:8]), w[23:16]), w[31:24]);
++        end
++    endfunction
++
++    function [31:0] mex;
++        input [31:0] base;
++        input integer idx;
++        begin
++            mex = mem[((base >> 2) + idx) & 16'h3FFF];
++        end
++    endfunction
++
++    task setw;
++        input [31:0] base;
++        input integer idx;
++        input [31:0] v;
++        begin
++            mem[((base >> 2) + idx) & 16'h3FFF] = v;
++        end
++    endtask
++
++    // 构造 R10F v1 帧（头 128B + packed 载荷 P 字节 + 4KiB 对齐尾零）
++    task build_frame;
++        input [31:0] base;
++        input integer P;
++        input integer bad_magic;
++        input integer corrupt_pay;
++        integer i, fb, nw;
++        reg [31:0] c;
++        begin
++            fb = ((128 + P + 4095) / 4096) * 4096;
++            nw = fb / 4;
++            for (i = 0; i < nw; i = i + 1) setw(base, i, 32'd0);
++            setw(base, 0,  bad_magic ? 32'hDEAD_0001 : 32'h4630_3152); // "R10F"
++            setw(base, 12, P);
++            for (i = 32; i < 32 + P/4; i = i + 1)
++                setw(base, i, 32'hA5A5_0000 + i);
++            c = 32'hFFFF_FFFF;
++            for (i = 32; i < 32 + P/4; i = i + 1)
++                c = crc32_word(c, mem[((base >> 2) + i) & 16'h3FFF]);
++            setw(base, 21, ~c);             // payload_crc32 字段
++            setw(base, 20, 32'h5A5A_1234);  // raw_crc32（不参与判定；smp1 对照）
++            c = 32'hFFFF_FFFF;
++            for (i = 0; i < 32; i = i + 1)
++                c = crc32_word(c, (i == 22) ? 32'd0 : mem[((base >> 2) + i) & 16'h3FFF]);
++            setw(base, 22, ~c);             // header_crc32 字段
++            if (corrupt_pay)
++                setw(base, 32, mem[((base >> 2) + 32) & 16'h3FFF] ^ 32'h0000_00FF);
++        end
++    endtask
++
++    // ---------------- DUT（触发 CDC + checker + 读仲裁）----------------
++    reg  [31:0] seq_d = 0, base_d = 0, len_d = 0;
++    wire [31:0] o_status, o_words, o_hdr, o_pay, o_runs, o_smp1, o_smp2;
++
++    reg  [28:0] m0_araddr;
++    reg         m0_arvalid;
++    wire [3:0]  m0_arid;
++    wire [7:0]  m0_arlen;
++    wire [2:0]  m0_arsize;
++    wire [1:0]  m0_arburst;
++    wire        m0_arready;
++    wire [3:0]  m0_rid;
++    wire [255:0] m0_rdata;
++    wire [1:0]  m0_rresp;
++    wire        m0_rlast, m0_rvalid;
++    wire        m0_rready;
++
++    wire [3:0]  s_arid;
++    wire [28:0] s_araddr;
++    wire [7:0]  s_arlen;
++    wire [2:0]  s_arsize;
++    wire [1:0]  s_arburst;
++    wire        s_arvalid;
++    reg         s_arready;
++    reg  [3:0]  s_rid;
++    reg  [255:0] s_rdata;
++    reg  [1:0]  s_rresp;
++    reg         s_rlast, s_rvalid;
++    wire        s_rready;
++
++    ddr_readback_int u_dut (
++        .clk_tl    (clk_tl),
++        .rst_tl    (rst_tl),
++        .seq_in    (seq_d),
++        .base_in   (base_d),
++        .len_in    (len_d),
++        .o_status  (o_status),
++        .o_words   (o_words),
++        .o_hdr_crc (o_hdr),
++        .o_pay_crc (o_pay),
++        .o_runs    (o_runs),
++        .o_smp1    (o_smp1),
++        .o_smp2    (o_smp2),
++        .clk_dhi   (clk_dhi),
++        .rst_dhi   (rst_dhi),
++        .m0_arid   (m0_arid),
++        .m0_araddr (m0_araddr),
++        .m0_arlen  (m0_arlen),
++        .m0_arsize (m0_arsize),
++        .m0_arburst(m0_arburst),
++        .m0_arvalid(m0_arvalid),
++        .m0_arready(m0_arready),
++        .m0_rid    (m0_rid),
++        .m0_rdata  (m0_rdata),
++        .m0_rresp  (m0_rresp),
++        .m0_rlast  (m0_rlast),
++        .m0_rvalid (m0_rvalid),
++        .m0_rready (m0_rready),
++        .s_arid    (s_arid),
++        .s_araddr  (s_araddr),
++        .s_arlen   (s_arlen),
++        .s_arsize  (s_arsize),
++        .s_arburst (s_arburst),
++        .s_arvalid (s_arvalid),
++        .s_arready (s_arready),
++        .s_rid     (s_rid),
++        .s_rdata   (s_rdata),
++        .s_rresp   (s_rresp),
++        .s_rlast   (s_rlast),
++        .s_rvalid  (s_rvalid),
++        .s_rready  (s_rready)
++    );
++
++    // ---------------- AXI slave（DDR 桩：顺序出数，1 拍/beat）----------------
++    reg        sl_busy;
++    reg [28:0] sl_addr;
++    reg [8:0]  sl_cnt, sl_beats;
++    wire [31:0] bi0 = (sl_addr[15:2] + sl_cnt*8) & 16'h3FFF;
++
++    always @(posedge clk_dhi or posedge rst_dhi) begin
++        if (rst_dhi) begin
++            s_arready <= 1'b1;
++            s_rvalid  <= 1'b0;
++            s_rlast   <= 1'b0;
++            s_rdata   <= 256'd0;
++            s_rresp   <= 2'b00;
++            sl_busy   <= 1'b0;
++            sl_addr   <= 29'd0;
++            sl_cnt    <= 9'd0;
++            sl_beats  <= 9'd0;
++        end else begin
++            if (!sl_busy) begin
++                if (s_arready && s_arvalid) begin
++                    sl_addr   <= s_araddr;
++                    sl_beats  <= {1'b0, s_arlen} + 9'd1;
++                    sl_cnt    <= 9'd0;
++                    sl_busy   <= 1'b1;
++                    s_arready <= 1'b0;
++                end
++            end else begin
++                s_rvalid <= 1'b1;
++                s_rdata  <= {mem[(bi0+7)&16'h3FFF], mem[(bi0+6)&16'h3FFF],
++                             mem[(bi0+5)&16'h3FFF], mem[(bi0+4)&16'h3FFF],
++                             mem[(bi0+3)&16'h3FFF], mem[(bi0+2)&16'h3FFF],
++                             mem[(bi0+1)&16'h3FFF], mem[bi0]};
++                s_rlast  <= (sl_cnt == sl_beats - 9'd1);
++                if (s_rvalid && s_rready) begin
++                    sl_cnt <= sl_cnt + 9'd1;
++                    if (sl_cnt == sl_beats - 9'd1) begin
++                        sl_busy   <= 1'b0;
++                        s_arready <= 1'b1;
++                        s_rvalid  <= 1'b0;
++                        s_rlast   <= 1'b0;
++                    end
++                end
++            end
++        end
++    end
++
++    // ---------------- pusher 桩（m0）：连续 1-beat 读 + 数据自检 ----------------
++    localparam [28:0] PUSH_BASE = 29'h0020_9000;
++    localparam integer NPUSH = 64;
++
++    reg         push_run = 0;
++    reg  [1:0]  pst;
++    reg  [28:0] pa;
++    reg  [31:0] push_ok, push_bad;
++
++    assign m0_arid    = 4'd0;
++    assign m0_arlen   = 8'd0;
++    assign m0_arsize  = 3'd5;
++    assign m0_arburst = 2'b01;
++    assign m0_rready  = 1'b1;
++
++    always @(posedge clk_dhi or posedge rst_dhi) begin
++        if (rst_dhi) begin
++            pst      <= 2'd0;
++            pa       <= PUSH_BASE;
++            push_ok  <= 32'd0;
++            push_bad <= 32'd0;
++            m0_arvalid <= 1'b0;
++            m0_araddr  <= 29'd0;
++        end else if (push_run) begin
++            case (pst)
++                2'd0: if (pa < PUSH_BASE + NPUSH*32) begin
++                          m0_arvalid <= 1'b1;
++                          m0_araddr  <= pa;
++                          pst        <= 2'd1;
++                      end
++                2'd1: if (m0_arready) begin
++                          m0_arvalid <= 1'b0;
++                          pst        <= 2'd2;
++                      end
++                2'd2: if (m0_rvalid) begin
++                          if (m0_rdata[31:0] !== mem[(pa[15:2]) & 16'h3FFF])
++                              push_bad <= push_bad + 32'd1;
++                          else
++                              push_ok <= push_ok + 32'd1;
++                          pa  <= pa + 32'd32;
++                          pst <= (pa + 32'd32 >= PUSH_BASE + NPUSH*32) ? 2'd3 : 2'd0;
++                      end
++                default: ;
++            endcase
++        end
++    end
++
++    // ---------------- AR 计数（仲裁证据）----------------
++    integer chk_ars = 0;
++    integer push_ars = 0;
++    always @(posedge clk_dhi or posedge rst_dhi) begin
++        if (rst_dhi) begin
++            chk_ars  <= 0;
++            push_ars <= 0;
++        end else begin
++            if (u_dut.u_chk.m_axi_arvalid && u_dut.u_chk.m_axi_arready)
++                chk_ars <= chk_ars + 1;
++            if (m0_arvalid && m0_arready)
++                push_ars <= push_ars + 1;
++        end
++    end
++
++    // ---------------- 辅助任务 ----------------
++    task wait_runs;
++        input integer n;
++        integer guard;
++        begin
++            guard = 0;
++            while ((o_runs != n) && (guard < 3000000)) begin
++                @(posedge clk_tl);
++                guard = guard + 1;
++            end
++            if (guard >= 3000000) begin
++                $display("ERROR: wait_runs(%0d) timeout o_runs=%0d", n, o_runs);
++                errors = errors + 1;
++            end
++            repeat (3) @(posedge clk_tl);
++        end
++    endtask
++
++    task publish;
++        input [31:0] b;
++        input [31:0] l;
++        begin
++            @(negedge clk_tl);
++            base_d <= b;
++            len_d  <= l;
++            seq_d  <= seq_d + 32'd1;
++        end
++    endtask
++
++    task wait_chk_done;
++        integer guard;
++        begin
++            guard = 0;
++            while (!((u_dut.u_chk.done === 1'b1) && (u_dut.u_chk.busy === 1'b0))
++                   && (guard < 2000000)) begin
++                @(posedge clk_dhi);
++                guard = guard + 1;
++            end
++            if (guard >= 2000000) begin
++                $display("ERROR: wait_chk_done timeout");
++                errors = errors + 1;
++            end
++            @(posedge clk_tl); @(posedge clk_tl); @(posedge clk_tl);
++        end
++    endtask
++
++    // ---------------- ep_bar_win 字库实例（F 段）----------------
++    reg  [31:0] chk_a9, chk_a10, chk_a11, chk_a12, chk_a13, chk_a14, chk_a15;
++    reg  [127:0] dbg_ddr_ro;
++    reg  [127:0] dbg_ddr_ro_b;
++    reg  [31:0] dbg_csi_a, dbg_csi_a2;
++    reg         dbg_por_rst = 1'b1;
++
++    ep_bar_win #(
++        .MAGIC(32'h5043_4946), .VERSION(32'h0002_0000),
++        .PTR_BYTES(32'h0004_B000), .CLK_MHZ(9'd62),
++        .MAGIC_RKA1(32'h3141_4B52), .VERSION_RKA1(32'h0001_0000),
++        .DBG_CTRL_DEFAULT_EN(1'b1)
++    ) u_dbg (
++        .clk(clk_tl), .rst(1'b0), .dbg_por_rst(dbg_por_rst),
++        .rx_sop_ff(1'b0), .rx_data_ff(256'd0),
++        .mrdata_rd_data(), .memrd_addr_lo(),
++        .ddr_ro_b(dbg_ddr_ro_b), .cam_diag_b(32'd0),
++        .cam_tap_cfg(), .cam_tap_b_cfg(), .cam_ab_sel(),
++        .cam_drop_a(96'd0),
++        .ctrl_enable(), .ctrl_trigger(), .ctrl_pattern(),
++        .ctrl_ddr_en(), .ddr_ro(dbg_ddr_ro),
++        .push_ro(128'd0), .ctrl_push_en(), .ctrl_push_src(),
++        .push_dst_lo(), .push_dst_hi(), .push_db_lo(), .push_db_hi(),
++        .host_rd_prio(), .host_grant(1'b0),
++        .st_ready(1'b0), .st_busy(1'b0), .st_frame_cnt(32'd0),
++        .st_width(16'd0), .st_height(16'd0), .st_data_len(32'd0),
++        .fb_raddr(), .fb_rdata(32'd0), .dbg_rd_idx(32'd0), .cam_stat(256'd0),
++        .tx_cap_bytes(), .tx_session_id(), .tx_cmd_arm(), .tx_cmd_ack(),
++        .tx_cmd_cancel(), .tx_ack_seq(), .tx_ack_session(),
++        .tx_status_in(32'd0), .tx_block_cfg(1'b0), .cfg_reject(),
++        .csi_diag_a(dbg_csi_a), .csi_diag_a2(dbg_csi_a2),
++        .csi_diag_b(32'd0), .csi_diag_b2(32'd0),
++        .chk_status(chk_a9), .chk_words(chk_a10), .chk_hdr_crc(chk_a11),
++        .chk_pay_crc(chk_a12), .chk_runs(chk_a13), .chk_smp1(chk_a14),
++        .chk_smp2(chk_a15)
++    );
++
++    ep_bar_win #(
++        .MAGIC(32'h5043_4946), .VERSION(32'h0002_0000),
++        .PTR_BYTES(32'h0004_B000), .CLK_MHZ(9'd62),
++        .MAGIC_RKA1(32'h3141_4B52), .VERSION_RKA1(32'h0001_0000),
++        .DBG_CTRL_DEFAULT_EN(1'b0)
++    ) u_prod (
++        .clk(clk_tl), .rst(1'b0), .dbg_por_rst(1'b0),
++        .rx_sop_ff(1'b0), .rx_data_ff(256'd0),
++        .mrdata_rd_data(), .memrd_addr_lo(),
++        .ddr_ro_b(dbg_ddr_ro_b), .cam_diag_b(32'd0),
++        .cam_tap_cfg(), .cam_tap_b_cfg(), .cam_ab_sel(),
++        .cam_drop_a(96'd0),
++        .ctrl_enable(), .ctrl_trigger(), .ctrl_pattern(),
++        .ctrl_ddr_en(), .ddr_ro(dbg_ddr_ro),
++        .push_ro(128'd0), .ctrl_push_en(), .ctrl_push_src(),
++        .push_dst_lo(), .push_dst_hi(), .push_db_lo(), .push_db_hi(),
++        .host_rd_prio(), .host_grant(1'b0),
++        .st_ready(1'b0), .st_busy(1'b0), .st_frame_cnt(32'd0),
++        .st_width(16'd0), .st_height(16'd0), .st_data_len(32'd0),
++        .fb_raddr(), .fb_rdata(32'd0), .dbg_rd_idx(32'd0), .cam_stat(256'd0),
++        .tx_cap_bytes(), .tx_session_id(), .tx_cmd_arm(), .tx_cmd_ack(),
++        .tx_cmd_cancel(), .tx_ack_seq(), .tx_ack_session(),
++        .tx_status_in(32'd0), .tx_block_cfg(1'b0), .cfg_reject(),
++        .csi_diag_a(dbg_csi_a), .csi_diag_a2(dbg_csi_a2),
++        .csi_diag_b(32'd0), .csi_diag_b2(32'd0),
++        .chk_status(chk_a9), .chk_words(chk_a10), .chk_hdr_crc(chk_a11),
++        .chk_pay_crc(chk_a12), .chk_runs(chk_a13), .chk_smp1(chk_a14),
++        .chk_smp2(chk_a15)
++    );
++
++    // ---------------- 主流程 ----------------
++    integer gi;
++    initial begin
++        // 存储清零 + 预置各帧/推帧区
++        for (mi = 0; mi < 16384; mi = mi + 1) mem[mi] = 32'd0;
++        build_frame(32'h0010_0000, 64, 0, 0);      // A
++        build_frame(32'h0010_1000, 64, 0, 0);      // B
++        build_frame(32'h0010_2000, 64, 0, 1);      // C：载荷 CRC 破坏
++        build_frame(32'h0010_3000, 64, 1, 0);      // D-wrong：magic 错（其触发应被丢弃）
++        build_frame(32'h0010_4000, 16000, 0, 0);   // D-long：16384B（长忙）
++        build_frame(32'h0010_A000, 64, 0, 0);      // F（E 段并发校验用）
++        for (gi = 0; gi < NPUSH; gi = gi + 1)
++            mem[((PUSH_BASE >> 2) + gi*8) & 16'h3FFF] = 32'hC0DE_0000 + gi;
++
++        dbg_ddr_ro   = {32'h0027_9000, 32'h0001_0018, 32'h0010_0000, 32'h0000_0007};
++        dbg_ddr_ro_b = {32'h0000_0011, 32'h0000_0022, 32'h0000_0033, 32'h0000_0044};
++        dbg_csi_a    = 32'hA1B2_C3D4;
++        dbg_csi_a2   = 32'h0000_0438;
++
++        #100;
++        rst_dhi = 0;
++        rst_tl  = 0;
++        #200;
++
++        // ---------- A) 正例（小帧） ----------
++        $display("=== A) 首帧自动校验（base=0x00100000, P=64）===");
++        publish(32'h0010_0000, 32'd4096);
++        wait_runs(1);
++        chk32("A word9  status ", o_status, 32'h0000_003E);   // err0; magic/hdr/pay/len ok; done
++        chk32("A word10 words  ", o_words,  32'd1024);
++        chk32("A word11 hdr_crc", o_hdr,    mex(32'h0010_0000,22));
++        chk32("A word12 pay_crc", o_pay,    mex(32'h0010_0000,21));
++        chk32("A word13 runs   ", o_runs,   32'd1);
++        chk32("A word14 smp1   ", o_smp1,   32'h5A5A_1234);
++        chk32("A word15 smp2   ", o_smp2,   mex(32'h0010_0000,21));
++
++        // ---------- B) 基址变化 ----------
++        $display("=== B) base 变化 → 第二次校验读新区域 ===");
++        publish(32'h0010_1000, 32'd4096);
++        wait_runs(2);
++        chk32("B word9  status ", o_status, 32'h0000_003E);
++        chk32("B word11 hdr_crc", o_hdr,    mex(32'h0010_1000,22));
++        chk32("B word12 pay_crc", o_pay,    mex(32'h0010_1000,21));
++        chk32("B word13 runs   ", o_runs,   32'd2);
++
++        // ---------- C) 负例：载荷 CRC 破坏 → err=3 ----------
++        $display("=== C) 载荷 CRC 破坏 → payload_crc_ok=0 / err_code=3 ===");
++        publish(32'h0010_2000, 32'd4096);
++        wait_runs(3);
++        chk32("C word9  status ", o_status, 32'h0000_032E);   // err3; magic/hdr/len ok; pay=0
++        chk32("C word10 words  ", o_words,  32'd1024);
++        chk32("C word13 runs   ", o_runs,   32'd3);
++
++        // ---------- D) busy 重入：长帧期间发布被丢弃 ----------
++        $display("=== D) busy 重入（长帧 16384B 期间再发布 → 丢弃，不重启）===");
++        publish(32'h0010_4000, 32'd16384);
++        gi = 0;
++        while (!(u_dut.u_chk.busy === 1'b1) && gi < 200000) begin
++            @(posedge clk_dhi); gi = gi + 1;
++        end
++        if (gi >= 200000) begin $display("ERROR: busy 未在预期内拉起"); errors = errors + 1; end
++        repeat (50) @(posedge clk_dhi);
++        publish(32'h0010_3000, 32'd4096);      // busy 中发布：应被丢弃
++        wait_runs(4);
++        chk32("D word9  status ", o_status, 32'h0000_003E);   // 仍是长帧结果
++        chk32("D word10 words  ", o_words,  32'd4096);
++        chk32("D word13 runs   ", o_runs,   32'd4);
++        publish(32'h0010_A000, 32'd4096);      // 完成后再发布：正常校验
++        wait_runs(5);
++        chk32("D2 word9 status ", o_status, 32'h0000_003E);
++        chk32("D2 word13 runs  ", o_runs,   32'd5);
++
++        // ---------- E) 读仲裁：pusher 桩连续请求 + checker 并发 ----------
++        $display("=== E) 读仲裁（pusher 桩连续 64 次读 + checker 并发）===");
++        push_run = 1;
++        publish(32'h0010_A000, 32'd4096);
++        
++        gi = 0;
++        while ((push_ok + push_bad < NPUSH) && gi < 400000) begin
++            @(posedge clk_dhi); gi = gi + 1;
++        end
++        if (gi >= 400000) begin $display("ERROR: pusher 桩未完成"); errors = errors + 1; end
++        chk32("E pusher ok      ", push_ok,  NPUSH);
++        chk32("E pusher bad     ", push_bad, 32'd0);
++        chk32("E word9  status  ", o_status, 32'h0000_003E);
++        chk32("E word13 runs    ", o_runs,   32'd6);
++        if (chk_ars < 1 || push_ars < 1) begin
++            $display("ERROR: AR 计数异常 chk_ars=%0d push_ars=%0d", chk_ars, push_ars);
++            errors = errors + 1;
++        end else begin
++            $display("ok: AR 计数 chk_ars=%0d push_ars=%0d", chk_ars, push_ars);
++        end
++        push_run = 0;
++
++        // ---------- F) 字库（新字 + 既有字不变 + DBG-off） ----------
++        $display("=== F) dbg 字库 word9..15 / 既有字不变 / DBG-off ===");
++        chk_a9  = 32'h0000_003E; chk_a10 = 32'h0000_0400; chk_a11 = 32'h1234_5678;
++        chk_a12 = 32'h89AB_CDEF; chk_a13 = 32'h0000_0007; chk_a14 = 32'hCAFE_0001;
++        chk_a15 = 32'hCAFE_0002;
++        #2;
++        chk32("F w9  mirror ", u_dbg.dbg_bank_word9,  chk_a9);
++        chk32("F w10 mirror ", u_dbg.dbg_bank_word10, chk_a10);
++        chk32("F w11 mirror ", u_dbg.dbg_bank_word11, chk_a11);
++        chk32("F w12 mirror ", u_dbg.dbg_bank_word12, chk_a12);
++        chk32("F w13 mirror ", u_dbg.dbg_bank_word13, chk_a13);
++        chk32("F w14 mirror ", u_dbg.dbg_bank_word14, chk_a14);
++        chk32("F w15 mirror ", u_dbg.dbg_bank_word15, chk_a15);
++        chk32("F old w0 MAGIC", u_dbg.dbg_bank_word0, 32'h5043_4946);
++        chk32("F old w3 seq ", u_dbg.dbg_bank_word3,  32'h0000_0007);
++        chk32("F old w4 base", u_dbg.dbg_bank_word4,  32'h0010_0000);
++        chk32("F old w5 len ", u_dbg.dbg_bank_word5,  32'h0027_9000);
++        chk32("F old w6 csi ", u_dbg.dbg_bank_word6,  32'hA1B2_C3D4);
++        chk32("F prod w9 dead", u_prod.dbg_bank_word9,  32'hDEAD_BEEF);
++        chk32("F prod w15 dead", u_prod.dbg_bank_word15, 32'hDEAD_BEEF);
++        // 既有 9 字 mark 快照不变（抽验 w0/w3）
++        dbg_por_rst = 1'b0;
++        repeat (4) @(posedge clk_tl);
++        chk32("F mark w0    ", u_dbg.g_dbg_mark.dbg_mark_word0, 32'h5043_4946);
++        chk32("F mark w9    ", u_dbg.g_dbg_mark.dbg_mark_word9, chk_a9);
++        chk32("F mark w15   ", u_dbg.g_dbg_mark.dbg_mark_word15, chk_a15);
++
++        if (errors == 0) $display("*** ALL PASS ***");
++        else             $display("*** FAIL: %0d errors ***", errors);
++        $display("tb_ddr_readback_int done");
++        $finish;
++    end
++
++
++    initial begin
++        #2_000_000;
++        $display("ERROR: watchdog timeout");
++        $display("*** FAIL: watchdog ***");
++        $finish;
++    end
++
++endmodule

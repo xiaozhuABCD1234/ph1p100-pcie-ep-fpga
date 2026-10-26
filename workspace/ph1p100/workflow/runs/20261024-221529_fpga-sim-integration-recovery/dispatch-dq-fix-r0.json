@@ -1,0 +1,123 @@
+{
+  "run_id": "20261024-221529_fpga-sim-integration-recovery",
+  "runtime": "Codex",
+  "project_root": "D:\\fpga\\ph1p100",
+  "output_dir": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery",
+  "batch_size": 1,
+  "task_ids": [
+    "T10.a1-uart-descriptor-fix"
+  ],
+  "run_task_ids": [
+    "T08.sync-production-sim",
+    "T10.a1-recovery-sim",
+    "T10.a1-uart-descriptor-fix"
+  ],
+  "status": "ready",
+  "needs_user_input": false,
+  "input_paths": [
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\request.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\user-feedback-01-continue.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\planner-amendment-authorized-dq-fix.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\planning-input-manifest.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T10.a1-recovery-sim\\dev-report-r0.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T10.a1-recovery-sim\\defect-evidence.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T10.a1-recovery-sim\\relay-metadata.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\dispatch-dq-fix-r0.json"
+  ],
+  "write_scope": [
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\T10.a1-uart-descriptor-fix"
+  ],
+  "protected": [
+    "all paths outside developer write_scope",
+    "all original inputs and tested candidate/control manifests",
+    "production/upstream/fpga/tools and old runs/work",
+    "docs junction",
+    "D:\\TD",
+    "D:\\fpga_work",
+    "board bit/CWC/DB, shared drive mappings and other worktrees"
+  ],
+  "next_action": {
+    "operation": "spawn_agent",
+    "role": "fpga-dev",
+    "skill_path": "D:\\fpga\\ph1p100\\.agents\\skills\\fpga-dev\\SKILL.md",
+    "fork_turns": "none",
+    "task_ids": [
+      "T10.a1-uart-descriptor-fix"
+    ],
+    "round": 0,
+    "instruction": "Read AGENTS, assigned skill and input_paths. Execute only T10.a1-uart-descriptor-fix under planner-amendment-authorized-dq-fix.md. Existing user continuation authorizes this necessary reversible simulation-copy repair; no new confirmation needed. New candidate file only a1_uart_export.v queue index/count/reset/event logic; other seven RTL unchanged. Reproduce and correct wrap/simultaneous-count cases; real-module 12 descriptors and full-top clean >=4 complete frames; old RTL negative controls. No TD/synthesis/route/bit/CWC/download/Flash, production or board changes. G0/G1 simulation qualification only, G2 not_run. Freeze unique manifest plus corrected-dut-index.json (one changed file + seven original SHA paths), stop modifying and all commands, return relay-contract metadata. Do not spawn agents."
+  },
+  "after_development": {
+    "operation": "spawn_single_tester",
+    "role": "fpga-tester",
+    "skill_path": "D:\\fpga\\ph1p100\\.agents\\skills\\fpga-tester\\SKILL.md",
+    "when": "ready_for_test; stopped_modifying=true; active_commands=0; unique manifest/test_input_paths available",
+    "dimension": "integrated",
+    "write_scope": [
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\test-reports\\T10.a1-uart-descriptor-fix",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\test-reports\\T10.a1-uart-descriptor-fix-r0-integrated.md"
+    ],
+    "instruction": "One new independent integrated tester; read same amendment/dispatch and developer frozen manifest. Independently rebuild real corrected exporter and top; cover all frozen queue transitions, >=12 IDs/wraps/reset/epoch/strict bytes/zlib/four CRC, >=4 complete clean pipeline frames and meaningful old-DUT negative controls. Verify narrow single-file diff, seven unchanged RTL and all protected input hashes before/after. G0/G1 required; G2 not_run, G3/G4/G5 N/A as original offline scope. No TD/hardware/candidate mutation. One integrated report and relay metadata."
+  },
+  "after_test": {
+    "operation": "return_to_planner",
+    "instruction": "Return to original planner /root/fpga_planner_sim_221529 with actual role IDs, verdict/report/manifest/corrected-dut-index and counts. Original planner then resumes T10.a1-recovery-sim via original developer /root/fpga_dev_recovery_221529 on changed frozen DUT; no automatic fourth task, no counter reset. Same-task unblocked FAIL uses original new-fix developer/tester, max3 actual repairs."
+  },
+  "scope_limits": {
+    "major_goals": 1,
+    "formal_packages": 3,
+    "maximum_packages": 4,
+    "levels": 2,
+    "max_semantic_steps_per_package": 5,
+    "batch_size": 1,
+    "max_actual_repair_rounds": 3,
+    "td": 0,
+    "synthesis": 0,
+    "route": 0,
+    "bitgen": 0,
+    "cwc": 0,
+    "download": 0,
+    "flash": 0,
+    "production_writeback": false
+  },
+  "execution_limits": {
+    "developer_tool_calls": 45,
+    "developer_minutes": 60,
+    "tester_tool_calls": 40,
+    "tester_minutes": 45,
+    "read_search_seconds": 60,
+    "local_compile_or_single_sim_seconds": 300,
+    "full_compiles_per_dispatch": 2,
+    "same_failed_command_max_attempts": 2,
+    "same_issue_search_rounds": 3,
+    "consecutive_no_progress_cycles": 2,
+    "reason": "Bounded necessary simulation-copy queue repair; excludes the historical proposal TD/G2 extension."
+  },
+  "authorization": {
+    "source_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261024-221529_fpga-sim-integration-recovery\\user-feedback-01-continue.md",
+    "user_quote": "接着做",
+    "interpretation": "Continuation includes necessary reversible isolated repair for original simulation goals; no repeat approval",
+    "scope_clarification_supplement_count": 1,
+    "actual_repair_rounds_not_incremented": true
+  },
+  "preserved_state": {
+    "T08.sync-production-sim": {
+      "verdict": "PASS",
+      "round": 0,
+      "actual_repair_rounds": 0
+    },
+    "T10.a1-recovery-sim": {
+      "status": "blocked_awaiting_corrected_DUT",
+      "developer_id": "/root/fpga_dev_recovery_221529",
+      "tester_id": null,
+      "actual_repair_rounds": 0,
+      "historical_compile_count": 1,
+      "historical_clean_actual_simulations": 1,
+      "historical_pre_elaboration_failure_count": 1,
+      "problem_id": "T10.a1-recovery-sim:SCOPE_CLARIFICATION:fixed-r5-descriptor-index",
+      "planner_scope_supplement_opportunities": 1
+    }
+  },
+  "question_path": null,
+  "user_summary_path": null
+}

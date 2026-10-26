@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "task_id": "T10.dual-aplus-service-verdict",
+  "run_id": "20261025-195604_fpga-dual-aplus-core-feasibility",
+  "round": "r0",
+  "role": "fpga-dev (offline model; no TD/RTL/board/RK)",
+  "generated_by": "model/gen_tables.py; every value below is re-verified against the sources listed in input-verified.json before any CSV is written (0 anchor mismatches required)",
+  "units": {
+    "MB": "10^6 bytes (decimal)",
+    "MiB": "2^20 bytes",
+    "clock": "Hz unless the key ends in _mhz"
+  },
+  "clock_hz": 187500000,
+  "clock_mhz": 187.5,
+  "clock_sensitivity_mhz": [150, 175, 200],
+  "design_margin": 0.25,
+  "device": {
+    "part": "PH1P100SBG484",
+    "speed": "3",
+    "eram20k": 300,
+    "lut4": 129024,
+    "lut6_sites": 71680,
+    "dff": 143360,
+    "slice": 71680,
+    "dsp": 220,
+    "pll": 12,
+    "eram_logic_quota_210": 210,
+    "eram_fit_pass_max_270": 270,
+    "label": "device_totals=measured(docs/DDR + TD report row names); 270/210 are project gates, not hard limits"
+  },
+  "frame": {
+    "W": 1920,
+    "H": 1080,
+    "pixels": 2073600,
+    "bytes_per_px": 1.25,
+    "group_bytes": 5,
+    "groups_per_ddr_word": 4,
+    "ddr_word_bytes": 32,
+    "raw_bytes": 2592000,
+    "raw_slot_words": 129600,
+    "raw_slot_bytes": 4147200,
+    "raw_slot_expansion": 1.6,
+    "content_header_bytes": 128,
+    "content_bytes": 2592128,
+    "dma_align_bytes": 4096,
+    "dma_bytes": 2592768,
+    "cmp_payload_bytes": 2594706,
+    "a1u1_header_bytes": 44,
+    "cmp_total_bytes": 2594750,
+    "cmp_slot_bytes": 8388608,
+    "fps_target": 30.0,
+    "frame_period_ms": 33.3333,
+    "labels": {
+      "raw_bytes": "derived (P*10/8; P=W*H)",
+      "raw_slot_bytes": "derived ceil(G/4)*32 (20B/32B; 1.6x) - this run's adopted main layout",
+      "content_bytes": "derived raw+128",
+      "dma_bytes": "derived ceil(content/4096)*4096",
+      "cmp_payload_bytes": "derived raw+5*ceil(H/2)+6 (worst stored zlib)",
+      "cmp_total_bytes": "derived payload+44 (A1U1 header)",
+      "cmp_slot_bytes": "measured (8 MiB CMP slot contract)"
+    }
+  },
+  "anchors": {
+    "comp": {
+      "input_bytes": 153600,
+      "cycles": 355261,
+      "rate_MBps": 81.067159,
+      "cycles_per_byte": 2.3128971354166667,
+      "label": "measured (b6 independent rerun, cycles exact; rate=derived from bytes*clock/cycles)"
+    },
+    "rand": {
+      "input_bytes": 153600,
+      "cycles": 161479,
+      "rate_MBps": 178.351365,
+      "cycles_per_byte": 1.051296875,
+      "label": "measured (b6 manifest/independent report; stored fallback, not worst case)"
+    },
+    "full_grad": {
+      "cycles": 6421414,
+      "W": 1920,
+      "H": 1080,
+      "raw_bytes": 2592000,
+      "captured_stream_bytes": 40076,
+      "exported_stream_bytes": 40032,
+      "read_words": 129600,
+      "fps_at_187p5": 29.198707,
+      "label": "measured (b6 P1 STAT: 1080p full frame, read_words=129600 proves the 20B/32B RAW slot geometry; .dec is the TB decimal text capture, 40076 lines = 180425 B file, NOT the payload size)"
+    }
+  },
+  "overhead": {
+    "anchor_implied_cycles": 426384.625,
+    "primary_cycles": 426385,
+    "sensitivity_tiers": [0, 426385, 1000000],
+    "label": "assumed (6421414-5995029.375; only proven on full_grad content; affine model for other geometry)"
+  },
+  "resources": {
+    "single_chain_b10_r1_routed": {
+      "eram_logic": 102,
+      "dram_hardcon": 85,
+      "eram_total": 187,
+      "eram_headroom": 113,
+      "headroom_pct": 37.6667,
+      "lut6": 19695,
+      "reg": 28004,
+      "slice": 24368,
+      "dsp": 0,
+      "pll": 4,
+      "wns_ns": 0.103,
+      "hold_ns": 0.020,
+      "viol_ep": 0,
+      "total_ep": 24665,
+      "label": "measured (b10 r1 routed; P1 round1 PASS)"
+    },
+    "single_core_b6_routed": {
+      "wns_ns": 0.119,
+      "hold_ns": 0.020,
+      "viol_ep": 0,
+      "total_ep": 19779,
+      "label": "measured (b6 routed)"
+    },
+    "dual_marginal": {
+      "eram_logic": 146,
+      "dram_hardcon": 85,
+      "eram_total": 231,
+      "eram_headroom": 69,
+      "headroom_pct": 23.0,
+      "eram_logic_quota": 210,
+      "logic_headroom_210": 64,
+      "lut6": 25709,
+      "lut4_upper": 51418,
+      "reg": 34341,
+      "slice": 30733,
+      "dsp": 0,
+      "pll": 4,
+      "fit_300": "pass",
+      "fit_210_logic": "pass",
+      "timing": "unproven",
+      "label": "derived (P1 manifest 228531e7...bdd0; second core u_core + second bridge + second stream fabric; shared MCU/DDR PHY)"
+    },
+    "dual_conservative": {
+      "eram_logic": 204,
+      "dram_hardcon": 85,
+      "eram_total": 289,
+      "eram_headroom": 11,
+      "headroom_pct": 3.6667,
+      "eram_logic_quota": 210,
+      "logic_headroom_210": 6,
+      "lut6": 39390,
+      "lut4_upper": 78780,
+      "reg": 56008,
+      "slice": 48736,
+      "dsp": 0,
+      "pll": 8,
+      "fit_300": "conditional",
+      "fit_210_logic": "pass",
+      "timing": "unproven",
+      "label": "derived upper bound (full second chain replicated; 85 DRAMHARDCON counted once; includes 2x15 CWC debug ERAM)"
+    },
+    "dual_ddr_variant": {
+      "marginal_eram_total": 316,
+      "conservative_eram_total": 374,
+      "fit_300": "fail",
+      "label": "assumed variant (second DDR port/controller -> +85); not the default architecture"
+    },
+    "second_full_csi": {
+      "logic_delta": 773,
+      "ripple_delta": 340,
+      "seq_delta": 1474,
+      "eram_delta": 0,
+      "lut6_total": 26822,
+      "lut4_upper": 53644,
+      "reg_total": 35815,
+      "slice_total": 32083,
+      "eram_total": 231,
+      "label": "measured + assumed (routed has ONLY u_csi_a; if a full second CSI RX is required: +773/340/1474/0; ERAM/fit unchanged)"
+    }
+  },
+  "ddr": {
+    "peak_MBps": 6400,
+    "raw_slot_expansion": 1.6,
+    "layout_main": "20B_payload_per_32B_word (b10/b11 slot; this run's frozen design guide 5.1)",
+    "layout_tight_variant": "packed 1.0x (20261025-180900 T08/T10 contract; variant only, not main)",
+    "label": "peak = theoretical x32 1600 MT/s; not measured, excludes refresh/arbitration/bank switching"
+  },
+  "timing": {
+    "single_core_proven_max_mhz": 187.5,
+    "single_core_proven_basis": "b6 routed +0.119/0; b10 r1 routed +0.103/0 at clk_a1 187.5 MHz",
+    "above_187p5": "unproven",
+    "dual_core": "unproven",
+    "label": "measured at 187.5 MHz only; 200 MHz and dual-core timing unproven"
+  },
+  "packing": {
+    "profile_allowed": "RAW10_packed_20B32B",
+    "forbidden_profiles": ["RAW12", "RAW10_1.0x"],
+    "label": "frozen; RAW12 3,110,400 B and 1.0x slots are negative controls"
+  },
+  "labels_summary": {
+    "measured": "values read from b6/b10 routed reports, b6 STAT, or P1 frozen artifacts",
+    "derived": "computed from measured values by the formulas in model/calc.py",
+    "assumed": "model assumptions (overhead constancy, slice scaling, shared PHY, CSI delta)",
+    "unproven": "no current evidence (dual-core Routed, DDR sustained, natural-image content, 200 MHz)"
+  }
+}

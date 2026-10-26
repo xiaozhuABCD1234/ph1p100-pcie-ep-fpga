@@ -1,0 +1,16 @@
+# vsim -c -l vsim.log -do "run.do" tb_t11_csi_enable_corner 
+# Start time: 02:32:44 on Oct 19,2026
+# Loading work.tb_t11_csi_enable_corner
+# Loading work.csi_rx_packet_integrity
+# Loading work.csi_rx_hdr_ecc
+# do run.do
+# === P1 好帧 → good=1 / crc=0 ===
+# === P2 角落：包尾首拍撤 enable（应 abort、crc 少计 1）===
+# === P3 对照：enable 不撤 → crc=1 / bad=2 ===
+# === P4 恢复：好帧 → good=2 / crc 不变 ===
+#   [summary] good=2 bad=2 crc=1 abort_pulses=3 good_pulses=2
+# ALL PASS
+# ** Note: $finish    : S:/sim/tb/tb_t11_csi_enable_corner.v(230)
+#    Time: 4820 ns  Iteration: 1  Instance: /tb_t11_csi_enable_corner
+# End time: 02:32:45 on Oct 19,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0

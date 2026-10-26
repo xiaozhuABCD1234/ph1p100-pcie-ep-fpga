@@ -1,0 +1,139 @@
+{
+  "run_id": "20261026-144617_fpga-chain-detail-review",
+  "runtime": "Codex",
+  "project_root": "D:/fpga/ph1p100",
+  "output_dir": "D:/fpga/ph1p100/workflow/runs/20261026-144617_fpga-chain-detail-review",
+  "task_ids": [
+    "T06.chain-storage-review"
+  ],
+  "batch_size": 1,
+  "status": "ready",
+  "needs_user_input": false,
+  "input_paths": [
+    "D:/fpga/ph1p100/AGENTS.md",
+    "D:/fpga/ph1p100/.agents/skills/fpga-dev/SKILL.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\request.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\dev-plan.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\fpga-design-guide.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\input-index.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\source-manifest.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\planning\\task-T06-chain-storage-review.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T02.chain-input-review\\manifest-r0.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T02.chain-input-review\\review.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T02.chain-input-review\\findings.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T02.chain-input-review\\source-map.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\test-reports\\T02.chain-input-review-r0-integrated.md"
+  ],
+  "write_scope": [
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T06.chain-storage-review/**"
+  ],
+  "protected": [
+    "baseline/**",
+    "workflow/tasks.json",
+    "workflow/records/**",
+    "docs/**",
+    "fpga/**",
+    "upstream/**",
+    "parallel/**",
+    "all other runs/worktrees",
+    "D:/TD/**",
+    "D:/fpga/refs/**",
+    "global configuration",
+    "hardware/COM/JTAG/Flash",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T02.chain-input-review/**",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\test-reports\\T02.chain-input-review/**",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\test-reports\\T02.chain-input-review-r0-integrated.md"
+  ],
+  "next_action": {
+    "operation": "spawn_agent",
+    "role": "fpga-dev",
+    "task_id": "T06.chain-storage-review",
+    "skill_path": "D:/fpga/ph1p100/.agents/skills/fpga-dev/SKILL.md",
+    "plan_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\dev-plan.md",
+    "supplement_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\planning\\task-T06-chain-storage-review.md",
+    "instruction": "新建本任务开发，fork_turns=none仅传路径；禁止派生；按原T06的5步只读审查与补充契约执行，保护已验T02/统一baseline/其他活动run，不实施优化。停止修改及所有活动、冻结唯一manifest后才返回ready_for_test。"
+  },
+  "after_development": {
+    "operation": "spawn_single_tester",
+    "role": "fpga-tester",
+    "skill_path": "D:/fpga/ph1p100/.agents/skills/fpga-tester/SKILL.md",
+    "required_status": "ready_for_test",
+    "input": "new T06 manifest_path/test_input_paths plus same request/plan/guide/baseline and T02 accepted dependency",
+    "write_scope": [
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\test-reports\\T06.chain-storage-review/**",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\test-reports\\T06.chain-storage-review-rN-integrated.md"
+    ],
+    "report_path_round0": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\test-reports\\T06.chain-storage-review-r0-integrated.md",
+    "after_integrated_pass": {
+      "operation": "return_to_planner",
+      "instruction": "续本run真实原规划ID，传本包三维结果/manifest/报告/修复计数，下一包由原规划更新dispatch；主不选任务。"
+    },
+    "fail_rule": "same original developer/tester only; round0 initial acceptance, rounds1-3 at most3 actual repairs; external blocker returns immediately to original planner",
+    "enabled": true
+  },
+  "scope_limits": {
+    "main_goals": 1,
+    "formal_packages": 4,
+    "levels": 2,
+    "semantic_steps_per_package_max": 5,
+    "approved_override": null,
+    "production_changes": false,
+    "hardware_operations_max": 0
+  },
+  "execution_limits": {
+    "tool_calls_per_role_turn_max": 30,
+    "planner_minutes_max": 15,
+    "developer_minutes_max": 45,
+    "tester_minutes_max": 45,
+    "read_search_deadline_seconds": 60,
+    "local_static_sim_deadline_seconds": 300,
+    "micro_sim_runs_per_role_max": 3,
+    "micro_sim_total_minutes_max": 10,
+    "same_issue_read_rounds_max": 3,
+    "same_failed_command_attempts_max": 2,
+    "no_progress_cycles_max": 2,
+    "actual_repairs_max": 3,
+    "problem_supplement_chances_max": 2,
+    "timeout_requirement": "actual deadline and safe termination of only own processes before launch; yield is not timeout",
+    "td_build_bitgen_download_flash_com_jtag_rk_max": 0
+  },
+  "global_task_board": {
+    "path": "D:/fpga/ph1p100/workflow/tasks.json",
+    "mode": "read_only",
+    "parent_tasks_must_not_be_closed_by_audit": true
+  },
+  "question_path": null,
+  "user_summary_path": null,
+  "blocked": null,
+  "problem_history": [
+    {
+      "problem_id": "T02.chain-input-review:API_ERROR:model_capacity",
+      "evidence_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\planning\\blocked-model-capacity.json",
+      "status": "historical_capacity_error_resolved_for_T02_by_user_authorized_successful_turn"
+    }
+  ],
+  "completed_dependencies": [
+    {
+      "task_id": "T02.chain-input-review",
+      "verdict": "PASS",
+      "round": 0,
+      "actual_repairs": 0,
+      "manifest_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T02.chain-input-review\\manifest-r0.json",
+      "report_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\test-reports\\T02.chain-input-review-r0-integrated.md",
+      "manifest_sha256": "af32567395a3083b3b5005df40cfc37857f54b133293a644782eca9d6a34b997",
+      "report_sha256": "c96751cda203daf4c53a47909760f7d5b2edd3b88abdedbda0e625d67d2fb920"
+    }
+  ],
+  "round_accounting": {
+    "T02.chain-input-review": {
+      "round0": "PASS",
+      "actual_repairs": 0,
+      "problem_supplements_used": 0
+    },
+    "T06.chain-storage-review": {
+      "round0": "not_started",
+      "actual_repairs": 0,
+      "problem_supplements_used": 0
+    }
+  }
+}

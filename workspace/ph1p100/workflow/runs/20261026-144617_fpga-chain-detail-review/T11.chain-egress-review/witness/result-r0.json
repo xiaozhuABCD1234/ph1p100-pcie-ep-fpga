@@ -1,0 +1,399 @@
+{
+  "task_id": "T11.chain-egress-review",
+  "status": "local_witness_pass",
+  "method": "source-anchored arithmetic and event projection; not RTL/DUT/board simulation",
+  "source_hashes": {
+    "0101.v": "e0dd673cd19dd09c0343dd5811a6bc4efbfab48ece2ab5e59396a17ef6f57a5b",
+    "0148.v": "f8f9e4e354b5bdbcce56321cacb22981f1283565ec6c40479a90d0625ce76b61",
+    "0123.v": "7b4be3e4dbc437212b619c43e20a875526f5ec0bd4824b4c994054baa7b24435",
+    "0098.v": "b6c5ab12f77f36cbb409882fa0847d1e5b34e4c64090a5161d26866c5ed3488e"
+  },
+  "source_wrap_cases": [
+    {
+      "base": "0x100000",
+      "bytes": 4096,
+      "capacity": 268435456,
+      "wide_end": "0x101000",
+      "source_32bit_end": "0x101000",
+      "source_claim": true,
+      "wide_oracle": true,
+      "first_AR29": "0x100000"
+    },
+    {
+      "base": "0xffff000",
+      "bytes": 4096,
+      "capacity": 268435456,
+      "wide_end": "0x10000000",
+      "source_32bit_end": "0x10000000",
+      "source_claim": true,
+      "wide_oracle": true,
+      "first_AR29": "0xffff000"
+    },
+    {
+      "base": "0x10000000",
+      "bytes": 4096,
+      "capacity": 268435456,
+      "wide_end": "0x10001000",
+      "source_32bit_end": "0x10001000",
+      "source_claim": false,
+      "wide_oracle": false,
+      "first_AR29": "0x10000000"
+    },
+    {
+      "base": "0xffffe000",
+      "bytes": 4096,
+      "capacity": 268435456,
+      "wide_end": "0xfffff000",
+      "source_32bit_end": "0xfffff000",
+      "source_claim": false,
+      "wide_oracle": false,
+      "first_AR29": "0x1fffe000"
+    },
+    {
+      "base": "0xfffff000",
+      "bytes": 4096,
+      "capacity": 268435456,
+      "wide_end": "0x100000000",
+      "source_32bit_end": "0x0",
+      "source_claim": true,
+      "wide_oracle": false,
+      "first_AR29": "0x1ffff000"
+    }
+  ],
+  "export_E_OPEN_cases": [
+    {
+      "ready": false,
+      "id_match": false,
+      "length_match": false,
+      "source_opens": false,
+      "source_next_state": "E_OPEN",
+      "fail_closed_oracle_opens": false
+    },
+    {
+      "ready": false,
+      "id_match": false,
+      "length_match": true,
+      "source_opens": false,
+      "source_next_state": "E_OPEN",
+      "fail_closed_oracle_opens": false
+    },
+    {
+      "ready": false,
+      "id_match": true,
+      "length_match": false,
+      "source_opens": false,
+      "source_next_state": "E_OPEN",
+      "fail_closed_oracle_opens": false
+    },
+    {
+      "ready": false,
+      "id_match": true,
+      "length_match": true,
+      "source_opens": false,
+      "source_next_state": "E_OPEN",
+      "fail_closed_oracle_opens": false
+    },
+    {
+      "ready": true,
+      "id_match": false,
+      "length_match": false,
+      "source_opens": true,
+      "source_next_state": "E_HDR",
+      "fail_closed_oracle_opens": false
+    },
+    {
+      "ready": true,
+      "id_match": false,
+      "length_match": true,
+      "source_opens": true,
+      "source_next_state": "E_HDR",
+      "fail_closed_oracle_opens": false
+    },
+    {
+      "ready": true,
+      "id_match": true,
+      "length_match": false,
+      "source_opens": true,
+      "source_next_state": "E_HDR",
+      "fail_closed_oracle_opens": false
+    },
+    {
+      "ready": true,
+      "id_match": true,
+      "length_match": true,
+      "source_opens": true,
+      "source_next_state": "E_HDR",
+      "fail_closed_oracle_opens": true
+    }
+  ],
+  "export_mismatch_cases": [
+    {
+      "ready": true,
+      "id_match": false,
+      "length_match": false,
+      "source_opens": true,
+      "source_next_state": "E_HDR",
+      "fail_closed_oracle_opens": false
+    },
+    {
+      "ready": true,
+      "id_match": false,
+      "length_match": true,
+      "source_opens": true,
+      "source_next_state": "E_HDR",
+      "fail_closed_oracle_opens": false
+    },
+    {
+      "ready": true,
+      "id_match": true,
+      "length_match": false,
+      "source_opens": true,
+      "source_next_state": "E_HDR",
+      "fail_closed_oracle_opens": false
+    }
+  ],
+  "long_descriptor_example": {
+    "desc_len": 33,
+    "slot_exact_len": 1,
+    "slot_alloc_word_B": 32,
+    "reason": "After32 copied bytes no next word exists; pending word33 cannot be satisfied in this isolated fault input."
+  },
+  "default_page_cases": [
+    {
+      "offset": 0,
+      "end": 128,
+      "within_page": true
+    },
+    {
+      "offset": 128,
+      "end": 256,
+      "within_page": true
+    },
+    {
+      "offset": 256,
+      "end": 384,
+      "within_page": true
+    },
+    {
+      "offset": 384,
+      "end": 512,
+      "within_page": true
+    },
+    {
+      "offset": 512,
+      "end": 640,
+      "within_page": true
+    },
+    {
+      "offset": 640,
+      "end": 768,
+      "within_page": true
+    },
+    {
+      "offset": 768,
+      "end": 896,
+      "within_page": true
+    },
+    {
+      "offset": 896,
+      "end": 1024,
+      "within_page": true
+    },
+    {
+      "offset": 1024,
+      "end": 1152,
+      "within_page": true
+    },
+    {
+      "offset": 1152,
+      "end": 1280,
+      "within_page": true
+    },
+    {
+      "offset": 1280,
+      "end": 1408,
+      "within_page": true
+    },
+    {
+      "offset": 1408,
+      "end": 1536,
+      "within_page": true
+    },
+    {
+      "offset": 1536,
+      "end": 1664,
+      "within_page": true
+    },
+    {
+      "offset": 1664,
+      "end": 1792,
+      "within_page": true
+    },
+    {
+      "offset": 1792,
+      "end": 1920,
+      "within_page": true
+    },
+    {
+      "offset": 1920,
+      "end": 2048,
+      "within_page": true
+    },
+    {
+      "offset": 2048,
+      "end": 2176,
+      "within_page": true
+    },
+    {
+      "offset": 2176,
+      "end": 2304,
+      "within_page": true
+    },
+    {
+      "offset": 2304,
+      "end": 2432,
+      "within_page": true
+    },
+    {
+      "offset": 2432,
+      "end": 2560,
+      "within_page": true
+    },
+    {
+      "offset": 2560,
+      "end": 2688,
+      "within_page": true
+    },
+    {
+      "offset": 2688,
+      "end": 2816,
+      "within_page": true
+    },
+    {
+      "offset": 2816,
+      "end": 2944,
+      "within_page": true
+    },
+    {
+      "offset": 2944,
+      "end": 3072,
+      "within_page": true
+    },
+    {
+      "offset": 3072,
+      "end": 3200,
+      "within_page": true
+    },
+    {
+      "offset": 3200,
+      "end": 3328,
+      "within_page": true
+    },
+    {
+      "offset": 3328,
+      "end": 3456,
+      "within_page": true
+    },
+    {
+      "offset": 3456,
+      "end": 3584,
+      "within_page": true
+    },
+    {
+      "offset": 3584,
+      "end": 3712,
+      "within_page": true
+    },
+    {
+      "offset": 3712,
+      "end": 3840,
+      "within_page": true
+    },
+    {
+      "offset": 3840,
+      "end": 3968,
+      "within_page": true
+    },
+    {
+      "offset": 3968,
+      "end": 4096,
+      "within_page": true
+    }
+  ],
+  "legal_MPS_cases": [
+    {
+      "code": 0,
+      "bytes": 128,
+      "default_payload_fits": true
+    },
+    {
+      "code": 1,
+      "bytes": 256,
+      "default_payload_fits": true
+    },
+    {
+      "code": 2,
+      "bytes": 512,
+      "default_payload_fits": true
+    },
+    {
+      "code": 3,
+      "bytes": 1024,
+      "default_payload_fits": true
+    },
+    {
+      "code": 4,
+      "bytes": 2048,
+      "default_payload_fits": true
+    },
+    {
+      "code": 5,
+      "bytes": 4096,
+      "default_payload_fits": true
+    }
+  ],
+  "TL_local_facts": {
+    "data_header_valid": "F0 four DW",
+    "data_valid": "FF eight DW",
+    "doorbell_valid": "F8 five DW",
+    "data_first_BE": 15,
+    "data_last_BE": 15,
+    "doorbell_first_BE": 15,
+    "doorbell_last_BE": 0,
+    "ack_event": "G_HELD and equal nonzero session and equal seq; local done is not host read completion"
+  },
+  "budget": {
+    "raw_payload_B": 2592000,
+    "raw_single_MBps": 77.76,
+    "raw_dual_MBps": 155.52,
+    "aplus_ideal_zlib_upper_B": 2594706,
+    "aplus_single_MBps": 77.84118,
+    "aplus_dual_MBps": 155.68236,
+    "aplus_outer_A1U1_B": 2594750,
+    "aplus_outer_single_MBps": 77.8425,
+    "r10f_header_B": 128,
+    "r10f_content_B": 2592128,
+    "r10f_DMA_B": 2592768,
+    "r10f_padding_B": 640,
+    "r10f_TLP_count": 20256,
+    "r10f_TLP_header_B": 16,
+    "doorbell_TLP_B": 20,
+    "r10f_TLP_total_B": 2916884,
+    "r10f_TLP_single_MBps": 87.50652,
+    "r10f_TLP_dual_MBps": 175.01304,
+    "raw_store_B": 4147200,
+    "cmp_alloc32_B": 2594720,
+    "cmp_slot_margin_B": 14,
+    "ddr_four_pass_B_per_frame": 13483840,
+    "ddr_single_MBps": 404.5152,
+    "ddr_dual_MBps": 809.0304,
+    "uart_115200_8N1_seconds_aplus_outer": 225.23871527777777,
+    "note": "Pure budgets; A+ upper conditional on true bit-offset cost; TLP excludes DLL/PHY; DDR excludes control/refresh/stalls; UART115200 illustrative not measured board baud."
+  },
+  "limitations": [
+    "No cycle-accurate RTL",
+    "Descriptor mismatch full-size default reachability unproven",
+    "Source wrap outside frozen fixed low writer bases",
+    "No host/IP/DDR service or hardware acceptance claim"
+  ]
+}

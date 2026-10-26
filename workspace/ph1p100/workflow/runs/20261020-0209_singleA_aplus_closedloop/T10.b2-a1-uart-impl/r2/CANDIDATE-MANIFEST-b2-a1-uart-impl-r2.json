@@ -1,0 +1,118 @@
+﻿{
+    "task_id":  "T10.b2-a1-uart-impl",
+    "run_id":  "20261020-0209_singleA_aplus_closedloop",
+    "revision":  "r2",
+    "date":  "2026-10-23",
+    "status":  "blocked",
+    "ready_for_test":  false,
+    "tester":  null,
+    "package_type":  "P2 r2: preview removal/HDMI TPG + bridge output register + board-level 187.5 diagnosis; synth reached clk_a1 +0.116/0 viol but reset-distribution path -0.193; stopped for board-level boundary decision; no route/bit/CWC",
+    "status_reason":  "Resources fixed: design ERAM 72 (preview removed), CWC 30 fits (102\u003c=280), LUT 16,753/reg 16,059. The bridge output skid register removed the P1 store read-data path: clk_a1-\u003eclk_a1 is now SWNS +0.116, 0/14,968 violations. The remaining failure is the reset distribution into the frozen A+ core: path group sys_clk50m-\u003eclk_a1, SWNS -0.193 / STNS -63.883 / 331 endpoints, start a1_rst_sync_reg[2], end u_a1/u_a1/u_a1/smem.addrb (inside a1_deflate_core/a1_frame_top). In the small top rst_n was a primary port (untimed); the board synchronizer makes the core reset-\u003ememory-address mux a timed path. The clk_a1 data path is only +0.116 at synth (small-top +0.275; board required 5.266 vs 5.333), so even excluding the reset path a route-only pass is unlikely to reach WNS\u003e0/+0.2. Fix requires a reset false path (real async, forbidden by r2 stop conditions) or a core/frame reset/pipeline change (forbidden). Stopped for the board-level boundary decision; no route/bitgen/CWC.",
+    "diagnosis":  {
+                      "small_top":  "create_clock clk 5.333 on a primary port; rst_n primary port; synth +0.275",
+                      "board":  "PLL 50/3*90/8 = 187.5; required 5.266 (setup 0.067); clock uncertainty 0.000 (not PLL jitter); reset from a1_rst_sync[2] flop",
+                      "clk_a1_group":  "SWNS +0.116, 0/14,968 viol; begin u_a1/u_a2/... core smem path",
+                      "reset_group":  "SWNS -0.193, STNS -63.883, 331/331 viol; begin a1_rst_sync_reg[2].q; end u_a1/u_a1/u_a1/smem.addrb[12]; data 4.890 ns (net 3.323), reset net fanout 3360 = 0.754 ns; path inside a1_deflate_core/a1_frame_top",
+                      "other_groups":  "ddr_user +0.423, mcu +12.255, mipi_byte +0.728, sys_clk50m +10.283, pclkx1 +3.101, mclk27 +36.490",
+                      "fix_tried":  "p2_ddr_bridge output skid register (board integration); fixed the store read-data path; ERAM preview removal"
+                  },
+    "resources":  {
+                      "lut":  16753,
+                      "reg":  16059,
+                      "eram_design":  72,
+                      "eram_cwc":  30,
+                      "eram_total":  102,
+                      "io":  "110/286"
+                  },
+    "p1_r5":  {
+                  "hash":  "17793341f717ddac3476d9c129a96b87a745f553dbdbee59efb1f29966baac88",
+                  "manifest":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/CANDIDATE-MANIFEST-b1-a1-uart-integ-r5.json",
+                  "note":  "P1 r5 file unchanged in r2; P2 uses Y: frozen files + r2-local P2 copies"
+              },
+    "artifacts":  [
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r2/td/src/f9p_camera_display_core.v",
+                          "sha256":  "48a71bb35094f5c607b940c32cf39438e8469be5d9e3f85665964102455a9284"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r2/td/src/p2_ddrmc_shell.v",
+                          "sha256":  "9c8fd30587aba533728c3ea4b67d4cc7f061be98e612331cd86298929819f14a"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r2/td/src/p2_ddr_bridge.v",
+                          "sha256":  "d50f37fa9513962ffb1b069287cace35da055e17cc895928e9ef02138a0cd451"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r2/td/src/p2_a1_pll.v",
+                          "sha256":  "0cc4e3cb801f9f5086cec1590e053d8e78b6ffcd20f3aa27d1ab336a96e474fd"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r2/td/a1_board_Runs/syn_1/a1_board_gate.area",
+                          "sha256":  "efc77bb32c4210f9bddeea7fdb48855309b453fe13e4110d28268775219b514e"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r2/td/01_build.tcl",
+                          "sha256":  "723155ca6020fe3fc0b8fb9d228179359e49ff198b50404ca6ac6bb2267deb4f"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r2/td/src/p2_a1_board_top.v",
+                          "sha256":  "3285a25bdaac3466aa6b11ad96bc5b57edde382cf864fc8e626b64ff01c4901d"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r2/td/build_console_r2.log",
+                          "sha256":  "6cc148b287c0c0c7eb8f7f67045d4cc101009968478bc2bac262a78ffea85807"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r2/td/a1_board_Runs/syn_1/a1_board_gate.timing",
+                          "sha256":  "d8a5e383984ed139c7923652df6c85e21b2e9a26cdb3d7dfe6112e9caec85a63"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r2/td/p2_board.sdc",
+                          "sha256":  "9284982452c37f308fc4dcd396eb94b8da4962337bdd5740a23ce830d3856d95"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r2/td/02_bitgen.tcl",
+                          "sha256":  "ea7e8689339c5d4b18d4f6475c6ca3e73605c55127b446728abd4172e7e6caf0"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r2/td/03_cwc.tcl",
+                          "sha256":  "7f4bba1da44f7c30fb7174b6a7b5f1793e4105c398722d1ab8e3ba075aa9a56f"
+                      }
+                  ],
+    "p2_not_done":  {
+                        "route":  "not run (synth negative on reset path)",
+                        "bitgen":  0,
+                        "cwc":  0,
+                        "download":  0
+                    },
+    "boundary_options":  [
+                             "A: authorize a bounded A+ core/frame reset/pipeline fix (new P1 hash; re-run 8x2/64x8/full regression; retiming/phys_opt reused)",
+                             "B: authorize a documented real-asynchronous reset-distribution false path and accept the thin clk_a1 +0.116 synth margin (route risk; target +0.2 not met)",
+                             "C: user/planner device-clock-acceptance decision (no silent 187.5 relaxation); stop P2"
+                         ],
+    "blocked":  {
+                    "reason_code":  "SCOPE_CLARIFICATION",
+                    "new_information":  true,
+                    "detail":  "remaining critical path is the board reset distribution inside the frozen A+ core/frame; fixing it needs a core/frame change or a real-async reset false path, both outside r2 authorization; the clk_a1 data path is only +0.116 synth so route-only margin is doubtful",
+                    "evidence_path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r2/td/a1_board_Runs/syn_1/a1_board_gate.timing; .../build_console_r2.log",
+                    "last_evidence":  "clk_a1-\u003eclk_a1 +0.116/0 viol; sys_clk50m-\u003eclk_a1 -0.193/331 EP; ERAM 72+30",
+                    "requested_action":  "planner/user choose A/B/C; no route/bitgen/CWC before the decision",
+                    "resume_input_path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r2/result-r2.md"
+                },
+    "retest":  {
+                   "tester_required":  false,
+                   "note":  "no P2 candidate/bit/CWC; P2 engineering validation cannot start"
+               },
+    "budget":  {
+                   "dev_minutes":  "~35",
+                   "dev_calls":  "~28/60",
+                   "td_sessions":  "1/2",
+                   "synth_attempts":  "1/2 (this round)",
+                   "route_attempts":  "0/2",
+                   "bitgen":  "0/1",
+                   "cwc":  "0/1",
+                   "download":  0
+               },
+    "result":  "result-r2.md",
+    "lessons":  "lessons-r2.md"
+}

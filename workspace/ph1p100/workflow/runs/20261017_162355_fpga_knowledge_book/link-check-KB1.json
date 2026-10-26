@@ -1,0 +1,51 @@
+{
+  "run_id": "20261017_162355_fpga_knowledge_book",
+  "task_id": "KB1",
+  "role": "fpga-dev",
+  "created_at": "2026-10-17",
+  "revised_at": "2026-10-17（round1 修复轮：D1 URL 修正、e14 使用口径、汇总算式、脚注归属；见 dev-notes-KB1.md §8）",
+  "tool": "会话联网工具（google_search 抓取/解析）；B 站条目另经多次复测",
+  "schema_note": "字段：chapter/url/title_expected/title_returned/status/checked_at/proposed_state/note；status 取值=ok|mismatch|timeout|dead|unverifiable。",
+  "summary": {
+    "attempted": 23,
+    "verified_pass": 17,
+    "failed_or_unverifiable": 6,
+    "entries_by_chapter": {"02": 9, "03": 8, "04": 6, "total": 23},
+    "distinct_urls_used_in_tables": 18,
+    "table_rows_by_chapter": {"02": 8, "03": 7, "04": 6, "total_rows": 21},
+    "shared_rows_note": "3 条共享条目在两章各计 1 行（跨时钟域：02/03；Clock domain crossing：02/03；先进先出算法：03/04），故表行 21 = 18 条不重复 URL + 3 条重复计入。",
+    "entries_note": "23 条 = 入表 18（16 条在线核验通过 + 2 条 B 站降级；表行 21 = 18 条不重复 URL + 3 条跨章共享重复计入）+ 未入表 1（Asynchronous_circuit，核验通过、保留待自然修订）+ 未采用 4（cnblogs 404、B站 BV1yf4y1R7gH 标题不一致、知乎 2 条超时）。明细以 entries 列表为准。",
+    "proposed_states_used": {
+      "在线核验通过 2026-10-17": 16,
+      "无法在线核验（联网抓取结果不稳定）": 2,
+      "未入表（核验通过，保留待自然修订）": 1,
+      "未采用（失败/未纳入）": 4
+    }
+  },
+  "entries": [
+    {"chapter": "02", "url": "https://zh.wikipedia.org/wiki/静态时序分析", "title_expected": "静态时序分析（维基百科）", "title_returned": "静态时序分析 - 维基百科，自由的百科全书", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "用于第 02 章延伸资源第 1 条。"},
+    {"chapter": "02", "url": "https://en.wikipedia.org/wiki/Static_timing_analysis", "title_expected": "Static timing analysis（Wikipedia）", "title_returned": "Static timing analysis - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 02 章延伸资源第 2 条。"},
+    {"chapter": "02", "url": "https://zh.wikipedia.org/wiki/跨时钟域", "title_expected": "跨时钟域（维基百科）", "title_returned": "跨时钟域 - 维基百科，自由的百科全书", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 02/03 章共用；条目路径经 /wiki/时钟域 重定向。"},
+    {"chapter": "02", "url": "https://en.wikipedia.org/wiki/Clock_domain_crossing", "title_expected": "Clock domain crossing（Wikipedia）", "title_returned": "Clock domain crossing - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 02/03 章共用。"},
+    {"chapter": "02", "url": "https://en.wikipedia.org/wiki/Synchronous_circuit", "title_expected": "Synchronous circuit（Wikipedia）", "title_returned": "Synchronous circuit - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 02 章延伸资源第 5 条（正文『直觉』节的『异步电路』句在 round1 修正为指向本条）。"},
+    {"chapter": "02", "url": "https://zh.wikipedia.org/wiki/建立与保持时间", "title_expected": "建立与保持时间（维基百科，重定向）", "title_returned": "触发器 - 维基百科，自由的百科全书（重定向至触发器条目时序考量段）", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17（该词条重定向至“触发器”）", "note": "第 02 章延伸资源第 6 条；已在校验状态中注明重定向。"},
+    {"chapter": "02", "url": "https://www.bilibili.com/video/BV1bg4y14759/", "title_expected": "【学习】Vivado 从此开始（B站）", "title_returned": "多次请求结果不一致：一次返回“未知/失败”，一次返回无关标题（前台不稳定）", "status": "unverifiable", "checked_at": "2026-10-17", "proposed_state": "无法在线核验（联网抓取结果不稳定）", "note": "同链接第 2 次请求返回与登记不符的标题（疑似重定向/风控页），无法稳定核验；第 02 章资源行已降级为“无法在线核验+检索词”。未沿用第 01 章（KB0 会话）实测状态。engineering r0 §5-O1 复测实抓成功（标题与登记一致）；状态按本会话稳定性降级，保留待自然修订复核。"},
+    {"chapter": "02", "url": "https://www.bilibili.com/video/BV12y4y1v7V3/", "title_expected": "Verilog 硬件描述语言（B站·西电 蔡觉平）", "title_returned": "多次请求结果不一致：一次返回“Verilog Hardware Description Language / 蔡觉平（或相关UP主）”，一次返回无关短视频标题", "status": "unverifiable", "checked_at": "2026-10-17", "proposed_state": "无法在线核验（联网抓取结果不稳定）", "note": "同上；已降级为“无法在线核验+检索词”。"},
+    {"chapter": "02", "url": "https://www.cnblogs.com/liujinggang/p/9927749.html", "title_expected": "时序分析入门（候选博客）", "title_returned": "抓取失败（404/已移除）", "status": "dead", "checked_at": "2026-10-17", "proposed_state": "未采用（失败/未纳入）", "note": "候选资源失败样例；未写入章节资源表。"},
+    {"chapter": "03", "url": "https://en.wikipedia.org/wiki/Pipeline_(computing)", "title_expected": "指令流水线（Wikipedia）", "title_returned": "Pipeline (computing) - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 03 章延伸资源第 1 条。"},
+    {"chapter": "03", "url": "https://zh.wikipedia.org/wiki/先进先出算法", "title_expected": "先进先出算法（维基百科）", "title_returned": "先进先出算法 - 维基百科，自由的百科全书（重定向至先进先出演算法）", "status": "ok", "checked_at": "2026-10-17（round1 复核实抓）", "proposed_state": "在线核验通过 2026-10-17", "note": "round1 修复：原登记 /wiki/先进先出 实抓重定向至“先进先出和先进先出会计法”（会计条目），已改为本条（计算机的“先进先出算法”条目）；第 03 章资源表第 2 行与第 04 章资源表第 5 行同步更新。"},
+    {"chapter": "03", "url": "https://en.wikipedia.org/wiki/FIFO_(computing_and_electronics)", "title_expected": "FIFO (computing and electronics)（Wikipedia）", "title_returned": "FIFO (computing and electronics) - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 03 章延伸资源第 3 条。"},
+    {"chapter": "03", "url": "https://zh.wikipedia.org/wiki/握手_(技术)", "title_expected": "握手（维基百科）", "title_returned": "握手(技术) - 维基百科，自由的百科全书", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 03 章延伸资源第 6 条。"},
+    {"chapter": "03", "url": "https://en.wikipedia.org/wiki/Asynchronous_circuit", "title_expected": "Asynchronous circuit（Wikipedia）", "title_returned": "Asynchronous circuit - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "未入表（核验通过，保留待自然修订）", "note": "round1 更正：本条为核验通过的候选项，**不在任何章节资源表内**（原备注“第 02/03 章共用”有误）；第 02 章正文“异步电路…工程上少用”句已改指第 5 条 Synchronous circuit。"},
+    {"chapter": "03", "url": "https://www.runoob.com/w3cnote/verilog-fsm.html", "title_expected": "Verilog 状态机（菜鸟教程）", "title_returned": "6.3 Verilog 状态机 - 菜鸟教程", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 03 章延伸资源第 7 条。"},
+    {"chapter": "03", "url": "https://www.bilibili.com/video/BV1yf4y1R7gH/", "title_expected": "FPGA 从入门到精通（B站·明德扬，KB0/01 章在用）", "title_returned": "一次返回“FPGA设计和IC设计到底有啥区别?(FPGA小白贴)”，与登记标题不一致", "status": "mismatch", "checked_at": "2026-10-17", "proposed_state": "未采用（失败/未纳入）", "note": "本次实测与第 01 章（KB0 会话）登记不一致，说明 B 站抓取在本会话不可稳定用于“标题一致性”核验；该链接未写入第 03 章资源表。"},
+    {"chapter": "03", "url": "https://zhuanlan.zhihu.com/p/95670435", "title_expected": "握手协议/valid-ready（候选知乎专栏）", "title_returned": "两次请求均无返回", "status": "timeout", "checked_at": "2026-10-17", "proposed_state": "未采用（失败/未纳入）", "note": "候选资源失败样例；未写入章节资源表；第 03 章章末脚注已按本条更正归属（round1，原写“中文博客”）。"},
+    {"chapter": "04", "url": "https://zh.wikipedia.org/wiki/字节序", "title_expected": "端序（维基百科）", "title_returned": "端序 - 维基百科，自由的百科全书", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 04 章延伸资源第 1 条。engineering r0 §5-O2：实际页面 H1 为“字节序 - 维基百科”（正文首术语为“端序”），链接与内容正确，标题记录口径保留。"},
+    {"chapter": "04", "url": "https://en.wikipedia.org/wiki/Endianness", "title_expected": "Endianness（Wikipedia）", "title_returned": "Endianness - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 04 章延伸资源第 2 条。"},
+    {"chapter": "04", "url": "https://zh.wikipedia.org/wiki/循环冗余校验", "title_expected": "循环冗余校验（维基百科）", "title_returned": "循环冗余校验 - 维基百科，自由的百科全书", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 04 章延伸资源第 3 条。"},
+    {"chapter": "04", "url": "https://en.wikipedia.org/wiki/Cyclic_redundancy_check", "title_expected": "Cyclic redundancy check（Wikipedia）", "title_returned": "Cyclic redundancy check - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 04 章延伸资源第 4 条。"},
+    {"chapter": "04", "url": "https://en.wikipedia.org/wiki/Camera_Serial_Interface", "title_expected": "Camera Serial Interface（Wikipedia）", "title_returned": "Camera Serial Interface - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "在线核验通过 2026-10-17", "note": "第 04 章延伸资源第 6 条。"},
+    {"chapter": "04", "url": "https://zhuanlan.zhihu.com/p/21191014", "title_expected": "大小端/内存布局（候选知乎专栏）", "title_returned": "两次请求均无返回", "status": "timeout", "checked_at": "2026-10-17", "proposed_state": "未采用（失败/未纳入）", "note": "候选资源失败样例；未写入章节资源表；第 04 章章末脚注已按本条更正归属（round1，原写“英文博客”）。"}
+  ],
+  "integrity_statement": "以上状态均来自本会话实际请求结果（2026-10-17）；失败与不稳定项如实登记，未以检索结果标题冒充“在线核验通过”。第 01 章（KB0）两条 B 站链接的“在线核验通过 2026-10-17”状态来自 KB0 会话实测，保持其原范围；本文件不改变其结论。round1 更新项（先进先出算法 URL 修正、e14 使用口径、汇总算式、脚注归属）已由 dev-notes-KB1.md §8 记录。"
+}

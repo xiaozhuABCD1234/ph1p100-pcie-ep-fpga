@@ -1,0 +1,23 @@
+# vsim -c -lib W:/lib -l W:/logs/sim_micro8x2.log tb_camera_a1_uart_top "+MODE=0" "+OUT=W:/captures/micro8x2.dec" "+STAT=W:/captures/micro8x2.stats" -do "W:/run.do" -gH=2 -gCAM_H=4 -gROI_X=4 -gUART_DIV=1 -gROI_Y=2 -gW=8 -gCAM_W=32 
+# Start time: 19:49:39 on Oct 24,2026
+# Loading W:/lib.tb_camera_a1_uart_top
+# Loading W:/lib.camera_a1_uart_top
+# Loading W:/lib.a1_raw_crop
+# Loading W:/lib.capture_async_fifo
+# Loading W:/lib.a1_ddr_slot_store
+# Loading W:/lib.a1_frame_top
+# Loading W:/lib.a1_deflate_core
+# Loading W:/lib.a1_uart_export
+# Loading W:/lib.a1_uart_tx
+# Loading W:/lib.a1_ddr_arb2
+# Loading W:/lib.a1_ddr_model
+# ** Warning: (vsim-3017) P:/fpga/csi2/src/a1/camera_a1_uart_top.v(265): [TFMPC] - Too few port connections. Expected 38, found 36.
+#    Time: 0 ps  Iteration: 0  Instance: /tb_camera_a1_uart_top/dut/u_cmp_store File: P:/fpga/csi2/src/a1/a1_ddr_slot_store.v
+# ** Warning: (vsim-3722) P:/fpga/csi2/src/a1/camera_a1_uart_top.v(265): [TFMPC] - Missing connection for port 'st_read_words'.
+# ** Warning: (vsim-3722) P:/fpga/csi2/src/a1/camera_a1_uart_top.v(265): [TFMPC] - Missing connection for port 'st_dup_words'.
+# do W:/run.do
+# TB_DONE mode=0 exported=1 bytes=19 err=0
+# ** Note: $finish    : P:/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r0/sim/tb_camera_a1_uart_top.v(279)
+#    Time: 20318906 ps  Iteration: 1  Instance: /tb_camera_a1_uart_top
+# End time: 19:49:40 on Oct 24,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 3

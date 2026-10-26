@@ -1,0 +1,380 @@
+CHAN_CANDIDATE[0] exit=0 sha=((Get-FileHash C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1347_runA_offline_sim\board-selfcheck\logs\05-sram-download-runa-retry.txt).Hash)
+CHAN_CANDIDATE[0] sha=6078E18F3AEE9F8CC700D91BC63347A2948F359E8EB024414231C4E89EB35D15 path=C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1347_runA_offline_sim\board-selfcheck\logs\05-sram-download-runa-retry.txt
+[check] CH01       PASS     device id PH1P100 | [check] CH02       PASS     PRG-2014 success with -mode jtag | [check] CH03       PASS     no flash/SPI/efuse command text | [summary] pass=3 fail=0 blocked=0 verdict=pass | [record] C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1347_runA_offline_sim\bringup-kit\records\channel-candidate-0.json
+CHAN_CANDIDATE[1] exit=1 sha=((Get-FileHash C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1347_runA_offline_sim\board-selfcheck\logs\04-sram-download-runa.txt).Hash)
+CHAN_CANDIDATE[1] sha=BFDF839C4BB50155436AD806B1CFC2609B703BA2D834AC657237CF982DC83057 path=C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1347_runA_offline_sim\board-selfcheck\logs\04-sram-download-runa.txt
+[check] CH01       BLOCKED  no PH1P device id found | [check] CH02       FAIL     incomplete evidence: prg_ok=False jtag_download=True | [check] CH03       PASS     no flash/SPI/efuse command text | [summary] pass=1 fail=1 blocked=1 verdict=fail | [record] C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1347_runA_offline_sim\bringup-kit\records\channel-candidate-1.json
+CHAN_CANDIDATE[2] exit=0 sha=((Get-FileHash C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1347_runA_offline_sim\board-selfcheck\scratch\log\bw_2026-10-18_14-11-55.log).Hash)
+CHAN_CANDIDATE[2] sha=7C3D6A0D28228C31B8D4BA184D9D6C424B48742940498B8075E2B94884A1695C path=C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1347_runA_offline_sim\board-selfcheck\scratch\log\bw_2026-10-18_14-11-55.log
+[check] CH01       PASS     device id PH1P100 | [check] CH02       PASS     PRG-2014 success with -mode jtag | [check] CH03       PASS     no flash/SPI/efuse command text | [summary] pass=3 fail=0 blocked=0 verdict=pass | [record] C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1347_runA_offline_sim\bringup-kit\records\channel-candidate-2.json
+CHAN_CANDIDATE[3] exit=1 sha=((Get-FileHash C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1347_runA_offline_sim\board-selfcheck\scratch\log\bw_2026-10-18_14-06-19.log).Hash)
+CHAN_CANDIDATE[3] sha=D9201D8F99CA782A205874036F52062D93A76C60830E3ED2C7DFEE7136CC6221 path=C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1347_runA_offline_sim\board-selfcheck\scratch\log\bw_2026-10-18_14-06-19.log
+[check] CH01       BLOCKED  no PH1P device id found | [check] CH02       BLOCKED  no SRAM download evidence | [check] CH03       PASS     no flash/SPI/efuse command text | [summary] pass=1 fail=0 blocked=2 verdict=blocked | [record] C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1347_runA_offline_sim\bringup-kit\records\channel-candidate-3.json
+CHANNEL_SELECTED[0]=C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1347_runA_offline_sim\board-selfcheck\logs\05-sram-download-runa-retry.txt
+=== CASE positive expected_exit=0 actual_exit=0
+[regs] input=C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\upstream\ph1p100-pcie-ep-fpga\tools\bringup\fixtures\dump-positive.txt sha256=5fd0b87ad9d7c8c882781a5d878af6cca037966efdc4b2abbacc2131cacb65a5
+[rule] R01_MAGIC          PASS     0x50434946 == 0x50434946
+[rule] R02_CTRL_RESERVED  PASS     reserved bits clear (mask 0xFFFFFE10)
+[rule] R03_EXT_MAGIC      PASS     0x31414B52 == 0x31414B52
+[rule] R04_EXT_VERSION    PASS     0x00010000 == 0x00010000
+[rule] R05_DDR_LEN_A      PASS     0x00279000 == 0x00279000
+[rule] R06_DDR_LEN_B      PASS     0x00279000 == 0x00279000
+[rule] R07_DDR_BASE_A_ALIGN PASS     0x00010000 aligned to 128
+[rule] R08_DDR_BASE_B_ALIGN PASS     0x00289000 aligned to 128
+[rule] R09_DDR_STATUS_A_RESERVED PASS     reserved bits clear (mask 0x0000FFE0)
+[rule] R10_DDR_STATUS_B_RESERVED PASS     reserved bits clear (mask 0x0000FFE0)
+[rule] R11_PUSH_STATUS_RESERVED PASS     reserved bits clear (mask 0x0000FFE0)
+[rule] R12_PUSH_ERR_RANGE PASS     0 in [0, 4]
+[rule] R13_TX_STATUS_RESERVED PASS     reserved bits clear (mask 0xFFFFFFE0)
+[rule] R14_CAM_DROP_A3_RESERVED PASS     reserved bits clear (mask 0xFFFFFFC0)
+[rule] R15_PUSH_TLP_CNT_RANGE PASS     2400 in [1, 2400]
+[rule] R16_DDR_BASE_A_NONZERO PASS     0x00010000 nonzero
+[rule] R17_TX_CMD_READ_ZERO PASS     0x00000000 == 0x00000000
+[read] 0x040 MAGIC            0x50434946
+[read] 0x044 CTRL             0x00000061
+[read] 0x048 IMG_STATUS       0x00000003
+[read] 0x04C TEST_FRAME_CNT   0x00000064
+[read] 0x064 LEGACY_VERSION   0x00020000
+[read] 0x080 CAM_STAT_080     0x00000001
+[read] 0x084 CAM_STAT_084     0x00000000
+[read] 0x088 CAM_STAT_088     0x00000001
+[read] 0x08C CAM_STAT_08C     0x00000000
+[read] 0x090 CAM_STAT_090     0x00000001
+[read] 0x094 CAM_STAT_094     0x00000000
+[read] 0x098 CAM_STAT_098     0x00000001
+[read] 0x0A0 DDR_SEQ_A        0x00000064
+[read] 0x0A4 DDR_BASE_A       0x00010000
+[read] 0x0A8 DDR_STATUS_A     0x00000019
+[read] 0x0AC DDR_LEN_A        0x00279000
+[read] 0x0B0 PUSH_DST_LO      0x20000000
+[read] 0x0B4 PUSH_DST_HI      0x00000000
+[read] 0x0B8 PUSH_DB_LO       0x20001000
+[read] 0x0BC PUSH_DB_HI       0x00000000
+[read] 0x0C0 PUSH_DONE        0x00000064
+[read] 0x0C4 PUSH_STATUS      0x0000001E
+[read] 0x0C8 PUSH_ERR         0x00000000
+[read] 0x0CC PUSH_TLP_CNT     0x00000960
+[read] 0x0D0 CAM_DIAG_A       0x00000000
+[read] 0x0D4 CAM_TAP_B        0x00000000
+[read] 0x0D8 CAM_DIAG_B       0x00000000
+[read] 0x0DC CAM_DROP_A       0x00000000
+[read] 0x0E0 DDR_SEQ_B        0x00000065
+[read] 0x0E4 DDR_BASE_B       0x00289000
+[read] 0x0E8 DDR_STATUS_B     0x00000019
+[read] 0x0EC DDR_LEN_B        0x00279000
+[read] 0x0F0 CAM_DROP_A2      0x00000960
+[read] 0x0F4 CAM_DROP_A3      0x00000020
+[read] 0x100 DMA_CAP_BYTES    0x00279000
+[read] 0x104 SESSION_ID       0x20261018
+[read] 0x108 TX_CMD           0x00000000
+[read] 0x10C ACK_SEQ          0x00000065
+[read] 0x110 ACK_SESSION      0x20261018
+[read] 0x114 TX_STATUS        0x00000000
+[read] 0x118 EXT_MAGIC        0x31414B52
+[read] 0x11C EXT_VERSION      0x00010000
+[read] 0x120 CSI_DIAG_A       0x64000000
+[read] 0x124 CSI_DIAG_A2      0x04380960
+[read] 0x128 CSI_DIAG_B       0x00000000
+[read] 0x12C CSI_DIAG_B2      0x00000000
+[summary] pass=17 fail=0 blocked=0 na=0 verdict=pass
+[record] C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1347_runA_offline_sim\bringup-kit\records\positive-run-record.json
+=== RESULT positive OK
+=== CASE neg-magic expected_exit=1 actual_exit=1
+[regs] input=C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\upstream\ph1p100-pcie-ep-fpga\tools\bringup\fixtures\neg-magic.txt sha256=a7d91be17691bf73be0f9bbfe9bdf38c0ae5f3976b5132d65be7ddc8045704fc
+[rule] R01_MAGIC          FAIL     0xDEADBEEF != 0x50434946
+[rule] R02_CTRL_RESERVED  PASS     reserved bits clear (mask 0xFFFFFE10)
+[rule] R03_EXT_MAGIC      PASS     0x31414B52 == 0x31414B52
+[rule] R04_EXT_VERSION    PASS     0x00010000 == 0x00010000
+[rule] R05_DDR_LEN_A      PASS     0x00279000 == 0x00279000
+[rule] R06_DDR_LEN_B      PASS     0x00279000 == 0x00279000
+[rule] R07_DDR_BASE_A_ALIGN PASS     0x00010000 aligned to 128
+[rule] R08_DDR_BASE_B_ALIGN PASS     0x00289000 aligned to 128
+[rule] R09_DDR_STATUS_A_RESERVED PASS     reserved bits clear (mask 0x0000FFE0)
+[rule] R10_DDR_STATUS_B_RESERVED PASS     reserved bits clear (mask 0x0000FFE0)
+[rule] R11_PUSH_STATUS_RESERVED PASS     reserved bits clear (mask 0x0000FFE0)
+[rule] R12_PUSH_ERR_RANGE PASS     0 in [0, 4]
+[rule] R13_TX_STATUS_RESERVED PASS     reserved bits clear (mask 0xFFFFFFE0)
+[rule] R14_CAM_DROP_A3_RESERVED PASS     reserved bits clear (mask 0xFFFFFFC0)
+[rule] R15_PUSH_TLP_CNT_RANGE PASS     2400 in [1, 2400]
+[rule] R16_DDR_BASE_A_NONZERO PASS     0x00010000 nonzero
+[rule] R17_TX_CMD_READ_ZERO PASS     0x00000000 == 0x00000000
+[read] 0x040 MAGIC            0xDEADBEEF
+[read] 0x044 CTRL             0x00000061
+[read] 0x048 IMG_STATUS       0x00000003
+[read] 0x04C TEST_FRAME_CNT   0x00000064
+[read] 0x064 LEGACY_VERSION   0x00020000
+[read] 0x080 CAM_STAT_080     0x00000001
+[read] 0x084 CAM_STAT_084     0x00000000
+[read] 0x088 CAM_STAT_088     0x00000001
+[read] 0x08C CAM_STAT_08C     0x00000000
+[read] 0x090 CAM_STAT_090     0x00000001
+[read] 0x094 CAM_STAT_094     0x00000000
+[read] 0x098 CAM_STAT_098     0x00000001
+[read] 0x0A0 DDR_SEQ_A        0x00000064
+[read] 0x0A4 DDR_BASE_A       0x00010000
+[read] 0x0A8 DDR_STATUS_A     0x00000019
+[read] 0x0AC DDR_LEN_A        0x00279000
+[read] 0x0B0 PUSH_DST_LO      0x20000000
+[read] 0x0B4 PUSH_DST_HI      0x00000000
+[read] 0x0B8 PUSH_DB_LO       0x20001000
+[read] 0x0BC PUSH_DB_HI       0x00000000
+[read] 0x0C0 PUSH_DONE        0x00000064
+[read] 0x0C4 PUSH_STATUS      0x0000001E
+[read] 0x0C8 PUSH_ERR         0x00000000
+[read] 0x0CC PUSH_TLP_CNT     0x00000960
+[read] 0x0D0 CAM_DIAG_A       0x00000000
+[read] 0x0D4 CAM_TAP_B        0x00000000
+[read] 0x0D8 CAM_DIAG_B       0x00000000
+[read] 0x0DC CAM_DROP_A       0x00000000
+[read] 0x0E0 DDR_SEQ_B        0x00000065
+[read] 0x0E4 DDR_BASE_B       0x00289000
+[read] 0x0E8 DDR_STATUS_B     0x00000019
+[read] 0x0EC DDR_LEN_B        0x00279000
+[read] 0x0F0 CAM_DROP_A2      0x00000960
+[read] 0x0F4 CAM_DROP_A3      0x00000020
+[read] 0x100 DMA_CAP_BYTES    0x00279000
+[read] 0x104 SESSION_ID       0x20261018
+[read] 0x108 TX_CMD           0x00000000
+[read] 0x10C ACK_SEQ          0x00000065
+[read] 0x110 ACK_SESSION      0x20261018
+[read] 0x114 TX_STATUS        0x00000000
+[read] 0x118 EXT_MAGIC        0x31414B52
+[read] 0x11C EXT_VERSION      0x00010000
+[read] 0x120 CSI_DIAG_A       0x64000000
+[read] 0x124 CSI_DIAG_A2      0x04380960
+[read] 0x128 CSI_DIAG_B       0x00000000
+[read] 0x12C CSI_DIAG_B2      0x00000000
+[summary] pass=16 fail=1 blocked=0 na=0 verdict=fail
+[record] C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1347_runA_offline_sim\bringup-kit\records\neg-magic-record.json
+=== RESULT neg-magic OK
+=== CASE neg-len expected_exit=1 actual_exit=1
+[regs] input=C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\upstream\ph1p100-pcie-ep-fpga\tools\bringup\fixtures\neg-len.txt sha256=31991891a6cfe27cd1c5f7c103523a12a420c2959cb969b71db4262c05d0b26c
+[rule] R01_MAGIC          PASS     0x50434946 == 0x50434946
+[rule] R02_CTRL_RESERVED  PASS     reserved bits clear (mask 0xFFFFFE10)
+[rule] R03_EXT_MAGIC      PASS     0x31414B52 == 0x31414B52
+[rule] R04_EXT_VERSION    PASS     0x00010000 == 0x00010000
+[rule] R05_DDR_LEN_A      FAIL     0x00279001 != 0x00279000
+[rule] R06_DDR_LEN_B      PASS     0x00279000 == 0x00279000
+[rule] R07_DDR_BASE_A_ALIGN PASS     0x00010000 aligned to 128
+[rule] R08_DDR_BASE_B_ALIGN PASS     0x00289000 aligned to 128
+[rule] R09_DDR_STATUS_A_RESERVED PASS     reserved bits clear (mask 0x0000FFE0)
+[rule] R10_DDR_STATUS_B_RESERVED PASS     reserved bits clear (mask 0x0000FFE0)
+[rule] R11_PUSH_STATUS_RESERVED PASS     reserved bits clear (mask 0x0000FFE0)
+[rule] R12_PUSH_ERR_RANGE PASS     0 in [0, 4]
+[rule] R13_TX_STATUS_RESERVED PASS     reserved bits clear (mask 0xFFFFFFE0)
+[rule] R14_CAM_DROP_A3_RESERVED PASS     reserved bits clear (mask 0xFFFFFFC0)
+[rule] R15_PUSH_TLP_CNT_RANGE PASS     2400 in [1, 2400]
+[rule] R16_DDR_BASE_A_NONZERO PASS     0x00010000 nonzero
+[rule] R17_TX_CMD_READ_ZERO PASS     0x00000000 == 0x00000000
+[read] 0x040 MAGIC            0x50434946
+[read] 0x044 CTRL             0x00000061
+[read] 0x048 IMG_STATUS       0x00000003
+[read] 0x04C TEST_FRAME_CNT   0x00000064
+[read] 0x064 LEGACY_VERSION   0x00020000
+[read] 0x080 CAM_STAT_080     0x00000001
+[read] 0x084 CAM_STAT_084     0x00000000
+[read] 0x088 CAM_STAT_088     0x00000001
+[read] 0x08C CAM_STAT_08C     0x00000000
+[read] 0x090 CAM_STAT_090     0x00000001
+[read] 0x094 CAM_STAT_094     0x00000000
+[read] 0x098 CAM_STAT_098     0x00000001
+[read] 0x0A0 DDR_SEQ_A        0x00000064
+[read] 0x0A4 DDR_BASE_A       0x00010000
+[read] 0x0A8 DDR_STATUS_A     0x00000019
+[read] 0x0AC DDR_LEN_A        0x00279001
+[read] 0x0B0 PUSH_DST_LO      0x20000000
+[read] 0x0B4 PUSH_DST_HI      0x00000000
+[read] 0x0B8 PUSH_DB_LO       0x20001000
+[read] 0x0BC PUSH_DB_HI       0x00000000
+[read] 0x0C0 PUSH_DONE        0x00000064
+[read] 0x0C4 PUSH_STATUS      0x0000001E
+[read] 0x0C8 PUSH_ERR         0x00000000
+[read] 0x0CC PUSH_TLP_CNT     0x00000960
+[read] 0x0D0 CAM_DIAG_A       0x00000000
+[read] 0x0D4 CAM_TAP_B        0x00000000
+[read] 0x0D8 CAM_DIAG_B       0x00000000
+[read] 0x0DC CAM_DROP_A       0x00000000
+[read] 0x0E0 DDR_SEQ_B        0x00000065
+[read] 0x0E4 DDR_BASE_B       0x00289000
+[read] 0x0E8 DDR_STATUS_B     0x00000019
+[read] 0x0EC DDR_LEN_B        0x00279000
+[read] 0x0F0 CAM_DROP_A2      0x00000960
+[read] 0x0F4 CAM_DROP_A3      0x00000020
+[read] 0x100 DMA_CAP_BYTES    0x00279000
+[read] 0x104 SESSION_ID       0x20261018
+[read] 0x108 TX_CMD           0x00000000
+[read] 0x10C ACK_SEQ          0x00000065
+[read] 0x110 ACK_SESSION      0x20261018
+[read] 0x114 TX_STATUS        0x00000000
+[read] 0x118 EXT_MAGIC        0x31414B52
+[read] 0x11C EXT_VERSION      0x00010000
+[read] 0x120 CSI_DIAG_A       0x64000000
+[read] 0x124 CSI_DIAG_A2      0x04380960
+[read] 0x128 CSI_DIAG_B       0x00000000
+[read] 0x12C CSI_DIAG_B2      0x00000000
+[summary] pass=16 fail=1 blocked=0 na=0 verdict=fail
+[record] C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1347_runA_offline_sim\bringup-kit\records\neg-len-record.json
+=== RESULT neg-len OK
+=== CASE neg-reserved expected_exit=1 actual_exit=1
+[regs] input=C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\upstream\ph1p100-pcie-ep-fpga\tools\bringup\fixtures\neg-reserved.txt sha256=94af05c2d3fa56f0da215d299b8a1087865ca6915626abc765eec731e906bac6
+[rule] R01_MAGIC          PASS     0x50434946 == 0x50434946
+[rule] R02_CTRL_RESERVED  PASS     reserved bits clear (mask 0xFFFFFE10)
+[rule] R03_EXT_MAGIC      PASS     0x31414B52 == 0x31414B52
+[rule] R04_EXT_VERSION    PASS     0x00010000 == 0x00010000
+[rule] R05_DDR_LEN_A      PASS     0x00279000 == 0x00279000
+[rule] R06_DDR_LEN_B      PASS     0x00279000 == 0x00279000
+[rule] R07_DDR_BASE_A_ALIGN PASS     0x00010000 aligned to 128
+[rule] R08_DDR_BASE_B_ALIGN PASS     0x00289000 aligned to 128
+[rule] R09_DDR_STATUS_A_RESERVED PASS     reserved bits clear (mask 0x0000FFE0)
+[rule] R10_DDR_STATUS_B_RESERVED PASS     reserved bits clear (mask 0x0000FFE0)
+[rule] R11_PUSH_STATUS_RESERVED PASS     reserved bits clear (mask 0x0000FFE0)
+[rule] R12_PUSH_ERR_RANGE PASS     0 in [0, 4]
+[rule] R13_TX_STATUS_RESERVED FAIL     reserved bits set: 0xFFFFFFE0 (mask 0xFFFFFFE0)
+[rule] R14_CAM_DROP_A3_RESERVED PASS     reserved bits clear (mask 0xFFFFFFC0)
+[rule] R15_PUSH_TLP_CNT_RANGE PASS     2400 in [1, 2400]
+[rule] R16_DDR_BASE_A_NONZERO PASS     0x00010000 nonzero
+[rule] R17_TX_CMD_READ_ZERO PASS     0x00000000 == 0x00000000
+[read] 0x040 MAGIC            0x50434946
+[read] 0x044 CTRL             0x00000061
+[read] 0x048 IMG_STATUS       0x00000003
+[read] 0x04C TEST_FRAME_CNT   0x00000064
+[read] 0x064 LEGACY_VERSION   0x00020000
+[read] 0x080 CAM_STAT_080     0x00000001
+[read] 0x084 CAM_STAT_084     0x00000000
+[read] 0x088 CAM_STAT_088     0x00000001
+[read] 0x08C CAM_STAT_08C     0x00000000
+[read] 0x090 CAM_STAT_090     0x00000001
+[read] 0x094 CAM_STAT_094     0x00000000
+[read] 0x098 CAM_STAT_098     0x00000001
+[read] 0x0A0 DDR_SEQ_A        0x00000064
+[read] 0x0A4 DDR_BASE_A       0x00010000
+[read] 0x0A8 DDR_STATUS_A     0x00000019
+[read] 0x0AC DDR_LEN_A        0x00279000
+[read] 0x0B0 PUSH_DST_LO      0x20000000
+[read] 0x0B4 PUSH_DST_HI      0x00000000
+[read] 0x0B8 PUSH_DB_LO       0x20001000
+[read] 0x0BC PUSH_DB_HI       0x00000000
+[read] 0x0C0 PUSH_DONE        0x00000064
+[read] 0x0C4 PUSH_STATUS      0x0000001E
+[read] 0x0C8 PUSH_ERR         0x00000000
+[read] 0x0CC PUSH_TLP_CNT     0x00000960
+[read] 0x0D0 CAM_DIAG_A       0x00000000
+[read] 0x0D4 CAM_TAP_B        0x00000000
+[read] 0x0D8 CAM_DIAG_B       0x00000000
+[read] 0x0DC CAM_DROP_A       0x00000000
+[read] 0x0E0 DDR_SEQ_B        0x00000065
+[read] 0x0E4 DDR_BASE_B       0x00289000
+[read] 0x0E8 DDR_STATUS_B     0x00000019
+[read] 0x0EC DDR_LEN_B        0x00279000
+[read] 0x0F0 CAM_DROP_A2      0x00000960
+[read] 0x0F4 CAM_DROP_A3      0x00000020
+[read] 0x100 DMA_CAP_BYTES    0x00279000
+[read] 0x104 SESSION_ID       0x20261018
+[read] 0x108 TX_CMD           0x00000000
+[read] 0x10C ACK_SEQ          0x00000065
+[read] 0x110 ACK_SESSION      0x20261018
+[read] 0x114 TX_STATUS        0xFFFFFFFF
+[read] 0x118 EXT_MAGIC        0x31414B52
+[read] 0x11C EXT_VERSION      0x00010000
+[read] 0x120 CSI_DIAG_A       0x64000000
+[read] 0x124 CSI_DIAG_A2      0x04380960
+[read] 0x128 CSI_DIAG_B       0x00000000
+[read] 0x12C CSI_DIAG_B2      0x00000000
+[summary] pass=16 fail=1 blocked=0 na=0 verdict=fail
+[record] C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1347_runA_offline_sim\bringup-kit\records\neg-reserved-record.json
+=== RESULT neg-reserved OK
+=== CASE neg-malformed expected_exit=2 actual_exit=2
+ERROR: line 2 is not a register dump line: '0x040 = 0x5043494G'
+=== RESULT neg-malformed OK
+=== CASE neg-missing expected_exit=1 actual_exit=1
+[regs] input=C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\upstream\ph1p100-pcie-ep-fpga\tools\bringup\fixtures\neg-missing.txt sha256=c33bc541eb94f9ddfa73fbc1c32a1b1da3e4c5edf4bb29eefb6d233383c11404
+[rule] R01_MAGIC          PASS     0x50434946 == 0x50434946
+[rule] R02_CTRL_RESERVED  BLOCKED  reading 0x044 missing
+[rule] R03_EXT_MAGIC      PASS     0x31414B52 == 0x31414B52
+[rule] R04_EXT_VERSION    PASS     0x00010000 == 0x00010000
+[rule] R05_DDR_LEN_A      BLOCKED  precondition reading 0x0A0 missing
+[rule] R06_DDR_LEN_B      BLOCKED  precondition reading 0x0E0 missing
+[rule] R07_DDR_BASE_A_ALIGN BLOCKED  precondition reading 0x0A0 missing
+[rule] R08_DDR_BASE_B_ALIGN BLOCKED  precondition reading 0x0E0 missing
+[rule] R09_DDR_STATUS_A_RESERVED BLOCKED  reading 0x0A8 missing
+[rule] R10_DDR_STATUS_B_RESERVED BLOCKED  reading 0x0E8 missing
+[rule] R11_PUSH_STATUS_RESERVED BLOCKED  reading 0x0C4 missing
+[rule] R12_PUSH_ERR_RANGE BLOCKED  reading 0x0C8 missing
+[rule] R13_TX_STATUS_RESERVED BLOCKED  reading 0x114 missing
+[rule] R14_CAM_DROP_A3_RESERVED BLOCKED  reading 0x0F4 missing
+[rule] R15_PUSH_TLP_CNT_RANGE BLOCKED  precondition reading 0x0C0 missing
+[rule] R16_DDR_BASE_A_NONZERO BLOCKED  precondition reading 0x0A0 missing
+[rule] R17_TX_CMD_READ_ZERO BLOCKED  reading 0x108 missing
+[read] 0x040 MAGIC            0x50434946
+[read] 0x118 EXT_MAGIC        0x31414B52
+[read] 0x11C EXT_VERSION      0x00010000
+[summary] pass=3 fail=0 blocked=14 na=0 verdict=blocked
+[record] C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1347_runA_offline_sim\bringup-kit\records\neg-missing-record.json
+=== RESULT neg-missing OK
+=== CASE neg-empty expected_exit=2 actual_exit=2
+ERROR: empty input file: C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\upstream\ph1p100-pcie-ep-fpga\tools\bringup\fixtures\neg-empty.txt
+=== RESULT neg-empty OK
+=== CASE channel-b1-real expected_exit=0 actual_exit=0
+[check] CH01       PASS     device id PH1P100
+[check] CH02       PASS     PRG-2014 success with -mode jtag
+[check] CH03       PASS     no flash/SPI/efuse command text
+[summary] pass=3 fail=0 blocked=0 verdict=pass
+[record] C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1347_runA_offline_sim\bringup-kit\records\b1-channel-record.json
+=== RESULT channel-b1-real OK
+=== CASE channel-neg-flash expected_exit=1 actual_exit=1
+[check] CH01       PASS     device id PH1P100
+[check] CH02       PASS     PRG-2014 success with -mode jtag
+[check] CH03       FAIL     forbidden flash/SPI/efuse command(s): program_spi
+[summary] pass=2 fail=1 blocked=0 verdict=fail
+[record] C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1347_runA_offline_sim\bringup-kit\records\neg-channel-record.json
+=== RESULT channel-neg-flash OK
+DETERMINISM_OK=True (rerun exit=0)
+CRC_STRICT_ERROR: 无法识别的转义序列。 (52): {
+  "file": "C:\\Users\\czz\\OneDrive\\妗岄潰\\瀹為獙瀹\绔炶禌\\宓屽叆寮廫\FPGA鍒涙柊璁捐璧涢亾\\upstream\\ph1p100-pcie-ep-fpga\\docs\\protocol\\rka1-r10f-v1\\artifacts\\r10f-1080p-synthetic.dma",
+  "sha256": "646ebaedc19bdd6feb595430989b736f01913bb23caee26a132c922cfe5e9bff",
+  "size": 2592768,
+  "ok": true,
+  "errors": [],
+  "header": {
+    "magic": "R10F",
+    "version_major": 1,
+    "version_minor": 0,
+    "header_bytes": 128,
+    "camera_id": 0,
+    "format_id": 0,
+    "codec_id": 0,
+    "session_id": 539365399,
+    "capture_seq": 1,
+    "mode_id": 1,
+    "width": 1920,
+    "height": 1080,
+    "stride_bytes": 2400,
+    "roi_x": 960,
+    "roi_y": 540,
+    "bayer_phase": 3,
+    "bayer_dir": 0,
+    "valid_bits": 10,
+    "packing": 0,
+    "raw_bytes": 2592000,
+    "payload_bytes": 2592000,
+    "block_count": 1,
+    "exposure_code": 0,
+    "gain_code": 0,
+    "sof_timestamp": 0,
+    "timestamp_hz": 0,
+    "flags": 2,
+    "raw_crc32": 3491449518,
+    "payload_crc32": 3491449518,
+    "header_crc32": 108710859
+  },
+  "header_crc_calc": 108710859,
+  "payload_crc_calc": 3491449518,
+  "marker": "R10F_STRICT_OK"
+}
+
+CRC_GEN_SELFCHECK exit=0 out=verify k=1: 20040 cases, 0 mismatches | verify k=2: 20040 cases, 0 mismatches | verify k=3: 20040 cases, 0 mismatches | verify k=4: 20040 cases, 0 mismatches | crc32('123456789') = 0xCBF43926 (expect 0xCBF43926)
+LENGTH_RECOMPUTE_OK=True len=2592768 calc=2592768
+JSON_CHECK exit=0 out=JSON_OK
+SCHEMA_KEYS exit=0 out=SCHEMA_KEYS_OK
+TOTAL_CASE_MISMATCH=0
+CRC_FIELDS_COMPARE match=True diffs=

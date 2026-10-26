@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\test-reports\T06.chain-storage-review\independent_check.py", line 143, in <module>
+    {'pre':lambda:hashes('pre'),'post':lambda:hashes('post'),'refs':refs,'ordering':ordering,'budget':budget}[sys.argv[1]]()
+  File "D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\test-reports\T06.chain-storage-review\independent_check.py", line 86, in refs
+    must(len(c)==1 and c[0]['sha256']==h,'changed source binding '+name)
+  File "D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\test-reports\T06.chain-storage-review\independent_check.py", line 15, in must
+    if not value: raise AssertionError(message)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: changed source binding a1_deflate_core.v

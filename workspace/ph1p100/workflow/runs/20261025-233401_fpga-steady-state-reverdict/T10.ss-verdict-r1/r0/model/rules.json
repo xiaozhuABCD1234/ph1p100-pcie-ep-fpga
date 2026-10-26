@@ -1,0 +1,211 @@
+{
+  "schema_version": 2,
+  "task_id": "T10.ss-verdict-r1",
+  "source": "workflow/runs/20261025-233401_fpga-steady-state-reverdict/fpga-design-guide.md sections 4,5,6 + dev-plan.md section 4 (frozen before implementation)",
+  "supersedes": {
+    "legacy_rules_sha256": "fdaae351c56d29cc97cdf3a66a393422854e61e95b24828b9ff3182ab1e42f4d",
+    "legacy_calc_sha256": "9eea41f56586d6cdd18f50433d607870aa725396e1688d5ce97ecd0c67f9bd2c",
+    "legacy_copy_dir": "inputs/legacy/",
+    "legacy_use": "regression replay of the 43 frozen P2 rows only; never used for a corrected verdict"
+  },
+  "thresholds": {
+    "design_margin": 0.25,
+    "eram_device": 300,
+    "eram_fit_pass_max": 270,
+    "lut6_sites": 71680,
+    "dsp_device": 220,
+    "pll_device": 12,
+    "raw_slot_expansion": 1.6,
+    "min_streams": 1,
+    "max_streams": 2
+  },
+  "gates": {
+    "G0": {
+      "id": "G0",
+      "name": "nominal_per_stream_30fps",
+      "condition": "per_stream_capacity_MBps >= demand_per_stream_MBps at the row fps",
+      "labels": ["meets_nominal", "misses_nominal"],
+      "note": "0% is an arithmetic control; the project gate is G25"
+    },
+    "G25": {
+      "id": "G25",
+      "name": "design_margin_25",
+      "condition": "per_stream_capacity_MBps >= 1.25 * demand_per_stream_MBps at the row fps",
+      "labels": ["meets_25", "below_25"],
+      "note": "frozen; never relaxed for any row, anchor or recommendation"
+    }
+  },
+  "grid": {
+    "cores": [1, 2],
+    "streams": [1, 2],
+    "geometry_30fps": [
+      [1920, 1080],
+      [1728, 972],
+      [1600, 900],
+      [1440, 810],
+      [1280, 720],
+      [1152, 648],
+      [960, 540]
+    ],
+    "fps_1080p": [30, 25, 24, 20, 15],
+    "fps_1080p_single_core_single_stream": [25, 24, 20, 15],
+    "clock_1080p30_mhz": [150, 175, 187.5, 200],
+    "expected_rows": 43,
+    "row_count_note": "identical grid and order to the frozen P2 43-row grid (dedupe of 1080p30@187.5 c2s2 and c1s2); the row set is kept so that the legacy replay is a pure rules/input change, not a grid change"
+  },
+  "row_verdict_rules": [
+    {
+      "id": "V1",
+      "verdict": "infeasible",
+      "condition": "marginal_eram_total > 300 (resource cannot fit even in the expected column)",
+      "reason": "RESOURCE_MARGINAL_OVER_300"
+    },
+    {
+      "id": "V2",
+      "verdict": "infeasible",
+      "condition": "G0 missed (per-stream chain capacity < demand at the row fps)",
+      "reason": "MISSES_NOMINAL"
+    },
+    {
+      "id": "V3",
+      "verdict": "conditional",
+      "condition": "cores == 2 (Routed dual-core timing unproven and shared-PAXI arbitration unproven)",
+      "reason": "DUAL_CORE_OR_PAAXI_UNPROVEN"
+    },
+    {
+      "id": "V4",
+      "verdict": "conditional",
+      "condition": "G0 met and G25 missed (0 <= margin_0 < 25%)",
+      "reason": "BELOW_25",
+      "note": "below_25 must NEVER be written as infeasible (this is the P2 GATE_COLLAPSE error)"
+    },
+    {
+      "id": "V5",
+      "verdict": "conditional",
+      "condition": "G25 met but conservative ERAM > 270 or timing unproven",
+      "reason": "RESOURCE_OR_TIMING_UNPROVEN"
+    },
+    {
+      "id": "V6",
+      "verdict": "feasible",
+      "condition": "G25 met AND conservative ERAM <= 270 AND timing proven (single core at <=187.5 MHz only)",
+      "reason": "G25_MET_RESOURCE_TIMING_PROVEN",
+      "note": "row verdict is content-basis-local; the claim_status column and the headline carry the content envelope"
+    }
+  ],
+  "claim_status": {
+    "enum": ["proven_for_measured_content", "not_proven_all_content"],
+    "rule": "the content envelope is a claim-level attribute separate from the row verdict; a row may not convert its claim_status into a different row verdict and a row verdict may not be used to upgrade the claim_status",
+    "assignment": {
+      "1080p_rows": "not_proven_all_content (chain anchor A1 is measured on ONE gradient content class only; A2 comp extrapolation crosses G0 and G25, so the content envelope is unproven)",
+      "affine_comp_rows": "not_proven_all_content (chain anchor is an assumed comp area-scaling; no full-frame comp measurement exists)"
+    },
+    "emitted_values_note": "proven_for_measured_content is never emitted in r0 because no row has a measured full-frame chain anchor across more than one content class; the enum value is kept for future measured multi-class evidence"
+  },
+  "headline_rules_1080p30": {
+    "scope": "claim-level conclusion for per-stream 1080p30; reported as three parts G0 / G25 / content, never as one word",
+    "table": [
+      {"condition": "A1.G0 == false AND A2.G0 == false", "headline": "infeasible"},
+      {"condition": "A1.G0 != A2.G0 (content crossing)", "headline": "not_proven"},
+      {"condition": "A1.G0 == A2.G0 == true AND (A1.G25 == false OR A2.G25 == false OR resources/timing unproven)", "headline": "conditional"},
+      {"condition": "A1.G0/G25 and A2.G0/G25 all true AND resources/timing proven", "headline": "feasible"}
+    ],
+    "dual_core_cap": "for any dual-core combination the headline can be at most not_proven (per-stream capacity is assumed_from_single_core and shared PAXI is unproven); dual-core feasible is forbidden",
+    "current": {
+      "A1": {"G0": true, "G25": true},
+      "A2": {"G0": false, "G25": false},
+      "headline": "not_proven",
+      "why": "content crossing: the measured gradient passes both gates, the conservative comp extrapolation fails both; neither infeasible nor feasible is a defensible single word"
+    }
+  },
+  "capacity_rules": {
+    "per_stream_capacity": {
+      "1core_1stream": "C",
+      "1core_2streams": "C/2 (frame-level round robin; long-run 50% per stream)",
+      "2core_1stream": "C (second core idle)",
+      "2core_2streams": "C (one frozen core per stream; NEVER 2C)"
+    },
+    "chain_anchor_by_geometry": {
+      "1920x1080": "A1_grad_ss (measured); clock scaling only, cycle count is clock independent",
+      "other": "affine_comp_tier = cycles_core(W,H) + overhead tier"
+    },
+    "core_basis": "comp fixed vector (slowest measured core content); rand only as an optimistic envelope",
+    "aggregate_2c": "may be used for DDR/total-volume statements only; never for a per-stream verdict"
+  },
+  "content_anchors": {
+    "A1": {"label": "measured", "gate_eligible": true, "use": "primary measured chain anchor for 1080p"},
+    "A2": {"label": "assumed", "gate_eligible": true, "use": "conservative content envelope; circular with A4 via the overhead definition (must be disclosed)"},
+    "A3": {"label": "assumed", "gate_eligible": true, "use": "optimistic content envelope; never the worst case"},
+    "A4": {"label": "measured_but_not_throughput", "gate_eligible": false, "use": "latency reference only; a cold single-frame completion time is not a frame interval"}
+  },
+  "overhead_rules": {
+    "tiers_cycles": [0, 426385, 1000000],
+    "primary_cycles": 426385,
+    "shift_1080p": "cycles_chain_1080p(tier) = S_ss + (tier - 426385); tier0 -> S_ss - 426385, primary -> S_ss, 1e6 -> S_ss + 573615",
+    "applies": "1080p participates in the sensitivity (applies=true in all tiers); the P2 applies=false is superseded",
+    "robust_definition": "a geometry is tier-robust only if per-stream G25 is met in ALL three tiers",
+    "optimization_path_rule": "delta_req = S_ss - 5,000,000 cycles; if delta_req <= 426385 then reducing per-frame fixed overhead to <= (426385 - delta_req) is a sufficient path to G25; otherwise overhead alone cannot close the gap"
+  },
+  "ddr_rules": {
+    "peak_main_MBps": 5332,
+    "peak_fallback_MBps": 6400,
+    "peak_main_basis": "1333 MT/s * 32 bit / 8",
+    "peak_fallback_basis": "1600 MT/s * 32 bit / 8 (rollback tier, disclosed, not current mainline)",
+    "raw_write_MBps": "D_total * 1.6",
+    "raw_read_MBps": "D_total * 1.6",
+    "cmp_write_MBps": "cmp_total_bytes(W,H) * fps * streams / 1e6 (worst stored)",
+    "cmp_read_MBps": "cmp_write",
+    "ddr_total": "raw_write + raw_read + cmp_write + cmp_read",
+    "ddr_gate_25": "ddr_total * 1.25",
+    "required_eff_pct": "ddr_total / peak * 100",
+    "gate_eff_pct": "ddr_gate_25 / peak * 100",
+    "rule": "a 1333 platform must not quote the 6,400 peak as the primary efficiency basis without a label; average inside peak does not prove sustained bandwidth or arbitration",
+    "doc1_section8": "the doc's 1.2/2.33/3.4 GB/s is not reproducible from data_rate*width/8; disclose, never adopt"
+  },
+  "uart_rules": {
+    "real_bps": 11520,
+    "b11_sim_sink_bytes_per_s": 18750000,
+    "export_tail_measured_cycles": 480930,
+    "sink_limited": false,
+    "rule": "the steady-state export tail is a constant per-frame cost that cancels in the frame-to-frame interval; it is NOT subtracted from S_ss unless sink_limited (tail growing with k, or >= 0.5 * S_ss). A real 115200 UART cannot sustain 1080p30; the transport is not_proven and the sim sink must never be presented as a production path",
+    "transport": "not_proven"
+  },
+  "dual_core_rules": {
+    "per_stream_capacity": "C (assumed_from_single_core)",
+    "paaxi_shared_unproven": true,
+    "routed_dual_core_timing": "unproven",
+    "resources": {"marginal_eram": 231, "conservative_eram": 289, "device": 300},
+    "max_headline": "not_proven",
+    "forbidden": ["feasible", "2C used as per-stream capacity", "aggregate 2C compared against 155.52 MB/s to declare dual-stream feasibility"]
+  },
+  "recommendation_rules": {
+    "primary": "largest per-stream pixel count at 30 fps that meets G25 at the primary overhead tier with resources/timing admissible, on the SAME content basis as the comparison set (comp-affine). A1-measured 1080p may only become the primary if A2 also meets G25",
+    "content_basis_consistency": "the primary recommendation must not be a single-content measured anchor when all other candidates are comp extrapolations; 1080p30 is therefore reported on its own line as measured-content-only / not_proven_all_content",
+    "alternates": {
+      "max_count": 2,
+      "alt1": "largest 30 fps single-core/single-stream comp-basis row meeting G25 in ALL three overhead tiers (tier-robust)",
+      "alt2": "largest 1-core/2-stream row meeting G25 per stream in ALL three tiers"
+    },
+    "nominal_only": "a row meeting G0 but not G25 is listed as nominal-only and may never be the primary recommendation",
+    "forbidden": ["dual-core primary", "primary justified by A1 while A2 fails G25", "claiming tier robustness when any tier misses G25"]
+  },
+  "frontier_rules": {
+    "maximality": "no 30 fps row with more pixels may meet G25 at the primary tier than the primary recommendation",
+    "same_source": "each frontier row's margin columns must come from the same anchor it names",
+    "worst_tier": "worst_tier_margin_pct = min over the three overhead tiers"
+  },
+  "negative_controls": [
+    {"id": "NC1", "name": "cold latency used as steady-state throughput", "reject": "COLD_LATENCY_AS_THROUGHPUT", "fixture": {"anchor_id": "A4", "use": "throughput"}},
+    {"id": "NC2", "name": "G25 miss collapsed into infeasible", "reject": "GATE_COLLAPSE", "fixture": {"gate_G0": "pass", "gate_G25": "fail", "verdict": "infeasible"}},
+    {"id": "NC3", "name": "1333 platform quoted with the 6400 peak", "reject": "PEAK_MISMATCH", "fixture": {"platform": "ddr1333", "peak_MBps_used": 6400}},
+    {"id": "NC4", "name": "sim fast sink presented as a production transport", "reject": "SINK_MISMATCH", "fixture": {"sink": "sim_fast_b11", "claim": "production_realtime"}},
+    {"id": "NC5", "name": "aggregate 2C used as per-stream capacity", "reject": "AGGREGATE_CAPACITY_FOR_PER_STREAM", "fixture": {"cores": 2, "streams": 2, "capacity_used_MBps": 207.8017588, "per_stream_basis_MBps": 103.9008794, "demand_per_stream_MBps": 77.76}},
+    {"id": "NC6", "name": "1080p declares tier robustness with applies=false", "reject": "TIER_NOT_APPLIED", "fixture": {"W": 1920, "H": 1080, "applies": false}}
+  ],
+  "forbidden_collapses": [
+    "COLD_LATENCY_AS_THROUGHPUT", "GATE_COLLAPSE", "PEAK_MISMATCH", "SINK_MISMATCH",
+    "AGGREGATE_CAPACITY_FOR_PER_STREAM", "TIER_NOT_APPLIED",
+    "CONTENT_ANCHOR_MIX (A1 numerator with A2 denominator)", "TWO_FRAME_AVERAGE_AS_SS",
+    "CORE_ONLY_AS_SYSTEM", "DUAL_CORE_FEASIBLE"
+  ]
+}

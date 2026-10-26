@@ -1,0 +1,30 @@
+[b20camsel] compile rc=0 0.3s errors=0
+GROUP_DONE camsel {"camsel_main": true}
+EXIT camsel=0
+=== GROUP status 2026-10-26T21:43:27.8400766+08:00
+[b20status] compile rc=0 0.2s errors=0
+GROUP_DONE status {"v6": true}
+EXIT status=0
+=== GROUP native 2026-10-26T21:43:30.4213222+08:00
+[b20native] compile rc=0 0.2s errors=0
+[native/main] ok=True rc=0 2.2s
+[native/mask] ok=True rc=0 2.1s
+[native/addr] ok=True rc=0 2.3s
+[native/conc] ok=True rc=0 2.2s
+[native/b15] ok=True rc=0 2.3s
+GROUP_DONE native {"native_main": true, "native_mask": true, "native_addr": true, "native_conc": true, "native_b15": true}
+EXIT native=0
+=== GROUP p1 2026-10-26T21:43:41.9889065+08:00
+[b20p1] compile rc=0 0.3s errors=0
+[p1 micro8x2] identical=True rc=0 2.1s
+[p1 mid64x8] identical=True rc=0 2.2s
+[p1 full_grad] identical=True rc=0 203.5s
+GROUP_DONE p1 {"p1_micro8x2": true, "p1_mid64x8": true, "p1_full_grad": true}
+EXIT p1=0
+=== GROUP chain t4a/t4b 2026-10-26T21:47:10.3255786+08:00
+[b20chain] compile rc=0 0.3s errors=0
+[chain/t4a_drop1] vsim=0 check=0 status=PASS geom={'mode': 'retry_path', 'frames': 1, 'four_crcs': [True], 'strict_zlib': [True], 'raw_len': [640]} cyc=0 err=[]
+[chain/t4b_drop_mid3] vsim=0 check=0 status=PASS geom={'mode': 'retry_path', 'frames': 3, 'four_crcs': [True, True, True], 'strict_zlib': [True, True, True], 'raw_len': [640, 640, 640]} cyc=0 err=[]
+GROUP_DONE chain-t4a_drop1-t4b_drop_mid3 {"chain_t4a_drop1": "PASS", "chain_t4b_drop_mid3": "PASS"}
+EXIT chain4=0
+DONE 2026-10-26T21:47:21.0050305+08:00

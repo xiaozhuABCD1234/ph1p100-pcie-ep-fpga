@@ -1,0 +1,216 @@
+{
+  "date": "2026-10-13",
+  "kind": "User board feedback plus matching debug configuration export; no counter capture",
+  "candidate": {
+    "project": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_reference_20261013_215134",
+    "expected_bit_sha256": "5c8d3081ae5a56e8cd9c35de134ca75c7fece5f5379d33587b727d73a9ea35cd",
+    "selected_db_sha256": "0861d93a676d755e2d0350f82563dd9f52daa3677a45e7269dbaaa80b6abb700",
+    "identity_basis": "User followup to exact215134 manual-test instructions; contextual association, no independent download log or device readback."
+  },
+  "observations": {
+    "source": "Direct user conversation",
+    "exact_time": null,
+    "duration_seconds": null,
+    "power_continuous": null,
+    "reference_colors": "Cyan described as light blue, magenta as purple; remaining reference colors reported completely normal.",
+    "live_camera_image_visible": false,
+    "led": {
+      "D37": "blinking",
+      "D38": "off",
+      "D39": "on",
+      "D40": "on"
+    },
+    "temperature_c": null,
+    "classification_counters": null,
+    "new_images_or_capture_frames": false
+  },
+  "verification": {
+    "G3": "fail",
+    "reference_output": "partial_subjective_pass",
+    "live_image": "fail",
+    "G4": "not_run",
+    "limits": "No measured RGB/colorimetry, exact timings or classified errors; not a full FPGA chain pass or HDMI physical-rate qualification."
+  },
+  "code_interpretation": {
+    "D37": "DDR ready gated heartbeat",
+    "D38": "No complete readback-pass flag latched",
+    "D39": "At least one sticky DDR validation/protocol/underflow/capture-drop source; exact class unknown",
+    "D40": "A configuration completion flag, not CSI-frame validity",
+    "source": "Candidate ddrmc_display_top.v:179-208 and camera_ddr_display_top.v:185-209"
+  },
+  "debug_export": {
+    "performed": true,
+    "native_exit_code": 0,
+    "arguments": [
+      "./export_reference_debug.tcl"
+    ],
+    "cwd": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_reference_20261013_215134",
+    "tool": "D:/downlaod/bin/td_commands_prompt.exe",
+    "marker": "REFERENCE_MATCHING_CWC_EXPORTED_NO_DOWNLOAD",
+    "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_reference_20261013_215134\\camera_ddr_display.cwc",
+    "bytes": 84859,
+    "sha256": "cbd7e4c88f5d6f7b21cb34b292895f775d4602f91471f74b8a4c14a2325126c7",
+    "groups": {
+      "auto_created_cwc1": [
+        {
+          "name": "u_camera/w_a_bad_frames[31:0]",
+          "clock": "u_camera/u_csi_a/u_packet/I_clock",
+          "inst": "auto_created_cwc1",
+          "type": "MARK_DEBUG_PROBE",
+          "is_enabled": "yes"
+        },
+        {
+          "name": "u_camera/w_a_crc_errors[31:0]",
+          "clock": "u_camera/u_csi_a/u_packet/I_clock",
+          "inst": "auto_created_cwc1",
+          "type": "MARK_DEBUG_PROBE",
+          "is_enabled": "yes"
+        },
+        {
+          "name": "u_camera/w_a_frame_timeouts[31:0]",
+          "clock": "u_camera/u_csi_a/u_packet/I_clock",
+          "inst": "auto_created_cwc1",
+          "type": "MARK_DEBUG_PROBE",
+          "is_enabled": "yes"
+        },
+        {
+          "name": "u_camera/w_a_good_frames[31:0]",
+          "clock": "u_camera/u_csi_a/u_packet/I_clock",
+          "inst": "auto_created_cwc1",
+          "type": "MARK_DEBUG_PROBE",
+          "is_enabled": "yes"
+        },
+        {
+          "name": "u_camera/w_a_header_errors[31:0]",
+          "clock": "u_camera/u_csi_a/u_packet/I_clock",
+          "inst": "auto_created_cwc1",
+          "type": "MARK_DEBUG_PROBE",
+          "is_enabled": "yes"
+        },
+        {
+          "name": "u_camera/w_a_last_lines[15:0]",
+          "clock": "u_camera/u_csi_a/u_packet/I_clock",
+          "inst": "auto_created_cwc1",
+          "type": "MARK_DEBUG_PROBE",
+          "is_enabled": "yes"
+        },
+        {
+          "name": "u_camera/w_a_last_wc[15:0]",
+          "clock": "u_camera/u_csi_a/u_packet/I_clock",
+          "inst": "auto_created_cwc1",
+          "type": "MARK_DEBUG_PROBE",
+          "is_enabled": "yes"
+        },
+        {
+          "name": "u_camera/w_a_packet_timeouts[31:0]",
+          "clock": "u_camera/u_csi_a/u_packet/I_clock",
+          "inst": "auto_created_cwc1",
+          "type": "MARK_DEBUG_PROBE",
+          "is_enabled": "yes"
+        },
+        {
+          "name": "u_ddrmc_test_top/capture_drops[31:0]",
+          "clock": "u_camera/u_csi_a/u_packet/I_clock",
+          "inst": "auto_created_cwc1",
+          "type": "MARK_DEBUG_PROBE",
+          "is_enabled": "yes"
+        }
+      ],
+      "auto_created_cwc2": [
+        {
+          "name": "u_ddrmc_test_top/failed_frames[31:0]",
+          "clock": "u_ddrmc_test_top/u_capture/clk",
+          "inst": "auto_created_cwc2",
+          "type": "MARK_DEBUG_PROBE",
+          "is_enabled": "yes"
+        },
+        {
+          "name": "u_ddrmc_test_top/passed_frames[31:0]",
+          "clock": "u_ddrmc_test_top/u_capture/clk",
+          "inst": "auto_created_cwc2",
+          "type": "MARK_DEBUG_PROBE",
+          "is_enabled": "yes"
+        },
+        {
+          "name": "u_ddrmc_test_top/protocol_errors[31:0]",
+          "clock": "u_ddrmc_test_top/u_capture/clk",
+          "inst": "auto_created_cwc2",
+          "type": "MARK_DEBUG_PROBE",
+          "is_enabled": "yes"
+        },
+        {
+          "name": "u_ddrmc_test_top/published_frames[31:0]",
+          "clock": "u_ddrmc_test_top/u_capture/clk",
+          "inst": "auto_created_cwc2",
+          "type": "MARK_DEBUG_PROBE",
+          "is_enabled": "yes"
+        }
+      ],
+      "auto_created_cwc3": [
+        {
+          "name": "u_ddrmc_test_top/shown_frames[31:0]",
+          "clock": "u_camera/X_hdmi_tx/I_pixel_clk",
+          "inst": "auto_created_cwc3",
+          "type": "MARK_DEBUG_PROBE",
+          "is_enabled": "yes"
+        },
+        {
+          "name": "u_ddrmc_test_top/underflow_frames[31:0]",
+          "clock": "u_camera/X_hdmi_tx/I_pixel_clk",
+          "inst": "auto_created_cwc3",
+          "type": "MARK_DEBUG_PROBE",
+          "is_enabled": "yes"
+        }
+      ]
+    },
+    "recompiled": false,
+    "bit_downloaded": false,
+    "hardware_connected_by_assistant": false,
+    "counters_read": false,
+    "original_bit_and_db_unchanged": true
+  },
+  "cli_boundary": {
+    "registered_read_functions": [
+      "read_cwc_data",
+      "read_cwc_reg",
+      "rdbk_cwc_data"
+    ],
+    "runtime_signature_obtained": false,
+    "runtime_hardware_calls_executed": false,
+    "reason": "Functions are native, not Tcl procs; available command help and SWUG105 did not yield their signatures. Did not guess arguments."
+  },
+  "manual_source": {
+    "path": "D:/downlaod/doc/SWUG/SWUG111_Debug_Tools_User_Guide.pdf",
+    "physical_pages": [
+      40,
+      47,
+      55,
+      58,
+      59
+    ],
+    "printed_pages": [
+      36,
+      43,
+      51,
+      54,
+      55
+    ],
+    "scope": "Offline entry, matching bit/cwc folder, Watch, Add Signals, Instant Trigger and Value bar; full manual/pages not uploaded."
+  },
+  "next_action": "Keep current bit running; open exact exported cwc offline, select cwc2, try Instant Trigger for four DDR counters without download; stop at any reconnect/download/code-mismatch requirement.",
+  "guide": "docs/参考色条正常但无实时图_ChipWatcher读取步骤_2026-10-13.md",
+  "artifacts": {
+    "docs/evidence/reference_debug_20261013/export_reference_debug.tcl": {
+      "bytes": 539,
+      "sha256": "43202a7fee7845eb2c9080ac3c40d069368f0b9b3a7c3db2415227ce5a00d52a"
+    },
+    "docs/evidence/reference_debug_20261013/reference_debug_export_console.txt": {
+      "bytes": 74161,
+      "sha256": "1b744b75dea5a5f4943abe4cb75b85434259c9e2db07b858a9bce2b3af74d95f"
+    },
+    "docs/evidence/reference_debug_20261013/camera_ddr_display.cwc": {
+      "bytes": 84859,
+      "sha256": "cbd7e4c88f5d6f7b21cb34b292895f775d4602f91471f74b8a4c14a2325126c7"
+    }
+  }
+}

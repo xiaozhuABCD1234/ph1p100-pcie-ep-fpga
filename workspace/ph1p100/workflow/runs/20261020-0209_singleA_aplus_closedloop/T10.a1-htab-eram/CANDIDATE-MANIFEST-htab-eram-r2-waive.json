@@ -1,0 +1,63 @@
+{
+  "task_id": "T10.a1-htab-eram",
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "round": "r2",
+  "revision": "r2-waive",
+  "continuation_of": "T10.a1-htab-eram r2 s1 candidate 0b084317 (route-only waiver)",
+  "status": "blocked",
+  "frozen_for_test": false,
+  "reason": "The one-time route-only waiver was attempted on the existing r2 synthesis (candidate 0b084317, no RTL change, no synthesis). The phy_1 run never started: the launcher generated a1_ht_r2_Runs/phy_1/settings.cfg with empty `device_name` and `package_name`, so run.exe failed immediately with PRJ-8001 `can't read \"device_name\": no such variable`. No opt_place/opt_route marker was created, no place/route ran, no *_pr.db or routed reports exist, report_cdc/check_timing were not executed, and bitgen was never invoked (no .bit/CWC/download). The single 60-minute session was consumed by the 1800 s route-start poll plus wait_run until the shell cap. Route 0/1 executed; no r3. Best candidate remains r2 0b084317.",
+  "date": "2026-10-22",
+  "waiver": {
+    "type": "one_time_pre_route_synth_gate_waiver",
+    "candidate": "0b084317db0608a56865a77fd18e7312add3ddb87c2a465a48f60816d8545396",
+    "no_rtl_change": true,
+    "no_synthesis": true,
+    "result": "route-only attempt failed before any physical step (launcher settings bug); no routed evidence"
+  },
+  "candidate": {
+    "file": "T10.a1-htab-eram/r2/candidate-0b084317.a1_deflate_core.v",
+    "sha256": "0b084317db0608a56865a77fd18e7312add3ddb87c2a465a48f60816d8545396",
+    "working_tree": "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v == 0b084317...5396 (unchanged)",
+    "synth_evidence": "T10.a1-htab-eram/r2/td/syn_gate_timing_s1.rpt (SWNS -0.017, 1/4640 endpoint), syn_gate_area_s1.rpt (slice 3068, ERAM 26, core 22, DRAM 32)"
+  },
+  "route_only_attempt": {
+    "tcl": "T10.a1-htab-eram/r2/td/02_route_only.tcl",
+    "method": "open_project a1_ht_r2.al; launch_runs phy_1 -jobs 4; poll for .opt_route.begin.f; write .stop.f so bitgen halts before executing; wait_run; import *_pr.db; report_timing_summary/status/area/timing/qor/clock_utilization, report_cdc, check_timing",
+    "project_open": "ok (PROJECT_OPENED, 3 source files analyzed)",
+    "phy_launch": "phy_1 launched but run.exe failed at `source ./settings.cfg`",
+    "failure": "PRJ-8001 ERROR: source ./settings.cfg failed: can't read \"device_name\": no such variable; the generated settings.cfg has `set device_name ` and `set package_name ` empty",
+    "route_start_poll": "1800 s, no .opt_route.begin.f",
+    "session_end": "shell 60-min cap; TD parent killed; no place/route, no pr.db",
+    "root_cause": "The route-only tcl opened the .al without first running `import_device ph1_100p.db -package PH1P100SBG484 -speed 3`. The launch_runs settings generator uses the session device variables; create_project (used by the normal flow) sets them, open_project alone does not. The run therefore failed before opt_place."
+  },
+  "g1": "unchanged from r2: P2 13/13 (0 mismatch, 0 X, vlog 0/0, 355,261 cycles/81.067 MB/s), P3 20/20 (0 mismatch, 0 X, vlog 0/0, 1080p 4,677,945-4,866,587); see T10.a1-htab-eram/CANDIDATE-MANIFEST-htab-eram-r2.json",
+  "g2_synth": "unchanged: s1 SWNS -0.017 / STNS -0.017 / 1 of 4640 endpoints / slice 3068 / ERAM 26 / core 22 / DRAM 32; T10.a1-htab-eram/r2/td/syn_gate_timing_s1.rpt",
+  "g2_routed": {
+    "status": "not_routed",
+    "reason": "phy run failed before opt_place (PRJ-8001); no placed/routed DB",
+    "wns_ns": null, "tns_ns": null, "hwns_ns": null, "htns_ns": null, "violating_endpoints": null,
+    "report_cdc": "not executed (no routed DB)",
+    "check_timing": "not executed (no routed DB)",
+    "resources": "not measured at route"
+  },
+  "bitgen": {"status": "not_run", "bit_files": 0, "downloads": 0, "flash": 0, "note": "the flow failed at settings source before any step; .stop.f was never created because opt_route never began"},
+  "td_budget_used": {"sessions": "1/1 (60 min cap)", "route_attempts": "1 invoked / 0 routed", "synthesis_attempts": 0, "bitgen": 0, "dev_minutes": "~75 min wall (route session 60 min + dev)", "dev_tool_calls": "~8"},
+  "protected_touched": "none; core remains 0b084317, frame 18d51b1b, SDC 227dd39e; r0/r1/r2/r2-b manifests and reports untouched; workflow/tasks.json untouched",
+  "evidence": {
+    "tcl": "T10.a1-htab-eram/r2/td/02_route_only.tcl",
+    "stdout": "T10.a1-htab-eram/r2/td/td_stdout_route_only.log",
+    "phy_dir": "T10.a1-htab-eram/r2/td/a1_ht_r2_Runs/phy_1",
+    "settings_cfg": {"path": "T10.a1-htab-eram/r2/td/a1_ht_r2_Runs/phy_1/settings.cfg", "sha256": "177556d00f34d498ea579b69667ad9c433d2c1d284f645bb37df6a53e1543477"},
+    "run_log": {"path": "T10.a1-htab-eram/r2/td/a1_ht_r2_Runs/phy_1/run.log", "sha256": "332e22cbc907c9fc245737c7eca7eb3c97a0bc84c67346edb8128477f32bb3d5"},
+    "run_logw": {"path": "T10.a1-htab-eram/r2/td/a1_ht_r2_Runs/phy_1/run.logw", "sha256": "276566065a1b41d3ec5d3072fa45a6c484358e92944b533163b01d2b532c7166"},
+    "hashes": {
+      "02_route_only.tcl": "d14646f64983e34a6cb59606dabdba7206e59aa1fb12b64fde80b94d9d2113b1",
+      "td_stdout_route_only.log": "f9424fd0a3d6762df27b9a6f2acdb4133ba3c64c3ef2b8c5681e6b1906894e97",
+      "syn_gate_timing_s1.rpt": "40446ba228f80f81af4a4758595294915ad2f6e38111430c07123364cdb345ea",
+      "syn_gate_area_s1.rpt": "1852e22735f3e6d3d469ba446870ef6297184c2d87038961bd09155b0d98833b"
+    }
+  },
+  "next_step": "No r3 and no remaining route budget. The r2 candidate 0b084317 remains the best (synth -0.017 ns, functionally green, no routed evidence). If a future explicit user/planner authorization allows another route-only attempt, the tcl must call `import_device ph1_100p.db -package PH1P100SBG484 -speed 3` before `open_project`/`launch_runs` (or write a manual phy settings.cfg with end_step opt_route and non-empty device_name/package_name, then run DefaultFlow.tcl), and must still preserve the .stop.f-before-bitgen rule. Do not synthesize, change RTL, seed-sweep, or lower the clock.",
+  "rollback": "No RTL change was made; the working tree remains r2 0b084317. Restore points: r2/candidate-0b084317.a1_deflate_core.v (best), r1/candidate-3326a1fa.a1_deflate_core.v, r0/candidate-b374f6fc.a1_deflate_core.v, r0/base-1dca732b.a1_deflate_core.v."
+}

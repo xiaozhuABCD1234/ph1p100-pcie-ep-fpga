@@ -1,0 +1,51 @@
+# Local research scratch files and obsolete material (kept on disk).
+/tmp/
+/待删除/
+/.vscode/
+/.codex/
+/.agents/*
+!/.agents/skills/
+/.agents/skills/*
+!/.agents/skills/fpga-orchestrator/
+!/.agents/skills/fpga-planner/
+!/.agents/skills/fpga-design-guide/
+!/.agents/skills/fpga-dev/
+!/.agents/skills/fpga-tester-functional/
+!/.agents/skills/fpga-tester-engineering/
+!/.agents/skills/fpga-tester-system/
+
+# Credentials and local configuration.
+.env
+.env.*
+!.env.example
+*.lic
+*.key
+*.pem
+id_rsa*
+id_ed25519*
+
+# Generated FPGA outputs; track RTL, Tcl, ADC, SDC and project inputs.
+*.log
+*.logw
+*.jou
+*.bit
+*.bin
+*.db
+*.vcd
+*.fst
+*.wlf
+/fpga/**/_scratch/
+/fpga/**/runs/
+/fpga/**/build/
+/fpga/**/output/
+
+# Local trial fixtures (junction trees back into the repository are not portable).
+/workflow/runs/**/output-junction-external/
+/workflow/runs/**/output-junction-internal/
+
+# Local language caches and OS files.
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+desktop.ini

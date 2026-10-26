@@ -1,0 +1,68 @@
+T10.b7 status packet v2 parse
+input            : D:\fpga\ph1p100\workflow\runs\20261020-0209_singleA_aplus_closedloop\T10.b7-cam-diag\r0\sim\status_v2_bytes.txt
+bytes            : 582
+packet size      : 97
+packets          : 6
+bad_xor          : 0
+bad_len_ver      : 0
+skipped_bytes    : 0
+trailing_bytes   : 0
+
+field                         first         last   delta_wrap       or_all
+cap_frames                286331153    286331153            0 0x11111111
+raw_pub                   572662306    572662306            0 0x22222222
+enc_frames                858993459    858993459            0 0x33333333
+exported                 1145324612   1145324612            0 0x44444444
+raw_drop                 1431655765   1431655765            0 0x55555555
+cmp_drop                 1717986918   1717986918            0 0x66666666
+errors                   2004318071   2004318071            0 0x77777777
+read_words               2290649224   2290649224            0 0x88888888
+cam_clk_tgl_inc          2711724449   2711724449            0 0xA1A1A1A1
+cam_pkt_tgl_inc          2711724450   2711724450            0 0xA1A1A1A2
+cam_vs_tgl_inc           2711724451   2711724451            0 0xA1A1A1A3
+cam_pix_beats            2711724452   2711724452            0 0xA1A1A1A4
+cam_line_rises           2711724453   2711724453            0 0xA1A1A1A5
+cam_frame_rises          2711724454   2711724454            0 0xA1A1A1A6
+cam_frame_falls          2711724455   2711724455            0 0xA1A1A1A7
+cam_last_frame_cycles    2711724456   2711724456            0 0xA1A1A1A8
+crop_roi_frames          2711724457   2711724457            0 0xA1A1A1A9
+crop_groups              2711724458   2711724458            0 0xA1A1A1AA
+crop_short               2711724459   2711724459            0 0xA1A1A1AB
+crop_geom_err            2711724460   2711724460            0 0xA1A1A1AC
+cam_phystat              2711724461   2711724461            0 0xA1A1A1AD
+cam_sysstat              2711724462   2711724462            0 0xA1A1A1AE
+cam_nack_cnt             2711724463   2711724463            0 0xA1A1A1AF
+
+level fields (first / last / OR):
+  cam_phystat    0xA1A1A1AD / 0xA1A1A1AD / 0xA1A1A1AD
+  cam_sysstat    0xA1A1A1AE / 0xA1A1A1AE / 0xA1A1A1AE
+  cam_nack_cnt   0xA1A1A1AF / 0xA1A1A1AF / 0xA1A1A1AF
+
+cam_phystat decode (last packet): 0xA1A1A1A5
+  delay_tap    = 37
+  delay_done   = 0
+  rst_out      = 1
+  sync_wait    = 1
+  in_frame_now = 0
+  vsync_now    = 0
+cam_sysstat decode (last packet): 0xA1A1A1A6
+  cfg_done     = 0
+  bus_err_lat  = 1
+  xclr_n       = 1
+  pll_locked   = 0
+  cfg_rst_n    = 0
+  lane_sticky  = 1
+
+=== Q1 MIPI: is there data? ===
+answer           : NO - MIPI byte clock is dead (cam_clk_tgl_inc delta = 0)
+evidence         : cam_clk_tgl_inc=0 cam_pkt_tgl_inc=0 cam_pix_beats=0 cam_line_rises=0 cam_frame_rises=0 cam_frame_falls=0 cam_vs_tgl_inc=0
+supporting state : lane_sticky=0x1 rst_out=1 sync_wait=1 delay_done=0 tap=37 in_frame_now=0 vsync_now=0
+
+=== Q2 I2C: did configuration succeed? ===
+answer           : NO - cfg_done never asserted (table/timing/address/power)
+evidence         : cfg_done=0 bus_err_lat=1 xclr_n=1 pll_locked=0 cfg_rst_n=0 lane_sticky=0x1 cam_nack_cnt_delta=0 cam_nack_cnt_last=2711724455
+
+=== Q3 crop: did it receive a frame? ===
+answer           : NO - crop never saw a valid beat (crop_groups = 0)
+evidence         : crop_roi_frames=0 crop_groups=0 crop_short=0 crop_geom_err=0 cam_last_frame_cycles=0
+legacy cross-chk : cap_frames=0 raw_pub=0 enc_frames=0 exported=0 raw_drop=0 cmp_drop=0 errors=0 read_words=0
