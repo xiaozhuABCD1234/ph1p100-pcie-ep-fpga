@@ -118,13 +118,16 @@ module pcie_ep_engine #(
 // ====================================================================
 // T07 仿真兼容修正（行为不变）：tl_tx_state 与其状态编码原声明在下面 TX Engine
 // 段（本段先使用、后声明），TD 能过、ModelSim vlog 报 vlog-2730/2388。声明提前。
-reg   [4:0]  tl_tx_state=0;
-localparam   TL_TX_IDLE     = 5'b0_0001,
-             TL_TX_ACK_IOW  = 5'b0_0010,
-             TL_TX_ACK_IOR  = 5'b0_0100,
-             TL_TX_ACK_MEMR = 5'b0_1000,
-             TL_TX_ACK_MSIX = 5'b1_0000,
-             TL_TX_USER     = 5'b10_0000;
+// 位宽 6：TL_TX_USER 是 5'b10_0000（六位字面量），若状态寄存器只留 5 位，
+// 该编码会被截成 0，与上电初值 0 撞码——上电后、第一次复位前 utx_sel 会误判为
+// 「正在发用户包」，把 TL 发送口从引擎侧切走。状态寄存器与全部编码统一到 6 位。
+reg   [5:0]  tl_tx_state=0;
+localparam   TL_TX_IDLE     = 6'b00_0001,
+             TL_TX_ACK_IOW  = 6'b00_0010,
+             TL_TX_ACK_IOR  = 6'b00_0100,
+             TL_TX_ACK_MEMR = 6'b00_1000,
+             TL_TX_ACK_MSIX = 6'b01_0000,
+             TL_TX_USER     = 6'b10_0000;
 
 // pipeline for input signals
 reg     [47:0]       tl_rx_bardec_ff        ;

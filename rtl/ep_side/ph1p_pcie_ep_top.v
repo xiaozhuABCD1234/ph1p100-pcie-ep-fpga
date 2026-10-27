@@ -1551,7 +1551,9 @@ cam_r10f_writer #(
     .cam_pix_valid (w_a_pixel_valid ),
     .cam_frame_good(w_a_frame_good  ),
     .cam_frame_abort(w_a_frame_abort | cl_inject_abort),
-    .prot_en       (img_push_en     ),
+    // 只有被 CTRL[8] 选中的那一路才做「发布即保护」：pusher 只给选中相机发 release，
+    // 未选中那路若也开保护，发布完两块后再没有 release，写者会永久停在封锁态。
+    .prot_en       (img_push_en && ~img_cam_ab_sel),
     .rel_tgl0      (w_rel_tgl0      ),
     .rel_tgl1      (w_rel_tgl1      ),
 
@@ -1615,7 +1617,7 @@ cam_r10f_writer #(
     .cam_pix_valid (w_b_pixel_valid ),
     .cam_frame_good(w_b_frame_good  ),
     .cam_frame_abort(w_b_frame_abort),
-    .prot_en       (img_push_en     ),
+    .prot_en       (img_push_en && img_cam_ab_sel),   // 同 A 路：只保护被 CTRL[8] 选中的相机
     .rel_tgl0      (w_rel_tgl2      ),
     .rel_tgl1      (w_rel_tgl3      ),
 
