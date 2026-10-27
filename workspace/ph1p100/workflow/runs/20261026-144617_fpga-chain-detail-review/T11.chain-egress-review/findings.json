@@ -1,0 +1,430 @@
+{
+  "task_id": "T11.chain-egress-review",
+  "round": 0,
+  "findings": [
+    {
+      "finding_id": "T11-F01",
+      "severity": "high",
+      "kind": "confirmed_issue",
+      "claim": "UART导出E_OPEN对槽ID/精确长度不符只计错，仍cmp_open并无条件转E_HDR；没有拒绝错误事务。",
+      "evidence_refs": [
+        {
+          "source_id": "B0148",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0148.v",
+          "sha256": "f8f9e4e354b5bdbcce56321cacb22981f1283565ec6c40479a90d0625ce76b61",
+          "line_start": 403,
+          "line_end": 415,
+          "reason": "错误只更新st_err；头发送无guard"
+        },
+        {
+          "source_id": "B0148",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0148.v",
+          "sha256": "f8f9e4e354b5bdbcce56321cacb22981f1283565ec6c40479a90d0625ce76b61",
+          "line_start": 439,
+          "line_end": 461,
+          "reason": "以描述符长度发送并关闭槽"
+        },
+        {
+          "source_id": "B0150",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0150.v",
+          "sha256": "acc1eff329aa295d01b16123581fee48ef49d444efdce3b7fe62214555517405",
+          "line_start": 838,
+          "line_end": 864,
+          "reason": "commit到独立描述符队列及store读口"
+        }
+      ],
+      "reproduction": "模块接口给d_id=7/stream_len=33与cmp_id=8/cmp_len=1，cmp_open_ready=1；E_OPEN仍进入E_HDR。witness/egress_witness.py枚举匹配/不匹配正反例；不是RTL仿真。",
+      "impact": "错误元数据和另一槽载荷可能被拼接；描述符超出槽最后32B字的容量时可永等rd_valid。与T06排序反例相邻，但默认全尺寸整机可达性未证。",
+      "recommendation": "后续使错误ID/长度在任何头字节外发前失败关闭，定义槽归还/描述符丢弃/重新对齐及可观测错误。",
+      "expected_benefit": "阻断已检测到的不一致事务外发；收益是正确性，不报资源百分比。",
+      "tradeoff": "拒绝恢复状态与超时要和slot/store一起验证。",
+      "validation": "真实exporter+store RTL注入ID错/len短长、同拍push/pop、reset及后继正常帧；零错误头/零误释放。",
+      "disposition": "review_only; implementation_deferred",
+      "default_configuration_affected": "not_proven; requires mismatch; normal matching descriptors unaffected"
+    },
+    {
+      "finding_id": "T11-F02",
+      "severity": "medium",
+      "kind": "confirmed_issue",
+      "claim": "RAW PCIe pusher的claim_base_ok用32bit ddr_base+frame_bytes比较容量，回绕可放行越界源，随后AR地址截为29bit。",
+      "evidence_refs": [
+        {
+          "source_id": "B0101",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0101.v",
+          "sha256": "e0dd673cd19dd09c0343dd5811a6bc4efbfab48ece2ab5e59396a17ef6f57a5b",
+          "line_start": 397,
+          "line_end": 403,
+          "reason": "32bit加法上界比较且未要求par_valid"
+        },
+        {
+          "source_id": "B0101",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0101.v",
+          "sha256": "e0dd673cd19dd09c0343dd5811a6bc4efbfab48ece2ab5e59396a17ef6f57a5b",
+          "line_start": 970,
+          "line_end": 990,
+          "reason": "base_s2[28:0]发AR"
+        },
+        {
+          "source_id": "B0123",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0123.v",
+          "sha256": "7b4be3e4dbc437212b619c43e20a875526f5ec0bd4824b4c994054baa7b24435",
+          "line_start": 105,
+          "line_end": 122,
+          "reason": "默认固定槽及256MiB容量"
+        },
+        {
+          "source_id": "B0123",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0123.v",
+          "sha256": "7b4be3e4dbc437212b619c43e20a875526f5ec0bd4824b4c994054baa7b24435",
+          "line_start": 312,
+          "line_end": 324,
+          "reason": "默认源来自writer的选定base"
+        }
+      ],
+      "reproduction": "ddr_base=0xfffff000, frame_bytes=4096, cap=0x10000000：32bit sum=0通过；宽精度sum=0x100000000应拒。首AR=0x1ffff000。",
+      "impact": "模块声称的容量拒绝不成立；默认writer固定低地址不触发，不能写成默认板上越界或缺R根因。",
+      "recommendation": "后续在边界用扩位加法并检查base范围/所选槽白名单，再截29bit；保留主机目的64bit独立检查。",
+      "expected_benefit": "使所有接口输入的源边界检查可验证。",
+      "tradeoff": "扩位组合逻辑与更严格拒绝，需确认合法基址。",
+      "validation": "独立扩位算术及真实DUT边界0/cap-4096/cap/0xfffff000，默认槽为正控制；验证不发AR且后续恢复。",
+      "disposition": "review_only; implementation_deferred",
+      "default_configuration_affected": "false_for_frozen_fixed_writer_bases; module_interface_counterexample"
+    },
+    {
+      "finding_id": "T11-F03",
+      "severity": "high",
+      "kind": "evidence_gap",
+      "claim": "PCIe本地doorbell已被TL接纳及G_HELD不等于RK完成可见；本轮未绑定主机DMA分配/缓存一致性/屏障/读取验证后ACK的同候选证据。",
+      "evidence_refs": [
+        {
+          "source_id": "B0101",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0101.v",
+          "sha256": "e0dd673cd19dd09c0343dd5811a6bc4efbfab48ece2ab5e59396a17ef6f57a5b",
+          "line_start": 542,
+          "line_end": 573,
+          "reason": "TC0/RO=0头和本地utx_ack"
+        },
+        {
+          "source_id": "B0101",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0101.v",
+          "sha256": "e0dd673cd19dd09c0343dd5811a6bc4efbfab48ece2ab5e59396a17ef6f57a5b",
+          "line_start": 733,
+          "line_end": 753,
+          "reason": "仅匹配held session/seq才release"
+        },
+        {
+          "source_id": "B0101",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0101.v",
+          "sha256": "e0dd673cd19dd09c0343dd5811a6bc4efbfab48ece2ab5e59396a17ef6f57a5b",
+          "line_start": 875,
+          "line_end": 934,
+          "reason": "done/HELD依本地接纳而非PCIe Completion"
+        },
+        {
+          "source_id": "B0118",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0118.v",
+          "sha256": "285fc9f009bd5c2481dbc25ee1c7ddd809a70b328b12dca63c0bd59baf581717",
+          "line_start": 333,
+          "line_end": 355,
+          "reason": "cap/session与单bit命令"
+        }
+      ],
+      "reproduction": "检索范围为统一快照RAW top/pusher/BAR/RAW合同、旧T09报告及补冻IP；不把旧RK收图反馈当本候选主机证据。",
+      "impact": "必须区分TL接纳、posted write排序、CPU可见、CPU消费及ACK；FPGA不能仅凭cap寄存器证明DMA地址来自授权分配。",
+      "recommendation": "后续绑定实际RK驱动、DMA/IOMMU映射、CPU同步/屏障、session重启与读后ACK协议；保留HELD保护。",
+      "expected_benefit": "防主机读到旧内容及过早重用；可定位责任边界。",
+      "tradeoff": "增加端到端证据和主机动作，不能靠删ACK减少复杂度。",
+      "validation": "同候选真实主机核对payload/header/seq/CRC，延迟/错/旧session ACK、PERST/re-enumeration和并发重复窗口；G2–G5授权另行。",
+      "disposition": "review_only; implementation_deferred",
+      "default_configuration_affected": "unproven_for_current_hardware"
+    },
+    {
+      "finding_id": "T11-F04",
+      "severity": "high",
+      "kind": "evidence_gap",
+      "claim": "A+ UART与RAW/R10F PCIe是分离分支；压缩帧级codec/外头、精确长度至DMA对齐、描述符与完成ACK尚未实际接入该PCIe top。",
+      "evidence_refs": [
+        {
+          "source_id": "B0150",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0150.v",
+          "sha256": "acc1eff329aa295d01b16123581fee48ef49d444efdce3b7fe62214555517405",
+          "line_start": 830,
+          "line_end": 866,
+          "reason": "A+ commit只驱动UART exporter"
+        },
+        {
+          "source_id": "B0123",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0123.v",
+          "sha256": "7b4be3e4dbc437212b619c43e20a875526f5ec0bd4824b4c994054baa7b24435",
+          "line_start": 1515,
+          "line_end": 1544,
+          "reason": "PCIe top使用cam_r10f_writer"
+        },
+        {
+          "source_id": "B0098",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0098.v",
+          "sha256": "b6c5ab12f77f36cbb409882fa0847d1e5b34e4c64090a5161d26866c5ed3488e",
+          "line_start": 440,
+          "line_end": 464,
+          "reason": "codec=0且raw_bytes=payload_bytes"
+        },
+        {
+          "source_id": "B0123",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0123.v",
+          "sha256": "7b4be3e4dbc437212b619c43e20a875526f5ec0bd4824b4c994054baa7b24435",
+          "line_start": 1712,
+          "line_end": 1726,
+          "reason": "RAW pusher及默认4KiB服务"
+        }
+      ],
+      "reproduction": "按两份实际top/编译入口实例追踪，无三算法→A+→R10F压缩DMA通路；不是仅按文件名搜索。",
+      "impact": "不能以A+能压、RAW PCIe能传或旧RK能收组合成双路压缩生产闭环。stored回退仍是变换域zlib，不是codec=0 raw。",
+      "recommendation": "后续先冻结压缩接口和codec版本/头长/每帧容量/取消/ACK，再选择生产接入，保持现RAW兼容。",
+      "expected_benefit": "消除跨分支假设，形成可验端到端边。",
+      "tradeoff": "协议、顶层、缓冲和RK解码均需联动验证。",
+      "validation": "同冻结manifest真实DUT与主机解码后的源像素oracle、最坏回退/尾字节/模式错拒收；不能只改codec_id。",
+      "disposition": "review_only; implementation_deferred",
+      "default_configuration_affected": "true_as_missing_integration; no_claim_of_runtime_failure"
+    },
+    {
+      "finding_id": "T11-F05",
+      "severity": "medium",
+      "kind": "evidence_gap",
+      "claim": "UART st_exported/close在最后payload装入本地holding寄存器后即可发生，既非末stop-bit已离线、亦非PC消费确认；没有传输ACK/重试事务。",
+      "evidence_refs": [
+        {
+          "source_id": "B0148",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0148.v",
+          "sha256": "f8f9e4e354b5bdbcce56321cacb22981f1283565ec6c40479a90d0625ce76b61",
+          "line_start": 334,
+          "line_end": 344,
+          "reason": "单拍请求及busy定义"
+        },
+        {
+          "source_id": "B0148",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0148.v",
+          "sha256": "f8f9e4e354b5bdbcce56321cacb22981f1283565ec6c40479a90d0625ce76b61",
+          "line_start": 449,
+          "line_end": 461,
+          "reason": "sent加1后P_DONE与close"
+        },
+        {
+          "source_id": "B0148",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0148.v",
+          "sha256": "f8f9e4e354b5bdbcce56321cacb22981f1283565ec6c40479a90d0625ce76b61",
+          "line_start": 210,
+          "line_end": 222,
+          "reason": "下一帧边界确实等待tx_ready"
+        },
+        {
+          "source_id": "B0148",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0148.v",
+          "sha256": "f8f9e4e354b5bdbcce56321cacb22981f1283565ec6c40479a90d0625ce76b61",
+          "line_start": 513,
+          "line_end": 519,
+          "reason": "holding独立于slot"
+        }
+      ],
+      "reproduction": "最后byte复制到tx_byte_r→sent达标→P_DONE→close；UART busy仍可能为1。本地轨迹见witness，不宣称已发生丢字节。",
+      "impact": "槽最后字节已被复制，早释放本身未证明破坏数据；但exported不能用于整帧主机成功率/吞吐或掉电安全证明。",
+      "recommendation": "后续明确本地queued/wire_done/host_accepted计数语义；若要求可靠传输，另冻结ACK/重试/epoch。",
+      "expected_benefit": "计数与真正完成事件一致，降低诊断误判。",
+      "tradeoff": "增加计数/协议需要独立验兼容性。",
+      "validation": "观察末byte请求/last stop-bit/close各时刻，重置/断线注入及PC完整CRC判据；保留独立holding。",
+      "disposition": "review_only; implementation_deferred",
+      "default_configuration_affected": "true_for_counter_semantics; no_proven_slot_corruption"
+    },
+    {
+      "finding_id": "T11-F06",
+      "severity": "medium",
+      "kind": "evidence_gap",
+      "claim": "已补冻PCIe实际生成wrapper/工程入口，端口是256bit数据+8bit tl_tx_valid+tl_tx_wait，无32bit byte_keep；但该当前源不能追认旧bit完整IP身份和真实TL接纳/CDC签核。",
+      "evidence_refs": [
+        {
+          "source_id": "E02",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T11.chain-egress-review\\inputs\\E02-pcie_ep_core.v",
+          "sha256": "a61be99096c7cb11c74c540448fcdaf54e2c34d43d90c8a13be9c62c013fdf56",
+          "line_start": 1,
+          "line_end": 14,
+          "reason": "生成TD版本6.2.174248"
+        },
+        {
+          "source_id": "E02",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T11.chain-egress-review\\inputs\\E02-pcie_ep_core.v",
+          "sha256": "a61be99096c7cb11c74c540448fcdaf54e2c34d43d90c8a13be9c62c013fdf56",
+          "line_start": 76,
+          "line_end": 103,
+          "reason": "DW有效端口和LINK_WIDTH=2"
+        },
+        {
+          "source_id": "E01",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T11.chain-egress-review\\inputs\\E01-ph1p_pcie_ep_top.al",
+          "sha256": "44552740187a72a9e7a3ec17fc441e42f133014183048618cc1918d284348a17",
+          "line_start": 310,
+          "line_end": 334,
+          "reason": "实际pusher/writer工程源"
+        },
+        {
+          "source_id": "E01",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T11.chain-egress-review\\inputs\\E01-ph1p_pcie_ep_top.al",
+          "sha256": "44552740187a72a9e7a3ec17fc441e42f133014183048618cc1918d284348a17",
+          "line_start": 360,
+          "line_end": 368,
+          "reason": "工程XML IP入口"
+        },
+        {
+          "source_id": "B0123",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0123.v",
+          "sha256": "7b4be3e4dbc437212b619c43e20a875526f5ec0bd4824b4c994054baa7b24435",
+          "line_start": 633,
+          "line_end": 641,
+          "reason": "top直连IP"
+        }
+      ],
+      "reproduction": "E01–E05副本前后SHA一致；生成器元数据1.0/171484 2025-08-11与wrapper TD6.2.174248分别记录，不能当当前安装版或旧bit签名。",
+      "impact": "字节keep假设会错解F0/FF/F8；封装版本存在只构成来源证据，不证明本候选板级性能。",
+      "recommendation": "后续在生产manifest补全生成IP/加密内部/参数/约束/bit绑定及真实TL语义/背压/复位证明。",
+      "expected_benefit": "避免错误IP适配和跨版本混证。",
+      "tradeoff": "完整闭包需未来G2/板级窗口，当前只读审查不运行。",
+      "validation": "厂商定义及真实IP RTL/TL monitors独立确认DW方向/F0/FF/F8、stall数据稳定、复位和重连。",
+      "disposition": "review_only; implementation_deferred",
+      "default_configuration_affected": "qualification_gap"
+    },
+    {
+      "finding_id": "T11-F07",
+      "severity": "high",
+      "kind": "evidence_gap",
+      "claim": "P1080必须计入R10F 128B头/640B尾零、128B载荷TLP的16B头及门铃；UART和93.75MB/s代理sink不足以证明生产双路。",
+      "evidence_refs": [
+        {
+          "source_id": "B0098",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0098.v",
+          "sha256": "b6c5ab12f77f36cbb409882fa0847d1e5b34e4c64090a5161d26866c5ed3488e",
+          "line_start": 153,
+          "line_end": 167,
+          "reason": "R10F精确payload和4KiB DMA"
+        },
+        {
+          "source_id": "B0101",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0101.v",
+          "sha256": "e0dd673cd19dd09c0343dd5811a6bc4efbfab48ece2ab5e59396a17ef6f57a5b",
+          "line_start": 234,
+          "line_end": 241,
+          "reason": "默认128B/TLP与4KiB burst"
+        },
+        {
+          "source_id": "B0101",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0101.v",
+          "sha256": "e0dd673cd19dd09c0343dd5811a6bc4efbfab48ece2ab5e59396a17ef6f57a5b",
+          "line_start": 542,
+          "line_end": 570,
+          "reason": "4DW头和1DW门铃"
+        },
+        {
+          "source_id": "B0123",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0123.v",
+          "sha256": "7b4be3e4dbc437212b619c43e20a875526f5ec0bd4824b4c994054baa7b24435",
+          "line_start": 1712,
+          "line_end": 1718,
+          "reason": "实际默认参数"
+        },
+        {
+          "source_id": "B0283",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0283.md",
+          "sha256": "c129fe3d4798750814ddf695b75fe1e6b9df8ab4c750f354de99073111e22e14",
+          "line_start": 1,
+          "line_end": 20,
+          "reason": "旧scope必须保留"
+        }
+      ],
+      "reproduction": "见witness/result-r0.json独立整数算术：R10F DMA=2592768B，20256个128B MWr，TLP总=2916884B/帧（含20B门铃，不含DLL/PHY）。",
+      "impact": "双路TLP预算175.01304MB/s；b15四次DDR预算809.0304MB/s。不同路径预算不得相加成一个已接入实现或以压缩平均值代最坏。",
+      "recommendation": "后续用真实内容/生产slot-free/fast sink与共享DDR签核；本轮不重复另一活动run四帧矩阵。",
+      "expected_benefit": "准确定位吞吐瓶颈与最坏容量。",
+      "tradeoff": "需要实测持续服务和资源/时序，队列加深不能增加长期服务率。",
+      "validation": "独立整数重算，真实DUT和共享服务率/背压/坏帧恢复矩阵；保留成本offset前提与CMP14B余量缺口。",
+      "disposition": "review_only; implementation_deferred",
+      "default_configuration_affected": "budget_gap; no_measured_rate_claim"
+    },
+    {
+      "finding_id": "T11-F08",
+      "severity": "low",
+      "kind": "redundancy_candidate",
+      "claim": "UART源码头/中段仍写诊断v3=177B/43字段，实际常量v5=241B/59字段；维护性收口可行，不能把旧文档副本数当硬件冗余。",
+      "evidence_refs": [
+        {
+          "source_id": "B0148",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0148.v",
+          "sha256": "f8f9e4e354b5bdbcce56321cacb22981f1283565ec6c40479a90d0625ce76b61",
+          "line_start": 36,
+          "line_end": 56,
+          "reason": "旧v3注释"
+        },
+        {
+          "source_id": "B0148",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0148.v",
+          "sha256": "f8f9e4e354b5bdbcce56321cacb22981f1283565ec6c40479a90d0625ce76b61",
+          "line_start": 204,
+          "line_end": 235,
+          "reason": "真实v5参数与59字段snapshot"
+        }
+      ],
+      "reproduction": "对比STS_LEN=241、STS_VER=5和4+59*4+1=241；不用旧注释指导解析。",
+      "impact": "旧布局可能误导人工/新工具；本轮未证实已有PC parser按旧布局失败。",
+      "recommendation": "后续将协议布局放单一版本来源并同步注释/解码器；FIFO/skid/CRC/Adler/row-bank均不直接删除。",
+      "expected_benefit": "减少维护歧义；无资源百分比收益。",
+      "tradeoff": "须留版本兼容和解码回归。",
+      "validation": "v3/v4/v5录制向量与实际v5字段/XOR对照；综合网表差分后才谈资源。",
+      "disposition": "review_only; implementation_deferred",
+      "default_configuration_affected": "true_for_comment_mismatch; parser_runtime_not_proven"
+    },
+    {
+      "finding_id": "T11-F09",
+      "severity": "info",
+      "kind": "no_issue_found",
+      "claim": "限定当前PAY_DW=32/BURST_BEATS=128与对齐前提，默认TLP不跨4KiB且≤最小128B MPS；BE/DW-valid、冻结ARM/匹配ACK及槽持有有明确实现。",
+      "evidence_refs": [
+        {
+          "source_id": "B0101",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0101.v",
+          "sha256": "e0dd673cd19dd09c0343dd5811a6bc4efbfab48ece2ab5e59396a17ef6f57a5b",
+          "line_start": 542,
+          "line_end": 604,
+          "reason": "全DW数据F0/FF、门铃F8及BE=f/0、ARM检查"
+        },
+        {
+          "source_id": "B0101",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0101.v",
+          "sha256": "e0dd673cd19dd09c0343dd5811a6bc4efbfab48ece2ab5e59396a17ef6f57a5b",
+          "line_start": 733,
+          "line_end": 795,
+          "reason": "session/seq保护和cancel状态"
+        },
+        {
+          "source_id": "B0101",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0101.v",
+          "sha256": "e0dd673cd19dd09c0343dd5811a6bc4efbfab48ece2ab5e59396a17ef6f57a5b",
+          "line_start": 909,
+          "line_end": 950,
+          "reason": "HELD到ACK才释放"
+        },
+        {
+          "source_id": "B0123",
+          "snapshot_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0123.v",
+          "sha256": "7b4be3e4dbc437212b619c43e20a875526f5ec0bd4824b4c994054baa7b24435",
+          "line_start": 1712,
+          "line_end": 1722,
+          "reason": "冻结默认参数"
+        }
+      ],
+      "reproduction": "witness枚举全部32种128B对齐页内偏移；每个payload+offset≤4096；mps_code0..5最小128B。只检查真实默认值，不推广任意PAY_DW。",
+      "impact": "本地静态算术未发现默认包界矛盾；host可见性、IP真实stall/CDC、同时命令优先与重置晚响应未做RTL/硬件签核。",
+      "recommendation": "保留ACK/HELD/FIFO/读持数及错误计数；后续扩参数需重新证明BE、MPS、尾包和4KiB。",
+      "expected_benefit": "保留已有安全边界与可追溯接受事件。",
+      "tradeoff": "真实DUT/host验证仍需授权。",
+      "validation": "测试者用不同判据复核包字段、对齐及扩位边界；生产未来随机stall/reset、旧ACK、cancel和link重启。",
+      "disposition": "review_only; implementation_deferred",
+      "default_configuration_affected": "default_static_scope_only"
+    }
+  ]
+}

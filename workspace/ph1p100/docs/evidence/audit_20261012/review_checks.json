@@ -1,0 +1,95 @@
+{
+  "date": "2026-10-12",
+  "baseline_commit": "f9ac15dba8423fa0af2b8cf3f9c9ff0f43986d59",
+  "scope": "Capture/DDR committed baseline; display work-in-progress excluded from completed qualification",
+  "packet_handler_sha256": "a2394afd29270a6d05ac3dcff636d903385413e3ba3205be9f25bb6fd009fe31",
+  "packet_simulator": "ModelSim Intel FPGA Edition 10.5b",
+  "packet_observations": {
+    "RAW10_WC20_expected_payload_words": 5,
+    "RAW10_WC20_actual_payload_words": 6,
+    "DT12_embedded_actual_payload_words": 2,
+    "boundary": "Handler-only directed simulation; WC20 is a valid RAW10 packing length. Not a physical CSI waveform test or proof of green-sparkle root cause."
+  },
+  "manifest_source_and_report_hashes_verified": 33,
+  "chain_test_address_mutation": {
+    "mutation": "read_offset bit4 forced to zero",
+    "words": 16200,
+    "unique_addresses": 8104,
+    "payload_identical": true,
+    "original_crc32": "0bcde2f7",
+    "mutant_crc32": "0bcde2f7",
+    "footer_offset": 16200,
+    "footer_bit4": 0,
+    "method": "Memory-only Python equivalence, not mutated RTL simulation"
+  },
+  "bandwidth_requirement_calculations_not_measurements": [
+    {
+      "format": "RAW10_1080p",
+      "frame_bytes": 2592000,
+      "dual_30fps_MBps": 155.52,
+      "ddr_raw_fallback_2R2S_MBps": 622.08,
+      "three_slots_per_camera_MiB": 14.83154296875
+    },
+    {
+      "format": "RAW12_1080p",
+      "frame_bytes": 3110400,
+      "dual_30fps_MBps": 186.624,
+      "ddr_raw_fallback_2R2S_MBps": 746.496,
+      "three_slots_per_camera_MiB": 17.7978515625
+    },
+    {
+      "format": "GRAY8_1080p",
+      "frame_bytes": 2073600,
+      "dual_30fps_MBps": 124.416,
+      "ddr_raw_fallback_2R2S_MBps": 497.664,
+      "three_slots_per_camera_MiB": 11.865234375
+    },
+    {
+      "format": "RAW10_4K",
+      "frame_bytes": 10368000,
+      "dual_30fps_MBps": 622.08,
+      "ddr_raw_fallback_2R2S_MBps": 2488.32,
+      "three_slots_per_camera_MiB": 59.326171875
+    },
+    {
+      "format": "GRAY8_preview",
+      "frame_bytes": 518400,
+      "dual_30fps_MBps": 31.104,
+      "ddr_raw_fallback_2R2S_MBps": 124.416,
+      "three_slots_per_camera_MiB": 2.96630859375
+    }
+  ],
+  "source_period_bytes": 256,
+  "notes": [
+    "Original packet RTL copied without modification and hashes compared before compile.",
+    "32-bit ModelSim sandbox DLL relocation and Unicode-cwd failures required native approval and ASCII writable-root work directory.",
+    "No project RTL changes, hardware download, or full implementation qualification performed."
+  ],
+  "latest_parallel_display_candidate": {
+    "manifest": "docs/evidence/camera_ddr_display_20261012.json",
+    "project": "camera_ddr_display_20261012_003550",
+    "eram": 55,
+    "setup_wns_ns": 0.049,
+    "hold_wns_ns": 0.02,
+    "downloaded": false,
+    "hardware_verified": false,
+    "audit_boundary": "Read current manifest and selected sources, did not independently repeat its full qualification."
+  },
+  "reviewed_file_sha256_at_report_time": {
+    "fpga/csi2/src/mem/ddr_frame_store.v": "c600420683a607a486661a678655a6fd23f13f29e1ae652fe1af8befe23a879a",
+    "fpga/csi2/src/mem/ddr_capture_check.v": "fb12b778d1fcc10d144305dd8eb5acfbbb83bf7fcfd06ee75c5c9f4e29c8bb61",
+    "fpga/csi2/src/mem/camera_ddr_capture.v": "8909e714350ba3f857bd84e7db195e205fba4f35abf77643ab1472e5d8003c71",
+    "fpga/csi2/src/cam/f9p_camera_capture_core.v": "2542a445ced1e14f725d7dd11123d5686f18bb6a090dafbc0d9055fef2e48386",
+    "fpga/csi2/prj/camera_peer/uisrc/03_ip/ui_imx415_cfg/ui_imx415_reg.v": "60f1ac9a0b8cb0a542312d27ee43bd8d0fbbc29f333f61638907b0739651a843",
+    "fpga/csi2/prj/camera_peer/uisrc/03_ip/mipi_csi_2/mipi_csi2_rx_ph1p.v": "54fb40dd8fd8b5013c72bc96fa71ed11e01599b83618acdc45e42e715ea4954d",
+    "fpga/csi2/prj/camera_peer/uisrc/04_pin/fep_vid006_imx415.adc": "4b32953901974b7cbe5e3bb35cf7623d48147cce4bd215e22db54c39122f2e11",
+    "fpga/csi2/src/pcie_top.v": "838e9277656cad9c19f3098d37f5b1858523463a01d2f8128fa6d13a767d45d8",
+    "fpga/csi2/tb/tb_capture_chain.sv": "c8b216bd753bf1c5e316b6c9ef28a278423f73a1840461f5c8594ce7e2f9b589",
+    "fpga/csi2/docs/interface_v1.md": "9941fd6a527ce0ab35f22604da5d400bbb55f5cdcc6b3a4b423cd49ddb4bf73d",
+    "docs/evidence/camera_ddr_display_20261012.json": "e42ab2913cf82a6c95f5018ae5f391eb0637a429c75934427ef41c063de4c5ab",
+    "docs/evidence/audit_20261012/tb_packet_audit.sv": "b3f537acb9261f8552b5a7ccae797dc7d247a0f785564a64284bea36e8cfb8c1",
+    "docs/evidence/audit_20261012/packet_audit.log.txt": "ec46aa8073e55f65bbd08a22f6f2879936f8f72e22ad5278882c665c3ed3a526",
+    "docs/evidence/audit_20261012/reproduce_checks.py": "47e042e9fc26f14144a7224541abc7368da64e15d066edd835da2c254553a243"
+  },
+  "competition_schedule_verified_source": "https://www.anlogic.com/support/university/competitions/eda/news1/42.html"
+}

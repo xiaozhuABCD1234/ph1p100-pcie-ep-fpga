@@ -1,0 +1,99 @@
+{
+  "run_id": "20261025-180900_fpga-dual-offline-closure",
+  "project_root": "D:\\fpga\\ph1p100",
+  "output_dir": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure",
+  "batch_size": 1,
+  "status": "ready",
+  "needs_user_input": false,
+  "question_path": null,
+  "user_summary_path": null,
+  "authorization_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\user-feedback-continue03.md",
+  "scope_limits": {
+    "formal_tasks": 2,
+    "new_tasks": 0,
+    "new_roles": 0,
+    "new_implementation_repairs": 0,
+    "batch_size": 1,
+    "offline_only": true
+  },
+  "protected": [
+    "All frozen candidate RTL/TB/runner/source inputs and old evidence",
+    "Production, other runs, OpenCode candidates, TD and hardware",
+    "Global taskboard/config/Git/drive mappings"
+  ],
+  "on_external_error_or_actual_ID_error": {
+    "operation": "return_to_planner",
+    "target": "/root/fpga_plan_dual_offline",
+    "automatic_retry": false,
+    "model_change": false,
+    "preemptive_replacement": false
+  },
+  "after_each_return": {
+    "operation": "return_to_planner",
+    "target": "/root/fpga_plan_dual_offline",
+    "requires_actual_counts_stop_flags_manifest_and_problem_if_any": true
+  },
+  "task_ids": [
+    "T08.dual-local-closure"
+  ],
+  "stage": "formal r1 interrupted quota recovery; original remaining acceptance only",
+  "input_paths": [
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T08-continue03-input.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T08.dual-local-closure\\r1\\mode-fix02\\manifest-mode-fix02.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T08-integrated-r1-input.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\continue03-recovery-audit.json"
+  ],
+  "manifest_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T08.dual-local-closure\\r1\\mode-fix02\\manifest-mode-fix02.json",
+  "manifest_sha256": "38e0615341330aa5b8f1e0e1f9ecf4e169abbdc6bc4856912b9e4f929bdfcce3",
+  "write_scope": [
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T08.dual-local-closure\\r1/**",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T08.dual-local-closure-r1-integrated.md"
+  ],
+  "next_action": {
+    "operation": "followup_task",
+    "target": "/root/fpga_tester_dual_local_180900",
+    "role": "fpga-tester",
+    "prompt_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T08-continue03-input.md",
+    "same_model": true,
+    "original_single_tester_only": true
+  },
+  "execution_limits": {
+    "recovery_accounting_static_calls": 4,
+    "original_r1_total_calls_including_recovery": 30,
+    "prior_calls": "must reconstruct; not zero",
+    "remaining_calls": "max(0,30-prior_r1_actual_conservative_calls-current_recovery_calls); no experiments until certified",
+    "remaining_compiles": "max(0,2-prior_r1_actual_compiles)",
+    "remaining_cases": "max(0,14-prior_r1_actual_case_processes)",
+    "original_edges_remaining": "at most 1; deduct any actual interrupted-turn attempt, uncertain means not runnable",
+    "recovery_calendar_window_minutes": 30,
+    "absolute_deadline": "record real receipt time+30min before any command; old 22:54:16 deadline remains expired in history",
+    "rationale": "User continuation after actual quota error opens a finite calendar resumption for remaining acceptance, without restoring calls/compiles/cases or failed-command attempts.",
+    "read_search_seconds": 60,
+    "compile_case_seconds": 300,
+    "search_rounds_per_problem": 3,
+    "same_failed_command_attempts_total": 2,
+    "no_progress_cycles": 2,
+    "TD": 0,
+    "hardware": 0,
+    "download": 0,
+    "Flash": 0
+  },
+  "current_evidence": {
+    "observed_receipts_compiles": 0,
+    "observed_receipts_cases": 0,
+    "no_integrated_r1_verdict": true,
+    "all_actual_counts_require_original_context_confirmation": true
+  },
+  "history_preserved": {
+    "r0_verdict": "FAIL",
+    "actual_repair_round": 1,
+    "r0_tester_calls": 44,
+    "r0_tester_compiles": 2,
+    "r0_tester_cases": 20,
+    "developer_cumulative_calls": 142,
+    "developer_cumulative_compiles": 7,
+    "developer_cumulative_cases": 44,
+    "developer_r0_overrun": true
+  },
+  "gate": "Account first. Reuse any valid same-manifest own evidence. Execute only certified remaining original checks; unknown/insufficient budget -> truthful blocked handoff, not assumed zero or PASS."
+}

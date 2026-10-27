@@ -1,0 +1,353 @@
+{
+    "schema":  "fpga-task-candidate-manifest-v1",
+    "task_id":  "T11.runB-debug-rtl",
+    "run_id":  "20261018-1631_runA_fpga_side_readchannel",
+    "generated_at":  "2026-10-18T21:59:49.9348753+08:00",
+    "author_role":  "fpga-dev (opencode subagent, P1-fix continuation)",
+    "repo":  "upstream/ph1p100-pcie-ep-fpga",
+    "branch":  "codex/raw10-rka1",
+    "base_head":  "8e1ef05f12831e94311c6cc593090198b0e258fc",
+    "commit_sha":  null,
+    "commit_status":  "ROOT_TOOL_COMMIT=27c596b01cd961dfa9d0850e4fbf879fe249de90 (tools/td/check_chipwatcher_readback.py + tools/td/tests/run_validator_tests.py; 2 files/360+/22-; not pushed). UPSTREAM=BLOCKED_PENDING (3 worktree-only candidate paths; commit not attempted this round).",
+    "pushed":  false,
+    "frozen":  true,
+    "status":  "ready_for_test",
+    "blocked_reason_code":  null,
+    "blocked_summary":  "Resolved by planner ruling (2): CWC multi-piece geometry validated equivalently - 15 contiguous pieces cover 288/288 data bits + 1 documented TD status tail bit (ram logic width 289); per-piece BID fields/modes exact; depth 1024. Default strict mode unchanged (still rejects multi-piece: BID width mismatch). 9/9 harness cases pass.",
+    "sdc_resolution":  {
+                           "verdict":  "PASS",
+                           "evidence":  "debug-fix/sdc-validation.txt",
+                           "prod_sdc_sha256":  "3f999c447abbb8908e0c830c1b2bf0313dc8a30b3f50a2ed899f3793bfa4c13a",
+                           "dbg_sdc_sha256":  "a902487425310fe2209a87a072e9af5a299f03c93c7a40a611637617019e3b36",
+                           "diff":  "3/51 lines pure u_top/ prefix",
+                           "run_log_sdc_warnings":  0
+                       },
+    "g2":  {
+               "verdict":  "FAIL (only CWC validator)",
+               "build_exit":  0,
+               "wall_s":  776.8,
+               "confidence":  "Routed",
+               "sta_coverage":  "96.00%",
+               "swNs":  0.139,
+               "stNs":  0,
+               "hwNs":  0.02,
+               "htNs":  0,
+               "violation_lines":  0,
+               "resources":  {
+                                 "lut6":  "16677/71680 (23.27%)",
+                                 "reg":  "21780/143360 (15.19%)",
+                                 "eram":  "151/300 (50.33%)",
+                                 "io":  "107/286 (37.41%)",
+                                 "dsp":  "0/220",
+                                 "pcie":  "1/1"
+                             }
+           },
+    "cwc":  {
+                "instance":  "auto_created_cwc1",
+                "view_nodes":  9,
+                "trigger_nets":  288,
+                "data_nets":  288,
+                "cwc_logic_width":  "288",
+                "cwc_logic_depth":  "1024",
+                "phy_eram_pieces":  15,
+                "bid_logic_widths":  null,
+                "bid_logic_depths":  null,
+                "cwc_sha256":  "fa24e25830fefe882edb3b4d9ab18de8fd39598a9822231b8622c9a0c73f22bb",
+                "validator_accepted":  true,
+                "validator_reason":  "strict: rejected (BID width mismatch, unchanged); multipiece: accepted (equivalent coverage)",
+                "validator_evidence":  "debug-fix/validator-tests/summary.json",
+                "multipiece":  {
+                                   "mode":  "--multipiece",
+                                   "result":  "accepted",
+                                   "pieces":  15,
+                                   "data_coverage":  "288/288",
+                                   "ram_logic_width":  289,
+                                   "status_bits":  1,
+                                   "depth":  1024,
+                                   "map":  "debug-fix/cwc-multipiece-map.json"
+                               }
+            },
+    "candidate_files":  [
+                            {
+                                "path":  "rtl\\ep_side\\img\\ep_bar_win.v",
+                                "sha256":  "795d7a56431f98c62cb6d113bfb5dc933bced1e94f95bc4841ce48710eb81377",
+                                "bytes":  35921,
+                                "role":  "modified insert-only: generate-gated MARK_DEBUG snapshot regs of dbg_bank_word0..8 (only when DBG_CTRL_DEFAULT_EN=1 = debug top; production generate disabled)"
+                            },
+                            {
+                                "path":  "constraints\\ph1p_pcie_case_ep_dbg.sdc",
+                                "sha256":  "a902487425310fe2209a87a072e9af5a299f03c93c7a40a611637617019e3b36",
+                                "bytes":  3916,
+                                "role":  "new: debug SDC variant mechanically generated (3 lines u_top/ prefix only); fail-closed validated"
+                            },
+                            {
+                                "path":  "tools\\pcie_integration\\td\\00_all_debug.tcl",
+                                "sha256":  "899f88ea88034015645113dd95e1c7548aaa3545c9a0e292c9549cc7906a73f6",
+                                "bytes":  5842,
+                                "role":  "modified: debug build uses debug SDC variant; ADC kept; production SDC not added"
+                            }
+                        ],
+    "artifacts":  [
+                      {
+                          "sha256":  "2385cdedae1d9985687360af77341183517e34cb18be9cad0229291593411873",
+                          "name":  "debug bit",
+                          "bytes":  5224027
+                      },
+                      {
+                          "sha256":  "2385cdedae1d9985687360af77341183517e34cb18be9cad0229291593411873",
+                          "name":  "compiled.bit",
+                          "bytes":  5224027
+                      },
+                      {
+                          "sha256":  "fa24e25830fefe882edb3b4d9ab18de8fd39598a9822231b8622c9a0c73f22bb",
+                          "name":  "compiled.cwc",
+                          "bytes":  81063
+                      },
+                      {
+                          "sha256":  "71330f1630e250a7c805a68edfffc3a4683a9a4480191c99f95614eacc913ba1",
+                          "name":  "BID",
+                          "bytes":  140754
+                      },
+                      {
+                          "sha256":  "1f83737f165cb311d253616b991605cf426a6816e67fb1e205f3091a1dc91add",
+                          "name":  "final_timing.rpt",
+                          "bytes":  5338334
+                      },
+                      {
+                          "sha256":  "9e1d712725bf1cb40c8c83986f24ee3cf98c593d68047b468b5a8125c9936fd1",
+                          "name":  "phy.area",
+                          "bytes":  72770
+                      },
+                      {
+                          "sha256":  "fd049037d104eef3850bdc03cb945ccdbc1ec432c71a808c197d1ba152f81f63",
+                          "name":  "phy run.log",
+                          "bytes":  211127
+                      },
+                      {
+                          "sha256":  "6727349ddead4cad93f1199eb8d764cb448612c1595f26d8321fd1ea29b103f9",
+                          "name":  "td log",
+                          "bytes":  26370
+                      },
+                      {
+                          "sha256":  "dd66bf43141e57972c3ceb2d02e58d1dd81c81fecdab4cedc255b580db6b3290",
+                          "name":  "commands.log",
+                          "bytes":  238
+                      }
+                  ],
+    "bit_parallel":  {
+                         "new_bit_sha256":  "2385cdedae1d9985687360af77341183517e34cb18be9cad0229291593411873",
+                         "old_bit_sha256":  "e81d353b284cb4e99ec86bcd7d511691cda187254f801c4832916f0000692b9a",
+                         "relation":  "parallel, not mixed; new bit NOT READY; old bit untouched",
+                         "downloaded":  false,
+                         "flash_written":  false
+                     },
+    "upstream":  {
+                     "head":  "8e1ef05f12831e94311c6cc593090198b0e258fc",
+                     "worktree":  "dirty: 3 candidate paths",
+                     "prod_sdc_unchanged":  true
+                 },
+    "notes":  [
+                  "G1 rerun: tb_ep_bar_win_debug + 8 legacy TBs all ALL PASS, vlog Errors:0 (debug-fix/msim/regression-summary.txt).",
+                  "Production SDC byte-identical; debug SDC diff 3 pure u_top/ prefix insertions; 0 SDC failure warnings in run.log.",
+                  "CWC auto-created from RTL MARK_DEBUG regs via TD flow insert_debugger + setup_debugger.",
+                  "No download, no board, no flash, no push, no network. Build budget exhausted with this single P1-fix build."
+              ],
+    "p1_fix2":  {
+                    "status":  "PASS",
+                    "validator":  {
+                                      "path":  "tools/td/check_chipwatcher_readback.py",
+                                      "sha256":  "fa3bcaf7242571ff292e9e92c273b8e69edd7383eb5b4a2b80e2cb81f1f641e6",
+                                      "bytes":  10861,
+                                      "change":  "added --multipiece fail-closed multi-piece coverage mode + --map-out; default strict mode unchanged (exit codes 0/1 unchanged)"
+                                  },
+                    "harness":  {
+                                    "path":  "tools/td/tests/run_validator_tests.py",
+                                    "sha256":  "e47cd705c54ac634b78730a482bbe20a71c5f1e47d59dc43347681508f7bb87f",
+                                    "bytes":  10526
+                                },
+                    "tests":  {
+                                  "summary":  "debug-fix/validator-tests/summary.json",
+                                  "total":  9,
+                                  "passed":  9,
+                                  "cases":  [
+                                                "real_multipiece(accept)",
+                                                "real_strict(reject: BID width mismatch)",
+                                                "single_strict(accept)",
+                                                "single_multipiece(accept)",
+                                                "neg_gap(reject)",
+                                                "neg_overlap(reject)",
+                                                "neg_width_overflow(reject)",
+                                                "neg_mode_mismatch(reject)",
+                                                "neg_wrong_rid(reject)"
+                                            ]
+                              },
+                    "geometry":  {
+                                     "width":  288,
+                                     "depth":  1024,
+                                     "ram_logic_width":  289,
+                                     "status_bits":  1,
+                                     "pieces":  15,
+                                     "coverage":  "288/288",
+                                     "segments":  "15 contiguous pieces tile [0,289): 20x14 + 9",
+                                     "note":  "288 data bits + 1 TD status tail bit; strict mode still rejects multi-piece by design"
+                                 },
+                    "map":  {
+                                "path":  "debug-fix/cwc-multipiece-map.json",
+                                "sha256":  "6f0669d87acd1bd465e4a98195c2da99cf484428db175bc7f598ba53c8e4bc69",
+                                "bytes":  40254,
+                                "bits":  289,
+                                "data_bits":  288,
+                                "status_bits":  1
+                            },
+                    "negatives":  [
+                                      {
+                                          "case":  "gap",
+                                          "rejected":  true,
+                                          "reason":  "data range gap/overlap at bit 100 (piece starts 101)"
+                                      },
+                                      {
+                                          "case":  "overlap",
+                                          "rejected":  true,
+                                          "reason":  "data range gap/overlap at bit 120 (piece starts 110)"
+                                      },
+                                      {
+                                          "case":  "width_overflow",
+                                          "rejected":  true,
+                                          "reason":  "piece width exceeds BID logic_width"
+                                      },
+                                      {
+                                          "case":  "mode_mismatch",
+                                          "rejected":  true,
+                                          "reason":  "working depth mismatch"
+                                      },
+                                      {
+                                          "case":  "wrong_rid",
+                                          "rejected":  true,
+                                          "reason":  "wrong/duplicate BID identity"
+                                      }
+                                  ],
+                    "test_files":  [
+                                       {
+                                           "path":  "debug-fix/validator-tests/inspect_bid.py",
+                                           "sha256":  "bf2d1ac8d862e4aabd5ad689d0911650d3de440378aaf62b243b3f21b5463f73",
+                                           "bytes":  1240
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/neg_gap.bid",
+                                           "sha256":  "049dbd52d1f9e3f2d376cd9b9541e730512efa24a56e71676c48fa612cd3ee4a",
+                                           "bytes":  140628
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/neg_gap.cwc",
+                                           "sha256":  "bf6592bc95b2a1954e6028533492e064bfc29a2b1fea8806d9aa96664ddb67a0",
+                                           "bytes":  81531
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/neg_gap.json",
+                                           "sha256":  "fcf89989c3e450ab00808bfb0661311f1e71ff943482bef757e8b2b7eec4ffee",
+                                           "bytes":  934
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/neg_mode_mismatch.bid",
+                                           "sha256":  "f5d782ae52d474b87cfd884bfb29e83456b3c05bc247c6ca7ccf3c129cc800be",
+                                           "bytes":  140628
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/neg_mode_mismatch.cwc",
+                                           "sha256":  "92c77767140b1ce0c6388c791ba01519a800e7d59b4b43b1ee6f2f3433fd6122",
+                                           "bytes":  81530
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/neg_mode_mismatch.json",
+                                           "sha256":  "9b8834b9118b1fcaa4c494542d765ab81a2cafc4e448be2c6a527f23fc1ec6ac",
+                                           "bytes":  924
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/neg_overlap.bid",
+                                           "sha256":  "03bb3af9b57d98ed6a8f97c75c135a887122e6dad13c9fe38e3cafe845f5d9ba",
+                                           "bytes":  140628
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/neg_overlap.cwc",
+                                           "sha256":  "1655ef85674966bbaa5972983bf32a0cfa00a841a0d307c06814123931ce9775",
+                                           "bytes":  81531
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/neg_overlap.json",
+                                           "sha256":  "c578c94f8875538650efbfcd07a9daf89eab029541644295ab7a17d87a548dc4",
+                                           "bytes":  942
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/neg_width_overflow.bid",
+                                           "sha256":  "44759b08986fedb4e120c6bef3aea5b27af91f8e1a30ef654688fda2d2536ff9",
+                                           "bytes":  140631
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/neg_width_overflow.cwc",
+                                           "sha256":  "aa6f45f1d7b0247c6ba396e3ae10e25794156717a12f8763ce019717c8712762",
+                                           "bytes":  81534
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/neg_width_overflow.json",
+                                           "sha256":  "16cf4aadcaaf53a9307c39ea83f597bebc1e88632267ef940e6f687cd2adb548",
+                                           "bytes":  939
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/neg_wrong_rid.bid",
+                                           "sha256":  "f5d782ae52d474b87cfd884bfb29e83456b3c05bc247c6ca7ccf3c129cc800be",
+                                           "bytes":  140628
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/neg_wrong_rid.cwc",
+                                           "sha256":  "c1702c2af55bae03d47e64431f1b43ea72ecf7b9d2fa05fc802fe0f0b6b5bc36",
+                                           "bytes":  81531
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/neg_wrong_rid.json",
+                                           "sha256":  "c1f7a0773d1e599fa9c4e779244adee7b2d4752ca94f79d8ea21d23006bcb6a5",
+                                           "bytes":  989
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/real_multipiece.json",
+                                           "sha256":  "f1c3d5b92279f633d0de3876fc7199a503a45a36360703918e75583c1d9be410",
+                                           "bytes":  5647
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/real_strict.json",
+                                           "sha256":  "a6f1615099aa187ba120fc61a4bc179c19a304002a64faf01787a87b3825b50f",
+                                           "bytes":  945
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/single_multipiece.json",
+                                           "sha256":  "55aba530ed10f063e4c6dd72e8c1e5f7b0702bff684dd6f588bbc96319250107",
+                                           "bytes":  5756
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/single_strict.json",
+                                           "sha256":  "934855edbe65911378c8a5164be5532cec8aa6a66ea3df735cbecafe564ab3a3",
+                                           "bytes":  989
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/summary.json",
+                                           "sha256":  "84f7e97aacf957004bf7e0800523fd7cc96c3bc8cc247b511fec2fd9ec29ca23",
+                                           "bytes":  2327
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/synthetic_single.bid",
+                                           "sha256":  "2513cff34a906d6cb220524093e1bbe1ec5d811dfebca1a0d3409fddcc69c1ed",
+                                           "bytes":  672
+                                       },
+                                       {
+                                           "path":  "debug-fix/validator-tests/synthetic_single.cwc",
+                                           "sha256":  "81e1390af85522137a61bf63f3bd2cdfb7fbca6943ace8609ddcfd228f3036a0",
+                                           "bytes":  644
+                                       }
+                                   ],
+                    "boundary":  "no build, no TD, no hardware, no network, no push; CWC/bit/RTL/constraints hashes unchanged (bit 2385cded..., cwc fa24e258..., bid 71330f16...)",
+                    "commit":  {
+                                   "root_repo":  "27c596b01cd961dfa9d0850e4fbf879fe249de90",
+                                   "root_branch":  "codex/ddr-timing-margin",
+                                   "upstream":  "BLOCKED_PENDING (3 worktree-only paths)"
+                               }
+                }
+}

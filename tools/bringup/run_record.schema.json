@@ -1,0 +1,108 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "r10f-run-record.schema.json",
+  "title": "R10F bring-up run record",
+  "description": "Frozen record schema for T11.runA-bringup-kit. One record per input and time point. A fail-closed parser must not emit a record when the input is invalid.",
+  "type": "object",
+  "required": [
+    "run_id",
+    "timestamp",
+    "operator",
+    "channel",
+    "readings",
+    "verdicts",
+    "notes"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}"
+    },
+    "operator": {
+      "type": "string",
+      "minLength": 1
+    },
+    "channel": {
+      "type": "string",
+      "enum": [
+        "offline-register-dump",
+        "bw-jtag-session-log",
+        "pcie-host-bar0",
+        "uart-command",
+        "synthetic"
+      ]
+    },
+    "tool": {
+      "type": "object",
+      "required": ["name", "version"],
+      "properties": {
+        "name": {"type": "string"},
+        "version": {"type": "string"}
+      }
+    },
+    "input": {
+      "type": "object",
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "readings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["offset", "offset_hex", "name", "value", "value_hex"],
+        "properties": {
+          "offset": {"type": "integer", "minimum": 0, "maximum": 4092, "multipleOf": 4},
+          "offset_hex": {"type": "string", "pattern": "^0x[0-9A-F]{3}$"},
+          "name": {"type": "string"},
+          "value": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+          "value_hex": {"type": "string", "pattern": "^0x[0-9A-F]{8}$"},
+          "raw": {"type": "string"}
+        }
+      }
+    },
+    "verdicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["rule_id", "verdict", "detail", "source"],
+        "properties": {
+          "rule_id": {"type": "string", "minLength": 1},
+          "offset": {"type": "string"},
+          "name": {"type": "string"},
+          "verdict": {
+            "type": "string",
+            "enum": ["pass", "fail", "blocked", "not_applicable"]
+          },
+          "detail": {"type": "string"},
+          "source": {"type": "string"}
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "pass": {"type": "integer", "minimum": 0},
+        "fail": {"type": "integer", "minimum": 0},
+        "blocked": {"type": "integer", "minimum": 0},
+        "not_applicable": {"type": "integer", "minimum": 0},
+        "verdict": {"type": "string", "enum": ["pass", "fail", "blocked"]}
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  },
+  "additionalProperties": true
+}

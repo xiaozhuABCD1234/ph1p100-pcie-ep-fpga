@@ -1,0 +1,987 @@
+{
+  "schema_version": 1,
+  "upstreams": [
+    {
+      "name": "peer-fpga-2a4b253",
+      "commit": "2a4b253d9f2e56a943f1667b2a7a366824dcba34",
+      "source_git": "C:/Users/czz/AppData/Local/Temp/opencode/ref_ph1p100_fpga",
+      "commit_metadata": "2a4b253d9f2e56a943f1667b2a7a366824dcba34\n2026-10-16T23:16:07+08:00\n2026-10-16T23:16:07+08:00\nfeat(ddr): 相机 A/B 双路 4K 直通 DDR3，写口按突发仲裁",
+      "archive": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261017-011744-rk-fpga-align/references/peer-fpga-2a4b253.tar",
+      "archive_sha256": "e129cb6e72cae3d0147e0794e243a31448b1c02cac3990374ff4ed4337b8d504",
+      "files": [
+        {
+          "path": ".gitignore",
+          "bytes": 769,
+          "sha256": "c5551d3c3a5bdd80b4a945ce541581a103623b1af6ab5adb11ccd7ff817b1c44"
+        },
+        {
+          "path": "README.md",
+          "bytes": 12411,
+          "sha256": "731e4824359ff8ba674e017b86c28e47637b74aa4fd24274623916092d4e7fbb"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/.m_params_ddr3_mc_0.txt",
+          "bytes": 848,
+          "sha256": "535e28148b07fd73ee6b6d03d47f02e5e178022d7b66b30af8f391e27c058c21"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/.params_ddr3_mc_0.txt",
+          "bytes": 6047,
+          "sha256": "ed062b1dc0bc6576a750335fe35f6dc0c38437f34eb1ae519e486d84c7670a71"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/.ports_ddr3_mc_0.txt",
+          "bytes": 1605,
+          "sha256": "a2a23e909d3e0efaefb83c40a23c974ce9ebb07c16f90a9adeaa3bf03108e7bb"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/Design.xml",
+          "bytes": 39926,
+          "sha256": "4d7060f8877717b82e4e547617c80178c369a6c296a21827eb057a7a2ec551c0"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/DesignConfiguration.xml",
+          "bytes": 983,
+          "sha256": "72d1c8958af62aaa3e4675769f0592bbe8acf76ea5210cc94317ae75df94f0f7"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/ddr3_mc_0.v",
+          "bytes": 6807,
+          "sha256": "e75df667d589aae88865af8cb977edca5549ae433cd69b1fcb1b17d89f22bd30"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/ddr3_mc_0.xml",
+          "bytes": 44737,
+          "sha256": "ed124035986b727346246a75cd20970fff9d8967d8ec68d48c9879be2c0caa41"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/ddr3_mc_0_ph1p_ddrmc_wrapper.v",
+          "bytes": 21184,
+          "sha256": "c52620880d40d4f9088a9f093d29617782dcfa9482e27408499c7fc092311ca4"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/adc/ddr3_mc_0.adc",
+          "bytes": 8621,
+          "sha256": "751997438bd28e2a956864493b3083008e1458878263dd709a569feca09c0baa"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/axi/mc0_axi2mc_top_all.enc.sv",
+          "bytes": 156379,
+          "sha256": "4cc96bff7df75105daa90d2035a6fb667fbd7ceebf539b2667ed327970b400c7"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/cal/ph1p_ddrphy_cal_gate.v",
+          "bytes": 4745,
+          "sha256": "e508c6a72c880091b69d9c8e52a8be35dd9b25c08e93203cef9f38454da7b375"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/cal/ph1p_ddrphy_cal_gate_wrapper.v",
+          "bytes": 12985,
+          "sha256": "6881f0d8f37d7eefa0e417cdd2de8a205bcfd17eb8caa205d2f0f6ffda7f0002"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/cal/ph1p_ddrphy_cal_wla.v",
+          "bytes": 4417,
+          "sha256": "ac3753acc3ba028965b8a232e19699e77f29a0c6904bb7e5f635042c50181b95"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/cal/ph1p_ddrphy_cal_wla_wrapper.v",
+          "bytes": 11447,
+          "sha256": "44c024d6addbb2b35bc156fce65e88fd0feaf942798343cbda6dbbb4111ec222"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/cal/ph1p_ddrphy_cal_wrapper.v",
+          "bytes": 22879,
+          "sha256": "88b69d9a5bc6833f6eec625b2399790d7bffabcd5808e7f83cdd6d7278c2c1bd"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/cal/ph1p_ddrphy_cal_wrlvl.v",
+          "bytes": 4489,
+          "sha256": "726e3569d4c4548d86df0c06d482888cbbc4b4879ab95f99fe7735580af13c55"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/cal/ph1p_ddrphy_cal_wrlvl_wrapper.v",
+          "bytes": 11428,
+          "sha256": "8e5ce34c949bba8ab9ade8d4bbfe1d2d012608bde24ee64dcfeae27073add341"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/clk/ph1p_ddrphy_clk_top.v",
+          "bytes": 4031,
+          "sha256": "372caf69cb0a79e1385be521e5e0ddadd3ff423dbc294d0fe9e89171c73c4b81"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/clk/ph1p_ddrphy_pll0.v",
+          "bytes": 10461,
+          "sha256": "a813b819285ca8bf9da9661f6f4bb45a677afb96b66b15415ee842581102512b"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/clk/ph1p_ddrphy_pll1.v",
+          "bytes": 10665,
+          "sha256": "34f8d8349cf37c4bd0367458e9773b53833dbf0c66d47fc9fe41a0335481d5df"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/include/ph1p_mis_define.vh",
+          "bytes": 182,
+          "sha256": "5773ad120403b87d11397b5608b4fca0c35ddd9bfed31cdf5c25ccedcc796f70"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/init/ph1p_ddrphy_dram_init.v",
+          "bytes": 9440,
+          "sha256": "8e737b35716bf5d19584c6cbe3babd2142654ac33ab1930a6387a3612058945f"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/mc/alc_phy2mc_fifo_ctrl.v",
+          "bytes": 4908,
+          "sha256": "2f15c2a5ab3f16093664b9f3d86c871778b57285756d61d5f937761e954e0e6f"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/mc/mc0_alc_mc_top_all.enc.sv",
+          "bytes": 252018,
+          "sha256": "b312be5d928141657ba19edf0fc1755f6bb62eb88219e0b322361245fc94b554"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/misc/ph1p_ddr_fifo_dram_sync.v",
+          "bytes": 2701,
+          "sha256": "c78340c7d69aa202136da2fb85f02e1b3dfd61a770ed49ffcc634ca8597e8dc8"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/misc/ph1p_ddrphy_sync_rst_gen.v",
+          "bytes": 736,
+          "sha256": "2679b2593fbf1200fd431a31b1f6925968307c084f61c65df16b4008de9145f2"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ddrphy_cfg_rom.txt",
+          "bytes": 1003,
+          "sha256": "470a3558aee0a075cf926f2715d2fe5ce7c23c4054696d8ac3ac346e180b84e4"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/include/ph1p_ddrphy_board_delay.vh",
+          "bytes": 1754,
+          "sha256": "bb94456607df0a7f8635cec2f2d9cb93a7c02bceb9c6beef5d440345e4200c95"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/include/ph1p_ddrphy_bus_matrix.vh",
+          "bytes": 10396,
+          "sha256": "c88d9df34f7ae4d6dd1da8f13870a52a6da4b788485a60d20633170c928a8286"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/include/ph1p_ddrphy_ddrio.vh",
+          "bytes": 1388,
+          "sha256": "80b4979acf127c19a73f5afd269532264d276fd536171b4353473779af2ac64a"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/include/ph1p_ddrphy_pad_type.vh",
+          "bytes": 780,
+          "sha256": "179aad250f27a04f52d33efd18c8d06e3f68fba0167fa94a7e38c0c882f5ffb2"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ph1p_ddrphy.v",
+          "bytes": 42272,
+          "sha256": "a67e0eb545490b8f85101f23e02c7c2295b0468e771c909b4a5cd5343eac8f45"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ph1p_ddrphy_apb_bridge.v",
+          "bytes": 8502,
+          "sha256": "8aead394b9fc579f7a5fe3f9d20da9e9427a370e225ac498478c3c3332e29de2"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ph1p_ddrphy_bankref_cfg.v",
+          "bytes": 3175,
+          "sha256": "a3aea618b3f0aebf1dd5c35a239ed76cbe4f62606adc46f156e141dd3103d387"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ph1p_ddrphy_byte_wrapper.v",
+          "bytes": 18893,
+          "sha256": "d05817a87545aa727e0581a763270eb797ddb6c6812f4a81fc6205be7b0b4322"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ph1p_ddrphy_cmd_decode.v",
+          "bytes": 7076,
+          "sha256": "0c4ba7079b384715de14ab36de79a41fa6a09db461b24ad4f77bbbf3d36cb28b"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ph1p_ddrphy_cmd_execution.v",
+          "bytes": 6619,
+          "sha256": "5bffa8536e5ded31ab314a16664748d07c8eea105e4a38bbc722d1b1acc6d260"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ph1p_ddrphy_cmd_wrapper.v",
+          "bytes": 7751,
+          "sha256": "6fad2694b6e47881337f08fe93398cb7c3ee015e109100266d39960eca56ce1d"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ph1p_ddrphy_dbi_wrapper.v",
+          "bytes": 1819,
+          "sha256": "2b8ce9b9e1e0e8103847dd9eceaaa7893388906eb69ca0130a206d9db4475984"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ph1p_ddrphy_dcu.v",
+          "bytes": 10852,
+          "sha256": "dc93530badac360c550f2eaad2863e68437805f2d8d6f332de29597ec1b81903"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ph1p_ddrphy_dcu_wrapper.v",
+          "bytes": 3297,
+          "sha256": "5a09f007371f049b5b8fce463456b4e60d8f823e2cb3890750890b52ebf114d6"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ph1p_ddrphy_fast_init.v",
+          "bytes": 6958,
+          "sha256": "725e14c8013684352dc62f73b2fe386a4b47efbb2a366f9b92ffd152b6ffabe6"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ph1p_ddrphy_fast_init_wrapper.v",
+          "bytes": 20715,
+          "sha256": "afb4e9b0729d994ef5066a2ff92655b7bb78edb0fbdd6d1a53c6a4d6178e57ff"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ph1p_ddrphy_init.v",
+          "bytes": 9150,
+          "sha256": "15e490a9312253fd615abc13a83634b82ca0ecd364383087eabe7d646cae99ac"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ph1p_ddrphy_mdl_cal.v",
+          "bytes": 15515,
+          "sha256": "9a9f1f84e3ddca138cc10ef8bae8197d189ec2a6277adf26f6a6fe19131c4f13"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ph1p_ddrphy_mdl_cal_wrapper.v",
+          "bytes": 3019,
+          "sha256": "d278260689d50dc948744df0ab4a53677691e4a6a83b835e50bce8157a607e46"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ph1p_ddrphy_rdbi.v",
+          "bytes": 1102,
+          "sha256": "816635c1d0afd52c884ea5765d96d2a4b2f7c38c94d1ba0fcc1d1aa4c21d1577"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ph1p_ddrphy_rphase_ctl.v",
+          "bytes": 6327,
+          "sha256": "2bae7007117faf570926ab0b090c270d2dbf53ad5bcf29bce936b28739336612"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ph1p_ddrphy_top.v",
+          "bytes": 34077,
+          "sha256": "6fba1b5b89d01b1da78742b3b37d05edb318725aae5dfe7d8e52f86b545502f4"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ph1p_ddrphy_wdbi.v",
+          "bytes": 2117,
+          "sha256": "92668b0e72632756f01a5a1d9956954ad6a174b51492c768d36ace2640c36730"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ph1p_ddrphy_wphase_ctl.v",
+          "bytes": 8413,
+          "sha256": "b62c1d5674d8fbb4cbd301ece79a2210bba0e2f073b7e5c306dbef95d704b583"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/phy/ph1p_ddrphy_wrapper.v",
+          "bytes": 24024,
+          "sha256": "a30eb9870f2b1f6ae7ae2bacb7dd448623dab4b30bc78dbe04dcbdc4b13d3e5b"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/timing/ddr3/ddr3_1066.vh",
+          "bytes": 747,
+          "sha256": "e04c9cdf76f29e26263112b145cfbfdcfe3a14411a3226d2609fe7cb59788a17"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/timing/ddr3/ddr3_1333.vh",
+          "bytes": 751,
+          "sha256": "f79e90cb2bfe3c69072b6343910aa46fe1aa32634d41fec224c2e7b05d3d1f1d"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/timing/ddr3/ddr3_1600.vh",
+          "bytes": 749,
+          "sha256": "a07dddf3609fb3ad9bfc1fa50b50eef9eefe50237fb4ac4384c745a8c56e97fa"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/timing/ddr3/ddr3_1866.vh",
+          "bytes": 733,
+          "sha256": "095bcd24e53b48347bd278821edeae3b8d3e621ab0d5a262fcbaf14d9452cdc3"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/timing/ddr3/ddr3_2133.vh",
+          "bytes": 733,
+          "sha256": "6d162f4fa58e84b27c033fdb0376145a21165130aede314f94c9c69bef2ed998"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/timing/ddr3/ddr3_800.vh",
+          "bytes": 747,
+          "sha256": "165909f1cf97354b565d0f4e009e311fade3828ff312fb44205335e1d85f94fa"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/timing/ddr3/ddr3_parameter.vh",
+          "bytes": 4103,
+          "sha256": "21b830118966fada6e8938feb66b755ad4b3359d832ccf13cb354e763546c843"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/rtl/top/ph1p_ddrmc_top.v",
+          "bytes": 15295,
+          "sha256": "a6c42954a10ff8526263bcd21192b99a8b4a3434fa5add3bca287109b4e0579f"
+        },
+        {
+          "path": "al_ip/ddr3_mc_0/src/sdc/ddr3_mc_0.sdc",
+          "bytes": 792,
+          "sha256": "adb6317927dfd09095073cad40be8e63d39ea3d941b4c790f2f483b1aed428d6"
+        },
+        {
+          "path": "al_ip/pcie_ep_core/.m_params_pcie_ep_core.txt",
+          "bytes": 5407,
+          "sha256": "b5d9732faffd98c66d71e57e123186ee9900ffc914ebb713bfb8cf45fbf48cc1"
+        },
+        {
+          "path": "al_ip/pcie_ep_core/.params_pcie_ep_core.txt",
+          "bytes": 23967,
+          "sha256": "b3eb67a1f7fe5b558b544ce726aa193baa6219740e18696f1765b46165692a89"
+        },
+        {
+          "path": "al_ip/pcie_ep_core/.ports_pcie_ep_core.txt",
+          "bytes": 4786,
+          "sha256": "1979f28f5c57ad8af70cdc447b22b47d06de2c76e304e5bb14d861e2e04b6af6"
+        },
+        {
+          "path": "al_ip/pcie_ep_core/Design.xml",
+          "bytes": 59215,
+          "sha256": "e79e8f5986d48aa7b4b14c33efab54f6cba61413a5203bf37ba7c8375bf662e0"
+        },
+        {
+          "path": "al_ip/pcie_ep_core/DesignConfiguration.xml",
+          "bytes": 984,
+          "sha256": "7ec3ad3bc8adfea0384f71ae966452050f1950b1a0fbc7b326f5804a73153f17"
+        },
+        {
+          "path": "al_ip/pcie_ep_core/RTL/include/define.v",
+          "bytes": 384,
+          "sha256": "6dcc1666a9895c03fe27f9e4282619e6df97e23bd1742eca341bee72ddb54df2"
+        },
+        {
+          "path": "al_ip/pcie_ep_core/RTL/ph1p_pcie_subsystem_top_e9a1caca5a70.v",
+          "bytes": 172708,
+          "sha256": "d25b3a566b632e0d56666ef6e50db236bfb8a12fd3abbf04ec50451b2848c1f2"
+        },
+        {
+          "path": "al_ip/pcie_ep_core/pcie_ep_core.adc",
+          "bytes": 199,
+          "sha256": "7e4e39f2dc6796570b9cc77d54bce492f7d964d3eeabb31276bb9d15f325481e"
+        },
+        {
+          "path": "al_ip/pcie_ep_core/pcie_ep_core.v",
+          "bytes": 11154,
+          "sha256": "a61be99096c7cb11c74c540448fcdaf54e2c34d43d90c8a13be9c62c013fdf56"
+        },
+        {
+          "path": "al_ip/pcie_ep_core/pcie_ep_core.xml",
+          "bytes": 35033,
+          "sha256": "be3a63a90135d75e94667bbd3431f36f357d196e7aa7ccee83c34b42c59a4315"
+        },
+        {
+          "path": "al_ip/pcie_pll_ep/.m_params_pcie_pll_ep.txt",
+          "bytes": 2199,
+          "sha256": "1ea66c2adaae319df2492d6128b665831190c0c5f4d062118fb0f555232fd3ab"
+        },
+        {
+          "path": "al_ip/pcie_pll_ep/.params_pcie_pll_ep.txt",
+          "bytes": 21233,
+          "sha256": "5268850fce836577d7fa6b62ee4e28ef6c97b4089fc0bf4c7cded420b38b2565"
+        },
+        {
+          "path": "al_ip/pcie_pll_ep/.ports_pcie_pll_ep.txt",
+          "bytes": 938,
+          "sha256": "a45f90956a23e02bdbfedc619d0827d74da49fd4cb1408f868f96f0c6b34bc23"
+        },
+        {
+          "path": "al_ip/pcie_pll_ep/Design.xml",
+          "bytes": 40986,
+          "sha256": "fc38c6ab3b59761fb328ae6a310718135a99fd1dc60c7ad86722849e61bb816c"
+        },
+        {
+          "path": "al_ip/pcie_pll_ep/DesignConfiguration.xml",
+          "bytes": 971,
+          "sha256": "d3c2799227a58e24ad973c7a58981e3deb1d53f1832d06680f59db889c92ada2"
+        },
+        {
+          "path": "al_ip/pcie_pll_ep/Other/PLLF6F1D0P0_1_1_upgrade.tcl",
+          "bytes": 5275,
+          "sha256": "604f7e2fc6f80289cb21d26900495ce478c57bf4e52fe6fe572fbc7b6d713842"
+        },
+        {
+          "path": "al_ip/pcie_pll_ep/RTL/include/define.v",
+          "bytes": 28,
+          "sha256": "e6cbdf51d3a21ab5c7d5f690d23214cd97da08a90574d1d384f927a8ab79df13"
+        },
+        {
+          "path": "al_ip/pcie_pll_ep/RTL/ph1p_phy_pll_wrapper_pcie_pll_ep.v",
+          "bytes": 12546,
+          "sha256": "027d33c5384a0c2da5917f1dd7109b02e6350dc12e25f2ff614afa0cb2d921d6"
+        },
+        {
+          "path": "al_ip/pcie_pll_ep/pcie_pll_ep.v",
+          "bytes": 3090,
+          "sha256": "d96fb2d4cca5128714441d236bba013ecc7bb27a575df68d0e4d82aa37f279de"
+        },
+        {
+          "path": "al_ip/pcie_pll_ep/pcie_pll_ep.xml",
+          "bytes": 6727,
+          "sha256": "de7439ed736615c4e8fc82ab27b23b81fb4b7acc0e6f918ae57a52d0e513832a"
+        },
+        {
+          "path": "al_ip/ram/.m_params_ram.txt",
+          "bytes": 405,
+          "sha256": "fd83f144e7efc7ba134ef65c1d5b6b1c660ce3fa227b4a480ffa624ceb1d7d92"
+        },
+        {
+          "path": "al_ip/ram/.params_ram.txt",
+          "bytes": 3573,
+          "sha256": "cab474b225360e7976599b72b244ab7e7c2caf31602737259ef88a2a3580b815"
+        },
+        {
+          "path": "al_ip/ram/.ports_ram.txt",
+          "bytes": 403,
+          "sha256": "1b45df07d9fd966e5dd0ef6b7f86fc18634221118854e4ee342d0ad4d0825192"
+        },
+        {
+          "path": "al_ip/ram/Design.xml",
+          "bytes": 13051,
+          "sha256": "41ef508f5b07e117919c37edc542e70ae63c6533af1032af568bc6885d0ab95a"
+        },
+        {
+          "path": "al_ip/ram/DesignConfiguration.xml",
+          "bytes": 920,
+          "sha256": "b84250023ac7ec02c6b07f9c5ea62535213e687a4163ead333dcd107fb5f0fe1"
+        },
+        {
+          "path": "al_ip/ram/RTL/include/define.v",
+          "bytes": 104,
+          "sha256": "b439fdeab07e0df82ec0bf5de52df341936c7f23eced940bb615bb63e2f670ea"
+        },
+        {
+          "path": "al_ip/ram/RTL/include/hxt_parameter.v",
+          "bytes": 2371,
+          "sha256": "8c7fe0aadee43a9b6de9dc72ef82a20247aacf84758813c36deac8403b25a48d"
+        },
+        {
+          "path": "al_ip/ram/ram.v",
+          "bytes": 1293,
+          "sha256": "b9c3fce5ad2fe1ea1b66966206e7d8cf893915711474b075a59c8fc92197586d"
+        },
+        {
+          "path": "al_ip/ram/ram.xml",
+          "bytes": 5951,
+          "sha256": "f5749a8b1ad3312a3822831072e72fc7f26ba2f3300fe4a92a294892cf96178a"
+        },
+        {
+          "path": "al_ip/ram/ram_a5091d0ea69c.v",
+          "bytes": 2574,
+          "sha256": "e16d9d2e23a5ec5199213569c68f7729bb90f74555641cef3c2eac19c0c8bd6e"
+        },
+        {
+          "path": "build.tcl",
+          "bytes": 706,
+          "sha256": "4d20e53f4461e29813b9ad8a98b1d7cc9668d00e49e07508579161a5487d8935"
+        },
+        {
+          "path": "constraints/ph1p_pcie_case_ep.adc",
+          "bytes": 5668,
+          "sha256": "67831295aef0f5afbec9f2dfbf062922b793a6586e56c074ace21787b6365c98"
+        },
+        {
+          "path": "constraints/ph1p_pcie_case_ep.sdc",
+          "bytes": 3898,
+          "sha256": "3f999c447abbb8908e0c830c1b2bf0313dc8a30b3f50a2ed899f3793bfa4c13a"
+        },
+        {
+          "path": "create_project.tcl",
+          "bytes": 2629,
+          "sha256": "99dd21606e3e0e793996910fb34e22f691acb6145e2499369357db1a84150da3"
+        },
+        {
+          "path": "doc/APUG081_安路科技PH1P系列FPGA PCIE RC对接EP参考设计.docx",
+          "bytes": 1537595,
+          "sha256": "362e24221d745f811fafc9983d03d0b1fb5651937a806f530c41bdcfeeed1869"
+        },
+        {
+          "path": "doc/uart_cmd_file_pcie.txt",
+          "bytes": 56050,
+          "sha256": "32bbfcb96e105e5565b86b55a07d3eaed4988dd083ecbf739a3ae33bbeebabf3"
+        },
+        {
+          "path": "download_sram.tcl",
+          "bytes": 1473,
+          "sha256": "2a638149d337de04416be9251d95327ef42ac88a7851a0553c0dfd04b438ac46"
+        },
+        {
+          "path": "ph1p_pcie_ep_top.al",
+          "bytes": 17546,
+          "sha256": "4cfc0fd6e6408e05550102368cef679c1c84c1f6210b3a302b15f33c46f6c521"
+        },
+        {
+          "path": "rtl/common/BDF.v",
+          "bytes": 2998,
+          "sha256": "c59a0aacf5200b349b9b549e886ea5256fcb525e7e224c5138ac7ff6cd72adf1"
+        },
+        {
+          "path": "rtl/common/PCIE_REG_TABLE.v",
+          "bytes": 20250,
+          "sha256": "3755685e52c857882b46188952c4cc72bb2b5ea0967fa9085a4342ba407111bd"
+        },
+        {
+          "path": "rtl/common/TLP_FMT_TYPE.v",
+          "bytes": 3057,
+          "sha256": "167bcd7fb3213a886affded2945f0fa46a0f1d5b92fbfb55761e6ecf4e98b9e4"
+        },
+        {
+          "path": "rtl/common/eram.v",
+          "bytes": 25828,
+          "sha256": "684eb8cc0c547c988b96d117792142c9182cb335c00ba4184f66a7e27f077286"
+        },
+        {
+          "path": "rtl/common/ph1p_pcie_case_param.v",
+          "bytes": 161,
+          "sha256": "7e9a8a9e57b44b8edb400897b1530a9b4b93e77b7176616c6e8587a12ae123f3"
+        },
+        {
+          "path": "rtl/common/ph1p_pcie_rst_sync.v",
+          "bytes": 2661,
+          "sha256": "ead457ae6dc09a84f18e68fc6cfe1a95246bea51106f5c5578396c438296859b"
+        },
+        {
+          "path": "rtl/common/uart/bps_setting.v",
+          "bytes": 983,
+          "sha256": "e8d3e388be2adaf9786490c28e2de73b13cf8c434ad3cd6b28582742b0fbb5d2"
+        },
+        {
+          "path": "rtl/common/uart/pcie_uart.v",
+          "bytes": 8714,
+          "sha256": "29e5fa8f68ffaa80946cd673b233b9d5752956f5aea1e75cbd4b3bcd48c774ea"
+        },
+        {
+          "path": "rtl/common/uart/pcie_uprotocol.v",
+          "bytes": 7939,
+          "sha256": "13d08d56365e98023e361cdb08ed60cf69709d2f8090397c2750d2efc7dbf9b5"
+        },
+        {
+          "path": "rtl/common/uart/uart_cdc.v",
+          "bytes": 5160,
+          "sha256": "5cb1e4d902841f74b6b16c429f5a6a61ca45b3ae30809118c454f95d245205c4"
+        },
+        {
+          "path": "rtl/common/uart/uart_rx_setting.v",
+          "bytes": 6133,
+          "sha256": "ddcc4a50cfeb7614e688a191844a4f4381ee00a96d8e06e6fe577432bf2f6ab9"
+        },
+        {
+          "path": "rtl/common/uart/uart_tx_setting.v",
+          "bytes": 4557,
+          "sha256": "b59e8eb924eb63ed2c8ff5a8070cbba3d8711e8b17e33ea00fb0a18db8ff8aeb"
+        },
+        {
+          "path": "rtl/common/ubus2hxt_apb.v",
+          "bytes": 4630,
+          "sha256": "5ffe893445c06166b34292a148e0244cca9e3e77a28284b15bec3eabe50e39f4"
+        },
+        {
+          "path": "rtl/common/ubus2pcie_apb.v",
+          "bytes": 4440,
+          "sha256": "768e410b3cba707d790c3e837c2ed73aabbc4158c0533e95f04e15c1ab7d5535"
+        },
+        {
+          "path": "rtl/ep_side/cam/auto_delay_ctl.v",
+          "bytes": 6631,
+          "sha256": "155681dcb59055d6fc9eee8029c75e0796763bb0ec89b61dda6b2322d1f520bd"
+        },
+        {
+          "path": "rtl/ep_side/cam/clk_activity.v",
+          "bytes": 1159,
+          "sha256": "566954217277ebe6a5294124332ac68b9947ff2810f5fe0b284ce1702ef01b90"
+        },
+        {
+          "path": "rtl/ep_side/cam/csi_rx_10bit_unpack.v",
+          "bytes": 7271,
+          "sha256": "c66019f622acec04830f2ae6fe039ee17c3b3a5ffc524c604c5b12884686fb30"
+        },
+        {
+          "path": "rtl/ep_side/cam/csi_rx_byte_align.v",
+          "bytes": 5522,
+          "sha256": "1e76d86ba1e9c5464edd19b08b4c856f5aaaeeab47d93b12851d20065ebfc839"
+        },
+        {
+          "path": "rtl/ep_side/cam/csi_rx_clock_det.v",
+          "bytes": 3588,
+          "sha256": "eb079a9e13d8744afcf49a866640d6de8719c41cfffaa62ba8e44de93a44b32f"
+        },
+        {
+          "path": "rtl/ep_side/cam/csi_rx_hdr_ecc.v",
+          "bytes": 1587,
+          "sha256": "f20bf32792a6734c49fed579f8cb4ab086da7c1254d9e00570cbb1c834634b76"
+        },
+        {
+          "path": "rtl/ep_side/cam/csi_rx_packet_handler.v",
+          "bytes": 11326,
+          "sha256": "a2394afd29270a6d05ac3dcff636d903385413e3ba3205be9f25bb6fd009fe31"
+        },
+        {
+          "path": "rtl/ep_side/cam/csi_rx_word_align.v",
+          "bytes": 5898,
+          "sha256": "310bef19ca967197ba81a9a45cbc6da8b2f2212146bb76d070e2965e9b4526dd"
+        },
+        {
+          "path": "rtl/ep_side/cam/csi_rx_word_gear_box.v",
+          "bytes": 1965,
+          "sha256": "0f8137e3a65c0335d162c0ce3afb39da21f90b03f61c01b455161197b6c1a230"
+        },
+        {
+          "path": "rtl/ep_side/cam/mipi_csi2_rx_ph1p.v",
+          "bytes": 5945,
+          "sha256": "54fb40dd8fd8b5013c72bc96fa71ed11e01599b83618acdc45e42e715ea4954d"
+        },
+        {
+          "path": "rtl/ep_side/cam/pulse2toggle.v",
+          "bytes": 831,
+          "sha256": "a71fd594175de9b2882a9439368bdfb823d253c856d13f8fb47d24a885a65e4f"
+        },
+        {
+          "path": "rtl/ep_side/cam/rx_phy_ph1p.v",
+          "bytes": 7493,
+          "sha256": "ac711c853a345bf747d539edb7e0093cd315d90a362d62512289c3e396d967ef"
+        },
+        {
+          "path": "rtl/ep_side/cam/sfifo.v",
+          "bytes": 34306,
+          "sha256": "795a54967a3c5515c6bbac5ee9d2f0e0c049002d21c6287025d79c1bbe14752f"
+        },
+        {
+          "path": "rtl/ep_side/cam/ui_cfg_imx415.v",
+          "bytes": 8207,
+          "sha256": "6bffc905be9756418f5dc9061b957baa1385395ef34b0143e3e677a50bdcd0d0"
+        },
+        {
+          "path": "rtl/ep_side/cam/ui_i2c.v",
+          "bytes": 12921,
+          "sha256": "f887902b6038b3c5c13e92524ee854ed5ac94704a49e906f8aa891299e65c305"
+        },
+        {
+          "path": "rtl/ep_side/cam/ui_imx415_reg.v",
+          "bytes": 13070,
+          "sha256": "4a058e988125a68a129fd00645fd641dd991443ded1d2a840090ec2bdc028af3"
+        },
+        {
+          "path": "rtl/ep_side/cam/wfifo.v",
+          "bytes": 37826,
+          "sha256": "a0fa03b0739c3e6c5382c582296d70bc3b778b66a55c399bd6013f36e3d68bc0"
+        },
+        {
+          "path": "rtl/ep_side/ddr/cam_ddr_writer.v",
+          "bytes": 45298,
+          "sha256": "7bb43a31a6a30539e743b13f9b07461084ed384ed9d8c1b5b152876a3abd9ab9"
+        },
+        {
+          "path": "rtl/ep_side/ddr/ddr_frame_pusher.v",
+          "bytes": 50621,
+          "sha256": "397fc5f645ce42384e5bde419242e2356b1c48e6e079d615553e617d258bcd7c"
+        },
+        {
+          "path": "rtl/ep_side/ddr/ddr_wr_arb.v",
+          "bytes": 7677,
+          "sha256": "7eebccc22ebd3245102e6c0ace6cd1ce7c1d3e21294a2afb25b62686315a39ca"
+        },
+        {
+          "path": "rtl/ep_side/img/ep_bar_win.v",
+          "bytes": 24121,
+          "sha256": "885f95e7e8faf8ffe3c378bd1e18ee586c65234185144241d40d7c293fca36a8"
+        },
+        {
+          "path": "rtl/ep_side/img/img_frame_src.v",
+          "bytes": 9364,
+          "sha256": "ddc837ad458df1c1b08ebf06597d252aef1c178563ac28ffcc0a6014a73e35cf"
+        },
+        {
+          "path": "rtl/ep_side/img/img_regs.v",
+          "bytes": 5923,
+          "sha256": "aa62707b15cf6811afd241f0af49d086fa6f9a011f73829eff31ef4d83dc0a3e"
+        },
+        {
+          "path": "rtl/ep_side/pcie_ep_engine.v",
+          "bytes": 36657,
+          "sha256": "fcb70389b6a3af9e401aab2f270f30531ef1bc8bc39153fd32b17bfc362fde13"
+        },
+        {
+          "path": "rtl/ep_side/pcie_ep_int_handle.v",
+          "bytes": 6396,
+          "sha256": "3e137fe6369a845d1ab94c24e733ef7bf9092aa64134fcc4357002f5fde0ca49"
+        },
+        {
+          "path": "rtl/ep_side/ph1p_pcie_ep_top.v",
+          "bytes": 90861,
+          "sha256": "909858ccd71b49acb7b2e2fcbfe00c5b0e1f8e98069dfa5848eeaddd23d97e7a"
+        },
+        {
+          "path": "rtl/ep_side/ubus_bridge/ep_ubus_bridge.v",
+          "bytes": 13325,
+          "sha256": "c3c8886fd6b69606d84beb0612f14394c1c08446e6ee2b256fc80c565a01fa3f"
+        },
+        {
+          "path": "rtl/rc_side/pcie_prbs/prbs_chk_pcie.v",
+          "bytes": 1789,
+          "sha256": "a38141e0d7bb047919e2ff5b2b208d29fde274d037050d3db4e984dba8be95e2"
+        },
+        {
+          "path": "rtl/rc_side/pcie_prbs/prbs_gen_pcie.v",
+          "bytes": 1399,
+          "sha256": "516b83212478b4da5d0b82dc196147638476cf4eeb907764302e85d57fe5107a"
+        },
+        {
+          "path": "rtl/rc_side/pcie_rc_int_handle.v",
+          "bytes": 5192,
+          "sha256": "1f2ba121a6ecc05f20424ec3e0e1fddfc10fa48a30175e203796af403f3f9188"
+        },
+        {
+          "path": "rtl/rc_side/pcie_rc_rx_engine.v",
+          "bytes": 19015,
+          "sha256": "54f039af6cfddf753f0ed7340b73dbc36f38193986c331b7857ba4a24d462150"
+        },
+        {
+          "path": "rtl/rc_side/pcie_rc_tx_engine.v",
+          "bytes": 44670,
+          "sha256": "479591d96fe20132b97d00a64d9882647505671908512354c939a5a45572565b"
+        },
+        {
+          "path": "rtl/rc_side/ph1p_pcie_rc_top.v",
+          "bytes": 41876,
+          "sha256": "2bc0dca04aa67a199baa1fe747d8927e644db96215c4fdd38179c70087c1b237"
+        },
+        {
+          "path": "rtl/rc_side/si5344_5345/count_rst_n.v",
+          "bytes": 2328,
+          "sha256": "12013b1815d230b8c24f6d8d0911752134cef4d26b90035ea4d1c0b1a6d6074b"
+        },
+        {
+          "path": "rtl/rc_side/si5344_5345/si5344_5345.v",
+          "bytes": 2051,
+          "sha256": "7a120c4ffbae4d0c68a7ef30edc007c11ce028b0e328fb06ef2f5c3c12fed319"
+        },
+        {
+          "path": "rtl/rc_side/si5344_5345/soft_mcu/AHB_Core.enc.v",
+          "bytes": 823401,
+          "sha256": "0d3b1c39e03515ae2aae072488197f008d6badac7aef93809202fe300481f520"
+        },
+        {
+          "path": "rtl/rc_side/si5344_5345/soft_mcu/NCS23345_IIC.bin.mif",
+          "bytes": 163924,
+          "sha256": "de30ebc04ff7f6f12220c6be95f55e8b91617e9412a408de52fe6b99ff1f1b0d"
+        },
+        {
+          "path": "rtl/rc_side/si5344_5345/soft_mcu/eMCU.ipc",
+          "bytes": 608,
+          "sha256": "ce5905031172c7ca9f9899c5132be9209265371b9cbaa3d9e5c04728ea3a9cdc"
+        },
+        {
+          "path": "rtl/rc_side/si5344_5345/soft_mcu/eMCU_gate.v",
+          "bytes": 1113527,
+          "sha256": "1875bff83e13f5b402df32f015d96ba24d1d5c677750ce7f0182d75bf7d77be8"
+        },
+        {
+          "path": "rtl/rc_side/si5344_5345/soft_mcu/soft_ps_wrapper.v",
+          "bytes": 103369,
+          "sha256": "ac64994455ade6108f5f192d36a8de222302816b57a3ee4fa0c1484204b99701"
+        },
+        {
+          "path": "rtl/rc_side/ubus_bridge/rc_ubus_bridge.v",
+          "bytes": 17872,
+          "sha256": "ef57731ab890017be94abebfc63364741c83cb6903e4ca8d0cabe2561190900b"
+        },
+        {
+          "path": "rtl/rc_side/ubus_bridge/ubus2tlp.v",
+          "bytes": 23688,
+          "sha256": "213aae7ec228a7a61943e2be1cda3c2ce9e8d24eff4b3d332e6ecc9dff74dc12"
+        },
+        {
+          "path": "sim_do/modelsim/sim.do",
+          "bytes": 980,
+          "sha256": "179e7b08f59a6a54e92ac942ef4d53014b0bd2b3e35fe3817f35063e7a661a4d"
+        },
+        {
+          "path": "sim_do/tb/pcie_subsystem_tb.v",
+          "bytes": 19962,
+          "sha256": "55fdd11d24fa4ced5ac24f97aeb83dada4b7b8096ff1b62df19bd4a137df2d0f"
+        },
+        {
+          "path": "sim_do/tb/tb_fsim_task.v",
+          "bytes": 16282,
+          "sha256": "1d47d2446f53bf828e2d99d8df58fc6c21599fb6454c30148cba1ed47d87e976"
+        },
+        {
+          "path": "sim_do/tb/ubus_model.v",
+          "bytes": 3981,
+          "sha256": "412f58eec9294c174ba29f49a3f664de5fc75b931d217e6faea34b7611efcefe"
+        },
+        {
+          "path": "sim_do/tb/ubus_model_fast.v",
+          "bytes": 2954,
+          "sha256": "e41b10a8139391ff24bda5f2f7a864acddb02cfe0dde3f4aed5300e1ac38080f"
+        },
+        {
+          "path": "sim_do/tb_cam_ddr_writer.v",
+          "bytes": 16349,
+          "sha256": "1ef02ef2900c053c091dee233f3ced0f5442d3902aae670387799e552f645641"
+        },
+        {
+          "path": "sim_do/tb_ddr_frame_pusher.v",
+          "bytes": 24096,
+          "sha256": "e65a60b1e5b27a6e370da0edeee7ec35e7b461b4ecbc4f45f0c1c39b8c28ce74"
+        },
+        {
+          "path": "sim_do/tb_ddr_wr_arb.v",
+          "bytes": 9035,
+          "sha256": "4dd13316542361697c856bf0466e3cd37bbff67c2c1455784b336c687edd4b73"
+        },
+        {
+          "path": "sim_do/tb_ep_bar_win.v",
+          "bytes": 12612,
+          "sha256": "273c60662e26c4a0952ce298cf38e60d6a453193201b2806015ccda5e7f15b52"
+        },
+        {
+          "path": "sim_do/tb_img.v",
+          "bytes": 7478,
+          "sha256": "e67b50d1c8d1a718e2a5994072d6e933eb8d55e0fabda2ab976cd8e2bd9abeae"
+        },
+        {
+          "path": "sim_do/vcs/makefile",
+          "bytes": 2549,
+          "sha256": "9c28c58629fe1f18bb78f22a0cb620081047f7f9a73f5f2baa530a29a6083471"
+        }
+      ],
+      "license": "No repository LICENSE/COPYING in pinned tree. Vendor IP/encrypted cores and reference documents retain their owners rights; private local use only; redistribution permission not established."
+    },
+    {
+      "name": "peer-driver-a0215c5",
+      "commit": "a0215c5a2fcb95bfc867a4768d4831d68edf64a2",
+      "source_git": "C:/Users/czz/AppData/Local/Temp/opencode/ref_ph1p100_driver",
+      "commit_metadata": "a0215c5a2fcb95bfc867a4768d4831d68edf64a2\n2026-10-16T22:05:17+08:00\n2026-10-16T22:05:17+08:00\ndocs(drv): 补 4K 收帧与预装 ko 的坑，注释「武装」改为「初始化」",
+      "archive": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261017-011744-rk-fpga-align/references/peer-driver-a0215c5.tar",
+      "archive_sha256": "011aaa339bc572c636b8bc44acb40ef106dc0aaa3112f4b78e0253796a58d61e",
+      "files": [
+        {
+          "path": ".gitignore",
+          "bytes": 219,
+          "sha256": "7f034b84cac4fab1de20b5f3e90e8a43b8a1c4c72a0c61a81ae204b64af38beb"
+        },
+        {
+          "path": "Makefile",
+          "bytes": 814,
+          "sha256": "9d3dcc00a065614260d43e60e7f94652215016defd456929544f0948c2a153ce"
+        },
+        {
+          "path": "README.md",
+          "bytes": 11911,
+          "sha256": "9ccde4574f0176384ed0389372a09551fb1672f18f3a8992cc27e618e302f060"
+        },
+        {
+          "path": "app/rs/.cargo/config.toml",
+          "bytes": 300,
+          "sha256": "87d22f3f408eaeec568184a56c860608674082acafa5b0b7a900f1dac1dc1145"
+        },
+        {
+          "path": "app/rs/Cargo.lock",
+          "bytes": 168,
+          "sha256": "c740afa544ae0a445e4bdbb924c6fddd26f00d0387d65556277500f9bfba102a"
+        },
+        {
+          "path": "app/rs/Cargo.toml",
+          "bytes": 877,
+          "sha256": "0c4f675c493528123b969da28cf24daf03d923c0760249d7cfcbd571fd227dd8"
+        },
+        {
+          "path": "app/rs/src/bin/cam_grab.rs",
+          "bytes": 49588,
+          "sha256": "4d08566e61a6b29c46ad2a009bcdde31f2e9950cfb6331c2a8494ec3a69a7a53"
+        },
+        {
+          "path": "app/rs/src/bin/frame_grab.rs",
+          "bytes": 19198,
+          "sha256": "9b57e132213f173926962e9333291d7eebf4d2ca2a0a47479cdfa35af9a39fca"
+        },
+        {
+          "path": "app/rs/src/bin/link_ctl.rs",
+          "bytes": 19234,
+          "sha256": "c41a39e72a40c419bba26aa3a7e3060184fecdfb335bfba04d3ea9e34a1aff68"
+        },
+        {
+          "path": "app/rs/src/bin/pci_bar.rs",
+          "bytes": 5145,
+          "sha256": "47f75260ada9b5c72f46cf7e81865481d64a3b1ccb8298586b3e3d65a2e7d78c"
+        },
+        {
+          "path": "app/rs/src/bin/pcie_check.rs",
+          "bytes": 7882,
+          "sha256": "b9287a94b6a865560af1343e2f3c4b2add6bc387666f48a98b5a772ec38ed882"
+        },
+        {
+          "path": "app/rs/src/getopt.rs",
+          "bytes": 11431,
+          "sha256": "ce96fcf9bdf83a651c894dc2f17f80e35c875ea94ff8f18108a68858c0ce89f8"
+        },
+        {
+          "path": "app/rs/src/ioctl.rs",
+          "bytes": 14710,
+          "sha256": "de54b68d315e7c6910c172a5f1e282e6ddb48676b3ebc699ad03571ede0193b6"
+        },
+        {
+          "path": "app/rs/src/lib.rs",
+          "bytes": 1134,
+          "sha256": "36919408e040a9118cc83ab422aeb5bf21ef393bd3f0258f9abb5a91267f1c7b"
+        },
+        {
+          "path": "app/rs/src/parse.rs",
+          "bytes": 4738,
+          "sha256": "5b05c5964f2ea5fcfccd06945a0e6b750bf30abe48e627df52196eeb2034d8cd"
+        },
+        {
+          "path": "app/rs/src/sys.rs",
+          "bytes": 4130,
+          "sha256": "8226c532c929eb13c44de65807e4ef7925133ee170454797e038e83beef1bcb9"
+        },
+        {
+          "path": "include/anlogic_pci_ioctl.h",
+          "bytes": 19440,
+          "sha256": "a9c00ae1e3d692561fa5538741c695d0a54da731266a2e735752be89171b7468"
+        },
+        {
+          "path": "src/anlogic_pci.h",
+          "bytes": 9119,
+          "sha256": "d4dda38bb14561daedc51b236e3bc4324f67bf148eeeb5ad1e17b3770a549a3a"
+        },
+        {
+          "path": "src/anlogic_pci_chrdev.c",
+          "bytes": 10941,
+          "sha256": "f9a04ecfb991850747544beb4545454d8810d1a03c1f1171df83f05d6696fdce"
+        },
+        {
+          "path": "src/anlogic_pci_ctrl.c",
+          "bytes": 20592,
+          "sha256": "e6a37650ab4206e54327aa7f40a6849b06a774f4a33fd79ed0dbf965522207c2"
+        },
+        {
+          "path": "src/anlogic_pci_frame.c",
+          "bytes": 21246,
+          "sha256": "57c24bf87d75624ffec6155a0a385097dd3da393b1178c4ae97e31f45d58d76b"
+        },
+        {
+          "path": "src/anlogic_pci_hw.c",
+          "bytes": 25617,
+          "sha256": "1b075d4df7c5a1cdb4dafea6b6895f36a2102a2096a9f2495568c96b8dd9787d"
+        },
+        {
+          "path": "src/anlogic_pci_link.c",
+          "bytes": 29094,
+          "sha256": "6fadc165ed232e3cc00e60e830bce27551ad4da0b94a19cbdb5493209df1c79b"
+        },
+        {
+          "path": "src/anlogic_pci_main.c",
+          "bytes": 6470,
+          "sha256": "c79f1ddb0e492504cc5152a2361865de6ab5d6533ebb4bf46f90d14d433c445c"
+        }
+      ],
+      "license": "No repository LICENSE/COPYING in pinned tree. Vendor IP/encrypted cores and reference documents retain their owners rights; private local use only; redistribution permission not established."
+    }
+  ]
+}

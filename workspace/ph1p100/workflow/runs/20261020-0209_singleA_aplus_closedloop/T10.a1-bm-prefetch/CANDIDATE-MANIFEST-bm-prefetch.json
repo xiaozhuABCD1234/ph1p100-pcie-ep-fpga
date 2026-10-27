@@ -1,0 +1,133 @@
+{
+  "task_id": "T10.a1-bm-prefetch",
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "round": "r0",
+  "package_type": "new bm read-data/prefetch pipeline package under T10",
+  "date": "2026-10-22",
+  "status": "blocked_not_for_test",
+  "status_reason": "G1 FAIL on P2 p2_perf_1920x64_comp (stream invalid: first literal of every block after the first is missing; cycles 355205 != 355261). Per dev-plan 32.7 stop before TD: 0 synth, 0 route, no CDC.",
+  "ready_for_test": false,
+  "tester": null,
+  "base_candidate": {
+    "a1_deflate_core.v": "587ef708967fbe2f3bb27b0bccdbc6af942b61639ad95d8d9ec9eca2b24a2f16",
+    "a1_frame_top.v": "18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+    "a1_small_top.sdc": "227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311",
+    "manifest": "T10.a1-hit-pipe/CANDIDATE-MANIFEST-hit-pipe-r0-route.json",
+    "manifest_sha256_16": "35a8809b06ab1f0c"
+  },
+  "failed_candidate": {
+    "path": "T10.a1-bm-prefetch/r0/candidate-bm-prefetch.a1_deflate_core.v",
+    "sha256": "de59bddc0e4323348e05c3ae1dc16a14e16652da4d34553a3218beb4bf6f840b",
+    "bytes": 73493,
+    "applied_by": "T10.a1-bm-prefetch/r0/patch_bm_prefetch.py",
+    "reverse_by": "T10.a1-bm-prefetch/r0/restore_baseline.py",
+    "delta": [
+      "add reg [7:0] bm_a_rd2; bm_a_rd2 <= bm_a_rd (bm_a ERAM clk2q now only drives this flop)",
+      "htab_rd_addr: hash3(w*, x1_r, bm_a_rd) -> hash3(w*, x1_r, bm_a_rd2) (3 sites)",
+      "prefetch one cycle earlier: x1_r <= bm_a_rd2; praddr = raddr+4 (S_SCAN) / raddr+3 (S_PRE,S_REPOS); seeds BHDR 2, S_PRE cnt0 3, S_MCHK pos_next_r+2, S_REPOS cnt0 pos+3",
+      "ext_mis_r unconditional load via data mux ext_fw_byte = (state==S_EXT)? bm_a_rd : x1_r (CE removed)"
+    ],
+    "not_changed": [
+      "S_EXT compare sources/addresses (bm_a_rd, ext_raddr, ext_faddr)",
+      "stored path (bm_a_rd via raddr)",
+      "protocol/ports/frame/CRC/abort/Bayer/thresh_lit8_9/htab-bm mapping"
+    ]
+  },
+  "tree_after_work": {
+    "a1_deflate_core.v": "587ef708967fbe2f3bb27b0bccdbc6af942b61639ad95d8d9ec9eca2b24a2f16",
+    "a1_frame_top.v": "18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+    "a1_small_top.sdc": "227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311",
+    "note": "failed candidate rolled back; working tree equals the locked baseline"
+  },
+  "gates": {
+    "g1_functional": {
+      "verdict": "FAIL",
+      "p2": {
+        "cases": 13,
+        "pass": 12,
+        "fail": ["p2_perf_1920x64_comp"],
+        "fail_detail": {
+          "zlib_err": "Error -3 while decompressing data: incorrect data check",
+          "strict_err": "E_BAD_ADLER",
+          "run_cycles": 355205,
+          "baseline_cycles": 355261,
+          "out_bytes": 50278,
+          "baseline_out_bytes": 50310,
+          "stream_sha256": "9a8ba6bf9a6807f8d106a08d84daf63e8c120d6d9722b675259815030d70e44f",
+          "baseline_stream_sha256": "2601d57cd98d1fe69b2e46fe8423779a5d44bd14c00e1fe2d5faab6ff15a7c05",
+          "decoded_bytes": 153569,
+          "decoded_bytes_baseline": 153600,
+          "symbol_level": "block 0 identical (1200 sym / 4800 B); blocks 1-31 have 1199 sym / 4799 B: the first literal of each block is missing from the stream"
+        },
+        "extras_pass": ["p2_frame_16x8_bp", "p2_frame_16x8_gapbp", "abort_midblock", "reset_midblock"],
+        "vlog": "0 errors / 0 warnings"
+      },
+      "p3": "not_run (P2 already failed; stop condition)",
+      "p2_comp_cycles_exact_required": 355261,
+      "p2_comp_cycles_measured": 355205,
+      "evidence_that_read_data_is_correct": {
+        "debug_trace": "T10.a1-bm-prefetch/r0/dbg_comp/stdout.log",
+        "scan_lines": 37005,
+        "window_vs_xform_mismatches": 0,
+        "matches_checked": 19200,
+        "invalid_matches": 0,
+        "coverage_per_block": 4800
+      }
+    },
+    "g2_synth": {"status": "not_run", "why": "G1 red line failed; dev-plan 32.7 forbids entering TD"},
+    "g2_routed": {"status": "not_run"},
+    "cdc_static": {"status": "not_run"}
+  },
+  "budget_used": {
+    "td_sessions": 0,
+    "synth_attempts": 0,
+    "route_attempts": 0,
+    "dev_tool_calls_approx": 36,
+    "dev_minutes_approx": 85,
+    "deepseek_calls": 0,
+    "subagents": 0
+  },
+  "forbidden_actions_not_taken": [
+    "no QoR strategy change",
+    "no clock/frequency change",
+    "no false path / multicycle / clock group",
+    "no seed sweep or blind re-run",
+    "no frame_top/SDC edit",
+    "no bitgen / .bit / download / Flash",
+    "no new package inside this task"
+  ],
+  "artifacts": {
+    "result": "T10.a1-bm-prefetch/r0/result.md",
+    "lessons": "T10.a1-bm-prefetch/r0/lessons-r0.md",
+    "manifest": "T10.a1-bm-prefetch/CANDIDATE-MANIFEST-bm-prefetch.json",
+    "patch_forward": "T10.a1-bm-prefetch/r0/patch_bm_prefetch.py",
+    "patch_reverse": "T10.a1-bm-prefetch/r0/restore_baseline.py",
+    "p2_run": "T10.a1-bm-prefetch/r0/p2/",
+    "p2_scripts": [
+      "upstream/ph1p100-pcie-ep-fpga/tools/codec/run_p2_bm_prefetch.ps1",
+      "upstream/ph1p100-pcie-ep-fpga/tools/codec/run_p3_bm_prefetch.ps1"
+    ],
+    "debug_trace": "T10.a1-bm-prefetch/r0/dbg_comp/stdout.log",
+    "td_dir": "T10.a1-bm-prefetch/r0/td/ (only a1_small_top.sdc copy; no TD session)"
+  },
+  "blocked": {
+    "reason_code": "NO_PROGRESS",
+    "detail": "Functional red line: one P2 case fails (invalid stream, one literal lost per block after the first) and p2_comp cycles differ from the baseline. Fixing it requires touching logic outside the allowed scope (block-start emit/packer path), which dev-plan 32.7 makes a stop-and-return-to-planner condition.",
+    "done": [
+      "aligned prefetch re-derivation and RTL edit (bm_a_rd2, praddr +1, x1_r, ext_mis_r unconditional)",
+      "P2 full regression (13 cases + bp/gapbp/abort/reset) and independent verify",
+      "A1_DEBUG per-cycle window trace vs .xform (0 mismatch)",
+      "symbol-level stream parse of baseline vs candidate (defect located to block-start emit)",
+      "failed candidate saved, baseline restored with hash assertions"
+    ],
+    "not_done": [
+      "P3 regression",
+      "any synthesis / ERAM clk2q slack measurement",
+      "route and routed STA",
+      "static single-clock CDC evidence"
+    ],
+    "last_evidence": "T10.a1-bm-prefetch/r0/p2/result.json ; T10.a1-bm-prefetch/r0/dbg_comp/stdout.log ; T10.a1-bm-prefetch/r0/result.md 3.2",
+    "minimal_next_step": "On candidate de59bddc, diff the A1_DEBUG CP0 lines across a block boundary to find why the first literal push of each block never reaches the stream (cp_en / p0_valid / pbit_off / cand_bits / S_EODONE drain). Any fix outside bm read-data/prefetch/ext_mis_r is out of this package's scope -> planner decision.",
+    "resume_entry": "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-bm-prefetch/r0/ (result.md, lessons-r0.md, CANDIDATE-MANIFEST-bm-prefetch.json, candidate-bm-prefetch.a1_deflate_core.v, patch/restore scripts, p2/, dbg_comp/)"
+  }
+}

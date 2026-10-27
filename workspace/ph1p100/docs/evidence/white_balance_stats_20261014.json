@@ -1,0 +1,31 @@
+{
+  "run_id": "20261014_T01_raw_stats_140836",
+  "observed_by": "user screenshots and scene confirmation",
+  "board_bit": "D:/TD/work/csi2/prj/camera_rgb565_20261014_140836/camera_ddr_display.bit",
+  "board_bit_sha256": "e4a3e980c4bb2305c52e6316da4164f8f1588e6bc7819edf0fb68fd8f99bbf7e",
+  "identity_basis": "Previously confirmed140836; user followed unchanged-program measurement instructions. No independent hardware bit readback.",
+  "cwc_sha256": "4ea1869249877ee245f4ae517bedcf0ac67cb13e9c0e5a0b697e0276b87c300e",
+  "white": {"A":71678429,"B":48632641,"C":45434359,"D":71626612,"sample_count":518400,"stat_valid":1},
+  "red": {"A":31261203,"B":27567227,"C":32360382,"D":31282085,"sample_count":518400,"stat_valid":1},
+  "blue": {"A":38512781,"B":34423486,"C":29493615,"D":38519670,"sample_count":518400,"stat_valid":1},
+  "scene_confirmation": "User confirmed white paper filled most of view under ordinary indoor illumination without overexposure; then supplied red and blue target captures under unchanged-program instructions.",
+  "screenshot_paths_local_only": [
+    "C:/Users/czz/OneDrive/Pictures/屏幕快照/屏幕截图 2026-10-14 215749.png",
+    "C:/Users/czz/OneDrive/Pictures/屏幕快照/屏幕截图 2026-10-14 215803.png",
+    "C:/Users/czz/OneDrive/Pictures/屏幕快照/屏幕截图 2026-10-14 220706.png",
+    "C:/Users/czz/OneDrive/Pictures/屏幕快照/屏幕截图 2026-10-14 220709.png",
+    "C:/Users/czz/OneDrive/Pictures/屏幕快照/屏幕截图 2026-10-14 220943.png",
+    "C:/Users/czz/OneDrive/Pictures/屏幕快照/屏幕截图 2026-10-14 220946.png"
+  ],
+  "phase_candidate": 3,
+  "phase_mapping": {"R":"C","G":"(A+D)/2","B":"B"},
+  "phase_evidence": "A/D match on white; white-normalized C/B is1.256504 on red and0.917100 on blue. Supports phase3; final displayed color identity remains hardware acceptance.",
+  "nominal_black_level_raw10": 50,
+  "black_level_source": "Frozen ui_imx415_reg.v:115-116 writes30E2=32h/30E3=00h; Sony IMX415 datasheet physical42,68 defines50DN forRAW10. Nominal programmed value, not measured dark-frame pedestal or sensor register readback.",
+  "candidate_gains_q10": {"R":2400,"G":1024,"B":2062},
+  "gain_derivation": "G=(A+D)/(2*N); Rgain=(G-50)/(C/N-50); Bgain=(G-50)/(B/N-50); positive ratios rounded toQ10 nearest.",
+  "candidate_balance": "clip(BL+sign(x-BL)*floor((abs(x-BL)*gainQ10+512)/1024),0,1023). Retains output pedestal, magnitude half ties away from zero. Green unchanged; raw statistics unscaled.",
+  "limitations": ["Fixed illumination calibration, not automatic white balance.","Sums do not reveal clipped pixel fraction or actual dark offsets.","Gamma, color matrix and display tone mapping remain uncalibrated.","Activity sparkles remain deferred.","No corrected-color board acceptance yet."],
+  "chipwatcher_hardware_readback": "pass for the supplied statistics",
+  "white_balance_hardware_result": "not_run"
+}

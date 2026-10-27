@@ -1,0 +1,21 @@
+﻿=>      * T07: RKA1 safety extension state (see anlogic_pci_rka1.c).
+=>      *   rka1_ext_ok = 0 means the FPGA image has no RKA1 extension
+=>      *   (0x118 != "RKA1"); every RKA1 op then returns -EOPNOTSUPP and the
+=>      *   driver never falls back to the legacy "write CTRL and push" path.
+=>     unsigned int rka1_ext_ok;
+=>     u32 rka1_ext_version;
+=>     u32 rka1_cap_bytes;
+=>     u32 rka1_session;
+=>     u32 rka1_tx_status;
+=>     /*
+=>      */
+=> 
+=> /* T07: RKA1 safety extension (anlogic_pci_rka1.c) */
+=> int anlogic_pci_rka1_probe(struct anlogic_pci_hw *hw);
+=> int anlogic_pci_rka1_configure(struct anlogic_pci_hw *hw, u32 cap_bytes, u32 session);
+=> int anlogic_pci_rka1_arm_one_shot(struct anlogic_pci_hw *hw);
+=> int anlogic_pci_rka1_ack_release(struct anlogic_pci_hw *hw, u32 seq, u32 session);
+=> int anlogic_pci_rka1_cancel(struct anlogic_pci_hw *hw);
+=> int anlogic_pci_rka1_status(struct anlogic_pci_hw *hw, u32 *status);
+=> long anlogic_pci_rka1_ioctl(struct anlogic_pci_hw *hw, unsigned long arg);
+=> 

@@ -1,0 +1,449 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-10-16T21:05:00+08:00",
+  "task": "T01.tool-A",
+  "run": "workflow/runs/20261016_185639_td_cli_iptool",
+  "status": "boundary_verified_no_headless_generation",
+  "deliverable": false,
+  "summary": "20 controlled attempts total (10 initial cap + 4 authorized + 6 authorized for the external-reference increment H6-H9; all caps reached). Increment outcome: the 6.2.2 command-gap is finalized (no create_ip/get_ips/generate_target family; no usable set-params-and-generate entry among set_ip_property/print_ip_config/read_ip_adc/xmlipgen/create_syn_ip/ipgen_synip); using a tool-era unedited instance as -user DOES make the automatic copy flow load the instance values (log: 50.00/1600.00 after the 100/800 defaults) - confirming that the hand-edited instance was the earlier value-fallback cause - and mapping the external golden-ADC path to the local input_pins.adc keeps that behavior, yet generation still fails deterministically with '#IP Generate Failed!' (~2.5 s, 8 scaffolding files, byte-identical tool logs across four runs). The residual failure detail remains hidden in a td_commands_prompt.exe child (captured once as pid/name; console text and command line not obtainable with routine tooling because the child lives under ~0.5 s and writes no td_*.log). No complete IP product exists; the success branch was not triggered.",
+  "tool_anchors_verified_unchanged": {
+    "D:/downlaod/bin/IpTool.exe": {
+      "sha256": "DA9E765EE1AF39594BC546224BA79CF84EAD5700C7BDDFE4A6FCC7BF95A3DE46",
+      "unchanged_across_all_attempts": true
+    },
+    "D:/downlaod/bin/td_commands_prompt.exe": {
+      "sha256": "79EC56674F8F7B889E25E11BDCA91F7D64C24BA0DE99E80680248F00B4F87190",
+      "unchanged_across_all_attempts": true
+    },
+    "D:/downlaod/ip/depot/MIS_DDRF6F1D0P0_1.2/Component.xml": {
+      "sha256": "FEB4F5BC5771CF9B8F816296754AB0BA9088CA9FFAFC9F001F9C1C50CBD5E543",
+      "unchanged_across_all_attempts": true
+    },
+    "D:/downlaod/ip/depot/MIS_DDRF6F1D0P0_1.2/Dependency.tcl": {
+      "sha256": "CD927834C559A6962E97159AE0C01CCA666C9E66B6C2CBBC7BCECB4C0B119623",
+      "unchanged_across_all_attempts": true
+    }
+  },
+  "frozen_input": {
+    "source_package": "D:/TD/work/csi2/_validation/ddr1333_ip_20261015_190248",
+    "preparation_manifest_sha256": "a94f894870c2c065c316c2679d64bdc5b48622ca751bc8cba77ad9224679bd64",
+    "entries": 197,
+    "copy_policy": "per attempt: fresh directory ddr1333_cli_<YYYYMMDD_HHMMSS>[_N] created with mkdir exist_ok=False; 196 files copied and SHA-verified against the frozen manifest; 30 files retargeted by exact ASCII substring substitution ddr1333_ip_20261015_190248 -> <new dir> with round-trip verification; preparation.json/preparation_manifest.json/binding_preflight.log not copied; output/ and _retained/ created empty; per-file and per-attempt SHAs recorded in each experiment_manifest.json/experiment.json/result.json"
+  },
+  "scripts": {
+    "tools/td/prepare_ddr1333_ip.py": {
+      "sha256_before": "81b4f29ac55ea4ef49a36676711493505323c0ffaea871891afc6951295c953c",
+      "sha256_intermediate": "b388a79645f2926f5a3fff13c9c4657f67f6c3e0ba9b9be71c77aee00296a4a5",
+      "sha256_intermediate2": "1d271cad900670bddf58704903a21890e35c28ad94b7f5a5c10b79bcb8ac9fec",
+      "sha256_after": "2d3458982b10cf056cb50c7713480aaf7f66afbdf7fdb5a7c4ad227e3d00f20f",
+      "bytes_after": 14468,
+      "changes": "cli_entry_status no longer self-labeled 'inferred'; now a factual, overridable --entry-status string sourced from this evidence file (final wording reflects all 20 attempts incl. the value-load and H6-H9 findings); argv parameterized (--comp-name/--use-value/--extra-flag/--user-mode/--gen-mode) with defaults kept at the historical file-path form; argv_notes now warn that hand-editing Design.xml/.params while .m_params stays at baseline breaks the automatic copy-value load; all assertions, retention mechanism and manifest writing preserved; manual GUI kit guard component name parameterized; --help smoke-tested, AST checked"
+    },
+    "tools/td/run_ddr1333_ipgen.py": {
+      "sha256": "b44e065c06bff47374ac37ef880446e4f4c765761b4a58faa8fa39d257862b7d",
+      "bytes": 48089,
+      "sha256_history": "7b6f15967f468fb741a75099820a3a1dc0ba2ec2a082ece66cf3d5cb42314bda was used for attempts 1-10; 98a517fc74fcbe5e7c9b86b7621f3123156df4392e6eb1905478e982f9887a4b for attempts 11-14; the current revision (used for attempts 15-20) adds Toolhelp32 fast child tracking with cmdline/console capture, --extra-source for tool-era instance copies, the adc-to-local variant, and an early high-frequency monitoring phase",
+      "role": "new controlled experiment runner: new-dir (fresh copied+retargeted package; --extra-source copies a tool-era instance read-only; --plain-depot variant), run (records argv/cwd/pid/start/end/timeout/exit/timed_out/kill; stdout/stderr files+SHA; monitor.jsonl process-tree/CPU/window/output samples; fast child detection + PrintWindow dialog/console captures + child events incl. command line; post-parent descendant observation; input before/after SHA diff; install/validation/test/temp tree before/after mtime scan diff; artifacts SHA list), gui-probe, verify, variant (recorded byte-level edits such as adc-to-local)",
+      "deletion_safety": "no delete calls anywhere; kills are process-only"
+    }
+  },
+  "attempt_ledger": {
+    "attempts_total": 20,
+    "generation_class_attempts": 18,
+    "td_cli_probe_attempts_not_generation": 2,
+    "cap": 20,
+    "cap_history": "10 for the initial batch; +4 authorized by the orchestrator on 2026-10-16 (first follow-up); +6 authorized for the external-reference increment H6-H9 (second follow-up). Total cap reached.",
+    "note": "each attempt ran in its own fresh ddr1333_cli_* directory with verified frozen inputs; all attempts recorded exit code, stdout/stderr, monitor samples, artifact list and environment before/after",
+    "attempts": [
+      {
+        "id": "negctl_user",
+        "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_191016",
+        "kind": "negative control (required)",
+        "argv": ["D:/downlaod/bin/IpTool.exe", "D:/downlaod", "-user", "D:/TD/work/csi2/_validation/absent_dir/nope.xml", "-gen", ".../ddr1333_cli_20261016_191016/depot/Component.xml", "-device", "PH1P100SBG484", "-export_to", ".../output", "-comp", "ddrmc_1333", "-use_value", "copy"],
+        "exit_code": 1,
+        "timed_out": false,
+        "duration_s": 5.4,
+        "output_files": 0,
+        "observation": "failure detected via exit code + zero artifacts; no stdout/stderr text, no window observed",
+        "result_json_sha256": "9baf4f92070da9dd6bd2129e7ef016779c7edebcb3bc255bd00dbb285d9d1b5a",
+        "monitor_sha256": "601a9be1b70460e665af8303a79eebda16e1076821459931cea489b7b0829d7e"
+      },
+      {
+        "id": "h1_default",
+        "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_191204_1",
+        "kind": "H1 documented generation form with -use_value default (no -user, no -tcl)",
+        "exit_code": 1,
+        "timed_out": false,
+        "duration_s": 2.64,
+        "output_files": 0,
+        "observation": "silent natural exit; zero stdout/stderr; no window seen; install/inputs unchanged",
+        "result_json_sha256": "b53c5085020c87cdae66393675993a15464eb6de3823e0e061f38f799cda689f",
+        "monitor_sha256": "6eebf151553ded8f7db899fb022e68a67818db13ca30fa1443733ff250e0ed3b"
+      },
+      {
+        "id": "h2_copy",
+        "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_191508_4",
+        "kind": "H2 copy form without -tcl (the form that time-out at 30/45 s on 2026-10-15), long timeout",
+        "exit_code": 1,
+        "timed_out": true,
+        "duration_s": 605.0,
+        "output_files": 0,
+        "observation": "visible window 'IpTool' (Qt51517QWindowIcon) from about 7.2 s and stable until killed at 600 s; CPU frozen at ~1.3 s after ~35 s; zero files; no child processes; no writes to inputs; kill verified (killed_pids [43976], alive_after_kill [])",
+        "result_json_sha256": "8085d20975f0846be8bf1f2d6b5f52f38249576325b8f635ecf19215fe19d1a5",
+        "monitor_sha256": "740edcc8304965912ae3ad376b9d94448fe0f7912d1befd9ca784284c59310ea"
+      },
+      {
+        "id": "h1var_plain",
+        "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_192929_10",
+        "kind": "H1 variant: private depot without our injected manual-binding guard sources (single variable)",
+        "exit_code": 1,
+        "timed_out": false,
+        "duration_s": 2.70,
+        "output_files": 0,
+        "observation": "identical to h1_default; our guard is not the blocker",
+        "result_json_sha256": "2a5d06a0b07bc50d857df22a65e428c8b1f03baf16138b58d7615ab631e23104",
+        "monitor_sha256": "547bb3bf007f1d3ddb33ea27783b68163c1e1fadec7ad42848111ba8e8e97923"
+      },
+      {
+        "id": "h1_qcerr",
+        "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_193141_11",
+        "kind": "H1 + -qcerr (single variable; error-visibility probe)",
+        "exit_code": 1,
+        "timed_out": false,
+        "duration_s": 2.55,
+        "output_files": 0,
+        "observation": "no change; -qcerr produced no console text and no window",
+        "result_json_sha256": "5b5aae1e503e6fc21c3b4c72ecf14c8454965fd99e543e08195ab3e6d4a3ead1",
+        "monitor_sha256": "0290895d1fc5031d895b895045efe805b576a6ada896c95eddc95329a4e1f1fe"
+      },
+      {
+        "id": "h1v2_gendir",
+        "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_193213_12",
+        "kind": "H1 variant: -gen pointing to the depot directory instead of Component.xml",
+        "exit_code": 1,
+        "timed_out": false,
+        "duration_s": 2.78,
+        "output_files": 0,
+        "observation": "same silent exit; no window (dialogs are not surfaced in this configuration; see h2d for the variant that surfaces them)",
+        "result_json_sha256": "6ac111453f2ec0dc8268a54dfc970bb09fbb20010678d2b95502b66c6600f11a",
+        "monitor_sha256": "d8402a56f4f1548115dcadafa25f45b3ee0ef3306e6b938c1b49703304188130"
+      },
+      {
+        "id": "h2b_nostatus",
+        "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_192854_7",
+        "kind": "H2 + -no_status (single variable)",
+        "exit_code": 1,
+        "timed_out": false,
+        "duration_s": 2.58,
+        "output_files": 0,
+        "observation": "-no_status removes the interactive window entirely; the run then terminates silently with code 1 in ~2.6 s (same class as h1_default), i.e. automatic mode fails fast without surfacing a message unless -app_path is given (see h2d)",
+        "result_json_sha256": "5f0dde20942a1e194e64c47246d7ee3d990068640dc78859ae590bc6a02df1c3",
+        "monitor_sha256": "2be3c5e886f546afc907e773c36adb5e4cb8c1685e0cc8928990a6af18dba9b7"
+      },
+      {
+        "id": "h2c_projpath",
+        "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_193337_13",
+        "kind": "h2b + -proj_path <experiment dir> (single variable)",
+        "exit_code": 1,
+        "timed_out": false,
+        "duration_s": 2.58,
+        "output_files": 0,
+        "observation": "no change; -proj_path does not alter the fast silent failure",
+        "result_json_sha256": "bce567a221ad0c1966415104905a4c1bffd94bf236b8a28e1690bf2730625260",
+        "monitor_sha256": "5804c596d392f593837925caec6effd499771b633679e13e0d82d0e4bf1ea3b5"
+      },
+      {
+        "id": "h2d_apppath",
+        "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_193357_14",
+        "kind": "h2b + -app_path D:/downlaod/bin/td.exe (single variable)",
+        "exit_code": null,
+        "timed_out": true,
+        "duration_s": 605.9,
+        "output_files": 0,
+        "observation": "KEY EVIDENCE: with -app_path the tool surfaces a visible modal 'Error' dialog at 1.7 s reading: Failed to identify the file: <exp>/source/ddrmc_x32/ddrmc_x32.xml/Design.xml. The process stayed alive at the dialog until killed at 600 s. Verbatim PrintWindow capture preserved.",
+        "dialog_capture": "attempts/h2d_apppath/win_12325418.png",
+        "dialog_sha256": "ee9627fce926d846390a10c54bca0c6223404ef33cf4a0660b8e3b0eb55a4d64",
+        "result_json_sha256": "f889451bf4c6e05026c9f3bd8b570dfe9f92af44d699f117fa420220ea884980",
+        "monitor_sha256": "1dd37b0f259d54beae8a9f80932d6115ed1af08fb73da79f4723fc604ced1f58"
+      },
+      {
+        "id": "h2e_userdir",
+        "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_194444_15",
+        "kind": "h2d with -user pointing to the instance directory (single variable)",
+        "exit_code": 0,
+        "timed_out": false,
+        "duration_s": 135.58,
+        "output_files": 0,
+        "observation": "The user-path check passes with the directory form; the tool then shows a visible modal 'File Identification Error' dialog at 1.7 s reading: Failed to identify the file: <exp>/depot/Component.xml/Component.xml. This proves BOTH -user and -gen are validated as directories. The process ended at about 135 s with exit code 0 and no product; the dialog was still visible at 132 s and vanished with the process (there was concurrent unrelated desktop activity on this machine; an external dismissal cannot be excluded and is noted as a limitation).",
+        "dialog_capture": "attempts/h2e_userdir/win_11343096.png",
+        "dialog_sha256": "13592f32aaa90e546cefee4c32dd5dc42f0e3291353d936cddc2fff01bd06cad",
+        "result_json_sha256": "0c0970cb22f00ded1b11d82f18814631720352c7f107a221ce80c0e0ae1dd032",
+        "monitor_sha256": "5878ef5759970745eb134884b63083ae2eb5e2d50bf74732665e0ef355ada3ba"
+      },
+      {
+        "id": "h2f_corrected",
+        "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_195304_19",
+        "kind": "AUTHORIZED +4 #1 (attempt 11): corrected directory form with -no_status -app_path td.exe -use_value copy",
+        "exit_code": 0,
+        "timed_out": false,
+        "duration_s": 2.83,
+        "output_files": 8,
+        "output_bytes": 57702,
+        "observation": "The corrected form reaches the automatic generation stage: instance scaffolding exported under output/ddrmc_1333/ (Design.xml, DesignConfiguration.xml, ddrmc_1333.xml/.v, .params/.ports/.m_params, Other/upgrade.tcl, RTL/include/define.v) and a td_commands_prompt.exe child was observed. The tool's own log (log/ipgen.log) then records: set PH1P_REF_CLK 100.00, set PH1P_DDR_SPEED 800.00, '#IP Generate Failed!' then closes the message box. exit 0, no stdout/stderr text, no window on screen.",
+        "tool_log_sha256": "88550b28325693ca674d018c59ea3a8eb04e346980abe3614a790ca8ec3232e5",
+        "m_params_sha256": "46432cc06d85be919f5d22e8d94fd992575548b879c44850514d34407306dd9a",
+        "result_json_sha256": "ba8f6af7fe5eb05c8eda64f098409c2cef98aa7c14500c4a75c5416f2675bc12",
+        "monitor_sha256": "cca32fdadca54f82198803d2d646e63c1fb0faa45661de5c94219001db43cee2"
+      },
+      {
+        "id": "h2g_repeat",
+        "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_195532_20",
+        "kind": "AUTHORIZED +4 #2 (attempt 12): identical repeat of h2f_corrected in a fresh directory",
+        "exit_code": 0,
+        "timed_out": false,
+        "duration_s": 2.53,
+        "output_files": 8,
+        "output_bytes": 57702,
+        "observation": "Byte-identical tool log (same SHA as h2f) and byte-identical .m_params: the failure is deterministic; 8 files / 57,702 bytes again.",
+        "tool_log_sha256": "88550b28325693ca674d018c59ea3a8eb04e346980abe3614a790ca8ec3232e5",
+        "m_params_sha256": "46432cc06d85be919f5d22e8d94fd992575548b879c44850514d34407306dd9a",
+        "result_json_sha256": "e5a00a334d82225a6e7ae6c34cc200b027b81aa6416d716a83088baa42c4c8ff",
+        "monitor_sha256": "935132c20bf36fdb8fb62995f364d7321869bc289f9e0ef0274d08a610198669"
+      },
+      {
+        "id": "h2h_nousevalue",
+        "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_195622_21",
+        "kind": "AUTHORIZED +4 #3 (attempt 13): corrected form without -use_value (single variable)",
+        "exit_code": 1,
+        "timed_out": true,
+        "duration_s": 905.12,
+        "output_files": 0,
+        "observation": "Without -use_value the tool IGNORES -no_status and opens the interactive configuration window (visible at 1.5 s, idles until killed at 900 s; kill verified). PrintWindow capture shows the full MIS configuration dialog with Component Name ddrmc_1333, DDR Type DDR3, RefClk 100.00, DQ Bytes 4, IO Voltage 1.5 and the 'Switch to Default Configuration' toolbar - i.e., -use_value is the switch that engages the automatic path.",
+        "window_png": "attempts/h2h_nousevalue/win_8063134.png",
+        "window_png_sha256": "30d8f93b65d1f7926f19f7c31ac44cf65f8466ab214cdf1a48b21583aeed78ff",
+        "tool_log_sha256": "3e7bc92f86c7d162e2c61c1099e972bf680518ab71c8faefdf537142227386b7",
+        "result_json_sha256": "92a1fe34e14b78454da802bcb70b97d6523c7a4dc5aed092d7d10866b3c2b927",
+        "monitor_sha256": "4202cc3d6db3f763af09f00b58485372e5a84f8937e8cbb410ce86645ff14bae"
+      },
+      {
+        "id": "h2i_defaultmode",
+        "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_201333_22",
+        "kind": "AUTHORIZED +4 #4 (attempt 14): corrected form with -use_value default (single variable vs h2f)",
+        "exit_code": 0,
+        "timed_out": false,
+        "duration_s": 2.52,
+        "output_files": 8,
+        "output_bytes": 57702,
+        "observation": "Identical outcome to the copy-mode runs (byte-identical tool log and .m_params): the generation failure is NOT value-mode specific but systemic at the generation stage. This concludes the authorized experiments (14/14).",
+        "tool_log_sha256": "88550b28325693ca674d018c59ea3a8eb04e346980abe3614a790ca8ec3232e5",
+        "m_params_sha256": "46432cc06d85be919f5d22e8d94fd992575548b879c44850514d34407306dd9a",
+        "result_json_sha256": "da1af59827f73d5f776ca38858c1425cde9482c23ff942c9897743fd369a3a2b",
+        "monitor_sha256": "9a4cecac6db55b2c1e5b2b503a42ae507cc2245330f869f80d93ea5bd839c6e2"
+      },
+      {
+        "id": "h6_probe",
+        "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_203627_23",
+        "kind": "EXTERNAL-REF INCREMENT #1 (attempt 15): H6 read-only command census (TD CLI)",
+        "exit_code": 0,
+        "timed_out": false,
+        "duration_s": 2.52,
+        "observation": "Present: set_property, get_property, create_syn_ip, xmlipgen, ipgen_synip, print_ip_config, read_ip_adc, export_ip_lib, set_ip_property, set_ippin_assignment, save_best_bits, reset_runs (plus the registry also lists generate_gate, generate_simulation, process_vlog_files, read_adc, export_ip_pins, export_ip_sdc, import_ip_pin_list, set_hxt_property, set_ipinst_assignment). Absent: create_ip, get_ipdefs, get_ips, get_ipdef, generate_target, generate_ipinst, load_project_ips, close_project_ips, report_ip_status, ip_upgrade, create_ipinst, delete_ipinst, list_ipinst. help/-h/-help return no usage text (help prints the full registry). Full registry dump preserved in stdout.log.",
+        "stdout_sha256": "00900e600b880ccafa504036a4cbc5b2cec9245b0a51e4523caee84e4b0831af",
+        "result_json_sha256": "200cd3a7b7acb6463c4e267281ba3c88b3e51638dc1aff37f015f66a3226c8cb",
+        "monitor_sha256": "ece19030c9ff30c4463870d2709661ee4603c8a7954dc263953b1e48c5b3d4a1"
+      },
+      {
+        "id": "h7_probe",
+        "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_203721_24",
+        "kind": "EXTERNAL-REF INCREMENT #2 (attempt 16): H7 minimal controlled calls in a fresh scratch project",
+        "exit_code": 0,
+        "timed_out": false,
+        "duration_s": 6.92,
+        "observation": "add_files <instance xml> -> PRJ-1202 success (registration works). set_ip_property PH1P_DDR_SPEED 1333.00 <name> -> rc 0, silent, no observable effect (unverifiable). read_ip_adc -ip ddrmc_x32 -file <existing .adc> -> 'USR-8321 CRITICAL-WARNING: Read IP adc error, cannot find ip model according to IP name ddrmc_x32'. create_syn_ip -> 'PRJ-9009 ERROR: No top model in project.' xmlipgen -> 'HDL-8001 ERROR: XmlIpGen cannot find all xml file.' (also when cwd is the instance dir). ipgen_synip -> rc 0 silent. export_ip_lib -> error (needs different args). Conclusion: no usable set-params-and-generate entry on 6.2.2; commands operate on project models/an undocumented XML set and give no help text.",
+        "stdout_sha256": "649f3742506ad75be1cfb5eab13fed0e444852482e37bf585d0387aca5f477d9",
+        "result_json_sha256": "bccc4cbaf97dca7a6100d41f12e04fccd849e11ac9393129d4143714bcf91304",
+        "monitor_sha256": "0f9714ad024c9747b0140e4d6793d0d8fb34df54b90d53189d60911d6de33ebf"
+      },
+      {
+        "id": "h8_toolmade_source",
+        "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_203808_25",
+        "kind": "EXTERNAL-REF INCREMENT #3 (attempt 17): H8 single variable vs h2f/h2g = -user source is the unedited tool-era 002820 vendor/ip/ddrmc_x32 (61 files copied read-only as source/ddrmc_x32_extra)",
+        "exit_code": 0,
+        "timed_out": false,
+        "duration_s": 2.56,
+        "output_files": 8,
+        "output_bytes": 72842,
+        "observation": "KEY MECHANISM FINDING: the tool log now shows the instance values being applied after the defaults: set PH1P_REF_CLK 100.00 / DDR_SPEED 800.00 then set PH1P_REF_CLK 50.00 / DDR_SPEED 1600.00, followed by '#IP Generate Failed!' (~2.5 s). The output Design.xml carries the source instance values incl. its external golden-ADC path F:/al_data/... (absent on this machine). => the hand-edited instance was the cause of the earlier value-fallback to defaults; an unedited tool-era instance loads values.",
+        "tool_log_sha256": "78a4a21c18e4e67849427d1b3b80c09a66de94102e9ded026fa0298fab7a2c4c",
+        "m_params_sha256": "fde70a5a4b6e75115b2db773d20bc193f208ae6377c50acec3d4c162bbcb2df1",
+        "out_design_sha256": "a463a5a6c6c19826a601b8c5f06ca348a6e94008b449b48c2a93b86cbf2477d9",
+        "result_json_sha256": "5a620227e6f980f402dfd1f1ecb2309e1f7e5da0d8a6798ab4ad99b7913c4252",
+        "monitor_sha256": "8a995e51b70a6a07b519eec13f6420356d64179aa87f17c81a61ef7c3b0d31bf"
+      },
+      {
+        "id": "h8b_local_adc",
+        "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_203932_26",
+        "kind": "EXTERNAL-REF INCREMENT #4 (attempt 18): H8b = h8 + recorded adc-to-local variant (external golden-ADC path replaced by this dir's input_pins.adc in the otherwise unedited instance; 2 files, recorded with before/after SHA in experiment.json variants)",
+        "exit_code": 0,
+        "timed_out": false,
+        "duration_s": 2.53,
+        "output_files": 8,
+        "output_bytes": 72830,
+        "observation": "Values load (50/1600) and the output Design.xml now points at the local existing input_pins.adc - yet generation STILL fails identically with '#IP Generate Failed!' (~2.5 s). => the external repo's ADC-path root cause is necessary context but NOT sufficient here; the residual failure persists with values loaded and the ADC present.",
+        "tool_log_sha256": "78a4a21c18e4e67849427d1b3b80c09a66de94102e9ded026fa0298fab7a2c4c",
+        "m_params_sha256": "fde70a5a4b6e75115b2db773d20bc193f208ae6377c50acec3d4c162bbcb2df1",
+        "out_design_sha256": "ed93a0b7de45f3743e8cbe6edc75b257cf81bfd9fa6dd42f8ad8ce7c77573c59",
+        "result_json_sha256": "7510593926f3981ecc1532e6cd4f13443240e5e228c13b39a645ad23a9ab742c",
+        "monitor_sha256": "049495fb1d70cbdd8c26e75238c7f769e5f18509627de9b24b308e2c75870d57"
+      },
+      {
+        "id": "h8c_capture",
+        "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_204025_27",
+        "kind": "EXTERNAL-REF INCREMENT #5 (attempt 19): H9 first capture run = h8b recipe with child/console capture enabled",
+        "exit_code": 0,
+        "timed_out": false,
+        "duration_s": 2.33,
+        "output_files": 8,
+        "output_bytes": 72830,
+        "observation": "Same failure. The child was NOT detected because the initial blocking PowerShell sample consumed the whole ~1 s window in which the child lives (harness limitation, fixed afterwards).",
+        "tool_log_sha256": "78a4a21c18e4e67849427d1b3b80c09a66de94102e9ded026fa0298fab7a2c4c",
+        "m_params_sha256": "fde70a5a4b6e75115b2db773d20bc193f208ae6377c50acec3d4c162bbcb2df1",
+        "out_design_sha256": "3a80f9b74fa030189797be9dad08b977261874481b17c461f5a6daa09a3bb18a",
+        "result_json_sha256": "d6295495375d40f288949563bd5f3c33b307b1d5d8e3b274c2a18f8926376aad",
+        "monitor_sha256": "5a16db4191b15e293bb5a7d9f364463347bf4cc1c36f67b9c5fe6e5e52e44aeb"
+      },
+      {
+        "id": "h8d_finalcapture",
+        "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_204128_28",
+        "kind": "EXTERNAL-REF INCREMENT #6 (attempt 20, final): H9 second capture run = h8b recipe with the fixed early high-frequency monitoring (first PowerShell sample deferred past the child's lifetime window)",
+        "exit_code": 0,
+        "timed_out": false,
+        "duration_s": 5.0,
+        "output_files": 8,
+        "output_bytes": 72830,
+        "observation": "The child WAS captured this time: td_commands_prompt.exe (pid 15816) plus its conhost child, first seen ~0.2 s after start, gone within ~0.5 s. Its command line and console text could NOT be obtained (cmdline query returned null before the child exited; console buffer empty at the scrape moments) and the child writes no td_*.log anywhere (no workaround available with routine tooling). Per the H9 judgment rule this records: 'routine tooling cannot capture the child's failure text - child lifetime <0.5 s, no persisted log'. Same '#IP Generate Failed!' outcome. Total attempts used 20/20.",
+        "tool_log_sha256": "78a4a21c18e4e67849427d1b3b80c09a66de94102e9ded026fa0298fab7a2c4c",
+        "m_params_sha256": "fde70a5a4b6e75115b2db773d20bc193f208ae6377c50acec3d4c162bbcb2df1",
+        "out_design_sha256": "fcdd655fc9a9dff60a4d81afdc2797b71170696a342ed08cad045c6064caea02",
+        "result_json_sha256": "a3e1aaf3177caaed012d514870e5d8e8400086b89ff00801f3bc33c74e1fcbc4",
+        "monitor_sha256": "d93e89c562c39d3dc599691c8f8fb41a322fe3fbbd66a5fe4718dc882ceac2de"
+      }
+    ]
+  },
+  "probes_not_counted_against_the_generation_cap": [
+    {
+      "id": "h3_probe",
+      "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_191344_2",
+      "kind": "-tcl -source interpreter inventory (H3)",
+      "exit_code": 0,
+      "findings": "Tcl 8.6; full info commands dump captured; NO generation command; open_iplib against the depot copy fails ('Failed to identify required files.'); Dependency.tcl with our guard fails to source in bare context ('Missing IPTool context: IP_INSTALL_PATH'); help table lists only create_iplib/open_iplib/import_ip/info_ip/list_ips/close_iplib/find_ip/delete_ip/create_dialog; help generate_ipinst: invalid command",
+      "probe_log_sha256": "16e3c2268da1d8b7ce471feb25b1b157c593b694093a5bc1f830f2d2360f7d51",
+      "result_json_sha256": "5b48f29f3b73d5cbf92a322448abcad505a4fe5db694cc8ad23e533b4ee9e8d9"
+    },
+    {
+      "id": "h3_probe2",
+      "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_191430_3",
+      "kind": "-tcl -source library sequence + create_dialog GUI-evidence test (H3 completion)",
+      "exit_code": 0,
+      "findings": "create_iplib OK (creates a lib tree); open_iplib -path <that lib path> failed ('Failed to identify required files.', not pursued further - residual); after library ops still no generation command; create_dialog is NOT a registered command ('invalid command name \"create_dialog\"') although it appears in the static help table; guard-stripped Dependency.tcl still needs IP_DEVICE (tool-provided context)",
+      "probe_log_sha256": "c832b70d08dc1f3facecd951f2be03a6f5adce7f4cd2ee024727560e66956983",
+      "result_json_sha256": "32cc8f798296670cfd20df3ce28291fc0182c6c902cb14b8d1e8b8b7d292aeda"
+    },
+    {
+      "id": "h5_launcher / h5_launcher2",
+      "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_192652_6",
+      "kind": "private-copy GUI launcher probe (H5): start, observe, screenshot, kill; no click, Generate not pressed",
+      "findings": "IpTool window appears within about 1-7 s and idles; binding marker gui_depot_binding.log NOT written within 40 s (guard/depot stage not reached before user interaction); window tree has no native children (Qt); PrintWindow capture shows the MIS configuration window (title 'MIS - DDR2/DDR3/DDR4', Component Name ddrmc_x32, parameter table incl. CL 11) - i.e. the interactive configuration entry works, but nothing is generated without a human; killed cleanly",
+      "config_window_png_sha256": "4cf8ae314ace66b395956ddaceb4e47f895b174341b1d5f2abbb453528acd8d1",
+      "config_window_png": "attempts/h5_launcher2/win_1641324.png",
+      "fullscreen_screen_png_sha256": "6fffb1d5f1b09cc743ed3d1749a60a0386e82f195e0a935d5f27d72dc185b61d",
+      "privacy_note": "the full-screen PNG necessarily contains unrelated desktop content; it stays local in the experiment directory as raw evidence",
+      "result_json_sha256_launcher": "f71471dcb0161dfddc29e32558e6cfdb1ca205cc7ac19119a52f03fa319fc6c6",
+      "result_json_sha256_launcher2": "2c995cccf19ba1cb17bbb76cdcbff5c4117c3fdd83bb7c6c2ca0479c2ae9a14e"
+    },
+    {
+      "id": "h4_xmlipgen / h4b_xmlipgen",
+      "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_194801_17 and ..._194851_18",
+      "kind": "TD CLI xmlipgen in a fresh scratch project (H4)",
+      "exit_code": 0,
+      "findings": "scratch project creation OK (import_device + create_project, 2.0-2.6 s each); xmlipgen is registered (native, not a proc); -h/-help produce empty output; -gen/-user/-xml/-device are invalid options; bare xmlipgen executes the internal engine and fails with 'HDL-8001 ERROR: XmlIpGen cannot find all xml file.' - it requires an undocumented input XML file set that IpTool prepares, so it is not a usable standalone headless entry in this configuration",
+      "stdout_sha256_17": "03084c609205e0220e07dd84080d5e030ba7e98d119c5032b52f37808d75b594",
+      "stdout_sha256_18": "8ba80442266ccf022f903e86fbba42fd9b89da8f5518ff9b3d2ff6f7cf3e6712",
+      "result_json_sha256_17": "e3f2a9858f13b17e5a9ac99b543354fea9ffc8df67a659dda6863cb6bf902f1b",
+      "result_json_sha256_18": "6c702e7055cd539ad9a3668d8acfa522772e2c89f8c7c8a0d617a4ccf1e14094"
+    },
+    {
+      "id": "tcl_recontrol",
+      "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_194800_16",
+      "kind": "positive control: re-run of the -tcl -source entry",
+      "exit_code": 0,
+      "findings": "entry works: trace file written with ENTER/EXIT markers; Tcl 8.6; IP commands list identical to H3",
+      "trace_sha256": "006f151897236259d18cb6a2a466aac0737b5641dfe32a53c5833336a32de1aa",
+      "result_json_sha256": "f364dd5e348fe25fe36a6a7f5df16ec50ea22497f0ca2a63ba9513f24241cbc3"
+    },
+    {
+      "id": "smoke",
+      "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_191037_9",
+      "kind": "runner machinery smoke test (cmd.exe echo through the runner)",
+      "findings": "runner spawn/record/monitor/kill machinery verified; no tool executed",
+      "result_json_sha256": "b3dd6505c3d4a3fe2ed2c9db34edf46c327d67f8852f32b1295c3dfd02a31b3e"
+    },
+    {
+      "id": "unused",
+      "dir": "D:/TD/work/csi2/_validation/ddr1333_cli_20261016_192919_9",
+      "kind": "created while testing a shell gate; no attempt executed; inputs intact",
+      "result_json_absent": true
+    }
+  ],
+  "h_conclusions": {
+    "H1_documented_default_form": "Standalone form (no -user) executed 3 times in distinct variants (file-path -gen, directory -gen, +-qcerr, plus a guard-free depot run: 4 related attempts): always exit 1 in 2.5-2.8 s, zero stdout/stderr, zero windows, zero artifacts, zero writes. Attempt 14 additionally ran the corrected form with -use_value default (with directories and -user): it reached the automatic generation stage and failed deterministically at '#IP Generate Failed!' (same as copy mode). Conclusion: no headless generation succeeded; the standalone default form remains undiagnosed (it cannot surface dialogs without -app_path) but the failure mode observed elsewhere is systemic at the generation stage.",
+    "H2_copy_form": "The interactive reality is proven: without -use_value the tool ignores -no_status and opens the configuration window waiting for a human (attempt 13: 900 s, window captured; earlier H2: 600 s). With -use_value (copy or default) plus the corrected directory form and -app_path, the tool runs its AUTOMATIC path: it exports the instance scaffolding (8 files, 57,702 B), sets PH1P_REF_CLK=100.00 / PH1P_DDR_SPEED=800.00 and deterministically reports '#IP Generate Failed!' in ~2.5 s (byte-identical tool log across attempts 11/12/14). The corrected form is therefore validated as far as the tool's own automatic stage; the residual failure is systemic (independent of copy vs default) and its detail lives in a short-lived td_commands_prompt.exe child whose output is not persisted (no td_*.log anywhere; likely launched with -nolog). Earlier diagnosis stands: -user and -gen are validated as directories (error dialogs captured in attempts 9/10).",
+    "H3_tcl_entry": "Confirmed working as a scripting/diagnostic entry (positive control passes), but it exposes no generation command: no generate_ipinst in any context; create_dialog is only in the static help table and is NOT a registered command; library commands exist but generation is out of their scope. The only GUI-adjacent command semantics remain create_dialog ('create the IP setting dialog then generate'), unavailable in script mode.",
+    "H4_xmlipgen": "Exists in project context but is an internal engine step requiring an undocumented prepared XML set ('XmlIpGen cannot find all xml file'), no usable help, invalid-option errors for guessed parameters. Not a usable standalone headless entry in this experiment.",
+    "H5_gui_boundary": "The private-copy launcher opens the real configuration window (capture preserved). No binding marker within 40 s; no generation without human interaction. GUI dependency confirmed for the interactive route; the marker behavior needs a human-in-the-loop validation run."
+  },
+  "external_reference_increment_H6_H9": {
+    "context": "User-provided sibling-project repos (same MLK-F9P board, TD 6.2.3) document a same-family failure (empty PH1P_IO_ASSIGN -> gen_adc open fails -> generation aborts) and a Tcl IP-flow recipe. Their claims were checked here only by local controlled experiments; no external script was executed.",
+    "H6_command_gap_finalized": "On this TD 6.2.2.200067: absent create_ip/get_ipdefs/get_ips/get_ipdef/generate_target/generate_ipinst/load_project_ips/close_project_ips/report_ip_status/ip_upgrade/create_ipinst/delete_ipinst/list_ipinst; present set_property/get_property/create_syn_ip/xmlipgen/ipgen_synip/print_ip_config/read_ip_adc/export_ip_lib/set_ip_property/set_ippin_assignment/save_best_bits/reset_runs (registry also lists generate_gate/generate_simulation/process_vlog_files/read_adc/export_ip_pins/export_ip_sdc/import_ip_pin_list/set_hxt_property/set_ipinst_assignment). No usage text via -h/-help/help. => the 6.2.3 recipe cannot be ported; evidence: attempt h6_probe.",
+    "H7_no_usable_entry": "set_ip_property is accepted silently with no observable effect; read_ip_adc requires a project IP model ('USR-8321 cannot find ip model'); create_syn_ip requires a top model ('PRJ-9009'); xmlipgen always fails with 'HDL-8001 cannot find all xml file' (needs an undocumented prepared XML set); ipgen_synip does nothing observable; export_ip_lib errors. => no usable set-params-and-generate entry on 6.2.2; this line is closed. evidence: attempt h7_probe.",
+    "H8_value_load_mechanism": "Using the unedited tool-era instance as -user makes the automatic copy flow load instance values (ipgen.log: 100.00/800.00 defaults then 50.00/1600.00 instance values) - the hand-edited instance produced by the prepare script was the earlier value-fallback cause. With the external golden-ADC path mapped to the local input_pins.adc the behavior is unchanged and generation still fails identically. => external ADC-path root cause is necessary context but not sufficient; the residual '#IP Generate Failed!' persists with values loaded and ADC present. evidence: attempts h8_toolmade_source / h8b_local_adc (byte-identical tool logs 78a4a21c... across four runs).",
+    "H9_child_capture_limits": "td_commands_prompt.exe (+conhost) is spawned ~0.2 s after start and lives under ~0.5 s; it writes no td_*.log and its stdout/stderr are not inherited; in the final capture run its pid/name were recorded but the command line (query returned null) and console text (buffer empty at scrape moments) were not obtainable with routine tooling. Recorded per the H9 rule as 'routine tooling cannot capture the child failure text'; a debugger/ETW-based session would be required. evidence: attempts h8c_capture / h8d_finalcapture."
+  },
+  "boundary_acceptance": {
+    "attempts_table_complete": true,
+    "positive_control_rerun_passed": true,
+    "negative_control_passed": "nonexistent -user path: exit 1, zero artifacts, zero writes (failure detectable)",
+    "failures_reproducible": "generation-stage failure reproduced 3x with byte-identical tool logs and .m_params (attempts 11/12/14); silent exit-1 class reproduced 4x within the H1 family; window-wait class reproduced 3x (h2_copy 600 s, h2h 900 s, h5_launcher probes)",
+    "corrected_form_executed": "yes: 4 authorized runs (attempts 11-14) with both options as directories; reached the automatic generation stage and the '#IP Generate Failed!' stage deterministically",
+    "external_increment_executed": "yes: H6-H9 per dev-plan increment, 6/6 attempts (15-20); verdicts in external_reference_increment_H6_H9 (command gap finalized, no usable Tcl entry, value-load mechanism verified, ADC-path cause necessary-but-not-sufficient, child capture recorded as not obtainable with routine tooling)",
+    "gui_dependency_objective_evidence": "visible window enumeration (0.5 s polling), PrintWindow captures of the config dialog and error dialogs, CPU stagnation, zero output files on wait paths - no click performed, Generate never pressed",
+    "script_side_repair_delivered": true,
+    "no_headless_success_claimed": true
+  },
+  "outside_write_scan": {
+    "scopes_scanned_per_attempt": ["D:/downlaod/bin", "D:/downlaod/ip/depot", "D:/TD/work/csi2/_validation (excluding the running experiment dir)", "D:/TD/work/test", "%TEMP%"],
+    "result": "no file additions/removals attributed to IpTool/TD in the scanned scopes for attempts 1-10; for attempts 11-20 the tool modified D:/downlaod/bin/.setup.ini each time (a pre-existing 21-byte UI state file; content stays 'LAST_POS=(251, 177)', mtime updated per run - a window-position cache). It is the only outside write detected. One temp-file add and two temp changes during h2e (shared temp) cannot be attributed reliably.",
+    "setup_ini_note": "benign UI-state write into the installation directory; content before the first modification is not archived (limitation). IpTool.exe and all other install files verified unchanged by SHA (anchors).",
+    "limitations": "AppData was checked manually once (no IpTool artifacts); registry writes not monitored; temp is shared with other desktop activity"
+  },
+  "limits": [
+    "No complete DDR IP product exists (any speed/config); the success branch was not triggered and no parameter/pin acceptance checks could be executed. The scaffolding under output/ is partial and is NOT a candidate.",
+    "The residual '#IP Generate Failed!' cause at ~2.5 s was not identifiable within the budget: values load (verified), the ADC file exists locally (verified), yet the failure persists; its detail lives in a <0.5 s td_commands_prompt.exe child whose output is not obtainable with routine tooling (no td_*.log, no inherited stdio).",
+    "The precise edit in our prepared instance that breaks copy-value loading was not isolated; the tool-era unedited instance loads values correctly (mechanism verified), so a consistent-value preparation strategy can be built later (e.g. generate once via GUI, or replicate the tool's own file-set transitions).",
+    "The '#IP Generate Failed!' path is identical for copy and default modes and across four tool-era-instance runs with byte-identical tool logs - deterministic, hence reproducible.",
+    "IpTool rewrites D:/downlaod/bin/.setup.ini (window position cache) on every automatic run - detected and reported in each attempt.",
+    "No hardware actions; no bitstream; no writes to D:/downlaod other than the tool's own .setup.ini; no writes to frozen projects."
+  ],
+  "next_steps_recommended": {
+    "primary_tcl_side_closed": "The TD 6.2.2 Tcl path is closed by direct experiment (H6/H7): no create_ip/generate_target family, no usable set-params-and-generate entry. Do not revive it; if this route is wanted, the user decision is to upgrade/install TD >= 6.2.3 (version gap verified locally, not tested for compatibility).",
+    "ivory_tower_gui_route": "The reliable unlock remains a user-in-the-loop GUI generation (190248 kit or an equivalent fresh package; GUI steps externally corroborated). The interactive window opens (captures preserved); the binding marker and final dialog need a human validation run.",
+    "if_headless_is_pursued": "(a) attach a debugger/ETW session to td_commands_prompt.exe to read its failure text (child <0.5 s; needs special tooling), or (b) ask the vendor for the IpTool CLI generation contract; (c) prepare a consistent instance value set (avoid hand edits that mismatch .m_params) before any further -use_value copy runs.",
+    "corrected_command_reference": "IpTool.exe D:/downlaod -no_status -app_path D:/downlaod/bin/td.exe -user <fresh_exp>/source/<instance_dir> -gen <fresh_exp>/depot -device PH1P100SBG484 -export_to <fresh_exp>/output -comp ddrmc_1333 -use_value copy   (runner: tools/td/run_ddr1333_ipgen.py run --raw ...; use new-dir --extra-source <tool-era instance> + variant --adc-to-local to reproduce the H8b recipe)",
+    "external_repo_success_recipe": "Not portable here (requires TD >= 6.2.3 create_ip/set_property/generate_target; their final delivery is GUI as well). Their documented ADC root cause is partially validated (value-load family) but not sufficient on 6.2.2."
+  },
+  "review_notes": [
+    "All SHAs of attempt records live in the experiment directories; this file anchors the key ones.",
+    "The experiment directories are append-only evidence: nothing was deleted; one aborted attempt directory (negctl_userpath) contains an ABORTED.md explaining zero tool execution.",
+    "Diagnostic scripts written by hand live inside their experiment directories (h3_probe.tcl, h3_probe2.tcl, h4_xmlipgen.tcl, h4b_xmlipgen.tcl, tcl_recontrol.tcl)."
+  ]
+}

@@ -1,0 +1,177 @@
+{
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "project_root": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+  "output_dir": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop",
+  "task_ids": [
+    "T10.a1-bm-addr"
+  ],
+  "package_id": "T10.a1-bm-addr",
+  "round": "r0",
+  "revision": "r0-route",
+  "continuation_of": "T10.a1-bm-addr r0 candidate 35ea7364 (G1 green; synth +0.113; route 0/1)",
+  "batch_size": 1,
+  "status": "finished",
+  "needs_user_input": false,
+  "result": {
+    "verdict": "FAIL",
+    "g1": "PASS functional/throughput",
+    "route": "Routed SWNS -0.087, STNS -1.109, 27/4555 endpoints; hold PASS; slice 2,993; ERAM 26; reg 1,664",
+    "worst": "adler_red_st -> smem.addrb; address/CE cone gone",
+    "decision": "T10.a1-adler-smem r0 final 87-ps micro-fix"
+  },
+  "operation": "followup_task",
+  "authorization": {
+    "quote": "请裁决最后一次 route-only：1. 豁免 +0.5 预布线门槛...",
+    "date": "2026-10-22",
+    "type": "final_one_time_pre_route_synth_margin_waiver_plus_route_only",
+    "basis": "用户要求最后一次 route-only 并给出依据：ERAM clk2q 起点 0 个；frame_top smem_waddr 同路径 r2-waive2 routed +0.020；本候选 synth +0.113 优于 r2 的 +0.021。失败即收尾，不扩轮。",
+    "round_accounting": "r0 synth 1/2 used; this is a route-only waiver, not a new round/reset; no r1.",
+    "limits_frozen_here": {
+      "td_sessions_max": 1,
+      "td_session_minutes_max": 45,
+      "td_synth_attempts_max": 0,
+      "td_route_attempts_max": 1
+    },
+    "not_authorized": [
+      "new synthesis or RTL change",
+      "new round/r1",
+      "A route or clock change",
+      "larger device/QoR strategy",
+      "false path/multicycle/seed sweep",
+      "bitgen/download/Flash",
+      "protocol/port/frame/CRC/length/abort/Bayer/SDC changes"
+    ]
+  },
+  "waiver": {
+    "type": "final_one_time_pre_route_synth_margin_waiver",
+    "original_gate": "synth WNS >= +0.5",
+    "actual": "+0.113",
+    "reason": [
+      "G1 all green; 33/33 bit-identical; comp 355,261; f1080p 81,707 B.",
+      "Report has 0 ERAM clk2q-start endpoints.",
+      "Worst is locked frame_top smem_waddr; same path routed +0.020 in r2-waive2.",
+      "Synth +0.113 is better than r2 +0.021 (which also routed)."
+    ],
+    "not_waived": "Routed WNS/TNS/HWNS/HTNS>=0, 0 violations, resources, static CDC, bitgen not_run",
+    "one_time": true
+  },
+  "r0_state": {
+    "candidate": "35ea7364 (full hash in CANDIDATE-MANIFEST-bm-addr-r0.json)",
+    "g1": "PASS: P2 13/13, P3 20/20, 0 mismatch, 0 X, vlog 0/0; 33/33 bit-identical to r2; comp 355,261; f1080p 81,707 B / b769cc66",
+    "synth": "+0.113 / TNS 0; slice 3,085; ERAM 26; reg 1,646",
+    "worst": "frame_top byte_k_reg[2] -> smem_waddr_r_reg[14/15].d; 0 ERAM clk2q-start endpoints",
+    "route": "0/1; no routed DB; CDC not available"
+  },
+  "route_scope": {
+    "primary": "Final route-only on 35ea7364; no synth, no RTL change.",
+    "gates": "Routed WNS/TNS/HWNS/HTNS>=0, 0 violations, resources in device; report_clock_utilization/check_timing/report_timing_summary direct -file on new DB; static single-clock CDC evidence; bitgen not_run.",
+    "if_fail": "Stop; close T10 as 3/4 PASS + 1 warning; keep r2 0b084317 and bm-prefetch/bm-addr evidence; no automatic extension."
+  },
+  "input_paths": [
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/dev-plan.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/handoff.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-bm-addr/r0/result-r0.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-bm-addr/r0/td/syn_gate_timing_a1.rpt",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-bm-addr/CANDIDATE-MANIFEST-bm-addr-r0.json",
+    "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v",
+    "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v",
+    "tools/td/td_env.ps1",
+    "tools/td/PATH_CONTRACT.md",
+    ".agents/skills/fpga-dev/SKILL.md",
+    ".agents/skills/fpga-tester/SKILL.md"
+  ],
+  "write_scope": {
+    "modify_existing_run_owned": [],
+    "must_not_modify": [
+      "a1_deflate_core.v (keep 35ea7364)",
+      "a1_frame_top.v (18d51b1b)",
+      "a1_small_top.sdc (227dd39e)"
+    ],
+    "create_new": [
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-bm-addr/r0-route/**",
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-bm-addr/r0/td/02_route_only.tcl (tooling only)"
+    ],
+    "td_project_dir": "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-bm-addr/r0/td/**",
+    "path_contract": {
+      "td": "T: = r0/td, Y: = project root; run tools/td/td_env.ps1 -Force -TdDir ...; never map X: to project root",
+      "sim": "P: = project root, W: = current sim run",
+      "doc": "tools/td/PATH_CONTRACT.md"
+    },
+    "rules": [
+      "No RTL change; no synthesis; route-only on existing r0 syn.",
+      "Use route-only flow, no bitgen; early 5-10 s failure check; stop end opt_route.",
+      "After route, report_clock_utilization/check_timing/report_timing_summary direct -file.",
+      "Static CDC; do not claim report_cdc.",
+      "If route fails/WNS<0, close T10 3/4 PASS + 1 warning; keep r2 0b084317; no automatic extension.",
+      "Follow T:/Y: TD and P:/W: simulation."
+    ]
+  },
+  "protected": [
+    "a1_deflate_core.v 35ea7364, frame 18d51b1b, SDC 227dd39e",
+    "all old manifests/reports",
+    "workflow/tasks.json",
+    "production candidate b68c6e18…f9bf",
+    "board, Flash, PCIe/RK, camera configuration"
+  ],
+  "next_action": "followup_task",
+  "next_action_detail": {
+    "role": "fpga-dev",
+    "skill_path": ".agents/skills/fpga-dev/SKILL.md",
+    "task": "T10.a1-bm-addr r0-route：不综合、不改 RTL；对 35ea7364 route-only 一次；Routed 全门槛；新 DB report_clock_utilization/check_timing/report_timing_summary 直接 -file；静态 CDC；bitgen not_run。失败即收尾。",
+    "must_read": [
+      "dev-plan.md §37",
+      "r0/result-r0.md §3/§5",
+      "r0/td/syn_gate_timing_a1.rpt",
+      "tools/td/PATH_CONTRACT.md"
+    ],
+    "first_checks": [
+      "confirm core hash 35ea7364 (full hash from manifest)",
+      "confirm frame 18d51b1b / SDC 227dd39e",
+      "confirm r0 syn exists and settings.cfg device/package non-empty"
+    ]
+  },
+  "td_budget": {
+    "sessions_max": 1,
+    "session_minutes_max": 45,
+    "total_minutes_max": 45,
+    "synth_attempts_max": 0,
+    "route_attempts_max": 1,
+    "route_minutes_max": 40,
+    "dev_minutes_max": 45,
+    "dev_tool_calls_max": 20,
+    "tester_minutes_max": 45,
+    "tester_tool_calls_max": 30,
+    "why": "Final route-only after G1 green; one route; no synth.",
+    "no_qor_strategy_change": true,
+    "no_clock_change": true
+  },
+  "stop_conditions": [
+    "Any RTL/synthesis needed -> stop; route-only.",
+    "settings.cfg empty/PRJ-8001 persists -> stop; report harness evidence.",
+    "No opt_place start within 10 s or run exits -> stop; no long poll.",
+    "Route not Routed within 40 min -> stop; close T10 3/4 + 1 warning.",
+    "Routed WNS<0 or TNS<0 -> stop; close; keep r2.",
+    "Routed HWNS<0 or HTNS<0 -> stop; close.",
+    "Any violating endpoint or resource overflow -> stop; close.",
+    "report_clock_utilization/check_timing/report_timing_summary not actually executed -> G2 cannot PASS; close with evidence gap.",
+    "bitgen invoked or .bit generated -> stop and report; no download.",
+    "1 session/45 min or 1 route exhausted -> stop; no r1.",
+    "Any request for false path/multicycle/seed sweep/clock change/QoR strategy -> stop and return to planner."
+  ],
+  "after_development": {
+    "sequence": [
+      "dev ready_for_test + frozen r0-route manifest -> spawn_single_tester (new package tester; not bm-prefetch/hit-pipe)",
+      "tester integrated verdict -> return_to_planner",
+      "dev blocked at harness/route/report -> return_to_planner, no tester",
+      "route fail -> close T10 3/4 PASS + 1 warning; keep r2 0b084317"
+    ],
+    "rules": [
+      "If routed passes, one new integrated tester does final verification: functional evidence may reuse same-candidate r0 evidence if hash/manifest match; engineering recomputes routed reports; system throughput/no bit.",
+      "Tester must independently implement/repair strict decoder; verify P3 per-case cycles and per-cycle table; reports direct -file.",
+      "Tester writes test-reports/T10.a1-bm-addr-r0-integrated.md with one unique verdict heading.",
+      "G2 PASS requires Routed WNS/TNS>=0, 0 violations, resources in device, static CDC evidence; do not claim report_cdc."
+    ]
+  },
+  "question_path": null,
+  "user_summary_path": "workflow/runs/20261020-0209_singleA_aplus_closedloop/user-summary.md"
+}

@@ -1,0 +1,29 @@
+# 主传输日志
+
+- 261025 1956 runtime=opencode；PROJECT_ROOT=D:\fpga\ph1p100；RUN_ID=20261025-195604_fpga-dual-aplus-core-feasibility。
+- 261025 1956 保存用户原话与紧邻引用上下文至 request.md；使用项目 fpga-orchestrator 工作流，主仅传输。
+- 261025 1956 默认 BATCH_SIZE=1；本需求另开新 run，不加入 20261025-180900_fpga-dual-offline-closure，也不修改 b11/T08/T10 目录。
+- 261025 1956 约束：只做 FPGA 侧；不接 RK；板卡/COM/JTAG/下载/Flash 归 b11；TD 串行、b11 优先；新源只在本次 run 目录冻结副本；不修改 workflow/tasks.json；不批量删除。
+- 261025 1956 尝试以 agent=fpga-planner 派发，工具返回 Unknown agent；按 OpenCode 实际可用角色改用 general 子会话并显式加载 fpga-planner 技能，登记 runtime=opencode、role=fpga-planner、sessionID=ses_e8d13df9effeKFwPFwPZ1rlbNk；未由主接管技术规划。
+- 261025 2021 规划返回 ready；task_ids=T10.dual-core-resource-baseline；dispatch_path=D:\fpga\ph1p100\workflow\runs\20261025-195604_fpga-dual-aplus-core-feasibility\dispatch.json；needs_user_input=false。3 个正式包：P1 ready、P2 待 P1 PASS、P3 blocked（TD/b11 优先条件）。
+- 261025 2021 P1 为只读报告提取/资源基线，TD/综合/布线/bitgen/CWC/下载/板卡=0；只派发 P1，不派发 P2/P3。
+- 261025 2027 服务器重启导致首次 dev 派发中断（agent=fpga-dev 当时 Unknown agent；未创建任务目录）。会话已迁至项目根 D:\fpga\ph1p100，项目角色入口加载；未重复规划、未改 dispatch。
+- 261025 2032 P1 开发完成并冻结：runtime=opencode、role=fpga-dev、sessionID=ses_e8cf5605dfferY55lc545nnvXB；status=ready_for_test；manifest=r0/manifest-r0.json（stopped_modifying=true, active_commands=0，15 artifacts/27 inputs，0 mismatch）；资源结论 conditional，双核时序 unproven；blocked 空。
+- 261025 2032 按 dispatch 新建本任务唯一综合测试者，round0；只读 P1 manifest/产物，不派第二个 tester。
+- 261025 2046 综合测试 round0 返回：runtime=opencode、role=fpga-tester、sessionID=ses_e8ce63a04ffe272QmDmCLazXFE；verdict=FAIL（可修复，blocked 空）；report=test-reports/T10.dual-core-resource-baseline-r0-integrated.md；manifest 同开发 r0。三维：functional fail（marginal LUT6 少计 2,221，应为 25,709；LUT4 上界应 51,418）；engineering fail（最终 manifest SHA 与 mk_manifest 日志不一致，commands 未记录最终 freeze）；system fail（u_camera 第二路 CSI 未在 routed 层次/边际表中体现；b11 WNS 域需注明）。G2-G4 按规划 not_applicable。
+- 261025 2046 按固定分支续真实原开发，round1 实际修复；不新建开发、不改 tester；修复后须同 tester 复测受影响项。
+- 261025 2053 原开发 round1 返回 ready_for_test：runtime=opencode、role=fpga-dev、sessionID=ses_e8cf5605dfferY55lc545nnvXB；F1/F2/F3 已修；manifest=r0/manifest-r0.json，SHA256=228531e7c16bca1a14898966c150b31bce464d7413f58078ae0bd724e894bdd0；15 artifacts/27 inputs/10 commands；T2 6/6 PASS；T1 仅剩测试者脚本自身旧期望 2 项，需 tester r1 更新。blocked 空。
+- 261025 2053 按固定分支续真实原综合测试者 round1 复测；同任务同一 tester，不新建。
+- 261025 2059 综合测试 round1 返回 PASS：runtime=opencode、role=fpga-tester、sessionID=ses_e8ce63a04ffe272QmDmCLazXFE；report=test-reports/T10.dual-core-resource-baseline-r1-integrated.md；manifest=r0/manifest-r0.json（SHA256=228531e7…bdd0）；G0/G1 pass，G2-G4 not_applicable；三维 functional/engineering/system 均 pass；blocked 空；retest not_required。P1 仅解除 P2 前置条件，双核 Routed 时序/板级仍 unproven。
+- 261025 2059 按固定分支把 P1 PASS、三维结果、报告/manifest 路径及轮数交原规划更新下一 dispatch/收尾；主不自行派发 P2/P3。
+- 261025 2106 原规划续接成功：runtime=opencode、role=fpga-planner、sessionID=ses_e8d13df9effeKFwPFwPZ1rlbNk；更新 dispatch 为 P2 T10.dual-aplus-service-verdict（ready），P1 冻结，P3 仍 blocked（P2 未 PASS/TD/b11/planner go 未确认）；user-summary 已生成。P2 为纯模型/CSV/报告，TD/RTL/板卡=0。
+- 261025 2106 新任务 P2 新建唯一 fpga-dev；不复用 P1 开发或 tester。
+- 261025 2121 P2 开发完成并冻结：runtime=opencode、role=fpga-dev、sessionID=ses_e8cb5c609ffeWhhAfFYF9Z4iBq；status=ready_for_test；manifest=r0/manifest-r0.json（SHA256=01b3c24614a2dfd0d592d1bb910e455c4e9cf815e03f62b127e074690a815c2a；22 artifacts/22 inputs/14 commands；22/22 重哈希一致）；blocked 空。产出 43 行 scenarios.csv（规划预期约 39 行，交由 tester 判完整性）、content-sensitivity/ddr-budget/frontier、feasibility-report.md；本地 gen 97/97、test_calc 128/128、check_outputs 85/85、3 负对照被拒。
+- 261025 2121 按 dispatch 新建本任务唯一综合测试者 round0；不复用 P1 tester，不派第二个 tester。
+- 261025 2136 综合测试 round0 返回 FAIL（可修复，blocked=false）：runtime=opencode、role=fpga-tester、sessionID=ses_e8c9b673bffemVyHpOXTtGnwJF；report=test-reports/T10.dual-aplus-service-verdict-r0-integrated.md；manifest 同开发 r0（01b3c246…5c2a，测前/测后一致）。functional fail：F1 frontier 4 条 core-only 行 basis 与 margin 不同源（2 行 16.7967/18.3184 与 meets_25 矛盾）；F2 设计指南 §4.3/§6.2 强制 overhead 三档敏感性缺失，主推荐 1600×900@30 在 1,000,000 档仅 21.0486%<25% 未披露；F3 推荐缺所需时钟。engineering/system/G0/G1 pass；G2-G4 not_applicable。
+- 261025 2136 按固定分支续真实原 P2 开发，round1 实际修复；不新建开发、不换 tester；修复后同 tester 复测 functional 受影响项。
+- 261025 2144 P2 原开发 round1 返回 ready_for_test：runtime=opencode、role=fpga-dev、sessionID=ses_e8cb5c609ffeWhhAfFYF9Z4iBq；repair_round=1；manifest=r0/manifest-r0.json（SHA256=5ed90500a7e9650ca17e5f269731984fea9f215d7401d555dc5633551c2436a6；23 artifacts/22 inputs/18 commands；23/23 重哈希一致）；P1/b6 SHA 无漂移；新增 overhead-sensitivity.csv（129 行）、frontier 16 行同源 margin/三档/所需时钟；blocked 空。
+- 261025 2144 按固定分支续同一 P2 tester round1 复测 functional；engineering/system/G0/G1 未受影响项按原证据复用并由 tester 绑定新 manifest。
+- 261025 2152 综合测试 round1 返回 PASS：runtime=opencode、role=fpga-tester、sessionID=ses_e8c9b673bffemVyHpOXTtGnwJF；report=test-reports/T10.dual-aplus-service-verdict-r1-integrated.md；manifest=r0/manifest-r0.json（SHA256=5ed90500…36a6）；G0/G1 pass，G2-G4 not_applicable；三维 functional/engineering/system 均 pass；blocked=false；retest not_required。O1-O6 为非阻断观察。
+- 261025 2152 按固定分支把 P2 PASS、三维结果、报告/manifest、轮数交原规划收尾并决定 P3；主不自行派发 P3。
+- 261025 2200 原规划收尾返回：status=finished；task_ids=[]（无新派发）；P1/P2 均 PASS（各 round1）；P3 T10.dual-core-synth-probe 保持 blocked、未派发；needs_user_input=false；user_summary_path=D:\fpga\ph1p100\workflow\runs\20261025-195604_fpga-dual-aplus-core-feasibility\user-summary.md。run 内 P1/P2 完成，父 T10 与硬件/板级状态不变。

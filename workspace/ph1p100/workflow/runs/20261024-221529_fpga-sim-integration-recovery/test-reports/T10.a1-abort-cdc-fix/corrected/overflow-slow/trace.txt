@@ -1,0 +1,70 @@
+EVENT tag=start cycles=74 epoch=0 seed=0 raw_ingress=0 cmp_ingress=0 raw_aw=0 cmp_aw=0 aw=0 w=0 raw_active=0 raw_wcnt=0 cmp_active=0 cmp_wcnt=0 rawpub=0 enc=0 exp=0 geom=0 rawdrop=0 cmpdrop=0 err=0 fifo_full=0 rejected=0 slots0=0 slots1=0 fstate=0 pending=0 rvalid=0 response_epoch=0
+SOURCE seed=100 epoch=0 bad=0 cycles=74
+SOURCE_END seed=100 epoch=0 bad=0 rejected_delta=0 cycles=296
+SOURCE seed=101 epoch=0 bad=0 cycles=296
+SOURCE_END seed=101 epoch=0 bad=0 rejected_delta=0 cycles=519
+SOURCE seed=102 epoch=0 bad=0 cycles=519
+SOURCE_END seed=102 epoch=0 bad=0 rejected_delta=2 cycles=742
+SOURCE seed=103 epoch=0 bad=0 cycles=742
+SOURCE_END seed=103 epoch=0 bad=0 rejected_delta=4 cycles=966
+SOURCE seed=104 epoch=0 bad=0 cycles=966
+SOURCE_END seed=104 epoch=0 bad=0 rejected_delta=4 cycles=1189
+SOURCE seed=105 epoch=0 bad=0 cycles=1189
+SOURCE_END seed=105 epoch=0 bad=0 rejected_delta=4 cycles=1412
+SOURCE seed=106 epoch=0 bad=0 cycles=1412
+SOURCE_END seed=106 epoch=0 bad=0 rejected_delta=4 cycles=1635
+SOURCE seed=107 epoch=0 bad=0 cycles=1635
+SOURCE_END seed=107 epoch=0 bad=0 rejected_delta=4 cycles=1858
+EVENT tag=overflow_stalled cycles=1858 epoch=0 seed=107 raw_ingress=3 cmp_ingress=0 raw_aw=0 cmp_aw=0 aw=0 w=0 raw_active=1 raw_wcnt=3 cmp_active=0 cmp_wcnt=0 rawpub=0 enc=0 exp=0 geom=0 rawdrop=0 cmpdrop=0 err=0 fifo_full=470 rejected=22 slots0=1 slots1=0 fstate=0 pending=0 rvalid=0 response_epoch=0
+DDR_WRITE cycles=1859 epoch=0 address=0 rawpub=0 enc=0
+DDR_READ_ACCEPT cycles=1862 epoch=0 address=0
+DDR_WRITE cycles=1865 epoch=0 address=1 rawpub=1 enc=0
+DDR_RESPONSE cycles=1869 epoch=0 response_epoch=0
+ABORT_WRITE cycles=1872 count=1 crop_sof=0
+DDR_WRITE cycles=2019 epoch=0 address=131072 rawpub=2 enc=0
+ABORT_FIFO_ACCEPT cycles=2024 raw_active=1
+DDR_READ_ACCEPT cycles=2024 epoch=0 address=131072
+RAW_ABORT cycles=2025 raw_store_active=1
+TESTER_SLOT_RELEASE cycles=2025 slot=0 count=1
+DDR_RESPONSE cycles=2031 epoch=0 response_epoch=0
+DDR_READ_ACCEPT cycles=2033 epoch=0 address=1
+DDR_RESPONSE cycles=2040 epoch=0 response_epoch=0
+DDR_WRITE cycles=2194 epoch=0 address=212157 rawpub=2 enc=1
+DDR_READ_ACCEPT cycles=5012 epoch=0 address=212157
+DDR_RESPONSE cycles=5019 epoch=0 response_epoch=0
+EVENT tag=fault_observed cycles=11857 epoch=0 seed=107 raw_ingress=9 cmp_ingress=15 raw_aw=2 cmp_aw=2 aw=4 w=4 raw_active=0 raw_wcnt=1 cmp_active=0 cmp_wcnt=0 rawpub=2 enc=2 exp=2 geom=0 rawdrop=1 cmpdrop=0 err=1 fifo_full=474 rejected=22 slots0=0 slots1=0 fstate=0 pending=0 rvalid=0 response_epoch=0
+EVENT tag=overflow_released cycles=11857 epoch=0 seed=107 raw_ingress=9 cmp_ingress=15 raw_aw=2 cmp_aw=2 aw=4 w=4 raw_active=0 raw_wcnt=1 cmp_active=0 cmp_wcnt=0 rawpub=2 enc=2 exp=2 geom=0 rawdrop=1 cmpdrop=0 err=1 fifo_full=474 rejected=22 slots0=0 slots1=0 fstate=0 pending=0 rvalid=0 response_epoch=0
+SOURCE seed=1000 epoch=0 bad=0 cycles=11857
+DDR_WRITE cycles=12012 epoch=0 address=0 rawpub=2 enc=2
+DDR_READ_ACCEPT cycles=12015 epoch=0 address=0
+DDR_RESPONSE cycles=12022 epoch=0 response_epoch=0
+SOURCE_END seed=1000 epoch=0 bad=0 rejected_delta=0 cycles=12078
+DDR_WRITE cycles=12177 epoch=0 address=131072 rawpub=3 enc=2
+DDR_READ_ACCEPT cycles=12182 epoch=0 address=131072
+DDR_RESPONSE cycles=12189 epoch=0 response_epoch=0
+SOURCE seed=1001 epoch=0 bad=0 cycles=22078
+DDR_WRITE cycles=22232 epoch=0 address=0 rawpub=3 enc=3
+DDR_READ_ACCEPT cycles=22235 epoch=0 address=0
+DDR_RESPONSE cycles=22242 epoch=0 response_epoch=0
+SOURCE_END seed=1001 epoch=0 bad=0 rejected_delta=0 cycles=22299
+DDR_WRITE cycles=22397 epoch=0 address=131072 rawpub=4 enc=3
+DDR_READ_ACCEPT cycles=22403 epoch=0 address=131072
+DDR_RESPONSE cycles=22410 epoch=0 response_epoch=0
+SOURCE seed=1002 epoch=0 bad=0 cycles=32298
+DDR_WRITE cycles=32452 epoch=0 address=0 rawpub=4 enc=4
+DDR_READ_ACCEPT cycles=32456 epoch=0 address=0
+DDR_RESPONSE cycles=32463 epoch=0 response_epoch=0
+SOURCE_END seed=1002 epoch=0 bad=0 rejected_delta=0 cycles=32519
+DDR_WRITE cycles=32617 epoch=0 address=131072 rawpub=5 enc=4
+DDR_READ_ACCEPT cycles=32622 epoch=0 address=131072
+DDR_RESPONSE cycles=32629 epoch=0 response_epoch=0
+SOURCE seed=1003 epoch=0 bad=0 cycles=42519
+DDR_WRITE cycles=42673 epoch=0 address=0 rawpub=5 enc=5
+DDR_READ_ACCEPT cycles=42677 epoch=0 address=0
+DDR_RESPONSE cycles=42684 epoch=0 response_epoch=0
+SOURCE_END seed=1003 epoch=0 bad=0 rejected_delta=0 cycles=42740
+DDR_WRITE cycles=42837 epoch=0 address=131072 rawpub=6 enc=5
+DDR_READ_ACCEPT cycles=42842 epoch=0 address=131072
+DDR_RESPONSE cycles=42849 epoch=0 response_epoch=0
+EVENT tag=final cycles=72739 epoch=0 seed=1003 raw_ingress=25 cmp_ingress=47 raw_aw=6 cmp_aw=6 aw=12 w=12 raw_active=0 raw_wcnt=0 cmp_active=0 cmp_wcnt=0 rawpub=6 enc=6 exp=6 geom=0 rawdrop=1 cmpdrop=0 err=1 fifo_full=474 rejected=22 slots0=0 slots1=0 fstate=0 pending=0 rvalid=0 response_epoch=0
+CONTROL abort_writes=1 abort_reads=1 raw_aborts=1 abort_stalls=0 last_abort_hits=0 sof_abort_hits=0 source_losses=1 token_w=27 token_r=27

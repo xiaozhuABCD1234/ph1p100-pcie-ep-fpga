@@ -1,0 +1,217 @@
+﻿{
+ "source_log": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-233401_fpga-steady-state-reverdict\\T10.ss-steady-anchor\\r0\\sim\\logs\\run4.log",
+ "metrics": {
+  "t_rst": 20,
+  "L_cold": 6766434,
+  "L_frame": 6766393,
+  "S_2": 4677535,
+  "S_23": 4677535,
+  "S_34": 4677535,
+  "S_ss": 4677535.0,
+  "S_avg2": 5721984.5,
+  "S_band": [
+   4677535,
+   4677535
+  ],
+  "S_spread_pct": 0.0,
+  "startup": 2088899.0,
+  "startup_pct": 44.65811586658357,
+  "capacity_MBps": 103.90087941618823,
+  "fps": 40.085215824146694,
+  "margin_0_pct": 33.61738608048896,
+  "margin_25_pct": 6.893908864391185,
+  "f_req_0_MHz": 140.32605,
+  "f_req_25_MHz": 175.4075625,
+  "export_tail": {
+   "1": 480930,
+   "2": 480930,
+   "3": 480930,
+   "4": 480930
+  },
+  "export_cost_cycles": 400320,
+  "sink_limited": false,
+  "c_excl_export_MBps": 103.90087941618823,
+  "knife_edge_0pct": false,
+  "knife_edge_25pct": false,
+  "cam_duration": {
+   "1": 1608188,
+   "2": 1608188,
+   "3": 1608188,
+   "4": 1608188
+  }
+ },
+ "validity_recomputed": {
+  "v1_counts": true,
+  "v3_stable": true,
+  "v4_no_bubble": true,
+  "v5_slot_free": true,
+  "v6_monotone": true,
+  "v2_control_exact": "checked separately by independent FRAMES=2 re-run"
+ },
+ "v4_bubble": [],
+ "v5_detail": [
+  {
+   "frame": 3,
+   "slot": 0,
+   "pace": {
+    "slot": 0,
+    "t": 6285524,
+    "read": 129600,
+    "slot_st": 8
+   },
+   "slot_bits": 0,
+   "ok": true
+  },
+  {
+   "frame": 4,
+   "slot": 1,
+   "pace": {
+    "slot": 1,
+    "t": 10963059,
+    "read": 259200,
+    "slot_st": 2
+   },
+   "slot_bits": 0,
+   "ok": true
+  }
+ ],
+ "v6_detail": [],
+ "json_diffs": [],
+ "developer_validity": {
+  "v1_counts": true,
+  "v2_control_exact": true,
+  "v3_stable": true,
+  "v4_no_bubble": true,
+  "v5_slot_free": true,
+  "v6_monotone": true,
+  "v4_detail": [],
+  "v5_detail": [],
+  "v6_detail": []
+ },
+ "validity_match": true,
+ "stats_line": {
+  "cap": 4,
+  "enc": 4,
+  "exported": 4,
+  "read": 518400,
+  "cycles": 20801058,
+  "frames": 4,
+  "ss_pass": 1
+ },
+ "counter_checks": {
+  "exp_bytes_expected": 160136,
+  "cap_bytes_expected": 160312,
+  "read_expected": 518400,
+  "exp_bytes_ok": true,
+  "cap_bytes_ok": true,
+  "read_ok": true,
+  "drops_zero": true,
+  "ss_pass": 1,
+  "cycles_minus_last_exp": 1999
+ },
+ "stats": {
+  "cap": 4,
+  "enc": 4,
+  "exported": 4,
+  "exp_bytes": 160136,
+  "raw_pub": 4,
+  "raw_drop": 0,
+  "cmp_drop": 0,
+  "geom": 0,
+  "err": 0,
+  "read": 518400,
+  "dup": 0,
+  "cap_bytes": 160312,
+  "cycles": 20801058,
+  "wd": 0,
+  "ar": 523408,
+  "r": 523408,
+  "frames": 4,
+  "ss_pass": 1
+ },
+ "negative_controls": [
+  {
+   "id": "ONLY_3_FRAMES",
+   "rejected": true,
+   "reason": "ONLY_3_FRAMES"
+  },
+  {
+   "id": "S_AVG2_AS_STEADY",
+   "rejected": true,
+   "reason": "S_AVG2_AS_STEADY"
+  },
+  {
+   "id": "COLD_LATENCY_AS_THROUGHPUT",
+   "rejected": true,
+   "reason": "COLD_LATENCY_AS_THROUGHPUT"
+  },
+  {
+   "id": "TRUE_S_SS_ACCEPTED",
+   "rejected": false,
+   "accepted": true
+  }
+ ],
+ "dev_selfcheck": {
+  "created": "2026-10-26T00:48:01",
+  "negatives": [
+   {
+    "id": "NEG1_THREE_FRAMES_AS_FOUR",
+    "rejected": true,
+    "reason": "ONLY_3_FRAMES"
+   },
+   {
+    "id": "NEG2_S_AVG2_AS_S_SS",
+    "rejected": true,
+    "reason": "S_AVG2_AS_STEADY"
+   },
+   {
+    "id": "NEG3_L_COLD_AS_S_SS",
+    "rejected": true,
+    "reason": "COLD_LATENCY_AS_THROUGHPUT"
+   }
+  ],
+  "all_negatives_rejected": true,
+  "hand_checks": [
+   {
+    "id": "H1_S_5M_CAPACITY",
+    "expected": 97.2,
+    "actual": 97.2,
+    "pass": true
+   },
+   {
+    "id": "H2_S_6.25M_CAPACITY",
+    "expected": 77.76,
+    "actual": 77.76,
+    "pass": true
+   },
+   {
+    "id": "H3_EXPORT_COST",
+    "expected": 400320,
+    "actual": 400320,
+    "pass": true
+   },
+   {
+    "id": "H4_FPS_AT_5M",
+    "expected": 37.5,
+    "actual": 37.5,
+    "pass": true
+   },
+   {
+    "id": "H5_25PCT_DEMAND",
+    "expected": 97.2,
+    "actual": 97.2,
+    "pass": true
+   },
+   {
+    "id": "H6_BYTES_1080P",
+    "expected": 2592000,
+    "actual": 2592000.0,
+    "pass": true
+   }
+  ],
+  "all_hand_checks_pass": true,
+  "pass": true
+ },
+ "dev_selfcheck_consumed": true,
+ "pass": true
+}

@@ -1,0 +1,297 @@
+{
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "project_root": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+  "output_dir": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop",
+  "continuation_of": "T10.a1-eng-freeze r8 (same run, same task ID; r9 is the absolute final local-patch round, 9th actual repair)",
+  "task_ids": [
+    "T10.a1-eng-freeze"
+  ],
+  "batch_size": 1,
+  "status": "finished",
+  "needs_user_input": false,
+  "result": {
+    "verdict": "blocked",
+    "g1": "PASS: P2 13/13, P3 20/20, 0 mismatch, vlog 0/0; P2 comp 81.067 MB/s; 1080p 103.892 MB/s",
+    "g2": "FAIL: S1 WNS -0.789 ns / TNS -22.934 / 69 endpoints; S2 WNS -0.434 ns / TNS -45.639; 2/2 synthesis, 0/1 route",
+    "route": "not_run",
+    "td_used": "2/2 synthesis, 0/1 route",
+    "decision": "r9 FAIL; r10 explicitly authorized by user '执行r10'; no automatic r11"
+  },
+  "round": "r9",
+  "operation": "spawn_agent",
+  "authorization": {
+    "quote": "接着做",
+    "quote_context": "用户自 r5 起持续只回复“接着做”，未给新数字；r8 结果已返回，剩余 0.47 ns，剩余路径明确为 htab 读地址/pos+3。r9 沿用同一最小预算 2 会话/90 分钟，不增预算/范围。",
+    "date": "2026-10-21",
+    "type": "informed_continuation_reusing_minimal_displayed_budget_one_time_exception",
+    "interpretation": "用户在已知 2 会话/90 分钟最小预算、r8 结果与“r8 为最后局部补丁轮”声明后仍持续“接着做”，且 r8 残差仅 0.47 ns、S1 TNS 仅 -3.641/39 端点；这是改变边际收益判断的新证据。规划据此一次性例外授权 r9 = 2 会话/90 分钟；不是自动续轮，r9 是绝对最后一次局部补丁，失败不自动 r10。",
+    "basis": "r8 把 WNS 从 -1.287 推到 -0.470、S1 TNS 从 -73.092 推到 -3.641/39；剩余路径 7 级 5.739 ns、差 0.47 ns。与 r7 时预计的 ~1 ns 残差相比，边际收益显著提高；用户持续指令继续且未反对同一最小预算。若用户在开发开始前明确否认，立即停止并回收 dispatch。",
+    "round_accounting": "P4: round0 first acceptance; r1-r8 = 8 actual repairs; r9 = 9th actual repair, absolute final local-patch round.",
+    "limits_frozen_here": {
+      "td_sessions_max": 2,
+      "td_session_minutes_max": 75,
+      "td_total_minutes_max": 90,
+      "td_synth_attempts_max": 2,
+      "td_route_attempts_max": 1
+    },
+    "not_authorized": [
+      "C / RK / PCIe / dual-camera / G4",
+      "lowering 187.5 MHz or relaxing the 5.333 ns constraint",
+      "false path / multicycle / clock-group exceptions",
+      "seed sweep or blind re-run",
+      "bitgen / download / Flash / production integration",
+      "board window or real RAW assumption",
+      "new package ID, rename, or new run to bypass limits",
+      "automatic r10",
+      "clock-domain / lower-clock / async FIFO / CDC architecture change",
+      "protocol/port/frame commit/CRC/length/abort/Bayer changes",
+      "changes outside the htab read-address / pos+3 path"
+    ]
+  },
+  "convergence_assessment": {
+    "r8_s1": "WNS -0.586 ns, TNS -3.641 ns, Fmax 168.947 MHz, 39/148,565 endpoints",
+    "r8_s2": "WNS -0.470 ns, TNS -37.591 ns, Fmax 172.325 MHz, 147/148,604 endpoints",
+    "current_path": "state_reg[23] -> htab_rd_addr -> htab read -> hent_pos_p3_reg, 7 levels, 5.739 ns, slack -0.470 ns",
+    "probability": "roughly 60-75% that synthesis closes WNS/TNS with one htab read-address/pos+3 fix; routed closure is lower due to route derating, and only one route attempt is allowed.",
+    "why_one_time_exception": "r8 was declared final when residual was expected around 1 ns; actual residual is 0.47 ns and S1 TNS is only -3.641/39. This is new evidence, not a blind retry.",
+    "stop_rule": "r9 is the ABSOLUTE final local-patch round. If r9 WNS<0 or TNS<0 after two synth attempts, or route fails, stop; no r10. Then present route b (lower clock + async FIFO/CDC) for explicit user consent, or accept the warning."
+  },
+  "r8_state": {
+    "g1": "PASS: P2 13/13, P3 20/20, 0 mismatch, vlog 0/0; P2 comp 81.067 MB/s; 1080p 4,677,945 cycles = 103.892 MB/s",
+    "g2": "FAIL: S1 WNS -0.586 / TNS -3.641 / 168.947 MHz / 39 endpoints; S2 WNS -0.470 / TNS -37.591 / 172.325 MHz / 147 endpoints; route not_run",
+    "critical_path": "state_reg[23] -> htab_rd_addr -> htab read -> hent_pos_p3_reg, 7 levels, 5.739 ns",
+    "candidate": {
+      "a1_deflate_core.v": "4e1e97b8f9c00102447ab1c6de63a26c8b762e57416d0365c7aba837ce99ec9c",
+      "a1_frame_top.v": "fa64cb487b4241241516183e7b8bfd71f96b30e54f5ed3d53ac239a2771e1ba2",
+      "manifest": "T10.a1-eng-freeze/CANDIDATE-MANIFEST-r8.json"
+    },
+    "s1_reference": "S1 had much lower TNS (-3.641, 39 endpoints) but WNS -0.586; if the S1-equivalent RTL can be reconstructed by reverting the hent_pos_p3 precompute, prefer it as the base because TNS headroom is far better. Otherwise use S2."
+  },
+  "throughput_context": {
+    "cycles_per_byte": 1.8047,
+    "required_fmax_for_77_76_MBps": 140.3,
+    "required_fmax_for_97_2_MBps": 175.4,
+    "r8_s2_equivalent_MBps": 95.5,
+    "note": "187.5 MHz is this round's planning G2 gate, not a directly written requirement number; hard requirement >=77.76 MB/s, margin target 97.2. Route b (lower clock + CDC) needs explicit user consent."
+  },
+  "input_paths": [
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/dev-plan.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/handoff.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/fpga-design-guide.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-eng-freeze/p4/result-r8.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-eng-freeze/r8/reports/syn_gate_timing_s2.rpt",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-eng-freeze/CANDIDATE-MANIFEST-r8.json",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-eng-freeze/r8/td/00_all.tcl",
+    "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v",
+    "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v",
+    "upstream/ph1p100-pcie-ep-fpga/tools/codec/run_p2_r8.ps1",
+    "upstream/ph1p100-pcie-ep-fpga/tools/codec/run_p3_r8.ps1",
+    ".agents/skills/fpga-dev/SKILL.md",
+    ".agents/skills/fpga-tester/SKILL.md"
+  ],
+  "write_scope": {
+    "modify_existing_run_owned": [
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v"
+    ],
+    "must_not_modify": [
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v (keep r7/r8 hash fa64cb48…1ba2)"
+    ],
+    "create_new": [
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/** (new helper files only, if strictly needed)",
+      "upstream/ph1p100-pcie-ep-fpga/sim/tb/codec/**",
+      "upstream/ph1p100-pcie-ep-fpga/tools/codec/**",
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-eng-freeze/r9/**"
+    ],
+    "td_project_dir": "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-eng-freeze/r9/td/**",
+    "rules": [
+      "r9 is htab-only; frame_top is locked at fa64cb48...1ba2. If a frame_top change seems necessary, stop and return to planner.",
+      "Only the htab read-address / pos+3 path may change; no broader repacking.",
+      "Never edit ph1p_pcie_ep_top.al, build.tcl, sim/compile_checked.f, constraints/, SDC, existing TB, or production RTL.",
+      "TD projects and all generated artifacts stay under the run r9 directory, never in the upstream tree.",
+      "Do not overwrite r0-r8 manifests, reports, logs, or p4/result*.md."
+    ]
+  },
+  "protected": [
+    "all existing files in upstream/ph1p100-pcie-ep-fpga outside a1_deflate_core.v and the allowed new directories",
+    "a1_frame_top.v (locked fa64cb48...1ba2)",
+    "upstream/ph1p100-pcie-ep-fpga/ph1p_pcie_ep_top.al, build.tcl, constraints, SDC, sim/compile_checked.f",
+    "workflow/tasks.json",
+    "workflow/runs/20261016_* through 20261019-2117_* (read-only)",
+    "frozen manifests CANDIDATE-MANIFEST.json / -r1 ... -r8, old test reports, bit/CWC/BID",
+    "docs/protocol/** and R10F contract",
+    "board, Flash, PCIe/RK, camera configuration, production candidate b68c6e18…f9bf"
+  ],
+  "next_action": "spawn_agent",
+  "next_action_detail": {
+    "role": "fpga-dev",
+    "skill_path": ".agents/skills/fpga-dev/SKILL.md",
+    "task": "T10.a1-eng-freeze r9：按 dev-plan.md §20 只处理 htab 读地址/pos+3 路径（寄存 htab 读地址或把 pos+3 存入 htab），保持 frame_top r7/r8 与协议/吞吐不变；先跑 P2/P3，再做 TD 综合门槛与唯一一次条件布线。",
+    "must_read": [
+      "dev-plan.md §20",
+      "p4/result-r8.md §4、§6",
+      "r8/reports/syn_gate_timing_s2.rpt",
+      "fpga-design-guide.md §1-§3、§7"
+    ],
+    "first_checks": [
+      "确认 a1_deflate_core.v hash = 4e1e97b8f9c00102447ab1c6de63a26c8b762e57416d0365c7aba837ce99ec9c",
+      "确认 a1_frame_top.v hash = fa64cb487b4241241516183e7b8bfd71f96b30e54f5ed3d53ac239a2771e1ba2",
+      "评估是否可重建 S1-equivalent（回退 hent_pos_p3 预计算）；若可，优先用 S1 低 TNS 基准并在结果中报 hash/理由；否则用 S2",
+      "改动前复跑 P2/P3 基线；任一 mismatch 立即停止"
+    ]
+  },
+  "technical_scope": {
+    "primary": "Split state_reg[23] -> htab_rd_addr -> htab read -> hent_pos_p3_reg (7 levels, 5.739 ns, slack -0.470 ns) by one of: (a) register the htab read address, or (b) store pos+3 in htab so the read data already carries hent_pos+3. Use only one final implementation path.",
+    "base_selection": "Prefer S1-equivalent base (revert r8 hent_pos_p3 precompute) because S1 had TNS -3.641 / 39 endpoints vs S2 -37.591 / 147; if S1 RTL cannot be reconstructed reliably, use frozen S2 and report the reason. Either way, only the htab path may change.",
+    "throughput_red_line": {
+      "one_symbol_per_cycle": true,
+      "no_per_symbol_multicycle_fsm": true,
+      "p2_comp_min_MBps": 77.76,
+      "1080p_p1d1_min_MBps": 77.76,
+      "report_vs_97_2_MBps": true,
+      "rule": "Pipelining may add latency but must not add a per-symbol bubble. If the htab read-address register adds a cycle to S_SCAN, prove it does not reduce throughput; otherwise use the pos+3 store variant."
+    },
+    "invariants": [
+      "No change to protocol, ports, frame commit, raw/xform/stream length, CRC, abort, Bayer mapping, zlib/fixed/stored format.",
+      "No change to external timing contract or TB behavior.",
+      "Full-frame P3 must prove block boundaries, backpressure, abort/reset, stored fallback and A/B semantics unchanged."
+    ]
+  },
+  "gates": {
+    "g1_guard": {
+      "p2": "13/13 PASS",
+      "p3": "20/20 PASS",
+      "mismatch": 0,
+      "vlog": "Errors 0 / Warnings 0",
+      "throughput_min_MBps": 77.76,
+      "report_vs_97_2_MBps": true,
+      "behavior_unchanged": "1080p p1d1/p1d2, stored, abort/reset, A/B frame semantics unchanged",
+      "cycle_count_target": "1080p p1d1 <= 4,677,945 cycles or prove no throughput loss"
+    },
+    "g2_synth": {
+      "top": "a1_eng_top",
+      "device": "PH1P100SBG484 -3",
+      "clock_MHz": 187.5,
+      "period_ns": 5.333,
+      "wns_ns_min": 0.0,
+      "tns_ns_min": 0.0,
+      "violating_endpoints": 0,
+      "sdc_changed": false,
+      "false_path_or_multicycle": false
+    },
+    "g2_routed": {
+      "status": "Routed",
+      "wns_ns_min": 0.0,
+      "tns_ns_min": 0.0,
+      "hwns_ns_min": 0.0,
+      "htns_ns_min": 0.0,
+      "violating_endpoints": 0,
+      "resources": "within PH1P100SBG484",
+      "cdc_report": "report_cdc executed; no unsynchronized CDC; single-clock structure confirmed",
+      "bitgen": "not_run"
+    },
+    "forbidden_substitutions": [
+      "lowering clock frequency or relaxing the 5.333 ns constraint",
+      "false_path / multicycle / set_clock_groups exceptions",
+      "changing seed and re-running without a concrete RTL change",
+      "bitgen, download, Flash, efuse, SPI, svf",
+      "claiming G2 PASS from synthesis-only or unrouted results",
+      "using G0/G1 PASS to claim T10 or G2 complete",
+      "per-symbol multi-cycle FSM to buy timing",
+      "clock-domain / async FIFO / CDC architecture change in r9"
+    ]
+  },
+  "stop_conditions": [
+    "P2/P3 any mismatch, X propagation, illegal BTYPE, or vlog warning -> stop before TD, return blocked.",
+    "Any throughput regression below 77.76 MB/s (P2 comp or 1080p p1d1) or cycle count >4,677,945 without proof -> stop; do not enter TD.",
+    "Any needed change outside a1_deflate_core.v's htab read-address/pos+3 path -> stop and return to planner.",
+    "S1 synthesis WNS<0 or TNS<0 -> do not route; only one concrete retry (S2) within the 2-synth cap.",
+    "S2 synthesis still WNS<0 or TNS<0 -> stop; do not route; no third synthesis.",
+    "Synthesis WNS>=0 -> route in that same session; route must finish within the 60 min route window and the 75 min session cap.",
+    "Route not Routed, routed WNS/TNS<0, any violating endpoint, resource overflow, or CDC unsynchronized -> stop, keep logs; the single route attempt is used, no route retry.",
+    "After r9, if WNS<0 or TNS<0 -> stop; NO r10. Present route b (lower clock + async FIFO/CDC) for explicit user consent, or accept the warning.",
+    "TD budget reached (2 sessions / 90 min) -> stop; no further session in this run.",
+    "Any request to relax 187.5 MHz, add false path/multicycle, run bitgen/download, or expand scope -> stop and return to planner."
+  ],
+  "execution_limits": {
+    "batch_size": 1,
+    "dev_tool_calls_max": 30,
+    "dev_minutes_max": 45,
+    "tester_tool_calls_max": 30,
+    "tester_minutes_max": 45,
+    "planner_tool_calls_max": 30,
+    "planner_minutes_max": 15,
+    "read_search_seconds_max": 60,
+    "single_tb_minutes_max": 5,
+    "package_regression_minutes_max": 15,
+    "td_sessions_max": 2,
+    "td_session_minutes_max": 75,
+    "td_synth_attempts_max": 2,
+    "td_synth_minutes_max": 15,
+    "td_route_attempts_max": 1,
+    "td_route_minutes_max": 60,
+    "td_total_minutes_max": 90,
+    "retry_policy": "one concrete retry only; no seed sweep; two consecutive no-progress attempts -> blocked"
+  },
+  "td_budget_rationale": {
+    "sessions": 2,
+    "total_minutes": 90,
+    "why": "Only -0.470 ns remains; S1 had TNS -3.641 / 39 endpoints. One htab read-address/pos+3 fix may close synthesis; 2 sessions allow S1 plus one concrete retry, then a single route. A full session is 75 min (synth ~7 + route 60); the 90 min total cap prevents two full-length route sessions.",
+    "not_a_seed_sweep": true,
+    "history": "P4 r0-r8 used 16 TD sessions (r0 2, r1 1, r2 1, r3 2, r4 2, r5 3, r6 2, r7 1, r8 2); r9 is the 9th actual repair and absolute final local-patch round."
+  },
+  "after_development": {
+    "sequence": [
+      "dev ready_for_test + frozen r9 manifest -> spawn_single_tester (one new integrated tester)",
+      "tester integrated verdict -> return_to_planner",
+      "dev blocked at P2/P3 or synth gate -> return_to_planner, no tester, planner closes r9",
+      "r9 FAIL -> keep warning; NO r10; present route b (lower clock + CDC) or accept warning"
+    ],
+    "rules": [
+      "One new development session and one new independent tester session.",
+      "Tester writes test-reports/T10.a1-eng-freeze-r9-integrated.md with a single unique verdict heading.",
+      "No PASS assembled from r8 and r9 inputs; all G1/G2 evidence must bind to the r9 manifest.",
+      "Tester must independently re-run P2/P3 and independently parse raw TD reports/hashes; must not rely on dev prose.",
+      "G2 PASS requires Routed with WNS/TNS>=0; synthesis-only cannot PASS."
+    ]
+  },
+  "scope_limits": {
+    "main_goal": "T10 A+ small-top G2 timing closure at 187.5 MHz through the absolute final htab read-address/pos+3 fix.",
+    "in_scope": [
+      "htab read-address register or pos+3 store in a1_deflate_core.v",
+      "S1-equivalent base reconstruction if reliable, or frozen S2 base",
+      "P2/P3 regression and throughput proof",
+      "TD synthesis gate (<=2) + single route attempt + post-route STA/CDC/resource",
+      "new r9 manifest, result, rollback note",
+      "one independent integrated tester"
+    ],
+    "out_of_scope": [
+      "clock-domain / lower-clock / async FIFO / CDC architecture change (route b; requires explicit user consent)",
+      "board test, real camera/RAW, non-PCIe export execution",
+      "C, RK/PCIe, dual-camera, G4",
+      "production integration, bit/CWC, download/Flash",
+      "protocol/port/frame commit/CRC/length/abort/Bayer changes",
+      "new formal packages or new task IDs",
+      "automatic r10"
+    ],
+    "deferred_themes": [
+      {
+        "theme": "route b: freeze A+ small top at 145-170 MHz and bridge to 187.5 MHz system with async FIFO/CDC",
+        "status": "blocked_awaiting_user_consent",
+        "conditions": ["explicit user consent to clock architecture change", "accept 77.76 met but 97.2 not met", "routed lower-clock STA + CDC/FIFO verification", "system integration plan"],
+        "note": "r8 S2 Fmax 172.325 synthesis-only; route derating may require 160-165 MHz. Not assumed in r9."
+      },
+      {
+        "theme": "board/real-data dependency package (demand 2/3)",
+        "status": "blocked_awaiting_hardware_awaiting_user",
+        "conditions": ["G2 PASS routed", "non-PCIe export transport verified", "board window and user present", "explicit one-shot download authorization", "derived production candidate"]
+      },
+      {
+        "theme": "C: block DEFLATE / bounded Rice / RAW adaptive",
+        "status": "not_started_by_user_decision",
+        "conditions": ["T10 A+ fully PASS", "separate explicit slice"]
+      }
+    ]
+  },
+  "question_path": null,
+  "user_summary_path": "workflow/runs/20261020-0209_singleA_aplus_closedloop/user-summary.md"
+}

@@ -1,0 +1,71 @@
+{
+  "test": "capture",
+  "baseline": true,
+  "production": false,
+  "address_fault": false,
+  "accepted": true,
+  "commands": [
+    {
+      "command": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlib.exe",
+        "work"
+      ],
+      "exit_code": 0,
+      "errors": [],
+      "warnings": [],
+      "log": "0.log"
+    },
+    {
+      "command": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlog.exe",
+        "-sv",
+        "+define+GUARDED",
+        "tb_bayer565_capture.sv",
+        "bayer332_capture.v",
+        "baseline_adapter.v"
+      ],
+      "exit_code": 0,
+      "errors": [
+        0
+      ],
+      "warnings": [
+        0
+      ],
+      "log": "1.log"
+    },
+    {
+      "command": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vsim.exe",
+        "-c",
+        "work.tb_bayer565_capture",
+        "-do",
+        "run -all; quit -f"
+      ],
+      "exit_code": 0,
+      "errors": [
+        0
+      ],
+      "warnings": [
+        0
+      ],
+      "log": "2.log"
+    }
+  ],
+  "sources": {
+    "tb_bayer565_capture.sv": {
+      "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\fpga\\csi2\\tb\\tb_bayer565_capture.sv",
+      "sha256": "117b0fb13679284caa96d27e81a11a8fe491377a91613524c748e231aeeb89c1"
+    },
+    "bayer332_capture.v": {
+      "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_reference_20261013_215134\\bayer332_capture.v",
+      "sha256": "9af05e87b64ebcd3d2be02db89328b646a06f136af802a96696b0964bbcb388e"
+    }
+  },
+  "hardware_verified": false,
+  "control": "Constructed width adapter around actual frozen RGB332 sampler, no stub for old color algorithm.",
+  "inputs": {
+    "tb_bayer565_capture.sv": "117b0fb13679284caa96d27e81a11a8fe491377a91613524c748e231aeeb89c1",
+    "bayer332_capture.v": "9af05e87b64ebcd3d2be02db89328b646a06f136af802a96696b0964bbcb388e",
+    "baseline_adapter.v": "f97d7f543c75f691ff10815d5c4d75ad2065fc059b2bd031697f94bcafd7ee38"
+  }
+}

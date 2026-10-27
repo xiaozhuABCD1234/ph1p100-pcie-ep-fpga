@@ -1,0 +1,136 @@
+﻿{
+    "task_id":  "T10.b2-a1-uart-impl",
+    "run_id":  "20261020-0209_singleA_aplus_closedloop",
+    "revision":  "r0",
+    "date":  "2026-10-23",
+    "status":  "blocked",
+    "ready_for_test":  false,
+    "tester":  null,
+    "package_type":  "P2 board implementation: full constraints/187.5 MHz/CDC/STA/resources + 1 bitgen + 1 CWC; no download",
+    "status_reason":  "TD synthesis/elaboration fails on the frozen P1 r3 RTL: HDL-8007 net raw_rd_close_r is constantly driven from multiple places in camera_a1_uart_top.v; the same file also has duplicate drivers on raw_rd_open and raw_rd_take. The module becomes a black box and syn_1 exits after 5 s. No route, bitgen or CWC was attempted. The frozen file may not be modified under the P2 stop condition; r4 manifest hash prefixes (e88de0910ff0 / 5196c07aed52) do not match the working tree and no file with those digests exists.",
+    "p1_hash_verification":  {
+                                 "basis":  "P1 r3 full hashes (CANDIDATE-MANIFEST-b1-a1-uart-integ-r3.json)",
+                                 "measured_drift":  "0/8",
+                                 "hashes":  {
+                                                "a1_raw_crop.v":  "ca2f5d1656cd3b247707e3abd86b2d543e4b0da518cd835513308bd6ff6ebd01",
+                                                "a1_ddr_slot_store.v":  "8bab440d528a192d558081ab0b52f96d9116d3bb5713c821e2fa74a97f74d09a",
+                                                "a1_ddr_arb2.v":  "6513ad839dee02e932c49bdfd5afa3d62c382d4a144b8e74d5574273804afdc6",
+                                                "a1_uart_export.v":  "1d7ea9aa0d11574e2691347ae22165bed6921ed82ed97174fc36759bd3f7df91",
+                                                "camera_a1_uart_top.v":  "873cb98c7c791d61240b771dae5003abb315fc9c37da2c180a6323cbc38dd2c0",
+                                                "a1_deflate_core.v":  "bf6af3903f123d753391358ab003cd6ae4ec4a6a281a09dfa6e33b67798b1080",
+                                                "a1_frame_top.v":  "18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+                                                "capture_async_fifo.v":  "59dd6dcb5b7e7774f7d6518f50f56cafbc8be6b70e8ae1508236bac2b5af531d"
+                                            },
+                                 "r4_prefix_conflict":  "r4 lists camera_a1_uart_top.v e88de0910ff0 and a1_ddr_slot_store.v 5196c07aed52; measured are 873cb98c7c79 and 8bab440d528a; no e88de/5196 files exist in the workspace; r4 narrative claims rtl_tools_drift=0 (documentation inconsistency, not a physical drift)"
+                             },
+    "p2_done":  {
+                    "sources":  "copied board-verified camera/ + vendor/ trees into r0/td/src (camera 71 files, vendor 91 files)",
+                    "rtl":  "p2_a1_board_top.v (camera raw tap -\u003e P1 chain; 187.5 PLL; DDR shell; 187.5-\u003edhi_clk bridge; UART 115200 DIV=1628; LED/dbg)",
+                    "wrappers":  "p2_ddrmc_shell.v (DDR IP + APB, PAXI owned by A1), p2_ddr_bridge.v (3 Gray FIFOs, single-beat PAXI), p2_a1_pll.v (VCO 1500 MHz / 8 = 187.5), P2 f9p camera copy (raw tap/byte clock outputs; HDMI from internal preview/TPG)",
+                    "constraints":  "p2_board.sdc (187.5 rename, async groups, 8 Gray-bus skew constraints, real-async false paths recorded), board_p2.adc",
+                    "flow":  "01_build.tcl (retiming on, ultra post-route, stop marker), 02_bitgen.tcl (STA fail-closed + 1 bitgen), 03_cwc.tcl (setup_debugger + CWC/bit identity check)",
+                    "vlog":  "P2 new files + P2 camera copy compile 0 errors with ModelSim 10.5b -lint"
+                },
+    "p2_not_done":  {
+                        "route":  "not run (synth failed)",
+                        "sta":  "not run",
+                        "bitgen":  "0/1",
+                        "cwc":  "0/1",
+                        "manifest_candidate":  "no bit/CWC to freeze"
+                    },
+    "blocked":  {
+                    "reason_code":  "INPUT_CONFLICT",
+                    "new_information":  true,
+                    "detail":  "frozen P1 RTL is not TD-elaboratable; frozen-file stop condition forbids the 3-line reset-ownership cleanup without planner/user authorization",
+                    "evidence_path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r0/td/syn_failure_excerpt.txt",
+                    "last_evidence":  "td/a1_board_Runs/syn_1/run.log (HDL-8007 raw_rd_close_r multiple drivers; HDL-5007 black box; syn_1 exited after 5 s)",
+                    "minimal_next_step":  "authorize a P1 repair round in camera_a1_uart_top.v: remove the duplicate raw_rd_open/raw_rd_close_r/raw_rd_take resets and defaults from the skid always block (lines 162, 166-167); the sequencer block already owns those signals (305/310/317/331/364/368). Re-freeze the P1 hash, then resume P2 with 2 synth / 2 route / 1 bitgen / 1 CWC remaining",
+                    "requested_action":  "planner/user decision: authorize the P1 reset-ownership cleanup (or provide the missing e88de0910ff0 file) and re-freeze; no P2 bitgen until then",
+                    "resume_input_path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r0/result-r0.md"
+                },
+    "retest":  {
+                   "tester_required":  false,
+                   "note":  "no candidate; do not spawn the P2 engineering tester",
+                   "required_dimensions":  [
+
+                                           ],
+                   "required_checks":  [
+
+                                       ]
+               },
+    "budget":  {
+                   "dev_calls":  "~67/60 (budget exhausted; stopped)",
+                   "td_sessions":  "1/3 (30 min wait, session abandoned after synth failure)",
+                   "synth_attempts":  "1/3 (failed at elaboration)",
+                   "route_attempts":  "0/2",
+                   "bitgen":  "0/1",
+                   "cwc":  "0/1",
+                   "download":  "0"
+               },
+    "boundaries":  {
+                       "p1_rtl_modified":  false,
+                       "aplus_core_unchanged":  true,
+                       "frame_unchanged":  true,
+                       "sdc_227dd39e_unchanged":  true,
+                       "download":  0,
+                       "flash":  0,
+                       "bit":  0,
+                       "cwc":  0
+                   },
+    "artifacts":  [
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r0/td/src/p2_a1_board_top.v",
+                          "sha256":  "3285a25bdaac3466aa6b11ad96bc5b57edde382cf864fc8e626b64ff01c4901d"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r0/td/src/p2_ddrmc_shell.v",
+                          "sha256":  "9c8fd30587aba533728c3ea4b67d4cc7f061be98e612331cd86298929819f14a"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r0/td/src/p2_ddr_bridge.v",
+                          "sha256":  "32822b8231a501e9232a118edaa63ba112410c0f844a3f3f2aeb884be0299562"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r0/td/src/p2_a1_pll.v",
+                          "sha256":  "0cc4e3cb801f9f5086cec1590e053d8e78b6ffcd20f3aa27d1ab336a96e474fd"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r0/td/src/f9p_camera_display_core.v",
+                          "sha256":  "76991a1e3806490967b1428f8ac47cb1b58fc6df7396a4ad8227b40c3b291ae7"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r0/td/p2_board.sdc",
+                          "sha256":  "9284982452c37f308fc4dcd396eb94b8da4962337bdd5740a23ce830d3856d95"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r0/td/board_p2.adc",
+                          "sha256":  "1cb30346fa17da6bb0e77802ca72c4b4bb4aecc1445711e19391cf4ee2271580"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r0/td/01_build.tcl",
+                          "sha256":  "30c62b6e2f87a09927e757477e5f68d654316616599020a0a42b7a152124dadc"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r0/td/02_bitgen.tcl",
+                          "sha256":  "ea7e8689339c5d4b18d4f6475c6ca3e73605c55127b446728abd4172e7e6caf0"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r0/td/03_cwc.tcl",
+                          "sha256":  "7f4bba1da44f7c30fb7174b6a7b5f1793e4105c398722d1ab8e3ba075aa9a56f"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r0/td/build_console.log",
+                          "sha256":  "29797d776a75e314ce90feb49c5c63b9566776f4f1b1ee628132a11cdb02e798"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r0/td/a1_board_Runs/syn_1/run.log",
+                          "sha256":  "3be6e5682fc18390b848a687b8e101a55d3e09de242c9d0d4e2f743d41bb9573"
+                      },
+                      {
+                          "path":  "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b2-a1-uart-impl/r0/td/syn_failure_excerpt.txt",
+                          "sha256":  "01fe455c180ab2eb798819fbc4ce1f03cdd2bc705169ad5b5912266af46aef6c"
+                      }
+                  ],
+    "result":  "result-r0.md",
+    "lessons":  "lessons-r0.md"
+}

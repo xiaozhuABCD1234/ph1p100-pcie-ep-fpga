@@ -1,0 +1,9 @@
+﻿PS5.1 Get-Content (ACP=936) lines: run_sim.ps1=136  run_td.ps1=76
+.NET ReadAllLines (UTF-8 detect) lines: run_sim.ps1=144  run_td.ps1=81
+PS5.1 line view of source L123 area (run_sim.ps1):
+    |     # vsim 閫氳繃 cmd /c 璋冿紙PowerShell 5.1 鐨勬暟缁?splat 浼氭妸瀹冧笉璁よ瘑鐨勯€夐」浼犻敊锛夛紱
+    |     # 鍛戒护鏀?.do 鏂囦欢锛坈wd 宸叉槸 ASCII 鏄犲皠璺緞锛夛紱鍐欏畬鍚庣珛鍗虫牎楠屽唴瀹瑰啀璺戙€?    $doPath = Join-Path $outDirF "run.do"
+    |     [System.IO.File]::WriteAllLines($doPath, @("run -all", "quit -f"))
+    |     $doCheck = [System.IO.File]::ReadAllText($doPath)
+    |     if ($doCheck -notmatch "run -all") { throw "run.do write failed: $doCheck" }
+    |     $vsimCmd = "vsim -c -l vsim.log -do run.do $Tb"

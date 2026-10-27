@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Documentation-only adapter configuration; no executor is installed.",
+  "default_mode": "plan_only",
+  "project_root": "resolve_from_repository_at_runtime",
+  "task_source": "workflow/tasks.json",
+  "record_example": "workflow/examples/run-record.json",
+  "rules": {
+    "bulk_delete_allowed": false,
+    "implicit_permission_expansion": false,
+    "shell_interpolation_allowed": false,
+    "unobserved_hardware_can_pass": false,
+    "untrusted_proposal_requires_native_review": true
+  },
+  "adapters": [
+    {"id":"simulation","enabled":false,"connection":"not_connected","program":null,"arguments_example":["-X","utf8","tools/td/run_csi_integrity.py","--test","pack"],"cwd":"repository_root","write_roots":[],"expected_marker_example":"INTEGRITY_PASS pack","notes":"Resolve actual Python, inspect script output paths and current native permissions before running; no permission granted here."},
+    {"id":"td_build","enabled":false,"connection":"not_connected","program":null,"arguments_example":[],"cwd":null,"write_roots":[],"notes":"Bind exact candidate manifest, final database, STA/CDC review and bitstream; TD exit code alone is insufficient."},
+    {"id":"rk_test","enabled":false,"connection":"not_connected","program":null,"arguments_example":[],"cwd":null,"write_roots":[],"notes":"Requires confirmed RK owner, environment, interface version and actual test command."},
+    {"id":"hardware_observation","enabled":false,"connection":"manual","program":null,"arguments_example":[],"cwd":null,"write_roots":[],"notes":"Record observer, time, bitstream SHA256, connection/power and actual counters; no download configured."},
+    {"id":"task_board","enabled":false,"connection":"local_json_only","notes":"Use task_id as stable key; choose one authority before enabling remote synchronization."},
+    {"id":"ic_coder","enabled":false,"connection":"manual_handoff_not_tested","mode":"targeted_read_only_review","budget_file":"workflow/iccoder-budget.json","request_file":"workflow/requests/IC-001-guarded-pack-review.md","program":null,"notes":"No automatic API/CLI/MCP integration verified; manual budget is not a billing hard cap. Keep optional and measure settled credits after a small pilot."}
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "test": "capture",
+  "baseline": false,
+  "production": false,
+  "address_fault": false,
+  "accepted": true,
+  "commands": [
+    {
+      "command": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlib.exe",
+        "work"
+      ],
+      "exit_code": 0,
+      "errors": [],
+      "warnings": [],
+      "log": "0.log"
+    },
+    {
+      "command": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlog.exe",
+        "-sv",
+        "+define+GUARDED",
+        "tb_bayer565_capture.sv",
+        "bayer565_capture.v"
+      ],
+      "exit_code": 0,
+      "errors": [
+        0
+      ],
+      "warnings": [
+        0
+      ],
+      "log": "1.log"
+    },
+    {
+      "command": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vsim.exe",
+        "-c",
+        "work.tb_bayer565_capture",
+        "-do",
+        "run -all; quit -f"
+      ],
+      "exit_code": 0,
+      "errors": [
+        0
+      ],
+      "warnings": [
+        0
+      ],
+      "log": "2.log"
+    }
+  ],
+  "sources": {
+    "tb_bayer565_capture.sv": {
+      "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\fpga\\csi2\\tb\\tb_bayer565_capture.sv",
+      "sha256": "2509547395577f0ed2b093dca59febe91d183104de874baaeabe66032f1922b9"
+    },
+    "bayer565_capture.v": {
+      "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\fpga\\csi2\\src\\cam\\bayer565_capture.v",
+      "sha256": "2eac92c39064ebeb4d0bae77b59b1809e72be0d8a226ebac503393b2f5d14ea4"
+    }
+  },
+  "hardware_verified": false,
+  "inputs": {
+    "tb_bayer565_capture.sv": "2509547395577f0ed2b093dca59febe91d183104de874baaeabe66032f1922b9",
+    "bayer565_capture.v": "2eac92c39064ebeb4d0bae77b59b1809e72be0d8a226ebac503393b2f5d14ea4"
+  }
+}

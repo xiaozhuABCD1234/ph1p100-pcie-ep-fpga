@@ -1,0 +1,82 @@
+"""Check CWC physical readback mapping against its native BID; no hardware access.
+
+Only the single-section, full-depth geometry used by the current CWC is supported.
+"""
+import argparse
+import json
+from pathlib import Path
+import xml.etree.ElementTree as ET
+
+
+def number(value):
+    value = str(value).strip()
+    return int(value, 16 if value.lower().startswith("0x") else 10)
+
+
+def check(cwc, bid):
+    if not __debug__:
+        raise ValueError("run this validator without Python -O")
+    entries = {}
+    for entry in bid.iter():
+        if entry.tag.startswith("INST_"):
+            key = (number(entry.findtext("rid")), entry.findtext("name"))
+            assert key not in entries, f"duplicate BID identity: {key}"
+            entries[key] = entry
+    instances = []
+    for instance in cwc.findall("instance"):
+        if instance.get("inst_enable") != "true":
+            continue
+        name = instance.get("name")
+        logical = instance.findall("logic_eram")
+        assert len(logical) == 1, f"{name}: missing/unsupported logical ERAM"
+        ram = logical[0]
+        width, depth = number(ram.get("width")), number(ram.get("depth"))
+        assert width > 0 and depth > 0, f"{name}: invalid dimensions"
+        pieces = ram.findall("phy_eram")
+        assert pieces, f"{name}: missing physical ERAM readback mapping"
+        coverage = [0] * width
+        seen = set()
+        for piece in pieces:
+            key = (number(piece.get("rid")), piece.get("name"))
+            assert key in entries and key not in seen, f"{name}: wrong/duplicate BID identity {key}"
+            seen.add(key)
+            entry = entries[key]
+            assert number(entry.findtext("wid")) == number(piece.get("wid")), f"{name}: WID mismatch"
+            assert number(entry.findtext("logic_width")) == width, f"{name}: BID width mismatch"
+            assert number(entry.findtext("logic_depth")) == depth, f"{name}: BID depth mismatch"
+            subs = entry.findall("sub_bid_info")
+            assert len(subs) == 1, f"{name}: unsupported BID sections"
+            sub = subs[0]
+            for field in ("address_offset", "data_offset", "depth", "width", "num_section", "section_size", "width_per_section"):
+                assert number(piece.get(field)) == number(sub.findtext(field)), f"{name}: {field} mismatch"
+            assert number(piece.get("address_offset")) == 0, f"{name}: unsupported address offset"
+            assert number(piece.get("num_section")) == 1, f"{name}: unsupported sections"
+            assert number(piece.get("address_step")) == number(sub.findtext("working_mode/address_step")) == 1
+            assert number(piece.get("bytes_in_per_section")) == number(sub.findtext("bytes_in_per_section"))
+            for field in ("depth", "width", "num_byte"):
+                assert number(piece.get("working_mode_" + field)) == number(sub.findtext("working_mode/" + field)), f"{name}: working {field} mismatch"
+            ecc = "enable" if number(sub.findtext("working_mode/ecc")) else "disable"
+            assert piece.get("working_mode_ecc") == ecc, f"{name}: working ECC mismatch"
+            assert piece.get("working_mode_super_wide") == "disable", f"{name}: unsupported super-wide mode"
+            assert number(piece.get("depth")) == depth, f"{name}: partial depth"
+            start, size = number(piece.get("data_offset")), number(piece.get("width"))
+            assert size > 0 and 0 <= start < start + size <= width, f"{name}: invalid data range"
+            for bit in range(start, start + size):
+                coverage[bit] += 1
+        assert all(count == 1 for count in coverage), f"{name}: data coverage has gaps/overlap"
+        instances.append({"name": name, "width": width, "depth": depth, "physical_pieces": len(pieces)})
+    assert instances, "no enabled instances"
+    return instances
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("cwc", type=Path)
+    parser.add_argument("bid", type=Path)
+    args = parser.parse_args()
+    try:
+        result = {"accepted": True, "instances": check(ET.parse(args.cwc).getroot(), ET.parse(args.bid).getroot())}
+    except (AssertionError, ValueError, TypeError, ET.ParseError) as error:
+        result = {"accepted": False, "reason": str(error)}
+    print(json.dumps(result, indent=2))
+    raise SystemExit(0 if result["accepted"] else 1)

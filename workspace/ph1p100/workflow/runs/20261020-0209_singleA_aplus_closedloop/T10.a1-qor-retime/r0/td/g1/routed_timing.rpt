@@ -1,0 +1,1545 @@
+Created by          : Tang Dynasty Release_2026.2
+                    : Copyright (c) 2012-2026 Anlogic Inc.
+Generated           : Thu Oct 22 21:26:28 2026
+
+Top Model           : a1_eng_top
+Device              : PH1P100SBG484
+Speed               : 3
+STA coverage        : 96.36%
+Constraint File     : C:/Users/czz/OneDrive/W@Cf/J5QiJR/>:H|/G6HkJ=/FPGA44PBIh<FH|5@/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-qor-retime/r0/td/g1/a1_small_top.sdc;
+Confidence          : Routed
+Check Corner        : Both (Slow and Fast)
+CRPR Enabled        : Yes
+Report Scheme       : 10 end point(s) per path group, 1 path(s) per end point
+
+
+Check Status
+-------------
+
+Corner   | Max      Min     
+------------------------------------
+Slow     | yes      yes     
+Fast     | yes      yes     
+
+
+Timing Status
+--------------------
+	SWNS: -0.039ns, STNS: -0.645ns
+	HWNS: 0.024ns, HTNS: 0.000ns
+	Period Check WNS: 2.533ns
+
+
+Clock Summary
+--------------------
+
+       Clock-Id:       C-Freq       Fanout   Clock-Name
+--------------------------------------------------------------------------------
+           clk0:      187.512         1328   clk
+--------------------------------------------------------------------------------
+
+       Name            Type         Rise(ns)   Fall(ns)          C-Period(ns)     C-Freq(MHz)          R-Period(ns)     R-Freq(MHz)         SWNS(ns)   STNS(ns)         HWNS(ns)   HTNS(ns)         Skew(ns)           Fanout        Max-Level        CC-From    CC-To
+       clk0   Inferred GCLK            0.000      2.667                 5.333         187.512                 5.372         186.150           -0.039     -0.645            0.024      0.000            0.344             1328                7             no       no
+
+Notes
+----------
+C-Period  :  constraint period
+C-Freq    :  constraint freq
+R-Period  :  report min period
+R-Freq    :  report fmax
+CC-From   :  has path(s) from cross-domain clock
+CC-To     :  has path(s) to cross-domain clock
+
+
+*   Clock R-Period data only takes intra-clock timing. SWNS/STNS/HWNS/HTNS take both intra-clock and inter-clock timing.
+*   If there is mismatch between R-Period and SWNS, check inter-clock timing of this clock as capture clock.
+*   SWNS/STNS/HWNS/HTNS of timing exception (SMCP/SMD) only counted in global Timing Status, not counted in Clock Summary.
+
+Intra clock domain timing
+--------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+Path Group     :     clk -> clk
+Type           :     Self
+From Clock     :     clk
+To Clock       :     clk
+Min Period     :     5.372ns
+Fmax           :     186.150MHz
+
+Statistics:
+Max            : SWNS     -0.039ns, STNS     -0.645ns,        45 Viol Endpoints,      4635 Total Endpoints
+Min            : HWNS      0.024ns, HTNS      0.000ns,         0 Viol Endpoints,      4635 Total Endpoints
+----------------------------------------------------------------------------------------------------
+
+Max Paths
+----------------------------------------------------------------------------------------------------
+Slack               : -0.039ns
+Begin Point         : u_dut/u_core/pos_reg[3]_syn_2.clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/bm_a_syn_41.addrb[3] (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_m40c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 4.639ns (cell 1.957ns (42%), net 2.682ns (58%))
+Clock Skew          : 0.142ns
+Logic Level         : 6 ( LUT6=3  ADDER=2  ERAM=1 )
+Max Fanout          : 24
+Clock Uncertainty   : 0.075ns (sdc uncertainty: 0.000ns, default uncertainty: 0.075ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.738          0.738          pin: clk_syn_2.sg09_di
+PAD                 x000y016            1.059          1.797          pin: clk_syn_2.di
+net (fo=1)                              1.275          3.072          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.011          3.083          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.544          3.627          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkin
+SCLK                x039y059z12         0.081          3.708          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkout
+net (fo=198)                            1.068          4.776          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pos_reg[3]_syn_2.clk
+launch edge                             0.000    r     4.776               
+--------------------------------------------------------------------  ---------------
+clk2q               x042y074z7          0.137    r     4.913          pin: u_dut/u_core/pos_reg[3]_syn_2.oqb
+net (fo=20)                             0.593          5.506          net: u_dut/u_core/pos[4],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(106)
+                                                                      pin: u_dut/u_core/lt62_syn_64.id
+ADDER               x042y080z2          0.523    r     6.029       1  pin: u_dut/u_core/lt62_syn_64.fco
+net (fo=1)                              0.000          6.029          net: u_dut/u_core/lt62_syn_50,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(504)
+                                                                      pin: u_dut/u_core/lt62_syn_65.fci
+ADDER               x042y080z3          0.059    r     6.088          pin: u_dut/u_core/lt62_syn_65.fco
+net (fo=1)                              0.000          6.088          net: u_dut/u_core/lt62_syn_52,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(504)
+                                                                      pin: u_dut/u_core/lt62_syn_66.fci
+ADDER               x042y080z4          0.059    r     6.147          pin: u_dut/u_core/lt62_syn_66.fco
+net (fo=1)                              0.000          6.147          net: u_dut/u_core/lt62_syn_54,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(504)
+                                                                      pin: u_dut/u_core/lt62_syn_67.fci
+ADDER               x042y080z5          0.059    r     6.206          pin: u_dut/u_core/lt62_syn_67.fco
+net (fo=1)                              0.000          6.206          net: u_dut/u_core/lt62_syn_56,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(504)
+                                                                      pin: u_dut/u_core/lt62_syn_68.fci
+ADDER               x042y080z6          0.059    r     6.265          pin: u_dut/u_core/lt62_syn_68.fco
+net (fo=1)                              0.000          6.265          net: u_dut/u_core/lt62_syn_57,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(504)
+                                                                      pin: u_dut/u_core/lt62_syn_69.fci
+ADDER               x042y080z7          0.295    f     6.560       2  pin: u_dut/u_core/lt62_syn_69.ofb
+net (fo=12)                             0.667          7.227          net: u_dut/u_core/raddr_b25_n,  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_byp_n_syn_148.imf
+LUT6                x049y074z0          0.168    r     7.395       3  pin: u_dut/u_core/htab_byp_n_syn_148.ofb
+net (fo=24)                             0.238          7.633          net: u_dut/u_core/htab_byp_n_syn_65,  NOFILE(0)
+                                                                      pin: u_dut/u_core/bm_raddr_a[3]_syn_23.ia
+LUT6                x049y075z0          0.408    f     8.041       4  pin: u_dut/u_core/bm_raddr_a[3]_syn_23.ofb
+net (fo=1)                              0.160          8.201          net: u_dut/u_core/bm_raddr_a[3]_syn_17,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(711)
+                                                                      pin: u_dut/u_core/bm_raddr_a[3]_syn_22.ie
+LUT6                x050y075z4          0.190    r     8.391       5  pin: u_dut/u_core/bm_raddr_a[3]_syn_22.ofb
+net (fo=7)                              1.024          9.415          net: u_dut/u_core/bm_raddr_a[3],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(711)
+                                                                      pin: u_dut/u_core/bm_a_syn_41.addrb[3]
+ERAM (reg)          x051y092            0.000    f     9.415       6       
+--------------------------------------------------------------------  ---------------
+Arrival                                                9.415               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.678          0.678          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.974          1.652          pin: clk_syn_2.di
+net (fo=1)                              1.092          2.744          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.009          2.753          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.497          3.250          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1.clkin
+SCLK                x039y099z12         0.070          3.320          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1.clkout
+net (fo=398)                            0.984          4.304          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/bm_a_syn_41.clkb
+capture edge                            5.333    r     9.637               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.516          9.121               
+clock uncertainty                      -0.075          9.046               
+clock pessimism                         0.330          9.376               
+--------------------------------------------------------------------  ---------------
+Required                                               9.376               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.039               
+
+Slack               : -0.037ns
+Begin Point         : u_dut/u_core/lim2_reg[6]_syn_2.clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/bm_b_syn_19.addrb[9] (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_m40c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 4.603ns (cell 2.090ns (45%), net 2.513ns (55%))
+Clock Skew          : 0.208ns
+Logic Level         : 6 ( LUT5=3  ADDER=2  ERAM=1 )
+Max Fanout          : 13
+Clock Uncertainty   : 0.075ns (sdc uncertainty: 0.000ns, default uncertainty: 0.075ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.738          0.738          pin: clk_syn_2.sg09_di
+PAD                 x000y016            1.059          1.797          pin: clk_syn_2.di
+net (fo=1)                              1.275          3.072          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.011          3.083          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.580          3.663          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1.clkin
+SCLK                x039y099z12         0.081          3.744          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1.clkout
+net (fo=398)                            1.070          4.814          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/lim2_reg[6]_syn_2.clk
+launch edge                             0.000    r     4.814               
+--------------------------------------------------------------------  ---------------
+clk2q               x042y081z5          0.126    f     4.940          pin: u_dut/u_core/lim2_reg[6]_syn_2.oqa
+net (fo=3)                              0.405          5.345          net: u_dut/u_core/lim2[6],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(95)
+                                                                      pin: u_dut/u_core/lt62_syn_65.ib
+ADDER               x042y080z3          0.660    f     6.005       1  pin: u_dut/u_core/lt62_syn_65.fco
+net (fo=1)                              0.000          6.005          net: u_dut/u_core/lt62_syn_52,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(504)
+                                                                      pin: u_dut/u_core/lt62_syn_66.fci
+ADDER               x042y080z4          0.059    r     6.064          pin: u_dut/u_core/lt62_syn_66.fco
+net (fo=1)                              0.000          6.064          net: u_dut/u_core/lt62_syn_54,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(504)
+                                                                      pin: u_dut/u_core/lt62_syn_67.fci
+ADDER               x042y080z5          0.059    r     6.123          pin: u_dut/u_core/lt62_syn_67.fco
+net (fo=1)                              0.000          6.123          net: u_dut/u_core/lt62_syn_56,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(504)
+                                                                      pin: u_dut/u_core/lt62_syn_68.fci
+ADDER               x042y080z6          0.059    r     6.182          pin: u_dut/u_core/lt62_syn_68.fco
+net (fo=1)                              0.000          6.182          net: u_dut/u_core/lt62_syn_57,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(504)
+                                                                      pin: u_dut/u_core/lt62_syn_69.fci
+ADDER               x042y080z7          0.295    f     6.477       2  pin: u_dut/u_core/lt62_syn_69.ofb
+net (fo=12)                             0.423          6.900          net: u_dut/u_core/raddr_b25_n,  NOFILE(0)
+                                                                      pin: u_dut/u_core/mux390_syn_85.id
+LUT5                x042y074z4          0.266    r     7.166       3  pin: u_dut/u_core/mux390_syn_85.ofb
+net (fo=12)                             0.465          7.631          net: u_dut/u_core/mux390_syn_75,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(962)
+                                                                      pin: u_dut/u_core/bm_raddr_b[11]_syn_28.ic
+LUT5                x043y069z2          0.283    r     7.914       4  pin: u_dut/u_core/bm_raddr_b[11]_syn_28.ofb
+net (fo=13)                             0.243          8.157          net: u_dut/u_core/bm_raddr_b[11]_syn_2,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(726)
+                                                                      pin: u_dut/u_core/bm_raddr_b[7]_syn_10.ic
+LUT5                x045y069z1          0.283    r     8.440       5  pin: u_dut/u_core/bm_raddr_b[7]_syn_10.ofb
+net (fo=7)                              0.977          9.417          net: u_dut/u_core/bm_raddr_b[7],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(726)
+                                                                      pin: u_dut/u_core/bm_b_syn_19.addrb[9]
+ERAM (reg)          x051y076            0.000    f     9.417       6       
+--------------------------------------------------------------------  ---------------
+Arrival                                                9.417               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.678          0.678          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.974          1.652          pin: clk_syn_2.di
+net (fo=1)                              1.092          2.744          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.009          2.753          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.466          3.219          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkin
+SCLK                x039y059z12         0.070          3.289          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkout
+net (fo=198)                            0.987          4.276          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/bm_b_syn_19.clkb
+capture edge                            5.333    r     9.609               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.484          9.125               
+clock uncertainty                      -0.075          9.050               
+clock pessimism                         0.330          9.380               
+--------------------------------------------------------------------  ---------------
+Required                                               9.380               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.037               
+
+Slack               : -0.036ns
+Begin Point         : u_dut/u_core/dtot_r_reg[0]_syn_2.clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/pos_reg[5]_syn_3.ceb (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_m40c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 4.961ns (cell 2.510ns (50%), net 2.451ns (50%))
+Clock Skew          : 0.269ns
+Logic Level         : 6 ( ADDER=4  LUT4=2 )
+Max Fanout          : 23
+Clock Uncertainty   : 0.075ns (sdc uncertainty: 0.000ns, default uncertainty: 0.075ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.738          0.738          pin: clk_syn_2.sg09_di
+PAD                 x000y016            1.059          1.797          pin: clk_syn_2.di
+net (fo=1)                              1.275          3.072          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.011          3.083          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.580          3.663          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1.clkin
+SCLK                x039y099z12         0.081          3.744          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1.clkout
+net (fo=398)                            1.068          4.812          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/dtot_r_reg[0]_syn_2.clk
+launch edge                             0.000    r     4.812               
+--------------------------------------------------------------------  ---------------
+clk2q               x041y091z4          0.137    r     4.949          pin: u_dut/u_core/dtot_r_reg[0]_syn_2.oqb
+net (fo=2)                              0.225          5.174          net: u_dut/u_core/dtot_r[0],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(163)
+                                                                      pin: u_dut/u_core/add45_syn_190.ia
+ADDER               x042y091z0          0.652    r     5.826       1  pin: u_dut/u_core/add45_syn_190.fco
+net (fo=1)                              0.000          5.826          net: u_dut/u_core/add45_syn_158,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_191.fci
+ADDER               x042y091z1          0.059    r     5.885          pin: u_dut/u_core/add45_syn_191.fco
+net (fo=1)                              0.000          5.885          net: u_dut/u_core/add45_syn_159,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_192.fci
+ADDER               x042y091z2          0.059    r     5.944          pin: u_dut/u_core/add45_syn_192.fco
+net (fo=1)                              0.000          5.944          net: u_dut/u_core/add45_syn_160,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_193.fci
+ADDER               x042y091z3          0.059    r     6.003          pin: u_dut/u_core/add45_syn_193.fco
+net (fo=1)                              0.000          6.003          net: u_dut/u_core/add45_syn_161,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_194.fci
+ADDER               x042y091z4          0.000    f     6.003          pin: u_dut/u_core/add45_syn_194.fco_f
+net (fo=1)                              0.000          6.003          net: u_dut/u_core/add45_syn_226,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_195.fci_f
+ADDER               x042y091z5          0.000    f     6.003          pin: u_dut/u_core/add45_syn_195.fco_f
+net (fo=1)                              0.000          6.003          net: u_dut/u_core/add45_syn_227,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_196.fci_f
+ADDER               x042y091z6          0.000    f     6.003          pin: u_dut/u_core/add45_syn_196.fco_f
+net (fo=1)                              0.000          6.003          net: u_dut/u_core/add45_syn_228,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_197.fci_f
+ADDER               x042y091z7          0.000    f     6.003          pin: u_dut/u_core/add45_syn_197.fco_f
+net (fo=1)                              0.090          6.093          net: u_dut/u_core/add45_syn_229,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_198.fci_f
+ADDER               x042y092z0          0.000    f     6.093          pin: u_dut/u_core/add45_syn_198.fco_f
+net (fo=1)                              0.000          6.093          net: u_dut/u_core/add45_syn_230,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_199.fci_f
+ADDER               x042y092z1          0.000    f     6.093          pin: u_dut/u_core/add45_syn_199.fco_f
+net (fo=1)                              0.000          6.093          net: u_dut/u_core/add45_syn_231,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_200.fci_f
+ADDER               x042y092z2          0.000    f     6.093          pin: u_dut/u_core/add45_syn_200.fco_f
+net (fo=1)                              0.000          6.093          net: u_dut/u_core/add45_syn_232,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_201.fci_f
+ADDER               x042y092z3          0.000    f     6.093          pin: u_dut/u_core/add45_syn_201.fco_f
+net (fo=1)                              0.090          6.183          net: u_dut/u_core/add45_syn_233,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_202.fci_f
+ADDER               x042y092z4          0.000    f     6.183          pin: u_dut/u_core/add45_syn_202.fco_f
+net (fo=1)                              0.000          6.183          net: u_dut/u_core/add45_syn_234,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_203.fci_f
+ADDER               x042y092z5          0.000    f     6.183          pin: u_dut/u_core/add45_syn_203.fco_f
+net (fo=1)                              0.000          6.183          net: u_dut/u_core/add45_syn_235,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_204.fci_f
+ADDER               x042y092z6          0.000    f     6.183          pin: u_dut/u_core/add45_syn_204.fco_f
+net (fo=1)                              0.000          6.183          net: u_dut/u_core/add45_syn_236,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_205.fci_f
+ADDER               x042y092z7          0.000    f     6.183          pin: u_dut/u_core/add45_syn_205.fco_f
+net (fo=1)                              0.090          6.273          net: u_dut/u_core/add45_syn_237,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_206.fci_f
+ADDER               x042y093z0          0.000    f     6.273          pin: u_dut/u_core/add45_syn_206.fco_f
+net (fo=1)                              0.000          6.273          net: u_dut/u_core/add45_syn_238,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_207.fci_f
+ADDER               x042y093z1          0.000    f     6.273          pin: u_dut/u_core/add45_syn_207.fco_f
+net (fo=1)                              0.000          6.273          net: u_dut/u_core/add45_syn_239,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_208.fci_f
+ADDER               x042y093z2          0.000    f     6.273          pin: u_dut/u_core/add45_syn_208.fco_f
+net (fo=1)                              0.000          6.273          net: u_dut/u_core/add45_syn_240,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_209.fci_f
+ADDER               x042y093z3          0.000    f     6.273          pin: u_dut/u_core/add45_syn_209.fco_f
+net (fo=1)                              0.090          6.363          net: u_dut/u_core/add45_syn_241,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_210.fci_f
+ADDER               x042y093z4          0.059    r     6.422          pin: u_dut/u_core/add45_syn_210.fco
+net (fo=1)                              0.000          6.422          net: u_dut/u_core/add45_syn_178,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_211.fci
+ADDER               x042y093z5          0.059    r     6.481          pin: u_dut/u_core/add45_syn_211.fco
+net (fo=1)                              0.000          6.481          net: u_dut/u_core/add45_syn_179,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/add45_syn_212.fci
+ADDER               x042y093z6          0.295    f     6.776       2  pin: u_dut/u_core/add45_syn_212.ofb
+net (fo=1)                              0.372          7.148          net: u_dut/u_core/cand_abort_b[22],  NOFILE(0)
+                                                                      pin: u_dut/u_core/lt11_syn_149.ie
+ADDER               x041y093z3          0.363    r     7.511       3  pin: u_dut/u_core/lt11_syn_149.fco_f
+net (fo=1)                              0.090          7.601          net: u_dut/u_core/lt11_syn_165,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/lt11_syn_150.fci_f
+ADDER               x041y093z4          0.059    r     7.660          pin: u_dut/u_core/lt11_syn_150.fco
+net (fo=1)                              0.000          7.660          net: u_dut/u_core/lt11_syn_127,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/lt11_syn_151.fci
+ADDER               x041y093z5          0.059    r     7.719          pin: u_dut/u_core/lt11_syn_151.fco
+net (fo=1)                              0.000          7.719          net: u_dut/u_core/lt11_syn_129,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/lt11_syn_152.fci
+ADDER               x041y093z6          0.059    r     7.778          pin: u_dut/u_core/lt11_syn_152.fco
+net (fo=1)                              0.000          7.778          net: u_dut/u_core/lt11_syn_131,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1492)
+                                                                      pin: u_dut/u_core/lt11_syn_153.fci
+ADDER               x041y093z7          0.136    f     7.914       4  pin: u_dut/u_core/lt11_syn_153.ofa
+net (fo=23)                             0.462          8.376          net: u_dut/u_core/cand_abort_n6,  NOFILE(0)
+                                                                      pin: u_dut/u_core/mux388_syn_64.ie
+LUT4                x041y089z1          0.189    r     8.565       5  pin: u_dut/u_core/mux388_syn_64.ofb
+net (fo=1)                              0.532          9.097          net: u_dut/u_core/mux388_syn_36,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(962)
+                                                                      pin: u_dut/u_core/mux388_syn_47.id
+LUT4                x042y076z6          0.266    f     9.363       6  pin: u_dut/u_core/mux388_syn_47.ofa
+net (fo=15)                             0.410          9.773          net: u_dut/u_core/mux388_syn_2[0],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(962)
+                                                                      pin: u_dut/u_core/pos_reg[5]_syn_3.ceb
+reg                 x041y079z7          0.000    f     9.773               
+--------------------------------------------------------------------  ---------------
+Arrival                                                9.773               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.678          0.678          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.974          1.652          pin: clk_syn_2.di
+net (fo=1)                              1.092          2.744          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.009          2.753          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.466          3.219          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkin
+SCLK                x039y059z12         0.070          3.289          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkout
+net (fo=198)                            0.924          4.213          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pos_reg[5]_syn_3.clk
+capture edge                            5.333    r     9.546               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          9.482               
+clock uncertainty                      -0.075          9.407               
+clock pessimism                         0.330          9.737               
+--------------------------------------------------------------------  ---------------
+Required                                               9.737               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.036               
+
+Slack               : -0.036ns
+Begin Point         : u_dut/u_core/pos_reg[1]_syn_4.clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/thresh_base_reg[15]_syn_2.cea (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_m40c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.028ns (cell 1.692ns (33%), net 3.336ns (67%))
+Clock Skew          : 0.202ns
+Logic Level         : 4 ( LUT5=2  unknown=1  LUT2=1 )
+Max Fanout          : 23
+Clock Uncertainty   : 0.075ns (sdc uncertainty: 0.000ns, default uncertainty: 0.075ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.738          0.738          pin: clk_syn_2.sg09_di
+PAD                 x000y016            1.059          1.797          pin: clk_syn_2.di
+net (fo=1)                              1.275          3.072          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.011          3.083          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.544          3.627          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkin
+SCLK                x039y059z12         0.081          3.708          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkout
+net (fo=198)                            1.068          4.776          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pos_reg[1]_syn_4.clk
+launch edge                             0.000    r     4.776               
+--------------------------------------------------------------------  ---------------
+clk2q               x042y076z0          0.126    f     4.902          pin: u_dut/u_core/pos_reg[1]_syn_4.oqa
+net (fo=23)                             0.540          5.442          net: u_dut/u_core/pos[1],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(106)
+                                                                      pin: u_dut/u_core/sub37_syn_70.ie
+                    x041y073z1          0.626    r     6.068       1  pin: u_dut/u_core/sub37_syn_70.ofb
+net (fo=4)                              0.550          6.618          net: u_dut/u_core/hdist2[1],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(503)
+                                                                      pin: u_dut/u_core/raddr_reg[2]_syn_2.id
+LUT2                x043y078z7          0.266    f     6.884       2  pin: u_dut/u_core/raddr_reg[2]_syn_2.ofa
+net (fo=15)                             0.786          7.670          net: u_dut/u_core/mux400_syn_38,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(962)
+                                                                      pin: u_dut/u_core/mux400_syn_56.ib
+LUT5                x041y074z6          0.408    f     8.078       3  pin: u_dut/u_core/mux400_syn_56.ofb
+net (fo=23)                             0.903          8.981          net: u_dut/u_core/mux400_syn_40,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(962)
+                                                                      pin: u_dut/u_core/mux273_syn_5919.id
+LUT5                x041y091z1          0.266    r     9.247       4  pin: u_dut/u_core/mux273_syn_5919.ofb
+net (fo=20)                             0.557          9.804          net: u_dut/u_core/mux273_syn_dup_5920,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1283)
+                                                                      pin: u_dut/u_core/thresh_base_reg[15]_syn_2.cea
+reg                 x041y097z6          0.000    f     9.804               
+--------------------------------------------------------------------  ---------------
+Arrival                                                9.804               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.678          0.678          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.974          1.652          pin: clk_syn_2.di
+net (fo=1)                              1.092          2.744          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.009          2.753          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.497          3.250          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1.clkin
+SCLK                x039y099z12         0.070          3.320          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1.clkout
+net (fo=398)                            0.924          4.244          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/thresh_base_reg[15]_syn_2.clk
+capture edge                            5.333    r     9.577               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          9.513               
+clock uncertainty                      -0.075          9.438               
+clock pessimism                         0.330          9.768               
+--------------------------------------------------------------------  ---------------
+Required                                               9.768               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.036               
+
+Slack               : -0.036ns
+Begin Point         : u_dut/u_core/pos_reg[1]_syn_4.clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/thresh_base_reg[15]_syn_2.ceb (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_m40c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.028ns (cell 1.692ns (33%), net 3.336ns (67%))
+Clock Skew          : 0.202ns
+Logic Level         : 4 ( LUT5=2  unknown=1  LUT2=1 )
+Max Fanout          : 23
+Clock Uncertainty   : 0.075ns (sdc uncertainty: 0.000ns, default uncertainty: 0.075ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.738          0.738          pin: clk_syn_2.sg09_di
+PAD                 x000y016            1.059          1.797          pin: clk_syn_2.di
+net (fo=1)                              1.275          3.072          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.011          3.083          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.544          3.627          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkin
+SCLK                x039y059z12         0.081          3.708          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkout
+net (fo=198)                            1.068          4.776          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pos_reg[1]_syn_4.clk
+launch edge                             0.000    r     4.776               
+--------------------------------------------------------------------  ---------------
+clk2q               x042y076z0          0.126    f     4.902          pin: u_dut/u_core/pos_reg[1]_syn_4.oqa
+net (fo=23)                             0.540          5.442          net: u_dut/u_core/pos[1],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(106)
+                                                                      pin: u_dut/u_core/sub37_syn_70.ie
+                    x041y073z1          0.626    r     6.068       1  pin: u_dut/u_core/sub37_syn_70.ofb
+net (fo=4)                              0.550          6.618          net: u_dut/u_core/hdist2[1],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(503)
+                                                                      pin: u_dut/u_core/raddr_reg[2]_syn_2.id
+LUT2                x043y078z7          0.266    f     6.884       2  pin: u_dut/u_core/raddr_reg[2]_syn_2.ofa
+net (fo=15)                             0.786          7.670          net: u_dut/u_core/mux400_syn_38,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(962)
+                                                                      pin: u_dut/u_core/mux400_syn_56.ib
+LUT5                x041y074z6          0.408    f     8.078       3  pin: u_dut/u_core/mux400_syn_56.ofb
+net (fo=23)                             0.903          8.981          net: u_dut/u_core/mux400_syn_40,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(962)
+                                                                      pin: u_dut/u_core/mux273_syn_5919.id
+LUT5                x041y091z1          0.266    r     9.247       4  pin: u_dut/u_core/mux273_syn_5919.ofb
+net (fo=20)                             0.557          9.804          net: u_dut/u_core/mux273_syn_dup_5920,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1283)
+                                                                      pin: u_dut/u_core/thresh_base_reg[15]_syn_2.ceb
+reg                 x041y097z6          0.000    f     9.804               
+--------------------------------------------------------------------  ---------------
+Arrival                                                9.804               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.678          0.678          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.974          1.652          pin: clk_syn_2.di
+net (fo=1)                              1.092          2.744          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.009          2.753          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.497          3.250          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1.clkin
+SCLK                x039y099z12         0.070          3.320          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1.clkout
+net (fo=398)                            0.924          4.244          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/thresh_base_reg[15]_syn_2.clk
+capture edge                            5.333    r     9.577               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          9.513               
+clock uncertainty                      -0.075          9.438               
+clock pessimism                         0.330          9.768               
+--------------------------------------------------------------------  ---------------
+Required                                               9.768               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.036               
+
+Slack               : -0.036ns
+Begin Point         : u_dut/u_core/pos_reg[1]_syn_4.clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/thresh_base_reg[12]_syn_2.cea (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_m40c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.028ns (cell 1.692ns (33%), net 3.336ns (67%))
+Clock Skew          : 0.202ns
+Logic Level         : 4 ( LUT5=2  unknown=1  LUT2=1 )
+Max Fanout          : 23
+Clock Uncertainty   : 0.075ns (sdc uncertainty: 0.000ns, default uncertainty: 0.075ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.738          0.738          pin: clk_syn_2.sg09_di
+PAD                 x000y016            1.059          1.797          pin: clk_syn_2.di
+net (fo=1)                              1.275          3.072          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.011          3.083          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.544          3.627          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkin
+SCLK                x039y059z12         0.081          3.708          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkout
+net (fo=198)                            1.068          4.776          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pos_reg[1]_syn_4.clk
+launch edge                             0.000    r     4.776               
+--------------------------------------------------------------------  ---------------
+clk2q               x042y076z0          0.126    f     4.902          pin: u_dut/u_core/pos_reg[1]_syn_4.oqa
+net (fo=23)                             0.540          5.442          net: u_dut/u_core/pos[1],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(106)
+                                                                      pin: u_dut/u_core/sub37_syn_70.ie
+                    x041y073z1          0.626    r     6.068       1  pin: u_dut/u_core/sub37_syn_70.ofb
+net (fo=4)                              0.550          6.618          net: u_dut/u_core/hdist2[1],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(503)
+                                                                      pin: u_dut/u_core/raddr_reg[2]_syn_2.id
+LUT2                x043y078z7          0.266    f     6.884       2  pin: u_dut/u_core/raddr_reg[2]_syn_2.ofa
+net (fo=15)                             0.786          7.670          net: u_dut/u_core/mux400_syn_38,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(962)
+                                                                      pin: u_dut/u_core/mux400_syn_56.ib
+LUT5                x041y074z6          0.408    f     8.078       3  pin: u_dut/u_core/mux400_syn_56.ofb
+net (fo=23)                             0.903          8.981          net: u_dut/u_core/mux400_syn_40,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(962)
+                                                                      pin: u_dut/u_core/mux273_syn_5919.id
+LUT5                x041y091z1          0.266    r     9.247       4  pin: u_dut/u_core/mux273_syn_5919.ofb
+net (fo=20)                             0.557          9.804          net: u_dut/u_core/mux273_syn_dup_5920,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1283)
+                                                                      pin: u_dut/u_core/thresh_base_reg[12]_syn_2.cea
+reg                 x041y097z4          0.000    f     9.804               
+--------------------------------------------------------------------  ---------------
+Arrival                                                9.804               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.678          0.678          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.974          1.652          pin: clk_syn_2.di
+net (fo=1)                              1.092          2.744          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.009          2.753          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.497          3.250          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1.clkin
+SCLK                x039y099z12         0.070          3.320          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1.clkout
+net (fo=398)                            0.924          4.244          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/thresh_base_reg[12]_syn_2.clk
+capture edge                            5.333    r     9.577               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          9.513               
+clock uncertainty                      -0.075          9.438               
+clock pessimism                         0.330          9.768               
+--------------------------------------------------------------------  ---------------
+Required                                               9.768               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.036               
+
+Slack               : -0.036ns
+Begin Point         : u_dut/u_core/pos_reg[1]_syn_4.clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/thresh_base_reg[12]_syn_2.ceb (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_m40c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.028ns (cell 1.692ns (33%), net 3.336ns (67%))
+Clock Skew          : 0.202ns
+Logic Level         : 4 ( LUT5=2  unknown=1  LUT2=1 )
+Max Fanout          : 23
+Clock Uncertainty   : 0.075ns (sdc uncertainty: 0.000ns, default uncertainty: 0.075ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.738          0.738          pin: clk_syn_2.sg09_di
+PAD                 x000y016            1.059          1.797          pin: clk_syn_2.di
+net (fo=1)                              1.275          3.072          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.011          3.083          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.544          3.627          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkin
+SCLK                x039y059z12         0.081          3.708          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkout
+net (fo=198)                            1.068          4.776          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pos_reg[1]_syn_4.clk
+launch edge                             0.000    r     4.776               
+--------------------------------------------------------------------  ---------------
+clk2q               x042y076z0          0.126    f     4.902          pin: u_dut/u_core/pos_reg[1]_syn_4.oqa
+net (fo=23)                             0.540          5.442          net: u_dut/u_core/pos[1],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(106)
+                                                                      pin: u_dut/u_core/sub37_syn_70.ie
+                    x041y073z1          0.626    r     6.068       1  pin: u_dut/u_core/sub37_syn_70.ofb
+net (fo=4)                              0.550          6.618          net: u_dut/u_core/hdist2[1],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(503)
+                                                                      pin: u_dut/u_core/raddr_reg[2]_syn_2.id
+LUT2                x043y078z7          0.266    f     6.884       2  pin: u_dut/u_core/raddr_reg[2]_syn_2.ofa
+net (fo=15)                             0.786          7.670          net: u_dut/u_core/mux400_syn_38,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(962)
+                                                                      pin: u_dut/u_core/mux400_syn_56.ib
+LUT5                x041y074z6          0.408    f     8.078       3  pin: u_dut/u_core/mux400_syn_56.ofb
+net (fo=23)                             0.903          8.981          net: u_dut/u_core/mux400_syn_40,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(962)
+                                                                      pin: u_dut/u_core/mux273_syn_5919.id
+LUT5                x041y091z1          0.266    r     9.247       4  pin: u_dut/u_core/mux273_syn_5919.ofb
+net (fo=20)                             0.557          9.804          net: u_dut/u_core/mux273_syn_dup_5920,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1283)
+                                                                      pin: u_dut/u_core/thresh_base_reg[12]_syn_2.ceb
+reg                 x041y097z4          0.000    f     9.804               
+--------------------------------------------------------------------  ---------------
+Arrival                                                9.804               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.678          0.678          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.974          1.652          pin: clk_syn_2.di
+net (fo=1)                              1.092          2.744          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.009          2.753          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.497          3.250          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1.clkin
+SCLK                x039y099z12         0.070          3.320          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1.clkout
+net (fo=398)                            0.924          4.244          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/thresh_base_reg[12]_syn_2.clk
+capture edge                            5.333    r     9.577               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          9.513               
+clock uncertainty                      -0.075          9.438               
+clock pessimism                         0.330          9.768               
+--------------------------------------------------------------------  ---------------
+Required                                               9.768               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.036               
+
+Slack               : -0.034ns
+Begin Point         : u_dut/u_core/pos_reg[1]_syn_4.clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/bm_b_syn_19.addrb[9] (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_m40c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 4.791ns (cell 2.051ns (42%), net 2.740ns (58%))
+Clock Skew          : 0.042ns
+Logic Level         : 7 ( LUT5=3  ADDER=2  LUT2=1  ERAM=1 )
+Max Fanout          : 23
+Clock Uncertainty   : 0.050ns (sdc uncertainty: 0.000ns, default uncertainty: 0.050ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.738          0.738          pin: clk_syn_2.sg09_di
+PAD                 x000y016            1.059          1.797          pin: clk_syn_2.di
+net (fo=1)                              1.275          3.072          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.011          3.083          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.544          3.627          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkin
+SCLK                x039y059z12         0.081          3.708          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkout
+net (fo=198)                            1.068          4.776          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pos_reg[1]_syn_4.clk
+launch edge                             0.000    r     4.776               
+--------------------------------------------------------------------  ---------------
+clk2q               x042y076z0          0.126    f     4.902          pin: u_dut/u_core/pos_reg[1]_syn_4.oqa
+net (fo=23)                             0.540          5.442          net: u_dut/u_core/pos[1],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(106)
+                                                                      pin: u_dut/u_core/sub37_syn_70.ie
+ADDER               x041y073z1          0.361    r     5.803       1  pin: u_dut/u_core/sub37_syn_70.fco
+net (fo=1)                              0.000          5.803          net: u_dut/u_core/sub37_syn_57,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(503)
+                                                                      pin: u_dut/u_core/sub37_syn_71.fci
+ADDER               x041y073z2          0.059    r     5.862          pin: u_dut/u_core/sub37_syn_71.fco
+net (fo=1)                              0.000          5.862          net: u_dut/u_core/sub37_syn_58,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(503)
+                                                                      pin: u_dut/u_core/sub37_syn_72.fci
+ADDER               x041y073z3          0.059    r     5.921          pin: u_dut/u_core/sub37_syn_72.fco
+net (fo=1)                              0.000          5.921          net: u_dut/u_core/sub37_syn_59,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(503)
+                                                                      pin: u_dut/u_core/sub37_syn_73.fci
+ADDER               x041y073z4          0.295    f     6.216       2  pin: u_dut/u_core/sub37_syn_73.ofb
+net (fo=3)                              0.319          6.535          net: u_dut/u_core/hdist2[4],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(503)
+                                                                      pin: u_dut/u_core/mux390_syn_84.imb
+LUT2                x043y075z3          0.271    r     6.806       3  pin: u_dut/u_core/mux390_syn_84.ofb
+net (fo=5)                              0.470          7.276          net: u_dut/u_core/mux390_syn_69,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(962)
+                                                                      pin: u_dut/u_core/mux390_syn_104.ib
+LUT5                x043y070z4          0.408    f     7.684       4  pin: u_dut/u_core/mux390_syn_104.ofb
+net (fo=5)                              0.191          7.875          net: u_dut/u_core/mux390_syn_73,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(962)
+                                                                      pin: u_dut/u_core/bm_raddr_b[11]_syn_28.ie
+LUT5                x043y069z2          0.189    r     8.064       5  pin: u_dut/u_core/bm_raddr_b[11]_syn_28.ofb
+net (fo=13)                             0.243          8.307          net: u_dut/u_core/bm_raddr_b[11]_syn_2,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(726)
+                                                                      pin: u_dut/u_core/bm_raddr_b[7]_syn_10.ic
+LUT5                x045y069z1          0.283    r     8.590       6  pin: u_dut/u_core/bm_raddr_b[7]_syn_10.ofb
+net (fo=7)                              0.977          9.567          net: u_dut/u_core/bm_raddr_b[7],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(726)
+                                                                      pin: u_dut/u_core/bm_b_syn_19.addrb[9]
+ERAM (reg)          x051y076            0.000    f     9.567       7       
+--------------------------------------------------------------------  ---------------
+Arrival                                                9.567               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.678          0.678          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.974          1.652          pin: clk_syn_2.di
+net (fo=1)                              1.092          2.744          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.009          2.753          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.466          3.219          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkin
+SCLK                x039y059z12         0.070          3.289          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkout
+net (fo=198)                            0.987          4.276          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/bm_b_syn_19.clkb
+capture edge                            5.333    r     9.609               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.484          9.125               
+clock uncertainty                      -0.050          9.075               
+clock pessimism                         0.458          9.533               
+--------------------------------------------------------------------  ---------------
+Required                                               9.533               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.034               
+
+Slack               : -0.033ns
+Begin Point         : u_dut/u_core/pos_reg[1]_syn_4.clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/bm_b_syn_19.addrb[2] (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_m40c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 4.804ns (cell 2.013ns (41%), net 2.791ns (59%))
+Clock Skew          : 0.042ns
+Logic Level         : 7 ( LUT5=2  ADDER=2  LUT6=1  LUT2=1  ERAM=1 )
+Max Fanout          : 23
+Clock Uncertainty   : 0.050ns (sdc uncertainty: 0.000ns, default uncertainty: 0.050ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.738          0.738          pin: clk_syn_2.sg09_di
+PAD                 x000y016            1.059          1.797          pin: clk_syn_2.di
+net (fo=1)                              1.275          3.072          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.011          3.083          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.544          3.627          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkin
+SCLK                x039y059z12         0.081          3.708          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkout
+net (fo=198)                            1.068          4.776          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pos_reg[1]_syn_4.clk
+launch edge                             0.000    r     4.776               
+--------------------------------------------------------------------  ---------------
+clk2q               x042y076z0          0.126    f     4.902          pin: u_dut/u_core/pos_reg[1]_syn_4.oqa
+net (fo=23)                             0.540          5.442          net: u_dut/u_core/pos[1],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(106)
+                                                                      pin: u_dut/u_core/sub37_syn_70.ie
+ADDER               x041y073z1          0.361    r     5.803       1  pin: u_dut/u_core/sub37_syn_70.fco
+net (fo=1)                              0.000          5.803          net: u_dut/u_core/sub37_syn_57,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(503)
+                                                                      pin: u_dut/u_core/sub37_syn_71.fci
+ADDER               x041y073z2          0.059    r     5.862          pin: u_dut/u_core/sub37_syn_71.fco
+net (fo=1)                              0.000          5.862          net: u_dut/u_core/sub37_syn_58,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(503)
+                                                                      pin: u_dut/u_core/sub37_syn_72.fci
+ADDER               x041y073z3          0.059    r     5.921          pin: u_dut/u_core/sub37_syn_72.fco
+net (fo=1)                              0.000          5.921          net: u_dut/u_core/sub37_syn_59,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(503)
+                                                                      pin: u_dut/u_core/sub37_syn_73.fci
+ADDER               x041y073z4          0.295    f     6.216       2  pin: u_dut/u_core/sub37_syn_73.ofb
+net (fo=3)                              0.319          6.535          net: u_dut/u_core/hdist2[4],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(503)
+                                                                      pin: u_dut/u_core/mux390_syn_84.imb
+LUT2                x043y075z3          0.271    r     6.806       3  pin: u_dut/u_core/mux390_syn_84.ofb
+net (fo=5)                              0.470          7.276          net: u_dut/u_core/mux390_syn_69,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(962)
+                                                                      pin: u_dut/u_core/mux390_syn_104.ib
+LUT5                x043y070z4          0.408    f     7.684       4  pin: u_dut/u_core/mux390_syn_104.ofb
+net (fo=5)                              0.380          8.064          net: u_dut/u_core/mux390_syn_73,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(962)
+                                                                      pin: u_dut/u_core/bm_raddr_b[0]_syn_23.imf
+LUT6                x049y070z1          0.168    r     8.232       5  pin: u_dut/u_core/bm_raddr_b[0]_syn_23.ofb
+net (fo=1)                              0.272          8.504          net: u_dut/u_core/bm_raddr_b[0]_syn_4,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(726)
+                                                                      pin: u_dut/u_core/bm_raddr_b[0]_syn_26.id
+LUT5                x049y069z0          0.266    r     8.770       6  pin: u_dut/u_core/bm_raddr_b[0]_syn_26.ofb
+net (fo=7)                              0.810          9.580          net: u_dut/u_core/bm_raddr_b[0],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(726)
+                                                                      pin: u_dut/u_core/bm_b_syn_19.addrb[2]
+ERAM (reg)          x051y076            0.000    f     9.580       7       
+--------------------------------------------------------------------  ---------------
+Arrival                                                9.580               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.678          0.678          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.974          1.652          pin: clk_syn_2.di
+net (fo=1)                              1.092          2.744          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.009          2.753          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.466          3.219          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkin
+SCLK                x039y059z12         0.070          3.289          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkout
+net (fo=198)                            0.987          4.276          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/bm_b_syn_19.clkb
+capture edge                            5.333    r     9.609               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.470          9.139               
+clock uncertainty                      -0.050          9.089               
+clock pessimism                         0.458          9.547               
+--------------------------------------------------------------------  ---------------
+Required                                               9.547               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.033               
+
+Slack               : -0.032ns
+Begin Point         : u_dut/u_core/pos_reg[3]_syn_2.clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/bm_a_syn_37.addrb[12] (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_m40c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 4.633ns (cell 1.780ns (38%), net 2.853ns (62%))
+Clock Skew          : 0.142ns
+Logic Level         : 6 ( LUT6=3  ADDER=2  ERAM=1 )
+Max Fanout          : 24
+Clock Uncertainty   : 0.075ns (sdc uncertainty: 0.000ns, default uncertainty: 0.075ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.738          0.738          pin: clk_syn_2.sg09_di
+PAD                 x000y016            1.059          1.797          pin: clk_syn_2.di
+net (fo=1)                              1.275          3.072          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.011          3.083          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.544          3.627          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkin
+SCLK                x039y059z12         0.081          3.708          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkout
+net (fo=198)                            1.068          4.776          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/pos_reg[3]_syn_2.clk
+launch edge                             0.000    r     4.776               
+--------------------------------------------------------------------  ---------------
+clk2q               x042y074z7          0.137    r     4.913          pin: u_dut/u_core/pos_reg[3]_syn_2.oqb
+net (fo=20)                             0.593          5.506          net: u_dut/u_core/pos[4],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(106)
+                                                                      pin: u_dut/u_core/lt62_syn_64.id
+ADDER               x042y080z2          0.523    r     6.029       1  pin: u_dut/u_core/lt62_syn_64.fco
+net (fo=1)                              0.000          6.029          net: u_dut/u_core/lt62_syn_50,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(504)
+                                                                      pin: u_dut/u_core/lt62_syn_65.fci
+ADDER               x042y080z3          0.059    r     6.088          pin: u_dut/u_core/lt62_syn_65.fco
+net (fo=1)                              0.000          6.088          net: u_dut/u_core/lt62_syn_52,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(504)
+                                                                      pin: u_dut/u_core/lt62_syn_66.fci
+ADDER               x042y080z4          0.059    r     6.147          pin: u_dut/u_core/lt62_syn_66.fco
+net (fo=1)                              0.000          6.147          net: u_dut/u_core/lt62_syn_54,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(504)
+                                                                      pin: u_dut/u_core/lt62_syn_67.fci
+ADDER               x042y080z5          0.059    r     6.206          pin: u_dut/u_core/lt62_syn_67.fco
+net (fo=1)                              0.000          6.206          net: u_dut/u_core/lt62_syn_56,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(504)
+                                                                      pin: u_dut/u_core/lt62_syn_68.fci
+ADDER               x042y080z6          0.059    r     6.265          pin: u_dut/u_core/lt62_syn_68.fco
+net (fo=1)                              0.000          6.265          net: u_dut/u_core/lt62_syn_57,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(504)
+                                                                      pin: u_dut/u_core/lt62_syn_69.fci
+ADDER               x042y080z7          0.295    f     6.560       2  pin: u_dut/u_core/lt62_syn_69.ofb
+net (fo=12)                             0.667          7.227          net: u_dut/u_core/raddr_b25_n,  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_byp_n_syn_148.imf
+LUT6                x049y074z0          0.168    r     7.395       3  pin: u_dut/u_core/htab_byp_n_syn_148.ofb
+net (fo=24)                             0.284          7.679          net: u_dut/u_core/htab_byp_n_syn_65,  NOFILE(0)
+                                                                      pin: u_dut/u_core/bm_raddr_a[12]_syn_54.id
+LUT6                x050y075z1          0.231    f     7.910       4  pin: u_dut/u_core/bm_raddr_a[12]_syn_54.ofb
+net (fo=1)                              0.269          8.179          net: u_dut/u_core/bm_raddr_a[12]_syn_48,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(711)
+                                                                      pin: u_dut/u_core/bm_raddr_a[12]_syn_55.ie
+LUT6                x050y075z3          0.190    r     8.369       5  pin: u_dut/u_core/bm_raddr_a[12]_syn_55.ofb
+net (fo=8)                              1.040          9.409          net: u_dut/u_core/bm_raddr_a[12],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(711)
+                                                                      pin: u_dut/u_core/bm_a_syn_37.addrb[12]
+ERAM (reg)          x051y088            0.000    f     9.409       6       
+--------------------------------------------------------------------  ---------------
+Arrival                                                9.409               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.678          0.678          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.974          1.652          pin: clk_syn_2.di
+net (fo=1)                              1.092          2.744          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.009          2.753          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.497          3.250          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1.clkin
+SCLK                x039y099z12         0.070          3.320          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1.clkout
+net (fo=398)                            0.984          4.304          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/bm_a_syn_37.clkb
+capture edge                            5.333    r     9.637               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.515          9.122               
+clock uncertainty                      -0.075          9.047               
+clock pessimism                         0.330          9.377               
+--------------------------------------------------------------------  ---------------
+Required                                               9.377               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.032               
+
+
+Period Check
+----------------------------------------------------------------------------------------------------
+    Type       Setting(ns)      Required(ns)         Slack(ns)   Point
+--------------------------------------------------------------------------------
+    DRAM             5.333             2.800             2.533   u_dut/u_core/opq_mem_syn_40.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/fifo_mem_syn_129.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/wq_mem_syn_45.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/wq_mem_syn_25.wclk
+
+Min Paths
+----------------------------------------------------------------------------------------------------
+Slack               : 0.024ns
+Begin Point         : u_dut/u_core/s1_pos_r_reg[0]_syn_2.clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/htab_tag_syn_56.dia[0] (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : hold
+Process             : fast_m40c
+Budget              : 0.000ns { clk rising@0.000ns - clk rising@0.000ns }
+Data Path Delay     : 0.298ns (cell 0.065ns (21%), net 0.233ns (79%))
+Clock Skew          : 0.052ns
+Logic Level         : 1 ( ERAM=1 )
+Max Fanout          : 5
+Clock Uncertainty   : 0.050ns (sdc uncertainty: 0.000ns, default uncertainty: 0.050ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.523          0.523          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.177          0.700          pin: clk_syn_2.di
+net (fo=1)                              0.465          1.165          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.002          1.167          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.203          1.370          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkin
+SCLK                x039y059z12         0.025          1.395          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkout
+net (fo=198)                            0.380          1.775          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/s1_pos_r_reg[0]_syn_2.clk
+launch edge                             0.000    r     1.775               
+--------------------------------------------------------------------  ---------------
+clk2q               x042y077z6          0.065    r     1.840          pin: u_dut/u_core/s1_pos_r_reg[0]_syn_2.oqb
+net (fo=5)                              0.233          2.073          net: u_dut/u_core/s1_pos_r[0],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(288)
+                                                                      pin: u_dut/u_core/htab_tag_syn_56.dia[0]
+ERAM (reg)          x039y068            0.000    f     2.073       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                2.073               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.590          0.590          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.200          0.790          pin: clk_syn_2.di
+net (fo=1)                              0.506          1.296          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.003          1.299          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.224          1.523          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkin
+SCLK                x039y059z0          0.030          1.553          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkout
+net (fo=421)                            0.409          1.962          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_tag_syn_56.clka
+capture edge                            0.000    r     1.962               
+--------------------------------------------------------------------  ---------------
+hold                                    0.172          2.134               
+clock uncertainty                       0.050          2.184               
+clock pessimism                        -0.135          2.049               
+--------------------------------------------------------------------  ---------------
+Required                                               2.049               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.024               
+
+Slack               : 0.024ns
+Begin Point         : u_dut/smem_waddr_r_reg[9]_syn_2.clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/smem_syn_19.addra[11] (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : hold
+Process             : fast_m40c
+Budget              : 0.000ns { clk rising@0.000ns - clk rising@0.000ns }
+Data Path Delay     : 0.277ns (cell 0.062ns (22%), net 0.215ns (78%))
+Clock Skew          : 0.054ns
+Logic Level         : 1 ( ERAM=1 )
+Max Fanout          : 4
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.523          0.523          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.177          0.700          pin: clk_syn_2.di
+net (fo=1)                              0.465          1.165          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.002          1.167          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.208          1.375          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkin
+SCLK                x039y059z0          0.025          1.400          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkout
+net (fo=421)                            0.354          1.754          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/smem_waddr_r_reg[9]_syn_2.clk
+launch edge                             0.000    r     1.754               
+--------------------------------------------------------------------  ---------------
+clk2q               x036y076z3          0.062    f     1.816          pin: u_dut/smem_waddr_r_reg[9]_syn_2.oqa
+net (fo=4)                              0.215          2.031          net: u_dut/smem_waddr_r[9],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v(147)
+                                                                      pin: u_dut/smem_syn_19.addra[11]
+ERAM (reg)          x039y072            0.000    f     2.031       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                2.031               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.590          0.590          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.200          0.790          pin: clk_syn_2.di
+net (fo=1)                              0.506          1.296          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.003          1.299          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.224          1.523          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkin
+SCLK                x039y059z0          0.030          1.553          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkout
+net (fo=421)                            0.409          1.962          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/smem_syn_19.clka
+capture edge                            0.000    r     1.962               
+--------------------------------------------------------------------  ---------------
+hold                                    0.099          2.061               
+clock uncertainty                       0.100          2.161               
+clock pessimism                        -0.154          2.007               
+--------------------------------------------------------------------  ---------------
+Required                                               2.007               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.024               
+
+Slack               : 0.024ns
+Begin Point         : u_dut/u_core/wq_count_reg[0]_syn_2.clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/cmem_syn_13.dia[1] (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : hold
+Process             : fast_m40c
+Budget              : 0.000ns { clk rising@0.000ns - clk rising@0.000ns }
+Data Path Delay     : 0.350ns (cell 0.117ns (33%), net 0.233ns (67%))
+Clock Skew          : 0.054ns
+Logic Level         : 2 ( LUT6=1  ERAM=1 )
+Max Fanout          : 25
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.523          0.523          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.177          0.700          pin: clk_syn_2.di
+net (fo=1)                              0.465          1.165          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.002          1.167          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.222          1.389          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_l_bk1.clkin
+SCLK                x039y099z0          0.025          1.414          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_l_bk1.clkout
+net (fo=279)                            0.358          1.772          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_l_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/wq_count_reg[0]_syn_2.clk
+launch edge                             0.000    r     1.772               
+--------------------------------------------------------------------  ---------------
+clk2q               x036y092z7          0.065    r     1.837          pin: u_dut/u_core/wq_count_reg[0]_syn_2.oqb
+net (fo=25)                             0.079          1.916          net: u_dut/u_core/wq_count[0],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(151)
+                                                                      pin: u_dut/u_core/cmem_wdata_c[1]_syn_5.ie
+LUT6                x036y090z5          0.052    f     1.968       1  pin: u_dut/u_core/cmem_wdata_c[1]_syn_5.ofb
+net (fo=1)                              0.154          2.122          net: u_dut/u_core/cmem_wdata_c[1],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(253)
+                                                                      pin: u_dut/u_core/cmem_syn_13.dia[1]
+ERAM (reg)          x039y088            0.000    f     2.122       2       
+--------------------------------------------------------------------  ---------------
+Arrival                                                2.122               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.590          0.590          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.200          0.790          pin: clk_syn_2.di
+net (fo=1)                              0.506          1.296          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.003          1.299          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.242          1.541          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_l_bk1.clkin
+SCLK                x039y099z0          0.030          1.571          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_l_bk1.clkout
+net (fo=279)                            0.413          1.984          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_l_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/cmem_syn_13.clka
+capture edge                            0.000    r     1.984               
+--------------------------------------------------------------------  ---------------
+hold                                    0.172          2.156               
+clock uncertainty                       0.100          2.256               
+clock pessimism                        -0.158          2.098               
+--------------------------------------------------------------------  ---------------
+Required                                               2.098               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.024               
+
+Slack               : 0.027ns
+Begin Point         : u_dut/smem_waddr_r_reg[8]_syn_2.clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/smem_syn_19.addra[10] (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : hold
+Process             : fast_m40c
+Budget              : 0.000ns { clk rising@0.000ns - clk rising@0.000ns }
+Data Path Delay     : 0.281ns (cell 0.062ns (22%), net 0.219ns (78%))
+Clock Skew          : 0.031ns
+Logic Level         : 1 ( ERAM=1 )
+Max Fanout          : 4
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.523          0.523          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.177          0.700          pin: clk_syn_2.di
+net (fo=1)                              0.465          1.165          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.002          1.167          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.208          1.375          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkin
+SCLK                x039y059z0          0.025          1.400          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkout
+net (fo=421)                            0.354          1.754          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/smem_waddr_r_reg[8]_syn_2.clk
+launch edge                             0.000    r     1.754               
+--------------------------------------------------------------------  ---------------
+clk2q               x038y076z5          0.062    f     1.816          pin: u_dut/smem_waddr_r_reg[8]_syn_2.oqa
+net (fo=4)                              0.219          2.035          net: u_dut/smem_waddr_r[8],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v(147)
+                                                                      pin: u_dut/smem_syn_19.addra[10]
+ERAM (reg)          x039y072            0.000    f     2.035       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                2.035               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.590          0.590          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.200          0.790          pin: clk_syn_2.di
+net (fo=1)                              0.506          1.296          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.003          1.299          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.224          1.523          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkin
+SCLK                x039y059z0          0.030          1.553          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkout
+net (fo=421)                            0.409          1.962          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/smem_syn_19.clka
+capture edge                            0.000    r     1.962               
+--------------------------------------------------------------------  ---------------
+hold                                    0.123          2.085               
+clock uncertainty                       0.100          2.185               
+clock pessimism                        -0.177          2.008               
+--------------------------------------------------------------------  ---------------
+Required                                               2.008               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.027               
+
+Slack               : 0.028ns
+Begin Point         : u_dut/rd_addr_reg[7]_syn_18.clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/smem_syn_13.addrb[9] (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : hold
+Process             : fast_m40c
+Budget              : 0.000ns { clk rising@0.000ns - clk rising@0.000ns }
+Data Path Delay     : 0.301ns (cell 0.112ns (37%), net 0.189ns (63%))
+Clock Skew          : 0.054ns
+Logic Level         : 2 ( LUT6=1  ERAM=1 )
+Max Fanout          : 4
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.523          0.523          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.177          0.700          pin: clk_syn_2.di
+net (fo=1)                              0.465          1.165          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.002          1.167          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.222          1.389          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_l_bk1.clkin
+SCLK                x039y099z0          0.025          1.414          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_l_bk1.clkout
+net (fo=279)                            0.358          1.772          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_l_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/rd_addr_reg[7]_syn_18.clk
+launch edge                             0.000    r     1.772               
+--------------------------------------------------------------------  ---------------
+clk2q               x035y082z1          0.065    r     1.837          pin: u_dut/rd_addr_reg[7]_syn_18.oqb
+net (fo=1)                              0.026          1.863          net: u_dut/rd_addr[7],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v(118)
+                                                                      pin: u_dut/rd_addr_reg[7]_syn_18.imf
+LUT6                x035y082z1          0.047    f     1.910       1  pin: u_dut/rd_addr_reg[7]_syn_18.ofb
+net (fo=4)                              0.163          2.073          net: u_dut/rd_addr_reg[7]_syn_4,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v(245)
+                                                                      pin: u_dut/smem_syn_13.addrb[9]
+ERAM (reg)          x039y084            0.000    f     2.073       2       
+--------------------------------------------------------------------  ---------------
+Arrival                                                2.073               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.590          0.590          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.200          0.790          pin: clk_syn_2.di
+net (fo=1)                              0.506          1.296          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.003          1.299          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.242          1.541          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_l_bk1.clkin
+SCLK                x039y099z0          0.030          1.571          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_l_bk1.clkout
+net (fo=279)                            0.413          1.984          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_l_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/smem_syn_13.clkb
+capture edge                            0.000    r     1.984               
+--------------------------------------------------------------------  ---------------
+hold                                    0.119          2.103               
+clock uncertainty                       0.100          2.203               
+clock pessimism                        -0.158          2.045               
+--------------------------------------------------------------------  ---------------
+Required                                               2.045               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.028               
+
+Slack               : 0.029ns
+Begin Point         : u_dut/u_core/blk_tag_reg[9]_syn_2.clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/htab_tag_syn_14.dia_extra[1] (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : hold
+Process             : fast_m40c
+Budget              : 0.000ns { clk rising@0.000ns - clk rising@0.000ns }
+Data Path Delay     : 0.266ns (cell 0.065ns (24%), net 0.201ns (76%))
+Clock Skew          : 0.031ns
+Logic Level         : 1 ( ERAM=1 )
+Max Fanout          : 4
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.523          0.523          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.177          0.700          pin: clk_syn_2.di
+net (fo=1)                              0.465          1.165          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.002          1.167          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.208          1.375          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkin
+SCLK                x039y059z0          0.025          1.400          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkout
+net (fo=421)                            0.354          1.754          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/blk_tag_reg[9]_syn_2.clk
+launch edge                             0.000    r     1.754               
+--------------------------------------------------------------------  ---------------
+clk2q               x038y064z4          0.065    r     1.819          pin: u_dut/u_core/blk_tag_reg[9]_syn_2.oqb
+net (fo=4)                              0.201          2.020          net: u_dut/u_core/blk_tag[9],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(105)
+                                                                      pin: u_dut/u_core/htab_tag_syn_14.dia_extra[1]
+ERAM (reg)          x039y064            0.000    f     2.020       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                2.020               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.590          0.590          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.200          0.790          pin: clk_syn_2.di
+net (fo=1)                              0.506          1.296          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.003          1.299          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.224          1.523          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkin
+SCLK                x039y059z0          0.030          1.553          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkout
+net (fo=421)                            0.409          1.962          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_tag_syn_14.clka
+capture edge                            0.000    r     1.962               
+--------------------------------------------------------------------  ---------------
+hold                                    0.106          2.068               
+clock uncertainty                       0.100          2.168               
+clock pessimism                        -0.177          1.991               
+--------------------------------------------------------------------  ---------------
+Required                                               1.991               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.029               
+
+Slack               : 0.030ns
+Begin Point         : u_dut/u_core/w2_reg[2]_syn_2.clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/htab_tag_syn_35.dia[5] (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : hold
+Process             : fast_m40c
+Budget              : 0.000ns { clk rising@0.000ns - clk rising@0.000ns }
+Data Path Delay     : 0.333ns (cell 0.142ns (42%), net 0.191ns (58%))
+Clock Skew          : 0.031ns
+Logic Level         : 2 ( LUT3=1  ERAM=1 )
+Max Fanout          : 6
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.523          0.523          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.177          0.700          pin: clk_syn_2.di
+net (fo=1)                              0.465          1.165          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.002          1.167          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.208          1.375          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkin
+SCLK                x039y059z0          0.025          1.400          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkout
+net (fo=421)                            0.354          1.754          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/w2_reg[2]_syn_2.clk
+launch edge                             0.000    r     1.754               
+--------------------------------------------------------------------  ---------------
+clk2q               x038y070z0          0.065    r     1.819          pin: u_dut/u_core/w2_reg[2]_syn_2.oqb
+net (fo=6)                              0.064          1.883          net: u_dut/u_core/w1[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(108)
+                                                                      pin: u_dut/u_core/htab_byp_data_reg[10]_syn_2.imf
+LUT3                x038y068z3          0.077    f     1.960       1  pin: u_dut/u_core/htab_byp_data_reg[10]_syn_2.ofa
+net (fo=2)                              0.127          2.087          net: u_dut/u_core/s1_b1[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(485)
+                                                                      pin: u_dut/u_core/htab_tag_syn_35.dia[5]
+ERAM (reg)          x039y068            0.000    f     2.087       2       
+--------------------------------------------------------------------  ---------------
+Arrival                                                2.087               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.590          0.590          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.200          0.790          pin: clk_syn_2.di
+net (fo=1)                              0.506          1.296          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.003          1.299          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.224          1.523          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkin
+SCLK                x039y059z0          0.030          1.553          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkout
+net (fo=421)                            0.409          1.962          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_tag_syn_35.clka
+capture edge                            0.000    r     1.962               
+--------------------------------------------------------------------  ---------------
+hold                                    0.172          2.134               
+clock uncertainty                       0.100          2.234               
+clock pessimism                        -0.177          2.057               
+--------------------------------------------------------------------  ---------------
+Required                                               2.057               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.030               
+
+Slack               : 0.031ns
+Begin Point         : u_dut/smem_waddr_r_reg[3]_syn_2.clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/smem_syn_31.addra[9] (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : hold
+Process             : fast_m40c
+Budget              : 0.000ns { clk rising@0.000ns - clk rising@0.000ns }
+Data Path Delay     : 0.290ns (cell 0.065ns (22%), net 0.225ns (78%))
+Clock Skew          : 0.031ns
+Logic Level         : 1 ( ERAM=1 )
+Max Fanout          : 4
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.523          0.523          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.177          0.700          pin: clk_syn_2.di
+net (fo=1)                              0.465          1.165          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.002          1.167          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.208          1.375          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkin
+SCLK                x039y059z0          0.025          1.400          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkout
+net (fo=421)                            0.354          1.754          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/smem_waddr_r_reg[3]_syn_2.clk
+launch edge                             0.000    r     1.754               
+--------------------------------------------------------------------  ---------------
+clk2q               x038y076z6          0.065    r     1.819          pin: u_dut/smem_waddr_r_reg[3]_syn_2.oqb
+net (fo=4)                              0.225          2.044          net: u_dut/smem_waddr_r[7],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v(147)
+                                                                      pin: u_dut/smem_syn_31.addra[9]
+ERAM (reg)          x039y072            0.000    f     2.044       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                2.044               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.590          0.590          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.200          0.790          pin: clk_syn_2.di
+net (fo=1)                              0.506          1.296          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.003          1.299          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.224          1.523          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkin
+SCLK                x039y059z0          0.030          1.553          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkout
+net (fo=421)                            0.409          1.962          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/smem_syn_31.clka
+capture edge                            0.000    r     1.962               
+--------------------------------------------------------------------  ---------------
+hold                                    0.128          2.090               
+clock uncertainty                       0.100          2.190               
+clock pessimism                        -0.177          2.013               
+--------------------------------------------------------------------  ---------------
+Required                                               2.013               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.031               
+
+Slack               : 0.033ns
+Begin Point         : u_dut/u_core/s1_pos_r_reg[7]_syn_2.clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/htab_tag_syn_56.dia[6] (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : hold
+Process             : fast_m40c
+Budget              : 0.000ns { clk rising@0.000ns - clk rising@0.000ns }
+Data Path Delay     : 0.307ns (cell 0.062ns (20%), net 0.245ns (80%))
+Clock Skew          : 0.052ns
+Logic Level         : 1 ( ERAM=1 )
+Max Fanout          : 6
+Clock Uncertainty   : 0.050ns (sdc uncertainty: 0.000ns, default uncertainty: 0.050ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.523          0.523          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.177          0.700          pin: clk_syn_2.di
+net (fo=1)                              0.465          1.165          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.002          1.167          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.203          1.370          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkin
+SCLK                x039y059z12         0.025          1.395          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkout
+net (fo=198)                            0.380          1.775          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/s1_pos_r_reg[7]_syn_2.clk
+launch edge                             0.000    r     1.775               
+--------------------------------------------------------------------  ---------------
+clk2q               x042y077z3          0.062    f     1.837          pin: u_dut/u_core/s1_pos_r_reg[7]_syn_2.oqa
+net (fo=6)                              0.245          2.082          net: u_dut/u_core/s1_pos_r[7],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(288)
+                                                                      pin: u_dut/u_core/htab_tag_syn_56.dia[6]
+ERAM (reg)          x039y068            0.000    f     2.082       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                2.082               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.590          0.590          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.200          0.790          pin: clk_syn_2.di
+net (fo=1)                              0.506          1.296          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.003          1.299          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.224          1.523          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkin
+SCLK                x039y059z0          0.030          1.553          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1.clkout
+net (fo=421)                            0.409          1.962          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_l_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_tag_syn_56.clka
+capture edge                            0.000    r     1.962               
+--------------------------------------------------------------------  ---------------
+hold                                    0.172          2.134               
+clock uncertainty                       0.050          2.184               
+clock pessimism                        -0.135          2.049               
+--------------------------------------------------------------------  ---------------
+Required                                               2.049               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.033               
+
+Slack               : 0.034ns
+Begin Point         : u_dut/smem_waddr_r_reg[4]_syn_2.clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/smem_syn_13.addra[6] (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : hold
+Process             : fast_m40c
+Budget              : 0.000ns { clk rising@0.000ns - clk rising@0.000ns }
+Data Path Delay     : 0.310ns (cell 0.062ns (19%), net 0.248ns (81%))
+Clock Skew          : 0.072ns
+Logic Level         : 1 ( ERAM=1 )
+Max Fanout          : 4
+Clock Uncertainty   : 0.100ns (sdc uncertainty: 0.000ns, default uncertainty: 0.100ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.523          0.523          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.177          0.700          pin: clk_syn_2.di
+net (fo=1)                              0.465          1.165          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.002          1.167          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.203          1.370          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkin
+SCLK                x039y059z12         0.025          1.395          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1.clkout
+net (fo=198)                            0.385          1.780          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_1_r_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/smem_waddr_r_reg[4]_syn_2.clk
+launch edge                             0.000    r     1.780               
+--------------------------------------------------------------------  ---------------
+clk2q               x041y075z4          0.062    f     1.842          pin: u_dut/smem_waddr_r_reg[4]_syn_2.oqa
+net (fo=4)                              0.248          2.090          net: u_dut/smem_waddr_r[4],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v(147)
+                                                                      pin: u_dut/smem_syn_13.addra[6]
+ERAM (reg)          x039y084            0.000    f     2.090       1       
+--------------------------------------------------------------------  ---------------
+Arrival                                                2.090               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                 x000y016            0.590          0.590          pin: clk_syn_2.sg09_di
+PAD                 x000y016            0.200          0.790          pin: clk_syn_2.di
+net (fo=1)                              0.506          1.296          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst.clkin[0]
+GCLK                x039y079z0          0.003          1.299          pin: clk_dup_1_created_gclkinst.clkout
+net (fo=4)                              0.242          1.541          net: clk_syn_7,  ../../a1_eng_top.v(10)
+                                                                      pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_l_bk1.clkin
+SCLK                x039y099z0          0.030          1.571          pin: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_l_bk1.clkout
+net (fo=279)                            0.413          1.984          net: clk_dup_1_created_gclkinst_auto_created_sclk_s_2_l_bk1_sclk_outnet,  NOFILE(0)
+                                                                      pin: u_dut/smem_syn_13.clka
+capture edge                            0.000    r     1.984               
+--------------------------------------------------------------------  ---------------
+hold                                    0.104          2.088               
+clock uncertainty                       0.100          2.188               
+clock pessimism                        -0.132          2.056               
+--------------------------------------------------------------------  ---------------
+Required                                               2.056               
+--------------------------------------------------------------------  ---------------
+Slack                                                  0.034               
+
+
+Inter clock domain timing
+--------------------------------------------------
+
+IP timing
+--------------------------------------------------

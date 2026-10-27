@@ -28,7 +28,7 @@
 *8) _s state mechine
 *********************************************************************/
 /*********ui_cfg_imx415 IIC控制模块 ***********
---版本�?1.0
+--版本�?1.0
 *********************************************************************/
 
 module ui_cfg_imx415#
@@ -38,7 +38,7 @@ parameter	 CLK_DIV  = 16'd999
 (
 input  wire             I_clk,  //系统时钟输入
 input  wire             I_rst_n,  //系统复位输入
-input  wire [1:0]       I_cam_mode, // �ֱ���ģʽ: 0=1080p, 1=4K, 2=720p
+input  wire [1:0]       I_cam_mode, // �ֱ���ģʽ: 0=1080p, 1=4K, 2=720p
 input  wire             I_ae_req,//摄像头AE控制
 input  wire	 [7:0] 		I_ae_data,
 output wire             O_cam_scl, //I2C总线，SCL时钟
@@ -54,50 +54,53 @@ localparam CAM_ID = 8'h34;		//器件地址
 
 wire 		ic_busy			; 	//I2C控制器忙信号 
 wire   		O_iic_bus_error	;
+// T07 仿真兼容修正（行为不变）：原 peer 用隐式网 iic_busy（TD 会造 1 位网），
+// ModelSim vlog 报 vlog-2730 未定义；这里显式声明，接线/DUT 不变。
+wire   		iic_busy        ;
+// T07 仿真兼容修正：reg_index 原声明在下面（使用之后），挪到使用前（仅声明位置）
+reg  [7 :0] reg_index	;   //寄存索引
 assign      O_bus_error = O_iic_bus_error;
 assign O_dbg_idx  = reg_index;
 assign O_dbg_busy = ic_busy;
 
-wire [23:0] REG_DATA_REG	; 	//寄存器数�?
-wire [7 :0] REG_SIZE_REG	;	//寄存器数�?
+wire [23:0] REG_DATA_REG	; 	//寄存器数�?
+wire [7 :0] REG_SIZE_REG	;	//寄存器数�?
 
-wire [1 :0] REG_SIZE_ST = 2'd2; //待机寄存器数�?
-wire [2 :0] REG_SIZE_AE = 3'd1; //AE寄存器数�?(only GAIN_PGC_0)
+wire [1 :0] REG_SIZE_ST = 2'd2; //待机寄存器数�?
+wire [2 :0] REG_SIZE_AE = 3'd1; //AE寄存器数�?(only GAIN_PGC_0)
 
 
-reg  		O_cfg_done_r;	//待机模式寄存器配�?完成信号
-reg  		iic_req		;	//请求操作I2C控制器信�?
+reg  		O_cfg_done_r;	//待机模式寄存器配�?完成信号
+reg  		iic_req		;	//请求操作I2C控制器信�?
 reg  [7:0] 	rst_cnt		;	//复位延时计数
-reg  [21:0] cnt			;	//待机模式寄存器延时配�?计数
+reg  [21:0] cnt			;	//待机模式寄存器延时配�?计数
 
-reg  [31:0] wr_data		;   //写数�?寄存�?
+reg  [31:0] wr_data		;   //写数�?寄存�?
 
-reg  [7 :0] reg_index	;   //寄存索引            
-                                             
-reg [23:0] 	REG_DATA;    	//寄存器数�?
-reg [7:0]  	REG_SIZE;    	//寄存器数�?
+reg [23:0] 	REG_DATA;    	//寄存器数�?
+reg [7:0]  	REG_SIZE;    	//寄存器数�?
 
-reg [23:0] 	REG_DATA_ST;  	//待机寄存器数�?
-reg [23:0] 	REG_DATA_AE;  	//AE寄存器数�?
+reg [23:0] 	REG_DATA_ST;  	//待机寄存器数�?
+reg [23:0] 	REG_DATA_AE;  	//AE寄存器数�?
 
-reg  [1 :0] TS_S = 2'd0; 	//状态机寄存�?
+reg  [1 :0] TS_S = 2'd0; 	//状态机寄存�?
 
 // --- mode switch detection ---
-reg  [1:0]  cam_mode_r;      // ��һ�ĵ� mode�����ڱ��ؼ��
-wire        mode_changed = (I_cam_mode != cam_mode_r) & rst_cnt[7]; // ģʽ�л�����
+reg  [1:0]  cam_mode_r;      // ��һ�ĵ� mode�����ڱ��ؼ��
+wire        mode_changed = (I_cam_mode != cam_mode_r) & rst_cnt[7]; // ģʽ�л�����
 
 
 
-//内部计数器产生一�?延迟复位
+//内部计数器产生一�?延迟复位
 always@(posedge I_clk or negedge I_rst_n)  
-    if(I_rst_n == 1'b0) //复位初�?�化寄存�?
+    if(I_rst_n == 1'b0) //复位初�?�化寄存�?
         rst_cnt<= 8'd0; 
     else if(rst_cnt[7] == 1'b0)
        rst_cnt <= rst_cnt + 1'b1; 
     else 
        rst_cnt <= rst_cnt; 
 
-// --- cam_mode ���� ---
+// --- cam_mode ���� ---
 always@(posedge I_clk or negedge I_rst_n)
     if(I_rst_n == 1'b0)
         cam_mode_r <= 2'd0;
@@ -105,7 +108,7 @@ always@(posedge I_clk or negedge I_rst_n)
         cam_mode_r <= I_cam_mode;
 	   
 always@(posedge I_clk or negedge I_rst_n)  begin
-    if(I_rst_n == 1'b0) //复位初�?�化寄存�?
+    if(I_rst_n == 1'b0) //复位初�?�化寄存�?
          cnt <= 0;
     else if(cnt == 1000_000)
          cnt <= 0;
@@ -139,7 +142,7 @@ always@(posedge I_clk or negedge I_rst_n)begin
 end
 
 always@(posedge I_clk ) begin 
-    if(rst_cnt[7] == 1'b0)begin //复位初�?�化寄存�?
+    if(rst_cnt[7] == 1'b0)begin //复位初�?�化寄存�?
         reg_index  <= 9'd0;
         iic_req    <= 1'b0;
         wr_data    <= 32'd0;
@@ -149,7 +152,7 @@ always@(posedge I_clk ) begin
         TS_S     <= 2'd0;    
     end
     else begin
-        // --- ģʽ�л�: ���������������� (STANDBY����д�Ĵ���������) ---
+        // --- ģʽ�л�: ���������������� (STANDBY����д�Ĵ���������) ---
         if(mode_changed) begin
             reg_index    <= 9'd0;
             O_cfg_done   <= 1'b0;
@@ -173,27 +176,27 @@ always@(posedge I_clk ) begin
 		else if(reg_index == REG_SIZE && O_cfg_done == 1'b1 && O_cfg_done_r == 1'b1) begin//如果配置完成
             O_ae_cfg_done <= 1'b1;       //设置 cfg_done标准
         end 
-        else if(I_ae_req && O_ae_cfg_done)begin  // ���� AE ����ʱ��Ӧ�����󣬷�ֹ����
+        else if(I_ae_req && O_ae_cfg_done)begin  // ���� AE ����ʱ��Ӧ�����󣬷�ֹ����
             O_ae_cfg_done <= 0;
             reg_index   <= 0;
         end
         else if((O_cfg_done&O_cfg_done_r&O_ae_cfg_done) == 1'b0)
-            TS_S <= 2'd1;           //下一�?状�?
-        1:if(!iic_busy)begin        //当总线非忙，才�?以操作I2C控制�?
-            iic_req  <= 1'b1;       //请求操作I2C控制�?
+            TS_S <= 2'd1;           //下一�?状�?
+        1:if(!iic_busy)begin        //当总线非忙，才�?以操作I2C控制�?
+            iic_req  <= 1'b1;       //请求操作I2C控制�?
 			wr_data[7  :0] <= CAM_ID;           //器件地址   
-			wr_data[15 :8] <= REG_DATA[23:16];  //寄存器地址-�?8bit    
-			wr_data[23:16] <= REG_DATA[15: 8];  //寄存器地址-�?8bit  
-            wr_data[31:24] <= REG_DATA[7 : 0];  //寄存器数�?
-            TS_S      <= 2'd2; //下一�?状�?
+			wr_data[15 :8] <= REG_DATA[23:16];  //寄存器地址-�?8bit    
+			wr_data[23:16] <= REG_DATA[15: 8];  //寄存器地址-�?8bit  
+            wr_data[31:24] <= REG_DATA[7 : 0];  //寄存器数�?
+            TS_S      <= 2'd2; //下一�?状�?
         end    
         2:if(iic_busy)begin
              iic_req  <= 1'b0;  //重置 iic_req =0
-             TS_S     <= 2'd3;  //下一�?状�?
+             TS_S     <= 2'd3;  //下一�?状�?
         end
-        3:if(!iic_busy)begin  //当总线非忙，才�?以操作I2C控制�? 
+        3:if(!iic_busy)begin  //当总线非忙，才�?以操作I2C控制�? 
 			reg_index<= reg_index + 1'b1;//寄存器索引加1
-			TS_S    <= 2'd0;//回到初�?�状�?
+			TS_S    <= 2'd0;//回到初�?�状�?
         end 
         endcase
    end
@@ -202,8 +205,8 @@ end
 //例化I2C控制模块
 ui_i2c#
 (
-	.WMEN_LEN	(4		),     //最大支持一次写�?4BYTE(包含器件地址)
-	.RMEN_LEN	(1		),     //最大支持一次�?�出1BYTE
+	.WMEN_LEN	(4		),     //最大支持一次写�?4BYTE(包含器件地址)
+	.RMEN_LEN	(1		),     //最大支持一次�?�出1BYTE
 	.CLK_DIV	(CLK_DIV) 	   //100KHZ I2C总线时钟
 )
 X_ui_i2c
@@ -212,24 +215,24 @@ X_ui_i2c
 	.I_rstn			(rst_cnt[7]		),//系统复位
 	.O_iic_scl		(O_cam_scl		),//I2C SCL总线时钟
 	.IO_iic_sda		(IO_cam_sda		),//I2C SDA数据总线
-	.I_wr_data		(wr_data		),//写数�?寄存�?
+	.I_wr_data		(wr_data		),//写数�?寄存�?
 	.I_wr_cnt		(8'd4			),//需要写的数据BYTES
-	.O_rd_data		(				),//读数�?寄存�?
-	.I_rd_cnt		(8'd0			),//需要�?�的数据BYTES
-	.I_iic_mode		(1'b0			),//读模式�?�置
-	.I_iic_req		(iic_req		),//I2C控制器�?�求
+	.O_rd_data		(				),//读数�?寄存�?
+	.I_rd_cnt		(8'd0			),//需要�?�的数据BYTES
+	.I_iic_mode		(1'b0			),//读模式�?�置
+	.I_iic_req		(iic_req		),//I2C控制器�?�求
 	.O_iic_busy		(iic_busy		),//I2C控制器忙
 	.O_iic_bus_error(O_iic_bus_error)
 );
 
 
-//例化CAM的寄存器配置�?
+//例化CAM的寄存器配置�?
 ui_imx415reg X_ui_imx415reg
 (
-	.MODE		(I_cam_mode		),  //�ֱ���ģʽ
-	.REG_SIZE	(REG_SIZE_REG	),  //寄存器数�?
+	.MODE		(I_cam_mode		),  //�ֱ���ģʽ
+	.REG_SIZE	(REG_SIZE_REG	),  //寄存器数�?
 	.REG_INDEX	(reg_index		),    //寄存索引
-	.REG_DATA	(REG_DATA_REG	)   //寄存器数�?
+	.REG_DATA	(REG_DATA_REG	)   //寄存器数�?
 );  
 
 always@(*)

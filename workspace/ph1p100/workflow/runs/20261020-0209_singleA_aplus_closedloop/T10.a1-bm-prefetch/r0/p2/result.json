@@ -1,0 +1,1006 @@
+{
+ "task_id": "T10.a1-enc-rtl",
+ "verdict": "FAIL",
+ "marker": "synthetic",
+ "decoder_independence": {
+  "third_party": "Python zlib 1.2.13",
+  "self_written": "tools/codec/a1_inflate_strict.py",
+  "shared_core": false
+ },
+ "cases": [
+  {
+   "name": "p1_p_8x4_flat_prep0_pred0",
+   "kind": "p1_positive",
+   "pass": true,
+   "reasons": [],
+   "zlib_ok": true,
+   "zlib_err": "",
+   "strict_ok": true,
+   "strict_err": "",
+   "strict_stats": {
+    "blocks": 2,
+    "stored_blocks": 0,
+    "fixed_blocks": 2,
+    "literals": 6,
+    "matches": 6,
+    "stored_bytes": 0,
+    "out_len": 40
+   },
+   "zlib_mismatch": 0,
+   "mismatch": 0,
+   "stream_len": 24,
+   "stream_sha256": "66a622d1fedb47fd98d7329890334b51f71f3afb245bceef962de914047c6084",
+   "stats": {
+    "in_bytes": 40,
+    "out_bytes": 24,
+    "first_cycle": 7,
+    "done_cycle": 1157,
+    "run_cycles": 1150,
+    "done": 1,
+    "out_last": 1,
+    "stopped_early": 0,
+    "bp": 0,
+    "gap": 0,
+    "stat_blocks": 2,
+    "stat_fixed": 2,
+    "stat_stored": 0,
+    "stat_literals": 6,
+    "stat_matches": 6,
+    "stat_cand_aborts": 0,
+    "stat_stall": 5,
+    "stat_max_match": 11,
+    "stat_max_dist": 5,
+    "timeout_hit": 0
+   },
+   "bayer_inverse_mismatch": 0,
+   "raw_sha256": "0e1f675105bb43e28c69ce678e0f2d300eb1ea2ce3925f1f4f09f97fc06e1b9a",
+   "negative": [
+    {
+     "name": "truncate_1",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "truncate_2",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "truncate_5",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "bad_adler",
+     "expect": "E_BAD_ADLER",
+     "strict_reason": "E_BAD_ADLER",
+     "zlib_ok": false,
+     "zlib_err": "error: Error -3 while decompressing data: incorrect data check",
+     "pass": true
+    },
+    {
+     "name": "trailing_byte",
+     "expect": "E_TRAILING_BYTES",
+     "strict_reason": "E_TRAILING_BYTES",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "dynamic_btype",
+     "expect": "E_BAD_BTYPE_DYNAMIC",
+     "strict_reason": "E_BAD_BTYPE_DYNAMIC",
+     "zlib_ok": false,
+     "zlib_err": "error: Error -3 while decompressing data: invalid code lengths set",
+     "pass": true
+    }
+   ]
+  },
+  {
+   "name": "p1_p_8x4_grad_prep1_pred0",
+   "kind": "p1_positive",
+   "pass": false,
+   "reasons": [
+    "non-byte token at C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\..\\T10.a1-bm-prefetch\\r0\\p2\\runs\\p1_p_8x4_grad_prep1_pred0\\out.hex:26 ('x8')"
+   ]
+  },
+  {
+   "name": "p1_p_8x4_grad_prep1_pred1",
+   "kind": "p1_positive",
+   "pass": false,
+   "reasons": [
+    "non-byte token at C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\..\\T10.a1-bm-prefetch\\r0\\p2\\runs\\p1_p_8x4_grad_prep1_pred1\\out.hex:23 ('X6')"
+   ]
+  },
+  {
+   "name": "p1_p_1920x4_repeat_prep0_pred0",
+   "kind": "p1_positive",
+   "pass": true,
+   "reasons": [],
+   "zlib_ok": true,
+   "zlib_err": "",
+   "strict_ok": true,
+   "strict_err": "",
+   "strict_stats": {
+    "blocks": 2,
+    "stored_blocks": 0,
+    "fixed_blocks": 2,
+    "literals": 76,
+    "matches": 38,
+    "stored_bytes": 0,
+    "out_len": 9600
+   },
+   "zlib_mismatch": 0,
+   "mismatch": 0,
+   "stream_len": 183,
+   "stream_sha256": "d7c9df82724162fdac9a667eef44b5328e77d5189724ce6437637ded2b0c8bda",
+   "stats": {
+    "in_bytes": 9600,
+    "out_bytes": 183,
+    "first_cycle": 7,
+    "done_cycle": 14942,
+    "run_cycles": 14935,
+    "done": 1,
+    "out_last": 1,
+    "stopped_early": 0,
+    "bp": 0,
+    "gap": 0,
+    "stat_blocks": 2,
+    "stat_fixed": 2,
+    "stat_stored": 0,
+    "stat_literals": 76,
+    "stat_matches": 38,
+    "stat_cand_aborts": 0,
+    "stat_stall": 5,
+    "stat_max_match": 258,
+    "stat_max_dist": 260,
+    "timeout_hit": 0
+   },
+   "bayer_inverse_mismatch": 0,
+   "raw_sha256": "c3e0e465408eb118bbbabc67cc583ad1fdb894f7eb2302769dd749a5948b3fe5",
+   "negative": [
+    {
+     "name": "truncate_1",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "truncate_2",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "truncate_5",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "bad_adler",
+     "expect": "E_BAD_ADLER",
+     "strict_reason": "E_BAD_ADLER",
+     "zlib_ok": false,
+     "zlib_err": "error: Error -3 while decompressing data: incorrect data check",
+     "pass": true
+    },
+    {
+     "name": "trailing_byte",
+     "expect": "E_TRAILING_BYTES",
+     "strict_reason": "E_TRAILING_BYTES",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "dynamic_btype",
+     "expect": "E_BAD_BTYPE_DYNAMIC",
+     "strict_reason": "E_BAD_BTYPE_DYNAMIC",
+     "zlib_ok": false,
+     "zlib_err": "error: Error -3 while decompressing data: invalid code lengths set",
+     "pass": true
+    }
+   ]
+  },
+  {
+   "name": "p1_p_1920x4_repeat_prep1_pred1",
+   "kind": "p1_positive",
+   "pass": false,
+   "reasons": [
+    "non-byte token at C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\..\\T10.a1-bm-prefetch\\r0\\p2\\runs\\p1_p_1920x4_repeat_prep1_pred1\\out.hex:118 ('xX')"
+   ]
+  },
+  {
+   "name": "p1_p_32x5_tail_prep1_pred1",
+   "kind": "p1_positive",
+   "pass": false,
+   "reasons": [
+    "non-byte token at C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\..\\T10.a1-bm-prefetch\\r0\\p2\\runs\\p1_p_32x5_tail_prep1_pred1\\out.hex:74 ('X9')"
+   ]
+  },
+  {
+   "name": "p2_random_4800",
+   "kind": "synthetic_random",
+   "pass": true,
+   "reasons": [],
+   "zlib_ok": true,
+   "zlib_err": "",
+   "strict_ok": true,
+   "strict_err": "",
+   "strict_stats": {
+    "blocks": 1,
+    "stored_blocks": 1,
+    "fixed_blocks": 0,
+    "literals": 0,
+    "matches": 0,
+    "stored_bytes": 4800,
+    "out_len": 4800
+   },
+   "zlib_mismatch": 0,
+   "mismatch": 0,
+   "stream_len": 4811,
+   "stream_sha256": "4fa777e1b7252513e1501365ae01a90cccc7d3e2a8244d7938ec6f0edfede697",
+   "stats": {
+    "in_bytes": 4800,
+    "out_bytes": 4811,
+    "first_cycle": 7,
+    "done_cycle": 9702,
+    "run_cycles": 9695,
+    "done": 1,
+    "out_last": 1,
+    "stopped_early": 0,
+    "bp": 0,
+    "gap": 0,
+    "stat_blocks": 1,
+    "stat_fixed": 0,
+    "stat_stored": 1,
+    "stat_literals": 74,
+    "stat_matches": 0,
+    "stat_cand_aborts": 1,
+    "stat_stall": 0,
+    "stat_max_match": 0,
+    "stat_max_dist": 0,
+    "timeout_hit": 0
+   },
+   "negative": [
+    {
+     "name": "truncate_1",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "truncate_2",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "truncate_5",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "bad_adler",
+     "expect": "E_BAD_ADLER",
+     "strict_reason": "E_BAD_ADLER",
+     "zlib_ok": false,
+     "zlib_err": "error: Error -3 while decompressing data: incorrect data check",
+     "pass": true
+    },
+    {
+     "name": "trailing_byte",
+     "expect": "E_TRAILING_BYTES",
+     "strict_reason": "E_TRAILING_BYTES",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "dynamic_btype",
+     "expect": "E_BAD_BTYPE_DYNAMIC",
+     "strict_reason": "E_BAD_BTYPE_DYNAMIC",
+     "zlib_ok": false,
+     "zlib_err": "error: Error -3 while decompressing data: invalid code lengths set",
+     "pass": true
+    },
+    {
+     "name": "bad_stored_nlen",
+     "expect": "E_BAD_STORED_NLEN",
+     "strict_reason": "E_BAD_STORED_NLEN",
+     "zlib_ok": false,
+     "zlib_err": "error: Error -3 while decompressing data: invalid stored block lengths",
+     "pass": true
+    }
+   ]
+  },
+  {
+   "name": "p2_dist2048_len258",
+   "kind": "synthetic_boundary",
+   "pass": true,
+   "reasons": [],
+   "zlib_ok": true,
+   "zlib_err": "",
+   "strict_ok": true,
+   "strict_err": "",
+   "strict_stats": {
+    "blocks": 1,
+    "stored_blocks": 0,
+    "fixed_blocks": 1,
+    "literals": 5,
+    "matches": 19,
+    "stored_bytes": 0,
+    "out_len": 4800
+   },
+   "zlib_mismatch": 0,
+   "mismatch": 0,
+   "stream_len": 62,
+   "stream_sha256": "e654c2a9cd4558d09737b43851ff9bd4e94df4238b7886ba618512f57185bf68",
+   "stats": {
+    "in_bytes": 4800,
+    "out_bytes": 62,
+    "first_cycle": 7,
+    "done_cycle": 9814,
+    "run_cycles": 9807,
+    "done": 1,
+    "out_last": 1,
+    "stopped_early": 0,
+    "bp": 0,
+    "gap": 0,
+    "stat_blocks": 1,
+    "stat_fixed": 1,
+    "stat_stored": 0,
+    "stat_literals": 5,
+    "stat_matches": 19,
+    "stat_cand_aborts": 0,
+    "stat_stall": 0,
+    "stat_max_match": 258,
+    "stat_max_dist": 2048,
+    "timeout_hit": 0
+   },
+   "negative": [
+    {
+     "name": "truncate_1",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "truncate_2",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "truncate_5",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "bad_adler",
+     "expect": "E_BAD_ADLER",
+     "strict_reason": "E_BAD_ADLER",
+     "zlib_ok": false,
+     "zlib_err": "error: Error -3 while decompressing data: incorrect data check",
+     "pass": true
+    },
+    {
+     "name": "trailing_byte",
+     "expect": "E_TRAILING_BYTES",
+     "strict_reason": "E_TRAILING_BYTES",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "dynamic_btype",
+     "expect": "E_BAD_BTYPE_DYNAMIC",
+     "strict_reason": "E_BAD_BTYPE_DYNAMIC",
+     "zlib_ok": false,
+     "zlib_err": "error: Error -3 while decompressing data: invalid code lengths set",
+     "pass": true
+    }
+   ]
+  },
+  {
+   "name": "p2_len3_dist4",
+   "kind": "synthetic_boundary",
+   "pass": true,
+   "reasons": [],
+   "zlib_ok": true,
+   "zlib_err": "",
+   "strict_ok": true,
+   "strict_err": "",
+   "strict_stats": {
+    "blocks": 1,
+    "stored_blocks": 0,
+    "fixed_blocks": 1,
+    "literals": 1203,
+    "matches": 1199,
+    "stored_bytes": 0,
+    "out_len": 4800
+   },
+   "zlib_mismatch": 0,
+   "mismatch": 0,
+   "stream_len": 3009,
+   "stream_sha256": "eada93193bec0e70065718ebd49a52ef1d0c5da536fc2a569b83a24d1a2f3596",
+   "stats": {
+    "in_bytes": 4800,
+    "out_bytes": 3009,
+    "first_cycle": 7,
+    "done_cycle": 21630,
+    "run_cycles": 21623,
+    "done": 1,
+    "out_last": 1,
+    "stopped_early": 0,
+    "bp": 0,
+    "gap": 0,
+    "stat_blocks": 1,
+    "stat_fixed": 1,
+    "stat_stored": 0,
+    "stat_literals": 1203,
+    "stat_matches": 1199,
+    "stat_cand_aborts": 0,
+    "stat_stall": 0,
+    "stat_max_match": 3,
+    "stat_max_dist": 4,
+    "timeout_hit": 0
+   },
+   "negative": [
+    {
+     "name": "truncate_1",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "truncate_2",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "truncate_5",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "bad_adler",
+     "expect": "E_BAD_ADLER",
+     "strict_reason": "E_BAD_ADLER",
+     "zlib_ok": false,
+     "zlib_err": "error: Error -3 while decompressing data: incorrect data check",
+     "pass": true
+    },
+    {
+     "name": "trailing_byte",
+     "expect": "E_TRAILING_BYTES",
+     "strict_reason": "E_TRAILING_BYTES",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "dynamic_btype",
+     "expect": "E_BAD_BTYPE_DYNAMIC",
+     "strict_reason": "E_BAD_BTYPE_DYNAMIC",
+     "zlib_ok": false,
+     "zlib_err": "error: Error -3 while decompressing data: invalid code lengths set",
+     "pass": true
+    }
+   ]
+  },
+  {
+   "name": "p2_frame_8x5_tail",
+   "kind": "synthetic_tail",
+   "pass": false,
+   "reasons": [
+    "non-byte token at C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-eng-freeze\\..\\T10.a1-bm-prefetch\\r0\\p2\\runs\\p2_frame_8x5_tail\\out.hex:28 ('xx')"
+   ]
+  },
+  {
+   "name": "p2_frame_16x8",
+   "kind": "synthetic_multiblock",
+   "pass": true,
+   "reasons": [],
+   "zlib_ok": true,
+   "zlib_err": "",
+   "strict_ok": true,
+   "strict_err": "",
+   "strict_stats": {
+    "blocks": 4,
+    "stored_blocks": 0,
+    "fixed_blocks": 4,
+    "literals": 80,
+    "matches": 4,
+    "stored_bytes": 0,
+    "out_len": 160
+   },
+   "zlib_mismatch": 0,
+   "mismatch": 0,
+   "stream_len": 100,
+   "stream_sha256": "9b570694dc75e9b4962f2936aa86a72f2914ca32fd20a39a34c806d3bd06795f",
+   "stats": {
+    "in_bytes": 160,
+    "out_bytes": 100,
+    "first_cycle": 7,
+    "done_cycle": 1438,
+    "run_cycles": 1431,
+    "done": 1,
+    "out_last": 1,
+    "stopped_early": 0,
+    "bp": 0,
+    "gap": 0,
+    "stat_blocks": 4,
+    "stat_fixed": 4,
+    "stat_stored": 0,
+    "stat_literals": 80,
+    "stat_matches": 4,
+    "stat_cand_aborts": 0,
+    "stat_stall": 1102,
+    "stat_max_match": 20,
+    "stat_max_dist": 20,
+    "timeout_hit": 0
+   },
+   "negative": [
+    {
+     "name": "truncate_1",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "truncate_2",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "truncate_5",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "bad_adler",
+     "expect": "E_BAD_ADLER",
+     "strict_reason": "E_BAD_ADLER",
+     "zlib_ok": false,
+     "zlib_err": "error: Error -3 while decompressing data: incorrect data check",
+     "pass": true
+    },
+    {
+     "name": "trailing_byte",
+     "expect": "E_TRAILING_BYTES",
+     "strict_reason": "E_TRAILING_BYTES",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "dynamic_btype",
+     "expect": "E_BAD_BTYPE_DYNAMIC",
+     "strict_reason": "E_BAD_BTYPE_DYNAMIC",
+     "zlib_ok": false,
+     "zlib_err": "error: Error -3 while decompressing data: invalid code lengths set",
+     "pass": true
+    }
+   ]
+  },
+  {
+   "name": "p2_perf_1920x64_comp",
+   "kind": "synthetic_perf",
+   "pass": false,
+   "reasons": [
+    "decoder/mismatch failure",
+    "expected real matches missing"
+   ],
+   "zlib_ok": false,
+   "zlib_err": "error: Error -3 while decompressing data: incorrect data check",
+   "strict_ok": false,
+   "strict_err": "E_BAD_ADLER",
+   "strict_stats": {},
+   "zlib_mismatch": 0,
+   "mismatch": 1,
+   "stream_len": 50278,
+   "stream_sha256": "9a8ba6bf9a6807f8d106a08d84daf63e8c120d6d9722b675259815030d70e44f",
+   "stats": {
+    "in_bytes": 153600,
+    "out_bytes": 50278,
+    "first_cycle": 7,
+    "done_cycle": 355212,
+    "run_cycles": 355205,
+    "done": 1,
+    "out_last": 1,
+    "stopped_early": 0,
+    "bp": 0,
+    "gap": 0,
+    "stat_blocks": 32,
+    "stat_fixed": 32,
+    "stat_stored": 0,
+    "stat_literals": 19200,
+    "stat_matches": 19200,
+    "stat_cand_aborts": 0,
+    "stat_stall": 184475,
+    "stat_max_match": 7,
+    "stat_max_dist": 351,
+    "timeout_hit": 0
+   },
+   "negative": [
+    {
+     "name": "truncate_1",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "truncate_2",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "truncate_5",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "bad_adler",
+     "expect": "E_BAD_ADLER",
+     "strict_reason": "E_BAD_ADLER",
+     "zlib_ok": false,
+     "zlib_err": "error: Error -3 while decompressing data: incorrect data check",
+     "pass": true
+    },
+    {
+     "name": "trailing_byte",
+     "expect": "E_TRAILING_BYTES",
+     "strict_reason": "E_TRAILING_BYTES",
+     "zlib_ok": false,
+     "zlib_err": "error: Error -3 while decompressing data: incorrect data check",
+     "pass": true
+    },
+    {
+     "name": "dynamic_btype",
+     "expect": "E_BAD_BTYPE_DYNAMIC",
+     "strict_reason": "E_BAD_BTYPE_DYNAMIC",
+     "zlib_ok": false,
+     "zlib_err": "error: Error -3 while decompressing data: invalid code lengths set",
+     "pass": true
+    }
+   ]
+  },
+  {
+   "name": "p2_perf_1920x64_rand",
+   "kind": "synthetic_perf",
+   "pass": true,
+   "reasons": [],
+   "zlib_ok": true,
+   "zlib_err": "",
+   "strict_ok": true,
+   "strict_err": "",
+   "strict_stats": {
+    "blocks": 32,
+    "stored_blocks": 32,
+    "fixed_blocks": 0,
+    "literals": 0,
+    "matches": 0,
+    "stored_bytes": 153600,
+    "out_len": 153600
+   },
+   "zlib_mismatch": 0,
+   "mismatch": 0,
+   "stream_len": 153766,
+   "stream_sha256": "54f262f2a600a3e2f12129f2937a390737d1ec8018d8f0236979e604760496dd",
+   "stats": {
+    "in_bytes": 153600,
+    "out_bytes": 153766,
+    "first_cycle": 7,
+    "done_cycle": 161486,
+    "run_cycles": 161479,
+    "done": 1,
+    "out_last": 1,
+    "stopped_early": 0,
+    "bp": 0,
+    "gap": 0,
+    "stat_blocks": 32,
+    "stat_fixed": 0,
+    "stat_stored": 32,
+    "stat_literals": 2655,
+    "stat_matches": 0,
+    "stat_cand_aborts": 32,
+    "stat_stall": 2872,
+    "stat_max_match": 0,
+    "stat_max_dist": 0,
+    "timeout_hit": 0
+   },
+   "negative": [
+    {
+     "name": "truncate_1",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "truncate_2",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "truncate_5",
+     "expect": "E_TRUNCATED",
+     "strict_reason": "E_TRUNCATED",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "bad_adler",
+     "expect": "E_BAD_ADLER",
+     "strict_reason": "E_BAD_ADLER",
+     "zlib_ok": false,
+     "zlib_err": "error: Error -3 while decompressing data: incorrect data check",
+     "pass": true
+    },
+    {
+     "name": "trailing_byte",
+     "expect": "E_TRAILING_BYTES",
+     "strict_reason": "E_TRAILING_BYTES",
+     "zlib_ok": false,
+     "zlib_err": "",
+     "pass": true
+    },
+    {
+     "name": "dynamic_btype",
+     "expect": "E_BAD_BTYPE_DYNAMIC",
+     "strict_reason": "E_BAD_BTYPE_DYNAMIC",
+     "zlib_ok": false,
+     "zlib_err": "error: Error -3 while decompressing data: invalid code lengths set",
+     "pass": true
+    },
+    {
+     "name": "bad_stored_nlen",
+     "expect": "E_BAD_STORED_NLEN",
+     "strict_reason": "E_BAD_STORED_NLEN",
+     "zlib_ok": false,
+     "zlib_err": "error: Error -3 while decompressing data: invalid stored block lengths",
+     "pass": true
+    }
+   ]
+  }
+ ],
+ "backpressure_gap": [
+  {
+   "name": "p2_frame_16x8_bp",
+   "pass": true,
+   "reasons": [],
+   "zlib_ok": true,
+   "zlib_err": "",
+   "strict_ok": true,
+   "strict_err": "",
+   "strict_stats": {
+    "blocks": 4,
+    "stored_blocks": 0,
+    "fixed_blocks": 4,
+    "literals": 80,
+    "matches": 4,
+    "stored_bytes": 0,
+    "out_len": 160
+   },
+   "zlib_mismatch": 0,
+   "mismatch": 0,
+   "stats": {
+    "in_bytes": 160,
+    "out_bytes": 100,
+    "first_cycle": 7,
+    "done_cycle": 1439,
+    "run_cycles": 1432,
+    "done": 1,
+    "out_last": 1,
+    "stopped_early": 0,
+    "bp": 1,
+    "gap": 0,
+    "stat_blocks": 4,
+    "stat_fixed": 4,
+    "stat_stored": 0,
+    "stat_literals": 80,
+    "stat_matches": 4,
+    "stat_cand_aborts": 0,
+    "stat_stall": 1102,
+    "stat_max_match": 20,
+    "stat_max_dist": 20,
+    "timeout_hit": 0
+   }
+  },
+  {
+   "name": "p2_frame_16x8_gapbp",
+   "pass": true,
+   "reasons": [],
+   "zlib_ok": true,
+   "zlib_err": "",
+   "strict_ok": true,
+   "strict_err": "",
+   "strict_stats": {
+    "blocks": 4,
+    "stored_blocks": 0,
+    "fixed_blocks": 4,
+    "literals": 80,
+    "matches": 4,
+    "stored_bytes": 0,
+    "out_len": 160
+   },
+   "zlib_mismatch": 0,
+   "mismatch": 0,
+   "stats": {
+    "in_bytes": 160,
+    "out_bytes": 100,
+    "first_cycle": 7,
+    "done_cycle": 1438,
+    "run_cycles": 1431,
+    "done": 1,
+    "out_last": 1,
+    "stopped_early": 0,
+    "bp": 1,
+    "gap": 1,
+    "stat_blocks": 4,
+    "stat_fixed": 4,
+    "stat_stored": 0,
+    "stat_literals": 80,
+    "stat_matches": 4,
+    "stat_cand_aborts": 0,
+    "stat_stall": 1085,
+    "stat_max_match": 20,
+    "stat_max_dist": 20,
+    "timeout_hit": 0
+   }
+  }
+ ],
+ "abort_reset": [
+  {
+   "name": "abort_midblock",
+   "pass": true,
+   "reasons": [],
+   "bytes": 2,
+   "zlib_ok": false,
+   "zlib_err": "",
+   "strict_reason": "E_TRUNCATED",
+   "stats": {
+    "in_bytes": 50,
+    "out_bytes": 2,
+    "first_cycle": 7,
+    "done_cycle": 0,
+    "run_cycles": 0,
+    "done": 0,
+    "out_last": 0,
+    "stopped_early": 1,
+    "bp": 0,
+    "gap": 0,
+    "stat_blocks": 0,
+    "stat_fixed": 0,
+    "stat_stored": 0,
+    "stat_literals": 0,
+    "stat_matches": 0,
+    "stat_cand_aborts": 0,
+    "stat_stall": 5,
+    "stat_max_match": 0,
+    "stat_max_dist": 0,
+    "timeout_hit": 0
+   }
+  },
+  {
+   "name": "reset_midblock",
+   "pass": true,
+   "reasons": [],
+   "bytes": 2,
+   "zlib_ok": false,
+   "zlib_err": "",
+   "strict_reason": "E_TRUNCATED",
+   "stats": {
+    "in_bytes": 50,
+    "out_bytes": 2,
+    "first_cycle": 7,
+    "done_cycle": 0,
+    "run_cycles": 0,
+    "done": 0,
+    "out_last": 0,
+    "stopped_early": 1,
+    "bp": 0,
+    "gap": 0,
+    "stat_blocks": 0,
+    "stat_fixed": 0,
+    "stat_stored": 0,
+    "stat_literals": 0,
+    "stat_matches": 0,
+    "stat_cand_aborts": 0,
+    "stat_stall": 0,
+    "stat_max_match": 0,
+    "stat_max_dist": 0,
+    "timeout_hit": 0
+   }
+  }
+ ],
+ "throughput": [
+  {
+   "name": "p2_perf_1920x64_comp",
+   "in_bytes": 153600,
+   "run_cycles": 355205,
+   "cycles_per_byte": 2.3125325520833333,
+   "mb_per_s_at_187p5MHz": 81.07993975310032,
+   "gate_77p76": true,
+   "margin_target_97p2": false,
+   "frame_1080p_ms_equiv": 31.96845
+  },
+  {
+   "name": "p2_perf_1920x64_rand",
+   "in_bytes": 153600,
+   "run_cycles": 161479,
+   "cycles_per_byte": 1.0512955729166666,
+   "mb_per_s_at_187p5MHz": 178.35136457372164,
+   "gate_77p76": true,
+   "margin_target_97p2": true,
+   "frame_1080p_ms_equiv": 14.533110000000002
+  }
+ ],
+ "token_totals_decoded": {
+  "fixed_blocks": 10,
+  "stored_blocks": 33,
+  "literals": 1370,
+  "matches": 1266
+ },
+ "clock_hz": 187500000
+}

@@ -1,0 +1,163 @@
+{
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "runtime": "opencode",
+  "project_root": "D:/fpga/ph1p100",
+  "output_dir": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b17-paxi-native",
+  "task_ids": ["T10.b17-paxi-native"],
+  "batch_size": 1,
+  "status": "ready",
+  "needs_user_input": false,
+  "dispatch_path": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b17-paxi-native/dispatch.json",
+  "user_summary_path": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b17-paxi-native/user-summary.md",
+  "handoff_path": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b17-paxi-native/handoff.md",
+  "final_summary_path": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b17-paxi-native/final-summary.md",
+  "parent_task": "T10 (stays blocked; this package does not close T10)",
+  "primary_goal": "Return to the native PAXI boundary contract on top of b15: (1) convert AW/AR word index to native address {word_index[23:0],3'b000} only at the bridge output, with range check; (2) drive paxi_wstrb=0 (native full-word write) and make the simulation model actually enforce the mask; (3) default single-command acceptance (AW/W and AR mutually exclusive; keep ALLOW_CONCURRENT for later comparison); (4) update the model to check low3/out-of-range/mask/concurrency, run an 8-16 distinct-word write-stop-read test first, then full frame / two frames / drop-R and the P1 three goldens; (5) expand the status packet to v6 with last_issued_ar_addr, timeout-latched AR address+low3, AW/W/AR same-cycle flags and in-flight state; (6) rebuild with 0 routed violations and WNS per b13 rules, 1 bitgen + 1 CWC; (7) download once then open COM8 for 150 s and require timeout/retry/giveup deltas zero, enc/exported deltas >0 and at least one frame with four CRCs + zlib; if R is still missing, preserve v6 failure-AR evidence and stop.",
+  "input_paths": [
+    "D:/fpga/ph1p100/docs/OpenCode_b15根因审计与定位建议_2026-10-26.md",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b17-paxi-native/dev-plan.md",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b17-paxi-native/fpga-design-guide.md",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b17-paxi-native/handoff.md",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b15-ddr-pace/result-r0.md",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b15-ddr-pace/handoff.md",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b15-ddr-pace/r0/changed-src",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b15-ddr-pace/r0/td",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b15-ddr-pace/r0/sim",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b15-ddr-pace/r0/board",
+    "D:/fpga/ph1p100/fpga/csi2/src/mem/ddr_frame_store.v"
+  ],
+  "write_scope": [
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b17-paxi-native/**",
+    "%TEMP%/opencode/T10.b17-paxi-native/** (exclusive ModelSim work/INI/logs only)"
+  ],
+  "protected": [
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b15-ddr-pace/**",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b13-ddr-retry/**",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b14-cam-b/**",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b11-aplus-read/**",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b12-r1-last/**",
+    "D:/fpga/ph1p100/workflow/tasks.json",
+    "D:/fpga/ph1p100/fpga/csi2/src/**",
+    "D:/fpga/ph1p100/upstream/**",
+    "D:/fpga/ph1p100/work/**",
+    "D:/TD/work/csi2/**",
+    "D:/fpga_work/**",
+    "all other run dirs/manifests/evidence, all bit/CWC/BID/DB outside this package, TD drive mappings, Flash/program_spi, board/COM/JTAG/RK"
+  ],
+  "allowed_src_edits": {
+    "must_copy_to_run_first": true,
+    "functional": [
+      "p2_ddr_bridge.v -- paxi_awaddr={wf_rdata[279:256],3'b000}; paxi_araddr={af_rdata[23:0],3'b000}; paxi_wstrb=32'h0000_0000; ALLOW_CONCURRENT parameter default 0 with AW/W vs AR mutual exclusion; preserve b15 ar_busy/rlast, rready=1, rf_path_empty, timeout/retry/purge semantics; add v6 diagnostics and 512-bit dbg_a1",
+      "camera_a1_uart_top.v -- i_dbg_bridge 256->512; sts_ext_bus 512->768 with v6 fields #60..#67 appended; v5 fields #44..#59 unchanged",
+      "p2_a1_board_top.v -- dbg_bridge 256->512 only",
+      "a1_uart_export.v -- v6 packet 273 B / 67 fields / VER=6 / LEN low byte 0x11 / XOR 0..271; v5 fields #1..#59 unchanged; sidx/sbyte_i 9 bit; extsnap 768; allsnap 2144"
+    ],
+    "mechanical": [
+      "01_build.tcl / a1_board.al -- changed-src paths only; flow/params/seed unchanged",
+      "new p2_paxi_model_b17.v, tb_b17_paxi_native.sv, tb_b17_chain.sv, run_b17.py",
+      "new parse_status_v6.py (accepts v5 and v6), check_b17_board.py, dl_b17.tcl, run_board_b17.ps1, capture_com8.py copies (bit path/COM/duration only)",
+      "manifest/result/lessons/artifact hashes"
+    ],
+    "unchanged_byte_identical": [
+      "f9p_camera_display_core.v (C9DE0D9C176E830DF35833EFF7E91B811D954FB5480BC13E1FB122EF23305089)",
+      "a1_ddr_slot_store.v (6C619CF90E54385D667F1EC0F63CC87EE58AADD3C42143330AC4945EB47DEFE9)",
+      "a1_ddr_arb2.v (B84019BDA057AFE82FF558E0848D6171FA12732BD8CDB7C6239CB71B3F81D6BA)",
+      "a1_frame_top.v (0064607ACEB20AE3EF14133F0AAF5F8B3F489943011A66A1DDC005350DBA7109)",
+      "a1_deflate_core.v (A91C2ED82FBEF654C4E065B64AE1CC268CA232FEAA26FDD313C58D8740F81B3E)",
+      "a1_raw_crop.v (33A6FEE77FD1AA67A31CACF26DD5530E5E2EA474EE655CBD5F1D98D887C5D72D)",
+      "cam_diag_mailbox.v (352AF7C85094EA99B575E99DA952AF8D33871352140E4C6EFDDFF9E6C2407278; only the instance W parameter changes in p2_ddr_bridge.v)",
+      "p2_board.sdc, a1_small_top.sdc, board_p2.adc (SDC/ADC diff must be empty)",
+      "frame header/CRC/compressed bytes/crop geometry/ROI/four-slot DDR layout/UART_DIV/HB_DIV/pins/clock frequencies",
+      "DDR IP/PAXI protocol, A+ core, exporter frame path, vendor/upstream"
+    ],
+    "forbidden": [
+      "any functional RTL change outside the four files listed above",
+      "any SDC/pin/clock/DDR IP/PAXI protocol change or new clock domain",
+      "status packet v6 field removal, reorder, or change to 44 B frame header/CRC/zlib path",
+      "using ALLOW_CONCURRENT=1 in the bitgen or board candidate",
+      "second bitstream, second download, Flash/program_spi, PCIe/RK, dual-stream/G4",
+      "false path/multicycle/seed change/downclock/new ERAM instance",
+      "broadening simulation injection to hide low3/out-of-range/mask/concurrency errors",
+      "batch or recursive delete"
+    ]
+  },
+  "next_action": {
+    "operation": "spawn_agent",
+    "role": "fpga-dev",
+    "task_id": "T10.b17-paxi-native",
+    "prompt_path": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b17-paxi-native/dev-plan.md",
+    "read_first": [
+      "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b17-paxi-native/dev-plan.md",
+      "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b17-paxi-native/fpga-design-guide.md",
+      "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b17-paxi-native/handoff.md",
+      "D:/fpga/ph1p100/docs/OpenCode_b15根因审计与定位建议_2026-10-26.md",
+      "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b15-ddr-pace/r0/changed-src/p2_ddr_bridge.v",
+      "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b15-ddr-pace/result-r0.md"
+    ],
+    "input_status": "Baseline is the b15 r0 source set (11 files). Copy all 11 into r0/changed-src and record SHA256 before editing; 7 must stay byte-identical, 4 are allowed functional/diagnostic edits. b15's read strictness (ar_busy to rlast, rready=1, rf_path_empty, timeout/retry/purge) is retained; this package adds native address conversion, mask=0, single-command arbitration and v6 diagnostics."
+  },
+  "required_outputs": [
+    "r0/changed-src/** (11 files: 4 edited + 7 byte-identical) + r0/rtl-diff-r0.patch",
+    "r0/diag/paxi-native-contract.md (address unit, mask, command acceptance, range check; exact source/port evidence)",
+    "r0/diag/v6-fields.md (273 B/67 fields, bit packing, timeout latch semantics)",
+    "r0/sim: 16-word write-stop-read 16/16; S1 full frame; S2 two frames; S3 drop-1-R recovery; P1 three goldens byte-identical; v6 structure; negative controls (old b15 bridge must fail; all-ones mask must not write; low3/OOB/concurrency flagged); logs + JSON + model counters",
+    "r0/td (synth <=3, route <=2, 1 bitgen + 1 CWC, 0 routed violations, WNS per dev-plan section 6, ERAM+CWC <=300, bit/CWC/BID/compiled hashes frozen, SDC diff empty)",
+    "r0/board (FTDI preflight; if present: 1 SRAM download FIRST, then COM8 150 s, v6 >=120 packets, bad_xor=0, timeout/retry/giveup deltas 0, enc/exported deltas >0, >=1 frame four CRCs + zlib, v6 address low3=0, same-cycle counts=0; if R still missing, preserve v6 failure-AR evidence and stop)",
+    "CANDIDATE-MANIFEST-b17-paxi-native-r0.json, r0/artifact-hashes.txt, result-r0.md, lessons-r0.md"
+  ],
+  "gates": {
+    "address_unit": "AW/AR native address is exactly {word_index[23:0],3'b000}; internal slots remain 256-bit word units; 16-word test observes 0,8,...,120; every PAXI address low3=0; max valid word 424313; range check sticky + sim fatal.",
+    "mask": "paxi_wstrb is 32'h0000_0000 in the candidate; model bit=0 enables a byte, bit=1 preserves it; all-zero writes the full word, all-ones writes nothing; clean runs n_mask_nonzero=0; all-ones negative control proves no write.",
+    "command_acceptance": "ALLOW_CONCURRENT=0 in bitgen/board: no same-cycle AW+AR or W+AR handshake; write-start/AR arbitration is write-priority (`paxi_arvalid = rd_req && !wr_start_req`); model n_same_hs=0; ALLOW_CONCURRENT=1 is comparison-only and must not be used for the board candidate.",
+    "small_pattern": "16 distinct 256-bit words written to internal indices 0..15, stop >=32 clk_ddr cycles, read back 16/16 byte-identical; model n_bad_low3=n_oob=n_mask_nonzero=n_same_req=n_same_hs=0; n_write_commit=16; last_issued_ar_addr=120.",
+    "frame_sim": "S1: pix_beats 2,117,472 / line_rises 2,192 / frame_rises 1 / crop_groups 518,400 / raw_len 2,592,000 / enc=1 / exported=1 / four CRCs + strict zlib / no half frame / timeout=retry=giveup=0 / ar=r=rlast=210,685 / model counters 0. S2: exported=2 / ar=r=rlast=421,370 / both frames four CRCs + zlib.",
+    "drop_recovery": "S3: exactly one timeout then one successful retry then exported=1 with golden CRC; giveup=0; late R only stale, never queued; dup=0; dropped AR native address low3=0.",
+    "p1": "micro8x2/mid64x8/full_grad compressed bytes SHA256 identical to b15 caps (FA513A2B.../EE61E620.../B992A8AD...); four CRCs; zlib_ok; dup=0; no half frame; vlog 0/0.",
+    "v6": "273 B, 67 fields, VER=6, LEN low byte 0x11, XOR over 0..271; v5 241 B/59 fixture still parses; bad XOR rejected; fields 60..67 reflect bridge diagnostics and are all zero/low3=0 in clean runs.",
+    "negative_controls": "Frozen b15 bridge against b17 model must fail (address and mask violations); all-ones mask must not modify memory; low3/OOB/concurrency must be counted and must not hang; these are mandatory evidence, not optional.",
+    "synth": "0 violation endpoints, SWNS >= 0, <=3 runs.",
+    "routed": "0 violations, hold >= 0, period positive, ERAM+CWC <=300; WNS target >= +0.05; if 0 violations and WNS in +0.003..+0.05, accept diagnostic candidate with timing_caveat=thin_margin_+0.00x; WNS < +0.003 or any violation stops the build.",
+    "bitgen_cwc": "1 each; bit/CWC/BID/compiled hashes frozen and self-consistent.",
+    "board": "FTDI preflight; absent => board=blocked, 0 download, 0 COM8. Present => exactly 1 SRAM download FIRST, then COM8 150 s: >=120 valid v6 packets, bad_xor=0, len=273/ver=6/fields=67, sel=0/bit20=0, cap_frames and raw_pub deltas >0, crop_short=crop_geom_err=0, timeout=retry=giveup deltas all 0, enc_frames/exported deltas >0, >=1 frame four CRCs + zlib, no half frame, stale_guard delta 0, ar-rlast<=1, ar-r<=1, all last_issued_ar_addr low3=0, same_aw_ar_cnt=same_w_ar_cnt=0, diag_flags bits1..5=0."
+  },
+  "failure_branch": {
+    "board_still_missing_R": "Stop; preserve last_issued_ar_addr/last_issued_ar_low3 first/last, timeout_ar_addr/timeout_ar_low3/timeout_ar_valid, same_aw_ar_cnt/same_w_ar_cnt/inflight_state/diag_flags, ar/r/rlast/stale_guard/stale_r deltas, failed frame/attempt; mark PAXI_NATIVE_STILL_UNRESOLVED; no second download or second bitstream.",
+    "board_blocked": "FTDI 0403:6042 absent => board=blocked, 0 downloads, 0 COM8; offline + build results remain valid; not a FAIL and no user question.",
+    "read_ok_export_stuck": "timeout=0 but enc=0 => read path passed; hand A+ evidence to planner; this package does not modify A+."
+  },
+  "budget": {
+    "dev_minutes": 150,
+    "dev_calls": 70,
+    "td_sessions": 3,
+    "synth_runs": 3,
+    "route_runs": 2,
+    "bitgen": 1,
+    "cwc": 1,
+    "downloads_same_bit": 1,
+    "flash": 0,
+    "tester_minutes": 45,
+    "tester_calls": 30,
+    "planner_minutes": 15,
+    "planner_calls": 30
+  },
+  "stop_conditions": [
+    "the fix requires editing any functional RTL outside p2_ddr_bridge.v / camera_a1_uart_top.v / p2_a1_board_top.v / a1_uart_export.v",
+    "the fix requires an SDC/pin/clock/DDR IP/PAXI protocol/frame format/UART frame change, or a new clock domain",
+    "the 16-word test fails after one evidence-based correction",
+    "any P1 golden not byte-identical, or any frame header/CRC/compressed byte change",
+    "v6 packet breaks 273 B / 67 fields / order / in-frame boundary",
+    "S1/S2/S3 cannot pass, or the mandatory negative controls do not catch the b15 contract errors",
+    "ERAM+CWC > 300, synth negative after 3 runs, route negative/any violation or WNS < +0.003 after 2 runs",
+    "a second bitstream or second download is needed",
+    "board still loses one R per frame with exported=0: stop, preserve v6 AR evidence, no second download",
+    "FTDI absent: board=blocked with 0 downloads (offline+build still valid)",
+    "any batch/recursive delete request: stop and ask the user"
+  ],
+  "planning_files": [
+    {"path": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b17-paxi-native/request.md", "sha256": "D3E0BA7B150E68D9C592D0A7852C87098945A4F2217E07B3C51960AC8E1EA1AB"},
+    {"path": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b17-paxi-native/input-index.md", "sha256": "7063BAA9A1166C70AACDF72D024CB2A1DDBC29E118FDFA825A7703027AE53CB8"},
+    {"path": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b17-paxi-native/fpga-design-guide.md", "sha256": "000073351C2C37B2B39A31EA0BB841F761994E350F0B64E98937EB002AF5D4A9"},
+    {"path": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b17-paxi-native/dev-plan.md", "sha256": "005835C9468428EABA5074F3BBF98AFED29A696E99AA45125258A0456AAC797C"}
+  ],
+  "notes": "Parent T10 remains blocked; this package does not close T10. The candidate keeps the b15 read strictness and fixes the native PAXI boundary only: address x8, mask=0, single-command acceptance. ALLOW_CONCURRENT=1 is comparison-only. v6 expands the status packet to 273 B/67 fields; frame format and all 7 other RTL files stay frozen. Path contract: Y:=project root, T:=r0/td, P:=project root, W:=r0/sim, X: never maps to project root. No Flash, no PCIe/RK, no dual-A+/G4, no batch delete. T10.b17 is the only formal package; the tester is a new independent integrated tester after the candidate is frozen."
+}

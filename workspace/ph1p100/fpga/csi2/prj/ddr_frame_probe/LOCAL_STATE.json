@@ -1,0 +1,210 @@
+{
+  "date": "2026-10-11",
+  "scope": "Standalone same-clock-domain triple-frame DDR backend and full-frame readback probe; not camera/DDR/HDMI integration",
+  "bit": {
+    "path": "D:\\TD\\work\\csi2\\prj\\ddr_frame_probe_20261011_194120\\ddr_frame_probe.bit",
+    "bytes": 5224030,
+    "sha256": "4ec67e4993e27ebc54261d21946c2e1ff953ef21d304de08da4c64e795e4a4e0",
+    "downloaded": true,
+    "hardware_verified": false,
+    "verification_level": "User-reported LED-level acceptance; sustained counters not captured."
+  },
+  "design": {
+    "frame_width": 960,
+    "frame_height": 540,
+    "bits_per_pixel": 8,
+    "words_per_frame": 16200,
+    "word_bits": 256,
+    "slots": 3,
+    "paxi_stride": 8,
+    "paxi_slot_bases": [
+      0,
+      129600,
+      259200
+    ],
+    "user_clock_mhz": 200,
+    "ddr_clock_mhz": 800,
+    "design_rate_mtps": 1600,
+    "rate_measured": false
+  },
+  "build": {
+    "tool": "TD Release_2026.1_SP2",
+    "setup_wns_ns": 0.006,
+    "hold_wns_ns": 0.02,
+    "setup_tns_ns": 0,
+    "hold_tns_ns": 0,
+    "period_wns_ns": 2.2,
+    "candidate_coverage_percent": 93.4,
+    "route_coverage_percent": 95.78,
+    "coverage_discrepancy": "After explicit DB import, only timestamp and coverage header differ; complete timing body identical. Cause unresolved. Not complete constraint coverage.",
+    "abnormal_targets_empty": true,
+    "slice": 11219,
+    "lut": 8913,
+    "reg": 12681,
+    "eram": 35,
+    "pll": 2,
+    "parent_open_run_failed": true,
+    "recovery": "Verified all 96 input hashes and canonical RTL; imported exported routed DB; reran final STA and generated bit with timing gate.",
+    "database_sha256": "64b4692b7704d3138739b3b4dcb7893d602af9bb0dcd4be80a09a6b95a9e89c2",
+    "input_files_verified": 96,
+    "exceptions_review": "Preserved vendor MCU/user asynchronous clock groups and generated debug handshake hold exceptions; no added frame-backend false path."
+  },
+  "source_hashes": {
+    "ddr_frame_store.v": "c600420683a607a486661a678655a6fd23f13f29e1ae652fe1af8befe23a879a",
+    "ddr_frame_probe.v": "0bf95205a221945a02104aba4731c7fe80197fc5fca6e03341b7aa733750c8c3",
+    "ddrmc_frame_top.v": "a8c8907f4b403b81428d14f8ff3fa29f3817d7b16457d0dcf2eac5e60730ad43"
+  },
+  "reports": {
+    "timing": {
+      "source": "D:\\TD\\work\\csi2\\prj\\ddr_frame_probe_20261011_194120\\candidate_timing.rpt",
+      "archive": "docs/evidence/ddr_frame_20261011_timing.rpt",
+      "sha256": "e793a2aefd3c792a209b2619565f7f874ba71780c8e584732c4f1ffef48ccfeb",
+      "bytes": 5130835
+    },
+    "ignored": {
+      "source": "D:\\TD\\work\\csi2\\prj\\ddr_frame_probe_20261011_194120\\candidate_ignored.rpt",
+      "archive": "docs/evidence/ddr_frame_20261011_ignored.rpt",
+      "sha256": "a1c1da12f2dfc22a8f90ab43062a46a962a9781ecb1173d5af2cbfe8d1d4b81f",
+      "bytes": 537172
+    },
+    "abnormal": {
+      "source": "D:\\TD\\work\\csi2\\prj\\ddr_frame_probe_20261011_194120\\candidate_abnormal.rpt",
+      "archive": "docs/evidence/ddr_frame_20261011_abnormal.rpt",
+      "sha256": "a4e5f4685518c9a537bd1f7fd5894808add6a2c61d0f75f02592300b77dc71da",
+      "bytes": 122
+    },
+    "area": {
+      "source": "D:\\TD\\work\\csi2\\prj\\ddr_frame_probe_20261011_194120\\ddr_frame_probe_Runs\\phy_1\\ddr_frame_probe_phy.area",
+      "archive": "docs/evidence/ddr_frame_20261011_area.rpt",
+      "sha256": "b98011512ded705688f3a78c2d465d2136101436b6b1d2ae58dfb5195ea3b80d",
+      "bytes": 47663
+    },
+    "inputs": {
+      "source": "D:\\TD\\work\\csi2\\prj\\ddr_frame_probe_20261011_194120\\input_manifest.json",
+      "archive": "docs/evidence/ddr_frame_20261011_inputs.json",
+      "sha256": "a3adf4a39eee855f63bbae245c2c670f7814f328dc67b0829df08e1fca5d3ca5",
+      "bytes": 11663
+    }
+  },
+  "simulation": {
+    "store": {
+      "path": "D:\\TD\\work\\csi2\\_validation\\ddr_frame\\20261011_193124_130527_caa9772c\\regression.log",
+      "sha256": "4aed16da5ea0b5e42d52888bb360931a0cd12de3e9090776c106475c991a4902",
+      "expected_marker": "DDR_FRAME_PASS",
+      "result_lines": [
+        "Errors: 0, Warnings: 0",
+        "# DDR_FRAME_PASS checks=77 writes=56 reads=25 published=8 errors=5",
+        "# Errors: 0, Warnings: 0"
+      ]
+    },
+    "probe_full": {
+      "path": "D:\\TD\\work\\csi2\\_validation\\ddr_frame\\20261011_194107_848445_f723a2bd\\regression.log",
+      "sha256": "0b09cfca3b79745be22e881057d9e09289d74345af2bce730bd954a2d532897b",
+      "expected_marker": "DDR_PROBE_PASS",
+      "result_lines": [
+        "Errors: 0, Warnings: 0",
+        "# DDR_PROBE_PASS frame_words=16200 passed=4 detected_corrupt_words=1 writes=288561 reads=81017 slots=111",
+        "# Errors: 0, Warnings: 0"
+      ]
+    },
+    "store_red": {
+      "path": "D:\\TD\\work\\csi2\\_validation\\ddr_frame\\20261011_193124_132526_ff874cbd\\regression.log",
+      "sha256": "e7466bb2fe55666b2fe44bbb01e059af9b0be4c7191129c1966f08f6b1ae51f5",
+      "expected_marker": "DDR_FRAME_FAIL",
+      "result_lines": [
+        "Errors: 0, Warnings: 0",
+        "# DDR_FRAME_FAIL watchdog: frame handshake or recovery missing",
+        "# Errors: 0, Warnings: 0"
+      ]
+    },
+    "probe_red": {
+      "path": "D:\\TD\\work\\csi2\\_validation\\ddr_frame\\20261011_190438_230392\\regression.log",
+      "sha256": "1202ebc172becd469098f7de01087dccf8dc63980571bc8263629dbdc5a97f14",
+      "expected_marker": "DDR_PROBE_FAIL",
+      "result_lines": [
+        "Errors: 0, Warnings: 0",
+        "# DDR_PROBE_FAIL watchdog: probe did not verify complete frames",
+        "# Errors: 0, Warnings: 0"
+      ]
+    }
+  },
+  "iterations": [
+    {
+      "directory": "D:\\TD\\work\\csi2\\prj\\ddr_frame_probe_20261011_191316",
+      "routed_report": "D:\\TD\\work\\csi2\\prj\\ddr_frame_probe_20261011_191316\\probe_timing.rpt",
+      "sha256": "99ea0070c81a8fbfbbef4b66ad5840517cb7a53a0840ba2869a463d4ffda0c3c",
+      "timing_ns": {
+        "SWNS": -0.436,
+        "STNS": -19.528,
+        "HWNS": 0.02,
+        "HTNS": 0.0,
+        "Period Check WNS": 2.2
+      },
+      "coverage_percent": 94.82,
+      "bit_eligible": false
+    },
+    {
+      "directory": "D:\\TD\\work\\csi2\\prj\\ddr_frame_probe_20261011_191816",
+      "routed_report": "D:\\TD\\work\\csi2\\prj\\ddr_frame_probe_20261011_191816\\probe_timing.rpt",
+      "sha256": "db37c67d575019ff7ba08bcdab577700b181c47ec6358604a08e8151c7962ea6",
+      "timing_ns": {
+        "SWNS": -0.486,
+        "STNS": -20.914,
+        "HWNS": 0.02,
+        "HTNS": 0.0,
+        "Period Check WNS": 2.2
+      },
+      "coverage_percent": 94.82,
+      "bit_eligible": false
+    },
+    {
+      "directory": "D:\\TD\\work\\csi2\\prj\\ddr_frame_probe_20261011_192822",
+      "routed_report": "D:\\TD\\work\\csi2\\prj\\ddr_frame_probe_20261011_192822\\probe_timing.rpt",
+      "sha256": "15bb2fabc8126876d358a30a32c574069fcaeb29d1cec4c799caa3094f52d125",
+      "timing_ns": {
+        "SWNS": -0.071,
+        "STNS": -0.361,
+        "HWNS": 0.02,
+        "HTNS": 0.0,
+        "Period Check WNS": 2.2
+      },
+      "coverage_percent": 94.82,
+      "bit_eligible": false
+    },
+    {
+      "directory": "D:\\TD\\work\\csi2\\prj\\ddr_frame_probe_20261011_194120",
+      "routed_report": "D:\\TD\\work\\csi2\\prj\\ddr_frame_probe_20261011_194120\\ddr_frame_probe_Runs\\phy_1\\ddr_frame_probe_pr.timing",
+      "sha256": "b9a8d8f2de5664f8107a0c840e0495c5263a5f704b24909369f8a9f317b6abe5",
+      "timing_ns": {
+        "SWNS": 0.006,
+        "STNS": 0.0,
+        "HWNS": 0.02,
+        "HTNS": 0.0,
+        "Period Check WNS": 2.2
+      },
+      "coverage_percent": 95.78,
+      "bit_eligible": true
+    }
+  ],
+  "review": "Independent review completed; comparison pipeline, backpressure and abort semantics checked. Report coverage and bit size/hash independently checked by root.",
+  "boundaries": [
+    "Behavioral PAXI memory simulation, not electrical DDR simulation or a complete vendor controller simulation.",
+    "Ready loss requires controller reset/flush of old responses; no response epoch ID implemented.",
+    "LED success is sticky and proves only at least one completed good frame; sustained operation needs counter observations.",
+    "No camera/DDR or DDR/HDMI CDC integration yet.",
+    "Green sparkles unresolved; independent native1080p60 stripe clean by user report.",
+    "User reports SRAM download and expected LEDs; DDR bandwidth and sustained stability have not been measured."
+  ],
+  "hardware_feedback": {
+    "date": "2026-10-11",
+    "source": "user report: 操作好了，按照正确现象在呈现",
+    "download_success_reported": true,
+    "led_d37": "blinking",
+    "led_d38": "on",
+    "led_d39": "off",
+    "established": "DDR ready and at least one complete frame write/read compare passed; no sticky error observed at feedback.",
+    "sustained_counter_growth_verified": false,
+    "duration_recorded": false,
+    "independent_download_log": false
+  }
+}

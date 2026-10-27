@@ -1,0 +1,224 @@
+# vsim -c -l vsim.log -do "run.do" tb_t11_r10f_e2e 
+# Start time: 09:10:53 on Oct 17,2026
+# Loading work.tb_t11_r10f_e2e
+# Loading work.mipi_csi2_rx_ph1p_checked
+# Loading work.csi_rx_packet_integrity
+# Loading work.csi_rx_hdr_ecc
+# Loading work.csi_rx_10bit_unpack_checked
+# Loading work.cam_r10f_writer
+# Loading work.ddr_frame_pusher
+# do run.do
+# === E0 未 ARM：出帧 → 无 TLP + E_NOT_ARM + release ===
+#   WWDBG #1 @1285000 addr=00100020 strb=ffffffff d0=52
+#   WWDBG #2 @1445000 addr=00100040 strb=ffffffff d0=0a
+#   WWDBG #3 @1605000 addr=00100060 strb=ffffffff d0=00
+#   WWDBG #4 @1765000 addr=00100080 strb=ffffffff d0=00
+#   WWDBG #5 @1915000 addr=001000a0 strb=ffffffff d0=00
+#   WWDBG #6 @2065000 addr=001000c0 strb=ffffffff d0=ff
+#   WWDBG #7 @2225000 addr=001000e0 strb=ffffffff d0=00
+#   WWDBG #8 @2385000 addr=00100100 strb=ffffffff d0=00
+#   WWDBG #9 @2545000 addr=00100120 strb=ffffffff d0=00
+#   WWDBG #10 @2705000 addr=00100140 strb=ffffffff d0=00
+#   WWDBG #11 @2865000 addr=00100160 strb=ffffffff d0=00
+#   WWDBG #12 @3025000 addr=00100180 strb=ffffffff d0=00
+#   WWDBG #13 @3185000 addr=001001a0 strb=ffffffff d0=00
+#   WWDBG #14 @3345000 addr=001001c0 strb=ffffffff d0=00
+#   WWDBG #15 @3505000 addr=001001e0 strb=ffffffff d0=00
+#   WWDBG #16 @3665000 addr=00100200 strb=ffffffff d0=00
+#   WWDBG #17 @3825000 addr=00100220 strb=ffffffff d0=00
+#   WWDBG #18 @3985000 addr=00100240 strb=ffffffff d0=00
+#   WWDBG #19 @4145000 addr=00100260 strb=ffffffff d0=00
+#   WWDBG #20 @4305000 addr=00100280 strb=ffffffff d0=00
+# === E1 ARM → 帧2（block1）→ 32 MWr + 1 门铃 → held → ACK ===
+#   [model] seq=2 sess=20261017 hdrcrc=fff22667 paycrc=97e69de2
+#   WRDBG #1 @43815000 wptr=0 wdata0=52 full=0
+#   RDDBG #1 @43815000 addr=00002000 rlast=0 b0=52
+#   WRDBG #2 @43825000 wptr=1 wdata0=00 full=0
+#   RDDBG #2 @43825000 addr=00002020 rlast=0 b0=00
+#   WRDBG #3 @43835000 wptr=2 wdata0=00 full=0
+#   RDDBG #3 @43835000 addr=00002040 rlast=0 b0=00
+#   WRDBG #4 @43845000 wptr=3 wdata0=00 full=0
+#   RDDBG #4 @43845000 addr=00002060 rlast=0 b0=00
+#   POPDBG #1 @43848000 rptr=0 rdata0=xx p_st=1 k=0 rd_have=0
+#   WRDBG #5 @43855000 wptr=4 wdata0=ff full=0
+#   RDDBG #5 @43855000 addr=00002080 rlast=0 b0=ff
+#   WRDBG #6 @43865000 wptr=5 wdata0=00 full=0
+#   RDDBG #6 @43865000 addr=000020a0 rlast=0 b0=00
+#   WRDBG #7 @43875000 wptr=6 wdata0=00 full=0
+#   RDDBG #7 @43875000 addr=000020c0 rlast=0 b0=00
+#   WRDBG #8 @43885000 wptr=7 wdata0=00 full=0
+#   RDDBG #8 @43885000 addr=000020e0 rlast=0 b0=00
+#   WRDBG #9 @43895000 wptr=8 wdata0=00 full=0
+#   RDDBG #9 @43895000 addr=00002100 rlast=0 b0=00
+#   BEATDBG #1 tlp=0 data=60000020010000ff000000020000008000000000000000000000000000000000 valid=f0 sop=1 eop=0
+#   WRDBG #10 @43905000 wptr=9 wdata0=00 full=0
+#   RDDBG #10 @43905000 addr=00002120 rlast=0 b0=00
+#   POPDBG #2 @43912000 rptr=1 rdata0=52 p_st=3 k=1 rd_have=1
+#   BEATDBG #2 tlp=0 data=5231304601000000800000000000000017102620020000000100000008000400 valid=ff sop=0 eop=0
+#   WRDBG #11 @43915000 wptr=10 wdata0=00 full=0
+#   RDDBG #11 @43915000 addr=00002140 rlast=0 b0=00
+#   WRDBG #12 @43925000 wptr=11 wdata0=00 full=0
+#   RDDBG #12 @43925000 addr=00002160 rlast=0 b0=00
+#   POPDBG #3 @43928000 rptr=2 rdata0=00 p_st=3 k=2 rd_have=1
+#   BEATDBG #3 tlp=0 data=00000000000000000000000000000000e29de697e29de6976726f2ff00000000 valid=ff sop=0 eop=0
+#   WRDBG #13 @43935000 wptr=12 wdata0=00 full=0
+#   RDDBG #13 @43935000 addr=00002180 rlast=0 b0=00
+#   POPDBG #4 @43944000 rptr=3 rdata0=00 p_st=3 k=3 rd_have=1
+#   BEATDBG #4 tlp=0 data=0000000000000000000000000000000000000000000000000000000000000000 valid=ff sop=0 eop=0
+#   WRDBG #14 @43945000 wptr=13 wdata0=00 full=0
+#   RDDBG #14 @43945000 addr=000021a0 rlast=0 b0=00
+#   WRDBG #15 @43955000 wptr=14 wdata0=00 full=0
+#   RDDBG #15 @43955000 addr=000021c0 rlast=0 b0=00
+#   BEATDBG #5 tlp=0 data=0000ffffe40000ffffe40000ffffe40000ffffe40000ffffe40000ffffe40000 valid=ff sop=0 eop=1
+#   WRDBG #16 @43965000 wptr=15 wdata0=00 full=0
+#   RDDBG #16 @43965000 addr=000021e0 rlast=0 b0=00
+#   WRDBG #17 @43975000 wptr=16 wdata0=00 full=0
+#   RDDBG #17 @43975000 addr=00002200 rlast=0 b0=00
+#   POPDBG #5 @43976000 rptr=4 rdata0=00 p_st=4 k=0 rd_have=0
+#   WRDBG #18 @43985000 wptr=17 wdata0=00 full=0
+#   RDDBG #18 @43985000 addr=00002220 rlast=0 b0=00
+#   WRDBG #19 @43995000 wptr=18 wdata0=00 full=0
+#   RDDBG #19 @43995000 addr=00002240 rlast=0 b0=00
+#   WRDBG #20 @44005000 wptr=19 wdata0=00 full=0
+#   RDDBG #20 @44005000 addr=00002260 rlast=0 b0=00
+#   BEATDBG #6 tlp=1 data=60000020010000ff000000020000010000000000000000000000000000000000 valid=f0 sop=1 eop=0
+#   WRDBG #21 @44015000 wptr=20 wdata0=00 full=0
+#   RDDBG #21 @44015000 addr=00002280 rlast=0 b0=00
+#   POPDBG #6 @44024000 rptr=5 rdata0=ff p_st=3 k=1 rd_have=1
+#   BEATDBG #7 tlp=1 data=ffffe40000ffffe4000000000000000000000000000000000000000000000000 valid=ff sop=0 eop=0
+#   WRDBG #22 @44025000 wptr=21 wdata0=00 full=0
+#   RDDBG #22 @44025000 addr=000022a0 rlast=0 b0=00
+#   WRDBG #23 @44035000 wptr=22 wdata0=00 full=0
+#   RDDBG #23 @44035000 addr=000022c0 rlast=0 b0=00
+#   POPDBG #7 @44040000 rptr=6 rdata0=00 p_st=3 k=2 rd_have=1
+#   BEATDBG #8 tlp=1 data=0000000000000000000000000000000000000000000000000000000000000000 valid=ff sop=0 eop=0
+#   WRDBG #24 @44045000 wptr=23 wdata0=00 full=0
+#   RDDBG #24 @44045000 addr=000022e0 rlast=0 b0=00
+#   WRDBG #25 @44055000 wptr=24 wdata0=00 full=0
+#   POPDBG #8 @44056000 rptr=7 rdata0=00 p_st=3 k=3 rd_have=1
+#   BEATDBG #9 tlp=1 data=0000000000000000000000000000000000000000000000000000000000000000 valid=ff sop=0 eop=0
+#   WRDBG #26 @44065000 wptr=25 wdata0=00 full=0
+#   BEATDBG #10 tlp=1 data=0000000000000000000000000000000000000000000000000000000000000000 valid=ff sop=0 eop=1
+#   WRDBG #27 @44075000 wptr=26 wdata0=00 full=0
+#   WRDBG #28 @44085000 wptr=27 wdata0=00 full=0
+#   POPDBG #9 @44088000 rptr=8 rdata0=00 p_st=4 k=0 rd_have=0
+#   WRDBG #29 @44095000 wptr=28 wdata0=00 full=0
+#   WRDBG #30 @44105000 wptr=29 wdata0=00 full=0
+#   WRDBG #31 @44115000 wptr=30 wdata0=00 full=0
+#   BEATDBG #11 tlp=2 data=60000020010000ff000000020000018000000000000000000000000000000000 valid=f0 sop=1 eop=0
+#   WRDBG #32 @44125000 wptr=31 wdata0=00 full=0
+#   WRDBG #33 @44135000 wptr=32 wdata0=00 full=0
+#   POPDBG #10 @44136000 rptr=9 rdata0=00 p_st=3 k=1 rd_have=1
+#   BEATDBG #12 tlp=2 data=0000000000000000000000000000000000000000000000000000000000000000 valid=ff sop=0 eop=0
+#   WRDBG #34 @44145000 wptr=33 wdata0=00 full=0
+#   POPDBG #11 @44152000 rptr=10 rdata0=00 p_st=3 k=2 rd_have=1
+#   WRDBG #35 @44155000 wptr=34 wdata0=00 full=0
+#   WRDBG #36 @44165000 wptr=35 wdata0=00 full=0
+#   POPDBG #12 @44168000 rptr=11 rdata0=00 p_st=3 k=3 rd_have=1
+#   WRDBG #37 @44175000 wptr=36 wdata0=00 full=0
+#   WRDBG #38 @44185000 wptr=37 wdata0=00 full=0
+#   WRDBG #39 @44195000 wptr=38 wdata0=00 full=0
+#   POPDBG #13 @44200000 rptr=12 rdata0=00 p_st=4 k=0 rd_have=0
+#   WRDBG #40 @44205000 wptr=39 wdata0=00 full=0
+#   POPDBG #14 @44248000 rptr=13 rdata0=00 p_st=3 k=1 rd_have=1
+#   POPDBG #15 @44264000 rptr=14 rdata0=00 p_st=3 k=2 rd_have=1
+#   POPDBG #16 @44280000 rptr=15 rdata0=00 p_st=3 k=3 rd_have=1
+#   POPDBG #17 @44312000 rptr=16 rdata0=00 p_st=4 k=0 rd_have=0
+#   POPDBG #18 @44360000 rptr=17 rdata0=00 p_st=3 k=1 rd_have=1
+#   POPDBG #19 @44376000 rptr=18 rdata0=00 p_st=3 k=2 rd_have=1
+#   POPDBG #20 @44392000 rptr=19 rdata0=00 p_st=3 k=3 rd_have=1
+#   POPDBG #21 @44424000 rptr=20 rdata0=00 p_st=4 k=0 rd_have=0
+#   POPDBG #22 @44472000 rptr=21 rdata0=00 p_st=3 k=1 rd_have=1
+#   POPDBG #23 @44488000 rptr=22 rdata0=00 p_st=3 k=2 rd_have=1
+#   POPDBG #24 @44504000 rptr=23 rdata0=00 p_st=3 k=3 rd_have=1
+#   DDR[E1-blk1-hdr] off=2000:
+#     2000: 52 31 30 46 01 00 00 00 80 00 00 00 00 00 00 00
+#     2010: 17 10 26 20 02 00 00 00 01 00 00 00 08 00 04 00
+#     2020: 0a 00 00 00 00 00 00 00 03 00 0a 00 28 00 00 00
+#     2030: 28 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00
+#     2040: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+#     2050: e2 9d e6 97 e2 9d e6 97 67 26 f2 ff 00 00 00 00
+#     2060: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+#     2070: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+#   ERROR #1 @6445336000 :                                                                                 E1: st_done != 1
+#   ERROR #2 @6445336000 :                                                                              E1: MWr count != 32
+#   ERROR #3 @6445336000 :                                                                    E1: not held after completion
+#   ERROR #4 @6445336000 :                                                       E1: TLP total != 33 (32 data + 1 doorbell)
+#   ERROR #5 @6445336000 :                                                                          E1: doorbell count != 1
+#   HOSTMIS[E1] k=32 got=00 exp=0a
+#   HOSTMIS[E1] k=40 got=00 exp=03
+#   HOSTMIS[E1] k=42 got=00 exp=0a
+#   HOSTMIS[E1] k=44 got=00 exp=28
+#   HOSTMIS[E1] k=48 got=e2 exp=28
+#   HOSTMIS[E1] k=49 got=9d exp=00
+#   ERROR #6 @6445336000 :                                                                        E1: host content != model
+#   ERROR #7 @6445336000 :                                                               E1: payload crc field != recompute
+#   ERROR #8 @6445336000 :                                                                E1: header crc field != recompute
+#   ERROR #9 @6445992000 :                                                                  E1: wrong-seq ACK released held
+#   ERROR #10 @6446648000 :                                                              E1: wrong-session ACK released held
+#   ERROR #11 @6447495000 :                                                                   E1: block1 not released on ACK
+# === E2 再 ARM → 帧3（block0，seq=3）→ 发送 → ACK ===
+#   ERROR #12 @6447832000 :                                                                       E2: not armed after re-ARM
+#   [model] seq=3 sess=20261017 hdrcrc=39b8e6df paycrc=97e69de2
+#   ERROR #13 @12870024000 :                                                                                 E2: st_done != 2
+#   ERROR #14 @12870024000 :                                                                                E2: push err != 0
+#   ERROR #15 @12870024000 :                                                                              E2: TLP total != 66
+#   ERROR #16 @12870024000 :                                                                          E2: doorbell count != 1
+#   HOSTMIS[E2] k=20 got=02 exp=03
+#   HOSTMIS[E2] k=32 got=00 exp=0a
+#   HOSTMIS[E2] k=40 got=00 exp=03
+#   HOSTMIS[E2] k=42 got=00 exp=0a
+#   HOSTMIS[E2] k=44 got=00 exp=28
+#   HOSTMIS[E2] k=48 got=e2 exp=28
+#   ERROR #17 @12870024000 :                                                                        E2: host content != model
+#   ERROR #18 @12870024000 :                                                               E2: payload crc field != recompute
+#   ERROR #19 @12870024000 :                                                                E2: header crc field != recompute
+#   ERROR #20 @12870875000 :                                                                   E2: block0 not released on ACK
+# === E3 慢消费长 wait → held 保护 → 新帧拒绝(8) → ACK ===
+#   ERROR #21 @12871208000 :                                                                                    E3: not armed
+#   [model] seq=4 sess=20261017 hdrcrc=07dfaf34 paycrc=97e69de2
+#   ERROR #22 @19286232000 :                                                                                 E3: st_done != 3
+#   ERROR #23 @19286232000 :                                                                                E3: push err != 0
+#   ERROR #24 @19286232000 :                                                                              E3: TLP total != 99
+#   HOSTMIS[E3] k=20 got=02 exp=04
+#   HOSTMIS[E3] k=32 got=00 exp=0a
+#   HOSTMIS[E3] k=40 got=00 exp=03
+#   HOSTMIS[E3] k=42 got=00 exp=0a
+#   HOSTMIS[E3] k=44 got=00 exp=28
+#   HOSTMIS[E3] k=48 got=e2 exp=28
+#   ERROR #25 @19286232000 :                                                                        E3: host content != model
+#   ERROR #26 @19286232000 :                                                               E3: payload crc field != recompute
+#   ERROR #27 @19286232000 :                                                                E3: header crc field != recompute
+#   ERROR #28 @19286525000 :                                                                   E3: block1 released while held
+#   ERROR #29 @19308072000 :                                                                         E3: frame5 not published
+#   ERROR #30 @19308072000 :                                                                        E3: frame sent while held
+#   ERROR #31 @19308072000 :                                                        E3: held rejection not flagged (err != 8)
+#   ERROR #32 @19308072000 :                                                                                    E3: held lost
+#   ERROR #33 @19309025000 :                                                                   E3: block1 not released on ACK
+# === E4 reset 隔离 + 新 session 全流程 ===
+#   ERROR #34 @19309368000 :                                                                                    E4: not armed
+#   [model] seq=6 sess=20261017 hdrcrc=503b2805 paycrc=97e69de2
+#   ERROR #35 @25712840000 :                                                                                 E4: st_done != 4
+#   ERROR #36 @25712840000 :                                                                        E4: not held before reset
+#   HOSTMIS[E4a] k=20 got=02 exp=06
+#   HOSTMIS[E4a] k=32 got=00 exp=0a
+#   HOSTMIS[E4a] k=40 got=00 exp=03
+#   HOSTMIS[E4a] k=42 got=00 exp=0a
+#   HOSTMIS[E4a] k=44 got=00 exp=28
+#   HOSTMIS[E4a] k=48 got=e2 exp=28
+#   ERROR #37 @25712840000 :                                                                       E4a: host content != model
+#   ERROR #38 @25712840000 :                                                              E4a: payload crc field != recompute
+#   ERROR #39 @25712840000 :                                                               E4a: header crc field != recompute
+#   ERROR #40 @25715992000 :                                                                 E4: reset produced release event
+#   [model] seq=2 sess=20261018 hdrcrc=3eaa3163 paycrc=97e69de2
+#   HOSTMIS[E4b] k=32 got=00 exp=0a
+#   HOSTMIS[E4b] k=40 got=00 exp=03
+#   HOSTMIS[E4b] k=42 got=00 exp=0a
+#   HOSTMIS[E4b] k=44 got=00 exp=28
+#   HOSTMIS[E4b] k=48 got=e2 exp=28
+#   HOSTMIS[E4b] k=49 got=9d exp=00
+# FAIL: 45 errors
+# ** Note: $finish    : S:/fpga/csi2/pcie_integration/sim/tb/tb_t11_r10f_e2e.v(826)
+#    Time: 32162568 ns  Iteration: 1  Instance: /tb_t11_r10f_e2e
+# End time: 09:11:38 on Oct 17,2026, Elapsed time: 0:00:45
+# Errors: 0, Warnings: 0

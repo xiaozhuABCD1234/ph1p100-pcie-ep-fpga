@@ -1,0 +1,183 @@
+{
+  "schema": "a1-input-profile-v1",
+  "task_id": "T10.a1-format-ref",
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "generated": "2026-10-20",
+  "scope": "P1 step 1: audit geometry / ROI / packing / Bayer-phase facts for the T10 A+ v1 codec. Offline only. Every conclusion is bound to a readable path; missing physical evidence stays unknown.",
+  "state_legend": {
+    "confirmed": "Directly stated by a frozen/first-party artifact read in this task, or by a board report that records the observed value.",
+    "derived": "Arithmetic or contract consequence of confirmed facts and/or frozen design values; not an independent physical observation.",
+    "unknown": "No direct probe/observation exists. Must not be filled with a plausible value.",
+    "conflict": "Two artifacts state incompatible values or the composition of a value is unresolved. Not silently reconciled."
+  },
+  "project_root": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+  "facts": [
+    {
+      "id": "raw10_5b_4px",
+      "topic": "packing",
+      "value": "packed RAW10, 5 bytes per 4 pixels",
+      "state": "confirmed",
+      "evidence": [
+        "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/ddr/cam_r10f_writer.v: header comment (10bit samples are not silently truncated to 8bit; every 4-pixel group is packed to 5 bytes per frame_contract.py)",
+        "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/cam/csi_rx_10bit_unpack.v: module contract (4 px group, 40 bit)",
+        "upstream/ph1p100-pcie-ep-fpga/tools/pcie_integration/r10f_strict.py: FMT_RAW10_PACKED=0, VALID_BITS=10, packing=0"
+      ],
+      "note": "Frozen as the A+ v1 input contract in fpga-design-guide.md 1.1."
+    },
+    {
+      "id": "bit_layout",
+      "topic": "packing",
+      "value": "b0=P0[9:2], b1=P1[9:2], b2=P2[9:2], b3=P3[9:2], b4={P3[1:0],P2[1:0],P1[1:0],P0[1:0]}",
+      "state": "confirmed",
+      "evidence": [
+        "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/ddr/cam_r10f_writer.v: header comment, exact byte formula",
+        "upstream/ph1p100-pcie-ep-fpga/tools/pcie_integration/r10f_strict.py: contract field table (magic R10F, packing=0)",
+        "docs/planning/2026-10-20-fpga-priorities/01_OpenCode启动需求_单A_Aplus闭环.md: item 1 (freeze packing)"
+      ],
+      "note": "b4[1:0]=P0 low bits; b4[7:6]=P3 low bits. Implemented in tools/codec/a1_ref.py pack_samples/unpack_groups."
+    },
+    {
+      "id": "source_geometry",
+      "topic": "geometry",
+      "value": "source_geometry=0x089012DE -> 2192 rows, 4830 bytes per source line",
+      "state": "confirmed",
+      "evidence": [
+        "workflow/runs/20261019-2117_runD_batch2_continue/test-reports/T02.codex-singleA-board-r0-recovery03-integrated.md:80-84 (line 82 decodes high 16 bits 0x0890=2192, low 16 bits 0x12DE=4830; cwc1 source_geometry matches cwc3 word7)",
+        "workflow/runs/20261019-2117_runD_batch2_continue/test-reports/T02.codex-singleA-board-r0-recovery03-integrated.md:42,46,48,52 (six original board images)"
+      ],
+      "note": "This is the full 4K source frame geometry, not the ROI size."
+    },
+    {
+      "id": "source_row_composition",
+      "topic": "geometry",
+      "value": "4830 B/line is consistent with 3840 px (4800 B) + about 30 B embedded/line header; 2192 rows is described as 2160 active + about 32 blanking/embedded rows",
+      "state": "derived",
+      "evidence": [
+        "workflow/runs/20261019-2117_runD_batch2_continue/test-reports/T02.codex-singleA-board-r0-recovery03-integrated.md:84",
+        "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/ph1p_pcie_ep_top.v:103-109 (comment: 3840x2160 effective image, centered ROI)"
+      ],
+      "note": "The decomposition is an explanation in the board report, not a per-line probe. Do not treat 37+540 as proven to land on the same row model."
+    },
+    {
+      "id": "roi_configured",
+      "topic": "roi",
+      "value": "W=1920, H=1080, X0=960, Y0=540, SKIP_ROWS=37",
+      "state": "confirmed",
+      "evidence": [
+        "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/ph1p_pcie_ep_top.v:103-117 (localparams CAMDDR_W/H/X0/Y0/SKIP_ROWS, annotated 'not board-proven')",
+        "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/ddr/cam_r10f_writer.v: module parameters W=1920, H=1080, X0=960, Y0=540, SKIP_ROWS=37"
+      ],
+      "note": "Confirmed only as the frozen source configuration (code defaults). Physical correctness is a separate fact below."
+    },
+    {
+      "id": "roi_physical",
+      "topic": "roi",
+      "value": "physical meaning of X0/Y0/SKIP_ROWS and the resulting crop is not directly observed",
+      "state": "unknown",
+      "evidence": [
+        "workflow/runs/20261019-2117_runD_batch2_continue/test-reports/T02.codex-singleA-board-r0-recovery03-integrated.md:22 (ROI X/Y/SKIP and physical Bayer phase have no direct evidence)",
+        "workflow/runs/20261019-2117_runD_batch2_continue/test-reports/T02.codex-singleA-board-r0-recovery03-integrated.md:85 (six images contain no ROI X/Y/SKIP register or image; W/H has length evidence only)"
+      ],
+      "note": "No register/CWC probe or annotated image ties the crop origin to a physical pixel. Keep as unknown; do not promote configured values."
+    },
+    {
+      "id": "row_count_conflict",
+      "topic": "roi",
+      "value": "2192 total rows vs 2160 active + 37 SKIP_ROWS = 2197",
+      "state": "conflict",
+      "evidence": [
+        "workflow/runs/20261019-2117_runD_batch2_continue/test-reports/T02.codex-singleA-board-r0-recovery03-integrated.md:82 (2192 rows observed)",
+        "workflow/runs/20261019-2117_runD_batch2_continue/test-reports/T02.codex-singleA-board-r0-recovery03-integrated.md:84 (report explains 2192 = 2160 + about 32 blanking/embedded)",
+        "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/ph1p_pcie_ep_top.v:103-117 (SKIP_ROWS=37)",
+        "workflow/runs/20261020-0209_singleA_aplus_closedloop/input-index.md:46 (planner records the 5-row difference as unresolved)"
+      ],
+      "note": "5 rows are unexplained (37 vs 32). Either SKIP_ROWS or the 2192 decomposition is wrong/oversimplified. Do not guess; no A+ conclusion depends on it."
+    },
+    {
+      "id": "stride_and_frame_bytes",
+      "topic": "geometry",
+      "value": "stride_bytes=2400; packed frame=2,592,000 B for 1920x1080; 540 two-row blocks of 4,800 B",
+      "state": "derived",
+      "evidence": [
+        "workflow/runs/20261020-0209_singleA_aplus_closedloop/fpga-design-guide.md:20 (W=1920,H=1080,stride=2400,frame=2,592,000)",
+        "workflow/runs/20261019-2117_runD_batch2_continue/test-reports/T02.codex-singleA-board-r0-recovery03-integrated.md:84 (cl_len=0x00279000=2,592,768 B is a DMA slot compatible with the 2,592,000 B payload plus header/alignment)"
+      ],
+      "note": "Arithmetic: 1920*5/4=2400; 2400*1080=2,592,000; 1080/2=540 blocks. The 2,592,768 B slot is not the payload length."
+    },
+    {
+      "id": "dma_slot_len",
+      "topic": "geometry",
+      "value": "cl_len=0x00279000=2,592,768 B per 1080p ROI slot",
+      "state": "confirmed",
+      "evidence": [
+        "workflow/runs/20261019-2117_runD_batch2_continue/test-reports/T02.codex-singleA-board-r0-recovery03-integrated.md:84 (cl_words=648,192 x 32-bit, 81,024 AXI beats)"
+      ],
+      "note": "Slot includes 128 B R10F header and 4 KiB alignment; not the raw payload."
+    },
+    {
+      "id": "bayer_declared",
+      "topic": "bayer",
+      "value": "A+ v1 declaration: RGGB, phase=0 at ROI origin; R=(even x,even y), G1=(odd x,even y), G2=(even x,odd y), B=(odd x,odd y); plane order R,G1,G2,B",
+      "state": "derived",
+      "evidence": [
+        "workflow/runs/20261020-0209_singleA_aplus_closedloop/fpga-design-guide.md:22-27 (declared value, explicitly not a physical measurement)",
+        "workflow/runs/20261019-2117_runD_batch2_continue/test-reports/T02.codex-singleA-board-r0-recovery03-integrated.md:85 (physical phase unknown)"
+      ],
+      "note": "Test-only declaration for synthetic vectors. It is not evidence that the sensor output is RGGB phase 0."
+    },
+    {
+      "id": "bayer_phase_physical",
+      "topic": "bayer",
+      "value": "physical Bayer phase unknown",
+      "state": "unknown",
+      "evidence": [
+        "workflow/runs/20261019-2117_runD_batch2_continue/test-reports/T02.codex-singleA-board-r0-recovery03-integrated.md:85 ('PHASE=3 physical phase can only remain unknown')",
+        "workflow/runs/20261019-2117_runD_batch2_continue/test-reports/T02.codex-singleA-board-r0-recovery03-integrated.md:99 (G3 partial; PHASE=3 unknown)"
+      ],
+      "note": "No color chart, phase sweep, or annotated raw image. All A/B results in this run are valid only for the declared phase."
+    },
+    {
+      "id": "bayer_phase_placeholder_conflict",
+      "topic": "bayer",
+      "value": "SRC_BAYER_PHASE default 0 (writer) vs PHASE=3 (board report placeholder)",
+      "state": "conflict",
+      "evidence": [
+        "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/ddr/cam_r10f_writer.v: parameter SRC_BAYER_PHASE=2'd0, commented 'placeholder; must not be called verified before board proof'",
+        "workflow/runs/20261019-2117_runD_batch2_continue/test-reports/T02.codex-singleA-board-r0-recovery03-integrated.md:85,99 (PHASE=3 physical phase)"
+      ],
+      "note": "Neither value has a physical probe. They are placeholders in different artifacts; do not treat either as measured. The A+ format uses its own declared phase=0 and labels it synthetic."
+    },
+    {
+      "id": "raw_export_absent",
+      "topic": "export",
+      "value": "raw_export=false, csv_export=false; only six PNG transcriptions exist",
+      "state": "confirmed",
+      "evidence": [
+        "workflow/runs/20261019-2117_runD_batch2_continue/test-reports/T02.codex-singleA-board-r0-recovery03-integrated.md:22 (sample-record updated: csv_export=false, raw_export=false)",
+        "workflow/runs/20261020-0209_singleA_aplus_closedloop/input-index.md:78 (real RAW frame/segment missing; blocked_awaiting_hardware)"
+      ],
+      "note": "No real RAW segment exists in this run; P1 uses synthetic vectors only. No export path is claimed."
+    },
+    {
+      "id": "real_samples_absent",
+      "topic": "samples",
+      "value": "no real RAW frame or segment, no physical ROI/phase ground truth",
+      "state": "confirmed",
+      "evidence": [
+        "workflow/runs/20261020-0209_singleA_aplus_closedloop/input-index.md:74-82 (missing inputs and blocked conditions)",
+        "workflow/runs/20261019-2117_runD_batch2_continue/test-reports/T02.codex-singleA-board-r0-recovery03-integrated.md:22,85"
+      ],
+      "note": "Consequence: every P1 vector is marked synthetic; compression ratio and A/B conclusions do not transfer to real images yet."
+    }
+  ],
+  "downstream_use": {
+    "a1_format_geometry": "W=1920,H=1080,stride=2400,raw_len=2,592,000,block_count=540. These are the P2/P3 defaults, all derived from the frozen configured ROI, not from a physical ROI probe.",
+    "bayer_mode": "prep_en=0/1 and pred_en=0/1 are test switches. Only prep_en=1,pred_en=1 exercises the full declared transform; prep_en=0 must remain bit-exact pass-through.",
+    "prohibited_claims": [
+      "physical Bayer phase known",
+      "ROI X/Y/SKIP physically proven",
+      "real-image compression ratio",
+      "real RAW sample exported"
+    ]
+  }
+}

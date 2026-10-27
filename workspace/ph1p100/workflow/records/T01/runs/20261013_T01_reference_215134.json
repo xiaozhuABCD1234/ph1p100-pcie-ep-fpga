@@ -1,0 +1,147 @@
+{
+  "schema_version": "1.0",
+  "record_kind": "actual_run_index",
+  "task_id": "T01",
+  "run_id": "20261013_T01_reference_215134",
+  "operation": "Same camera/DDR load with fixed digital reference strip",
+  "source": {
+    "commit": "912725398b98a60d7933f280fe71bf4bc87f5bc2",
+    "dirty": true,
+    "binding": "202 frozen inputs, separate selected/checker manifests; new RTL/tests/scripts uncommitted at execution."
+  },
+  "execution": {
+    "tool": "TangDynasty Release_2026.1_SP2",
+    "program": "D:/downlaod/bin/td_commands_prompt.exe",
+    "cwd": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_reference_20261013_215134",
+    "started_at": null,
+    "ended_at": null,
+    "timestamp_note": "Native logs retained; central execution interval not captured.",
+    "phases": [
+      {
+        "arguments": [
+          "./build_reference.tcl"
+        ],
+        "exit_code": 1,
+        "marker": "RGB332_REFERENCE_SYNTHESIS_ERROR"
+      },
+      {
+        "arguments": [
+          "./route_reference.tcl"
+        ],
+        "exit_code": 0,
+        "marker": "RGB332_REFERENCE_ROUTE_RETURNED_CHECK_REPORTS_NO_BIT"
+      },
+      {
+        "arguments": [
+          "./inspect_reference.tcl"
+        ],
+        "exit_code": 0,
+        "marker": "CAPTURE_CDC_AUDIT_EXPORTED"
+      },
+      {
+        "arguments": [
+          "./audit_hdmi_reference.tcl"
+        ],
+        "exit_code": 0,
+        "marker": "HDMI_ROUTED_AUDIT_REPORTS_READY"
+      },
+      {
+        "arguments": [
+          "./bitgen_reference.tcl"
+        ],
+        "exit_code": 0,
+        "marker": "CAMERA_DDR_DISPLAY_CANDIDATE_GENERATED_NO_DOWNLOAD"
+      }
+    ]
+  },
+  "expected_outcome": "pass_selected_G1_G2",
+  "result_status": "pass_selected_G1_G2",
+  "phases": [
+    {
+      "id": "G1",
+      "status": "pass"
+    },
+    {
+      "id": "G2_synthesis_manager",
+      "status": "fail",
+      "exit_code": 1,
+      "recovery": {
+        "manager_exit_code": 1,
+        "code": "PRJ-8806",
+        "worker_gate_end_marker_present": true,
+        "worker_error_lines": [],
+        "gate_db_bytes": 10018176,
+        "gate_db_sha256": "0b38e04af4fdbd495b5254ad794308ad580e1675ab0b35cecececbcdf38282d7",
+        "recovery": "Native standalone route imported the fully exported gate DB; manager success is not claimed."
+      }
+    },
+    {
+      "id": "G2_selected_final",
+      "status": "pass"
+    },
+    {
+      "id": "G3",
+      "status": "fail"
+    },
+    {
+      "id": "G4",
+      "status": "not_run"
+    }
+  ],
+  "artifacts": [
+    {
+      "kind": "evidence_index",
+      "path": "docs/evidence/rgb332_reference_20261013.json"
+    },
+    {
+      "kind": "selected_checkpoint",
+      "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_reference_20261013_215134\\csi_checked_debug_pr.db",
+      "sha256": "0861d93a676d755e2d0350f82563dd9f52daa3677a45e7269dbaaa80b6abb700"
+    },
+    {
+      "kind": "candidate_bitstream",
+      "path": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_reference_20261013_215134\\camera_ddr_display.bit",
+      "bytes": 5224033,
+      "sha256": "5c8d3081ae5a56e8cd9c35de134ca75c7fece5f5379d33587b727d73a9ea35cd"
+    }
+  ],
+  "metrics": [
+    {
+      "setup_wns_ns": 0.005,
+      "setup_tns_ns": 0.0,
+      "hold_wns_ns": 0.02,
+      "hold_tns_ns": 0.0,
+      "period_wns_ns": 2.2,
+      "reimport_coverage_percent": 96.39,
+      "route_coverage_percent": 97.75
+    }
+  ],
+  "hardware": {
+    "status": "fail",
+    "observed_by": "user",
+    "bitstream_sha256": "5c8d3081ae5a56e8cd9c35de134ca75c7fece5f5379d33587b727d73a9ea35cd",
+    "power_continuous": null,
+    "observation_source": "docs/evidence/rgb332_reference_board_feedback_20261013.json",
+    "identity_basis": "Contextual association with215134 instructions, no independent readback/download log.",
+    "live_camera_image_visible": false,
+    "reference_output": "partial subjective pass",
+    "classification_counters": null,
+    "led": {
+      "D37": "blinking",
+      "D38": "off",
+      "D39": "on",
+      "D40": "on"
+    }
+  },
+  "scope": "Selected diagnostic G1/G2 only; T01 overall awaiting_hardware",
+  "limitations": [
+    "Bars bypass payload while original consumers remain active; no added pipeline cycle, but physical placement changes. Bars may show before camera ready/over top underflow. Correct bars alone prove neither Bayer/DDR correctness nor high-speed analog qualification. No new hardware/color/sparkle/temperature/long-run results. Selected CDC only; coverage gap and local clock warnings retained. New controls target current direct A*C/pixel-reset mapping; prior161550 controls remain historical."
+  ],
+  "history": "runs/20261013_T01_rgb332_161550.json",
+  "followup": {
+    "evidence": "docs/evidence/rgb332_reference_board_feedback_20261013.json",
+    "debug_configuration_exported": true,
+    "hardware_captured_by_assistant": false,
+    "next_action": "Offline Watch, cwc2 four DDR counters, no download."
+  }
+}

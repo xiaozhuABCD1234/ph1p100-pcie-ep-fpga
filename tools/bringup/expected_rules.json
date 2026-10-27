@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-18",
+  "run_id": "20261018-1347_runA_offline_sim",
+  "truth_sources": [
+    "docs/protocol/rka1-r10f-v1/contract/registers.json (frozen contract mirror)",
+    "rtl/ep_side/img/ep_bar_win.v (read-only header comment and decode)",
+    "fpga-design-guide.md s2 (frame geometry and DMA length)",
+    "board-selfcheck/channel-notes.md (channel evidence, B1)"
+  ],
+  "notes": [
+    "A rule is evaluated only when its input reading exists; missing readings yield BLOCKED, never PASS.",
+    "Rules with a when precondition yield NOT_APPLICABLE when the precondition is false.",
+    "This file is frozen for T11.runA-bringup-kit; changing it requires a new manifest.",
+    "Register access is currently blocked (B1); these rules are for post-recovery use."
+  ],
+  "rules": [
+    {
+      "id": "R01_MAGIC",
+      "offset": "0x040",
+      "name": "MAGIC",
+      "type": "eq",
+      "expected": "0x50434946",
+      "source": "contract registers.json offset 64 (MAGIC, RO); rtl/ep_side/img/ep_bar_win.v:350 and module parameter MAGIC=0x50434946"
+    },
+    {
+      "id": "R02_CTRL_RESERVED",
+      "offset": "0x044",
+      "name": "CTRL",
+      "type": "mask_zero",
+      "mask": "0xFFFFFE10",
+      "source": "contract registers.json ctrl_bits bits0..8 (bit4 reserved read0); rtl/ep_side/img/ep_bar_win.v:354,355"
+    },
+    {
+      "id": "R03_EXT_MAGIC",
+      "offset": "0x118",
+      "name": "EXT_MAGIC",
+      "type": "eq",
+      "expected": "0x31414B52",
+      "source": "contract registers.json extension offset 280 reset 826362706 (=0x31414B52); rtl/ep_side/img/ep_bar_win.v:499"
+    },
+    {
+      "id": "R04_EXT_VERSION",
+      "offset": "0x11C",
+      "name": "EXT_VERSION",
+      "type": "eq",
+      "expected": "0x00010000",
+      "source": "contract registers.json extension offset 284 reset 65536 (=major1.minor0); rtl/ep_side/img/ep_bar_win.v:500"
+    },
+    {
+      "id": "R05_DDR_LEN_A",
+      "offset": "0x0AC",
+      "name": "DDR_LEN_A",
+      "type": "eq",
+      "expected": "2592768",
+      "when": {"offset": "0x0A0", "op": "gt", "value": 0},
+      "source": "fpga-design-guide.md s2 (128 header + 2592000 payload + 640 tail = 2592768); rtl/ep_side/img/ep_bar_win.v header 0xAC"
+    },
+    {
+      "id": "R06_DDR_LEN_B",
+      "offset": "0x0EC",
+      "name": "DDR_LEN_B",
+      "type": "eq",
+      "expected": "2592768",
+      "when": {"offset": "0x0E0", "op": "gt", "value": 0},
+      "source": "fpga-design-guide.md s2; rtl/ep_side/img/ep_bar_win.v header 0xEC"
+    },
+    {
+      "id": "R07_DDR_BASE_A_ALIGN",
+      "offset": "0x0A4",
+      "name": "DDR_BASE_A",
+      "type": "aligned",
+      "alignment": 128,
+      "when": {"offset": "0x0A0", "op": "gt", "value": 0},
+      "source": "fpga-design-guide.md s2 (writer-published base is 128B aligned); rtl/ep_side/img/ep_bar_win.v header 0xA4"
+    },
+    {
+      "id": "R08_DDR_BASE_B_ALIGN",
+      "offset": "0x0E4",
+      "name": "DDR_BASE_B",
+      "type": "aligned",
+      "alignment": 128,
+      "when": {"offset": "0x0E0", "op": "gt", "value": 0},
+      "source": "fpga-design-guide.md s2; rtl/ep_side/img/ep_bar_win.v header 0xE4"
+    },
+    {
+      "id": "R09_DDR_STATUS_A_RESERVED",
+      "offset": "0x0A8",
+      "name": "DDR_STATUS_A",
+      "type": "mask_zero",
+      "mask": "0x0000FFE0",
+      "source": "rtl/ep_side/img/ep_bar_win.v header 0xA8: bit0 valid, bit1 busy, bit2 err, bit3 alive, bit4 cal_done, [31:16] err_cnt"
+    },
+    {
+      "id": "R10_DDR_STATUS_B_RESERVED",
+      "offset": "0x0E8",
+      "name": "DDR_STATUS_B",
+      "type": "mask_zero",
+      "mask": "0x0000FFE0",
+      "source": "rtl/ep_side/img/ep_bar_win.v header 0xE8 (same bit map as 0xA8)"
+    },
+    {
+      "id": "R11_PUSH_STATUS_RESERVED",
+      "offset": "0x0C4",
+      "name": "PUSH_STATUS",
+      "type": "mask_zero",
+      "mask": "0x0000FFE0",
+      "source": "rtl/ep_side/img/ep_bar_win.v header 0xC4: bit0 busy, bit1 last_ok, bit2 doorbell_sent, bit3 ddr_alive, bit4 ddr_cal_done, [31:16] err_cnt"
+    },
+    {
+      "id": "R12_PUSH_ERR_RANGE",
+      "offset": "0x0C8",
+      "name": "PUSH_ERR",
+      "type": "range",
+      "min": 0,
+      "max": 4,
+      "source": "rtl/ep_side/img/ep_bar_win.v header 0xC8: 0 normal, 1 dst unconfigured, 2 tl_tx_wait timeout, 3 AXI non-OKAY, 4 doorbell unconfigured"
+    },
+    {
+      "id": "R13_TX_STATUS_RESERVED",
+      "offset": "0x114",
+      "name": "TX_STATUS",
+      "type": "mask_zero",
+      "mask": "0xFFFFFFE0",
+      "source": "contract registers.json extension offset 276 bits0..4; rtl/ep_side/img/ep_bar_win.v header 0x114"
+    },
+    {
+      "id": "R14_CAM_DROP_A3_RESERVED",
+      "offset": "0x0F4",
+      "name": "CAM_DROP_A3",
+      "type": "mask_zero",
+      "mask": "0xFFFFFFC0",
+      "source": "rtl/ep_side/img/ep_bar_win.v header 0xF4: 24'd0 + verdict bits0..5 (p_bad, no EOF, word count, beat count, axi_err, pub_ok)"
+    },
+    {
+      "id": "R15_PUSH_TLP_CNT_RANGE",
+      "offset": "0x0CC",
+      "name": "PUSH_TLP_CNT",
+      "type": "range",
+      "min": 1,
+      "max": 2400,
+      "when": {"offset": "0x0C0", "op": "gt", "value": 0},
+      "source": "rtl/ep_side/img/ep_bar_win.v header 0xCC: normally 2400 MWr per 1080p frame (doorbell excluded)"
+    },
+    {
+      "id": "R16_DDR_BASE_A_NONZERO",
+      "offset": "0x0A4",
+      "name": "DDR_BASE_A",
+      "type": "nonzero",
+      "when": {"offset": "0x0A0", "op": "gt", "value": 0},
+      "source": "rtl/ep_side/img/ep_bar_win.v header 0xA4: base of the published frame; zero with seq>0 means no frame was published"
+    },
+    {
+      "id": "R17_TX_CMD_READ_ZERO",
+      "offset": "0x108",
+      "name": "TX_CMD",
+      "type": "eq",
+      "expected": "0x00000000",
+      "source": "contract registers.json extension offset 264: W1 command, reads 0"
+    }
+  ]
+}

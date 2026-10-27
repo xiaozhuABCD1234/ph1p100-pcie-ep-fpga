@@ -1,0 +1,497 @@
+NETLIST_SHA256=c273ec0fdd003213d29ae0a5fc1a7d9aed49869a5a5748f36d2563f829c214fd
+u_fifo/wgray: 9 Qs, clock root=u_camera/u_csi_a/u_packet/I_clock
+u_fifo/rgray: 9 Qs, clock root=u_ddrmc_test_top/u_capture/clk
+u_fifo/rq1_wgray: 9 Qs, clock root=u_ddrmc_test_top/u_capture/clk
+u_fifo/rq2_wgray: 9 Qs, clock root=u_ddrmc_test_top/u_capture/clk
+u_fifo/wq1_rgray: 9 Qs, clock root=u_camera/u_csi_a/u_packet/I_clock
+u_fifo/wq2_rgray: 9 Qs, clock root=u_camera/u_csi_a/u_packet/I_clock
+u_display_fifo/wgray: 9 Qs, clock root=u_ddrmc_test_top/u_capture/clk
+u_display_fifo/rgray: 9 Qs, clock root=u_camera/X_hdmi_tx/I_pixel_clk
+u_display_fifo/rq1_wgray: 9 Qs, clock root=u_camera/X_hdmi_tx/I_pixel_clk
+u_display_fifo/rq2_wgray: 9 Qs, clock root=u_camera/X_hdmi_tx/I_pixel_clk
+u_display_fifo/wq1_rgray: 9 Qs, clock root=u_ddrmc_test_top/u_capture/clk
+u_display_fifo/wq2_rgray: 9 Qs, clock root=u_ddrmc_test_top/u_capture/clk
+u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]: 1 -> u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[0] -> local reset, clock root=u_ddrmc_test_top/u_capture/clk
+u_ddrmc_test_top/u_capture/u_pack/rst_n_dup_2667: 1 -> u_ddrmc_test_top/u_capture/cap_reset[0] -> local reset, clock root=u_camera/u_csi_a/u_packet/I_clock
+u_ddrmc_test_top/u_capture/u_pack/rst_n_dup_2668: 1 -> u_ddrmc_test_top/u_capture/cap_reset[0] -> local reset, clock root=u_camera/u_csi_a/u_packet/I_clock
+u_ddrmc_test_top/u_capture/u_pack/rst_n_dup_2670: 1 -> u_ddrmc_test_top/u_capture/cap_reset[0] -> local reset, clock root=u_camera/u_csi_a/u_packet/I_clock
+u_ddrmc_test_top/u_capture/u_pack/rst_n_dup_2671: 1 -> u_ddrmc_test_top/u_capture/cap_reset[0] -> local reset, clock root=u_camera/u_csi_a/u_packet/I_clock
+u_ddrmc_test_top/u_capture/u_pixels/rst_n: 1 -> u_ddrmc_test_top/u_capture/pixel_reset[0] -> local reset, clock root=u_camera/X_hdmi_tx/I_pixel_clk
+u_pixels/expected_epoch (registered, u_camera/X_hdmi_tx/I_pixel_clk) -> u_reader/rq1 -> u_reader/rq2 (u_ddrmc_test_top/u_capture/clk)
+u_reader/ack_toggle (registered, u_ddrmc_test_top/u_capture/clk) -> u_pixels/ack1 -> u_pixels/ack2 (u_camera/X_hdmi_tx/I_pixel_clk)
+u_ddrmc_test_top/u_capture/run_rst_n_dup_943: numeric 3-input AND ['u_camera/display_rst_n', 'u_ddrmc_test_top/u_capture/ddr_ready_dup_762', 'u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_fiu_wrapper/rst_n']
+u_ddrmc_test_top/u_capture/run_rst_n_dup_945: numeric 3-input AND ['u_camera/display_rst_n', 'u_ddrmc_test_top/u_capture/ddr_ready_dup_762', 'u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_fiu_wrapper/rst_n']
+u_ddrmc_test_top/u_capture/run_rst_n_dup_947: numeric 3-input AND ['u_camera/display_rst_n', 'u_ddrmc_test_top/u_capture/ddr_ready_dup_762', 'u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_fiu_wrapper/rst_n']
+u_ddrmc_test_top/u_capture/run_rst_n_dup_953: numeric 3-input AND ['u_camera/display_rst_n', 'u_ddrmc_test_top/u_capture/ddr_ready_dup_762', 'u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_fiu_wrapper/rst_n']
+
+BOUNDARY: structural/direct-function and named source-net checks only. DDR ready replica generation, reset recovery/removal, metastability/MTBF and all-system CDC are not formally proven.
+
+NETLIST_LINE 266137
+  PH1P_PHY_LSLICE #(
+    .ASRMUX("INV"),
+    .CEAMUX("1"),
+    .CLKMUX("SIG"),
+    .LATCHMODE("DFF"),
+    .OQAMUX("QA"),
+    .OQBMUX("QB"),
+    .REGA_REGSET_ASYNC("RESET"),
+    .REGA_REGSET_SYNC("RESET"),
+    .REGA_SD("IMA"),
+    .SSRMUX("0"),
+    .SSROVERCE("ENABLE"))
+    \u_ddrmc_test_top/u_capture/cap_reset_reg[0]_syn_2  (
+    .asr(\u_ddrmc_test_top/u_capture/run_rst_n_dup_943 ),
+    .clk(\u_camera/u_csi_a/u_rx_phy/u_hs_byte_clk_bufg_auto_created_sclk_s_1_r_bk2_sclk_outnet ),
+    .ima(1'b1),
+    .oqa(\u_ddrmc_test_top/u_capture/cap_reset [0]));
+
+NETLIST_LINE 266155
+  PH1P_PHY_LSLICE #(
+    .ASRMUX("INV"),
+    .CEBMUX("1"),
+    .CLKMUX("SIG"),
+    .LATCHMODE("DFF"),
+    .OQAMUX("QA"),
+    .OQBMUX("QB"),
+    .REGB_REGSET_ASYNC("RESET"),
+    .REGB_REGSET_SYNC("RESET"),
+    .REGB_SD("IMB"),
+    .SSRMUX("0"),
+    .SSROVERCE("ENABLE"))
+    \u_ddrmc_test_top/u_capture/cap_reset_reg[0]_syn_3  (
+    .asr(\u_ddrmc_test_top/u_capture/run_rst_n_dup_943 ),
+    .clk(\u_camera/u_csi_a/u_rx_phy/u_hs_byte_clk_bufg_auto_created_sclk_s_1_r_bk2_sclk_outnet ),
+    .imb(\u_ddrmc_test_top/u_capture/cap_reset [0]),
+    .oqb(\u_ddrmc_test_top/u_capture/u_pack/rst_n_dup_2667 ));
+
+NETLIST_LINE 266173
+  PH1P_PHY_LSLICE #(
+    .ASRMUX("INV"),
+    .CEBMUX("1"),
+    .CLKMUX("SIG"),
+    .LATCHMODE("DFF"),
+    .OQAMUX("QA"),
+    .OQBMUX("QB"),
+    .REGB_REGSET_ASYNC("RESET"),
+    .REGB_REGSET_SYNC("RESET"),
+    .REGB_SD("IMB"),
+    .SSRMUX("0"),
+    .SSROVERCE("ENABLE"))
+    \u_ddrmc_test_top/u_capture/cap_reset_reg[0]_syn_4  (
+    .asr(\u_ddrmc_test_top/u_capture/run_rst_n_dup_943 ),
+    .clk(\u_camera/u_csi_a/u_rx_phy/u_hs_byte_clk_bufg_auto_created_sclk_s_1_r_bk2_sclk_outnet ),
+    .imb(\u_ddrmc_test_top/u_capture/cap_reset [0]),
+    .oqb(\u_ddrmc_test_top/u_capture/u_pack/rst_n_dup_2668 ));
+
+NETLIST_LINE 266209
+  PH1P_PHY_LSLICE #(
+    .ASRMUX("INV"),
+    .CEBMUX("1"),
+    .CLKMUX("SIG"),
+    .LATCHMODE("DFF"),
+    .OQAMUX("QA"),
+    .OQBMUX("QB"),
+    .REGB_REGSET_ASYNC("RESET"),
+    .REGB_REGSET_SYNC("RESET"),
+    .REGB_SD("IMB"),
+    .SSRMUX("0"),
+    .SSROVERCE("ENABLE"))
+    \u_ddrmc_test_top/u_capture/cap_reset_reg[0]_syn_6  (
+    .asr(\u_ddrmc_test_top/u_capture/run_rst_n_dup_945 ),
+    .clk(\u_camera/u_csi_a/u_rx_phy/u_hs_byte_clk_bufg_auto_created_sclk_s_1_r_bk2_sclk_outnet ),
+    .imb(\u_ddrmc_test_top/u_capture/cap_reset [0]),
+    .oqb(\u_ddrmc_test_top/u_capture/u_pack/rst_n_dup_2670 ));
+
+NETLIST_LINE 266227
+  PH1P_PHY_LSLICE #(
+    .ASRMUX("INV"),
+    .CEBMUX("1"),
+    .CLKMUX("SIG"),
+    .LATCHMODE("DFF"),
+    .OQAMUX("QA"),
+    .OQBMUX("QB"),
+    .REGB_REGSET_ASYNC("RESET"),
+    .REGB_REGSET_SYNC("RESET"),
+    .REGB_SD("IMB"),
+    .SSRMUX("0"),
+    .SSROVERCE("ENABLE"))
+    \u_ddrmc_test_top/u_capture/cap_reset_reg[0]_syn_7  (
+    .asr(\u_ddrmc_test_top/u_capture/run_rst_n_dup_945 ),
+    .clk(\u_camera/u_csi_a/u_rx_phy/u_hs_byte_clk_bufg_auto_created_sclk_s_1_r_bk2_sclk_outnet ),
+    .imb(\u_ddrmc_test_top/u_capture/cap_reset [0]),
+    .oqb(\u_ddrmc_test_top/u_capture/u_pack/rst_n_dup_2671 ));
+
+NETLIST_LINE 266393
+  PH1P_PHY_LSLICE #(
+    //.LUT5A("(~A*~(B*~(~D*~E*~C)))"),
+    //.LUT5B("(E*B*~A)"),
+    .ASRMUX("INV"),
+    .CEAMUX("1"),
+    .CLKMUX("SIG"),
+    .INIT_LUT5A(32'b00010001000100010001000100010101),
+    .INIT_LUT5B(32'b01000100010001000000000000000000),
+    .LATCHMODE("DFF"),
+    .LUT5A_SD0("IC"),
+    .LUT5A_SD1("IMF"),
+    .LUTMODE("DLUT5"),
+    .OFA_SD("LUT5A"),
+    .OFB_SD("LUTX"),
+    .OQAMUX("QA"),
+    .REGA_REGSET_ASYNC("RESET"),
+    .REGA_REGSET_SYNC("RESET"),
+    .REGA_SD("IMA"),
+    .SSRMUX("0"),
+    .SSROVERCE("ENABLE"))
+    \u_ddrmc_test_top/u_capture/pixel_reset_reg[0]_syn_2  (
+    .asr(\u_ddrmc_test_top/u_capture/run_rst_n_dup_943 ),
+    .clk(\u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_r_bk5_sclk_outnet ),
+    .ia(\u_ddrmc_test_top/u_capture/u_pack/abort_pending_reg_syn_6 ),
+    .ib(\u_ddrmc_test_top/u_capture/u_pack/preview_done_i1_syn_2 ),
+    .ic(\u_ddrmc_test_top/u_capture/u_pack/abort_pending_reg_syn_23 ),
+    .id(\u_ddrmc_test_top/u_capture/u_pack/frame_end ),
+    .ie(\u_ddrmc_test_top/u_capture/u_pack/mux23_syn_515 ),
+    .ima(1'b1),
+    .imf(\u_ddrmc_test_top/u_capture/u_pack/sof_dup_78 ),
+    .ofa(\u_ddrmc_test_top/u_capture/u_pack/active_reg_syn_5 ),
+    .ofb(\u_ddrmc_test_top/u_capture/u_pack/mux44_syn_515 ),
+    .oqa(\u_ddrmc_test_top/u_capture/pixel_reset [0]));
+
+NETLIST_LINE 266428
+  PH1P_PHY_LSLICE #(
+    //.LUT5A("(~C*E*B)"),
+    //.LUT5B("(~C*E*B*~A)"),
+    .ASRMUX("INV"),
+    .CEAMUX("1"),
+    .CLKMUX("SIG"),
+    .INIT_LUT5A(32'b00001100000011000000000000000000),
+    .INIT_LUT5B(32'b00000100000001000000000000000000),
+    .LATCHMODE("DFF"),
+    .LUT5A_SD0("IC"),
+    .LUT5A_SD1("IE"),
+    .LUTMODE("DLUT5"),
+    .OFA_SD("LUT5A"),
+    .OFB_SD("LUTX"),
+    .OQAMUX("QA"),
+    .REGA_REGSET_ASYNC("RESET"),
+    .REGA_REGSET_SYNC("RESET"),
+    .REGA_SD("IMA"),
+    .SSRMUX("0"),
+    .SSROVERCE("ENABLE"))
+    \u_ddrmc_test_top/u_capture/pixel_reset_reg[1]_syn_2  (
+    .asr(\u_ddrmc_test_top/u_capture/run_rst_n_dup_943 ),
+    .clk(\u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet ),
+    .ia(\u_ddrmc_test_top/u_capture/u_pack/sof_dup_78 ),
+    .ib(\u_ddrmc_test_top/u_capture/u_pack/pixel_valid ),
+    .ic(\u_ddrmc_test_top/u_capture/u_pack/preview_done ),
+    .ie(\u_ddrmc_test_top/u_capture/u_pack/active ),
+    .ima(\u_ddrmc_test_top/u_capture/pixel_reset [0]),
+    .ofa(\u_ddrmc_test_top/u_capture/u_pack/sample ),
+    .ofb(\u_ddrmc_test_top/u_capture/u_pack/mux23_syn_515 ),
+    .oqa(\u_ddrmc_test_top/u_capture/u_pixels/rst_n ));
+
+NETLIST_LINE 266460
+  PH1P_PHY_LSLICE #(
+    //.LUT5B("(C*D*E)"),
+    .INIT_LUT5B(32'b11110000000000000000000000000000),
+    .LUT5B_SD2("ID"),
+    .LUTMODE("DLUT5"),
+    .OFB_SD("LUTX"))
+    \u_ddrmc_test_top/u_capture/run_rst_n_syn_956  (
+    .ic(\u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_fiu_wrapper/rst_n ),
+    .id(\u_camera/display_rst_n ),
+    .ie(\u_ddrmc_test_top/u_capture/ddr_ready_dup_762 ),
+    .ofb(\u_ddrmc_test_top/u_capture/run_rst_n_dup_953 ));
+
+NETLIST_LINE 266508
+  PH1P_PHY_LSLICE #(
+    //.LUT5A("(E*D)"),
+    //.LUT5B("(E*D*C)"),
+    .INIT_LUT5A(32'b11111111000000000000000000000000),
+    .INIT_LUT5B(32'b11110000000000000000000000000000),
+    .LUT5A_SD1("IMF"),
+    .LUT5B_SD2("IMB"),
+    .LUTMODE("DLUT5"),
+    .OFA_SD("LUT5A"),
+    .OFB_SD("LUTX"))
+    \u_ddrmc_test_top/u_capture/run_rst_n_syn_959  (
+    .ic(\u_ddrmc_test_top/u_capture/ddr_ready_dup_762 ),
+    .id(\u_ddrmc_test_top/u_capture/u_reader/mux93_syn_dup_1037 ),
+    .ie(\u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_fiu_wrapper/rst_n ),
+    .imb(\u_camera/display_rst_n ),
+    .imf(\u_ddrmc_test_top/u_capture/u_reader/word_buf [193]),
+    .ofa(\u_ddrmc_test_top/u_capture/u_display_fifo/w_data [193]),
+    .ofb(\u_ddrmc_test_top/u_capture/run_rst_n_dup_943 ));
+
+NETLIST_LINE 270705
+  PH1P_PHY_LSLICE #(
+    //.LUT5A("(E*D*C)"),
+    //.LUT5B("(B*~(E)*~(A)+B*E*~(A)+~(B)*E*A+B*E*A)"),
+    .ASRMUX("INV"),
+    .CEAMUX("1"),
+    .CEBMUX("1"),
+    .CLKMUX("SIG"),
+    .INIT_LUT5A(32'b11110000000000000000000000000000),
+    .INIT_LUT5B(32'b11101110111011100100010001000100),
+    .LATCHMODE("DFF"),
+    .LUT5A_SD0("IC"),
+    .LUT5A_SD1("IMF"),
+    .LUTMODE("DLUT5"),
+    .OFA_SD("LUT5A"),
+    .OFB_SD("LUTX"),
+    .OQAMUX("QA"),
+    .OQBMUX("QB"),
+    .REGA_REGSET_ASYNC("RESET"),
+    .REGA_REGSET_SYNC("RESET"),
+    .REGA_SD("IMA"),
+    .REGB_REGSET_ASYNC("RESET"),
+    .REGB_REGSET_SYNC("RESET"),
+    .REGB_SD("IMB"),
+    .SSRMUX("0"),
+    .SSROVERCE("ENABLE"))
+    \u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset_reg[0]_syn_2  (
+    .asr(\u_ddrmc_test_top/u_capture/run_rst_n_dup_947 ),
+    .clk(\u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_r_bk1_sclk_outnet ),
+    .ia(\u_ddrmc_test_top/u_capture/u_reader/mux93_syn_1001 ),
+    .ib(\u_ddrmc_test_top/u_capture/u_reader/frame_id [20]),
+    .ic(\u_ddrmc_test_top/u_capture/ddr_ready_dup_762 ),
+    .id(\u_camera/display_rst_n ),
+    .ie(\u_ddrmc_test_top/u_capture/u_reader/word_buf [20]),
+    .ima(1'b1),
+    .imb(\u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset [0]),
+    .imf(\u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_fiu_wrapper/rst_n ),
+    .ofa(\u_ddrmc_test_top/u_capture/run_rst_n_dup_947 ),
+    .ofb(\u_ddrmc_test_top/u_capture/u_display_fifo/w_data [20]),
+    .oqa(\u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset [0]),
+    .oqb(\u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset [1]));
+
+NETLIST_LINE 295869
+  PH1P_PHY_LSLICE #(
+    //.LUT5A("B"),
+    //.LUT5B("B*~E*~C+E*D*~C+A*C"),
+    .ASRMUX("INV"),
+    .CEAMUX("SIG"),
+    .CEBMUX("1"),
+    .CLKMUX("SIG"),
+    .INIT_LUT5A(32'b11001100110011001100110011001100),
+    .INIT_LUT5B(32'b10101111101000001010110010101100),
+    .LATCHMODE("DFF"),
+    .LUTMODE("LUT6"),
+    .OFA_SD("LUT6"),
+    .OFB_SD("LUTX"),
+    .OQAMUX("QA"),
+    .OQBMUX("QB"),
+    .REGA_REGSET_ASYNC("RESET"),
+    .REGA_REGSET_SYNC("RESET"),
+    .REGA_SD("OFA"),
+    .REGB_REGSET_ASYNC("RESET"),
+    .REGB_REGSET_SYNC("RESET"),
+    .REGB_SD("IMB"),
+    .SSRMUX("0"),
+    .SSROVERCE("ENABLE"))
+    \u_ddrmc_test_top/u_capture/u_pixels/current_word_reg[44]_syn_2  (
+    .asr(\u_ddrmc_test_top/u_capture/u_pixels/rst_n ),
+    .cea(\u_ddrmc_test_top/u_capture/u_pixels/mux54_syn_dup_535 ),
+    .clk(\u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet ),
+    .ia(\u_ddrmc_test_top/u_capture/u_pixels/current_word [52]),
+    .ib(\u_ddrmc_test_top/u_capture/u_pixels/next_word [44]),
+    .ic(\u_ddrmc_test_top/u_capture/u_pixels/current_valid_dup_26 ),
+    .id(\u_ddrmc_test_top/u_capture/u_pixels/next_word [52]),
+    .ie(\u_ddrmc_test_top/u_capture/u_pixels/next_valid_dup_25 ),
+    .imb(\u_ddrmc_test_top/u_capture/u_reader/ack_toggle ),
+    .imf(al_601),
+    .oqa(\u_ddrmc_test_top/u_capture/u_pixels/current_word [44]),
+    .oqb(\u_ddrmc_test_top/u_capture/u_pixels/ack1 ));
+
+NETLIST_LINE 295907
+  PH1P_PHY_LSLICE #(
+    //.LUT5A("D*E*A*~C+B*~E*~C+~D*B"),
+    //.LUT5B("D*E*A+B*~E+~D*B+D*C"),
+    .ASRMUX("INV"),
+    .CEAMUX("SIG"),
+    .CEBMUX("1"),
+    .CLKMUX("SIG"),
+    .INIT_LUT5A(32'b00001010110011000000110011001100),
+    .INIT_LUT5B(32'b11111010110011001111110011001100),
+    .LATCHMODE("DFF"),
+    .LUTMODE("LUT6"),
+    .OFA_SD("LUT6"),
+    .OFB_SD("LUTX"),
+    .OQAMUX("QA"),
+    .OQBMUX("QB"),
+    .REGA_REGSET_ASYNC("RESET"),
+    .REGA_REGSET_SYNC("RESET"),
+    .REGA_SD("OFA"),
+    .REGB_REGSET_ASYNC("RESET"),
+    .REGB_REGSET_SYNC("RESET"),
+    .REGB_SD("IMB"),
+    .SSRMUX("0"),
+    .SSROVERCE("ENABLE"))
+    \u_ddrmc_test_top/u_capture/u_pixels/current_word_reg[45]_syn_2  (
+    .asr(\u_ddrmc_test_top/u_capture/u_pixels/rst_n ),
+    .cea(\u_ddrmc_test_top/u_capture/u_pixels/mux54_syn_dup_535 ),
+    .clk(\u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet ),
+    .ia(\u_ddrmc_test_top/u_capture/u_pixels/next_word [53]),
+    .ib(\u_ddrmc_test_top/u_capture/u_pixels/next_word [45]),
+    .ic(\u_ddrmc_test_top/u_capture/u_pixels/current_valid_dup_26 ),
+    .id(al_601),
+    .ie(\u_ddrmc_test_top/u_capture/u_pixels/next_valid_dup_25 ),
+    .imb(\u_ddrmc_test_top/u_capture/u_pixels/ack1 ),
+    .imf(\u_ddrmc_test_top/u_capture/u_pixels/current_word [53]),
+    .oqa(\u_ddrmc_test_top/u_capture/u_pixels/current_word [45]),
+    .oqb(\u_ddrmc_test_top/u_capture/u_pixels/ack2 ));
+
+NETLIST_LINE 298009
+  PH1P_PHY_LSLICE #(
+    //.LUT5A("~(~B*~(A)*~(C)+~B*A*~(C)+~(~B)*A*C+~B*A*C)"),
+    //.LUT5B("~(~(E*~D)*~((B@A))*~(C)+~(E*~D)*(B@A)*~(C)+~(~(E*~D))*(B@A)*C+~(E*~D)*(B@A)*C)"),
+    .ASRMUX("INV"),
+    .CEAMUX("1"),
+    .CEBMUX("1"),
+    .CLKMUX("SIG"),
+    .INIT_LUT5A(32'b01011100010111000101110001011100),
+    .INIT_LUT5B(32'b10010000100111111001000010010000),
+    .LATCHMODE("DFF"),
+    .LUT5A_SD0("IC"),
+    .LUT5B_SD2("IMB"),
+    .LUTMODE("DLUT5"),
+    .OFA_SD("LUT5A"),
+    .OFB_SD("LUTX"),
+    .OQAMUX("QA"),
+    .OQBMUX("QB"),
+    .REGA_REGSET_ASYNC("RESET"),
+    .REGA_REGSET_SYNC("RESET"),
+    .REGA_SD("LUT5A"),
+    .REGB_REGSET_ASYNC("RESET"),
+    .REGB_REGSET_SYNC("RESET"),
+    .REGB_SD("LUT6"),
+    .SSRMUX("0"),
+    .SSROVERCE("ENABLE"))
+    \u_ddrmc_test_top/u_capture/u_pixels/expected_epoch_reg_syn_6  (
+    .asr(\u_ddrmc_test_top/u_capture/u_pixels/rst_n ),
+    .clk(\u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet ),
+    .ia(\u_ddrmc_test_top/u_capture/u_pixels/ack2 ),
+    .ib(\u_ddrmc_test_top/u_capture/u_pixels/expected_epoch ),
+    .ic(\u_ddrmc_test_top/u_capture/u_pixels/rgb_b[23]_syn_4 ),
+    .ie(\u_ddrmc_test_top/u_capture/u_pixels/await_start ),
+    .imb(\u_ddrmc_test_top/u_capture/u_pixels/current_valid_i4_syn_2 ),
+    .oqa(\u_ddrmc_test_top/u_capture/u_pixels/expected_epoch ),
+    .oqb(\u_ddrmc_test_top/u_capture/u_pixels/await_start ));
+
+NETLIST_LINE 302146
+  PH1P_PHY_LSLICE #(
+    //.LUT5A("A*B*~D*E+A*~C*E"),
+    //.LUT5B("~B*C+C*D+~A+E"),
+    .ASRMUX("INV"),
+    .CEAMUX("1"),
+    .CLKMUX("SIG"),
+    .INIT_LUT5A(32'b00001010100010100000000000000000),
+    .INIT_LUT5B(32'b11111111111111111111010101110101),
+    .LATCHMODE("DFF"),
+    .LUTMODE("LUT6"),
+    .OFA_SD("LUT6"),
+    .OFB_SD("LUTX"),
+    .OQAMUX("QA"),
+    .REGA_REGSET_ASYNC("RESET"),
+    .REGA_REGSET_SYNC("RESET"),
+    .REGA_SD("OFA"),
+    .SSRMUX("0"),
+    .SSROVERCE("ENABLE"))
+    \u_ddrmc_test_top/u_capture/u_reader/ack_toggle_reg_syn_8  (
+    .asr(\u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset [1]),
+    .clk(\u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_r_bk1_sclk_outnet ),
+    .ia(\u_ddrmc_test_top/u_capture/ddr_ready_dup_759 ),
+    .ib(\u_ddrmc_test_top/u_capture/u_reader/ack_toggle_reg_syn_5 ),
+    .ic(\u_ddrmc_test_top/u_capture/u_store/slot_state_reg[4]_syn_6 ),
+    .id(\u_ddrmc_test_top/u_capture/u_reader/mux78_syn_109 ),
+    .ie(\u_ddrmc_test_top/u_capture/u_reader/ack_toggle ),
+    .imf(\u_ddrmc_test_top/u_capture/u_reader/rq2 ),
+    .oqa(\u_ddrmc_test_top/u_capture/u_reader/ack_toggle ));
+
+NETLIST_LINE 316665
+  PH1P_PHY_LSLICE #(
+    .ASRMUX("INV"),
+    .CEAMUX("1"),
+    .CLKMUX("SIG"),
+    .LATCHMODE("DFF"),
+    .OQAMUX("QA"),
+    .REGA_REGSET_ASYNC("RESET"),
+    .REGA_REGSET_SYNC("RESET"),
+    .REGA_SD("IMA"),
+    .SSRMUX("0"),
+    .SSROVERCE("ENABLE"))
+    \u_ddrmc_test_top/u_capture/u_reader/rq1_reg_syn_3  (
+    .asr(\u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset [1]),
+    .clk(\u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet ),
+    .ima(\u_ddrmc_test_top/u_capture/u_pixels/expected_epoch ),
+    .oqa(\u_ddrmc_test_top/u_capture/u_reader/rq1 ));
+
+NETLIST_LINE 316683
+  PH1P_PHY_LSLICE #(
+    //.LUT5A("(D*A)"),
+    //.LUT5B("(B*A)"),
+    .ASRMUX("INV"),
+    .CEAMUX("1"),
+    .CLKMUX("SIG"),
+    .INIT_LUT5A(32'b10101010000000001010101000000000),
+    .INIT_LUT5B(32'b10001000100010001000100010001000),
+    .LATCHMODE("DFF"),
+    .LUTMODE("DLUT5"),
+    .OFA_SD("LUT5A"),
+    .OFB_SD("LUTX"),
+    .OQAMUX("QA"),
+    .REGA_REGSET_ASYNC("RESET"),
+    .REGA_REGSET_SYNC("RESET"),
+    .REGA_SD("IMA"),
+    .SSRMUX("0"),
+    .SSROVERCE("ENABLE"))
+    \u_ddrmc_test_top/u_capture/u_reader/rq2_reg_syn_3  (
+    .asr(\u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset [1]),
+    .clk(\u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_r_bk1_sclk_outnet ),
+    .ia(\u_ddrmc_test_top/u_capture/u_reader/mux93_syn_1001 ),
+    .ib(\u_ddrmc_test_top/u_capture/u_reader/word_buf [33]),
+    .id(\u_ddrmc_test_top/u_capture/u_reader/word_buf [34]),
+    .ima(\u_ddrmc_test_top/u_capture/u_reader/rq1 ),
+    .ofa(\u_ddrmc_test_top/u_capture/u_display_fifo/w_data [34]),
+    .ofb(\u_ddrmc_test_top/u_capture/u_display_fifo/w_data [33]),
+    .oqa(\u_ddrmc_test_top/u_capture/u_reader/rq2 ));
+
+NETLIST_LINE 332614
+  PH1P_PHY_LSLICE #(
+    //.LUT5A("(D*E*B)"),
+    //.LUT5B("(E*D)"),
+    .ASRMUX("INV"),
+    .CEAMUX("SIG"),
+    .CEBMUX("SIG"),
+    .CLKMUX("SIG"),
+    .INIT_LUT5A(32'b11001100000000000000000000000000),
+    .INIT_LUT5B(32'b11111111000000000000000000000000),
+    .LATCHMODE("DFF"),
+    .LUT5A_SD1("IMF"),
+    .LUT5B_SD2("IMB"),
+    .LUTMODE("DLUT5"),
+    .OFA_SD("LUT5A"),
+    .OFB_SD("LUTX"),
+    .OQAMUX("QA"),
+    .OQBMUX("QB"),
+    .REGA_REGSET_ASYNC("RESET"),
+    .REGA_REGSET_SYNC("RESET"),
+    .REGA_SD("IMA"),
+    .REGB_REGSET_ASYNC("RESET"),
+    .REGB_REGSET_SYNC("RESET"),
+    .REGB_SD("LUT6"),
+    .SSRMUX("0"),
+    .SSROVERCE("ENABLE"))
+    \u_ddrmc_test_top/u_capture/u_store/rd_data_reg[187]_syn_2  (
+    .asr(\u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset [1]),
+    .cea(\u_ddrmc_test_top/u_capture/u_store/rd_valid_i_syn_dup_11 ),
+    .ceb(\u_ddrmc_test_top/u_capture/u_reader/mux88_syn_dup_529 ),
+    .clk(\u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_r_bk1_sclk_outnet ),
+    .ib(\u_ddrmc_test_top/u_capture/ddr_ready_dup_762 ),
+    .id(\u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_fiu_wrapper/rst_n ),
+    .ie(\u_ddrmc_test_top/u_capture/u_store/rd_data [186]),
+    .ima(\u_ddrmc_test_top/u_capture/u_store/paxi_rdata [187]),
+    .imb(\u_ddrmc_test_top/u_capture/u_reader/footer_match_b3[4]_dup_10 ),
+    .imf(\u_camera/display_rst_n ),
+    .ofa(\u_ddrmc_test_top/u_capture/run_rst_n_dup_945 ),
+    .oqa(\u_ddrmc_test_top/u_capture/u_store/rd_data [187]),
+    .oqb(\u_ddrmc_test_top/u_capture/u_reader/word_buf [186]));

@@ -1,0 +1,4 @@
+- 261017 1500 用户请求以队友两个原仓库作为主仓库的改动/合入规划。仅规划，不启动实施。list_agents确认原规划 /root/fpga_status_planner 可续接。
+- 261017 1501 followup_task target=/root/fpga_status_planner；新需求原话及两仓库URL已传；仅规划写入本次output，不启动开发/远程写入。
+- 261017 1510 为收束规划中断原规划（previous_status=running）并以followup_task续同一真实ID，要求依据既有核对结果完成本次规划文件；未改范围。
+- 261017 1513 原规划 /root/fpga_status_planner 返回 finished、needs_user_input=false；dispatch relay_to_user；原样转发user-summary.md，详细integration-plan仅交路径。

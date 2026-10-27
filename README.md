@@ -1,3 +1,10 @@
+> **当前项目入口（2026-10-27）**：先读 [当前代码、队友材料与活动 run](docs/PROJECT_SYNC_20261027.md)。
+> FPGA：[本原仓 main](https://github.com/xiaozhuABCD1234/ph1p100-pcie-ep-fpga/tree/main)；RK：[驱动与应用原仓 main](https://github.com/xiaozhuABCD1234/ph1p100-pcie-ep-driver/tree/main)。
+> 当前代码在 [rtl/](rtl/)；父工作区源码、文档、工作流与候选快照在 [workspace/ph1p100/](workspace/ph1p100/)，同名文件须按 SHA 区分。
+> 队友从 [B 路真帧交接包](handoff/rk-a1u1-b18-20261026/README.md) 开始；配套 bit/CWC/BID 在 [artifacts/](artifacts/)。
+> 集成进展看 [活动 run 快照](workspace/ph1p100/workflow/runs/20261026-2138_fpga-integrated-delivery/dispatch.json)；原 `D:\fpga\ph1p100` 活动 run 继续原地推进。
+> 本次同步不代表整机验收通过；下方保留原工程说明，历史路径与结论请结合当前入口核对。
+
 # 2026-embedded-chip-fpga-ph1p100
 
 米联客 **MLK-F9P**（安路 Anlogic **PH1P100SBG484**）**PCIe Gen2×2 例程**。
@@ -74,8 +81,6 @@ UART 命令脚本：`doc/uart_cmd_file_pcie.txt`（可经板载串口下发校�
 - 驱动目录里残留了部分内核模块构建中间物（`.mod`、`Module.symvers`、`modules.order` 等），
   重新 `make` 即可覆盖。
 - 引脚约束在 `prj/*/constraints/*.adc`，时序在 `*.sdc`；引脚定义可查板卡的 `03_管脚定义表/PCIEx2-管脚定义表.xlsx`。
-- `sim_do/regress.sh`：7 个 RTL 单元测试台一键回归（iverilog，**不需要板子、不需要 TD**）。
-  改完 RTL 先跑它再上板；`tb_img` 有 1 项已记录在案的历史遗留，脚本按 KNOWN-FAIL 处理。
 
 ## 相机整帧（4K）→ DDR3（`rtl/ep_side/ddr/cam_ddr_writer.v` ×2 + `ddr_wr_arb.v`）
 
@@ -131,19 +136,9 @@ CSI-2 字节域 187.5MHz                       DDR 用户域 dhi_clk 100MHz
   FIFO 满导致的丢帧。
 - **IDELAY tap**：`0x9C`（A）/ `0xD4`（B）各配 `{manual_en, tap[5:0]}`，默认 46 + manual
   （自动扫描会落到 32，误码很高）。两路 PCB 走线不同，**必须分开配**。
-- **两路推帧（同时在推）**：A/B **各有一份推帧引擎**（顶层 `u_ddr_frame_pusher` /
-  `u_ddr_frame_pusher_b`），各读自己那组握手字（A `0xA0~0xAC`、B `0xE0~0xEC`）、
-  各推到自己那组目标地址与门铃。使能是两个独立的位：`0x44` 的 `bit6` = A 路、
-  `bit8` = B 路（只写 `bit6` 的老主机行为与单路时代完全一致）。
-  两路的寄存器面：A `0xB0~0xCC`、B `0x100~0x11C`（逐项对应）。
-  共用资源各有一份仲裁器：
-    - DDR3 的 AXI4 **读**口只有一份 → `ddr_rd_arb.v`：**按一次 4KB 突发**独占，
-      AR 握手那一刻锁定、直到该突发 `rlast` 才放锁（读数据不能中途换手，会串帧）；
-      锁定期把 `m_arvalid` 关成 0（两路 arid 都是 0，不许有多个未完成突发）。
-    - 用户侧 TL 发送口只有一套 → `tl_tx_arb.v`：**按一笔 TLP** 独占，
-      `utx_sel=1` 期间绝不换手（引擎是按一个 TLP 借口的，中途换手会把两笔包拼烂）。
-  实测（Gen2 ×2）：两路各 64800 笔 MWr/帧、err=0、速率各 ≈7.85fps，
-  即同时满帧率推、互不饿死。
+- **推帧取哪一路**：`0x44` 的 `bit8`（`0` = A 路默认，`1` = B 路），决定推帧引擎读哪组
+  握手字与哪个 DDR 基址（推帧引擎只有一份，所以主机侧同一时刻看到一路；两路同时推
+  需要再加一份推帧引擎与 DDR 读口仲裁）。
 - **每帧的两类诊断字**（定位「为什么这帧没发布」用，板上就是靠它们定的案）：
   `0xDC = {notack[15:0], stuck[15:0]}`、`0xF0 = {last_beats[15:0], last_wcnt[15:0]}`、
   `0xF4 = {24'd0, verdict_snap}`（bit0 p_bad / bit1 没见 EOF / bit2 字数不符 /
@@ -160,9 +155,7 @@ CSI-2 字节域 187.5MHz                       DDR 用户域 dhi_clk 100MHz
 - **测试台**：`sim_do/tb_cam_ddr_writer.v`（逐字节比对、双缓冲、AXI 规则、短板突发、
   坏帧不发布 + 恢复、诊断值；实例参数刻意取 W=20/H=44/BB=16，一次覆盖残拍与短板
   两条边角路径）、`sim_do/tb_ddr_wr_arb.v`（通道方向、未授权者被关住、busy 期间不换手、
-  让出端口、以及「等端口时换手」的死锁形态）、`sim_do/tb_ddr_rd_arb.v`（读数据不许
-  中途换手、锁定期不放 AR、rlast 那拍仍归原主、放锁后轮转、未锁定时 rready 恒 0）、
-  `sim_do/tb_tl_tx_arb.v`（TLP 期间不换手、空档换手、授权与数据同源、两路交替不饿死）。
+  让出端口、以及「等端口时换手」的死锁形态）。
 
 ### 上板步骤（双路 4K）
 
@@ -172,38 +165,29 @@ insmod anlogic_pci.ko
 #    板上 /usr/lib/modules/$(uname -r)/updates/ 那份厂商版必须被覆盖掉，见 driver/README.md
 
 # 2) 主机侧写 BAR0 寄存器（cam_grab/pci_bar 都能写；顺序无所谓，但建议一起写）
-#    0x44 = bit5(ddr_en) | bit6(push_en_A)        = 0x60   （只推 A 路）
-#           再 | bit8(push_en_B) 两路同时推        = 0x160
-./pci_bar 0 0x44 0x160
-#    A 路：0xB0/0xB4 = 收帧缓冲路 0 的 DMA 地址、0xB8/0xBC = 它的门铃字
-#    B 路：0x100/0x104 = 收帧缓冲路 1 的 DMA 地址、0x108/0x10C = 它的门铃字
-#    （探测时驱动已经按两路填好；手动改地址用 ANLOGIC_IOCPUSHCFG / IOCPUSHCFGB）
+#    0x44 = bit5(ddr_en) | bit6(push_en)          = 0x60   （推 A 路）
+#           再 | bit8 就是推 B 路                  = 0x160
+./pci_bar 0 0x44 0x60
+#    0xB0/0xB4 = 主机收帧缓冲的 DMA 地址、0xB8/0xBC = mailbox 页里的门铃字
+#    （探测时驱动已经填好）
 #    读回自检：0xA8 bit0=valid bit2=err；0xAC 与 0xEC 都应是 8294400；
-#              0xD0/0xD8 应是 {2197, 960} 附近；0x9C/0xD4 看两路的 tap；
-#              0xC0/0x110 = 两路各自的已推帧数（都应在涨）、0xCC/0x11C = 64800
+#              0xD0/0xD8 应是 {2197, 960} 附近；0x9C/0xD4 看两路的 tap
 
-# 3) 板子上取帧（两路各一个字符节点）
-./frame_grab --info                 # A 路（老行为，默认就是它）
-./frame_grab -o a.pgm
-./frame_grab -d /dev/ANLOGIC-PCI0_frame_b -o b.pgm   # B 路
-# 两路同时显示（各起一个实例，端口分开）：
-#   ./display-stream --source device --device /dev/ANLOGIC-PCI0_frame   --bayer gbrg --auto --port 8098 &
-#   ./display-stream --source device --device /dev/ANLOGIC-PCI0_frame_b --bayer gbrg --auto --port 8099 &
+# 3) 板子上取帧
+./frame_grab --info                 # 看几何：应为 3840x2160
+./frame_grab -o f.pgm               # 8.29MB PGM
 ```
 
 
 ### 已知限制 / 还没做的
 
-- **真实图像帧率是 ≈7.85fps/路**（传感器每张图前还发一小帧 embedded 数据，FS 速率
-  15.7/s 里有一半是它）：由传感器 MCLK 12.5MHz + INCKSEL 决定（25MHz 在本板锁不住，
-  见顶层相机段的实测记录）。要 30fps 得先把 MCLK/INCKSEL 调到 24~27MHz 那一档并重新
-  验证链路锁定，与本次改动无关。两路同时跑也是各 ≈7.85fps（读口/TL 口的分时复用
-  只占约 5%+10%，不是瓶颈）。
+- **帧率仍是 ~14.5fps**：那是传感器 MCLK 12.5MHz + INCKSEL 决定的（25MHz 在本板锁不住，
+  见顶层相机段的实测记录）。要 30fps 得先把 MCLK/INCKSEL 调到 24~27MHz 那一档并重新验证
+  链路锁定，与本次改动无关。
 - **只传高 8 位**（RAW10 >>2，1 字节 1 像素）。想要 RAW10/16bit 需要另开一条 16bit 通路，
   DDR/PCIe 带宽翻倍（4K 30fps 16bit ≈ 498MB/s，Gen2×2 就紧张了）。
 - **CPU 侧 JPEG 是另一个瓶颈**：`display/` 那个推流工具在 RK3588 上单线程编 4K JPEG
-  只能几 fps，`--auto --bayer gbrg` 更慢；两路各起一个实例时各约 3fps（实测），
-  要流畅推流得先加一级降采样。
+  只能几 fps，`--auto --bayer gbrg` 更慢；要流畅推流得先加一级降采样。
 
 ## 提交信息规范
 
@@ -213,3 +197,24 @@ insmod anlogic_pci.ko
 - 范围：本仓库的模块名，如 `rtl` / `constraints` / `ip` / `doc`
 - 示例：`fix(rtl): 修正 IMX415 主时钟分频，恢复相机链路锁定`
 - 由 `commit-msg` 钩子校验，不合规直接拒绝
+
+
+## raw10-rka1 迁入说明（2026-10-18）
+
+本分支（`codex/raw10-rka1`）把已验收的 RAW10/R10F/DDR/PCIe（RKA1 单帧 ARM/held/ACK/CANCEL）通路
+逐文件并入本仓，保留原 PCIe 硬核、DDR AXI 接口、IP 与约束；不改时钟/SDC。
+
+- 新增目录：`rtl/checked/`（包完整性检查/解包/CRC 树）、`sim/`（8 个正式 TB + 编译清单）、
+  `tools/pcie_integration/`（仿真/TD/CRC/严格解析/清单工具）、`docs/protocol/rka1-r10f-v1/`
+  （R10F v1 合同与样例镜像，SHA256SUMS）。
+- 运行前设置：$env:MSIM_BIN=<modelsim_ase>\win32aloem；$env:TD_BIN=<TD_Release_2026.2>\bin（仅工具链安装位置；工程路径均相对检出根）。
+- 仿真（ModelSim ASE，检出根运行，单 TB 建议 5 分钟内）：
+  `powershell -ExecutionPolicy Bypass -File tools/pcie_integration/run_sim.ps1 -Tb tb_t11_r10f_e2e
+   -OutDir build/g1/e2e -TbFiles tb/tb_t11_r10f_e2e.v -Defines MIPI_PHY_SIM_STUB`
+  另外 7 个 TB：tb_cam_r10f_writer / tb_t11_csi_enable_corner / tb_ddr_frame_pusher_rka1 /
+  tb_csi_integrity_diff / tb_csi_checked / tb_ep_bar_win_rka1 / tb_ddr_wr_arb_peer。
+- 构建（TD 2026.2 单会话 syn+phy+bit，不下载/不写 Flash）：
+  `powershell -ExecutionPolicy Bypass -File tools/pcie_integration/run_td.ps1 -Stage 00_all -OutDir <构建输出目录>`
+- 离线检查：`python tools/pcie_integration/r10f_strict.py selftest`、
+  `python tools/pcie_integration/r10f_tools_consistency.py --rust-src <RK侧 rka1.rs 路径>`。
+- 几何/ROI/Bayer 相位仍为未板证占位（diagnostic）；板测与下载需另行授权。

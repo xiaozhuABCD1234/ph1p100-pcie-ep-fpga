@@ -1,0 +1,19 @@
+--- a1_deflate_core.v@0b084317(r2)
++++ a1_deflate_core.v@47b131fc(r2-b)
+@@ -475,7 +475,15 @@
+     wire [7:0]  s1_b1 = (state == S_SCAN) ? w2 : w1;
+     wire [7:0]  s1_b2 = x1_r;
+     wire [12:0] s1_hdist = s1_pos_r - hent_pos;
+-    wire        s1_rng = (s1_hdist <= MAX_DIST) && (hent_pos < s1_pos_r);
++    // r2-b: keep hent_pos (htab ERAM clk2q) out of the 13-bit subtractor.
++    // 0 < (s1_pos_r - hent_pos) <= MAX_DIST  <=>
++    // hent_pos < s1_pos_r && hent_pos >= max(s1_pos_r - MAX_DIST, 0).
++    // The saturating lower bound is derived from the s1_pos_r register, so
++    // only the two 13-bit compares launch from hent_pos; s1_hdist is kept for
++    // hd_r/cand_pos.  Exact for unsigned 13-bit values.
++    wire [12:0] s1_lo = (s1_pos_r > MAX_DIST)
++                        ? (s1_pos_r - MAX_DIST) : 13'd0;
++    wire        s1_rng = (hent_pos < s1_pos_r) && (hent_pos >= s1_lo);
+     wire        s1_bytes = hent_v && (hent[65:50] == blk_tag) &&
+                            (hent[23:16] == s1_b0) &&
+                            (hent[15:8]  == s1_b1) &&

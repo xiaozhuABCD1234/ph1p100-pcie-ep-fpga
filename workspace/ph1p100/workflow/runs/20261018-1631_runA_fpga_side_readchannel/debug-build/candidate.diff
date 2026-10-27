@@ -1,0 +1,22 @@
+# T11.runB-debug-build candidate diff
+
+STATUS: no upstream change. The build used the frozen commit as-is.
+
+- upstream HEAD = 8e1ef05f12831e94311c6cc593090198b0e258fc (parent c89ab758...)
+- `git status --porcelain` = empty (clean); no new commit, no push.
+- RTL / constraints / al_ip / build entry / TB: byte-identical to P1 manifest
+  (debug-rtl/candidate-manifest.json, SHA256 305aec10...), verified by HEAD/clean.
+- P2 did NOT modify 00_all_debug.tcl, 00_all.tcl, run_td.ps1, SDC/ADC, or any RTL.
+
+Run-local build recipe (not part of the design):
+- debug-build/prj_frozen/00_all_debug.tcl: TD-generated copy of the frozen entry
+  (REPO_ROOT substituted by run_td.ps1), used for the full build.
+- debug-build/prj (prj2/prj3): aborted preflight experiments (encoding / ADC /
+  SDC syntax); prj3 contains the failed SDC-marking attempt. None produced a
+  bitstream. They are evidence only and are not inputs to the frozen build.
+- debug-build/run-build*.ps1 / run-build3.ps1: wrapper experiments (hard timeout
+  1800 s + taskkill tree); final build was invoked inline with the same wrapper
+  semantics and the upstream run_td.ps1.
+
+Therefore the only delta between this task and P1 is generated build output
+under debug-build/prj_frozen (bit/DB/reports/logs), not source.

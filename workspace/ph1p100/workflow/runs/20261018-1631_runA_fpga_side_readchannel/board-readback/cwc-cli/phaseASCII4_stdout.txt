@@ -1,0 +1,384 @@
+============================================================
+   TD Release_2026.2
+   Copyright (c) 2012-2026 Anlogic Inc.
+   Executable = D:/anlogic/TD_Release_2026.2/bin/td_commands_prompt.exe
+   Build number = 6.2.3.210850
+   Built at =   11:35:58 Aug 19 2026
+   Run by =     czz
+   Run Date =   Sun Oct 18 23:24:36 2026
+
+   Run on =     LAPTOP-HE7N8DN4
+============================================================
+A4_START t=23:24:36
+RUN-1002 : start command "connect_cable -host_name 127.0.0.1:5555 -open"
+A4_CONNECT=0 -> 
+RUN-1002 : start command "read_device_id"
+PH1P100
+A4_DEV=0 -> PH1P100
+RUN-1002 : start command "config_chipwatcher D:/anlogic/runa_p3/ascii_20261018_232333/compiled.cwc"
+KIT-1004 : Chipwatcher code = 1010110001101100
+KIT-1004 : import watcher inst auto_created_cwc1 completed, there are 9 view node(s), 288 trigger net(s), 288 data net(s).
+A4_CONFIG=0 -> 
+USR-8011 ERROR: config_chipwatcher: invalid option -verbose.
+A4_CFG_VERB=1 -> 
+RUN-1002 : start command "get_hw_cws *"
+A4_HWS=0 -> auto_created_cwc1
+RUN-1002 : start command "get_hw_cws * -verbose"
+KIT-1001 : Total Matches 1
+KIT-1001 : auto_created_cwc1
+A4_HWS_VERB=0 -> auto_created_cwc1
+USR-8011 ERROR: report_cwc_status: invalid option -verbose.
+A4_STAT_VERB=1 -> 
+RUN-1002 : start command "report_cwc_status auto_created_cwc1"
+RUN-1001 : print cwc global configuration
+RUN-1001 : --------------------------------------------------------------------------------------
+RUN-1001 :          Project         |      Chip       |          Cwc File           |  Bit File  
+RUN-1001 : --------------------------------------------------------------------------------------
+RUN-1001 :   ph1p_pcie_integration  |  PH1P100SBG484  | D:/anlogic/runa_p3/asci...  |            
+RUN-1001 : --------------------------------------------------------------------------------------
+RUN-1001 : print net viewer configuration
+RUN-1001 : ------------------------------------------------------------------------------------------------------------------
+RUN-1001 :             Node             |        Type        |  Enabled  |        Trigger Clock        |  Watcher Instances  
+RUN-1001 : ------------------------------------------------------------------------------------------------------------------
+RUN-1001 :  u_top/u_pcie_ep_engine/...  |  MARK_DEBUG_PROBE  |    Yes    | u_top/u_uart/u_uart_cdc...  |  auto_created_cwc1  
+RUN-1001 :  u_top/u_pcie_ep_engine/...  |  MARK_DEBUG_PROBE  |    Yes    | u_top/u_uart/u_uart_cdc...  |  auto_created_cwc1  
+Anlogic hwserver v1.0c (g1deb3940) Build Date 2024-12-09 17:36:53
+Initialize ftdi
+Use channel A
+Open device vid=0x0403 pid=0x6042
+Error @ mpsse.cpp:90 : usb_open() failed
+RUN-1001 :  u_top/u_pcie_ep_engine/...  |  MARK_DEBUG_PROBE  |    Yes    | u_top/u_uart/u_uart_cdc...  |  auto_created_cwc1  
+RUN-1001 :  u_top/u_pcie_ep_engine/...  |  MARK_DEBUG_PROBE  |    Yes    | u_top/u_uart/u_uart_cdc...  |  auto_created_cwc1  
+RUN-1001 :  u_top/u_pcie_ep_engine/...  |  MARK_DEBUG_PROBE  |    Yes    | u_top/u_uart/u_uart_cdc...  |  auto_created_cwc1  
+RUN-1001 :  u_top/u_pcie_ep_engine/...  |  MARK_DEBUG_PROBE  |    Yes    | u_top/u_uart/u_uart_cdc...  |  auto_created_cwc1  
+RUN-1001 :  u_top/u_pcie_ep_engine/...  |  MARK_DEBUG_PROBE  |    Yes    | u_top/u_uart/u_uart_cdc...  |  auto_created_cwc1  
+RUN-1001 :  u_top/u_pcie_ep_engine/...  |  MARK_DEBUG_PROBE  |    Yes    | u_top/u_uart/u_uart_cdc...  |  auto_created_cwc1  
+RUN-1001 :  u_top/u_pcie_ep_engine/...  |  MARK_DEBUG_PROBE  |    Yes    | u_top/u_uart/u_uart_cdc...  |  auto_created_cwc1  
+RUN-1001 : ------------------------------------------------------------------------------------------------------------------
+RUN-1001 : print chipwatcher instances configuration
+RUN-1001 : ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+RUN-1001 :        Wathcer       |  Sample Depth  |            Clock            |  Input Pipe Stage  |  Output Pipe State  |  Power On trigger  |  Trig Input  |  Trig Output  |  Trig Bit Edge  |  Same Comparator  
+RUN-1001 : ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+RUN-1001 :   auto_created_cwc1  |      1024      | u_top/u_uart/u_uart_cdc...  |         0          |          0          |      disable       |   disable    |    disable    |     disable     |      Disable      
+RUN-1001 : ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+RUN-1001 : chipwatcher instance auto_created_cwc1 information: id 0, trigger length 1024, trigger postion 127
+RUN-1001 : ------------------------------------------------------------------------------------------------------------
+RUN-1001 :   Name                       |  Data Enable  |  Trigger Enable  |  Trigger Operators  |  Trigger Condition
+RUN-1001 : ------------------------------------------------------------------------------------------------------------
+RUN-1001 :   u_top/u_pcie_ep_engine/... |  Checked      |  Checked         |  dont_care          |  
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :   u_top/u_pcie_ep_engine/... |  Checked      |  Checked         |  dont_care          |  
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :   u_top/u_pcie_ep_engine/... |  Checked      |  Checked         |  dont_care          |  
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :   u_top/u_pcie_ep_engine/... |  Checked      |  Checked         |  dont_care          |  
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :   u_top/u_pcie_ep_engine/... |  Checked      |  Checked         |  dont_care          |  
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :   u_top/u_pcie_ep_engine/... |  Checked      |  Checked         |  dont_care          |  
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :   u_top/u_pcie_ep_engine/... |  Checked      |  Checked         |  dont_care          |  
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :   u_top/u_pcie_ep_engine/... |  Checked      |  Checked         |  dont_care          |  
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :   u_top/u_pcie_ep_engine/... |  Checked      |  Checked         |  dont_care          |  
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 :     u_top/u_pcie_ep_engin... |  Checked      |  Checked         |                     |  low
+RUN-1001 : ------------------------------------------------------------------------------------------------------------
+KIT-1004 : compile chipwatcher successfully!
+A4_STATUS=0 -> 
+A4_PROBELIST={u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word0[31:0]} {u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word1[31:0]} {u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word2[31:0]} {u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word3[31:0]} {u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word4[31:0]} {u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word5[31:0]} {u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word6[31:0]} {u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word7[31:0]} {u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word8[31:0]}
+RUN-1002 : start command "run_hw_cw auto_created_cwc1_trigger -trigger_now -cable 0"
+KIT-8000 ERROR: No watcher instance matched.
+A4_RUN_TRIG rc=1 msg=
+RUN-1002 : start command "run_hw_cw * -trigger_now -cable 0"
+KIT-8000 ERROR: No watcher instance matched.
+A4_RUN_STAR rc=1 msg=
+RUN-1002 : start command "run_hw_cw {u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word0[31:0]} {u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word1[31:0]} {u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word2[31:0]} {u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word3[31:0]} {u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word4[31:0]} {u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word5[31:0]} {u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word6[31:0]} {u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word7[31:0]} {u_top/u_pcie_ep_engine/u_ep_bar_win/g_dbg_mark$dbg_mark_word8[31:0]} -trigger_now -cable 0"
+KIT-8000 ERROR: No watcher instance matched.
+A4_RUN_PROBES rc=1 msg=
+RUN-1002 : start command "run_hw_cw auto_created_cwc1 -trigger_now -cable 0"
+KIT-8000 ERROR: No watcher instance matched.
+A4_RUN_INST rc=1 msg=
+A4_ALLFAIL
+A4_END t=23:24:37
+
+td > 

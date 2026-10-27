@@ -1,0 +1,94 @@
+T10.b9 status packet v3 parse
+input            : captures_b9b/com8_150s.bin
+bytes            : 26550
+packet size      : 177
+packets          : 150
+bad_xor          : 0
+bad_len_ver      : 0
+skipped_bytes    : 0
+
+field                         first           last     delta_wrap
+cap_frames                        0              0              0
+raw_pub                           0              0              0
+enc_frames                        0              0              0
+exported                          0              0              0
+raw_drop                          0              0              0
+cmp_drop                          0              0              0
+errors                            0              0              0
+read_words                        0              0              0
+cam_clk_tgl_inc               60185         566621         506436
+cam_pkt_tgl_inc               24972         228476         203504
+cam_vs_tgl_inc                    2              7              5
+cam_pix_beats                     0              0              0
+cam_line_rises                    0              0              0
+cam_frame_rises                   2              7              5
+cam_frame_falls                   2              7              5
+cam_last_frame_cycles       16777215       16777215     4294967296
+crop_roi_frames                   0              0              0
+crop_groups                       0              0              0
+crop_short                        2              7              5
+crop_geom_err                     0              0              0
+cam_phystat                     494            494     8589934592
+cam_sysstat                    3869           3869              0
+cam_nack_cnt                      0              0              0
+raw_begin_ok                      0              0              0
+raw_begin_deny                    0              0              0
+raw_wr_beats                      0              0              0
+raw_wr_words                      0              0              0
+raw_wr_ptr                        0              0              0
+raw_wr_state                      0              0              0
+raw_rd_state                  16512          16512              0
+raw_slot_st                       0              0              0
+raw_slot_len0                     0              0              0
+raw_slot_len1                     0              0              0
+raw_rd_idx                        0              0              0
+raw_rd_words                      0              0              0
+raw_ar_valid                      0              0              0
+raw_ar_hs                         0              0              0
+raw_rv_cnt                        0              0              0
+raw_rd_open_ok                    0              0              0
+raw_rd_close                      0              0              0
+raw_abort_cnt                     0              0              0
+raw_deny_nofree                   0              0              0
+raw_deny_ddr                      0              0              0
+
+raw_wr_state last : 0x00000000
+  wr_active=0 wr_slot=0 wcnt=0 nbytes=0
+raw_rd_state last : 0x00004080
+  rd_state           = 0 (R_IDLE)
+  rd_armed           = 0
+  rd_sel             = 0
+  rd_valid           = 0
+  raw_rd_open        = 0
+  raw_rd_open_ready  = 0
+  skip_frame         = 1
+  skid_valid         = 0
+  fifo_valid         = 0
+  fifo_ready         = 0
+  raw_active         = 0
+  a1_busy            = 0
+  a1_out_valid       = 0
+  cmp_begin_ready    = 1
+  fstate             = 0 (F_IDLE)
+  a1_in_valid        = 0
+  a1_in_ready        = 0
+  a1_out_last        = 0
+  cmp_begin          = 0
+  cmp_abort          = 0
+raw_slot_st last  : 0x00000000
+  slot0=FREE slot1=FREE seq0=0 seq1=0
+slot bytes        : slot0=0 slot1=0
+raw store write   : begin_ok_delta=0 deny_delta=0 (nofree=0 ddr=0)
+raw store words   : wr_beats_delta=0 wr_words_delta=0 read_words_delta=0
+raw read path     : open_ok=0 close=0 ar_valid=0 ar_hs=0 rv_cnt=0 dup?=0
+abort / drop      : abort_cnt=0 raw_drop_delta=0 cmp_drop_delta=0
+targets           : raw_pub=0 enc_frames=0 exported=0
+
+=== raw store verdict ===
+verdict          : C
+answer           : read never opened (rd_open_ok=0, rd_state=R_IDLE); write side: begin_ok=0, wr_beats=0, raw_pub=0
+where it stops   : rd_state=R_IDLE / fstate=F_IDLE / raw_active=0 / a1_busy=0 / a1_out_valid=0 / raw_rd_open_ready=0 / cmp_begin_ready=1 / fifo_valid=0
+
+=== v2-compatible fields (regression check) ===
+cap_frames=0 crop_roi_frames=0 crop_groups=0 crop_short=5 crop_geom_err=0
+cam_pix_beats=0 cam_line_rises=0 cam_frame_rises=5 cam_frame_falls=5

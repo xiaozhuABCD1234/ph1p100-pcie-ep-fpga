@@ -106,6 +106,18 @@
 //      SKIP_ROWS + 2160 = 2197；不等于它说明 SKIP_ROWS/H 要重新标定。
 //  另：顶层把「字节域丢过组/丢过标记」或到 0x80 相机状态字的 bit15（原来是保留 0），
 //  一眼就能看出是不是 FIFO 满导致的丢帧。
+//  另：T07.rk-align-backend 新增两项（见本文件下方 T07 标记）：
+//    (1) checked CSI 的整帧 good/abort 参与发布裁决：坏帧（CRC/ECC/WC/行数/超时
+//        /FE 未确认）绝不发布序号，只计数；
+//    (2) 缓冲区所有权保护（prot_en/rel_tgl0/rel_tgl1）：push 模式打开时，本模块
+//        发布一块后即「保护该块不许重写」，直到推帧引擎把该块的 release toggle
+//        送回来（claim 后 ACK/CANCEL，或未 claim 的 pass）才允许再次使用。
+//        这样 TL 长时间 stall 期间发射引擎读的那一块不会被相机覆盖；
+//        被保护的块正好轮到本帧时，本帧整帧丢弃（不写 DDR、不发布、计错），
+//        而不是冒险覆盖。prot_en=0（没开推帧）时与旧行为完全一致（自由轮转）。
+//  发布判定的新增条件：本帧必须收到 EOF 且该 EOF 携带「good」（checked CSI 的
+//  O_frame_good）——坏帧的 EOF 在字节域就被标成 bad（f_din[32]），打包器看到
+//  就置 p_bad，于是 verdict_bad 成立、不发布。
 ///////////////////////////////////////////////////////////////////////////////
 `timescale 1ns/1ps
 
@@ -135,6 +147,13 @@ module cam_ddr_writer #(
     input  wire          cam_in_line,
     input  wire [39:0]   cam_pix,
     input  wire          cam_pix_valid,
+    // ---- T07 新增：checked CSI 整帧裁决（字节时钟域，各 1 拍脉冲，与 FE 同拍）----
+    input  wire          cam_frame_good,   // FE 通过 CRC/ECC/WC/行数/超时 ⇒ 1
+    input  wire          cam_frame_abort,  // 本帧已判定坏/被终止 ⇒ 1（粘滞到下一 SOF）
+    // ---- T07 新增：缓冲区所有权保护（tl_clk_user 域，跨域由本模块同步）----
+    input  wire          prot_en,          // 1 = push 模式打开，做「发布即保护」
+    input  wire          rel_tgl0,         // 块 0 release 事件（异步 toggle）
+    input  wire          rel_tgl1,         // 块 1 release 事件
 
     // ---------------- tl_clk_user 域（62.5MHz）：发布握手（接 0xA0~0xAC）----------------
     input  wire          clk_fb,
@@ -230,6 +249,9 @@ module cam_ddr_writer #(
     reg        vsync_d, in_frame_d, in_line_d;
     reg        frame_armed;  // 本帧是否采集（SOF 那一刻锁存 arm）
     reg [1:0]  arm_c;        // arm（ddr 域电平）同步到字节域
+    // T07：checked CSI 的整帧裁决（good/abort 与 FE 同拍；SOF 时清）
+    reg        good_seen;    // 本帧见过 O_frame_good
+    reg        abort_seen;   // 本帧见过 O_frame_abort（粘滞到下一 SOF）
 
     wire [7:0]  p0 = cam_pix[9:2];
     wire [7:0]  p1 = cam_pix[19:12];
@@ -260,6 +282,7 @@ module cam_ddr_writer #(
             x_cnt <= 16'd0; y_cnt <= 16'd0; first_line <= 1'b1;
             vsync_d <= 1'b0; in_frame_d <= 1'b0; in_line_d <= 1'b0;
             frame_armed <= 1'b0; arm_c <= 2'd0;
+            good_seen <= 1'b0; abort_seen <= 1'b0;
             cur_grp <= 16'd0; max_grp <= 16'd0; frame_lines <= 16'd0;
             alive_c1 <= 1'b0; alive_c2 <= 1'b0;
         end else begin
@@ -270,11 +293,17 @@ module cam_ddr_writer #(
             alive_c1   <= ~rst_ddr;
             alive_c2   <= alive_c1;
 
+            // T07：整帧裁决采样（good 与 FE 同拍脉冲；abort 可能发生在帧内任意拍）
+            if (cam_frame_good)  good_seen  <= 1'b1;
+            if (cam_frame_abort) abort_seen <= 1'b1;
+
             if (sof_evt) begin                 // 帧起始：行列归零，锁存本帧是否采集
                 x_cnt       <= 16'd0;
                 y_cnt       <= 16'd0;
                 first_line  <= 1'b1;
                 frame_armed <= arm_c[1];       // 已在字节域稳了 ≥2 拍
+                good_seen   <= 1'b0;           // 新帧重新累计裁决
+                abort_seen  <= 1'b0;
                 cur_grp     <= 16'd0;
                 max_grp     <= 16'd0;
                 frame_lines <= 16'd0;
@@ -299,12 +328,16 @@ module cam_ddr_writer #(
     //    EOF 用 frame_armed 才对：它必须与本帧 SOF 时的采集决定一致。
     wire        push_sof = sof_evt & arm_c[1];
     wire        push_eof = eof_evt & frame_armed;
+    // T07：EOF 携带整帧裁决——只有 checked CSI 判 good 的 FE 才允许发布；
+    //      帧内出现过 abort、或 FE 未带 good，一律把本帧标坏（打包器置 p_bad）。
+    wire        eof_good = cam_frame_good | good_seen;
+    wire        eof_bad  = (~eof_good) | abort_seen | cam_frame_abort;
     wire        push_pix = cam_pix_valid & in_win & frame_armed & ~push_sof & ~push_eof;
     wire        push     = push_sof | push_eof | push_pix;
-    wire [33:0] f_din    = {push_sof, push_eof, pix_word};
+    wire [34:0] f_din    = {push_sof, push_eof, (push_eof & eof_bad), pix_word};
 
     // ---- 异步 FIFO（简单写口 → ERAM20K；输出寄存器读口在 ddr 域）----
-    reg  [33:0]      f_mem [0:(1 << FIFO_AW) - 1];
+    reg  [34:0]      f_mem [0:(1 << FIFO_AW) - 1];
     reg  [FIFO_AW:0] wptr_bin,  wptr_gray;
     reg  [FIFO_AW:0] rptr_bin,  rptr_gray;
     reg  [FIFO_AW:0] wgray_s1,  wgray_s2;    // 写指针 → ddr 域
@@ -355,19 +388,21 @@ module cam_ddr_writer #(
     //  ddr 域：寄存器/线网声明（必须早于下面所有 always，免得 TD 造隐式网）
     // ========================================================================
     // FIFO 读侧（输出寄存器 + 有效性；两者始终对应**当前** rptr 上那一条）
-    reg  [33:0] f_dout;
+    reg  [34:0] f_dout;
     reg         ent_vld;
 
     // packer
     localparam [1:0] C_SYNC = 2'd0,   // 等 SOF（期间把残留条目丢掉）
                      C_RUN  = 2'd1,   // 帧内：吃像素字、交拍
-                     C_END  = 2'd2;   // 本帧数据侧已收口，等 AXI 写完这一帧
+                     C_END  = 2'd2,   // 本帧数据侧已收口，等 AXI 写完这一帧
+                     C_SKIP = 2'd3;   // T07：本帧目标块被保护 ⇒ 整帧丢弃（不写 DDR）
     reg  [1:0]   c_st;
     reg  [31:0]  p_wcnt;             // 本帧已消费的像素字数
     reg  [2:0]   p_lane;             // 本拍内已装的字数（0..7）
     reg  [255:0] p_pack;
     reg          p_eof_seen;         // 本帧见过 EOF
     reg          p_bad;              // 本帧出过异常（回到 C_SYNC 才清）
+    reg          p_skip_frm;         // T07：本帧因目标块被保护而整帧丢弃
     reg  [31:0]  p_beats;            // 本帧已交给 AXI 的拍数
     reg          beat_vld;           // 手上有一拍没被取走
     reg  [255:0] beat_data;
@@ -434,9 +469,11 @@ module cam_ddr_writer #(
         f_dout <= f_mem[pop ? rptr_bin_nxt[FIFO_AW-1:0] : rptr_bin[FIFO_AW-1:0]];
 
     // 本拍头部的条目（不 pop 就一直挂在这一拍上，不会自己变）
-    wire        is_sof  = ent_vld &  f_dout[33];
-    wire        is_eof  = ent_vld &  f_dout[32];
-    wire        is_pix  = ent_vld & ~f_dout[33] & ~f_dout[32];
+    //  T07：位宽 35 = {sof, eof, eof_bad, word[31:0]}；eof_bad 由 checked CSI 裁决
+    wire        is_sof  = ent_vld &  f_dout[34];
+    wire        is_eof  = ent_vld & (f_dout[33] | f_dout[32]);   // 含坏帧 EOF
+    wire        is_eofb = ent_vld &  f_dout[32];                 // 坏帧 EOF
+    wire        is_pix  = ent_vld & ~f_dout[34] & ~f_dout[33] & ~f_dout[32];
     wire [31:0] e_word  = f_dout[31:0];
 
     // AXI 侧取走手上这一拍
@@ -445,9 +482,11 @@ module cam_ddr_writer #(
     wire data_go    = ent_vld & ~(beat_vld & ~beat_taken);
     wire pix_budget = (p_beats < NBEATS);                    // 还欠拍数就能继续吃像素
 
-    // pop：C_SYNC 一律丢到见到 SOF；C_RUN 只吃「标记」或「预算内的像素字」；C_END 不吃
+    // pop：C_SYNC 一律丢到见到 SOF；C_RUN 只吃「标记」或「预算内的像素字」；
+    //      C_SKIP（T07 保护块被跳过）一律丢（本帧不写 DDR）；C_END 不吃
     assign pop = (c_st == C_SYNC) ? ent_vld :
                  (c_st == C_RUN)  ? (data_go & (is_sof | is_eof | (is_pix & pix_budget))) :
+                 (c_st == C_SKIP) ? ent_vld :
                  1'b0;
 
     wire beat_full = (p_lane == 3'd7);                       // 攒满 8 个字
@@ -478,8 +517,42 @@ module cam_ddr_writer #(
 
     always @(posedge clk_ddr or posedge rst_ddr) begin
         if (rst_ddr) c_run_tmo <= 21'd0;
-        else if (pop | (c_st != C_RUN)) c_run_tmo <= 21'd0;
+        else if (pop | ((c_st != C_RUN) && (c_st != C_SKIP))) c_run_tmo <= 21'd0;
         else c_run_tmo <= c_run_tmo + 21'd1;
+    end
+
+    // ========================================================================
+    //  ddr 域：缓冲区所有权保护（T07 新增）
+    //   · 发布一块之后 protect[p]=1；收到该块的 release toggle（来自推帧引擎的
+    //     claim-release 或 pass-release）才清 0；
+    //   · 目标块被保护时本帧整帧跳过（C_SKIP），不写 DDR、不发布、计错。
+    //  为什么这样排序就安全：写者只在「观察到 release」之后才会碰该块，而
+    //  release 一定由推帧引擎在「不再读该块」之后发出（claim 后 ACK/CANCEL，
+    //  或从未 claim 的 pass）⇒ 读窗口与写窗口互斥，不依赖「1ms 内推完」假设。
+    // ========================================================================
+    reg        prot_en_s1, prot_en_s2;
+    reg        rel0_s1, rel0_s2, rel0_s3;
+    reg        rel1_s1, rel1_s2, rel1_s3;
+    reg        protect0, protect1;
+
+    wire rel0_evt = rel0_s2 ^ rel0_s3;
+    wire rel1_evt = rel1_s2 ^ rel1_s3;
+    wire blk_locked = prot_en_s2 & (frame_idx[0] ? protect1 : protect0);
+    wire skip_frm_done = (c_st == C_END) & p_skip_frm & ~beat_vld;
+
+    // T07: protect0/protect1 只在 AXI 状态机块里写（发布置 1、release 事件清 0），
+    //      本块只产生同步后的 release 事件线。TD 的 HDL-8007 就是「同一个 reg 出现在
+    //      两个 always」——peer 的注释里踩过一次，这里必须守住。
+    always @(posedge clk_ddr or posedge rst_ddr) begin
+        if (rst_ddr) begin
+            prot_en_s1 <= 1'b0; prot_en_s2 <= 1'b0;
+            rel0_s1 <= 1'b0; rel0_s2 <= 1'b0; rel0_s3 <= 1'b0;
+            rel1_s1 <= 1'b0; rel1_s2 <= 1'b0; rel1_s3 <= 1'b0;
+        end else begin
+            prot_en_s1 <= prot_en;   prot_en_s2 <= prot_en_s1;
+            rel0_s1 <= rel_tgl0; rel0_s2 <= rel0_s1; rel0_s3 <= rel0_s2;
+            rel1_s1 <= rel_tgl1; rel1_s2 <= rel1_s1; rel1_s3 <= rel1_s2;
+        end
     end
 
     // ========================================================================
@@ -497,6 +570,7 @@ module cam_ddr_writer #(
             beat_vld    <= 1'b0;
             beat_data   <= 256'd0;
             beat_strb   <= 32'd0;
+            p_skip_frm  <= 1'b0;
         end else begin
             if (beat_vld & beat_taken) beat_vld <= 1'b0;      // 交出去就撤
 
@@ -504,15 +578,44 @@ module cam_ddr_writer #(
             // ---------------- 等 SOF ----------------
             C_SYNC: begin
                 if (pop & is_sof) begin
-                    c_st       <= C_RUN;
-                    p_wcnt     <= 32'd0;
-                    p_lane     <= 3'd0;
-                    p_pack     <= 256'd0;
-                    p_eof_seen <= 1'b0;
-                    p_bad      <= 1'b0;
-                    p_beats    <= 32'd0;
+                    if (blk_locked) begin
+                        // T07：本帧要用的块还被推帧引擎占着（未 release）⇒
+                        // 整帧丢弃，不写 DDR、不发布（见上面所有权保护说明）
+                        c_st      <= C_SKIP;
+                        p_skip_frm<= 1'b1;
+                        p_bad     <= 1'b1;
+                        p_wcnt    <= 32'd0;
+                        p_lane    <= 3'd0;
+                        p_pack    <= 256'd0;
+                        p_eof_seen<= 1'b0;
+                        p_beats   <= 32'd0;
+                    end else begin
+                        c_st       <= C_RUN;
+                        p_wcnt     <= 32'd0;
+                        p_lane     <= 3'd0;
+                        p_pack     <= 256'd0;
+                        p_eof_seen <= 1'b0;
+                        p_bad      <= 1'b0;
+                        p_beats    <= 32'd0;
+                    end
                 end
                 // 其余（残留像素字 / 上一个 EOF）：丢掉，继续找 SOF
+            end
+
+            // ---------------- T07：目标块被保护：整帧丢弃（不写 DDR）----------------
+            C_SKIP: begin
+                if (pop && (is_eof | is_sof)) begin
+                    if (is_eof) begin
+                        p_eof_seen <= 1'b1;
+                        c_st       <= C_END;
+                    end else begin
+                        p_bad <= 1'b1;      // 又见 SOF（本帧没 EOF）：继续收口
+                        c_st  <= C_END;
+                    end
+                end else if (c_run_tmo_hit) begin
+                    p_bad <= 1'b1;
+                    c_st  <= C_END;
+                end
             end
 
             // ---------------- 帧内 ----------------
@@ -524,6 +627,7 @@ module cam_ddr_writer #(
                     p_pack <= 256'd0;
                 end else if (pop && is_eof) begin            // 帧数据侧收口
                     p_eof_seen <= 1'b1;
+                    if (is_eofb) p_bad <= 1'b1;              // T07：坏帧 EOF ⇒ 不发布
                     if (p_wcnt != FRAME_WORDS) p_bad <= 1'b1;
                     if ((p_lane != 3'd0) && pix_budget) begin // 末尾残拍：交出去并裁字节
                         beat_vld  <= 1'b1;
@@ -567,6 +671,7 @@ module cam_ddr_writer #(
                     p_bad  <= 1'b1;                          // 下一帧必须重新见 SOF
                     p_lane <= 3'd0;
                     p_pack <= 256'd0;
+                    p_skip_frm <= 1'b0;
                 end
             end
 
@@ -645,12 +750,41 @@ module cam_ddr_writer #(
             wcnt_last <= 16'd0; beats_last <= 16'd0; verdict_snap <= 8'd0;
             pub_tgl       <= 1'b0;
             err_cnt       <= 16'd0;
+            protect0      <= 1'b0;
+            protect1      <= 1'b0;
         end else begin
             frame_close <= 1'b0;
 
+            // T07: release 事件（来自推帧引擎的每块一根 toggle）清保护位。
+            //   与下面 A_DONE/跳过路径里的「发布即保护」同属本块：同一拍撞上时，
+            //   后面的置位获胜（新发布的帧必须被保护，旧 release 只对旧帧有效）。
+            if (rel0_evt) protect0 <= 1'b0;
+            if (rel1_evt) protect1 <= 1'b0;
+
             case (a_st)
+                // T07：被跳过（目标块被保护）的帧在这里收尾：不写 DDR、不发布（pub_ok=0，
+                //      但走同一次发布握手，把错误计数同步到 tl 域给主机看），然后放
+                //      frame_close 让 packer 回 C_SYNC
+                A_IDLE: if (skip_frm_done) begin
+                    if (pub_stuck) begin
+                        pub_tgl <= pub_ack_s2;
+                        err_cnt <= err_cnt + 16'd1;
+                        c_stuck <= c_stuck + 16'd1;
+                    end else if (pub_ack_s2 == pub_tgl) begin
+                        pub_base <= base_r;
+                        pub_ok   <= 1'b0;                 // 不发布序号
+                        pub_err  <= err_cnt + 16'd1;
+                        pub_tgl  <= ~pub_tgl;             // 计数随握手同步到 tl 域
+                        err_cnt  <= err_cnt + 16'd1;
+                        c_bad    <= c_bad + 16'd1;
+                    end else begin
+                        c_notack <= (c_notack == 16'hFFFF) ? c_notack : (c_notack + 16'd1);
+                    end
+                    frame_idx   <= frame_idx + 32'd1;
+                    frame_close <= 1'b1;
+                end
                 // 一帧的数据侧一开始（packer 收到 SOF 进了 C_RUN）就起一帧
-                A_IDLE: if (c_st == C_RUN) begin
+                else if (c_st == C_RUN) begin
                     base_r        <= (frame_idx[0]) ? BASE1 : BASE0;
                     addr_r        <= (frame_idx[0]) ? BASE1[28:0] : BASE0[28:0];
                     m_axi_awaddr  <= (frame_idx[0]) ? BASE1[28:0] : BASE0[28:0];
@@ -713,6 +847,11 @@ module cam_ddr_writer #(
                         pub_tgl  <= ~pub_tgl;
                         err_cnt  <= err_cnt + ((~verdict_bad & ~axi_err) ? 16'd0 : 16'd1);
                         if (verdict_bad | axi_err) c_bad <= c_bad + 16'd1;
+                        // T07：发布即保护该块——直到收到该块的 release toggle 才可重写
+                        if (prot_en_s2) begin
+                            if (frame_idx[0]) protect1 <= 1'b1;
+                            else              protect0 <= 1'b1;
+                        end
                     end else begin
                         // 上一帧还没被取走（同步链慢，但没到 pub_stuck）：本帧丢弃，
                         // 不覆盖那几个字

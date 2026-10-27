@@ -1,0 +1,68 @@
+{
+  "task_id": "T11.rk-align-raw",
+  "round": 0,
+  "generated_at": "2026-10-17",
+  "note": "实际执行的命令与结果（按时间顺序）；ModelSim 一律经 tools/pcie_integration/run_sim.ps1（UTF-8 BOM 保留），TD 经 tools/pcie_integration/run_td.ps1。所有日志在各 OutDir（commands.log/vlog.log/vsim.log）。",
+  "commands": [
+    {
+      "step": "G1-写者(修复后终版)",
+      "cmd": "powershell -ExecutionPolicy Bypass -File tools/pcie_integration/run_sim.ps1 -Tb tb_cam_r10f_writer -OutDir workflow/runs/20261017-011744-rk-fpga-align/raw/g1/msim/p1_writer_v4 -TbFiles tb/tb_cam_r10f_writer.v -Defines MIPI_PHY_SIM_STUB",
+      "result": "vlog exit=0；vsim exit=0；ALL PASS（P0..P10；v3 为 P10 标签文字修正前的同输入运行）"
+    },
+    {
+      "step": "G1-全链路(修通后终版)",
+      "cmd": "powershell -ExecutionPolicy Bypass -File tools/pcie_integration/run_sim.ps1 -Tb tb_t11_r10f_e2e -OutDir workflow/runs/20261017-011744-rk-fpga-align/raw/g1/msim/p2_e2e_v6 -TbFiles tb/tb_t11_r10f_e2e.v -Defines MIPI_PHY_SIM_STUB",
+      "result": "vlog exit=0；vsim exit=0；ALL PASS（E0..E4）"
+    },
+    {
+      "step": "G1-T07 遗留 enable 角落",
+      "cmd": "powershell -ExecutionPolicy Bypass -File tools/pcie_integration/run_sim.ps1 -Tb tb_t11_csi_enable_corner -OutDir workflow/runs/20261017-011744-rk-fpga-align/raw/g1/msim/p3_enable -TbFiles tb/tb_t11_csi_enable_corner.v -Defines MIPI_PHY_SIM_STUB",
+      "result": "ALL PASS（crc 少计 1 被钉住；abort/坏帧计数照常）"
+    },
+    {
+      "step": "G1-T07 回归（五个 TB）",
+      "cmd": "run_sim.ps1 -Tb tb_ddr_frame_pusher_rka1|-Tb tb_csi_integrity_diff|-Tb tb_csi_checked|-Tb tb_ep_bar_win_rka1|-Tb tb_ddr_wr_arb（OutDir=raw/g1/msim/r_t07_*）",
+      "result": "全部 ALL PASS；pusher 20387 TLPs（含 PHASE10 完整 1080p 20,256 MWr）；diff 680 拍 0 失配"
+    },
+    {
+      "step": "G1-可重放负对照 M1（隔离树）",
+      "cmd": "run_sim.ps1 -Root C:/Users/czz/AppData/Local/Temp/opencode/t11neg_1968226492 -Tb tb_t11_r10f_e2e -TbFiles tb/tb_t11_r10f_e2e.v -Defines MIPI_PHY_SIM_STUB（另跑 tb_cam_r10f_writer）",
+      "result": "两个 TB 均 FAIL（e2e: host 内容/CRC 不符；写者: P1/P2/P10 冻结向量不符）——负对照成立，mutation.json 记录变更与源 SHA"
+    },
+    {
+      "step": "离线严格解析自检（合同向量复算）",
+      "cmd": "python tools/pcie_integration/r10f_strict.py selftest --json-out workflow/runs/20261017-011744-rk-fpga-align/raw/g1/r10f_strict_selftest.json",
+      "result": "checks=38 failures=0 CONTRACT_VECTORS_OK"
+    },
+    {
+      "step": "样例生成（与合同验收向量逐字节一致）",
+      "cmd": "python tools/pcie_integration/r10f_strict.py gen --preset small|1080p --out raw/samples/r10f-*-synthetic.dma",
+      "result": "SHA=c855e03d…（small）/646ebaed…（1080p），与 contract/artifacts 相同"
+    },
+    {
+      "step": "RTL 输出帧用独立工具复核",
+      "cmd": "python tools/pcie_integration/r10f_strict.py check raw/g1/msim/p2_e2e_v6/t11_e2e_e4_host.bin --width 8 --height 4 --session 0x20261018 --json-out …/host_check.json",
+      "result": "R10F_STRICT_OK（RTL 经全链路发出的帧通过独立严格解析）"
+    },
+    {
+      "step": "Rust↔Python 解析器静态交叉核对",
+      "cmd": "python tools/pcie_integration/r10f_tools_consistency.py --json-out raw/g1/r10f_tool_consistency.json",
+      "result": "25/25 字段偏移一致；R10F_TOOLS_CONSISTENT"
+    },
+    {
+      "step": "RK 增量补丁 apply 校验（隔离临时基线副本）",
+      "cmd": "git init+commit(基线 backend/rk-driver-src) → git apply --check raw/patches/t11-rka1-r10f-fix.patch → git apply",
+      "result": "check exit=0；apply exit=0；apply 后与 raw/rk-driver-src 内容一致（CRLF 归一下逐字节相同）"
+    },
+    {
+      "step": "G2-TD 单会话重建（syn+phy+bit）",
+      "cmd": "powershell -ExecutionPolicy Bypass -File tools/pcie_integration/run_td.ps1 -Stage 00_all -OutDir workflow/runs/20261017-011744-rk-fpga-align/raw/candidate/prj",
+      "result": "见 raw/g2/README.md 与 raw/candidate/prj/td_00_all.log（PRJ-1406/PRJ-1424/控制台完成标记；标记文本沿用共享入口 00_all.tcl 的 \"T07_ALL_DONE\"，见 raw/g2/README.md 说明）"
+    },
+    {
+      "step": "清单/来源生成 + 自检",
+      "cmd": "python tools/pcie_integration/gen_manifest_t11.py --root . --run workflow/runs/20261017-011744-rk-fpga-align",
+      "result": "见 raw/candidate-manifest.json / raw/source-provenance.json / raw/manifest-selfcheck.json"
+    }
+  ]
+}

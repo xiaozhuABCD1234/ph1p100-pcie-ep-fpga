@@ -1,0 +1,219 @@
+============================================================
+   TD Release_2026.2
+   Copyright (c) 2012-2026 Anlogic Inc.
+   Executable = D:/anlogic/TD_Release_2026.2/bin/td_commands_prompt.exe
+   Build number = 6.2.3.210850
+   Built at =   11:35:58 Aug 19 2026
+   Run by =     czz
+   Run Date =   Thu Oct 22 14:23:34 2026
+
+   Run on =     LAPTOP-HE7N8DN4
+============================================================
+RUN-1002 : start command "import_device ph1_100p.db -package PH1P100SBG484 -speed 3"
+ARC-1001 : Device Initialization.
+ARC-1001 : -------------------------------------------------------------
+ARC-1001 :           OPTION          |         IO         |   SETTING   
+ARC-1001 : -------------------------------------------------------------
+ARC-1001 :   non_jtag_persist(none)  |       35 IOs       |    gpio    
+ARC-1001 :            jtag           |  /V12/T13/R13/U13  |  dedicate  
+ARC-1001 : -------------------------------------------------------------
+RUN-1003 : finish command "import_device ph1_100p.db -package PH1P100SBG484 -speed 3" in  2.017584s wall, 1.468750s user + 0.203125s system = 1.671875s CPU (82.9%)
+
+RUN-1004 : used memory is 341 MB, reserved memory is 326 MB, peak memory is 374 MB
+RUN-1002 : start command "open_project ./a1_bm_addr.al"
+RUN-1002 : start command "commit_param -step design"
+RUN-1001 : Print Global Property
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :     Parameters    |   Settings   |  Default Values  |  Note  
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :    enable_seed    |     off      |       off        |        
+RUN-1001 :    hfn_to_clock   |  1000000000  |    1000000000    |        
+RUN-1001 :      message      |   standard   |     standard     |        
+RUN-1001 :    qor_monitor    |      on      |        on        |        
+RUN-1001 :   speedup_effort  |      0       |        0         |        
+RUN-1001 :    syn_ip_flow    |     off      |       off        |        
+RUN-1001 :       thread      |     auto     |       auto       |        
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 : Print Design Property
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :       Parameters       |  Settings  |  Default Values  |  Note  
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :   default_reg_initial  |    auto    |       auto       |        
+RUN-1001 :    hdl_warning_level   |   normal   |      normal      |        
+RUN-1001 :      tcl_afterstep     |            |                  |        
+RUN-1001 :     tcl_beforestep     |            |                  |        
+RUN-1001 : ----------------------------------------------------------------
+RUN-1002 : start command "commit_param -step design"
+RUN-1001 : Print Global Property
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :     Parameters    |   Settings   |  Default Values  |  Note  
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :    enable_seed    |     off      |       off        |        
+RUN-1001 :    hfn_to_clock   |  1000000000  |    1000000000    |        
+RUN-1001 :      message      |   standard   |     standard     |        
+RUN-1001 :    qor_monitor    |      on      |        on        |        
+RUN-1001 :   speedup_effort  |      0       |        0         |        
+RUN-1001 :    syn_ip_flow    |     off      |       off        |        
+RUN-1001 :       thread      |     auto     |       auto       |        
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 : Print Design Property
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :       Parameters       |  Settings  |  Default Values  |  Note  
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :   default_reg_initial  |    auto    |       auto       |        
+RUN-1001 :    hdl_warning_level   |   normal   |      normal      |        
+RUN-1001 :      tcl_afterstep     |            |                  |        
+RUN-1001 :     tcl_beforestep     |            |                  |        
+RUN-1001 : ----------------------------------------------------------------
+HDL-1007 : analyze verilog file Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v
+HDL-1007 : analyze verilog file Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v
+HDL-1007 : analyze verilog file a1_eng_top.v
+PRJ-1401 : Successfully analyzed 3 source files.
+RUN-1002 : start command "launch_runs  phy_1  -jobs 4"
+PRJ-1403 : phy_1 is launched.
+PRJ-1404 : Run log file is T:/./a1_bm_addr_Runs/phy_1/run.log.
+PRJ-1409 : launch_runs phy_1  -jobs 4.
+RUN-1002 : start command "wait_run phy_1 -quiet"
+PRJ-1405 : Waiting for run phy_1 to finish.
+PRJ-1009 : If you need the best result of runs copied into "T:/./a1_bm_addr_Runs/best_result" , please execute "save_best_bits" in the Tcl console after all runs complete, or add "save_best_bits" in tcl script after "wait_run" command.
+PRJ-1406 : Run phy_1 finished.
+RUN-1003 : finish command "wait_run phy_1 -quiet" in  87.835245s wall, 0.093750s user + 1.078125s system = 1.171875s CPU (1.3%)
+
+RUN-1004 : used memory is 348 MB, reserved memory is 330 MB, peak memory is 374 MB
+RUN-1002 : start command "import_db ./a1_bm_addr_Runs/phy_1/a1_bm_addr_pr.db"
+RUN-1001 : Database version number 46207
+RUN-1001 : Importing database generated by Tang Dynasty, V6.2.3.210850.
+RUN-1001 : Import flow parameters
+RUN-1001 : Import netlist
+RUN-1001 : Constructing routing connections ...
+PHY-1001 : End build routing graph; 4.259530s wall, 19.421875s user + 1.015625s system = 20.437500s CPU (479.8%)
+
+RUN-1001 : Import phy database
+RUN-1001 : Import timing constraints
+RUN-1001 : Import IO constraints
+RUN-1001 : Import Inst constraints
+RUN-1001 : Import ChipWatcher
+RUN-1001 : Import design success TD_VERSION=Release_2026.2 , DB_VERSION=46207
+RUN-1003 : finish command "import_db ./a1_bm_addr_Runs/phy_1/a1_bm_addr_pr.db" in  4.704069s wall, 19.859375s user + 1.046875s system = 20.906250s CPU (444.4%)
+
+RUN-1004 : used memory is 930 MB, reserved memory is 981 MB, peak memory is 963 MB
+RUN-1002 : start command "update_timing -mode final"
+RUN-1002 : start command "start_timer"
+RUN-1003 : finish command "start_timer" in  1.139076s wall, 1.062500s user + 0.046875s system = 1.109375s CPU (97.4%)
+
+RUN-1004 : used memory is 975 MB, reserved memory is 1027 MB, peak memory is 975 MB
+TMR-1041 : Net delay calculation accelerates with 32 threads.
+TMR-2502 : Net delay update with mode: Routed
+TMR-1042 : Timing analysis accelerates with 32 threads.
+RUN-1003 : finish command "update_timing -mode final" in  1.720973s wall, 2.890625s user + 0.140625s system = 3.031250s CPU (176.1%)
+
+RUN-1004 : used memory is 1053 MB, reserved memory is 1109 MB, peak memory is 1053 MB
+RUN-1002 : start command "report_timing_summary -file ./routed_timing_summary.rpt"
+RUN-1002 : start command "report_timing_status -file ./routed_timing_status.rpt"
+RUN-1002 : start command "report_area -io_info -file ./routed_area.rpt"
+SYN-4034 : The count of slices with lut is 1938.
+SYN-4035 : The count of slices with lut+ripple is 942.
+RUN-1001 : standard
+***Report Model: a1_eng_top Device: PH1P100SBG484***
+
+Design Statistics
+#IO                       121   out of    286   42.31%
+  #input                   48
+  #output                  73
+  #inout                    0
+#lut6                    2912   out of  71680    4.06%
+#reg                     1664
+  #slice reg             1664   out of 143360    1.16%
+  #pad reg                  0
+
+Utilization Statistics
+#slice                   2993   out of  71680    4.18%
+  #used ram                32
+    #dram lut              32
+    #shifter lut            0
+  #used logic            2961
+    #with luts           1938
+    #with adder           942
+    #reg only              81
+#feedthrough             1238
+#f7mux                      0   out of  35840    0.00%
+#f8mux                      0   out of  17920    0.00%
+#eram                      26   out of    300    8.67%
+  #eram20k                 26
+  #fifo20k                  0
+#dsp                        0   out of    220    0.00%
+#pcie                       0   out of      1    0.00%
+#hxt quad                   0   out of      1    0.00%
+#ddr_byte                   0   out of     24    0.00%
+#pad                      121   out of    286   42.31%
+#pll                        0   out of     12    0.00%
+#gclk                       1   out of     32    3.12%
+#lclk                       0   out of     24    0.00%
+#sclk                       4   out of     96    4.17%
+#mlclk                      0   out of     24    0.00%
+#ioclk                      0   out of     24    0.00%
+
+
+DataNet Average Fanout:
+
+   Index     Fanout    Nets  
+    #1         1       4298  
+    #2         2       739   
+    #3         3       275   
+    #4         4       289   
+    #5        5-10     506   
+    #6       11-50     175   
+    #7       51-100     7    
+  Average     2.37           
+
+RUN-1002 : start command "check_timing -verbose -file ./routed_check_timing.rpt"
+RUN-1002 : start command "report_clock_utilization -file ./routed_clock_utilization.rpt"
+RUN-1002 : start command "report_timing -file ./routed_timing.rpt"
+TMR-9002 WARNING: 'report_timing' is obsolete. Please use 'report_timing_summary' instead.
+RUN-1002 : start command "report_timing_summary -file ./routed_timing.rpt"
+RUN-1002 : start command "report_qor -step route -file ./routed_qor.rpt"
+-----------------------------------------------------------
+| QoR metrics               |         value               |
+-----------------------------------------------------------
+| Timing                    |                             |
+|     Setup WNS             |          -87                |
+|     Setup TNS             |        -1109                |
+|     Num of violated S-EP  |           27                |
+|     Hold WNS              |           23                |
+|     Hold TNS              |            0                |
+|     Num of violated H-EP  |            0                |
+-----------------------------------------------------------
+| Routing Resource          |                             |
+|     Wire length           |       995840                |
+-----------------------------------------------------------
+| Utilization               |                             |
+|     #slices               |         2993                |
+|     slices percentage     |        4.18%                |
+|     #RAMs                 |           26                |
+|     #DSPs                 |            0                |
+|     #DRAMHARDCON          |            4                |
+-----------------------------------------------------------
+Report route stage QoR done.
+
+PHY-1034 : Refresh detailed routing grids ...
+RUN-0008 : Do timing check and 1 issue(s) found.
+RUN-0008 : Do critical path check and 0 issue(s) found.
+RUN-0008 : Do routing resoruce check and 0 issue(s) found.
+QoR Evaluation
+-------------------------------------------------------------------------------------------------------------------------------------
+  ID        |  Priority  |  Description                                             |  Suggestion
+-------------------------------------------------------------------------------------------------------------------------------------
+  QOR-1301  |  HIGH      |  - Route SWNS -87ps smaller than 0, do not meet timing.  |  - Try following method to drive timing meet:
+            |            |                                                          |      set_param route post_route_opt high
+            |            |                                                          |      set_param route postrt_opt_extra_round 4
+-------------------------------------------------------------------------------------------------------------------------------------
+Note* (*) means this parameter has been set already.
+      (+) means this parameter has been set, suggest to upgrade higher effort level.
+Note** plesae resolve priority MUST FIX and HIGH issues firstly
+       because these have highly possible to block the timing convergence even stop the flow.
+Note*** some suggested settings are not suitable to use together
+        take care of using them separately if suggestion mentioned.
+RUN-1003 : finish command "report_qor -step route -file ./routed_qor.rpt" in  1.755063s wall, 4.531250s user + 0.406250s system = 4.937500s CPU (281.3%)
+
+RUN-1004 : used memory is 1252 MB, reserved memory is 1312 MB, peak memory is 1254 MB
+USR-8011 ERROR: report_timing: invalid option -max_paths.

@@ -1,0 +1,452 @@
+{
+  "task": "T10.ss-g0-prod-coregap",
+  "run": "20261026-143924_fpga-1080p30-g0-production",
+  "round": 1,
+  "repair_round": 1,
+  "previous_manifest": {
+    "path": "manifest-r0.json",
+    "sha256": "97d7b1955b1df0bde45e9305d80a8aa703ea1365009d407f0d5d71d58dc6cc15",
+    "recorded_sha256_matches": true
+  },
+  "role": "fpga-dev",
+  "created": "2026-10-26T21:47:23",
+  "write_scope": [
+    "workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-coregap/**",
+    "%TEMP%/opencode/ss-g0-prod-coregap/**"
+  ],
+  "stopped_modifying": true,
+  "active_commands": 0,
+  "verdict": {
+    "closable_at_187_5": "conditional",
+    "headline": "G0_not_closed"
+  },
+  "evidence_rounds": {
+    "stage_probe_frames": 0,
+    "vsim_full_size_runs": 0,
+    "vsim_seconds": 0.0,
+    "td": 0,
+    "board": 0,
+    "network": 0,
+    "note": "r1 is a 0-sim documentation refreeze; the 3 x 1-frame probes (695.4 + 612.0 + 788.4 s = 2,095.8 s) belong to r0 and are quoted, not re-run"
+  },
+  "notes": {
+    "OBS-5_process_deviation": "r0 used ~49 developer tool calls against a 40-call budget; no extra simulation (3/3 full-size 1-frame probes, 34.93 min), no gate input or conclusion changed; registered here and in result-r1.md, no rework and no retroactive verdict change",
+    "r1_scope": "documentation / labels / references only: model arithmetic, matrix, 45.034% envelope, closable_at_187_5 = conditional and the G0 headline are unchanged",
+    "diff_probe_sha256": "066f8fd22d293f7e0ca4963abf5cfcb7710e3f3b113df19130c934c21d07f6cd",
+    "tester_r0_report_artifact_count_note": "the r0 tester report section 0 wrote P1 manifest-r1 as 40 artifacts; the correct value is 70 artifacts (report typo, to be corrected in the tester r1 report, P1 manifest untouched)"
+  },
+  "readonly_inputs": [
+    {
+      "path": "T10.ss-g0-prod-content/r0/content/raw40_n.hex",
+      "sha256": "e44fe7bc89aaa3ada2422a41fcfb8e283d5f66cdffda29b2caf4da10d2cd7b53",
+      "bytes": 5702400
+    },
+    {
+      "path": "T10.ss-g0-prod-content/r0/content/raw40_l.hex",
+      "sha256": "e7e3c21cd2e4cc18e115b4cf18692596450cfcfc7605297046e3840c67deefa2",
+      "bytes": 5702400
+    },
+    {
+      "path": "T10.ss-g0-prod-content/r0/content/raw_n.bin",
+      "sha256": "18a12ecb1af0acb9578b8323d3d7124c52a836763060bf09da13cae00e9f2504",
+      "bytes": 2592000
+    },
+    {
+      "path": "T10.ss-g0-prod-content/r0/content/raw_l.bin",
+      "sha256": "8c9c02b9121ddeaf3600b9b8c0ab726c38bc2416866bc85948f3c746c9383720",
+      "bytes": 2592000
+    },
+    {
+      "path": "T10.ss-g0-prod-content/r0/src/a1_deflate_core.v",
+      "sha256": "a91c2ed82fbef654c4e065b64ae1cc268ca232feaa26fdd313c58d8740f81b3e",
+      "bytes": 80501
+    },
+    {
+      "path": "T10.ss-g0-prod-content/r0/src/a1_frame_top.v",
+      "sha256": "0064607aceb20ae3ef14133f0aaf5f8b3f489943011a66a1ddc005350dba7109",
+      "bytes": 25654
+    },
+    {
+      "path": "T10.ss-g0-prod-content/r0/src/tb_ss_4run_wd.v",
+      "sha256": "785c3ef1d044f8529b7232ae37ed3a67172b6c4cd512c47a713103675090b79a",
+      "bytes": 26268
+    },
+    {
+      "path": "T10.ss-g0-prod-content/r0/manifest-r1.json",
+      "sha256": "e306ed42ed47dbcec6127bf2faee88925a9a88ae8a5ef07ecbda8dda91fe1fd9",
+      "bytes": 27964
+    }
+  ],
+  "commands": [
+    {
+      "seconds": 0.2,
+      "timeout_s": 1500,
+      "cwd": "C:\\Users\\czz\\AppData\\Local\\Temp\\opencode\\ss-g0-prod-coregap\\work",
+      "timed_out": false,
+      "argv": [
+        "-c",
+        "-lib",
+        "work",
+        "-l",
+        "D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-coregap/r0/sim/logs/n-probe.log",
+        "tb_ss_4run",
+        "+STAT=D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-coregap/r0/sim/caps/n-probe.stats",
+        "+EVT=D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-coregap/r0/sim/caps/n-probe.evt",
+        "+HDR=D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-coregap/r0/sim/caps/n-probe.hdr",
+        "+RAW40=D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-content/r0/content/raw40_n.hex",
+        "-gFRAMES=1",
+        "-gCONTENT=2",
+        "-gPACING=0",
+        "-gSINK=1",
+        "-gCAPTURE=0",
+        "-gMAX_CYCLES=13200000",
+        "-do",
+        "run -all; quit -f"
+      ],
+      "log": "D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-coregap/r0/sim/logs/n-probe.log",
+      "logged_at": "2026-10-26T19:49:05",
+      "rc": null,
+      "note": "N_coregap_stage_probe_frame1"
+    },
+    {
+      "seconds": 695.4,
+      "timeout_s": 1500,
+      "cwd": "C:\\Users\\czz\\AppData\\Local\\Temp\\opencode\\ss-g0-prod-coregap\\work",
+      "timed_out": false,
+      "argv": [
+        "vsim.exe",
+        "-c",
+        "-lib",
+        "work",
+        "-l",
+        "D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-coregap/r0/sim/logs/n-probe.log",
+        "tb_ss_4run",
+        "+STAT=D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-coregap/r0/sim/caps/n-probe.stats",
+        "+EVT=D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-coregap/r0/sim/caps/n-probe.evt",
+        "+HDR=D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-coregap/r0/sim/caps/n-probe.hdr",
+        "+RAW40=D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-content/r0/content/raw40_n.hex",
+        "-gFRAMES=1",
+        "-gCONTENT=2",
+        "-gPACING=0",
+        "-gSINK=1",
+        "-gCAPTURE=0",
+        "-gMAX_CYCLES=13200000",
+        "-do",
+        "run -all; quit -f"
+      ],
+      "log": "D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-coregap/r0/sim/logs/n-probe.log",
+      "logged_at": "2026-10-26T20:01:33",
+      "rc": 0,
+      "note": "N_coregap_stage_probe_frame1"
+    },
+    {
+      "seconds": 612,
+      "timeout_s": 1500,
+      "cwd": "C:\\Users\\czz\\AppData\\Local\\Temp\\opencode\\ss-g0-prod-coregap\\work",
+      "timed_out": false,
+      "argv": [
+        "vsim.exe",
+        "-c",
+        "-lib",
+        "work",
+        "-l",
+        "D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-coregap/r0/sim/logs/n-probe.log",
+        "tb_ss_4run",
+        "+STAT=D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-coregap/r0/sim/caps/n-probe.stats",
+        "+EVT=D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-coregap/r0/sim/caps/n-probe.evt",
+        "+HDR=D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-coregap/r0/sim/caps/n-probe.hdr",
+        "+RAW40=D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-content/r0/content/raw40_n.hex",
+        "-gFRAMES=1",
+        "-gCONTENT=2",
+        "-gPACING=0",
+        "-gSINK=1",
+        "-gCAPTURE=0",
+        "-gMAX_CYCLES=12800000",
+        "-do",
+        "run -all; quit -f"
+      ],
+      "log": "D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-coregap/r0/sim/logs/n-probe.log",
+      "logged_at": "2026-10-26T20:12:35",
+      "rc": 0,
+      "note": "N_coregap_stage_probe_frame1_v2"
+    },
+    {
+      "seconds": 788.4,
+      "timeout_s": 1500,
+      "cwd": "C:\\Users\\czz\\AppData\\Local\\Temp\\opencode\\ss-g0-prod-coregap\\work",
+      "timed_out": false,
+      "argv": [
+        "vsim.exe",
+        "-c",
+        "-lib",
+        "work",
+        "-l=D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-coregap/r0/sim/logs/l-probe.log",
+        "tb_ss_4run",
+        "+STAT=D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-coregap/r0/sim/caps/l-probe.stats",
+        "+EVT=D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-coregap/r0/sim/caps/l-probe.evt",
+        "+HDR=D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-coregap/r0/sim/caps/l-probe.hdr",
+        "+RAW40=D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-content/r0/content/raw40_l.hex",
+        "-gFRAMES=1",
+        "-gCONTENT=2",
+        "-gPACING=0",
+        "-gSINK=1",
+        "-gCAPTURE=0",
+        "-gMAX_CYCLES=13300000",
+        "-do",
+        "run -all; quit -f"
+      ],
+      "log": "D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/T10.ss-g0-prod-coregap/r0/sim/logs/l-probe.log",
+      "logged_at": "2026-10-26T20:27:11",
+      "rc": null,
+      "note": "L_coregap_stage_probe_frame1"
+    }
+  ],
+  "commands_note": "r0 sim/commands.jsonl is unchanged and still holds the 4 r0 commands; r1 added 0 commands",
+  "artifacts": [
+    {
+      "path": "lessons-r0.md",
+      "sha256": "2ff5a5c97854f067c85af1719ef07e624d35d24e6f1c7653eab2550f56977b15",
+      "bytes": 3371
+    },
+    {
+      "path": "model/__pycache__/coregap_model.cpython-311.pyc",
+      "sha256": "3b0ba46b0f9d84fdca3620b3bd8d45f234dfa27778b52ceea3d010b26b436e5e",
+      "bytes": 29634
+    },
+    {
+      "path": "model/__pycache__/matcher.cpython-311.pyc",
+      "sha256": "922c7f7b0ac693d3414ff294940ba3da583980d27a76bbeb9af1c8015e5d9053",
+      "bytes": 7723
+    },
+    {
+      "path": "model/assumptions.json",
+      "sha256": "a022ba0ee38d1471a7ff5f6c810f2d808cf33d054cbebb7c1f779a2c96d2eda1",
+      "bytes": 7311
+    },
+    {
+      "path": "model/coregap_model.py",
+      "sha256": "f086a52356f1d7265cc7cf320f4e1ce35793502c7be0582ced6c9c0760527a9d",
+      "bytes": 27197
+    },
+    {
+      "path": "model/finalize_r1.py",
+      "sha256": "f448ba9737d3a46aadd785fb28202c9747adf940ebc7448d5bf68c22f55354e6",
+      "bytes": 25037
+    },
+    {
+      "path": "model/make_manifest.py",
+      "sha256": "8a2b6656a46c2ae5a62592ba33bc55590f9988132267bd290f8970132c09b59e",
+      "bytes": 2926
+    },
+    {
+      "path": "model/manifest_state.json",
+      "sha256": "efc97e94b1f7e744c203177b63fd54cbe45c65c626324ef4856b5df8cc0a6f79",
+      "bytes": 57
+    },
+    {
+      "path": "model/matcher.py",
+      "sha256": "91d55aa875c9b5590c01b60ee7a4509f78b55503e495bce42062890d19cac4e0",
+      "bytes": 5148
+    },
+    {
+      "path": "model/parse_probe.py",
+      "sha256": "3e71382292a3579bacb9cc98fa0265f24fa46cd654bf4eb845dc9d29d5275273",
+      "bytes": 4212
+    },
+    {
+      "path": "model/patch_r1.py",
+      "sha256": "2bbffea5ea5cdd4111585885b2ec88ebbefb193a760eeaf21fabd52f46abfe5f",
+      "bytes": 6419
+    },
+    {
+      "path": "model/verify_patch_verdict_r1.py",
+      "sha256": "a62909a7b410095acdd17c04254d23862b5cdf5681ece06242c8194adae10751",
+      "bytes": 5948
+    },
+    {
+      "path": "out/coregap-model.json",
+      "sha256": "baf65e9de7214555ea314f15762c2af580fabcae2b753fc31715042bd4932a63",
+      "bytes": 18046
+    },
+    {
+      "path": "out/coregap-verdict.json",
+      "sha256": "22314fe9d4889cdc42001706614c4c37c89efadc21f2af352314192a58464fe4",
+      "bytes": 19430
+    },
+    {
+      "path": "out/negative-controls.json",
+      "sha256": "99ca4de7384c440e83b67e00c1e1f72b99a8dcf25ec807cd3ab08ea34eb8f3fe",
+      "bytes": 3349
+    },
+    {
+      "path": "out/stage-probe.json",
+      "sha256": "cadb287d59b4de6db1b7dc4b527a01f7cd882a459d11070078aa0c047e278017",
+      "bytes": 3171
+    },
+    {
+      "path": "result-r0.md",
+      "sha256": "570475aa89bfdb7c592cb50b86a50acbac837afe3156366d91243065aeb472fb",
+      "bytes": 8547
+    },
+    {
+      "path": "result-r1.md",
+      "sha256": "8597795add04b37638dbb5b499368c156a50bc9dff2672fb62c893bade82be0a",
+      "bytes": 4533
+    },
+    {
+      "path": "sim/caps/l-probe.evt",
+      "sha256": "b88a015ca1af1b421b0f120276e440e90e0adc33861c986a6bc83db8d3369031",
+      "bytes": 449
+    },
+    {
+      "path": "sim/caps/l-probe.hdr",
+      "sha256": "864d2fbac57c8d68529201784d210df50f73795c35035d683447d40b368e3e47",
+      "bytes": 1024
+    },
+    {
+      "path": "sim/caps/l-probe.stats",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "sim/caps/n-probe.evt",
+      "sha256": "cc131ef67677bf65c8fb9708592f64c4638686a59c6c9eb69afb0aa967e0758c",
+      "bytes": 449
+    },
+    {
+      "path": "sim/caps/n-probe.hdr",
+      "sha256": "c7fe281c7d3c28cf021f0f226e1a52cf2e005378613319f5055d42a6b593fe4e",
+      "bytes": 1024
+    },
+    {
+      "path": "sim/caps/n-probe.stats",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "sim/commands.jsonl",
+      "sha256": "c7a773977ee8a3f53532ca7df94799fea99ba5e5c7c92e1466219fe819d3407e",
+      "bytes": 4584
+    },
+    {
+      "path": "sim/logs/l-probe.log",
+      "sha256": "4481a858d0f541d7c39ca940c1bbf1450f9e9a39c8c2fbc23b1fa6aa7cbd809e",
+      "bytes": 7218
+    },
+    {
+      "path": "sim/logs/l-probe.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "sim/logs/l-probe.stdout",
+      "sha256": "cfbd9c759ceef58120a27901e3f36f83c06cf81c80bb8fe093f17e0c1c430459",
+      "bytes": 7289
+    },
+    {
+      "path": "sim/logs/n-probe.log",
+      "sha256": "07c305daae431ddacfaac9e950a3f4915870cfb27349f6b81ebfe5f39e36c93d",
+      "bytes": 7216
+    },
+    {
+      "path": "sim/logs/n-probe.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "sim/logs/n-probe.stdout",
+      "sha256": "0c880870ab3372d125989c7017e22fb81cc8e7019f4fb17fee7efbb9dbbae089",
+      "bytes": 14576
+    },
+    {
+      "path": "sim/logs/vlib.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "sim/logs/vlog.log",
+      "sha256": "06c500ac96f0db32ac26c8aeab568c877d938035ea937eec452e885786908e21",
+      "bytes": 4748
+    },
+    {
+      "path": "sim/logs/vlog2.log",
+      "sha256": "cbb29fe1dfa0dc07f1902c4e6620f1e7282f79dc1300300083dad4609061074e",
+      "bytes": 886
+    },
+    {
+      "path": "src/a1_ddr_arb2.v",
+      "sha256": "6513ad839dee02e932c49bdfd5afa3d62c382d4a144b8e74d5574273804afdc6",
+      "bytes": 3739
+    },
+    {
+      "path": "src/a1_ddr_model.v",
+      "sha256": "bbb41b89361d5235b11718a245443cd5ddd6dbe025a9f5eee70a5ad1205dc8b9",
+      "bytes": 2509
+    },
+    {
+      "path": "src/a1_ddr_slot_store.v",
+      "sha256": "86d626465dc8d0643a7bb62e952e79ee89215c2e0c02719fc348a04c4363ed84",
+      "bytes": 14547
+    },
+    {
+      "path": "src/a1_deflate_core.v",
+      "sha256": "a91c2ed82fbef654c4e065b64ae1cc268ca232feaa26fdd313c58d8740f81b3e",
+      "bytes": 80501
+    },
+    {
+      "path": "src/a1_frame_top.v",
+      "sha256": "0064607aceb20ae3ef14133f0aaf5f8b3f489943011a66a1ddc005350dba7109",
+      "bytes": 25654
+    },
+    {
+      "path": "src/a1_raw_crop.v",
+      "sha256": "33a6fee77fd1aa67a31cacf26dd5530e5e2ea474ee655cbd5f1d98d887c5d72d",
+      "bytes": 7257
+    },
+    {
+      "path": "src/a1_uart_export.v",
+      "sha256": "69b73de4205cf3387422e9a5097a085dd29831a80335aeeebf00d42b6a819c3e",
+      "bytes": 27395
+    },
+    {
+      "path": "src/cam_diag_mailbox.v",
+      "sha256": "352af7c85094ea99b575e99da952af8d33871352140e4c6efddff9e6c2407278",
+      "bytes": 3911
+    },
+    {
+      "path": "src/camera_a1_uart_top.v",
+      "sha256": "214b21015331e5cf90c0148b7c17a26351ffbade1d012da71e4d001d9b0b8242",
+      "bytes": 41313
+    },
+    {
+      "path": "src/capture_async_fifo.v",
+      "sha256": "59dd6dcb5b7e7774f7d6518f50f56cafbc8be6b70e8ae1508236bac2b5af531d",
+      "bytes": 2044
+    },
+    {
+      "path": "src/DIFF-probe.md",
+      "sha256": "7bd998d7fdf9aeab023fa2a523084456495456c67fa412b2c2274c8668a68c29",
+      "bytes": 3568
+    },
+    {
+      "path": "src/DIFF-probe.raw",
+      "sha256": "066f8fd22d293f7e0ca4963abf5cfcb7710e3f3b113df19130c934c21d07f6cd",
+      "bytes": 3617
+    },
+    {
+      "path": "src/p2_ddr_bridge.v",
+      "sha256": "4a2c7ddf6564de8659e35278c6a6eb5d04603cf0efd9e5899d551f13d884e43a",
+      "bytes": 12481
+    },
+    {
+      "path": "src/p2_paxi_model_b11.v",
+      "sha256": "8b2d937d19be99ee4d0ed2ee0bd92e56f52d21f18649b9e6a785276849258d25",
+      "bytes": 5707
+    },
+    {
+      "path": "src/tb_ss_4run_wd_probe.v",
+      "sha256": "d2aa6cc09b8c091a3581dee02f2d556c2384f67d1ee2ee2a705c250933f86c31",
+      "bytes": 28279
+    }
+  ]
+}

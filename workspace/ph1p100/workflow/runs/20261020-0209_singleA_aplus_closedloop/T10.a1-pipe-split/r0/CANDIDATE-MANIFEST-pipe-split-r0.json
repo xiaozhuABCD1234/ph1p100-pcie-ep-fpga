@@ -1,0 +1,582 @@
+{
+ "task_id": "T10.a1-pipe-split",
+ "run_id": "20261020-0209_singleA_aplus_closedloop",
+ "revision": "r0",
+ "date": "2026-10-22/23",
+ "status": "blocked_at_routed_gate",
+ "ready_for_test": false,
+ "tester": null,
+ "package_type": "cycle-neutral structural pipeline split (rng1_r/s1_ok_r stage-1 registration + flop-only stage-2 hit2, plus one bounded registered pos/blk_n predicate) under T10; same run; retiming reused; 3 synth + 1 route; no seed sweep, no clock change, no false path/multicycle",
+ "status_reason": "G1 PASS: 33/33 bit-identical (P2 13/13, P3 20/20, 0 mismatch, 0 X, vlog 0/0; P2 comp exactly 355,261 = cycle-neutral; f1080p_p1d1 81,707 B / 4,677,945 cycles; SDC 227dd39e and frame 18d51b1b unchanged). G2 partially met: Routed SWNS +0.047 / STNS 0.000 / HWNS +0.021 / 0 violating endpoints of 4,649 / Fmax 189.179 MHz, resources within device (3,032 slices, 26 ERAM, 0 DSP), single clock, bitgen not_run. The dispatch gate requires setup >= +0.2 ns; +0.047 < +0.2 -> BLOCKED, planner/user to adjudicate acceptance. The split removed the old worst cone (pos_reg[3] -> bm_a.addrb, -0.039/45 in qor-retime); the new limiter is the extension-compare ERAM clk2q cone (bm_a/b clk2q 1.846 ns -> ext_mis_r compare -> add41, 5.003 ns, +0.047), outside this package's authorized scope.",
+ "authorization": {
+  "source": "workflow/runs/20261020-0209_singleA_aplus_closedloop/dispatch-pipe-split.json",
+  "user_quote": "进行结构性分拍尝试 (2026-10-22)",
+  "cycle_rule": "cycle-neutral preferred (target P2 comp 355,261); any added cycles must be quantified and total P2 comp <= 370,370; > 370,370 forbidden without user refresh",
+  "limits": [
+   "no protocol/port/frame semantics/CRC/length/abort/Bayer changes",
+   "SDC 227dd39e unchanged",
+   "no random seed sweep",
+   "no clock change / false path / multicycle",
+   "no bitgen / .bit / download / Flash",
+   "no cross-clock or cross-reset retiming moves",
+   "no third pipeline stage anywhere"
+  ]
+ },
+ "tool": "Tang Dynasty Release_2026.2 (V6.2.3.210850), device PH1P100SBG484 speed 3, SDC 187.5 MHz (5.333 ns); ModelSim ASE 18.1",
+ "frozen_inputs": {
+  "core": {
+   "path": "candidate-pipe-split.a1_deflate_core.v (tested candidate; working tree holds the same file)",
+   "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\candidate-pipe-split.a1_deflate_core.v",
+   "sha256": "bf6af3903f123d753391358ab003cd6ae4ec4a6a281a09dfa6e33b67798b1080",
+   "working_tree_sha256": "bf6af3903f123d753391358ab003cd6ae4ec4a6a281a09dfa6e33b67798b1080",
+   "baseline_sha256": "35ea736415c5fbfd28fabcf85b78e33275fb2507f8d30a070a95a17a41760942",
+   "change": "bounded steps 1-2 + one step-4 predicate: stage-1 rng1_r (precomputed s1_lo/s1_hi bounds, dual hent-source compare, 1-bit select), s1_ok_r, s1_last_r, flop-only hit2 = s1_vld_r && hb_r && rng1_r && s1_ok_r; rng2 wire removed; reset/abort clears added. Step 3 (p3p1_r) not applied. See patch.diff."
+  },
+  "frame": {
+   "path": "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v",
+   "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\codec\\a1_frame_top.v",
+   "sha256": "18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+   "expected": "18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+   "match": true
+  },
+  "sdc": {
+   "path": "td/a1_small_top.sdc (copy used by TD)",
+   "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\a1_small_top.sdc",
+   "sha256": "227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311",
+   "expected": "227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311",
+   "match": true
+  },
+  "eng_top": {
+   "path": "td/a1_eng_top.v",
+   "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\a1_eng_top.v",
+   "sha256": "544cecfc2eb34a3ab5c03ebf3965730b4ce60b2ff73ac4c2ec2d87772faaf9aa",
+   "expected": "544cecfc2eb34a3ab5c03ebf3965730b4ce60b2ff73ac4c2ec2d87772faaf9aa",
+   "match": true
+  },
+  "note": "Only a1_deflate_core.v differs from the qor-retime baseline; frame/SDC/bench bit-identical."
+ },
+ "strategy": {
+  "no_random_seed": true,
+  "syn": "set_param -run syn_1 rtl retiming on (PRJ-1105 confirmed; SYN-3005 backward retimed adler_fold_b_reg[8..13] etc.)",
+  "route": "set_param -run phy_1 route post_route_opt ultra (PRJ-1105 confirmed; param table ultra (*)). EVIDENCE DEVIATION: the phy flow ran place 40 s / route 29 s / fix_hold 1 s and NO post-route phys_opt stage; the +47 ps result is from retiming + place/route + hold fix only.",
+  "postrt_params": "postrt_opt_loc 20 / postrt_opt_extra_round 4 accepted via set_param (no PRJ-1105 confirmation line; not claimed effective)",
+  "synth_iterations": 3,
+  "route_attempts": 1
+ },
+ "gates": {
+  "gate": "Routed zero violations AND setup >= +0.2 ns; hold >= 0; resources within device; static single-clock CDC + reset structure; reports direct -file; bitgen not_run",
+  "functional": {
+   "result": "PASS",
+   "detail": "P2 13/13, P3 20/20; P2 comp run_cycles=355261; f1080p_p1d1 cycles=4677945; vlog 0/0; all per-case stream SHA/len/cycles bit-identical to the final-combo/bm-addr baseline"
+  },
+  "synth": {
+   "sw_ns": 0.275,
+   "st_ns": 0.0,
+   "slice": 3128,
+   "reg": 1689,
+   "eram": 26,
+   "dram_lut": 32
+  },
+  "routed": {
+   "sw_ns": 0.047,
+   "st_ns": 0.0,
+   "hw_ns": 0.021,
+   "ht_ns": 0.0,
+   "viol_ep": 0,
+   "total_ep": 4649,
+   "confidence": "Routed",
+   "coverage": 96.4,
+   "clk_mhz": 187.512,
+   "clk_fanout": 1322,
+   "r_period_ns": 5.286,
+   "fmax_mhz": 189.179
+  },
+  "routed_area": {
+   "slice": 3032,
+   "lut6": 2945,
+   "reg": 1712,
+   "eram": 26,
+   "dsp": 0,
+   "io": 121
+  },
+  "bitgen": "not_run; stop marker set when opt_route begins; no .bit (NO_BIT_FILE), no download",
+  "baseline_qor_retime_g1": "synth +0.113 / routed -0.039 / 45 endpoints",
+  "baseline_final_combo": "synth +0.021 / routed -0.091 / 12 endpoints",
+  "synth_iteration_notes": "synth #1 literal form -0.055 (htab ERAM clk2q -> rng1_r 5.324 ns); #2 precomputed bounds -0.007; #3 final +0.275 / 0 violations"
+ },
+ "functional": {
+  "rtl_changed": true,
+  "regression_rerun": "full 33-case P2/P3 regression re-run on the final RTL (P2 43 s, P3 491 s clean single run); prior evidence used only as the bit-identical comparison baseline",
+  "equivalence": "all 13 P2 cases and all 20 P3 cases bit-identical to the final-combo (= bm-addr) baseline (stream SHA256/len/run_cycles and stats); P2 comp 355261",
+  "evidence_paths": [
+   "p2/result.json",
+   "p2/logs/vlog.log",
+   "p2/logs/exitcodes.txt",
+   "p3/result.json",
+   "p3/logs/vlog.log",
+   "p3/logs/vlog-lint.log",
+   "p3/logs/exitcodes.txt"
+  ],
+  "incident": "first P3 attempt was invalidated by two overlapping P3 runs on the same directory/work library (operator error); the clean single re-run is authoritative; contaminated evidence preserved under p3/logs/."
+ },
+ "static_check": {
+  "report_cdc": "TD Release_2026.2 has no report_cdc (console RPT_CDC_UNAVAILABLE); no cdc report file created",
+  "single_clock": "routed timing summary: single clk 187.512 MHz, CC-From=no, CC-To=no; report_clock_utilization: GCLK 1 / SCLK 4 (gclk_0 fanout 1,290)",
+  "check_timing": "executed: 0 combinational loops, 1 dummy node (PH1P_PHY_LSLICE), 0 unconnected generated clocks",
+  "gate_netlist_scan": "analysis/netlist_scan.txt: 1,689 AL_MAP_SEQ, 100% clocked by clk_dup_1; sr nets rst_n_dup_1567 (756), fifo_mem_i1_syn_2 (443), unconnected (245); retiming same-domain only",
+  "routed_netlist": "routed netlist packs flops into LSLICE/MSLICE (no AL_MAP_SEQ primitives); STA/clock reports used for the routed-level statement"
+ },
+ "artifacts": {
+  "hash_file": "artifact-hashes.txt",
+  "files": [
+   {
+    "path": "../../../../../upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\codec\\a1_deflate_core.v",
+    "sha256": "bf6af3903f123d753391358ab003cd6ae4ec4a6a281a09dfa6e33b67798b1080",
+    "bytes": 78627,
+    "kind": "frozen_input_rtl",
+    "note": "core working tree = tested candidate (rng1_r/s1_ok_r/s1_last_r stage-1 registration)"
+   },
+   {
+    "path": "candidate-pipe-split.a1_deflate_core.v",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\candidate-pipe-split.a1_deflate_core.v",
+    "sha256": "bf6af3903f123d753391358ab003cd6ae4ec4a6a281a09dfa6e33b67798b1080",
+    "bytes": 78627,
+    "kind": "candidate_archive",
+    "note": "tested RTL candidate (core bf6af390)"
+   },
+   {
+    "path": "baseline-core-35ea7364.v",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\baseline-core-35ea7364.v",
+    "sha256": "35ea736415c5fbfd28fabcf85b78e33275fb2507f8d30a070a95a17a41760942",
+    "bytes": 75877,
+    "kind": "baseline_archive",
+    "note": "pre-change baseline 35ea7364 (used for patch.diff)"
+   },
+   {
+    "path": "../../../../../upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\codec\\a1_frame_top.v",
+    "sha256": "18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+    "bytes": 23675,
+    "kind": "frozen_input_rtl",
+    "note": "unchanged 18d51b1b"
+   },
+   {
+    "path": "td/a1_small_top.sdc",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\a1_small_top.sdc",
+    "sha256": "227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311",
+    "bytes": 399,
+    "kind": "frozen_input_sdc",
+    "note": "unchanged 227dd39e"
+   },
+   {
+    "path": "td/a1_eng_top.v",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\a1_eng_top.v",
+    "sha256": "544cecfc2eb34a3ab5c03ebf3965730b4ce60b2ff73ac4c2ec2d87772faaf9aa",
+    "bytes": 2671,
+    "kind": "frozen_input_bench",
+    "note": "a1_eng_top.v unchanged 544cecfc"
+   },
+   {
+    "path": "patch.diff",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\patch.diff",
+    "sha256": "63724278c0b7742fc850d13760a3700d6192293afd03658c3bff565cea37fc8b",
+    "bytes": 16612,
+    "kind": "candidate_diff",
+    "note": "baseline 35ea7364 -> candidate bf6af390"
+   },
+   {
+    "path": "run_p2_pipe_split.ps1",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\run_p2_pipe_split.ps1",
+    "sha256": "47a00342e71d639c4323be6afb3828636d66ecc6616116a22bd9c82e6c5544da",
+    "bytes": 5364,
+    "kind": "script",
+    "note": ""
+   },
+   {
+    "path": "run_p3_pipe_split.ps1",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\run_p3_pipe_split.ps1",
+    "sha256": "e04a3ce52bc28fd5f24eefdad27593eae3f276f497fed61542c436e582b70b1f",
+    "bytes": 5755,
+    "kind": "script",
+    "note": ""
+   },
+   {
+    "path": "analysis/scan_netlists.py",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\analysis\\scan_netlists.py",
+    "sha256": "f5157ed0606d722ce4d8617e2badbc6e7bed71089b52e7a251772b3eaa92b653",
+    "bytes": 4080,
+    "kind": "static_scan_script",
+    "note": ""
+   },
+   {
+    "path": "analysis/netlist_scan.txt",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\analysis\\netlist_scan.txt",
+    "sha256": "6b29798553132ea344d51421986e6db70146257e0259911b9cb3a1cef1cac9fc",
+    "bytes": 2741,
+    "kind": "static_scan_result",
+    "note": ""
+   },
+   {
+    "path": "freeze_manifest.py",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\freeze_manifest.py",
+    "sha256": "4c1ded1cfa70cdd5087ed526c8adb256cae3481abf92c11a2672f9ed3dd748e0",
+    "bytes": 20341,
+    "kind": "manifest_generator",
+    "note": ""
+   },
+   {
+    "path": "result-r0.md",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\result-r0.md",
+    "sha256": "9d499cd98058fb7faeb07f75de058990c8a10549e7b1371dd7b9aa6abfbdfdb4",
+    "bytes": 13138,
+    "kind": "result",
+    "note": ""
+   },
+   {
+    "path": "lessons-r0.md",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\lessons-r0.md",
+    "sha256": "316d34db627f3fe393bf4cff0523a89d293bec266b21a75eb430b4b572f0e200",
+    "bytes": 5492,
+    "kind": "lessons",
+    "note": ""
+   },
+   {
+    "path": "td/01_syn_ps.tcl",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\01_syn_ps.tcl",
+    "sha256": "779f3266660d5c75bbcf632aeee7f073e8f5da49730e2835c12d220b2c173c7f",
+    "bytes": 3623,
+    "kind": "syn_tcl",
+    "note": ""
+   },
+   {
+    "path": "td/02_syn_route_ps.tcl",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\02_syn_route_ps.tcl",
+    "sha256": "156ea2f36275b3b2b093073a65b6e965daa39595218928ac8b3dbdde5ae28aa2",
+    "bytes": 7553,
+    "kind": "route_tcl",
+    "note": ""
+   },
+   {
+    "path": "p2/result.json",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\p2\\result.json",
+    "sha256": "77f70031925b3c4f4e4eafe88bccfff6e64daccaa3083e4943ed2248c5efbfe9",
+    "bytes": 34647,
+    "kind": "p2_result",
+    "note": ""
+   },
+   {
+    "path": "p2/logs/vlog.log",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\p2\\logs\\vlog.log",
+    "sha256": "f73db0cda4b207bc66e7c253f87728d7a918d78854ac5859fbadf97b7673fd4e",
+    "bytes": 982,
+    "kind": "p2_vlog",
+    "note": ""
+   },
+   {
+    "path": "p2/logs/exitcodes.txt",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\p2\\logs\\exitcodes.txt",
+    "sha256": "5f60f0db091111c041d7db1b3e18f6c0870091cd57421c548417ceb6a74536fb",
+    "bytes": 8864,
+    "kind": "p2_exitcodes",
+    "note": ""
+   },
+   {
+    "path": "p3/result.json",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\p3\\result.json",
+    "sha256": "cb2ef6ae94071979b922755c35652a657cb1f2394c24112bbb8f9288cea99ba2",
+    "bytes": 17053,
+    "kind": "p3_result",
+    "note": ""
+   },
+   {
+    "path": "p3/logs/vlog.log",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\p3\\logs\\vlog.log",
+    "sha256": "ee0e73c8115742fd9a89d36e581defdf04825a1ca48e39f7ef4a1ac988bafbed",
+    "bytes": 3744,
+    "kind": "p3_vlog",
+    "note": ""
+   },
+   {
+    "path": "p3/logs/vlog-lint.log",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\p3\\logs\\vlog-lint.log",
+    "sha256": "47a1168ef1bae92d76987c4ae9fd21e040389d2d4a64cd9393b208fc8d00e911",
+    "bytes": 904,
+    "kind": "p3_vlog_lint",
+    "note": ""
+   },
+   {
+    "path": "p3/logs/exitcodes.txt",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\p3\\logs\\exitcodes.txt",
+    "sha256": "bf72149900d28e357660c7a5da508ccd19c76449ba7c2143618ef7c0e14c1e8e",
+    "bytes": 9825,
+    "kind": "p3_exitcodes",
+    "note": ""
+   },
+   {
+    "path": "p3/logs/verify_first_run_FAIL.log",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\p3\\logs\\verify_first_run_FAIL.log",
+    "sha256": "9e3d3e71976a48e2052c417dc3d1ac2585aaa12279c51f73a35d488dbd6e53bf",
+    "bytes": 652,
+    "kind": "p3_contaminated_first_attempt_log",
+    "note": ""
+   },
+   {
+    "path": "p3/logs/f1080p_p1d0_first_run_stats.txt",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\p3\\logs\\f1080p_p1d0_first_run_stats.txt",
+    "sha256": "cc7e3d82ef4d51042d54099b62ab0702eece2605f560249e97f6be5776615a5a",
+    "bytes": 343,
+    "kind": "p3_contaminated_first_attempt_stats",
+    "note": ""
+   },
+   {
+    "path": "td/console_syn1.log",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\console_syn1.log",
+    "sha256": "66f7306f577cecf729b08a253f51ff43093b9fe5b440d8dede6c3f5b642d3d06",
+    "bytes": 22354,
+    "kind": "td_console_syn1_literal_form",
+    "note": ""
+   },
+   {
+    "path": "td/console_syn2.log",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\console_syn2.log",
+    "sha256": "7f8feeb32f0d54b3752298403f6a808c33f37766332b222e59bc37e1dc5580f3",
+    "bytes": 22426,
+    "kind": "td_console_syn2_threshold_form",
+    "note": ""
+   },
+   {
+    "path": "td/console_route.log",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\console_route.log",
+    "sha256": "8e61f360a02b94decb887dd9240493502a4db9e6340a97826552cdb644fe7da6",
+    "bytes": 18063,
+    "kind": "td_console_route",
+    "note": ""
+   },
+   {
+    "path": "td/syn1_gate_timing_literal_form.rpt",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\syn1_gate_timing_literal_form.rpt",
+    "sha256": "96e6bb4681ea99ca0b2c993b5803168f1ce60ed08086028fbade7143f44580d6",
+    "bytes": 133796,
+    "kind": "syn1_gate_timing",
+    "note": ""
+   },
+   {
+    "path": "td/syn1_gate_area_literal_form.rpt",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\syn1_gate_area_literal_form.rpt",
+    "sha256": "3650d8faf0e3022baf8bba169cd56badab6d323b9afe413f54b657bb5f4598f5",
+    "bytes": 2965,
+    "kind": "syn1_gate_area",
+    "note": ""
+   },
+   {
+    "path": "td/syn2_gate_timing_threshold_form.rpt",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\syn2_gate_timing_threshold_form.rpt",
+    "sha256": "8dc5757b930cfa06b0f344bfca0e71e656815cc3448533aa0e0fcb14f63fdd5d",
+    "bytes": 151941,
+    "kind": "syn2_gate_timing",
+    "note": ""
+   },
+   {
+    "path": "td/syn2_gate_area_threshold_form.rpt",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\syn2_gate_area_threshold_form.rpt",
+    "sha256": "5d0e71119fd9cc63503f30317756436067a8f0da35cfae716c7ee0c5f81d3690",
+    "bytes": 2965,
+    "kind": "syn2_gate_area",
+    "note": ""
+   },
+   {
+    "path": "td/syn_gate_timing_ps.rpt",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\syn_gate_timing_ps.rpt",
+    "sha256": "9f16371cb25d23b4c4e3333971a85f7723ec31cdf4b2efb50cc5b81a5fb99fe1",
+    "bytes": 153907,
+    "kind": "syn3_gate_timing_final",
+    "note": ""
+   },
+   {
+    "path": "td/syn_gate_area_ps.rpt",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\syn_gate_area_ps.rpt",
+    "sha256": "1adfd8502770154cc90ea6caedc0f3d19dc3e6744c759705e3ab31f2cca2d982",
+    "bytes": 2965,
+    "kind": "syn3_gate_area_final",
+    "note": ""
+   },
+   {
+    "path": "td/routed_timing_summary.rpt",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\routed_timing_summary.rpt",
+    "sha256": "15d712011f02f38ab778d7c2e0066a1a84bc7da50c857709ccb10b6089a61ce7",
+    "bytes": 167832,
+    "kind": "routed_timing_summary",
+    "note": ""
+   },
+   {
+    "path": "td/routed_timing_status.rpt",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\routed_timing_status.rpt",
+    "sha256": "aac5befc2ab31b6646a1e6f0537afdd0a71ac40febe4818cc41a941f42baee02",
+    "bytes": 62,
+    "kind": "routed_timing_status",
+    "note": ""
+   },
+   {
+    "path": "td/routed_area.rpt",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\routed_area.rpt",
+    "sha256": "7e64632761aaac63ff6901496fd26dd4f0a153b6700b35e995d77295a3f2bbe5",
+    "bytes": 18865,
+    "kind": "routed_area",
+    "note": ""
+   },
+   {
+    "path": "td/routed_timing.rpt",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\routed_timing.rpt",
+    "sha256": "15d712011f02f38ab778d7c2e0066a1a84bc7da50c857709ccb10b6089a61ce7",
+    "bytes": 167832,
+    "kind": "routed_timing",
+    "note": ""
+   },
+   {
+    "path": "td/routed_qor.rpt",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\routed_qor.rpt",
+    "sha256": "78d3c77b9be185bcc92fc7c6543379434ab8459bb88023d337f76e83b5029e3c",
+    "bytes": 1313,
+    "kind": "routed_qor",
+    "note": ""
+   },
+   {
+    "path": "td/routed_check_timing.rpt",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\routed_check_timing.rpt",
+    "sha256": "88578499d75ecf9336a29723ab630e3e7b624df7646ea5a64b49bf98101cfa78",
+    "bytes": 4882,
+    "kind": "routed_check_timing",
+    "note": ""
+   },
+   {
+    "path": "td/routed_clock_utilization.rpt",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\routed_clock_utilization.rpt",
+    "sha256": "e429648b8467f8deb00ad1aeca2b9020897a7eb4792c4e9a0705fcacb1b7c16c",
+    "bytes": 18067,
+    "kind": "routed_clock_utilization",
+    "note": ""
+   },
+   {
+    "path": "td/phy_pr_timing_flow.rpt",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\phy_pr_timing_flow.rpt",
+    "sha256": "a24fafd129f12b1ea18f779a653df600e3d6a76a2bcd5e13171312bb500d28af",
+    "bytes": 167832,
+    "kind": "phy_pr_timing_flow",
+    "note": ""
+   },
+   {
+    "path": "td/phy_area_run.rpt",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\phy_area_run.rpt",
+    "sha256": "7e64632761aaac63ff6901496fd26dd4f0a153b6700b35e995d77295a3f2bbe5",
+    "bytes": 18865,
+    "kind": "phy_area",
+    "note": ""
+   },
+   {
+    "path": "td/route_flow.status",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\route_flow.status",
+    "sha256": "67ad97be63eedf9512b669690a218f968286bce8471d06e8ad6854af4470b668",
+    "bytes": 1647,
+    "kind": "route_flow_status",
+    "note": ""
+   },
+   {
+    "path": "td/place_flow.status",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\place_flow.status",
+    "sha256": "bd74d0ada82e814fa83513c5a9e7e5f796ac9978c0a9325470a78df22edae010",
+    "bytes": 1456,
+    "kind": "place_flow_status",
+    "note": ""
+   },
+   {
+    "path": "td/ps_gate_netlist.v",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\ps_gate_netlist.v",
+    "sha256": "bd07f43aa42a61a1f79d4368ccce41130531d74f6c98d8b98322f8311e3b89dd",
+    "bytes": 3341494,
+    "kind": "gate_netlist",
+    "note": ""
+   },
+   {
+    "path": "td/ps_routed_netlist.v",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\ps_routed_netlist.v",
+    "sha256": "627e7a65746d227557a977ddff85129e282f6bad1f897006bff1f18a290e6c91",
+    "bytes": 3517575,
+    "kind": "routed_netlist",
+    "note": ""
+   },
+   {
+    "path": "td/ps_elab_netlist.v",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\ps_elab_netlist.v",
+    "sha256": "4df0ffd0d3d3f401ed6abb1390ae63bc600a4a1b5238d23f643d844dc7ac88ab",
+    "bytes": 1776558,
+    "kind": "elab_netlist",
+    "note": ""
+   },
+   {
+    "path": "td/params_ps_after.tcl",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\params_ps_after.tcl",
+    "sha256": "54ce9d77641e5385ab5f4d98307d555ba8e124447e722aa2814c229d654adf26",
+    "bytes": 282,
+    "kind": "params_after",
+    "note": ""
+   },
+   {
+    "path": "td/a1_ps.al",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\a1_ps.al",
+    "sha256": "239c13ed80b453622119deaf72f45c3465d517a160c55fb8be996367f11998d6",
+    "bytes": 3608,
+    "kind": "td_project_al",
+    "note": ""
+   },
+   {
+    "path": "td/a1_ps_Runs/syn_1/run.log",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\a1_ps_Runs\\syn_1\\run.log",
+    "sha256": "b697af91852e521e6a1143e214cee4504e9626efa0faffe26af67ed2351c0259",
+    "bytes": 54979,
+    "kind": "syn_runlog",
+    "note": ""
+   },
+   {
+    "path": "td/a1_ps_Runs/phy_1/run.log",
+    "abs_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-pipe-split\\r0\\td\\a1_ps_Runs\\phy_1\\run.log",
+    "sha256": "cfbf7e87873e71aee14e9f1ca99dd77cf30be74bfa22cad98fdbe38fb97f8477",
+    "bytes": 101395,
+    "kind": "phy_runlog",
+    "note": ""
+   }
+  ],
+  "result": "result-r0.md",
+  "lessons": "lessons-r0.md"
+ },
+ "fallback": {
+  "best_routed_this_package": "Routed SWNS +0.047 / 0 violating endpoints / hold +0.021 / Fmax 189.179 MHz (best WNS and only zero-violation route of T10, but below the +0.2 ns gate)",
+  "previous_best_routed": "T10.a1-qor-retime group 1: -0.039 / 45 endpoints (no run has met the +0.2 ns gate)",
+  "best_synth_overall": "this package final: synth +0.275 / 0 violations; T10.a1-adler-smem core 611ad704: synth +0.233",
+  "working_tree_after_package": "a1_deflate_core.v = tested candidate bf6af390 (NOT reverted, per this round's instruction); baseline 35ea7364 archived as baseline-core-35ea7364.v",
+  "rollback": "restore a1_deflate_core.v from baseline-core-35ea7364.v (or T10.a1-bm-addr/r0/td/a1_deflate_core.v); older manifests read-only"
+ },
+ "blocked": {
+  "reason_code": "LIMIT_REACHED",
+  "detail": "Routed zero violations achieved, but setup WNS +0.047 ns < the dispatch threshold +0.2 ns. Per dispatch stop conditions no second route and no extra RTL fix round; T10 stays 3/4 PASS + 1 warning.",
+  "last_evidence": "td/routed_timing_summary.rpt (SWNS +0.047, 0/4,649), td/a1_ps_Runs/phy_1/route.qor (Setup 47 ps, 0 violated S-EP), td/console_route.log (PS_ROUTED_SWNS=0.047 ...)",
+  "minimal_next_step": "Planner/user adjudication: accept +47 ps (requires refreshing the +0.2 ns acceptance basis) or close T10 as 3/4 + 1 warning. Any further RTL/route work needs a new explicit authorization."
+ },
+ "retest": {
+  "tester_required": false,
+  "note": "Routed gate (+0.2 ns) not met -> per dispatch no PASS tester is spawned; the planner decides acceptance. If an independent review is wanted, it must keep the threshold judgment explicit (+47 ps < +200 ps) and not silently relax it.",
+  "required_dimensions": [
+   "integrated",
+   "functional",
+   "engineering",
+   "system"
+  ],
+  "required_checks": [
+   "independent parse of routed_timing_summary.rpt / routed_timing_status.rpt (SWNS/STNS/HWNS/HTNS, violating endpoints) and a1_ps_Runs/phy_1/route.qor",
+   "independent re-run of the 33-case P2/P3 regression on core bf6af390 (expected bit-identical: comp 355,261; 1080p 81,707 B / b769cc66)",
+   "frame/SDC/bench hashes unchanged; no bitgen/.bit/download",
+   "static single-clock CDC + reset structure (analysis/netlist_scan.txt); resources within device"
+  ],
+  "input_status": "changed (core RTL), frame/SDC/bench same"
+ }
+}

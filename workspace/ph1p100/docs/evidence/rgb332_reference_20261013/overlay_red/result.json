@@ -1,0 +1,85 @@
+{
+  "test": "overlay",
+  "baseline": true,
+  "production": false,
+  "accepted": true,
+  "commands": [
+    {
+      "command": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlib.exe",
+        "work"
+      ],
+      "cwd": "D:\\TD\\work\\csi2\\_validation\\rgb332_reference_20261013_214930_970072",
+      "log": "0.log",
+      "returncode": 0,
+      "reported_errors": [],
+      "expected_functional_failure": false,
+      "tool_error": false
+    },
+    {
+      "command": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlog.exe",
+        "-sv",
+        "tb_rgb332_reference_overlay.sv",
+        "rgb332_reference_overlay.v"
+      ],
+      "cwd": "D:\\TD\\work\\csi2\\_validation\\rgb332_reference_20261013_214930_970072",
+      "log": "1.log",
+      "returncode": 0,
+      "reported_errors": [
+        0
+      ],
+      "expected_functional_failure": false,
+      "tool_error": false
+    },
+    {
+      "command": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vsim.exe",
+        "-c",
+        "work.tb_rgb332_reference_overlay",
+        "-do",
+        "run -all; quit -f"
+      ],
+      "cwd": "D:\\TD\\work\\csi2\\_validation\\rgb332_reference_20261013_214930_970072",
+      "log": "2.log",
+      "returncode": 0,
+      "reported_errors": [
+        0
+      ],
+      "expected_functional_failure": true,
+      "tool_error": false
+    }
+  ],
+  "source_inputs": {
+    "run_rgb332_reference.py": {
+      "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\tools\\td\\run_rgb332_reference.py",
+      "sha256": "f69a1f01a7f0222838e6fa024eb3f032c133b5d8f54fd6f86357db72ca13f727"
+    },
+    "rgb332_reference_support.py": {
+      "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\tools\\td\\rgb332_reference_support.py",
+      "sha256": "f27b8860a67be697c553e1d4cfd3b2ded0e6b8d0307f37ccb79f2e1d7564ad81"
+    },
+    "tb_rgb332_reference_overlay.sv": {
+      "path": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\fpga\\csi2\\tb\\tb_rgb332_reference_overlay.sv",
+      "sha256": "628ae7658846e83821f45a77ef729e605879a50b7ce82ae5638051e34885c363"
+    }
+  },
+  "inputs": {
+    "tb_rgb332_reference_overlay.sv": "628ae7658846e83821f45a77ef729e605879a50b7ce82ae5638051e34885c363",
+    "rgb332_reference_overlay.v": "e38735df2b83fea0a0fcb13137ea5a924a18d8bc50ef31807c347fc6cf7db6f9"
+  },
+  "script_hashes": {
+    "run_rgb332_reference.py": "f69a1f01a7f0222838e6fa024eb3f032c133b5d8f54fd6f86357db72ca13f727",
+    "rgb332_reference_support.py": "f27b8860a67be697c553e1d4cfd3b2ded0e6b8d0307f37ccb79f2e1d7564ad81"
+  },
+  "snapshot_transforms": [
+    "Constructed passthrough stub; no product implementation yet.",
+    "Same-interface active-video camera_rgb passthrough stub with reset/blank black; require RGB332_REFERENCE_FAIL pixel, zero tool errors and zero exit codes."
+  ],
+  "product_implementation_present": false,
+  "compile_files": [
+    "tb_rgb332_reference_overlay.sv",
+    "rgb332_reference_overlay.v"
+  ],
+  "expected_marker": "RGB332_REFERENCE_FAIL pixel"
+}

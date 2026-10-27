@@ -1,0 +1,922 @@
+Created by          : Tang Dynasty Release_2026.2
+                    : Copyright (c) 2012-2026 Anlogic Inc.
+Generated           : Thu Oct 22 05:11:03 2026
+
+Top Model           : a1_eng_top
+Device              : PH1P100SBG484
+Speed               : 3
+STA coverage        : 95.47%
+Constraint File     : T:/a1_small_top.sdc;
+Confidence          : Synthesized
+Check Corner        : Both (Slow and Fast)
+CRPR Enabled        : Yes
+Report Scheme       : 10 end point(s) per path group, 1 path(s) per end point
+
+
+Check Status
+-------------
+
+Corner   | Max      Min     
+------------------------------------
+Slow     | yes      yes     
+Fast     | yes      yes     
+
+
+Timing Status
+--------------------
+	SWNS: -1.094ns, STNS: -39.899ns
+	HWNS: 0.000ns, HTNS: 0.000ns
+	Period Check WNS: 2.533ns
+
+
+Clock Summary
+--------------------
+
+       Clock-Id:       C-Freq       Fanout   Clock-Name
+--------------------------------------------------------------------------------
+           clk0:      187.512         3957   clk
+--------------------------------------------------------------------------------
+
+       Name            Type         Rise(ns)   Fall(ns)          C-Period(ns)     C-Freq(MHz)          R-Period(ns)     R-Freq(MHz)         SWNS(ns)   STNS(ns)         HWNS(ns)   HTNS(ns)         Skew(ns)           Fanout        Max-Level        CC-From    CC-To
+       clk0           local            0.000      2.667                 5.333         187.512                 6.427         155.594           -1.094    -39.899            0.000      0.000            0.000             3957                7             no       no
+
+Notes
+----------
+C-Period  :  constraint period
+C-Freq    :  constraint freq
+R-Period  :  report min period
+R-Freq    :  report fmax
+CC-From   :  has path(s) from cross-domain clock
+CC-To     :  has path(s) to cross-domain clock
+
+
+*   Clock R-Period data only takes intra-clock timing. SWNS/STNS/HWNS/HTNS take both intra-clock and inter-clock timing.
+*   If there is mismatch between R-Period and SWNS, check inter-clock timing of this clock as capture clock.
+*   SWNS/STNS/HWNS/HTNS of timing exception (SMCP/SMD) only counted in global Timing Status, not counted in Clock Summary.
+
+Intra clock domain timing
+--------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+Path Group     :     clk -> clk
+Type           :     Self
+From Clock     :     clk
+To Clock       :     clk
+Min Period     :     6.427ns
+Fmax           :     155.594MHz
+
+Statistics:
+Max            : SWNS     -1.094ns, STNS    -39.899ns,       106 Viol Endpoints,      6811 Total Endpoints
+Min            : HWNS      0.000ns, HTNS      0.000ns,         0 Viol Endpoints,         0 Total Endpoints
+----------------------------------------------------------------------------------------------------
+
+Max Paths
+----------------------------------------------------------------------------------------------------
+Slack               : -1.094ns
+Begin Point         : u_dut/u_core/bm_a_syn_13.clkb (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/htab_rvalid_reg.d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 6.363ns (cell 3.527ns (55%), net 2.836ns (45%))
+Clock Skew          : 0.000ns
+Logic Level         : 6 ( LUT6=4  LUT4=1  LUT3=1 )
+Max Fanout          : 1409
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=2773)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/bm_a_syn_13.clkb
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+ERAM (clk2q)                            1.515    f     1.515          pin: u_dut/u_core/bm_a_syn_13.dob[0]
+net (fo=1)                              0.506          2.021          net: u_dut/u_core/bm_a_syn_14,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(211)
+                                                                      pin: u_dut/u_core/mux310_syn_3156.a
+LUT6                                    0.315    f     2.336       1  pin: u_dut/u_core/mux310_syn_3156.o
+net (fo=6)                              0.404          2.740          net: u_dut/u_core/bm_a_rd[0],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(240)
+                                                                      pin: u_dut/u_core/htab_rdata_b1[64]_syn_29.a
+LUT3                                    0.273    f     3.013       2  pin: u_dut/u_core/htab_rdata_b1[64]_syn_29.o
+net (fo=1409)                           0.710          3.723          net: u_dut/u_core/htab_rd_addr[0],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(473)
+                                                                      pin: u_dut/u_core/htab_v_syn_23597.ie
+LUT6                                    0.139    r     3.862       3  pin: u_dut/u_core/htab_v_syn_23597.relut6
+net (fo=1)                              0.000          3.862          net: u_dut/u_core/htab_v_syn_23599[3],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(216)
+                                                                      pin: u_dut/u_core/htab_v_syn_7262.muxi[3]
+F78MUX                                  0.103    r     3.965          pin: u_dut/u_core/htab_v_syn_7262.f8muxo
+net (fo=1)                              0.000          3.965          net: u_dut/u_core/htab_v_syn_23603,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(216)
+                                                                      pin: u_dut/u_core/htab_v_syn_23596.f78i
+                                        0.064    f     4.029          pin: u_dut/u_core/htab_v_syn_23596.ofa
+net (fo=1)                              0.304          4.333          net: u_dut/u_core/htab_v_syn_7173[62],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(216)
+                                                                      pin: u_dut/u_core/htab_v_syn_24224.ib
+LUT6                                    0.322    f     4.655       4  pin: u_dut/u_core/htab_v_syn_24224.relut6
+net (fo=1)                              0.000          4.655          net: u_dut/u_core/htab_v_syn_24229[0],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(216)
+                                                                      pin: u_dut/u_core/htab_v_syn_8085.muxi[0]
+F78MUX                                  0.103    r     4.758          pin: u_dut/u_core/htab_v_syn_8085.f8muxo
+net (fo=1)                              0.000          4.758          net: u_dut/u_core/htab_v_syn_24233,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(216)
+                                                                      pin: u_dut/u_core/htab_v_syn_24226.f78i
+                                        0.064    f     4.822          pin: u_dut/u_core/htab_v_syn_24226.ofa
+net (fo=1)                              0.304          5.126          net: u_dut/u_core/htab_v_syn_8069[3],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(216)
+                                                                      pin: u_dut/u_core/htab_v_syn_8125.a
+LUT6                                    0.315    f     5.441       5  pin: u_dut/u_core/htab_v_syn_8125.o
+net (fo=1)                              0.304          5.745          net: u_dut/u_core/htab_rvalid_n2,  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_rvalid_reg_syn_7.a
+LUT4                                    0.273    f     6.018       6  pin: u_dut/u_core/htab_rvalid_reg_syn_7.o
+net (fo=1)                              0.304          6.322          net: u_dut/u_core/htab_rvalid_reg_syn_5,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(483)
+                                                                      pin: u_dut/u_core/htab_rvalid_reg.d
+SEQ (reg)                               0.041    f     6.363               
+--------------------------------------------------------------------  ---------------
+Arrival                                                6.363               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=2773)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/htab_rvalid_reg.clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -1.094               
+
+Slack               : -0.571ns
+Begin Point         : u_dut/u_core/bm_a_syn_13.clkb (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/state_reg[1].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.840ns (cell 3.320ns (56%), net 2.520ns (44%))
+Clock Skew          : 0.000ns
+Logic Level         : 6 ( LUT6=3  LUT5=1  LUT4=1  LUT3=1 )
+Max Fanout          : 6
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=2773)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/bm_a_syn_13.clkb
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+ERAM (clk2q)                            1.515    f     1.515          pin: u_dut/u_core/bm_a_syn_13.dob[0]
+net (fo=1)                              0.506          2.021          net: u_dut/u_core/bm_a_syn_14,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(211)
+                                                                      pin: u_dut/u_core/mux310_syn_3156.a
+LUT6                                    0.315    f     2.336       1  pin: u_dut/u_core/mux310_syn_3156.o
+net (fo=6)                              0.404          2.740          net: u_dut/u_core/bm_a_rd[0],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(240)
+                                                                      pin: u_dut/u_core/mux310_syn_3212.a
+LUT4                                    0.273    f     3.013       2  pin: u_dut/u_core/mux310_syn_3212.o
+net (fo=1)                              0.304          3.317          net: u_dut/u_core/mux310_syn_3213,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1143)
+                                                                      pin: u_dut/u_core/mux310_syn_3218.d
+LUT6                                    0.315    f     3.632       3  pin: u_dut/u_core/mux310_syn_3218.o
+net (fo=5)                              0.394          4.026          net: u_dut/u_core/mux310_syn_3219,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1143)
+                                                                      pin: u_dut/u_core/mux310_syn_3320.a
+LUT3                                    0.273    f     4.299       4  pin: u_dut/u_core/mux310_syn_3320.o
+net (fo=1)                              0.304          4.603          net: u_dut/u_core/mux310_syn_3321,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1143)
+                                                                      pin: u_dut/u_core/mux310_syn_3332.a
+LUT6                                    0.315    f     4.918       5  pin: u_dut/u_core/mux310_syn_3332.o
+net (fo=1)                              0.304          5.222          net: u_dut/u_core/mux310_syn_3333,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1143)
+                                                                      pin: u_dut/u_core/mux310_syn_3334.a
+LUT5                                    0.273    f     5.495       6  pin: u_dut/u_core/mux310_syn_3334.o
+net (fo=1)                              0.304          5.799          net: u_dut/u_core/mux310_syn_2[1],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(1143)
+                                                                      pin: u_dut/u_core/state_reg[1].d
+SEQ (reg)                               0.041    f     5.840               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.840               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=2773)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/state_reg[1].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.571               
+
+Slack               : -0.504ns
+Begin Point         : u_dut/u_core/bm_a_syn_13.clkb (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/htab_rdata_reg[0].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.773ns (cell 3.247ns (56%), net 2.526ns (44%))
+Clock Skew          : 0.000ns
+Logic Level         : 5 ( LUT6=2  LUT3=2  DRAM=1 )
+Max Fanout          : 1281
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=2773)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/bm_a_syn_13.clkb
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+ERAM (clk2q)                            1.515    f     1.515          pin: u_dut/u_core/bm_a_syn_13.dob[2]
+net (fo=1)                              0.506          2.021          net: u_dut/u_core/bm_a_syn_16,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(211)
+                                                                      pin: u_dut/u_core/mux310_syn_3158.a
+LUT6                                    0.315    f     2.336       1  pin: u_dut/u_core/mux310_syn_3158.o
+net (fo=6)                              0.404          2.740          net: u_dut/u_core/bm_a_rd[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(240)
+                                                                      pin: u_dut/u_core/htab_rdata_b1[64]_syn_33.b
+LUT3                                    0.273    f     3.013       2  pin: u_dut/u_core/htab_rdata_b1[64]_syn_33.o
+net (fo=1281)                           0.704          3.717          net: u_dut/u_core/htab_rd_addr[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(473)
+                                                                      pin: u_dut/u_core/htab_syn_3303.ib
+DRAM                                    0.341    f     4.058       3  pin: u_dut/u_core/htab_syn_3303.ofb
+net (fo=1)                              0.304          4.362          net: u_dut/u_core/htab_syn_489,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1744.ib
+LUT6                                    0.322    f     4.684       4  pin: u_dut/u_core/htab_syn_1744.relut6
+net (fo=1)                              0.000          4.684          net: u_dut/u_core/htab_syn_1748[1],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1287.muxi[1]
+F78MUX                                  0.103    r     4.787          pin: u_dut/u_core/htab_syn_1287.f8muxo
+net (fo=1)                              0.000          4.787          net: u_dut/u_core/htab_syn_1752,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1745.f78i
+                                        0.064    f     4.851          pin: u_dut/u_core/htab_syn_1745.ofa
+net (fo=1)                              0.304          5.155          net: u_dut/u_core/htab_rdata_b2[0],  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_rdata_b1[0]_syn_1.a
+LUT3                                    0.273    f     5.428       5  pin: u_dut/u_core/htab_rdata_b1[0]_syn_1.o
+net (fo=1)                              0.304          5.732          net: u_dut/u_core/htab_rdata_b1[0],  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_rdata_reg[0].d
+SEQ (reg)                               0.041    f     5.773               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.773               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=2773)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/htab_rdata_reg[0].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.504               
+
+Slack               : -0.504ns
+Begin Point         : u_dut/u_core/bm_a_syn_13.clkb (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/htab_rdata_reg[1].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.773ns (cell 3.247ns (56%), net 2.526ns (44%))
+Clock Skew          : 0.000ns
+Logic Level         : 5 ( LUT6=2  LUT3=2  DRAM=1 )
+Max Fanout          : 1281
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=2773)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/bm_a_syn_13.clkb
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+ERAM (clk2q)                            1.515    f     1.515          pin: u_dut/u_core/bm_a_syn_13.dob[2]
+net (fo=1)                              0.506          2.021          net: u_dut/u_core/bm_a_syn_16,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(211)
+                                                                      pin: u_dut/u_core/mux310_syn_3158.a
+LUT6                                    0.315    f     2.336       1  pin: u_dut/u_core/mux310_syn_3158.o
+net (fo=6)                              0.404          2.740          net: u_dut/u_core/bm_a_rd[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(240)
+                                                                      pin: u_dut/u_core/htab_rdata_b1[64]_syn_33.b
+LUT3                                    0.273    f     3.013       2  pin: u_dut/u_core/htab_rdata_b1[64]_syn_33.o
+net (fo=1281)                           0.704          3.717          net: u_dut/u_core/htab_rd_addr[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(473)
+                                                                      pin: u_dut/u_core/htab_syn_3304.ib
+DRAM                                    0.341    f     4.058       3  pin: u_dut/u_core/htab_syn_3304.ofb
+net (fo=1)                              0.304          4.362          net: u_dut/u_core/htab_syn_490,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1754.ib
+LUT6                                    0.322    f     4.684       4  pin: u_dut/u_core/htab_syn_1754.relut6
+net (fo=1)                              0.000          4.684          net: u_dut/u_core/htab_syn_1758[1],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1294.muxi[1]
+F78MUX                                  0.103    r     4.787          pin: u_dut/u_core/htab_syn_1294.f8muxo
+net (fo=1)                              0.000          4.787          net: u_dut/u_core/htab_syn_1762,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1755.f78i
+                                        0.064    f     4.851          pin: u_dut/u_core/htab_syn_1755.ofa
+net (fo=1)                              0.304          5.155          net: u_dut/u_core/htab_rdata_b2[1],  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_rdata_b1[1]_syn_1.a
+LUT3                                    0.273    f     5.428       5  pin: u_dut/u_core/htab_rdata_b1[1]_syn_1.o
+net (fo=1)                              0.304          5.732          net: u_dut/u_core/htab_rdata_b1[1],  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_rdata_reg[1].d
+SEQ (reg)                               0.041    f     5.773               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.773               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=2773)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/htab_rdata_reg[1].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.504               
+
+Slack               : -0.504ns
+Begin Point         : u_dut/u_core/bm_a_syn_13.clkb (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/htab_rdata_reg[2].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.773ns (cell 3.247ns (56%), net 2.526ns (44%))
+Clock Skew          : 0.000ns
+Logic Level         : 5 ( LUT6=2  LUT3=2  DRAM=1 )
+Max Fanout          : 1281
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=2773)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/bm_a_syn_13.clkb
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+ERAM (clk2q)                            1.515    f     1.515          pin: u_dut/u_core/bm_a_syn_13.dob[2]
+net (fo=1)                              0.506          2.021          net: u_dut/u_core/bm_a_syn_16,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(211)
+                                                                      pin: u_dut/u_core/mux310_syn_3158.a
+LUT6                                    0.315    f     2.336       1  pin: u_dut/u_core/mux310_syn_3158.o
+net (fo=6)                              0.404          2.740          net: u_dut/u_core/bm_a_rd[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(240)
+                                                                      pin: u_dut/u_core/htab_rdata_b1[64]_syn_33.b
+LUT3                                    0.273    f     3.013       2  pin: u_dut/u_core/htab_rdata_b1[64]_syn_33.o
+net (fo=1281)                           0.704          3.717          net: u_dut/u_core/htab_rd_addr[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(473)
+                                                                      pin: u_dut/u_core/htab_syn_3305.ib
+DRAM                                    0.341    f     4.058       3  pin: u_dut/u_core/htab_syn_3305.ofb
+net (fo=1)                              0.304          4.362          net: u_dut/u_core/htab_syn_491,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1764.ib
+LUT6                                    0.322    f     4.684       4  pin: u_dut/u_core/htab_syn_1764.relut6
+net (fo=1)                              0.000          4.684          net: u_dut/u_core/htab_syn_1768[1],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1301.muxi[1]
+F78MUX                                  0.103    r     4.787          pin: u_dut/u_core/htab_syn_1301.f8muxo
+net (fo=1)                              0.000          4.787          net: u_dut/u_core/htab_syn_1772,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1765.f78i
+                                        0.064    f     4.851          pin: u_dut/u_core/htab_syn_1765.ofa
+net (fo=1)                              0.304          5.155          net: u_dut/u_core/htab_rdata_b2[2],  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_rdata_b1[2]_syn_1.a
+LUT3                                    0.273    f     5.428       5  pin: u_dut/u_core/htab_rdata_b1[2]_syn_1.o
+net (fo=1)                              0.304          5.732          net: u_dut/u_core/htab_rdata_b1[2],  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_rdata_reg[2].d
+SEQ (reg)                               0.041    f     5.773               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.773               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=2773)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/htab_rdata_reg[2].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.504               
+
+Slack               : -0.504ns
+Begin Point         : u_dut/u_core/bm_a_syn_13.clkb (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/htab_rdata_reg[3].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.773ns (cell 3.247ns (56%), net 2.526ns (44%))
+Clock Skew          : 0.000ns
+Logic Level         : 5 ( LUT6=2  LUT3=2  DRAM=1 )
+Max Fanout          : 1281
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=2773)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/bm_a_syn_13.clkb
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+ERAM (clk2q)                            1.515    f     1.515          pin: u_dut/u_core/bm_a_syn_13.dob[2]
+net (fo=1)                              0.506          2.021          net: u_dut/u_core/bm_a_syn_16,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(211)
+                                                                      pin: u_dut/u_core/mux310_syn_3158.a
+LUT6                                    0.315    f     2.336       1  pin: u_dut/u_core/mux310_syn_3158.o
+net (fo=6)                              0.404          2.740          net: u_dut/u_core/bm_a_rd[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(240)
+                                                                      pin: u_dut/u_core/htab_rdata_b1[64]_syn_33.b
+LUT3                                    0.273    f     3.013       2  pin: u_dut/u_core/htab_rdata_b1[64]_syn_33.o
+net (fo=1281)                           0.704          3.717          net: u_dut/u_core/htab_rd_addr[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(473)
+                                                                      pin: u_dut/u_core/htab_syn_3306.ib
+DRAM                                    0.341    f     4.058       3  pin: u_dut/u_core/htab_syn_3306.ofb
+net (fo=1)                              0.304          4.362          net: u_dut/u_core/htab_syn_492,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1774.ib
+LUT6                                    0.322    f     4.684       4  pin: u_dut/u_core/htab_syn_1774.relut6
+net (fo=1)                              0.000          4.684          net: u_dut/u_core/htab_syn_1778[1],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1308.muxi[1]
+F78MUX                                  0.103    r     4.787          pin: u_dut/u_core/htab_syn_1308.f8muxo
+net (fo=1)                              0.000          4.787          net: u_dut/u_core/htab_syn_1782,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1775.f78i
+                                        0.064    f     4.851          pin: u_dut/u_core/htab_syn_1775.ofa
+net (fo=1)                              0.304          5.155          net: u_dut/u_core/htab_rdata_b2[3],  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_rdata_b1[3]_syn_1.a
+LUT3                                    0.273    f     5.428       5  pin: u_dut/u_core/htab_rdata_b1[3]_syn_1.o
+net (fo=1)                              0.304          5.732          net: u_dut/u_core/htab_rdata_b1[3],  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_rdata_reg[3].d
+SEQ (reg)                               0.041    f     5.773               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.773               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=2773)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/htab_rdata_reg[3].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.504               
+
+Slack               : -0.504ns
+Begin Point         : u_dut/u_core/bm_a_syn_13.clkb (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/htab_rdata_reg[4].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.773ns (cell 3.247ns (56%), net 2.526ns (44%))
+Clock Skew          : 0.000ns
+Logic Level         : 5 ( LUT6=2  LUT3=2  DRAM=1 )
+Max Fanout          : 1281
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=2773)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/bm_a_syn_13.clkb
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+ERAM (clk2q)                            1.515    f     1.515          pin: u_dut/u_core/bm_a_syn_13.dob[2]
+net (fo=1)                              0.506          2.021          net: u_dut/u_core/bm_a_syn_16,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(211)
+                                                                      pin: u_dut/u_core/mux310_syn_3158.a
+LUT6                                    0.315    f     2.336       1  pin: u_dut/u_core/mux310_syn_3158.o
+net (fo=6)                              0.404          2.740          net: u_dut/u_core/bm_a_rd[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(240)
+                                                                      pin: u_dut/u_core/htab_rdata_b1[64]_syn_33.b
+LUT3                                    0.273    f     3.013       2  pin: u_dut/u_core/htab_rdata_b1[64]_syn_33.o
+net (fo=1281)                           0.704          3.717          net: u_dut/u_core/htab_rd_addr[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(473)
+                                                                      pin: u_dut/u_core/htab_syn_3307.ib
+DRAM                                    0.341    f     4.058       3  pin: u_dut/u_core/htab_syn_3307.ofb
+net (fo=1)                              0.304          4.362          net: u_dut/u_core/htab_syn_493,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1784.ib
+LUT6                                    0.322    f     4.684       4  pin: u_dut/u_core/htab_syn_1784.relut6
+net (fo=1)                              0.000          4.684          net: u_dut/u_core/htab_syn_1788[1],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1315.muxi[1]
+F78MUX                                  0.103    r     4.787          pin: u_dut/u_core/htab_syn_1315.f8muxo
+net (fo=1)                              0.000          4.787          net: u_dut/u_core/htab_syn_1792,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1785.f78i
+                                        0.064    f     4.851          pin: u_dut/u_core/htab_syn_1785.ofa
+net (fo=1)                              0.304          5.155          net: u_dut/u_core/htab_rdata_b2[4],  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_rdata_b1[4]_syn_1.a
+LUT3                                    0.273    f     5.428       5  pin: u_dut/u_core/htab_rdata_b1[4]_syn_1.o
+net (fo=1)                              0.304          5.732          net: u_dut/u_core/htab_rdata_b1[4],  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_rdata_reg[4].d
+SEQ (reg)                               0.041    f     5.773               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.773               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=2773)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/htab_rdata_reg[4].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.504               
+
+Slack               : -0.504ns
+Begin Point         : u_dut/u_core/bm_a_syn_13.clkb (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/htab_rdata_reg[5].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.773ns (cell 3.247ns (56%), net 2.526ns (44%))
+Clock Skew          : 0.000ns
+Logic Level         : 5 ( LUT6=2  LUT3=2  DRAM=1 )
+Max Fanout          : 1281
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=2773)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/bm_a_syn_13.clkb
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+ERAM (clk2q)                            1.515    f     1.515          pin: u_dut/u_core/bm_a_syn_13.dob[2]
+net (fo=1)                              0.506          2.021          net: u_dut/u_core/bm_a_syn_16,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(211)
+                                                                      pin: u_dut/u_core/mux310_syn_3158.a
+LUT6                                    0.315    f     2.336       1  pin: u_dut/u_core/mux310_syn_3158.o
+net (fo=6)                              0.404          2.740          net: u_dut/u_core/bm_a_rd[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(240)
+                                                                      pin: u_dut/u_core/htab_rdata_b1[64]_syn_33.b
+LUT3                                    0.273    f     3.013       2  pin: u_dut/u_core/htab_rdata_b1[64]_syn_33.o
+net (fo=1281)                           0.704          3.717          net: u_dut/u_core/htab_rd_addr[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(473)
+                                                                      pin: u_dut/u_core/htab_syn_3308.ib
+DRAM                                    0.341    f     4.058       3  pin: u_dut/u_core/htab_syn_3308.ofb
+net (fo=1)                              0.304          4.362          net: u_dut/u_core/htab_syn_494,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1794.ib
+LUT6                                    0.322    f     4.684       4  pin: u_dut/u_core/htab_syn_1794.relut6
+net (fo=1)                              0.000          4.684          net: u_dut/u_core/htab_syn_1798[1],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1322.muxi[1]
+F78MUX                                  0.103    r     4.787          pin: u_dut/u_core/htab_syn_1322.f8muxo
+net (fo=1)                              0.000          4.787          net: u_dut/u_core/htab_syn_1802,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1795.f78i
+                                        0.064    f     4.851          pin: u_dut/u_core/htab_syn_1795.ofa
+net (fo=1)                              0.304          5.155          net: u_dut/u_core/htab_rdata_b2[5],  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_rdata_b1[5]_syn_1.a
+LUT3                                    0.273    f     5.428       5  pin: u_dut/u_core/htab_rdata_b1[5]_syn_1.o
+net (fo=1)                              0.304          5.732          net: u_dut/u_core/htab_rdata_b1[5],  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_rdata_reg[5].d
+SEQ (reg)                               0.041    f     5.773               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.773               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=2773)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/htab_rdata_reg[5].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.504               
+
+Slack               : -0.504ns
+Begin Point         : u_dut/u_core/bm_a_syn_13.clkb (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/htab_rdata_reg[6].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.773ns (cell 3.247ns (56%), net 2.526ns (44%))
+Clock Skew          : 0.000ns
+Logic Level         : 5 ( LUT6=2  LUT3=2  DRAM=1 )
+Max Fanout          : 1281
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=2773)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/bm_a_syn_13.clkb
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+ERAM (clk2q)                            1.515    f     1.515          pin: u_dut/u_core/bm_a_syn_13.dob[2]
+net (fo=1)                              0.506          2.021          net: u_dut/u_core/bm_a_syn_16,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(211)
+                                                                      pin: u_dut/u_core/mux310_syn_3158.a
+LUT6                                    0.315    f     2.336       1  pin: u_dut/u_core/mux310_syn_3158.o
+net (fo=6)                              0.404          2.740          net: u_dut/u_core/bm_a_rd[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(240)
+                                                                      pin: u_dut/u_core/htab_rdata_b1[64]_syn_33.b
+LUT3                                    0.273    f     3.013       2  pin: u_dut/u_core/htab_rdata_b1[64]_syn_33.o
+net (fo=1281)                           0.704          3.717          net: u_dut/u_core/htab_rd_addr[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(473)
+                                                                      pin: u_dut/u_core/htab_syn_3309.ib
+DRAM                                    0.341    f     4.058       3  pin: u_dut/u_core/htab_syn_3309.ofb
+net (fo=1)                              0.304          4.362          net: u_dut/u_core/htab_syn_495,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1804.ib
+LUT6                                    0.322    f     4.684       4  pin: u_dut/u_core/htab_syn_1804.relut6
+net (fo=1)                              0.000          4.684          net: u_dut/u_core/htab_syn_1808[1],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1329.muxi[1]
+F78MUX                                  0.103    r     4.787          pin: u_dut/u_core/htab_syn_1329.f8muxo
+net (fo=1)                              0.000          4.787          net: u_dut/u_core/htab_syn_1812,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1805.f78i
+                                        0.064    f     4.851          pin: u_dut/u_core/htab_syn_1805.ofa
+net (fo=1)                              0.304          5.155          net: u_dut/u_core/htab_rdata_b2[6],  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_rdata_b1[6]_syn_1.a
+LUT3                                    0.273    f     5.428       5  pin: u_dut/u_core/htab_rdata_b1[6]_syn_1.o
+net (fo=1)                              0.304          5.732          net: u_dut/u_core/htab_rdata_b1[6],  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_rdata_reg[6].d
+SEQ (reg)                               0.041    f     5.773               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.773               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=2773)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/htab_rdata_reg[6].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.504               
+
+Slack               : -0.504ns
+Begin Point         : u_dut/u_core/bm_a_syn_13.clkb (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_core/htab_rdata_reg[7].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.773ns (cell 3.247ns (56%), net 2.526ns (44%))
+Clock Skew          : 0.000ns
+Logic Level         : 5 ( LUT6=2  LUT3=2  DRAM=1 )
+Max Fanout          : 1281
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=2773)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/bm_a_syn_13.clkb
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+ERAM (clk2q)                            1.515    f     1.515          pin: u_dut/u_core/bm_a_syn_13.dob[2]
+net (fo=1)                              0.506          2.021          net: u_dut/u_core/bm_a_syn_16,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(211)
+                                                                      pin: u_dut/u_core/mux310_syn_3158.a
+LUT6                                    0.315    f     2.336       1  pin: u_dut/u_core/mux310_syn_3158.o
+net (fo=6)                              0.404          2.740          net: u_dut/u_core/bm_a_rd[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(240)
+                                                                      pin: u_dut/u_core/htab_rdata_b1[64]_syn_33.b
+LUT3                                    0.273    f     3.013       2  pin: u_dut/u_core/htab_rdata_b1[64]_syn_33.o
+net (fo=1281)                           0.704          3.717          net: u_dut/u_core/htab_rd_addr[2],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(473)
+                                                                      pin: u_dut/u_core/htab_syn_3310.ib
+DRAM                                    0.341    f     4.058       3  pin: u_dut/u_core/htab_syn_3310.ofb
+net (fo=1)                              0.304          4.362          net: u_dut/u_core/htab_syn_496,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1814.ib
+LUT6                                    0.322    f     4.684       4  pin: u_dut/u_core/htab_syn_1814.relut6
+net (fo=1)                              0.000          4.684          net: u_dut/u_core/htab_syn_1818[1],  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1336.muxi[1]
+F78MUX                                  0.103    r     4.787          pin: u_dut/u_core/htab_syn_1336.f8muxo
+net (fo=1)                              0.000          4.787          net: u_dut/u_core/htab_syn_1822,  Y:/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v(215)
+                                                                      pin: u_dut/u_core/htab_syn_1815.f78i
+                                        0.064    f     4.851          pin: u_dut/u_core/htab_syn_1815.ofa
+net (fo=1)                              0.304          5.155          net: u_dut/u_core/htab_rdata_b2[7],  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_rdata_b1[7]_syn_1.a
+LUT3                                    0.273    f     5.428       5  pin: u_dut/u_core/htab_rdata_b1[7]_syn_1.o
+net (fo=1)                              0.304          5.732          net: u_dut/u_core/htab_rdata_b1[7],  NOFILE(0)
+                                                                      pin: u_dut/u_core/htab_rdata_reg[7].d
+SEQ (reg)                               0.041    f     5.773               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.773               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=2773)                           0.000          0.000          net: clk_dup_1,  ../../a1_eng_top.v(10)
+                                                                      pin: u_dut/u_core/htab_rdata_reg[7].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.504               
+
+
+Period Check
+----------------------------------------------------------------------------------------------------
+    Type       Setting(ns)      Required(ns)         Slack(ns)   Point
+--------------------------------------------------------------------------------
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5251.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/wq_mem_syn_25.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/fifo_mem_syn_133.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/opq_mem_syn_40.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5271.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/wq_mem_syn_45.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2411.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2431.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2451.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2471.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2491.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2511.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2531.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2551.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2571.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2591.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2611.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2631.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2651.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2671.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2691.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2711.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2731.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2751.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2771.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2791.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2811.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2831.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2851.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2871.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2891.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2911.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2931.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2951.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2971.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_2991.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3011.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3031.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3051.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3071.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3091.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3111.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3131.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3151.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3171.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3191.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3211.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3231.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3251.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3271.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3291.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3311.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3331.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3351.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3371.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3391.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3411.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3431.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3451.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3471.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3491.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3511.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3531.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3551.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3571.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3591.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3611.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3631.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3651.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3671.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3691.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3711.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3731.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3751.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3771.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3791.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3811.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3831.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3851.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3871.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3891.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3911.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3931.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3951.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3971.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_3991.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4011.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4031.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4051.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4071.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4091.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4111.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4131.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4151.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4171.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4191.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4211.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4231.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4251.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4271.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4291.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4311.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4331.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4351.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4371.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4391.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4411.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4431.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4451.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4471.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4491.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4511.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4531.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4551.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4571.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4591.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4611.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4631.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4651.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4671.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4691.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4711.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4731.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4751.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4771.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4791.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4811.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4831.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4851.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4871.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4891.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4911.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4931.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4951.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4971.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_4991.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5011.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5031.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5051.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5071.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5091.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5111.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5131.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5151.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5171.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5191.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5211.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_core/htab_syn_5231.wclk
+
+Min Paths
+----------------------------------------------------------------------------------------------------
+
+Inter clock domain timing
+--------------------------------------------------
+
+IP timing
+--------------------------------------------------

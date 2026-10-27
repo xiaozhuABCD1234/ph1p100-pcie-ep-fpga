@@ -1,0 +1,14 @@
+{
+  "task_id": "648ae8308e294099b121fe77cbee1132",
+  "status": "completed",
+  "delegated": "header excerpt only -> mailbox/slot offsets and literal CTRL macros; no command requests, no file access or architecture decisions",
+  "source": "references/peer-driver-a0215c5/include/anlogic_pci_ioctl.h",
+  "review": "Independently counted nine u32 fields including push_dbell at index8=32B; reserved[7] gives64B. Slot four u32 gives16B. Legacy macros ARM includes bit4=>0x71; actual pinned RTL reserves bit4. Worker closing explanation incorrectly said nine preceding fields; rejected that wording. Only offset32/size16/literal constants accepted after native ctypes verification.",
+  "verification": {
+    "mailbox_push_dbell_offset": 32,
+    "mailbox_bytes": 64,
+    "slot_header_bytes": 16
+  },
+  "usage_total_tokens": 4427,
+  "pending_call_ids": []
+}

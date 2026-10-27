@@ -1,0 +1,29 @@
+{
+  "problem_id": "T10.dual-aplus-scheduler:INPUT_CONFLICT:cmp-descriptor-stall",
+  "reason_code": "INPUT_CONFLICT",
+  "new_information": true,
+  "evidence_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10.dual-aplus-scheduler\\static-closeout01\\source-map.json",
+  "requested_action": "Original planner to schedule an explicitly bounded RTL repair and fresh verification for CMP descriptor ready/valid hold; static closeout cannot edit or simulate.",
+  "resume_input_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10.dual-aplus-scheduler\\static-closeout01\\handoff.md",
+  "proof": {
+    "stalled_initial": {
+      "cs0": 3,
+      "cs1": 2,
+      "cmp_ready": 0,
+      "cmp_valid": 1,
+      "cmp_slot": 1
+    },
+    "allowed_progress": [
+      "ACK held slot0 frees it while slot1 descriptor remains stalled",
+      "next RAW frame reserves slot0 and commits it READY while cmp_ready remains0"
+    ],
+    "stalled_later": {
+      "cs0": 2,
+      "cs1": 2,
+      "cmp_ready": 0,
+      "cmp_valid": 1,
+      "cmp_slot": 0
+    },
+    "violation": "Combinational fixed-priority cmp_sel switches1->0 without a cmp_valid&&cmp_ready transfer; all source metadata can change during stall."
+  }
+}

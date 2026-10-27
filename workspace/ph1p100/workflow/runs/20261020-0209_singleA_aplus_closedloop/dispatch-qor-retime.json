@@ -1,0 +1,225 @@
+{
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "project_root": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+  "output_dir": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop",
+  "task_ids": [
+    "T10.a1-qor-retime"
+  ],
+  "package_id": "T10.a1-qor-retime",
+  "package_type": "QoR/retiming implementation package under T10; RTL frozen; same T10/run",
+  "same_run": true,
+  "new_run": false,
+  "batch_size": 1,
+  "status": "finished",
+  "needs_user_input": false,
+  "round": "r0",
+  "operation": "spawn_agent",
+  "result": {
+    "verdict": "FAIL (best routed -0.039 / 45 endpoints; gate not met)",
+    "group_1": "synth +0.113; Routed SWNS -0.039 / STNS -0.645 / 45 endpoints; hold +0.024/0; Fmax 186.150; resources in device; retiming effective (SYN-3005, reg 1,646 -> 1,685)",
+    "group_2": "synth +0.109; Routed -0.747 / 188 endpoints",
+    "rtl_sdc": "hashes unchanged; no bitgen/.bit/download; no seed sweep",
+    "decision": "planner adjudicated one final combo attempt: T10.a1-final-combo (single cycle-neutral RTL micro-fix + reused group-1 strategy)"
+  },
+  "authorization": {
+    "quote": "好的可以写成边界然后来放开去做尝试能否闭环",
+    "date": "2026-10-22",
+    "type": "explicit_user_authorization_for_qor_retime_boundaries",
+    "basis": "用户明确批准在冻结 RTL 与固定策略边界内尝试综合/实现 QoR 与 retiming 闭环；不随机 seed，最多 2 组固定策略，失败即收尾。",
+    "round_accounting": "T10 currently 3/4 PASS + 1 warning; this is a new QoR package, not a repair/reset; failure keeps the warning and does not auto-expand.",
+    "limits_frozen_here": {
+      "td_sessions_max": 2,
+      "td_session_minutes_max": 75,
+      "td_total_minutes_max": 90,
+      "td_synth_attempts_max": 2,
+      "td_route_attempts_max": 2
+    },
+    "not_authorized": [
+      "RTL changes (core/frame/SDC hashes must stay identical)",
+      "random seed sweeps",
+      "A route/clock change or frequency relaxation",
+      "false path/multicycle/clock-group exceptions",
+      "bitgen/download/Flash",
+      "protocol/port/frame/CRC/length/abort/Bayer/SDC changes",
+      "cross-clock/cross-reset retiming moves"
+    ]
+  },
+  "base_candidate": {
+    "choice": "bm-addr 35ea7364",
+    "reason": "Best routed candidate (-0.087 ns / 27 endpoints) is physically closest to zero; QoR/retiming targets the physical result, and it has far fewer violating endpoints than adler-smem (299). adler-smem 611ad704 has better synth (+0.233) but routed -0.541, so it is not the better QoR base.",
+    "core": "35ea7364 (full hash in CANDIDATE-MANIFEST-bm-addr-r0.json)",
+    "frame": "18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+    "sdc": "227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311",
+    "manifest": "T10.a1-bm-addr/CANDIDATE-MANIFEST-bm-addr-r0.json",
+    "g1": "PASS 33/33 bit-identical; P2 13/13, P3 20/20, 0 mismatch, 0 X, vlog 0/0; comp 355,261; f1080p 81,707 B",
+    "routed": "SWNS -0.087, STNS -1.109, 27/4555 endpoints; hold PASS; slice 2,993; ERAM 26; reg 1,664"
+  },
+  "rtl_freeze": {
+    "core": "35ea7364 unchanged",
+    "frame": "18d51b1b unchanged",
+    "sdc": "227dd39e unchanged",
+    "verification": "Before each strategy run, recompute all three hashes and assert equality; any mismatch stops the package."
+  },
+  "strategy_plan": {
+    "max_groups": 2,
+    "no_random_seed": true,
+    "group_1": {
+      "name": "retiming + phys_opt",
+      "content": "Enable retiming and physical optimization (including physical retiming/replication as supported by TD 2026.2); record exact commands/options in the tcl and run log.",
+      "run": "1 synth + 1 route"
+    },
+    "group_2": {
+      "name": "performance map/place QoR",
+      "content": "Performance-oriented mapping/placement QoR settings as supported by TD 2026.2; record exact commands/options in the tcl and run log.",
+      "run": "1 synth + 1 route"
+    },
+    "note": "Actual option names must match TD Release_2026.2; if a named option is unavailable, document it and use the closest supported fixed option. No seed sweep, no random variants."
+  },
+  "gates": {
+    "g1": {
+      "reuse": "RTL unchanged; 33-case functional evidence from bm-addr 35ea7364 may be reused if core/frame/SDC hashes match exactly; state the binding and hashes.",
+      "p2": "13/13, P3 20/20, 0 mismatch, 0 X, vlog 0/0",
+      "comp_cycles": 355261,
+      "1080p_bytes": 81707,
+      "extra": "If gate-level simulation or equivalence check is available, run it; if unavailable, document and at least verify retiming did not cross clock/reset domains."
+    },
+    "g2_routed": {
+      "status": "Routed",
+      "setup_margin_ns_min": 0.2,
+      "hold_wns_ns_min": 0.0,
+      "hold_tns_ns_min": 0.0,
+      "violating_endpoints": 0,
+      "resources": "within PH1P100SBG484",
+      "cdc_static": "static single-clock evidence + report_clock_utilization/check_timing after retiming; no cross-clock/reset movement",
+      "reports": "direct -file; no post-run copy",
+      "bitgen": "not_run; no .bit/download"
+    }
+  },
+  "td_budget": {
+    "sessions_max": 2,
+    "session_minutes_max": 75,
+    "total_minutes_max": 90,
+    "synth_attempts_max": 2,
+    "route_attempts_max": 2,
+    "route_minutes_max": 60,
+    "dev_minutes_max": 60,
+    "dev_tool_calls_max": 40,
+    "tester_minutes_max": 45,
+    "tester_tool_calls_max": 30,
+    "why": "One fixed strategy per group; each group 1 synth + 1 route; total 2 synth/2 route, 2 sessions/90 min. No seed sweep.",
+    "no_qor_random_seed": true,
+    "no_clock_change": true
+  },
+  "stop_conditions": [
+    "RTL/SDC hash mismatch -> stop immediately; RTL freeze violated.",
+    "Any strategy option unsupported by TD 2026.2 and no fixed closest option -> stop and report.",
+    "Group 1 route not Routed or setup margin < +0.2 ns -> proceed to group 2 only; no seed sweep.",
+    "Group 2 route not Routed or setup margin < +0.2 ns -> stop; T10 stays 3/4 PASS + 1 warning; no auto expansion.",
+    "Any violating endpoint, resource overflow, hold violation, or cross-clock/reset retiming move -> stop.",
+    "Static CDC evidence/check_timing not actually executed -> G2 cannot PASS.",
+    "bitgen invoked or .bit generated -> stop and report; no download.",
+    "2 sessions/90 min, 2 synth, or 2 route exhausted -> stop; no third group.",
+    "Any request for random seed/clock change/false path/multicycle/bitgen/download -> stop and return to planner."
+  ],
+  "after_development": {
+    "sequence": [
+      "dev ready_for_test + frozen r0 manifest -> spawn_single_tester (new package tester; not bm-prefetch/hit-pipe)",
+      "tester integrated verdict -> return_to_planner",
+      "dev blocked at hashes/strategy/route/CDC -> return_to_planner, no tester",
+      "both groups fail -> T10 stays 3/4 PASS + 1 warning; no automatic next package"
+    ],
+    "rules": [
+      "New package tester; do not reuse prior testers.",
+      "If routed passes, functional evidence may be reused only if core/frame/SDC hashes match; engineering recomputes routed; system checks throughput/no bit.",
+      "Tester independently parses raw routed reports/hashes, verifies Routed setup margin >= +0.2 ns, hold >= 0, 0 violations, resources, static CDC, bitgen not_run.",
+      "Tester writes test-reports/T10.a1-qor-retime-r0-integrated.md with one unique verdict heading.",
+      "Do not claim report_cdc; TD 2026.2 lacks it."
+    ]
+  },
+  "write_scope": {
+    "modify_existing_run_owned": [],
+    "must_not_modify": [
+      "a1_deflate_core.v (35ea7364)",
+      "a1_frame_top.v (18d51b1b)",
+      "a1_small_top.sdc (227dd39e)"
+    ],
+    "create_new": [
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-qor-retime/r0/**",
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-qor-retime/r0/td/*.tcl (strategy scripts only)"
+    ],
+    "td_project_dir": "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-qor-retime/r0/td/**",
+    "path_contract": {
+      "td": "T: = current run td, Y: = project root; run tools/td/td_env.ps1; never map X: to project root",
+      "sim": "P: = project root, W: = current sim run",
+      "doc": "tools/td/PATH_CONTRACT.md"
+    },
+    "rules": [
+      "RTL/SDC frozen; only new strategy scripts and run outputs.",
+      "Fixed strategy list only; no random seed.",
+      "Reports direct -file; no post-run copy.",
+      "No bitgen/download/Flash.",
+      "TD artifacts stay under package r0; never overwrite old manifests.",
+      "Follow T:/Y: TD and P:/W: simulation."
+    ]
+  },
+  "protected": [
+    "a1_deflate_core.v 35ea7364, frame 18d51b1b, SDC 227dd39e",
+    "all old manifests/reports",
+    "workflow/tasks.json (T10 blocked/not done)",
+    "production candidate b68c6e18…f9bf",
+    "board, Flash, PCIe/RK, camera configuration"
+  ],
+  "next_action": "spawn_agent",
+  "next_action_detail": {
+    "role": "fpga-dev",
+    "skill_path": ".agents/skills/fpga-dev/SKILL.md",
+    "task": "T10.a1-qor-retime r0：RTL/SDC 冻结；用最多 2 组固定策略（1 retiming+phys_opt，2 performance map/place QoR）各跑 1 综合+1 布线；Routed 零违例且 setup>=+0.2 ns、hold>=0；静态 CDC；报告 -file；bitgen not_run。失败即收尾。",
+    "must_read": [
+      "dev-plan.md §41",
+      "T10.a1-bm-addr/r0/result-r0.md",
+      "T10.a1-bm-addr/r0-route/route.qor",
+      "CANDIDATE-MANIFEST-bm-addr-r0.json",
+      "tools/td/PATH_CONTRACT.md"
+    ],
+    "first_checks": [
+      "confirm core 35ea7364 / frame 18d51b1b / SDC 227dd39e (full hashes from manifest)",
+      "confirm TD 2026.2 supports the chosen retiming/phys_opt/QoR options; record actual commands",
+      "confirm no RTL/SDC modification before each strategy run"
+    ]
+  },
+  "scope_limits": {
+    "main_goal": "QoR/retiming closure of best routed candidate 35ea7364 with fixed strategies, RTL frozen.",
+    "in_scope": [
+      "group 1 retiming + phys_opt",
+      "group 2 performance map/place QoR",
+      "Routed zero violations with setup margin >= +0.2 ns and hold >= 0",
+      "static CDC + reset-structure check",
+      "r0 manifest/result/rollback",
+      "one new independent tester if routed passes"
+    ],
+    "out_of_scope": [
+      "RTL/SDC changes",
+      "random seed sweep",
+      "A route/clock change",
+      "larger device",
+      "false path/multicycle",
+      "bitgen/download/Flash",
+      "protocol/port/frame/CRC/length/abort/Bayer/SDC changes",
+      "new run or P4 repair-count change"
+    ],
+    "deferred_themes": [
+      {
+        "theme": "deeper microarchitecture re-pipeline",
+        "status": "requires_new_user_authorization",
+        "conditions": ["QoR/retime fails", "explicit new package"]
+      },
+      {
+        "theme": "larger device / board prerequisites",
+        "status": "not_selected",
+        "conditions": ["user decision only"]
+      }
+    ]
+  },
+  "question_path": null,
+  "user_summary_path": "workflow/runs/20261020-0209_singleA_aplus_closedloop/user-summary.md"
+}

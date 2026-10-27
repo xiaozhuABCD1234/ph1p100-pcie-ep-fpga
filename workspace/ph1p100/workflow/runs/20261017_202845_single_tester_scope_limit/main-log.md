@@ -1,0 +1,18 @@
+- 261017 2028 用户要求单测试Agent、按任务验证、更细任务及单次需求/拆分上限；主仅转交；本轮开始即采用一个测试者，不再启动三个。
+- 261017 2029 已转交PLANNER_ID=/root/single_tester_scope_planner；本轮限定一个开发及一个综合测试，不沿用旧三测试。
+- 261017 2030 用户补充已原样转交规划者：主不监控，只看返回；子Agent自带有限循环与主动停止规则。
+- 261017 2031 用户补充已原样转交规划者：主收到重复问题后允许有限机会；不得变为监控或无限往返。
+- 261017 2033 PLANNER返回ready；task_id=CFG-SINGLE-TESTER-LIMITS；next_role=fpga-dev；默认一目标/最多4包/两级；重复问题最多2次补充机会；仅单综合测试。
+- 261017 2034 用户要求修改完成后展示规则正文，已原样保存。
+- 261017 2034 按dispatch派发DEV_ID=/root/single_tester_scope_dev；主只等待完成/blocked返回，不查进度或催促；后续单综合tester。
+- 261017 2039 用户新增显式触发/Skill或MCP问题已保存；转开发等待修订计划，保留已有改动；原规划负责核对与更新。
+- 261017 2041 DEV返回waiting_plan/SCOPE_CLARIFICATION；configuration_written=false；candidate_frozen=false；保留原DEV_ID等待规划修订，不计实际修复轮。
+- 261017 2043 原规划返回revision=2；采用显式项目Skill入口，普通聊天不自动触发；next_action续原DEV_ID，非修复轮。
+- 261017 2044 按revision=2续原DEV_ID=/root/single_tester_scope_dev；显式Skill入口纳入同一配置包，非实际修复轮；仅等完成/blocked返回。
+- 261017 2051 原DEV返回blocked/NO_PROGRESS；problem_id=CFG-SINGLE-TESTER-LIMITS:NO_PROGRESS:local-static-deadline；new_information=true；300秒deadline主动停止；19份配置保留，未冻结，不派测；将证据路径交原规划，有界恢复机会1。
+- 261017 2054 原规划返回ready/recovery_revision1；按recovery-opportunity-1.md续原DEV；补充机会1/2，actual_repair_round=0；总检查deadline仍300秒，未扩大任务/角色。
+- 261017 2056 原DEV机会1返回blocked/NO_PROGRESS；同problem_id；new_information=true；A/B通过，C白名单verbose断言失败；未冻结不派测；转原规划处理最后补充机会2/2。
+- 261017 2101 原规划返回 recovery_revision=2、机会2/2，已续原DEV；原DEV返回 ready_for_test、candidate_frozen=true、stopped_modifying=true、actual_repair_round=0，manifest_sha256=b866f2475a637d8185e5d4d66cfe30a8af3d061350219358161b8043438ea272。
+- 261017 2101 按 after_development 已派唯一综合测试，TEST_ID=/root/single_tester_scope_tester；只静态综合验收，候选只读，报告路径=test-reports/CFG-SINGLE-TESTER-LIMITS-r0-integrated.md。
+- 261017 2106 原综合测试返回 PASS；functional/engineering适用G0/G1静态配置，system适用G0/G1静态合同，G2—G5不适用。报告=test-reports/CFG-SINGLE-TESTER-LIMITS-r0-integrated.md；manifest_sha256=b866f2475a637d8185e5d4d66cfe30a8af3d061350219358161b8043438ea272。已原样转原规划收尾，整理用户规则文本；actual_repair_round=0。
+- 261017 2109 原规划返回 finished/PASS，actual_repair_round=0，return_opportunities_used=2/2；收尾路径=user-summary.md、workflow-rules-for-user.md、final-summary.md。按返回展示规则正文；静态验收范围G0/G1，客户端和完整流程未实跑；不再派新角色或任务。

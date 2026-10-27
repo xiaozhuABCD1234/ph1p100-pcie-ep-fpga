@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "run_id": "20261016_130619_relay_workflow_revision",
+  "project_root": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道",
+  "output_dir": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261016_130619_relay_workflow_revision",
+  "batch_size": 1,
+  "task_ids": ["WFLOW-V2"],
+  "status": "ready",
+  "needs_user_input": false,
+  "next_action": {
+    "operation": "spawn",
+    "role": "fpga-dev",
+    "target_slot": "dev",
+    "skill_path": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/.agents/skills/fpga-dev/SKILL.md",
+    "task_ids": ["WFLOW-V2"]
+  },
+  "inputs": [
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261016_130619_relay_workflow_revision/request.md",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261016_130619_relay_workflow_revision/dev-plan.md",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261016_130619_relay_workflow_revision/fpga-design-guide.md",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261016_130619_relay_workflow_revision/input-index.md",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261016_130619_relay_workflow_revision/alignment.md"
+  ],
+  "allowed_write_paths_source": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261016_130619_relay_workflow_revision/dev-plan.md",
+  "expected_developer_return_paths": [
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261016_130619_relay_workflow_revision/dev-result.json",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261016_130619_relay_workflow_revision/candidate-manifest.json"
+  ],
+  "after_developer_freeze": {
+    "operation": "spawn_three_testers",
+    "roles": ["fpga-tester-functional", "fpga-tester-engineering", "fpga-tester-system"],
+    "inputs_source": "developer_return",
+    "task_ids": ["WFLOW-V2"],
+    "round": 0
+  },
+  "terminal_or_routing_question": {
+    "operation": "followup",
+    "target_slot": "planner",
+    "inputs": "current_result_paths_and_verbatim_user_feedback"
+  }
+}

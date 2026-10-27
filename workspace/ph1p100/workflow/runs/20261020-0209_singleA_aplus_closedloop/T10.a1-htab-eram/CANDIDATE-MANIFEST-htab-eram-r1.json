@@ -1,0 +1,77 @@
+{
+  "task_id": "T10.a1-htab-eram",
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "round": "r1",
+  "continuation_of": "T10.a1-htab-eram r0",
+  "status": "blocked",
+  "frozen_for_test": false,
+  "reason": "The only allowed change (literal-threshold compare) is implemented and functionally identical, but the synthesis WNS gate (>= 0 ns) is not met: attempt 1 (17-bit low-half sum) -0.722 ns; attempt 2 (precomputed thresh_lit-8/thresh_lit-9, frozen candidate) -0.245 ns / TNS -0.465 / 3 violating endpoints of 4640. The literal path is gone; the remaining 3 endpoints are the S_EXT ext_zero_r/len_cap_r flag update launched by bm_b ERAM clk2q (5.514 ns, 5 levels). Per dispatch, 2/2 synthesis attempts and 2/2 TD sessions are used, WNS < 0, so no route.",
+  "date": "2026-10-22",
+  "base_candidate": {
+    "a1_deflate_core.v": "b374f6fcc161ffe0b9c8fd703cc04fb3fab0411a674a8e0cf1ad06e64173fb6d",
+    "a1_frame_top.v": "18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+    "a1_small_top.sdc": "227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311"
+  },
+  "candidate": {
+    "file": "T10.a1-htab-eram/r1/candidate-3326a1fa.a1_deflate_core.v",
+    "sha256": "3326a1fae89cd35d86acc44701937970cdc6edece4abb91996325c896c82e532",
+    "working_tree": "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v == 3326a1fa...e532",
+    "diff": "T10.a1-htab-eram/r1/candidate.diff",
+    "patch_scripts": [
+      "upstream/ph1p100-pcie-ep-fpga/tools/codec/patch_htab_eram_r1.py (attempt 1, 06d59a9d, superseded)",
+      "upstream/ph1p100-pcie-ep-fpga/tools/codec/patch_htab_eram_r1b.py (attempt 2, frozen)"
+    ],
+    "scope": "only a1_deflate_core.v; a1_frame_top.v and a1_small_top.sdc unchanged",
+    "change": "Literal threshold only: cand_bits + litlen >= thresh_lit rewritten as cand_bits >= (litlen==9 ? thresh_lit9 : thresh_lit8), with thresh_lit8 = thresh_lit-8 and thresh_lit9 = thresh_lit-9 kept as registers updated at the three thresh_lit assignment sites (S_WAIT, S_SCAN pass, S_MCHK) and cleared in reset/abort. Exact: literals are bytes, so litlen is 8 (w0<144) or 9; thresh_lit >= 43 > 9 (no underflow). Range proof: MAX_BLOCK=4800 -> stored_cost <= 3+7+32+8*4800 = 38,442; thresh_lit <= 38,450; the literal guard keeps cand_bits below it.",
+    "superseded_attempt": {
+      "sha256": "06d59a9def7c55b959054c6ca414d5a485c410269e71e27adb294bf26706aa87",
+      "change": "17-bit low-half sum {1'b0,cand_bits[15:0]} + litlen vs {1'b0,thresh_lit[15:0]}",
+      "synth": "SWNS -0.722 / STNS -18.177 / slice 2876 / ERAM 26; exposed a 5.988 ns bm_a_rd -> state.ce path; rejected"
+    }
+  },
+  "frozen_files": {
+    "a1_eng_top.v": {"path": "T10.a1-htab-eram/r1/td/a1_eng_top.v", "sha256": "544cecfc2eb34a3ab5c03ebf3965730b4ce60b2ff73ac4c2ec2d87772faaf9aa"},
+    "a1_small_top.sdc": {"path": "T10.a1-htab-eram/r1/td/a1_small_top.sdc", "sha256": "227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311"},
+    "00_syn_then_route.tcl": {"path": "T10.a1-htab-eram/r1/td/00_syn_then_route.tcl", "sha256": "7ebdff797fb2f27556e8f7ebd7179f32cf42bb96a6cea994e1186f84e2d57a66"},
+    "run_p2_htab_eram_r1.ps1": {"path": "upstream/ph1p100-pcie-ep-fpga/tools/codec/run_p2_htab_eram_r1.ps1", "sha256": "a396f9aec793e46d652db2e8d26a3e49a5313727b95199988453bb92581e1734"},
+    "run_p3_htab_eram_r1.ps1": {"path": "upstream/ph1p100-pcie-ep-fpga/tools/codec/run_p3_htab_eram_r1.ps1", "sha256": "47e896a8a1e343f8c08284c7a4cd69f2ab6e9c3e2e40a5499b50ad654289c993"}
+  },
+  "g1_p2": {
+    "verdict": "PASS", "cases": "13/13", "mismatch": 0, "vlog": "Errors 0 / Warnings 0",
+    "equivalence": "13/13 stream_sha256, stream_len and run_cycles identical to T10.a1-htab-eram/r0/p2 (which equals the bm-eram baseline); bp/gapbp/abort_midblock/reset_midblock pass",
+    "p2_comp_cycles": 355261, "p2_comp_mb_s": 81.067, "red_line_cycles": 370370,
+    "result": "T10.a1-htab-eram/r1/p2/result.json",
+    "vlog_path": "T10.a1-htab-eram/r1/p2/logs/vlog.log"
+  },
+  "g1_p3": {
+    "verdict": "PASS", "cases": "20/20", "failures": [], "vlog": "Errors 0 / Warnings 0",
+    "equivalence": "20/20 PASS, 0 mismatch, 0 X; all cycles and worst_stored_bytes identical to T10.a1-htab-eram/r0/p3; 1080p 4,677,945/4,866,587/4,744,596/4,678,533 unchanged",
+    "1080p_cycles": {"f1080p_p1d1": 4677945, "f1080p_p1d0": 4866587, "f1080p_p0": 4744596, "f1080p_rand": 4678533, "hard_gate": 6250000},
+    "result": "T10.a1-htab-eram/r1/p3/result.json",
+    "vlog_path": "T10.a1-htab-eram/r1/p3/logs/vlog.log"
+  },
+  "g2_synth": {
+    "status": "FAIL (WNS < 0, 2/2 attempts used)", "device": "PH1P100SBG484 -3", "clock_MHz": 187.5, "period_ns": 5.333,
+    "attempts": [
+      {"tag": "s1", "candidate": "06d59a9d (17-bit low-half)", "swp_ns": -0.722, "stns_ns": -18.177, "viol_ep": 39, "slice": 2876, "eram": 26, "reg": 1546, "dram_lut": 32, "worst_path": "bm_a ERAM clk2q -> bm_a_rd -> S_EXT decision -> state.ce, 5.988 ns / 6 levels", "reports": ["T10.a1-htab-eram/r1/td/syn_gate_timing_s1.rpt", "T10.a1-htab-eram/r1/td/syn_gate_area_s1.rpt", "T10.a1-htab-eram/r1/td/td_stdout_s1.log"], "note": "superseded; raised 6.363-ish htab-era path back to 5.988"},
+      {"tag": "s2", "candidate": "3326a1fa (frozen)", "swp_ns": -0.245, "stns_ns": -0.465, "viol_ep": 3, "ep": 4640, "slice": 3030, "eram": 26, "core_eram": 22, "reg": 1626, "dram_lut": 32, "worst_path": "bm_b ERAM clk2q -> S_EXT byte compare -> ext_zero_r_reg.d, 5.514 ns (cell 3.089 / net 2.425), 5 levels (LUT6=4 LUT4=1)", "reports": ["T10.a1-htab-eram/r1/td/syn_gate_timing_s2.rpt", "T10.a1-htab-eram/r1/td/syn_gate_area_s2.rpt", "T10.a1-htab-eram/r1/td/syn_flow_status_s2.rpt", "T10.a1-htab-eram/r1/td/syn_run_s2.log", "T10.a1-htab-eram/r1/td/td_stdout_s2.log"]}
+    ],
+    "gate": {"wns_min": 0.0, "wns_target": 0.3, "tns_min": 0.0, "slice_max": 71680, "result": "WNS -0.245 < 0 -> stop; no route"},
+    "resource_evidence": "ERAM 26 (bm 8+8, cmem 4, smem 4, htab 4), core ERAM 22, DRAM LUT 32, slice 3030/71680; consistent with instances."
+  },
+  "g2_routed": {"status": "not_run", "route_attempts_used": 0, "reason": "synth WNS < 0 (dispatch: route only after WNS>=0)"},
+  "bitgen": {"status": "not_run", "bit_files": 0, "downloads": 0, "flash": 0},
+  "td_tcl_dram_fix": "The r0 fix is in the reused 00_syn_then_route.tcl: every parsed variable is initialised (set syn_dram -1 etc.) and each #field extraction is guarded by if {[regexp ...]}; the #dram regexp bug is not present. Neither r1 session hit it.",
+  "td_incident": "On the s2 synthesis the TD parent printed PRJ-8806 'Run syn_1 has exited unexpectedly' at wait_run, so the tcl aborted before its own copy/parse/gate block. The run log, flow.status and exported DB show opt_gate completed (37 s, 4 commands, 581 MB peak) and the timing/area reports were generated; the reports were copied manually from a1_ht_r1_Runs/syn_1 to syn_gate_*_s2.rpt and the flow status/run log preserved. This is a TD run-status detection anomaly, not a missing synthesis result; the raw report is complete and gives SWNS -0.245 / STNS -0.465 / 3 endpoints. No route or bitgen was launched.",
+  "td_budget_used": {"sessions": 2, "sessions_max": 2, "synthesis_attempts": 2, "synthesis_max": 2, "route_attempts": 0, "route_max": 1, "bitgen": 0, "wall_min_approx": 3},
+  "protected_touched": "none; frame_top 18d51b1b, SDC 227dd39e, r0 evidence, workflow/tasks.json, old runs/manifests/bit/CWC untouched",
+  "rollback": "copy T10.a1-htab-eram/r0/candidate-b374f6fc.a1_deflate_core.v over upstream/.../a1_deflate_core.v to return to the r0 candidate; base 1dca732b is in r0/base-1dca732b.a1_deflate_core.v. frame_top/SDC never modified.",
+  "next_step": "Only 3 endpoints remain, all on the S_EXT flag update: bm_b ERAM clk2q -> byte compare -> ext_zero_r/len_cap_r D. The flags are reloaded at every hit and only matter while the match continues, so their update can be made unconditional in S_EXT (outside the compare-dependent else branch) or precomputed one cycle earlier; that would remove the ERAM clk2q from their D path and should meet WNS>=0. This is outside the r1 literal-only scope and needs planner authorization; a fresh synth+route budget is also needed (2/2 sessions and 2/2 synths used). Do not change the frozen literal path; keep the 32-bit values' 16-bit range proof.",
+  "evidence": {
+    "p2": ["T10.a1-htab-eram/r1/p2/result.json", "T10.a1-htab-eram/r1/p2/logs/vlog.log", "T10.a1-htab-eram/r1/p2/logs/exitcodes.txt"],
+    "p3": ["T10.a1-htab-eram/r1/p3/result.json", "T10.a1-htab-eram/r1/p3/logs/vlog.log", "T10.a1-htab-eram/r1/p3/logs/exitcodes.txt"],
+    "synth": ["T10.a1-htab-eram/r1/td/syn_gate_timing_s1.rpt", "T10.a1-htab-eram/r1/td/syn_gate_area_s1.rpt", "T10.a1-htab-eram/r1/td/syn_gate_timing_s2.rpt", "T10.a1-htab-eram/r1/td/syn_gate_area_s2.rpt", "T10.a1-htab-eram/r1/td/syn_flow_status_s2.rpt", "T10.a1-htab-eram/r1/td/syn_run_s2.log"],
+    "td_logs": ["T10.a1-htab-eram/r1/td/td_stdout_s1.log", "T10.a1-htab-eram/r1/td/td_stdout_s2.log"],
+    "diff": "T10.a1-htab-eram/r1/candidate.diff"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "run_id": "20261017_162355_fpga_knowledge_book",
+  "task_id": "KB5",
+  "checked_at": "2026-10-17",
+  "tool": "google_search（OpenCode Code Mode 批量抓取：两批 URL 抓取 + 一批补充核验；逐条记录可达性/最终标题/重定向）",
+  "entries": [
+    {"chapter": "16", "url": "https://zh.wikipedia.org/wiki/无损压缩", "title_expected": "无损数据压缩（维基百科）", "title_returned": "无损数据压缩 - 维基百科，自由的百科全书", "status": "ok_redirect", "checked_at": "2026-10-17", "proposed_state": "pass", "note": "HTTP 200；内部重定向（无损压缩→无损数据压缩），按落地标题登记"},
+    {"chapter": "16", "url": "https://en.wikipedia.org/wiki/Lossless_compression", "title_expected": "Lossless compression（维基百科，英文）", "title_returned": "Lossless compression - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "pass", "note": "HTTP 200；标题一致"},
+    {"chapter": "16", "url": "https://zh.wikipedia.org/wiki/熵_(信息论)", "title_expected": "熵 (信息论)（维基百科）", "title_returned": "熵 (信息论) - 维基百科，自由的百科全书", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "pass", "note": "HTTP 200；路径规范化重定向"},
+    {"chapter": "16", "url": "https://en.wikipedia.org/wiki/Entropy_(information_theory)", "title_expected": "Entropy (information theory)（维基百科，英文）", "title_returned": "Entropy (information_theory) - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "pass", "note": "HTTP 200；标题一致"},
+    {"chapter": "16", "url": "https://en.wikipedia.org/wiki/Entropy_encoding", "title_expected": "Entropy coding（维基百科，英文）", "title_returned": "Entropy coding - Wikipedia", "status": "ok_redirect", "checked_at": "2026-10-17", "proposed_state": "pass", "note": "补充批次核验；HTTP 200；落地标题为 Entropy coding（已照实登记）"},
+    {"chapter": "17", "url": "https://zh.wikipedia.org/wiki/差分脉冲编码调制", "title_expected": "差分脉冲编码调制（维基百科）", "title_returned": "差分脉冲编码调制 - 维基百科，自由的百科全书", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "pass", "note": "HTTP 200；标题一致"},
+    {"chapter": "17", "url": "https://en.wikipedia.org/wiki/Differential_pulse-code_modulation", "title_expected": "Differential pulse-code modulation（维基百科，英文）", "title_returned": "Differential pulse-code modulation - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "pass", "note": "HTTP 200；标题一致"},
+    {"chapter": "17", "url": "https://en.wikipedia.org/wiki/Color_filter_array", "title_expected": "Color filter array（维基百科，英文）", "title_returned": "Color filter array - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "pass", "note": "HTTP 200；标题一致"},
+    {"chapter": "17", "url": "https://zh.wikipedia.org/wiki/拜耳濾鏡", "title_expected": "拜尔滤色镜（维基百科）", "title_returned": "拜尔滤色镜 - 维基百科，自由的百科全书", "status": "ok_redirect", "checked_at": "2026-10-17", "proposed_state": "pass", "note": "HTTP 200；繁体标题重定向至简体条目，按落地标题登记"},
+    {"chapter": "18", "url": "https://zh.wikipedia.org/wiki/格伦布编码", "title_expected": "格伦布编码（维基百科）", "title_returned": "格伦布编码 - 维基百科，自由的百科全书", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "pass", "note": "HTTP 200；标题一致"},
+    {"chapter": "18", "url": "https://en.wikipedia.org/wiki/Golomb_coding", "title_expected": "Golomb coding（维基百科，英文）", "title_returned": "Golomb coding - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "pass", "note": "HTTP 200；标题一致"},
+    {"chapter": "unlisted", "url": "https://zh.wikipedia.org/wiki/一元编码", "title_expected": "一元编码（维基百科）", "title_returned": "位数组 - 维基百科，自由的百科全书", "status": "ok_redirect_topic_mismatch", "checked_at": "2026-10-17", "proposed_state": "not_used", "note": "HTTP 200 但重定向至“位数组”，与预期主题不符；未入表，改用 en Unary coding 条目"},
+    {"chapter": "18", "url": "https://en.wikipedia.org/wiki/Unary_coding", "title_expected": "Unary coding（维基百科，英文）", "title_returned": "Unary coding - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "pass", "note": "HTTP 200；标题一致"},
+    {"chapter": "18", "url": "https://en.wikipedia.org/wiki/Bitstream", "title_expected": "Bitstream（维基百科，英文，消歧义页）", "title_returned": "Bitstream - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "pass", "note": "HTTP 200；消歧义页，表内已如实注明用途"},
+    {"chapter": "19", "url": "https://zh.wikipedia.org/wiki/DEFLATE", "title_expected": "DEFLATE（维基百科）", "title_returned": "Deflate - 维基百科，自由的百科全书", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "pass", "note": "HTTP 200；标题大小写差异（Deflate），内容一致"},
+    {"chapter": "19", "url": "https://en.wikipedia.org/wiki/Deflate", "title_expected": "Deflate（维基百科，英文）", "title_returned": "Deflate - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "pass", "note": "HTTP 200；标题一致"},
+    {"chapter": "19", "url": "https://en.wikipedia.org/wiki/LZ77_and_LZ78", "title_expected": "LZ77 and LZ78（维基百科，英文）", "title_returned": "LZ77 and LZ78 - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "pass", "note": "HTTP 200；标题一致"},
+    {"chapter": "19", "url": "https://www.rfc-editor.org/rfc/rfc1951", "title_expected": "RFC 1951: DEFLATE Compressed Data Format Specification version 1.3", "title_returned": "RFC 1951: DEFLATE Compressed Data Format Specification version 1.3", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "pass", "note": "HTTP 200；标题逐字一致"},
+    {"chapter": "19", "url": "https://zlib.net/feldspar.html", "title_expected": "An Explanation of the Deflate Algorithm（zlib.net）", "title_returned": "An Explanation of the `Deflate` Algorithm - Zlib", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "pass", "note": "HTTP 200；标题含反引号排版差异，内容一致（Antaeus Feldspar 著）"},
+    {"chapter": "unlisted", "url": "https://en.wikipedia.org/wiki/Data_compression_ratio", "title_expected": "Data compression ratio（维基百科，英文）", "title_returned": "落地不明确（可能重定向至 Data compression）", "status": "inconclusive", "checked_at": "2026-10-17", "proposed_state": "not_used", "note": "抓取结果对该 URL 的落地页描述不确定；未采用，改用经核验的 Data compression/数据压缩 条目"},
+    {"chapter": "20", "url": "https://github.com/joej970/OMLS", "title_expected": "OMLS 参考实现（GitHub，策略 §4.3 登记引用）", "title_returned": "不可访问（404 / 非公开）", "status": "not_found", "checked_at": "2026-10-17", "proposed_state": "degraded", "note": "原链接 404；按“已失效→备选”处置：表内降级为检索词获取（OMLS lossless compression GitHub）"},
+    {"chapter": "20", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11510722/", "title_expected": "Parallel Lossless Compression of Raw Bayer Images on FPGA-Based High-Speed Camera（PMC 论文）", "title_returned": "Parallel Lossless Compression of Raw Bayer Images on FPGA-Based High-Speed Camera - PMC", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "pass", "note": "HTTP 200；标题一致（开放获取）"},
+    {"chapter": "20", "url": "https://en.wikipedia.org/wiki/Data_compression", "title_expected": "Data compression（维基百科，英文）", "title_returned": "Data compression - Wikipedia", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "pass", "note": "补充批次核验；HTTP 200；标题一致"},
+    {"chapter": "20", "url": "https://zh.wikipedia.org/wiki/数据压缩", "title_expected": "数据压缩（维基百科）", "title_returned": "数据压缩 - 维基百科，自由的百科全书", "status": "ok", "checked_at": "2026-10-17", "proposed_state": "pass", "note": "补充批次核验；HTTP 200；标题一致"}
+  ],
+  "summary": {
+    "attempted": 24,
+    "verified_pass": 21,
+    "failed_or_unverifiable": 1,
+    "entries_by_chapter": {"16": 5, "17": 4, "18": 4, "19": 5, "20": 4, "unused": 2},
+    "distinct_urls_used_in_tables": 22,
+    "table_rows_by_chapter": {"16": 5, "17": 4, "18": 4, "19": 5, "20": 4, "total_rows": 22},
+    "entries_note": "尝试 24 条；入表 22＝21 在线核验通过＋1 已失效→备选（OMLS 404，按检索词获取）；未入表 0；未采用 2（zh“一元编码”重定向至“位数组”主题不符；en“Data compression ratio”落地不明确，均以经核验条目替代）。",
+    "proposed_states_used": {"pass": 21, "degraded": 1, "not_listed": 0, "not_used": 2}
+  },
+  "notes": "本包无 B 站/视频类资源（全书以中文维基＋权威标准为主），故无平台性降级项；唯一降级为 OMLS 仓库 404（策略 §4.3 登记的原参考实现），按规范“已失效→备选”处理并给出检索词。核验方式=实际网络抓取（Code Mode google_search 批量），逐条比对返回标题与登记标题；重定向条目按落地标题照实登记（无损压缩→无损数据压缩、拜耳濾鏡→拜尔滤色镜、Entropy encoding→Entropy coding）。"
+}

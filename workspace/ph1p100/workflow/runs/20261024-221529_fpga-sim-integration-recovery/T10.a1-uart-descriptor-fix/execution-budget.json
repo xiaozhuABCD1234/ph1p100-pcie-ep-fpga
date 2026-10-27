@@ -1,0 +1,27 @@
+{
+  "task_id": "T10.a1-uart-descriptor-fix",
+  "round": 0,
+  "max_tool_calls": 45,
+  "max_minutes": 60,
+  "full_compiles_used": 2,
+  "full_compiles_limit": 2,
+  "simulations_used": {
+    "old_boundaries": 1,
+    "old_wrap": 1,
+    "corrected_boundaries": 1,
+    "corrected_wrap": 1,
+    "corrected_full_clean": 1
+  },
+  "actual_repair_rounds": 0,
+  "failed_command_retries": 0,
+  "search_rounds_for_defect": 2,
+  "tool_call_accounting": {
+    "outer_functions_calls_including_final": 18,
+    "nested_native_calls_including_final": 20,
+    "combined_conservative_bound": 38
+  },
+  "read_deadline_seconds": 60,
+  "compile_sim_deadline_seconds": 300,
+  "timeout_events": 0,
+  "execution_deviation": "First four small read/status commands completed in 1.2-1.5s each but lacked an additional explicit 60s deadline wrapper; subsequent read/audit commands used owned PowerShell jobs with 60s limits. This is disclosed and not represented as deadline coverage of those initial reads."
+}

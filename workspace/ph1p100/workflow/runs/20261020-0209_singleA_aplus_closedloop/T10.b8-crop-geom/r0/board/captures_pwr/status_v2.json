@@ -1,0 +1,68 @@
+T10.b7 status packet v2 parse
+input            : captures_pwr/com8_150s.bin
+bytes            : 10767
+packet size      : 97
+packets          : 111
+bad_xor          : 0
+bad_len_ver      : 0
+skipped_bytes    : 0
+trailing_bytes   : 0
+
+field                         first         last   delta_wrap       or_all
+cap_frames                       20         3320         3300 0x00000FFE
+raw_pub                           2            2            0 0x00000002
+enc_frames                        0            0            0 0x00000000
+exported                          0            0            0 0x00000000
+raw_drop                          0            0            0 0x00000000
+cmp_drop                          0            0            0 0x00000000
+errors                            0            0            0 0x00000000
+read_words                        0            0            0 0x00000000
+cam_clk_tgl_inc                2404       376283       373879 0x0007FFFF
+cam_pkt_tgl_inc               45193      7407493      7362300 0x007FFFFF
+cam_vs_tgl_inc                   21         3321         3300 0x00000FFF
+cam_pix_beats              42866634   2735557488   6987658150 0xFFFFFFFF
+cam_line_rises                44376      7277976      7233600 0x007FFFFF
+cam_frame_rises                  21         3321         3300 0x00000FFF
+cam_frame_falls                  20         3320         3300 0x00000FFE
+cam_last_frame_cycles       3679155      3679155            0 0x003823B3
+crop_roi_frames                  20         3320         3300 0x00000FFE
+crop_groups                10368000   1721088000   1710720000 0x7FFFFE00
+crop_short                        0            0            0 0x00000000
+crop_geom_err                     0            0            0 0x00000000
+cam_phystat                     750          750 103079215104 0x000003EE
+cam_sysstat                    3869         3869            0 0x00000F1D
+cam_nack_cnt                      0            0            0 0x00000000
+
+level fields (first / last / OR):
+  cam_phystat    0x000002EE / 0x000002EE / 0x000002EE
+  cam_sysstat    0x00000F1D / 0x00000F1D / 0x00000F1D
+  cam_nack_cnt   0x00000000 / 0x00000000 / 0x00000000
+
+cam_phystat decode (last packet): 0x006F0D98
+  delay_tap    = 24
+  delay_done   = 0
+  rst_out      = 1
+  sync_wait    = 1
+  in_frame_now = 0
+  vsync_now    = 1
+cam_sysstat decode (last packet): 0x00000CF9
+  cfg_done     = 1
+  bus_err_lat  = 0
+  xclr_n       = 0
+  pll_locked   = 1
+  cfg_rst_n    = 1
+  lane_sticky  = 12
+
+=== Q1 MIPI: is there data? ===
+answer           : YES - complete ROI frames reached the crop
+evidence         : cam_clk_tgl_inc=373879 cam_pkt_tgl_inc=7362300 cam_pix_beats=6987658150 cam_line_rises=7233600 cam_frame_rises=3300 cam_frame_falls=3300 cam_vs_tgl_inc=3300
+supporting state : lane_sticky=0xF rst_out=1 sync_wait=1 delay_done=0 tap=24 in_frame_now=0 vsync_now=1
+
+=== Q2 I2C: did configuration succeed? ===
+answer           : YES - cfg_done seen, no NACK growth, sensor out of reset
+evidence         : cfg_done=1 bus_err_lat=1 xclr_n=1 pll_locked=1 cfg_rst_n=1 lane_sticky=0xF cam_nack_cnt_delta=0 cam_nack_cnt_last=3320
+
+=== Q3 crop: did it receive a frame? ===
+answer           : YES - complete ROI frames captured (crop_roi_frames delta > 0)
+evidence         : crop_roi_frames=3300 crop_groups=1710720000 crop_short=0 crop_geom_err=0 cam_last_frame_cycles=0
+legacy cross-chk : cap_frames=3300 raw_pub=0 enc_frames=0 exported=0 raw_drop=0 cmp_drop=0 errors=0 read_words=0

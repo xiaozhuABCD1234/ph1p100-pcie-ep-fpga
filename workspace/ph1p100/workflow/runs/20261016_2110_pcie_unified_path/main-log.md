@@ -1,0 +1,7 @@
+# main-log — run 20261016_2110_pcie_unified_path
+
+- 261016 2111 初始化run（主，本会话）。PROJECT_ROOT=`C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道`；OUTPUT_DIR=`workflow\runs\20261016_2110_pcie_unified_path`；SCRIPT_FILE=本目录 requirement.md（用户原话+机械注记）；BATCH_SIZE=1（默认）。阶段：规划派发。用户诉求=统一最终路径（PCIe）对接评估（"哪些用户侧改、哪些队友侧改"）。关联：run 20261016_185639_td_cli_iptool 的队友仓库评估与升级审核材料。
+- 261016 2114 派规划者（新建实例，ID=ses_ebb28cab8ffeBYZfIJfgmkf0ha）执行统一最终路径（PCIe）对接评估；后台执行（本会话）。输入=本 run requirement.md 所列材料（队友两仓库副本、td_cli_iptool run 既有评估记录与 upgrade-review.md）；输出=对接评估文档 + user-summary（本 run 目录）；主收到结果后原样转达用户。
+- 261016 2121 规划者评估完成（ID=ses_ebb28cab8ffeBYZfIJfgmkf0ha）：status=needs_user_input；输出=pcie-unified-path-assessment.md（评估文档）/ user-summary.md（待原样转用户）/ dispatch.json（next_action=relay_to_user；recommended_next 未派发，等待用户与队友确认）。唯一写入=本 run 目录（git 状态核对）。主原样转发 user-summary 给用户。
+- 261017 0057 用户会话追加（原话存 requirement.md 附录）：队友两仓库有新提交（主只读核对：fpga 654ef176→2a4b253d…、driver ad350ca4→a0215c5a…）；要求与用户侧再次对照、"我该更新什么"。已续接本 run 规划者（原ID=ses_ebb28cab8ffeBYZfIJfgmkf0ha，后台）执行增量对照；输出=增量报告+增量短清单（本 run 目录）；结果原样转达用户。
+- 261017 0102 规划者增量对照完成（ID=ses_ebb28cab8ffeBYZfIJfgmkf0ha）：fpga 654ef176→2a4b253d（2 提交：4K 直写 DDR3 双路 + 推帧参数化；旧 640×480 通路删除；12 位计数问题已修、4KB 帧长为硬约束）；driver ad350ca4→a0215c5a（1 提交，仅注释/README）。新增发现 F1-F6（含 CTRL bit4 与驱动不一致、1080p 帧补零 2,592,768B、双路仍单推帧引擎等）。status=needs_user_input；输出=user-summary-20261017.md / dispatch-20261017.json / pcie-unified-path-addendum-20261017.md（未覆盖 1016 既有文件）。主原样转达增量短清单。

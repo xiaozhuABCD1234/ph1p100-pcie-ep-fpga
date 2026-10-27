@@ -1,0 +1,24 @@
+{
+  "fixture_id": "NEG-01-synth-mixed-into-routed-fit",
+  "kind": "resource_table_rows",
+  "description": "Synth-stage ERAM/LUT6 row is marked used_in_fit, mixing synth with routed.",
+  "expected_reject": "STAGE_MIX_SYNTH_IN_FIT",
+  "rows": [
+    {
+      "source_id": "b6",
+      "scope": "top",
+      "stage": "routed",
+      "ERAM_logic": 102,
+      "DRAM_HARDCON": 85,
+      "used_in_fit": true
+    },
+    {
+      "source_id": "b6",
+      "scope": "top",
+      "stage": "synth",
+      "ERAM_logic": 72,
+      "DRAM_HARDCON": "",
+      "used_in_fit": true
+    }
+  ]
+}

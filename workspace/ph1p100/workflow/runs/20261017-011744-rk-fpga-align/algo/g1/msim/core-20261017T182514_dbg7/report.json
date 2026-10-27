@@ -1,0 +1,138 @@
+{
+  "case": "core",
+  "mutation": "none",
+  "sim_dir": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\workflow\\runs\\20261017-011744-rk-fpga-align\\algo\\g1\\msim\\core-20261017T182514_dbg7",
+  "stamp": "20261017T182514_dbg7",
+  "sources": {
+    "algo_rowwin_reader.v": {
+      "origin": "fpga\\csi2\\src\\img\\algo_rowwin_reader.v",
+      "sha256": "bbd3f9d3e2e231b7ead693df0b3b74440d7baafc352e2f243fa887b6ac666da2"
+    },
+    "algo_rowwin3.v": {
+      "origin": "fpga\\csi2\\src\\img\\algo_rowwin3.v",
+      "sha256": "e9f2f6e09021d1cfec8f2b30e585465e20a35b072451ad97b49fc60165e99d2a"
+    },
+    "bayer_raw10_demosaic4.v": {
+      "origin": "fpga\\csi2\\src\\img\\bayer_raw10_demosaic4.v",
+      "sha256": "d9dee4a31c5e9458d4de221e4185fc847c65639ccd9fe4bc230cc8536424dc1c"
+    },
+    "gray8_gaussian3x3_stream.v": {
+      "origin": "fpga\\csi2\\src\\img\\gray8_gaussian3x3_stream.v",
+      "sha256": "480c83915c09c90f2e73a97eda1f7e6a1d70c812eb565c18839b07f015763f27"
+    },
+    "gray8_he_cdfmin_frame.v": {
+      "origin": "fpga\\csi2\\src\\img\\gray8_he_cdfmin_frame.v",
+      "sha256": "2ab6484674106b55ca9d16980e6a80c15426de7ebaf3f14645de9f0c94289a07"
+    },
+    "rgb8_gray_stream.v": {
+      "origin": "fpga\\csi2\\src\\img\\rgb8_gray_stream.v",
+      "sha256": "e16095a0e71528008b269653f3e15d38c1d88b479abe49d2eb44f694421d8c81"
+    },
+    "img_algo_parallel_top.v": {
+      "origin": "fpga\\csi2\\src\\img\\img_algo_parallel_top.v",
+      "sha256": "e395150f0e19b072d236eed8634f692c8e7cb654eba29964fc2f3db209f09243"
+    },
+    "tb_img_algo_core.sv": {
+      "origin": "tools\\algo\\tb\\tb_img_algo_core.sv",
+      "sha256": "c660ed26dfaf72d07737729d47402c27263d13b58dd9a7b6f1f087bdac464f0f"
+    },
+    "algo_core.vec": {
+      "origin": "workflow\\runs\\20261017-011744-rk-fpga-align\\algo\\vectors\\algo_core.vec",
+      "sha256": "75bc49060f75dbed47eb3d13942ac92335522aef8d8dfafb8bf87bc9bb72adb5"
+    },
+    "algo_core.lut.hex": {
+      "origin": "workflow\\runs\\20261017-011744-rk-fpga-align\\algo\\vectors\\algo_core.lut.hex",
+      "sha256": "ca09b37712996c7fcac74d1bbb626addfb040470d0a09359bdb881aaab4c7f51"
+    }
+  },
+  "mutations": [],
+  "commands": [
+    {
+      "cmd": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlib.exe",
+        "work"
+      ],
+      "cwd": "S:\\workflow\\runs\\20261017-011744-rk-fpga-align\\algo\\g1\\msim\\core-20261017T182514_dbg7",
+      "exit": 0,
+      "seconds": 0.1
+    },
+    {
+      "cmd": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlog.exe",
+        "-sv",
+        "algo_rowwin_reader.v",
+        "algo_rowwin3.v",
+        "bayer_raw10_demosaic4.v",
+        "gray8_gaussian3x3_stream.v",
+        "gray8_he_cdfmin_frame.v",
+        "rgb8_gray_stream.v",
+        "img_algo_parallel_top.v",
+        "tb_img_algo_core.sv"
+      ],
+      "cwd": "S:\\workflow\\runs\\20261017-011744-rk-fpga-align\\algo\\g1\\msim\\core-20261017T182514_dbg7",
+      "exit": 0,
+      "seconds": 0.3
+    },
+    {
+      "cmd": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vsim.exe",
+        "-c",
+        "-l",
+        "vsim.log",
+        "-do",
+        "run.do",
+        "work.tb_img_algo_core",
+        "+VECTORS=algo_core.vec"
+      ],
+      "cwd": "S:\\workflow\\runs\\20261017-011744-rk-fpga-align\\algo\\g1\\msim\\core-20261017T182514_dbg7",
+      "exit": 0,
+      "seconds": 39.4
+    }
+  ],
+  "logs": {
+    "vlib": {
+      "exit": 0,
+      "seconds": 0.1,
+      "log": "vlib.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "vlog": {
+      "exit": 0,
+      "seconds": 0.3,
+      "log": "vlog.log",
+      "log_sha256": "ee4254ff966b4243eec3f3ab294ca6c94d28084e3d1ad5a1049702230a3a2619"
+    },
+    "vsim": {
+      "exit": 0,
+      "seconds": 39.4,
+      "log": "vsim.log",
+      "log_sha256": "0b5de80b9198921d9eff54c5a1b04cbd744e45ca3b2ec5e5e0cc7f17a32d2928"
+    }
+  },
+  "simulator_errors": false,
+  "pass_marker": false,
+  "fail_marker": true,
+  "mismatch_sample": [
+    "ALGO_CORE_MISMATCH cycle=12 branch 0 data mismatch idx=0 got=0306060a exp=09090305",
+    "ALGO_CORE_MISMATCH cycle=13 branch 0 data mismatch idx=1 got=0d111112 exp=13140e0e",
+    "ALGO_CORE_MISMATCH cycle=14 branch 0 data mismatch idx=2 got=0809090e exp=0c0b0607",
+    "ALGO_CORE_MISMATCH cycle=14 branch 2 data mismatch idx=0 got=0306060a exp=09090305",
+    "ALGO_CORE_MISMATCH cycle=15 branch 0 data mismatch idx=3 got=10141418 exp=15161111",
+    "ALGO_CORE_MISMATCH cycle=15 branch 2 data mismatch idx=1 got=0d111112 exp=13140e0e",
+    "ALGO_CORE_MISMATCH cycle=16 branch 2 data mismatch idx=2 got=0809090e exp=0c0b0607",
+    "ALGO_CORE_MISMATCH cycle=17 branch 2 data mismatch idx=3 got=10141418 exp=15161111",
+    "ALGO_CORE_MISMATCH cycle=18 branch 1 data mismatch idx=0 got=0c080605 exp=0b080605",
+    "ALGO_CORE_MISMATCH cycle=19 branch 1 data mismatch idx=1 got=1312110e exp=1413100e"
+  ],
+  "coverage": {},
+  "lut_check": {
+    "match": false,
+    "entries": 0,
+    "note": "no dump"
+  },
+  "verdict": "FAIL",
+  "limitations": [
+    "RTL simulation only; no synthesis, timing, resource or board evidence in this runner",
+    "Finite directed coverage, not exhaustive or formal"
+  ]
+}

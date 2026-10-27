@@ -1,0 +1,344 @@
+{
+  "schema_version": "1.0",
+  "snapshot_date": "2026-10-16",
+  "authority": "Task scheduling only; README.md and latest evidence define actual project results.",
+  "states": [
+    "backlog",
+    "ready",
+    "active",
+    "review",
+    "awaiting_hardware",
+    "blocked",
+    "done"
+  ],
+  "verification_statuses": [
+    "pass",
+    "fail",
+    "not_run",
+    "blocked",
+    "not_applicable"
+  ],
+  "tasks": [
+    {
+      "id": "T01",
+      "title": "彩色预览闭环与活动亮点待办",
+      "state": "active",
+      "owner_role": "FPGA主责+助手",
+      "owner_confirmed": true,
+      "depends_on": [],
+      "exit": "真实相机白纸中性、红蓝身份正确，适用G1/G2、短测与回退证据齐备；活动亮点及G4长稳保留独立待办，不外推为整机完成",
+      "references": [
+        "docs/亮点复现_持续上电对照步骤_2026-10-12.md",
+        "README.md",
+        "workflow/records/T01/task.md",
+        "docs/RGB332真实彩色对照_操作与证据_2026-10-13.md",
+        "docs/evidence/rgb332_20261013.json",
+        "docs/HDMI同程序负载保留对照_操作与证据_2026-10-13.md",
+        "docs/evidence/rgb332_color_feedback_20261013.json",
+        "workflow/records/T01/board-run.md",
+        "docs/RGB332偏色_同负载参考色条_2026-10-13.md",
+        "docs/evidence/rgb332_reference_20261013.json",
+        "docs/参考色条正常但无实时图_ChipWatcher读取步骤_2026-10-13.md",
+        "docs/evidence/rgb332_reference_board_feedback_20261013.json",
+        "docs/RGB565完整彩色预览_方案与上板步骤_2026-10-14.md",
+        "docs/evidence/rgb565_20261014.json",
+        "docs/RGB565玫红返工_接收Bayer相位核对_2026-10-14.md",
+        "docs/RGB565白平衡闭环_2026-10-14.md",
+        "docs/evidence/white_balance_stats_20261014.json",
+        "docs/ChipWatcher空白波形_读回映射修复_2026-10-14.md",
+        "workflow/README.md",
+        "docs/evidence/rgb565_wb_failed_233658/record.json",
+        "docs/evidence/camera_rgb565_wb_20261015_002820.json",
+        "docs/RGB565时序裕量优化_2026-10-15.md",
+        "docs/evidence/camera_rgb565_timing_20261015_103222.json",
+        "docs/evidence/camera_rgb565_timing_20261015_111134.json",
+        "docs/evidence/camera_rgb565_timing_20261015_114913.json",
+        "docs/evidence/ddr1333_ip_regeneration_20261015.json",
+        "docs/DDR1333候选评估与生成入口_2026-10-15.md",
+        "docs/DDR1333_IPTool再次尝试与人工操作_2026-10-15.md",
+        "docs/evidence/ddr1333_ip_retry_20261015.json",
+        "docs/TD_CLI_IpTool修缮与验证_2026-10-16.md",
+        "docs/evidence/ddr1333_iptool_cli_20261016.json",
+        "docs/evidence/td_cli_commands_20261016.json",
+        "docs/evidence/td2026_install_20261016.json",
+        "docs/evidence/td2026_ipgen_20261016.json",
+        "workflow/runs/20261016_185639_td_cli_iptool/upgrade-review.md",
+        "docs/evidence/td2026_gui_bootstrap_20261017.json",
+        "docs/evidence/td2026_ddr1333_generate_20261017.json",
+        "docs/evidence/td2026_ddr1333_accept_20261017.json",
+        "docs/evidence/td2026_b_run2_20261017.json"
+      ],
+      "latest_run_id": "20261015_T01_ddr1333_evaluation",
+      "status_note": "2026-10-17更新：升级与DDR1333 IP生成链已完整走完，T01解锁主路径打通。①TD 2026.2（6.2.3.210850）并行安装完成（D:\\anlogic\\TD_Release_2026.2；锚点登记+四步验证三维PASS；旧6.2.2与D:\\downlaod未动）；②方案A（GUI OK→CLI重试）实测否证：GUI OK步不物化<comp>_adc.log（其为完整生成步骤产物），CLI重试2/2同错；③方案B用户在场全GUI生成成功（2026-10-17 14:21–14:23）：产物闭合64文件、§4.1成功分支逐项全过（1333.00/DDR3-1333J/CWL7/派生CL10/tCK1500/物理CK666.6667≤666.667MHz、70引脚与golden逐项一致、DRC PASS、proc 12步全success）；④第二次独立复现（run2）裁定PASS（双复现成立）：run1↔run2 60/64逐字节一致、4文件字段级非实质（adc.log本体逐字节相同）；⑤推荐冻结候选=run1 D:/TD/work/csi2/_validation/td2026_gui_bootstrap_20261017_000935/ip_out（manifest D71057F3…，64文件；run2镜像9B3E5D00…），集成输入=64文件闭包+boot文件（ADC已本地化、自包含）。产出方式=CLI引导配方+一次用户在场GUI Generate——GUI不计headless成功、全自动headless仍不成立（CLI复现路径结构性不可行：adc.log会话加载期被工具清除）；本run无bit、无下板。T01置active：IP生成入口阻塞已解除；下一步=集成/综合/STA/bit/CWC与颜色G3/G4板验（待办）。002820/白平衡/DDR1600时序/亮点暂缓等历史结论保留既有记录；每次交付继续执行workflow/README.md第5.1节与独立审阅。",
+      "latest_evidence": [
+        "docs/evidence/rgb565_magenta_feedback_20261014.json",
+        "docs/evidence/white_balance_stats_20261014.json",
+        "docs/evidence/rgb565_wb_failed_233658/record.json",
+        "docs/evidence/camera_rgb565_wb_20261015_002820.json",
+        "docs/evidence/camera_rgb565_timing_20261015_103222.json",
+        "docs/evidence/camera_rgb565_timing_20261015_111134.json",
+        "docs/evidence/camera_rgb565_timing_20261015_114913.json",
+        "docs/evidence/ddr1333_ip_regeneration_20261015.json",
+        "docs/DDR1333候选评估与生成入口_2026-10-15.md",
+        "docs/DDR1333_IPTool再次尝试与人工操作_2026-10-15.md",
+        "docs/evidence/ddr1333_ip_retry_20261015.json"
+      ]
+    },
+    {
+      "id": "T02",
+      "title": "CSI帧完整性板验与IMX415包几何",
+      "state": "awaiting_hardware",
+      "owner_role": "FPGA主责+助手",
+      "owner_confirmed": true,
+      "depends_on": [],
+      "exit": "实际几何、CRC/FE发布、错误计数、恢复及稳定性证据；与T01协调硬件窗口",
+      "references": [
+        "docs/CSI帧完整性_候选上板步骤_2026-10-12.md",
+        "docs/evidence/csi_frame_integrity_20261012.json",
+        "workflow/records/T02/task.md",
+        "docs/CSI帧完整性_实现与验证_2026-10-12.md",
+        "docs/evidence/csi_frontend_drain_20261012.json",
+        "docs/evidence/sparkle_followup_20261012.json"
+      ],
+      "latest_run_id": null,
+      "status_note": "222159已有用户出图与D39灭反馈；实际包几何、分类计数、恢复和长稳证据仍缺，155843初始化候选保留为历史。 既有用户反馈没有统一正式run_id，保持null并指向实际证据，不补造板测会话。",
+      "latest_evidence": [
+        "docs/evidence/csi_frontend_drain_20261012.json",
+        "docs/evidence/sparkle_followup_20261012.json"
+      ]
+    },
+    {
+      "id": "T03",
+      "title": "FPGA/RK接口、压缩封装与交付责任确认",
+      "state": "active",
+      "owner_role": "双方联合；RK承诺待确认",
+      "owner_confirmed": false,
+      "depends_on": [],
+      "exit": "协议版本、样例、双方解码一致和实际责任/日期确认",
+      "references": [
+        "docs/双目首版_整链路方案与团队交付.md",
+        "workflow/templates/interface.md",
+        "docs/DeepSeek独立检测与现行方案整合_2026-10-16.md",
+        "parallel/frame/frame_contract.py",
+        "parallel/docs/帧与元数据接口合同_2026-10-15.md"
+      ],
+      "latest_run_id": null,
+      "status_note": "2026-10-17本轮T03.rk-align-freeze离线备份/接口子包round0三维PASS，manifest 9662167a4af6fcea43a76491a9507b191552fa52209648147de02f91cfd877c5；3107项恢复SHA一致。确定采用peer MWr后端、R10F非压缩内容、host偏移128B/16B ABI、CTRL0x61和one-shot/ACK安全扩展，固定peer 2a4b253/driver a0215c5，详见workflow/runs/20261017-011744-rk-fpga-align/closeout-T03-r0.md。正式双方G0签收及通用生产解析器/RK实际运行未完成，父T03不置done；BPR1 adapter仍待。"
+    },
+    {
+      "id": "T04",
+      "title": "Bayer/Rice软件参考与真实图集收益",
+      "state": "ready",
+      "owner_role": "FPGA主责+助手",
+      "owner_confirmed": true,
+      "depends_on": [],
+      "exit": "格式分离、round-trip、真实图集比例、最坏膨胀与硬件预算；合成图不冒充实拍",
+      "references": [
+        "docs/GitHub强相关项目调研与借鉴建议_2026-10-12.md",
+        "docs/DeepSeek独立检测与现行方案整合_2026-10-16.md",
+        "parallel/rk/ingest_raw.py",
+        "docs/superpowers/plans/2026-10-15-fpga-remaining-strategy.md"
+      ],
+      "latest_run_id": null,
+      "status_note": "用户已选Bayer同色预测+有界Rice+RAW回退，沿用codex/bayer-codec-reference工作树的BPR1，不再默认开发LZSS/LZ77。本轮20项codec核心测试及跨线RAW打包/往返通过；CLI原有测试与实拍压缩率不混为本轮验收。真实RAW图集仍缺，规则替代接受口径仍待确认。2026-10-17 user-feedback-06：压缩路线改为 LZ77 基线+Bayer 自有优化（见 T10）；BPR1 转拓展/可选第二模式，本注前句保留为历史。"
+    },
+    {
+      "id": "T05",
+      "title": "RK离线双目与单图NPU基线",
+      "state": "blocked",
+      "owner_role": "RK队友；待确认",
+      "owner_confirmed": false,
+      "depends_on": [],
+      "blocker": "缺已确认的RK执行者、运行环境和实际交付约定；真实双目图集另需准备",
+      "exit": "离线标定/匹配/距离误差、单图NPU、版本和耗时",
+      "references": [
+        "workflow/templates/handoff.md",
+        "docs/DeepSeek独立检测与现行方案整合_2026-10-16.md",
+        "parallel/rk/README.md",
+        "parallel/rk/run_stereo_pipeline_check.py",
+        "parallel/rk/frame_decode.c"
+      ],
+      "latest_run_id": null,
+      "status_note": "PC侧软件资产已接收：非压缩解码、四相位灰度对照、C参考及合成标定/校正/匹配/深度；纳入18项本机软件回归。阻塞仍是RK执行者/环境与实际交付，实拍标定、RK耗时、单图NPU及同步输入未验；不将PC合成自检记成RK板端完成。2026-10-17 user-feedback-07：本轮明确不进行 RK 深度/NPU；T05 相应部分不启动、不置 done（如未来用户重启另议）。"
+    },
+    {
+      "id": "T06",
+      "title": "完整1080p RAW10存储与读回",
+      "state": "backlog",
+      "owner_role": "FPGA主责+助手",
+      "owner_confirmed": true,
+      "depends_on": [
+        "T01",
+        "T02"
+      ],
+      "exit": "完整帧地址/容量/尾部、逐字节读回、故障拒绝及实际采集验证",
+      "references": [
+        "fpga/csi2/src/mem/ddr_frame_store.v",
+        "docs/完整RAW10后端_偏移扩展与保留进度_2026-10-14.md",
+        "docs/evidence/raw10_backend_20261014.json",
+        "docs/DeepSeek独立检测与现行方案整合_2026-10-16.md",
+        "parallel/rk/ingest_raw.py"
+      ],
+      "latest_run_id": null,
+      "status_note": "10-15历史阶段：已独立验证17位偏移/81001字合成容量及高位别名，完整采集CRC回归300秒超时未验收；当时优先RGB565，RAW后端不混入其候选。10-16增补：真实完整RAW采集仍未验；采用ingest_raw作为导出后的检查/统计工具，它不能从FPGA导帧。几何/ROI/Bayer相位与来源先记录，不能把预览放大当1080p原始帧。"
+    },
+    {
+      "id": "T07",
+      "title": "PCIe固定数据C2H DMA",
+      "state": "active",
+      "owner_role": "双方联合；RK承诺待确认",
+      "owner_confirmed": false,
+      "depends_on": [
+        "T03"
+      ],
+      "exit": "固定数据长度/序号/CRC、分包/尾部/超时/reset/缓冲所有权",
+      "references": [
+        "workflow/templates/interface.md",
+        "docs/DeepSeek独立检测与现行方案整合_2026-10-16.md",
+        "parallel/pcie/first_test_data.py",
+        "parallel/pcie/tlp_pack_ref.py",
+        "parallel/pcie/run_e2e_soft_path.py"
+      ],
+      "latest_run_id": "20261017-011744-rk-fpga-align",
+      "status_note": "2026-10-17 T07.rk-align-backend 收束：round0三维FAIL（F2编译阻塞/F1相机B路release/F3冻结漂移/G2 setup−2.433ns）→修复①F1/F2/F3（manifest 428C0B33…，G2仍−2.507ns）→修复②本域有界时序重构（差分oracle 680拍0失配；G2 +0.107ns达标）→修复③tool-only入口BOM+文档更正（RTL/SDC/bit零变化）。r3三维同候选PASS（实际修复3/3轮用尽；verdict-matrix-T07.rk-align-backend-r3.json）。唯一候选manifest=backend/candidate-manifest.json SHA256=68f9f4d0…4275（232条自检0不一致）；bit=0943cb36…8b0a（5,224,023B；G2 SWNS+0.107/STNS0.000/0端点、hold+0.020、Routed同源DB）。RK必改清单+补丁=backend/rk-change-list.md + backend/patches/rka1-driver.patch（离线apply-check通过、可逆；未在RK编译/安装，缺KDIR/交叉工具链）。本包G0局部/G1/G2成立；G3—G5与真实RK DMA未做（板测单列T07.rk-align-board），父T07不置done。遗留：F5-r3文档残留(g2 §6绑定句下次触碰改)、enable角落用例留T11、相机真实几何待板证、相机字节域余量+0.107ns须保持回归门槛。",
+      "latest_evidence": [
+        "workflow/runs/20261017-011744-rk-fpga-align/verdict-matrix-T07.rk-align-backend-r3.json",
+        "workflow/runs/20261017-011744-rk-fpga-align/test-reports/T07.rk-align-backend-r3-functional.md",
+        "workflow/runs/20261017-011744-rk-fpga-align/test-reports/T07.rk-align-backend-r3-engineering.md",
+        "workflow/runs/20261017-011744-rk-fpga-align/test-reports/T07.rk-align-backend-r3-system.md",
+        "workflow/runs/20261017-011744-rk-fpga-align/backend/candidate-manifest.json",
+        "workflow/runs/20261017-011744-rk-fpga-align/backend/hardware-ready.md",
+        "workflow/runs/20261017-011744-rk-fpga-align/backend/rk-change-list.md"
+      ]
+    },
+    {
+      "id": "T08",
+      "title": "双路采集与曝光同步",
+      "state": "backlog",
+      "owner_role": "FPGA主责+助手",
+      "owner_confirmed": true,
+      "depends_on": [
+        "T02",
+        "T06"
+      ],
+      "exit": "双路真实数据、曝光同步证据、失锁恢复；不以同帧号代替同步",
+      "references": [
+        "docs/当前硬件_引脚电气与同步证据.md"
+      ],
+      "latest_run_id": null,
+      "status_note": "2026-10-17 user-feedback-07：本轮最终目标=双路同步成功（双路真实数据、曝光同步证据、失锁恢复）——作为终点验收包；条件（T02/T06 与硬件窗口/双相机）具备时优先推进；未验不置 done，不以同帧号代替同步。"
+    },
+    {
+      "id": "T09",
+      "title": "三种四像素预处理",
+      "state": "active",
+      "owner_role": "FPGA主责+助手",
+      "owner_confirmed": true,
+      "depends_on": [
+        "T02"
+      ],
+      "exit": "灰度、高斯、CDF-min前帧均衡；边界/首帧/冲突/坏帧/切换验证",
+      "references": [
+        "workflow/templates/task.md",
+        "docs/DeepSeek独立检测与现行方案整合_2026-10-16.md",
+        "parallel/algorithms/image_algorithms_ref.py",
+        "parallel/algorithms/tb_image_algo_stream.sv"
+      ],
+      "latest_run_id": null,
+      "status_note": "采用parallel完整Bayer->Y8参考及保色边界，合用工作树RGB8->Y8/高斯/前帧HE参考；本轮算术与状态交叉检查通过。已有灰度与高斯RTL候选，灰度只接RGB8；Bayer去马赛克前端/HE/并行组织仍待做。parallel算法TB仅stub回放通过，不能当真实RTL；接入后补停顿/坏帧/换LUT及持续吞吐。2026-10-17 user-feedback-04 将三种算法纳入FPGA侧基础任务；本轮以 T09.rk-align-algo 子包排队（顺序：T11.rk-align-base→T09→T10→T11.rk-align-opt；batch=1，不并行）：只读引入Bayer工作树灰度/高斯候选（provenance）并补Bayer→Y8前端、CDF-min前帧HE（换LUT/首帧/四像素同bin冲突）与并行组织；写新目录fpga/csi2/src/img/+本run algo/；G0局部/G1/G2，G3/G4留板测；T02真实几何/坏帧板证仍为板验前提（离线用合成/参数化）。比赛R2（三种算法；原文“剩余两项必须硬件并行实现”）：验收须展示真实并行硬件结构与资源/吞吐证据，不得只串行或软件模拟。2026-10-17 派发 T09.rk-align-algo（task-T09.rk-align-algo.md；batch=1）：三算法真实RTL（灰度含Bayer→Y8前端/高斯3x3/CDF-min前帧HE）+硬件并行组织+模块级小顶；写新目录fpga/csi2/src/img/、tools/algo/、run algo/；Bayer工作树只读（provenance引入）；G0局部/G1/G2，G3/G4留板测；T02真实几何/坏帧板证仍为板验前提。"
+    },
+    {
+      "id": "T10",
+      "title": "压缩RTL与RAW回退",
+      "state": "ready",
+      "owner_role": "FPGA主责+助手",
+      "owner_confirmed": true,
+      "depends_on": [
+        "T03",
+        "T04"
+      ],
+      "exit": "软件解码一致、短尾块/反压/错误恢复、资源和持续输入吞吐",
+      "references": [
+        "docs/GitHub强相关项目调研与借鉴建议_2026-10-12.md",
+        "docs/DeepSeek独立检测与现行方案整合_2026-10-16.md",
+        "docs/superpowers/plans/2026-10-15-fpga-remaining-strategy.md"
+      ],
+      "latest_run_id": null,
+      "status_note": "复用Bayer工作树预测器/Rice/packer及bayer_rice_row_stream.v，当前组合仅输出Rice候选，缺RAW选择/行头/CRC/帧发布。源码保持原工作树，未并入顶层；8bit输出原型不证明双路155.520MB/s或194.400MB/s余量预算，需宽度/队列与持续服务率证据。2026-10-17 user-feedback-06 最终答复（R3 合规）：采用 LZ77 基线 + Bayer 自有优化混合路线——单编码器架构（真实 LZ77 熵编码合规基线 + Bayer 相位重排/同色预测前端（可开关A/B）+ 块级 RAW 回退）；输出优先 DEFLATE/GZIP 兼容或自描述格式+自研软件解码（不得自定义token声称zlib互通）；BPR1 转拓展/可选第二模式，不作本轮必需。T10 范围据此更新（不再等待答复；排在T09后；batch=1）：新做 LZ77 RTL（仓库无既有LZ77资产）+ Bayer 预处理 + 块头/CRC/长度/RAW回退 + 独立软件解码 round-trip + A/B 比率增益与最坏膨胀/吞吐预算证据；写新目录fpga/csi2/src/codec/+本run codec/；不分配压缩枚举、不触碰T11冻结输入；G0局部/G1/G2，G3/G4留板测。风险保留：单核吞吐可能低于双路155.520MB/s预算（需并行/降速）、资源/时序须本板实测、许可与来源贡献记录、真实RAW图集仍缺（先用合成/冻结向量并标注）。与 T11.rk-align-compress-int 的格式/枚举/RK解码合同由后者冻结。"
+    },
+    {
+      "id": "T11",
+      "title": "DDR到压缩到PCIe到RK集成",
+      "state": "active",
+      "owner_role": "双方联合；RK承诺待确认",
+      "owner_confirmed": false,
+      "depends_on": [
+        "T06",
+        "T07",
+        "T10"
+      ],
+      "exit": "帧重组、长度/CRC/序号、恢复、长稳与持续有效吞吐",
+      "references": [
+        "workflow/templates/verification.md",
+        "docs/DeepSeek独立检测与现行方案整合_2026-10-16.md",
+        "fpga/csi2/src/mem/ddr_frame_store.v",
+        "parallel/frame/frame_contract.py"
+      ],
+      "latest_run_id": "20261017-011744-rk-fpga-align",
+      "status_note": "2026-10-17 派发 T11.rk-align-raw（新计划见 run dev-plan.md『T07收束与T11派发』与 task-T11.rk-align-raw.md）：在后端r3候选（bit 0943cb36…8b0a / manifest 68f9f4d0…4275）上实现正式非压缩 packed RAW10→R10F（128B头/三层CRC/640B尾零/dma_bytes 2592768）完整帧通路、缓冲所有权与 one-shot 发送，几何按源实际WC/行数参数化（未板证标 synthetic/diagnostic；真实几何/相位待板测前核实），并补严格解析工具与按需 RK 补丁增量。本包 G0局部/G1/G2；G3/G4 单列板测包（T07.rk-align-board）、G5 未完成。父 T11 不置 done（父任务另含 T10 压缩与端到端，压缩未完成）。2026-10-17 user-feedback-03 追加：新增 T11.rk-align-base（环境配置合理化 + 逻辑冗余/优化只读勘察；只写 tools/env/、run/env/，与在途 T11.rk-align-raw functional 测试不冲突）与排队 T11.rk-align-opt（逻辑优化实施；必须等 T11.rk-align-raw r0 functional 判定与收束后派发，集成树在判定前冻结）。2026-10-17 T11.rk-align-raw round0 三维同候选全部PASS（实际修复0轮；manifest AAB0CC08…6975；bit 14b32037…5686b；矩阵 verdict-matrix-T11.rk-align-raw-r0.json）；T11.rk-align-opt 据此解禁（仍排 T09/T10 之后）；新增 T11.rk-align-compress-int（压缩帧经PCIe传输集成，R4）排队；压缩基线合规（R3）已由 user-feedback-06 定为 LZ77 基线+Bayer 自有优化混合路线（T10 范围更新，不再等待）；T11.rk-align-compress-int 承接 T10 做压缩帧传输/RK 解码/实测。2026-10-17 T11.rk-align-base 收束：round0（functional FAIL/system FAIL/engineering PASS）→修复①→修复②（r2 三维同候选全部PASS，实际修复2轮；manifest env/artifacts-manifest.json FF079FFA…C069，26条自检0不一致）；全部修复为文档/记录级，env_check.ps1/清单/受保护树/既有证据SHA零改动；交付=环境清单/env_check/环境手册/板测环境清单+逻辑冗余/优化只读勘察（run env/）。跨任务观察处置（规划）：T11.rk-align-raw r0 engineering §6『全库检索无+5.058来源』为无范围绝对断言（实际来源=final_timing.rpt tl_clk_user 路径组 L2076-2081）——仅登记并给出正确来源；不改写测试者历史判定报告（如需更正须由测试角色最小勘误、保持判定行/绑定不变并留痕）。父 T11 不置 done。"
+    },
+    {
+      "id": "T12",
+      "title": "双路端到端深度和NPU",
+      "state": "backlog",
+      "owner_role": "双方联合；RK承诺待确认",
+      "owner_confirmed": false,
+      "depends_on": [
+        "T05",
+        "T08",
+        "T09",
+        "T11"
+      ],
+      "exit": "同步配对、距离误差、检测、各段和整链路性能/丢帧证据",
+      "references": [
+        "workflow/templates/board-run.md"
+      ],
+      "latest_run_id": null,
+      "status_note": "2026-10-17 user-feedback-07：本轮终点=双路同步成功；RK 深度/NPU 明确不进行——T12 的深度/NPU 部分关闭/暂缓（不置 done；如未来重启另议）；依赖链中 T05 相应部分已排除。"
+    },
+    {
+      "id": "T13",
+      "title": "规则验收、材料和发布冻结",
+      "state": "backlog",
+      "owner_role": "用户统筹+团队",
+      "owner_confirmed": false,
+      "depends_on": [
+        "T12"
+      ],
+      "exit": "必选条款逐条证据、视频、版本/哈希/材料、恢复演练及提交回执",
+      "references": [
+        "docs/赛题条款与验收矩阵.md",
+        "workflow/templates/release.md"
+      ],
+      "latest_run_id": null,
+      "status_note": "2026-10-17 user-feedback-07：终点调整为双路同步；T12 深度/NPU 不进行 → T13 的 T12 依赖链相应变化；材料/发布范围以实际完成项为准（不虚报），是否提交及口径待用户后续安排；不置 done。"
+    },
+    {
+      "id": "T14",
+      "title": "提交版本之上的性能优化",
+      "state": "backlog",
+      "owner_role": "双方联合",
+      "owner_confirmed": false,
+      "depends_on": [
+        "T13"
+      ],
+      "exit": "保留稳定提交版本；优化前后数据、回归、资源和稳定性比较",
+      "references": [
+        "workflow/templates/design-decision.md",
+        "docs/DeepSeek独立检测与现行方案整合_2026-10-16.md"
+      ],
+      "latest_run_id": null,
+      "status_note": "未来候选O01-O08已登记于整合记录：TMDS受控ROM、u16容器、Gray8专用codec、二维预测/选k、规则不利时LZ77/JPEG、RK硬件ISP、FPGA立体/完整ISP/4K及更宽packer。按触发条件与证据启用；不默认重开第二codec、降HDMI分辨率或恢复30Hz。2026-10-17 user-feedback-07：终点=双路同步；T14 仍为提交后/未来优化，不在本轮终点范围（本轮 T11.rk-align-opt 为集成线逻辑优化子轨，见 run dev-plan）。"
+    }
+  ]
+}

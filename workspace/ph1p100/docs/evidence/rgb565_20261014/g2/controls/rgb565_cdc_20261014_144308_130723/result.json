@@ -1,0 +1,246 @@
+{
+  "source": "D:\\TD\\work\\csi2\\prj\\camera_rgb565_20261014_140836",
+  "source_sha256": "15978fd4be8b5081507a9713ef5d497841a6866c05cc36c5ffd4a1def27a70c7",
+  "checker_hashes": {
+    "audit_display_cdc.py": "7bd152c62dfca8da5a9898ba2c8d78d4c3fad182ae04a02dbdc65b42dfe2a52a",
+    "review_display_cdc_functions.py": "dce61e0d631b7bfdbf78409a83db9b2d5877c7851512875ff59d33e40a82043d",
+    "review_display_cdc_origins.py": "b4da00bbc59a8bc79836cbd9b012120fcf71f54de532f8e43b39876d88f8d429"
+  },
+  "cases": [
+    {
+      "case": "valid",
+      "expected": "pass",
+      "accepted": true,
+      "mutated_net_sha256": "cfe3db02d162c22eb01bc8821f698ebb83d5504f99fa1f63e67efc11a66da0d6",
+      "runs": [
+        {
+          "command": [
+            "C:\\Program Files\\Python311\\python.exe",
+            "-X",
+            "utf8",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\audit_display_cdc.py",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\valid",
+            "--fifo",
+            "u_fifo"
+          ],
+          "exit_code": 0,
+          "log": "valid/0.txt"
+        },
+        {
+          "command": [
+            "C:\\Program Files\\Python311\\python.exe",
+            "-X",
+            "utf8",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\audit_display_cdc.py",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\valid",
+            "--fifo",
+            "u_display_fifo"
+          ],
+          "exit_code": 0,
+          "log": "valid/1.txt"
+        },
+        {
+          "command": [
+            "C:\\Program Files\\Python311\\python.exe",
+            "-X",
+            "utf8",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\review_display_cdc_functions.py",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\valid"
+          ],
+          "exit_code": 0,
+          "log": "valid/2.txt"
+        },
+        {
+          "command": [
+            "C:\\Program Files\\Python311\\python.exe",
+            "-X",
+            "utf8",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\review_display_cdc_origins.py",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\valid"
+          ],
+          "exit_code": 0,
+          "log": "valid/3.txt"
+        }
+      ]
+    },
+    {
+      "case": "wrong_truth",
+      "expected": "rejection",
+      "accepted": true,
+      "mutated_net_sha256": "45b3934d55a22cd5166cc2a3b276c64d327aca08fb3cb38d317e6de1efcde391",
+      "runs": [
+        {
+          "command": [
+            "C:\\Program Files\\Python311\\python.exe",
+            "-X",
+            "utf8",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\audit_display_cdc.py",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\wrong_truth",
+            "--fifo",
+            "u_fifo"
+          ],
+          "exit_code": 0,
+          "log": "wrong_truth/0.txt"
+        },
+        {
+          "command": [
+            "C:\\Program Files\\Python311\\python.exe",
+            "-X",
+            "utf8",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\audit_display_cdc.py",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\wrong_truth",
+            "--fifo",
+            "u_display_fifo"
+          ],
+          "exit_code": 0,
+          "log": "wrong_truth/1.txt"
+        },
+        {
+          "command": [
+            "C:\\Program Files\\Python311\\python.exe",
+            "-X",
+            "utf8",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\review_display_cdc_functions.py",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\wrong_truth"
+          ],
+          "exit_code": 1,
+          "log": "wrong_truth/2.txt"
+        }
+      ]
+    },
+    {
+      "case": "wrong_bit",
+      "expected": "rejection",
+      "accepted": true,
+      "mutated_net_sha256": "45439ee86d2b6bf82cbc852056b5c9479ae4f4f069cc9922b4e5e6d79878b55f",
+      "runs": [
+        {
+          "command": [
+            "C:\\Program Files\\Python311\\python.exe",
+            "-X",
+            "utf8",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\audit_display_cdc.py",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\wrong_bit",
+            "--fifo",
+            "u_fifo"
+          ],
+          "exit_code": 1,
+          "log": "wrong_bit/0.txt"
+        }
+      ]
+    },
+    {
+      "case": "wrong_reset_domain",
+      "expected": "rejection",
+      "accepted": true,
+      "mutated_net_sha256": "c1ce9385840892e6cd4c8b612cb1ee3db9c4e2df1024fa50e3ccb589cd20559b",
+      "runs": [
+        {
+          "command": [
+            "C:\\Program Files\\Python311\\python.exe",
+            "-X",
+            "utf8",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\audit_display_cdc.py",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\wrong_reset_domain",
+            "--fifo",
+            "u_fifo"
+          ],
+          "exit_code": 0,
+          "log": "wrong_reset_domain/0.txt"
+        },
+        {
+          "command": [
+            "C:\\Program Files\\Python311\\python.exe",
+            "-X",
+            "utf8",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\audit_display_cdc.py",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\wrong_reset_domain",
+            "--fifo",
+            "u_display_fifo"
+          ],
+          "exit_code": 0,
+          "log": "wrong_reset_domain/1.txt"
+        },
+        {
+          "command": [
+            "C:\\Program Files\\Python311\\python.exe",
+            "-X",
+            "utf8",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\review_display_cdc_functions.py",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\wrong_reset_domain"
+          ],
+          "exit_code": 0,
+          "log": "wrong_reset_domain/2.txt"
+        },
+        {
+          "command": [
+            "C:\\Program Files\\Python311\\python.exe",
+            "-X",
+            "utf8",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\review_display_cdc_origins.py",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\wrong_reset_domain"
+          ],
+          "exit_code": 1,
+          "log": "wrong_reset_domain/3.txt"
+        }
+      ]
+    },
+    {
+      "case": "wrong_byte_clock_selector",
+      "expected": "rejection",
+      "accepted": true,
+      "mutated_net_sha256": "7fd3afa32555d8a5cf0b1f138918de18043ffb5f0972fc20ae7dd833f622db23",
+      "runs": [
+        {
+          "command": [
+            "C:\\Program Files\\Python311\\python.exe",
+            "-X",
+            "utf8",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\audit_display_cdc.py",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\wrong_byte_clock_selector",
+            "--fifo",
+            "u_fifo"
+          ],
+          "exit_code": 0,
+          "log": "wrong_byte_clock_selector/0.txt"
+        },
+        {
+          "command": [
+            "C:\\Program Files\\Python311\\python.exe",
+            "-X",
+            "utf8",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\audit_display_cdc.py",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\wrong_byte_clock_selector",
+            "--fifo",
+            "u_display_fifo"
+          ],
+          "exit_code": 0,
+          "log": "wrong_byte_clock_selector/1.txt"
+        },
+        {
+          "command": [
+            "C:\\Program Files\\Python311\\python.exe",
+            "-X",
+            "utf8",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\review_display_cdc_functions.py",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\wrong_byte_clock_selector"
+          ],
+          "exit_code": 0,
+          "log": "wrong_byte_clock_selector/2.txt"
+        },
+        {
+          "command": [
+            "C:\\Program Files\\Python311\\python.exe",
+            "-X",
+            "utf8",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\review_display_cdc_origins.py",
+            "D:\\TD\\work\\csi2\\_validation\\rgb565_cdc_20261014_144308_130723\\wrong_byte_clock_selector"
+          ],
+          "exit_code": 1,
+          "log": "wrong_byte_clock_selector/3.txt"
+        }
+      ]
+    }
+  ],
+  "boundary": "Exact observed mapping and injected fault set only; not general formal CDC."
+}

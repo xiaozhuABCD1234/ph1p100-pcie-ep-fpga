@@ -1,0 +1,135 @@
+===== g1_elab_netlist.v
+  bytes            : 1763388
+  raw token counts : AL_MAP_SEQ=0, AL_MAP_LUT=0, AL_MAP_ADDER=0, AL_MAP_MUX=0, ERAM=0, DRAM=0, GCLK=0, SCLK=0, PAD=0, IOBUF=0
+  AL_MAP_SEQ insts : 0
+  clk nets         : 
+  sr  nets         : 
+  ce  nets distinct: 0
+  ce  top          : 
+  SUSPICIOUS clk (no "clk" in net name): 0
+
+===== g1_gate_netlist.v
+  bytes            : 3317589
+  raw token counts : AL_MAP_SEQ=0, AL_MAP_LUT=0, AL_MAP_ADDER=0, AL_MAP_MUX=0, ERAM=0, DRAM=0, GCLK=0, SCLK=0, PAD=0, IOBUF=0
+  AL_MAP_SEQ insts : 1685
+  clk nets         : clk_dup_1:1685
+  sr  nets         : rst_n_dup_1567:755, \u_dut/u_core/fifo_mem_i1_syn_2:440, :245, \u_dut/mux126_syn_2 [0]:96, \u_dut/mux124_syn_2 [0]:64, \u_dut/mux118_syn_2 [0]:16, al_38:16, \u_dut/mux117_syn_2 [0]:16, \u_dut/u_core/cmem_raddr [12]:16, \u_dut/u_core/mux425_syn_2 [9]:13, \u_dut/u_core/mux461_syn_2 [0]:8
+  ce  nets distinct: 57
+  ce  top          : :170, \u_dut/u_core/mux273_syn_3 [3]:122, \u_dut/mux103_syn_2 [0]:66, \u_dut/u_core/htab_byp_n:66, \u_dut/mux0_syn_41:65, \u_dut/smem_we_r_i1_syn_4:64, \u_dut/mux81_syn_35 [0]:64, \u_dut/u_core/mux417_syn_2 [8]:61
+  SUSPICIOUS clk (no "clk" in net name): 0
+
+===== g1_routed_netlist.v
+  bytes            : 3501992
+  raw token counts : AL_MAP_SEQ=0, AL_MAP_LUT=0, AL_MAP_ADDER=0, AL_MAP_MUX=0, ERAM=0, DRAM=0, GCLK=0, SCLK=0, PAD=0, IOBUF=0
+  AL_MAP_SEQ insts : 0
+  clk nets         : 
+  sr  nets         : 
+  ce  nets distinct: 0
+  ce  top          : 
+  SUSPICIOUS clk (no "clk" in net name): 0
+
+===== g2_elab_netlist.v
+  bytes            : 1763388
+  raw token counts : AL_MAP_SEQ=0, AL_MAP_LUT=0, AL_MAP_ADDER=0, AL_MAP_MUX=0, ERAM=0, DRAM=0, GCLK=0, SCLK=0, PAD=0, IOBUF=0
+  AL_MAP_SEQ insts : 0
+  clk nets         : 
+  sr  nets         : 
+  ce  nets distinct: 0
+  ce  top          : 
+  SUSPICIOUS clk (no "clk" in net name): 0
+
+===== g2_gate_netlist.v
+  bytes            : 3372711
+  raw token counts : AL_MAP_SEQ=0, AL_MAP_LUT=0, AL_MAP_ADDER=0, AL_MAP_MUX=0, ERAM=0, DRAM=0, GCLK=0, SCLK=0, PAD=0, IOBUF=0
+  AL_MAP_SEQ insts : 1646
+  clk nets         : clk_dup_1:1646
+  sr  nets         : rst_n_dup_1567:747, \u_dut/u_core/fifo_mem_i1_syn_2:440, :214, \u_dut/mux126_syn_2 [0]:96, \u_dut/mux124_syn_2 [0]:64, \u_dut/mux118_syn_2 [0]:16, al_38:16, \u_dut/mux117_syn_2 [0]:16, \u_dut/u_core/cmem_raddr [12]:16, \u_dut/u_core/mux425_syn_2 [9]:13, \u_dut/u_core/mux461_syn_2 [0]:8
+  ce  nets distinct: 57
+  ce  top          : :170, \u_dut/u_core/mux273_syn_3 [3]:122, \u_dut/mux103_syn_2 [0]:66, \u_dut/u_core/htab_byp_n:66, \u_dut/mux0_syn_41:65, \u_dut/smem_we_r_i1_syn_4:64, \u_dut/mux81_syn_35 [0]:64, \u_dut/u_core/mux417_syn_2 [8]:61
+  SUSPICIOUS clk (no "clk" in net name): 0
+
+===== g2_routed_netlist.v
+  bytes            : 3615726
+  raw token counts : AL_MAP_SEQ=0, AL_MAP_LUT=0, AL_MAP_ADDER=0, AL_MAP_MUX=0, ERAM=0, DRAM=0, GCLK=0, SCLK=0, PAD=0, IOBUF=0
+  AL_MAP_SEQ insts : 0
+  clk nets         : 
+  sr  nets         : 
+  ce  nets distinct: 0
+  ce  top          : 
+  SUSPICIOUS clk (no "clk" in net name): 0
+
+PAIR g1_elab_netlist.v VS g1_gate_netlist.v
+  clk net sets equal: False  (only-in-A=[] only-in-B=['clk_dup_1'])
+  sr  net sets equal: False  (only-in-A=[] only-in-B=['', '\\u_dut/mux117_syn_2 [0]', '\\u_dut/mux118_syn_2 [0]', '\\u_dut/mux124_syn_2 [0]', '\\u_dut/mux126_syn_2 [0]', '\\u_dut/u_core/cmem_raddr [12]', '\\u_dut/u_core/fifo_mem_i1_syn_2', '\\u_dut/u_core/mux425_syn_2 [9]', '\\u_dut/u_core/mux461_syn_2 [0]', 'al_38', 'rst_n_dup_1567'])
+  SEQ counts: 0 vs 1685 (delta +1685)
+
+PAIR g1_elab_netlist.v VS g1_routed_netlist.v
+  clk net sets equal: True  (only-in-A=[] only-in-B=[])
+  sr  net sets equal: True  (only-in-A=[] only-in-B=[])
+  SEQ counts: 0 vs 0 (delta +0)
+
+PAIR g1_elab_netlist.v VS g2_elab_netlist.v
+  clk net sets equal: True  (only-in-A=[] only-in-B=[])
+  sr  net sets equal: True  (only-in-A=[] only-in-B=[])
+  SEQ counts: 0 vs 0 (delta +0)
+
+PAIR g1_elab_netlist.v VS g2_gate_netlist.v
+  clk net sets equal: False  (only-in-A=[] only-in-B=['clk_dup_1'])
+  sr  net sets equal: False  (only-in-A=[] only-in-B=['', '\\u_dut/mux117_syn_2 [0]', '\\u_dut/mux118_syn_2 [0]', '\\u_dut/mux124_syn_2 [0]', '\\u_dut/mux126_syn_2 [0]', '\\u_dut/u_core/cmem_raddr [12]', '\\u_dut/u_core/fifo_mem_i1_syn_2', '\\u_dut/u_core/mux425_syn_2 [9]', '\\u_dut/u_core/mux461_syn_2 [0]', 'al_38', 'rst_n_dup_1567'])
+  SEQ counts: 0 vs 1646 (delta +1646)
+
+PAIR g1_elab_netlist.v VS g2_routed_netlist.v
+  clk net sets equal: True  (only-in-A=[] only-in-B=[])
+  sr  net sets equal: True  (only-in-A=[] only-in-B=[])
+  SEQ counts: 0 vs 0 (delta +0)
+
+PAIR g1_gate_netlist.v VS g1_routed_netlist.v
+  clk net sets equal: False  (only-in-A=['clk_dup_1'] only-in-B=[])
+  sr  net sets equal: False  (only-in-A=['', '\\u_dut/mux117_syn_2 [0]', '\\u_dut/mux118_syn_2 [0]', '\\u_dut/mux124_syn_2 [0]', '\\u_dut/mux126_syn_2 [0]', '\\u_dut/u_core/cmem_raddr [12]', '\\u_dut/u_core/fifo_mem_i1_syn_2', '\\u_dut/u_core/mux425_syn_2 [9]', '\\u_dut/u_core/mux461_syn_2 [0]', 'al_38', 'rst_n_dup_1567'] only-in-B=[])
+  SEQ counts: 1685 vs 0 (delta -1685)
+
+PAIR g1_gate_netlist.v VS g2_elab_netlist.v
+  clk net sets equal: False  (only-in-A=['clk_dup_1'] only-in-B=[])
+  sr  net sets equal: False  (only-in-A=['', '\\u_dut/mux117_syn_2 [0]', '\\u_dut/mux118_syn_2 [0]', '\\u_dut/mux124_syn_2 [0]', '\\u_dut/mux126_syn_2 [0]', '\\u_dut/u_core/cmem_raddr [12]', '\\u_dut/u_core/fifo_mem_i1_syn_2', '\\u_dut/u_core/mux425_syn_2 [9]', '\\u_dut/u_core/mux461_syn_2 [0]', 'al_38', 'rst_n_dup_1567'] only-in-B=[])
+  SEQ counts: 1685 vs 0 (delta -1685)
+
+PAIR g1_gate_netlist.v VS g2_gate_netlist.v
+  clk net sets equal: True  (only-in-A=[] only-in-B=[])
+  sr  net sets equal: True  (only-in-A=[] only-in-B=[])
+  SEQ counts: 1685 vs 1646 (delta -39)
+
+PAIR g1_gate_netlist.v VS g2_routed_netlist.v
+  clk net sets equal: False  (only-in-A=['clk_dup_1'] only-in-B=[])
+  sr  net sets equal: False  (only-in-A=['', '\\u_dut/mux117_syn_2 [0]', '\\u_dut/mux118_syn_2 [0]', '\\u_dut/mux124_syn_2 [0]', '\\u_dut/mux126_syn_2 [0]', '\\u_dut/u_core/cmem_raddr [12]', '\\u_dut/u_core/fifo_mem_i1_syn_2', '\\u_dut/u_core/mux425_syn_2 [9]', '\\u_dut/u_core/mux461_syn_2 [0]', 'al_38', 'rst_n_dup_1567'] only-in-B=[])
+  SEQ counts: 1685 vs 0 (delta -1685)
+
+PAIR g1_routed_netlist.v VS g2_elab_netlist.v
+  clk net sets equal: True  (only-in-A=[] only-in-B=[])
+  sr  net sets equal: True  (only-in-A=[] only-in-B=[])
+  SEQ counts: 0 vs 0 (delta +0)
+
+PAIR g1_routed_netlist.v VS g2_gate_netlist.v
+  clk net sets equal: False  (only-in-A=[] only-in-B=['clk_dup_1'])
+  sr  net sets equal: False  (only-in-A=[] only-in-B=['', '\\u_dut/mux117_syn_2 [0]', '\\u_dut/mux118_syn_2 [0]', '\\u_dut/mux124_syn_2 [0]', '\\u_dut/mux126_syn_2 [0]', '\\u_dut/u_core/cmem_raddr [12]', '\\u_dut/u_core/fifo_mem_i1_syn_2', '\\u_dut/u_core/mux425_syn_2 [9]', '\\u_dut/u_core/mux461_syn_2 [0]', 'al_38', 'rst_n_dup_1567'])
+  SEQ counts: 0 vs 1646 (delta +1646)
+
+PAIR g1_routed_netlist.v VS g2_routed_netlist.v
+  clk net sets equal: True  (only-in-A=[] only-in-B=[])
+  sr  net sets equal: True  (only-in-A=[] only-in-B=[])
+  SEQ counts: 0 vs 0 (delta +0)
+
+PAIR g2_elab_netlist.v VS g2_gate_netlist.v
+  clk net sets equal: False  (only-in-A=[] only-in-B=['clk_dup_1'])
+  sr  net sets equal: False  (only-in-A=[] only-in-B=['', '\\u_dut/mux117_syn_2 [0]', '\\u_dut/mux118_syn_2 [0]', '\\u_dut/mux124_syn_2 [0]', '\\u_dut/mux126_syn_2 [0]', '\\u_dut/u_core/cmem_raddr [12]', '\\u_dut/u_core/fifo_mem_i1_syn_2', '\\u_dut/u_core/mux425_syn_2 [9]', '\\u_dut/u_core/mux461_syn_2 [0]', 'al_38', 'rst_n_dup_1567'])
+  SEQ counts: 0 vs 1646 (delta +1646)
+
+PAIR g2_elab_netlist.v VS g2_routed_netlist.v
+  clk net sets equal: True  (only-in-A=[] only-in-B=[])
+  sr  net sets equal: True  (only-in-A=[] only-in-B=[])
+  SEQ counts: 0 vs 0 (delta +0)
+
+PAIR g2_gate_netlist.v VS g2_routed_netlist.v
+  clk net sets equal: False  (only-in-A=['clk_dup_1'] only-in-B=[])
+  sr  net sets equal: False  (only-in-A=['', '\\u_dut/mux117_syn_2 [0]', '\\u_dut/mux118_syn_2 [0]', '\\u_dut/mux124_syn_2 [0]', '\\u_dut/mux126_syn_2 [0]', '\\u_dut/u_core/cmem_raddr [12]', '\\u_dut/u_core/fifo_mem_i1_syn_2', '\\u_dut/u_core/mux425_syn_2 [9]', '\\u_dut/u_core/mux461_syn_2 [0]', 'al_38', 'rst_n_dup_1567'] only-in-B=[])
+  SEQ counts: 1646 vs 0 (delta -1646)
+

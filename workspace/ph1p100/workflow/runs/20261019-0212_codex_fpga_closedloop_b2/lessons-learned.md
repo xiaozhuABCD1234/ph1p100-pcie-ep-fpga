@@ -1,0 +1,10 @@
+# B01 reusable lessons
+
+1. ModelSim Verilog-2001 creates implicit nets at first instance use. A testbench extension must put all new connected wire declarations before the instance, and put processes after declarations of every signal they use. Moving one combined declaration/process block from too early to too late produces a second compile failure; split the two parts before retrying.
+2. Preserve each failed attempt's exact logs in distinct output directories from the first invocation. This run preserved an actual first-failure excerpt and the full second logs; later independent checks switched to per-invocation timestamp directories.
+3. Existing testbench filename tb_ddr_wr_arb_peer.v contains module tb_ddr_wr_arb. Resolve declared module names before constructing a suite; the corrected one allowed retry passed and the original load failure remains.
+4. Algorithm adapter must hold its last ROI pixel until source FE/good, because ROI can end before the sensor frame's validity verdict. Complete EOF/HE LUT publication before FE would permit a late source CRC failure to publish a partial algorithm frame.
+5. Internal one-shot abort at the same SOF edge can be overwritten by SOF's sticky-flag clear; delay injection one camera clock. This code decision remains unverified at top until a future authorized integrated check.
+6. Checker standalone full1080p PASS is insufficient for integrated slot ownership or old-response isolation. Keep failed integration and missing G2 explicitly blocked instead of borrowing standalone PASS.
+7. DeepSeek generated only a text board template (task9c684ae859cd41128efd4254eb10fd9c,1392 API tokens); no execution requests. Review must separate SRAM configuration download from DDR data readback; the draft conflated them and was corrected locally.
+8. ROI ends before the physical source frame. End-of-frame short-line checks must be qualified by line_roi, and a representative adapter TB must include both leading and trailing non-ROI rows/pixels. A source that ends exactly at the ROI boundary cannot catch this bug.

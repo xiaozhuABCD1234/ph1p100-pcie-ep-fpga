@@ -1,0 +1,95 @@
+# vsim -c -l vsim.log -do "run.do" tb_t11_r10f_e2e 
+# Start time: 09:00:49 on Oct 17,2026
+# Loading work.tb_t11_r10f_e2e
+# Loading work.mipi_csi2_rx_ph1p_checked
+# Loading work.csi_rx_packet_integrity
+# Loading work.csi_rx_hdr_ecc
+# Loading work.csi_rx_10bit_unpack_checked
+# Loading work.cam_r10f_writer
+# Loading work.ddr_frame_pusher
+# do run.do
+# === E0 未 ARM：出帧 → 无 TLP + E_NOT_ARM + release ===
+# === E1 ARM → 帧2（block1）→ 32 MWr + 1 门铃 → held → ACK ===
+#   [model] seq=2 sess=20261017 hdrcrc=fff22667 paycrc=97e69de2
+#   ERROR #1 @6445336000 :                                                                                 E1: st_done != 1
+#   ERROR #2 @6445336000 :                                                                              E1: MWr count != 32
+#   ERROR #3 @6445336000 :                                                                    E1: not held after completion
+#   ERROR #4 @6445336000 :                                                       E1: TLP total != 33 (32 data + 1 doorbell)
+#   ERROR #5 @6445336000 :                                                                          E1: doorbell count != 1
+#   HOSTMIS[E1] k=32 got=00 exp=0a
+#   HOSTMIS[E1] k=40 got=00 exp=03
+#   HOSTMIS[E1] k=42 got=00 exp=0a
+#   HOSTMIS[E1] k=44 got=00 exp=28
+#   HOSTMIS[E1] k=48 got=e2 exp=28
+#   HOSTMIS[E1] k=49 got=9d exp=00
+#   ERROR #6 @6445336000 :                                                                        E1: host content != model
+#   ERROR #7 @6445336000 :                                                               E1: payload crc field != recompute
+#   ERROR #8 @6445336000 :                                                                E1: header crc field != recompute
+#   ERROR #9 @6445992000 :                                                                  E1: wrong-seq ACK released held
+#   ERROR #10 @6446648000 :                                                              E1: wrong-session ACK released held
+#   ERROR #11 @6447495000 :                                                                   E1: block1 not released on ACK
+# === E2 再 ARM → 帧3（block0，seq=3）→ 发送 → ACK ===
+#   ERROR #12 @6447832000 :                                                                       E2: not armed after re-ARM
+#   [model] seq=3 sess=20261017 hdrcrc=39b8e6df paycrc=97e69de2
+#   ERROR #13 @12870024000 :                                                                                 E2: st_done != 2
+#   ERROR #14 @12870024000 :                                                                                E2: push err != 0
+#   ERROR #15 @12870024000 :                                                                              E2: TLP total != 66
+#   ERROR #16 @12870024000 :                                                                          E2: doorbell count != 1
+#   HOSTMIS[E2] k=20 got=02 exp=03
+#   HOSTMIS[E2] k=32 got=00 exp=0a
+#   HOSTMIS[E2] k=40 got=00 exp=03
+#   HOSTMIS[E2] k=42 got=00 exp=0a
+#   HOSTMIS[E2] k=44 got=00 exp=28
+#   HOSTMIS[E2] k=48 got=e2 exp=28
+#   ERROR #17 @12870024000 :                                                                        E2: host content != model
+#   ERROR #18 @12870024000 :                                                               E2: payload crc field != recompute
+#   ERROR #19 @12870024000 :                                                                E2: header crc field != recompute
+#   ERROR #20 @12870875000 :                                                                   E2: block0 not released on ACK
+# === E3 慢消费长 wait → held 保护 → 新帧拒绝(8) → ACK ===
+#   ERROR #21 @12871208000 :                                                                                    E3: not armed
+#   [model] seq=4 sess=20261017 hdrcrc=07dfaf34 paycrc=97e69de2
+#   ERROR #22 @19286232000 :                                                                                 E3: st_done != 3
+#   ERROR #23 @19286232000 :                                                                                E3: push err != 0
+#   ERROR #24 @19286232000 :                                                                              E3: TLP total != 99
+#   HOSTMIS[E3] k=20 got=02 exp=04
+#   HOSTMIS[E3] k=32 got=00 exp=0a
+#   HOSTMIS[E3] k=40 got=00 exp=03
+#   HOSTMIS[E3] k=42 got=00 exp=0a
+#   HOSTMIS[E3] k=44 got=00 exp=28
+#   HOSTMIS[E3] k=48 got=e2 exp=28
+#   ERROR #25 @19286232000 :                                                                        E3: host content != model
+#   ERROR #26 @19286232000 :                                                               E3: payload crc field != recompute
+#   ERROR #27 @19286232000 :                                                                E3: header crc field != recompute
+#   ERROR #28 @19286525000 :                                                                   E3: block1 released while held
+#   ERROR #29 @19308072000 :                                                                         E3: frame5 not published
+#   ERROR #30 @19308072000 :                                                                        E3: frame sent while held
+#   ERROR #31 @19308072000 :                                                        E3: held rejection not flagged (err != 8)
+#   ERROR #32 @19308072000 :                                                                                    E3: held lost
+#   ERROR #33 @19309025000 :                                                                   E3: block1 not released on ACK
+# === E4 reset 隔离 + 新 session 全流程 ===
+#   ERROR #34 @19309368000 :                                                                                    E4: not armed
+#   [model] seq=6 sess=20261017 hdrcrc=503b2805 paycrc=97e69de2
+#   ERROR #35 @25712840000 :                                                                                 E4: st_done != 4
+#   ERROR #36 @25712840000 :                                                                        E4: not held before reset
+#   HOSTMIS[E4a] k=20 got=02 exp=06
+#   HOSTMIS[E4a] k=32 got=00 exp=0a
+#   HOSTMIS[E4a] k=40 got=00 exp=03
+#   HOSTMIS[E4a] k=42 got=00 exp=0a
+#   HOSTMIS[E4a] k=44 got=00 exp=28
+#   HOSTMIS[E4a] k=48 got=e2 exp=28
+#   ERROR #37 @25712840000 :                                                                       E4a: host content != model
+#   ERROR #38 @25712840000 :                                                              E4a: payload crc field != recompute
+#   ERROR #39 @25712840000 :                                                               E4a: header crc field != recompute
+#   ERROR #40 @25715992000 :                                                                 E4: reset produced release event
+#   [model] seq=2 sess=20261018 hdrcrc=3eaa3163 paycrc=97e69de2
+#   HOSTMIS[E4b] k=32 got=00 exp=0a
+#   HOSTMIS[E4b] k=40 got=00 exp=03
+#   HOSTMIS[E4b] k=42 got=00 exp=0a
+#   HOSTMIS[E4b] k=44 got=00 exp=28
+#   HOSTMIS[E4b] k=48 got=e2 exp=28
+#   HOSTMIS[E4b] k=49 got=9d exp=00
+# FAIL: 45 errors
+# ** Note: $finish    : S:/fpga/csi2/pcie_integration/sim/tb/tb_t11_r10f_e2e.v(772)
+#    Time: 32162568 ns  Iteration: 1  Instance: /tb_t11_r10f_e2e
+# End time: 09:01:36 on Oct 17,2026, Elapsed time: 0:00:47
+# Errors: 0, Warnings: 0

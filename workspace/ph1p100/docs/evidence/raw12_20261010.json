@@ -1,0 +1,59 @@
+{
+  "date": "2026-10-10",
+  "rtl_sha256": "e7ef62497a3fb5132810c0704c669e0d91d52edc406e28feb016c454c1d8b7ac",
+  "testbench_sha256": "9b8c6970cba520ecbad1c4da1e01283ca0c4227353cbba87ce98dc8dffaac411",
+  "simulation": {
+    "pass": true,
+    "pixels": 25874,
+    "task_packets": 194,
+    "cycles": 19047,
+    "negative_control_failed_as_expected": true
+  },
+  "synthesis": {
+    "tool": "6.2.2.200067",
+    "device": "PH1P100SBG484",
+    "package_speed": "-3",
+    "lut": 134,
+    "register": 71,
+    "slice_estimate": 81,
+    "latch": 0,
+    "eram": 0,
+    "dsp": 0
+  },
+  "warnings": [
+    "SYN-6021: standalone module has no board pin assignments; no bitgen attempted"
+  ],
+  "verilator_lint": "unavailable: binary and wrapper startup failed; no lint result",
+  "pnr_performed": false,
+  "hardware_tested": false,
+  "evidence": [
+    {
+      "path": "D:\\TD\\work\\csi2\\_validation\\raw12\\20261010_195843_575155_red\\regression.log",
+      "sha256": "38440dc176c4c56d1639ac56303641c69a4896e1f6546f73fd9aac6bfc8133d9"
+    },
+    {
+      "path": "D:\\TD\\work\\csi2\\_validation\\raw12\\20261010_201442_421740_green\\regression.log",
+      "sha256": "3b36a493cde34c559739522e62e94798ceee3655268b34e856981717caf92133"
+    },
+    {
+      "path": "D:\\TD\\work\\csi2\\_validation\\raw12\\syn_20261010_200205_4486459\\raw12_unpack.area",
+      "sha256": "c80795f03421f0e6c89b04d8b5b806bc081c146389ecb827d29eeb362335c0ba"
+    },
+    {
+      "path": "D:\\TD\\work\\csi2\\_validation\\raw12\\syn_20261010_200205_4486459\\raw12_unpack_Runs\\syn_1\\run.log",
+      "sha256": "584435cd0063a19163fba3d7784bdd1ab4eb1955a5fbaa59b2d1390d11b219ce"
+    },
+    {
+      "path": "D:\\TD\\work\\csi2\\_validation\\raw12\\syn_20261010_200205_4486459\\cli.log",
+      "sha256": "7da3d9d62fa44786cb3883e9023809d85b85363471b754315ecd04ea2c0751bd"
+    }
+  ],
+  "static_review": {
+    "source": "DeepSeek bounded read-only review",
+    "accepted_defects": 0,
+    "rejected_findings": [
+      "A0 C0 B1 decodes A01,C0B; directed RTL regression passed",
+      "done means EOP processed, not packet success; simultaneous error is required for malformed tails"
+    ]
+  }
+}

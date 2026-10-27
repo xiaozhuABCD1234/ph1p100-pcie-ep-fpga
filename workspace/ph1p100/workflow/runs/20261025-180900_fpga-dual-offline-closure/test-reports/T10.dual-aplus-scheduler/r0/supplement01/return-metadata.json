@@ -1,0 +1,91 @@
+{
+  "task_id": "T10.dual-aplus-scheduler",
+  "dimension": "integrated",
+  "dimension_results": {
+    "functional": {
+      "applicability": "applicable",
+      "G0": "pass",
+      "G1": "blocked",
+      "result": "blocked"
+    },
+    "engineering": {
+      "applicability": "applicable",
+      "G0": "pass",
+      "G1": "blocked",
+      "supplement_fixture_compile": "fail",
+      "G2": "not_run",
+      "result": "blocked"
+    },
+    "system": {
+      "applicability": "applicable",
+      "G1": "blocked",
+      "G3": "not_run-awaiting_hardware",
+      "G4": "not_run-awaiting_hardware",
+      "result": "blocked"
+    }
+  },
+  "verdict": "FAIL",
+  "report_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\supplement01\\T10.dual-aplus-scheduler-r0-integrated.md",
+  "manifest_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10.dual-aplus-scheduler\\cmp-stall-fix01\\static-closeout02\\manifest-cmp-stall-fix01.json",
+  "reuse_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\supplement01\\reuse-decision.json",
+  "canonical_report_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\supplement01\\canonical-report.json",
+  "blocked": {
+    "problem_id": "T10.dual-aplus-scheduler:LIMIT_REACHED:descriptor-release-same-edge-coverage",
+    "reason_code": "LIMIT_REACHED",
+    "new_information": true,
+    "evidence_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\supplement01\\compile.log",
+    "requested_action": "Original planner decide whether/how to recover the private TB declaration-order compile failure within remaining formal scope; no automatic compile or case retry is authorized. Candidate DUT unchanged; missing same-edge gate remains.",
+    "resume_input_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T10-r0-supplement01-input.md"
+  },
+  "retest": {
+    "required_dimensions": [
+      "functional",
+      "engineering",
+      "system"
+    ],
+    "required_checks": [
+      "Private same-edge TB compile recovery by planner decision; no automatic retry",
+      "Explicit descriptor/release same physical rising edge full identity/ownership matrix and real output lifecycle"
+    ],
+    "report_paths": [
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\supplement01\\T10.dual-aplus-scheduler-r0-integrated.md"
+    ],
+    "input_status": "same",
+    "reuse_decision_paths": [
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T10.dual-aplus-scheduler\\r0\\supplement01\\reuse-decision.json"
+    ]
+  },
+  "counts": {
+    "supplement": {
+      "conservative_tool_calls": 12,
+      "compiles": 1,
+      "case_processes": 0,
+      "calls_limit": 16,
+      "compiles_limit": 1,
+      "cases_limit": 1
+    },
+    "previous": {
+      "calls": 45,
+      "compiles": 2,
+      "cases": 19
+    },
+    "cumulative": {
+      "calls": 57,
+      "compiles": 3,
+      "cases": 19
+    },
+    "cumulative_caps": {
+      "calls": 61,
+      "compiles": 3,
+      "cases": 20
+    },
+    "fairness_attempts_used": 2,
+    "fairness_additional_attempts": 0,
+    "developer_faults": "3/3 unchanged",
+    "post_acceptance_repairs": 0,
+    "stopped_modifying": true,
+    "active_commands": 0
+  },
+  "stopped_modifying": true,
+  "active_commands": 0
+}

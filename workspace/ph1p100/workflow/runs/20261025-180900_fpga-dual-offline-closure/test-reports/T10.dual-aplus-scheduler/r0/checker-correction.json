@@ -1,0 +1,12 @@
+{
+  "time": "2026-10-26T01:18:37.616140+08:00",
+  "changes": [
+    "Interface oracle counts successful release rows only when a stream with that camera/seq was actually presented; reset-cancelled READY CMP is intentionally absent.",
+    "Fairness feeder refills whichever RAW slot becomes free, rather than blocking on its next fixed slot; earlier actual FAIR log has max5 consecutive both-pending.",
+    "Phase test now recovers two good frames after rejection."
+  ],
+  "DUT_changes": 0,
+  "compiles_before": 1,
+  "case_processes_before": 16,
+  "fairness_retry_number": 1
+}

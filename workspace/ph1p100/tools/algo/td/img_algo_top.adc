@@ -1,0 +1,11 @@
+# img_algo_top.adc - T09.rk-align-algo minimal pin constraints for the
+# module-level G2 build vehicle (img_algo_top_g2: clk, rst_n, dout,
+# dout_valid, led_good, led_abort).  Locations copied from the main project's
+# AP119 board file; the remaining (few) I/O is auto-placed by TD.
+# This build vehicle is NOT downloaded to any board in this package.
+set_pin_assignment { clk        } { LOCATION = H4;  IOSTANDARD = SSTL135; }
+set_pin_assignment { rst_n      } { LOCATION = R14; IOSTANDARD = LVCMOS33; }
+set_pin_assignment { dout       } { LOCATION = E21; IOSTANDARD = LVCMOS33; }
+set_pin_assignment { dout_valid } { LOCATION = D21; IOSTANDARD = LVCMOS33; }
+set_pin_assignment { led_good   } { LOCATION = E22; IOSTANDARD = LVCMOS33; }
+set_pin_assignment { led_abort  } { LOCATION = D22; IOSTANDARD = LVCMOS33; }

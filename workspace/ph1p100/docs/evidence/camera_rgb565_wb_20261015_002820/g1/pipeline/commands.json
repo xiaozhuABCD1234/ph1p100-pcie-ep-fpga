@@ -1,0 +1,61 @@
+[
+  {
+    "executable": "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlib.exe",
+    "arguments": [
+      "red_work"
+    ]
+  },
+  {
+    "executable": "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlog.exe",
+    "arguments": [
+      "-sv",
+      "-work",
+      "red_work",
+      "old_bayer565_capture.v",
+      "bayer565_reference.v",
+      "rgb565_frame_pack_guarded.v",
+      "tb_bayer565_pipeline.sv"
+    ]
+  },
+  {
+    "executable": "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vsim.exe",
+    "arguments": [
+      "-c",
+      "-l",
+      "red_simulator.log",
+      "red_work.tb_bayer565_pipeline",
+      "-do",
+      "run -all; quit -f"
+    ]
+  },
+  {
+    "executable": "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlib.exe",
+    "arguments": [
+      "work"
+    ]
+  },
+  {
+    "executable": "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlog.exe",
+    "arguments": [
+      "-sv",
+      "+define+PIPELINE_VERDICT_PORTS",
+      "-work",
+      "work",
+      "bayer565_capture.v",
+      "bayer565_reference.v",
+      "rgb565_frame_pack_guarded.v",
+      "tb_bayer565_pipeline.sv"
+    ]
+  },
+  {
+    "executable": "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vsim.exe",
+    "arguments": [
+      "-c",
+      "-l",
+      "simulator.log",
+      "work.tb_bayer565_pipeline",
+      "-do",
+      "run -all; quit -f"
+    ]
+  }
+]

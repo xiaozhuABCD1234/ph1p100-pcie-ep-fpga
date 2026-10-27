@@ -1,0 +1,29 @@
+# vsim -c -l vsim.log -do "run.do" tb_cam_r10f_writer 
+# Start time: 16:11:25 on Oct 17,2026
+# Loading work.tb_cam_r10f_writer
+# Loading work.cam_r10f_writer
+# do run.do
+# === P0 复位默认：无发布/无 AXI ===
+# === P1 好帧#1：4096B 逐字节 + 三 CRC + 发布 ===
+#   P1 DBG beats=129 bursts=2 seq=1 base=100000 status=00000019
+# === P2 好帧#2：换块 + 载荷逐字节 + seq=2 ===
+# === P3 坏帧：帧内 abort 不发布 ===
+# === P4 坏帧：FE 无 good 不发布 ===
+# === P5 坏帧：短行不发布 ===
+# === P6 无 FE：TMO 收口不发布 ===
+# === P7 所有权：发布即锁块 / 跳过 / release ===
+# === P8 复位隔离：残帧不发布，恢复后新帧发布 ===
+# === P9 FIFO 溢出：停摆 AXI + 连发 ⇒ 不发布 ===
+#   P9 DBG1 s=0 gcnt=63 pbad=1 eof=0 bc=128 payw=315 drop=65 status=0001001c
+#   P9 DBG2 s=0 gcnt=128 pbad=1 eof=1 bc=128 payw=640 seq=1 status=0001001d
+# === P10 1080p：81,024 拍 / 633+1 突发 / 尾零 / 头字段+CRC / 抽拍 ===
+#   P10 HDRPASS crc=56ba381a pay=ac1b6fe1 @21587125000
+#   P10 RW wdata=00000000_56ba381a_ac1b6fe1_ac1b6fe1_00000000_00000000_00000000_00000000 strb=0fff0000
+#   P10 PAYDBG got a3a2a2a1 a5a5a4b1 a8a7b1a6 aab1a9a8
+#   P10 PAYEXP exp a3a2a2a1 a5a5a4b1 a8a7b1a6 aab1a9a8
+#   P10 DBG beats=81025 bursts=634 seq=1 base=100000
+# ALL PASS
+# ** Note: $finish    : S:/fpga/csi2/pcie_integration/sim/tb/tb_cam_r10f_writer.v(782)
+#    Time: 21594872 ns  Iteration: 1  Instance: /tb_cam_r10f_writer
+# End time: 16:12:50 on Oct 17,2026, Elapsed time: 0:01:25
+# Errors: 0, Warnings: 0

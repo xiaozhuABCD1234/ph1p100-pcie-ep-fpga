@@ -1,0 +1,25 @@
+{
+  "task_id": "T09.rk-align-algo",
+  "run_id": "20261017-011744-rk-fpga-align",
+  "note": "Actual commands executed in this development round (representative, in order). Round1 = the first repair round. Every G1/G2 attempt kept its own directory with commands.log/vlog.log/vsim.log/report.json; round0 debugging runs are preserved under algo/g1/msim/core-*-dbg* and the TD attempts under algo/g2/smalltop-r0{,b,c,d}, round1 rebuilds under algo/g2/smalltop-r1{a,b}.",
+  "commands": [
+    {"cmd": "python tools/algo/oracle_algo.py --selftest", "cwd": "PROJECT_ROOT", "exit": 0, "marker": "T09_ORACLE PASS (10/10 selftests, cross-checked against parallel/algorithms/image_algorithms_ref.py)"},
+    {"cmd": "python tools/algo/gen_algo_vectors.py --out workflow/runs/20261017-011744-rk-fpga-align/algo/vectors", "cwd": "PROJECT_ROOT", "exit": 0, "marker": "T09_VECTORS_WRITTEN ... frames 24 (runs pattern added so the he_samebin mutation is detectable)"},
+    {"cmd": "python tools/algo/gen_ref_vectors.py --out workflow/runs/20261017-011744-rk-fpga-align/algo/vectors", "cwd": "PROJECT_ROOT", "exit": 0, "marker": "T09_REF_VECTORS_WRITTEN"},
+    {"cmd": "vlib/vlog (ModelSim) over all 10 RTL files incl. img_algo_top_g2.v", "cwd": "temp ASCII dir", "exit": 0, "marker": "Errors: 0, Warnings: 0"},
+    {"cmd": "python tools/algo/run_g1.py --case core --mutation none --tag r1a..r1N", "cwd": "PROJECT_ROOT", "exit": 0, "marker": "verdict PASS: ALGO_CORE_PASS cycles=52840 all3=53 ge2=132 beats=200/188/200 markers=6/6/6 hold=1 stalls=28 gaps=10 frames=2/1; LUT readback SHA == oracle expected; round0's 16 mismatches eliminated"},
+    {"cmd": "python tools/algo/run_g1.py --case core --mutation gray_round|gray_clamp|gau_round|he_samebin --tag r1", "cwd": "PROJECT_ROOT", "exit": 0, "marker": "verdict PASS for each negative control: no PASS marker, no simulator errors, the named mismatch present (replayable)"},
+    {"cmd": "python tools/algo/run_g1.py --case gray --mutation none --tag r1M", "cwd": "PROJECT_ROOT", "exit": 0, "marker": "ALGO_GRAYMOD_PASS accepted=307 emitted=305 stalls=41 gaps=12 resets=1 hold=41"},
+    {"cmd": "python tools/algo/run_g1.py --case gauss_frame --mutation none --tag r1", "cwd": "PROJECT_ROOT", "exit": 0, "marker": "ALGO_GAUMOD_PASS frames=12 pixels_in=334 pixels_out=311 stalls=138 resets=2 invalid=2"},
+    {"cmd": "python tools/algo/run_g1.py --case rate --mutation none --tag r1b", "cwd": "PROJECT_ROOT", "exit": 0, "marker": "ALGO_RATE_PASS W=1920 H=1080 frames=2 beats_per_frame=518400 cyc_f0=519370 cyc_f1=519942 settled_cyc=1040120 all3=1035832"},
+    {"cmd": "powershell -ExecutionPolicy Bypass -File tools/algo/run_td_algo.ps1 -Name smalltop-r1a", "cwd": "PROJECT_ROOT", "exit": 0, "marker": "T09_ALGO_ALL_DONE; setup SWNS -1.208 ns / STNS -57.522 ns (123 violating endpoints), hold HWNS +0.020 ns (HE merge/LUTGEN pipelining only)"},
+    {"cmd": "powershell -ExecutionPolicy Bypass -File tools/algo/run_td_algo.ps1 -Name smalltop-r1b", "cwd": "PROJECT_ROOT", "exit": 0, "marker": "T09_ALGO_ALL_DONE + PRJ-1406 + PRJ-1424; setup SWNS +0.059 ns / STNS 0.000 ns (0 violating endpoints), hold HWNS +0.020 ns, Fmax 189.609 MHz; bit + reports in algo/g2/smalltop-r1b/ph1p_algo_smalltop_Runs/phy_1/"},
+    {"cmd": "python tools/algo/freeze_manifest.py", "cwd": "PROJECT_ROOT", "exit": 0, "marker": "candidate-manifest.json 36 entries, manifest_sha256 ba3c95666c320f9185974d403134778bb017f40f2885070aedaaf750a4c29b5c; manifest-selfcheck ok=true"}
+  ],
+  "environment": {
+    "modelsim": "D:/intelFPGA/18.1/modelsim_ase/win32aloem (vsim/vlog 10.5b)",
+    "td": "D:/anlogic/TD_Release_2026.2/bin/td_commands_prompt.exe (TD Release_2026.2, build 6.2.3.210850)",
+    "python": "C:/Program Files/Python311/python.exe 3.11.5",
+    "subst_rule": "temporary mapping to PROJECT_ROOT, removed in finally (run_g1.py / run_td_algo.ps1); no D: writes"
+  }
+}

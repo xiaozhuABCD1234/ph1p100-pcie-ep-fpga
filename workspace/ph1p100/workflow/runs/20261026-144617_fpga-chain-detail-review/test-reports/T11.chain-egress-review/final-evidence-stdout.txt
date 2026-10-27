@@ -1,0 +1,144 @@
+{
+  "timestamp": "2026-10-26T12:58:23.474904+00:00",
+  "python": "3.11.5 (tags/v3.11.5:cce6ba9, Aug 24 2023, 14:38:34) [MSC v.1936 64 bit (AMD64)]",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "manifest_sha256": "77c67efbcf3dd623c6d97611b8f21a1eb64784a95667be0dba2c14671ae41b92",
+  "entries": 490,
+  "unique_paths": 490,
+  "role_counts": {
+    "accepted_dependency_transitive_input": 146,
+    "accepted_dependency_manifest": 3,
+    "T11_frozen_input_or_review_artifact": 50,
+    "immutable_unified_baseline": 287,
+    "immutable_unified_baseline_index": 1,
+    "accepted_dependency_integrated_report": 3
+  },
+  "errors": [],
+  "dependencies": [
+    {
+      "task_id": "T02.chain-input-review",
+      "bindings_ok": true,
+      "entry_count": 329,
+      "entry_errors": []
+    },
+    {
+      "task_id": "T06.chain-storage-review",
+      "bindings_ok": true,
+      "entry_count": 370,
+      "entry_errors": []
+    },
+    {
+      "task_id": "T10.chain-transform-review",
+      "bindings_ok": true,
+      "entry_count": 438,
+      "entry_errors": []
+    }
+  ],
+  "baseline_entries": 287,
+  "baseline_errors": [],
+  "controls": [
+    {
+      "file": "dev-plan.md",
+      "current_control_matches_frozen": true
+    },
+    {
+      "file": "dispatch.json",
+      "current_control_matches_frozen": true
+    },
+    {
+      "file": "fpga-design-guide.md",
+      "current_control_matches_frozen": true
+    },
+    {
+      "file": "input-index.md",
+      "current_control_matches_frozen": true
+    },
+    {
+      "file": "request.md",
+      "current_control_matches_frozen": true
+    },
+    {
+      "file": "task-T11-chain-egress-review.md",
+      "current_control_matches_frozen": true
+    }
+  ],
+  "activity": {
+    "task_id": "T11.chain-egress-review",
+    "round": 0,
+    "development_modification_stopped": true,
+    "activity_ended_utc": "2026-10-26T12:47:04.810299+00:00",
+    "owned_build_sim_hardware_processes_active": 0,
+    "pending_worker_operations": 0,
+    "worker_task_state": "completed; requested noop denied, actual denial resumed once",
+    "hardware_actions": 0,
+    "production_modifications": 0,
+    "deletions": 0,
+    "remaining_activity": "this one-time mechanical hashing/freezing process only; no developer edit/test process remains"
+  },
+  "drift": []
+}
+{
+  "timestamp": "2026-10-26T12:58:23.970214+00:00",
+  "git": {
+    "head": "27c596b01cd961dfa9d0850e4fbf879fe249de90",
+    "branch": "codex/ddr-timing-margin",
+    "version": "git version 2.54.0.windows.1",
+    "tracked_status": {
+      "entries": 801,
+      "sha256_utf8": "3946b97e03a38510dbdbf7de623f4191dae76ff4946d8b846367fdf448ca8f8e"
+    }
+  },
+  "python": "3.11.5 (tags/v3.11.5:cce6ba9, Aug 24 2023, 14:38:34) [MSC v.1936 64 bit (AMD64)]",
+  "powershell": "7.6.5",
+  "manifest_sha256": "77c67efbcf3dd623c6d97611b8f21a1eb64784a95667be0dba2c14671ae41b92",
+  "manifest_entries": 490,
+  "dependency_entry_checks": 1137,
+  "frozen_drift": [],
+  "test_scope": "independent read-only document/source/contract audit G0/G1",
+  "TD_RTL_sim_hardware_deletions_production_writes": 0,
+  "deepseek": "not delegated: the separable hash/arithmetic tasks did not justify dispatch/review overhead; no worker output used as independent verification",
+  "commands": [
+    {
+      "command": "python -X utf8 independent_audit.py initial",
+      "exit_code": 0,
+      "stdout": "integrity-initial-stdout.txt",
+      "stderr": "integrity-initial-stderr.txt"
+    },
+    {
+      "command": "python -B -X utf8 validate_structure.py (first run)",
+      "exit_code": 1,
+      "stdout": "validate_structure-stdout.txt",
+      "stderr": "validate_structure-stderr.txt",
+      "cause": "tester UTF-8 assumption for legacy HDL comment bytes"
+    },
+    {
+      "command": "python -B -X utf8 independent_semantics.py",
+      "exit_code": 0,
+      "stdout": "independent_semantics-stdout.txt",
+      "stderr": "independent_semantics-stderr.txt",
+      "completion": "T11_INDEPENDENT_SEMANTICS_COMPLETE"
+    },
+    {
+      "command": "python -B -X utf8 validate_structure.py (one corrected retry)",
+      "exit_code": 1,
+      "stdout": "validate_structure-attempt2-stdout.txt",
+      "stderr": "validate_structure-attempt2-stderr.txt",
+      "cause": "tester assumed an original_findings field; actual format stores original_finding_ids + claims; script stopped and was not rerun"
+    },
+    {
+      "command": "Start-Job -FilePath manual-structure.ps1; Wait-Job -Timeout 60; Receive-Job or Stop-Job only own job",
+      "exit_code": 0,
+      "completion": "manual-structure-and-reuse.json status=pass errors=[]",
+      "note": "native PowerShell job completed; exit_code denotes successful shell wrapper, not a third Python retry"
+    },
+    {
+      "command": "python -B -X utf8 final_evidence.py (runpy independent_audit.py final plus bounded read-only git)",
+      "exit_code": 0,
+      "completion": "T11_FINAL_EVIDENCE_COMPLETE",
+      "stdout": "final-evidence-stdout.txt",
+      "stderr": "final-evidence-stderr.txt"
+    }
+  ],
+  "deadline": "all Python runs own hidden Process WaitForExit(240000), kill own process tree on timeout; final git subprocess timeout60; all later reads own Job timeout60. First initial AGENTS/skill read completed in 1.1s but had no explicit deadline; retained as execution limitation."
+}
+T11_FINAL_EVIDENCE_COMPLETE

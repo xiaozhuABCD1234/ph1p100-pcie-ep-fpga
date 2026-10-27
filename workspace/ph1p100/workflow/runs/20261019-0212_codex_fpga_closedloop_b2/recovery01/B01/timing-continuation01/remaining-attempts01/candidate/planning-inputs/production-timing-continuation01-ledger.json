@@ -1,0 +1,65 @@
+{
+  "schema": "fpga-production-timing-continuation-v1",
+  "run_id": "20261019-0212_codex_fpga_closedloop_b2",
+  "source_authorization": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/request-followup-01.md",
+  "scope_changed": false,
+  "counters_reset": false,
+  "one_bounded_planner_budget_amendment": true,
+  "new_evidence": [
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/recovery01/B01/engineering/attempt3/result.json",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/recovery01/B01/engineering/attempt3/critical-paths.json",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/recovery01/B01/manual-engineering-review.md",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/recovery01/B01/attempt-counts-verified.json"
+  ],
+  "production": {
+    "historical_used": 3,
+    "previous_max": 3,
+    "additional_authorized": 3,
+    "cumulative_max": 6,
+    "additional_used": 0,
+    "attempt_numbers": [
+      4,
+      5,
+      6
+    ],
+    "build_deadline_seconds": 3600,
+    "cwc_postprocess_deadline_seconds": 600
+  },
+  "problems": [
+    {
+      "task_id": "T06.codex-ddr-readback-int",
+      "problem_id": "T06.codex-ddr-readback-int:LIMIT_REACHED:production-g2-timing",
+      "status": "authorized_bounded_timing_continuation",
+      "developer_id": "/root/fpga_dev_closedloop_b01",
+      "shared_production_counter": "B01.production",
+      "production_used": 3,
+      "actual_repair_rounds_used": 0,
+      "integrated_round0_occurred": false,
+      "supplement_opportunities_used": 0
+    },
+    {
+      "task_id": "T09.codex-production-int",
+      "problem_id": "T09.codex-production-int:LIMIT_REACHED:production-g2-timing",
+      "status": "authorized_bounded_timing_continuation",
+      "developer_id": "/root/fpga_dev_closedloop_b01",
+      "shared_production_counter": "B01.production",
+      "production_used": 3,
+      "actual_repair_rounds_used": 0,
+      "integrated_round0_occurred": false,
+      "supplement_opportunities_used": 0
+    }
+  ],
+  "historical_compile": {
+    "problem_id": "T06.codex-ddr-readback-int:LIMIT_REACHED:integrated-tb-compile",
+    "status": "resolved_G1",
+    "used": 6,
+    "max": 8
+  },
+  "T08": {
+    "problem_id": "T08.codex-sync-offline:LIMIT_REACHED:offline-tb-compile",
+    "used": 2,
+    "max": 8,
+    "status": "authorized_queued_original_developer"
+  },
+  "note": "仅生产预算明确修订；不存在按每任务各再3次的倍增，整个B01只追加3次。未授权第7次。"
+}

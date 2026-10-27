@@ -1,0 +1,11 @@
+﻿# run_sim.ps1 2026-10-17T09:29:58.5356521+08:00
+root        = C:\Users\czz\AppData\Local\Temp\opencode\t11neg_1968226492
+mapped_root = C:\Users\czz\AppData\Local\Temp\opencode\t11neg_1968226492
+tb          = tb_t11_r10f_e2e
+outdir      = C:\Users\czz\AppData\Local\Temp\opencode\t11neg_1968226492\workflow\runs\20261017-011744-rk-fpga-align\raw\g1\msim\neg_m1_pack_order
+defines     = MIPI_PHY_SIM_STUB
+vlib work
+vlog +define+MIPI_PHY_SIM_STUB -f abs.f  (cwd=C:\Users\czz\AppData\Local\Temp\opencode\t11neg_1968226492\workflow\runs\20261017-011744-rk-fpga-align\raw\g1\msim\neg_m1_pack_order)
+vlog exit=0
+cmd /c "vsim -c -l vsim.log -do run.do tb_t11_r10f_e2e"  (cwd=C:\Users\czz\AppData\Local\Temp\opencode\t11neg_1968226492\workflow\runs\20261017-011744-rk-fpga-align\raw\g1\msim\neg_m1_pack_order)
+vsim exit=0

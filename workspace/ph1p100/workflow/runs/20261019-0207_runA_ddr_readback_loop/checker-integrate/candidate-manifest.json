@@ -1,0 +1,167 @@
+{
+  "schema": "fpga-task-candidate-manifest-v1",
+  "task_id": "T11.runC-checker-integrate",
+  "run_id": "20261019-0207_runA_ddr_readback_loop",
+  "generated_at": "2026-10-19T14:38:46.639525+08:00",
+  "author_role": "fpga-dev (opencode subagent, 0207 runC round0)",
+  "runtime": "opencode",
+  "repo": "upstream/ph1p100-pcie-ep-fpga-wt0207",
+  "branch": "opencode/runC-0207",
+  "base_head": "b0282d2a8dfdf11e6e63779510fe380dfffb5e83",
+  "commit_sha": null,
+  "commit_status": "worktree-only（未本地 commit、未推送；如需 commit 由规划/用户决定）",
+  "pushed": false,
+  "frozen": true,
+  "status": "ready_for_test",
+  "baseline_r3_repro": {
+    "method": "git apply debug-fix3/candidate.diff on b0282d2a",
+    "stat": "+46/-5（4 文件：ep_bar_win.v、pcie_ep_engine.v、ph1p_pcie_ep_top.v、tb_ep_bar_win_debug.v）",
+    "files_sha_match": true,
+    "note": "3 个 RTL 文件字节相等；tb_ep_bar_win_debug.v 按 debug-fix3 冻结态 LF 内容相等（checkout CRLF 差异已消除）"
+  },
+  "g0": {
+    "words_map": "word9 0x164 CHECK_STATUS / word10 0x168 CHECK_WORDS_READ / word11 0x16C CHECK_HDR_CRC32 / word12 0x170 CHECK_PAYLOAD_CRC32 / word13 0x174 CHECK_RUNS / word14 0x178 CHECK_SMP1=head[20] / word15 0x17C CHECK_SMP2=head[21]",
+    "addr_check": "registers.json 无 offset>=300(0x12C) 条目、无 0x1xx hex 条目；ep_bar_win 既有 mux 最高 0x160 → 0x164..0x17C 无冲突",
+    "smp_downgrade": "smp0/3/4/5 按 guide §3 允许的整组降级省略；保留优先项 smp1/smp2（存储 CRC 对照自证）",
+    "dbg_gate": "仅 DBG_CTRL_DEFAULT_EN=1（debug 顶层）例化集成；生产 0 → 不例化、读值恒 DEAD_BEEF、行为与 r3 等价（源码级）"
+  },
+  "g1": {
+    "tbs": [
+      "tb_ddr_readback_int",
+      "tb_ep_bar_win_debug",
+      "tb_ep_bar_win_rka1",
+      "tb_ddr_wr_arb_peer",
+      "tb_ddr_frame_pusher_rka1",
+      "tb_csi_integrity_diff",
+      "tb_csi_checked",
+      "tb_cam_r10f_writer",
+      "tb_t11_r10f_e2e",
+      "tb_t11_csi_enable_corner"
+    ],
+    "marker": "ALL PASS + vlog Errors:0",
+    "summary": "checker-integrate/regression-summary.txt",
+    "logs": "checker-integrate/msim/<tb>/（vlog.log/vsim.log/commands.log/abs.f）",
+    "all_pass": true,
+    "new_tb": "sim/tb/tb_ddr_readback_int.v（A 正例 / B 基址变化 / C 载荷 CRC 负例 / D busy 重入 / D2 恢复 / E 仲裁并发 / F 字库+DBG-off）",
+    "evidence_reuse": "r0 全部 10 TB 日志与 regression-summary.txt 未变（RTL/TB SHA 与 r0 相同），本 manifest 绑定同一批 SHA；未重跑仿真"
+  },
+  "g2": "not_run（P2 才构建；本包零 TD）",
+  "g3": "not_run（零硬件动作）",
+  "candidate_files": [
+    {
+      "path": "upstream\\ph1p100-pcie-ep-fpga-wt0207\\rtl\\ep_side\\ddr\\ddr_readback_int.v",
+      "sha256": "808a835c46a760a37749381c773defd920f02a3b65ef751e1b5d15b33d049ea7",
+      "bytes": 10899,
+      "role": "new: 触发 CDC + checker 实例 + 结果同步 + 读仲裁（debug 通道专用）"
+    },
+    {
+      "path": "upstream\\ph1p100-pcie-ep-fpga-wt0207\\rtl\\ep_side\\ddr\\ddr_frame_readback_checker.v",
+      "sha256": "5ca11a83c7a5cedcaa438e9bbd1e09c67a76394a20e02d47c00481e4307dc038",
+      "bytes": 21473,
+      "role": "context: 既有 checker 核心（本包未改，仅接线）"
+    },
+    {
+      "path": "upstream\\ph1p100-pcie-ep-fpga-wt0207\\rtl\\ep_side\\ph1p_pcie_ep_top.v",
+      "sha256": "77c692a12d6f8e251cd0f49672603a243f3766d07064f05f08f77f0f6a70b0ae",
+      "bytes": 105647,
+      "role": "mod: DBG generate 例化 + 推帧读口改名 w_push_* + chk_* 字 + 引擎接线"
+    },
+    {
+      "path": "upstream\\ph1p100-pcie-ep-fpga-wt0207\\rtl\\ep_side\\pcie_ep_engine.v",
+      "sha256": "b52924fab7cf3ddaf6c2786f9b5a5aa7b32387c32eccb3c57a91271385358f88",
+      "bytes": 40387,
+      "role": "mod: chk_* 端口透传"
+    },
+    {
+      "path": "upstream\\ph1p100-pcie-ep-fpga-wt0207\\rtl\\ep_side\\img\\ep_bar_win.v",
+      "sha256": "2a25d6531849dfb4e9b61f01fbbd6d30e0e7dffcf8acb1aba3607864b186b62b",
+      "bytes": 40254,
+      "role": "mod: word9..15 字库 + MARK_DEBUG 快照（生产恒 DEAD_BEEF）"
+    },
+    {
+      "path": "upstream\\ph1p100-pcie-ep-fpga-wt0207\\sim\\tb\\tb_ddr_readback_int.v",
+      "sha256": "d173200d240a5d604da3846859404ce1a7d5b63eeac8e71dc3cec1db4d1e5772",
+      "bytes": 22224,
+      "role": "new TB: A—F（触发/基址/负例/重入/仲裁/字库）"
+    },
+    {
+      "path": "upstream\\ph1p100-pcie-ep-fpga-wt0207\\sim\\tb\\tb_ep_bar_win_debug.v",
+      "sha256": "1fdbc8376830ddb95de8bbe11a4242c1e30905fd3a2507053550786b951d67e0",
+      "bytes": 18797,
+      "role": "mod: 负例地址 0x164→0x180（0x164 已被本包定义）"
+    },
+    {
+      "path": "upstream\\ph1p100-pcie-ep-fpga-wt0207\\sim\\compile_checked.f",
+      "sha256": "558079c1451c870340201ee6767428f2a23b0dfc1d352176b08bf2ceda4ec69f",
+      "bytes": 2963,
+      "role": "mod: 仅追加 ddr_readback_int.v 编译行"
+    },
+    {
+      "path": "upstream\\ph1p100-pcie-ep-fpga-wt0207\\tools\\pcie_integration\\td\\00_all_debug.tcl",
+      "sha256": "810241f7506b6f0352f51e4082cd6b8daa6e642402a9e8629769fc6138640707",
+      "bytes": 6259,
+      "role": "mod: add_files 追加 checker/int 两文件（生产 00_all 未动）"
+    },
+    {
+      "path": "workflow\\runs\\20261019-0207_runA_ddr_readback_loop\\checker-integrate\\geometry-audit.md",
+      "sha256": "cbeb883c25eda5bd02ac69b818b7985e32767a9cfd98a352746f8cde40081775",
+      "bytes": 2630,
+      "role": "artifact: N3 几何核对（分级①/③；不改参数）"
+    },
+    {
+      "path": "workflow\\runs\\20261019-0207_runA_ddr_readback_loop\\checker-integrate\\dev-result.md",
+      "sha256": "4ea13bd32329079ca80e5735976c0c84a3546eed7e94d4d5439acec7fccc3379",
+      "bytes": 7370,
+      "role": "artifact: 结果/允许清单/protected 审计/lessons"
+    },
+    {
+      "path": "workflow\\runs\\20261019-0207_runA_ddr_readback_loop\\checker-integrate\\regression-summary.txt",
+      "sha256": "e1f8d5474a325287a4dd7fe800c4212cb4a600074be152f5e48c0ac0f2c9efec",
+      "bytes": 553,
+      "role": "artifact: 10 TB 回归摘要（ALL PASS 标记）"
+    },
+    {
+      "path": "workflow\\runs\\20261019-0207_runA_ddr_readback_loop\\checker-integrate\\candidate.diff",
+      "sha256": "5907b38f6241d3dcc163eeaeb78d67941c8ab0c2967b6d66edf5c8c1c6e18cb2",
+      "bytes": 59091,
+      "role": "artifact: HEAD→当前 worktree 全量 diff"
+    }
+  ],
+  "protected_audit": [
+    {
+      "path": "workflow\\runs\\20261018-1631_runA_fpga_side_readchannel\\debug-fix3\\prj\\ph1p_pcie_integration_Runs\\phy_1\\ph1p_pcie_integration.bit",
+      "sha256": "bfafdf97ff78d6f6d2646ffc706542a0bbbb7e11869043ba754cf68a270813d0",
+      "unchanged": true
+    },
+    {
+      "path": "workflow\\runs\\20261018-1631_runA_fpga_side_readchannel\\debug-fix3\\prj\\ph1p_pcie_integration_Runs\\phy_1\\cw\\compiled.cwc",
+      "sha256": "8d2998b96ef1763c14a1302118235a687488297ce496692b1f6cd95d76981026",
+      "unchanged": true
+    }
+  ],
+  "worktree_status": " M rtl/ep_side/img/ep_bar_win.v\n M rtl/ep_side/pcie_ep_engine.v\n M rtl/ep_side/ph1p_pcie_ep_top.v\n M sim/compile_checked.f\n M sim/tb/tb_ep_bar_win_debug.v\n M tools/pcie_integration/td/00_all_debug.tcl\n?? rtl/ep_side/ddr/ddr_readback_int.v\n?? sim/tb/tb_ddr_readback_int.v",
+  "diff_stat": " rtl/ep_side/img/ep_bar_win.v               |  85 ++++++++++++++++---\n rtl/ep_side/pcie_ep_engine.v               |  18 ++++\n rtl/ep_side/ph1p_pcie_ep_top.v             | 129 ++++++++++++++++++++++++++---\n sim/compile_checked.f                      |   2 +\n sim/tb/tb_ep_bar_win_debug.v               |  32 +++++--\n tools/pcie_integration/td/00_all_debug.tcl |   4 +\n 6 files changed, 240 insertions(+), 30 deletions(-)",
+  "untracked": "rtl/ep_side/ddr/ddr_readback_int.v\nsim/tb/tb_ddr_readback_int.v",
+  "allowed_list": [
+    "新增 ddr_readback_int.v / tb_ddr_readback_int.v",
+    "ph1p_pcie_ep_top.v：DBG generate + w_push_* 改名 + chk_* 接线",
+    "pcie_ep_engine.v：chk_* 端口透传（7x32）",
+    "img/ep_bar_win.v：word9..15 字库/快照/读 mux 0x164..0x17C（生产恒 DEAD_BEEF）",
+    "sim/compile_checked.f：仅追加 1 行",
+    "td/00_all_debug.tcl：仅追加 add_files 2 行（00_all 未动）",
+    "sim/tb/tb_ep_bar_win_debug.v：负例未占用地址 0x164→0x180"
+  ],
+  "rollback": [
+    "git revert / 丢弃本包新增与修改",
+    "旧候选 bit/CWC 原位未动（见 protected_audit）",
+    "SRAM 易失：重下旧 bit ≈30–40 s"
+  ],
+  "notes": [
+    "零 TD / 零下载 / 零 Flash / 零推送；只写本线 worktree 与 run 目录",
+    "实际工具调用数超过冻结 55 上限（worktree/r3 复现环境探路 + sim 重跑 3 次），未自动扩大范围；构建与硬件按原计划 P2—P4",
+    "CWC：新字 MARK_DEBUG 快照已就位（word9..15）；P2 setup_debugger 探针组按 elaborated nets 生成",
+    "round1 修复仅触及 run 目录工件（candidate.diff / dev-result.md / 本 manifest）；wt 下 8 个 RTL/TB 文件零改动"
+  ],
+  "repair_round": 1,
+  "repair_note": "round1: candidate.diff 以 cmd 原始字节重定向重生成（git apply --check --cached=0、 --check --reverse=0、8 diff --git/2 new、NUL=0）；dev-result.md 以 UTF-8 无 NUL 重写；RTL/TB 未改（8 文件 SHA == r0）→ r0 G1 证据复用并绑定本 manifest"
+}

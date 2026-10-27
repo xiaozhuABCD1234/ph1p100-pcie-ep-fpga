@@ -1,0 +1,343 @@
+{
+  "date": "2026-10-11",
+  "hardware_feedback": {
+    "source": "user report and attached Windows display screenshot",
+    "downloaded_prior_bit": "raw10_891_gray_1080p30_20261010_234257.bit",
+    "prior_bit_power_kept": true,
+    "symptom": "black display, input frequency out of range",
+    "pc_working_mode": "1920x1080 60 Hz",
+    "pc_mode_list_user_report": "apparently only 50 through 100 Hz, no 30 Hz",
+    "edid_verified": false,
+    "720p60_user_report": "stripes visible; reported 2026-10-11; independent diagnostic only"
+  },
+  "main_camera_source_changed": false,
+  "bit": {
+    "path": "D:\\TD\\work\\csi2\\prj\\camera_peer\\_evidence\\hdmi_test_720p60_20261011.bit",
+    "bytes": 5223984,
+    "sha256": "065d35670412f960985602c889b1ed060c8161e2aa2ea2bf06c82b4812ef44a6",
+    "role": "isolated 1280x720p60 red/cyan stripe diagnostic",
+    "downloaded": true,
+    "download_evidence": "user report of visible stripes, no independent download log or frequency measurement"
+  },
+  "720p60": {
+    "project": "D:\\TD\\work\\csi2\\prj\\camera_peer\\_diagnostics\\hdmi_720p60_20261011_012006",
+    "run": "phy_retry_1",
+    "setup_wns_ns": 0.059,
+    "hold_wns_ns": 0.025,
+    "setup_tns_ns": 0,
+    "hold_tns_ns": 0,
+    "coverage_percent": 99.06,
+    "warnings": [
+      "PHY-5016 PLL clkc is driving an IO without location"
+    ],
+    "retry": "syn_1 manager reported unexpected exit after gate DB export; retained original; new syn_retry_1/phy_retry_1 succeeded"
+  },
+  "1080p60": {
+    "project": "D:\\TD\\work\\csi2\\prj\\camera_peer\\_diagnostics\\hdmi_1080p60_20261011_011844",
+    "run": "phy_1",
+    "setup_wns_ns": -0.578,
+    "hold_wns_ns": -0.158,
+    "setup_tns_ns": -3.18,
+    "hold_tns_ns": -1.141,
+    "bit_generated": false,
+    "limitation": "existing fabric serialization at 742.5MHz failed internal STA"
+  },
+  "logs": {
+    "hdmi_vendor_serial": {
+      "path": "D:\\TD\\work\\csi2\\prj\\camera_peer\\_sim\\hdmi_vendor_serial_20261011_012244_136959\\regression.log",
+      "sha256": "d5cd35fa881ad59fd8b404ea5ca176f692e492a3466ef88e65f60fc01ca55b39",
+      "result_lines": [
+        "Errors: 0, Warnings: 0",
+        "# SERIAL_PASS phase=0 words=64 restarts=2",
+        "# Errors: 0, Warnings: 17",
+        "# SERIAL_PASS phase=250 words=64 restarts=2",
+        "# Errors: 0, Warnings: 17",
+        "# SERIAL_PASS phase=750 words=64 restarts=2",
+        "# Errors: 0, Warnings: 17"
+      ]
+    },
+    "hdmi_vendor_pll": {
+      "path": "D:\\TD\\work\\csi2\\prj\\camera_peer\\_sim\\hdmi_vendor_pll_20261011_011141_225780\\regression.log",
+      "sha256": "ef719e562fca7642bbf9d49452d1dd77174e0850e7a4e9ab501adc4bea8fe1b8",
+      "result_lines": [
+        "Errors: 0, Warnings: 0",
+        "# PLL_FAIL lock or clock timeout",
+        "# Errors: 0, Warnings: 39"
+      ]
+    },
+    "hdmi_diag_video": {
+      "path": "D:\\TD\\work\\csi2\\prj\\camera_peer\\_sim\\hdmi_diag_video_20261011_011753\\regression.log",
+      "sha256": "0bb14a50f5bd2a9dbe98ce1b7d128d9e3d86b19f1e508b43e13d171b3ef1a91d",
+      "result_lines": [
+        "Errors: 0, Warnings: 0",
+        "# DIAG_PASS mode=1 cycles=1237500 active=921600 nonblack=921600",
+        "# Errors: 0, Warnings: 0",
+        "# DIAG_PASS mode=0 cycles=2475000 active=2073600 nonblack=2073600",
+        "# Errors: 0, Warnings: 0"
+      ]
+    },
+    "hdmi_three_modes": {
+      "path": "D:\\TD\\work\\csi2\\prj\\camera_peer\\_sim\\hdmi_three_modes_20261011_015648\\regression.log",
+      "sha256": "64e91a2238127d557094e571c5fa26d5dd5b0c2c69877a9899e46efe98d4e622",
+      "result_lines": [
+        "Errors: 0, Warnings: 0",
+        "# DIAG_PASS mode=0 cycles=2475000 active=2073600 nonblack=2073600",
+        "# Errors: 0, Warnings: 0",
+        "# DIAG_PASS mode=1 cycles=2475000 active=2073600 nonblack=2073600",
+        "# Errors: 0, Warnings: 0",
+        "# DIAG_PASS mode=2 cycles=1237500 active=921600 nonblack=921600",
+        "# Errors: 0, Warnings: 0"
+      ]
+    },
+    "hdmi_native_stream": {
+      "path": "D:\\TD\\work\\csi2\\prj\\camera_peer\\_sim\\hdmi_native_20261011_020644_915126\\regression.log",
+      "sha256": "00fb2bdc6d014873130b36c46fce47c2d8b1057bc4f6aeca64d245581f0f5b9e",
+      "result_lines": [
+        "Errors: 0, Warnings: 0",
+        "# NATIVE_PASS phase=0 bits=2400 restarts=2",
+        "# Errors: 0, Warnings: 17",
+        "# NATIVE_PASS phase=250 bits=2400 restarts=2",
+        "# Errors: 0, Warnings: 17",
+        "# NATIVE_PASS phase=750 bits=2400 restarts=2",
+        "# Errors: 0, Warnings: 17"
+      ]
+    },
+    "hdmi_native_wrong_order": {
+      "path": "D:\\TD\\work\\csi2\\prj\\camera_peer\\_sim\\hdmi_native_20261011_020652_619728\\regression.log",
+      "sha256": "5f534c2ef5cf646320a80f81594ec2ddb9f0e8020752c233defc8f11761a1fce",
+      "result_lines": [
+        "Errors: 0, Warnings: 0",
+        "# NATIVE_FAIL phase=0 restart=0 no continuous MSB-first stream",
+        "# Errors: 0, Warnings: 17"
+      ]
+    }
+  },
+  "inputs": {
+    "hdmi_diagnostic_top.v": {
+      "source": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\fpga\\csi2\\diagnostics\\hdmi\\hdmi_diagnostic_top.v",
+      "sha256": "ba38ea41d5a18407881d707a417470c1feeda3cabf0ed471db678873756805c6"
+    },
+    "hdmi_diagnostic_clocks.v": {
+      "source": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\fpga\\csi2\\diagnostics\\hdmi\\hdmi_diagnostic_clocks.v",
+      "sha256": "a9582b4dbbbf4e773cb88e8391c49e1cc7f2e632c164ba07601e911d97617d6b"
+    },
+    "ph1p_phy_pll_wrapper_raw10_clocks.v": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_peer\\uisrc\\03_ip\\raw10_clocks\\RTL\\ph1p_phy_pll_wrapper_raw10_clocks.v",
+      "sha256": "0f16f163a345db488f2846b7c01b7f777104fa9bbd24ed9c787c673baed8318b"
+    },
+    "uivtc.v": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_peer\\uisrc\\03_ip\\vtc\\uivtc.v",
+      "sha256": "b2c5bb7de89c230caa96eb0e76437274625af5e4ce2c89284ba58afa76146601"
+    },
+    "ui_HDMI_TX.v": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_peer\\uisrc\\03_ip\\alip\\ui_HDMI_TX\\ui_HDMI_TX.v",
+      "sha256": "a076061e2f5254d5ed5419b941efd32af50cd17b00bfd833215ed7d62ef90554"
+    },
+    "lane_lvds_10_1.v": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_peer\\uisrc\\03_ip\\alip\\ui_HDMI_TX\\lane_lvds_10_1.v",
+      "sha256": "44ac2832e30df6fc072c90105d6ebd98f882d47155ff01d7d966fbc943902867"
+    },
+    "hdmi_phy_warpper.v": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_peer\\uisrc\\03_ip\\alip\\ui_HDMI_TX\\hdmi_phy_warpper.v",
+      "sha256": "54ce5b3d586061d1c87991af90d84d78a273e7a5aa6db8ee5f3c400b63bd455a"
+    },
+    "hdmi_tx_controller_wrapper.enc.v": {
+      "source": "D:\\TD\\work\\csi2\\prj\\camera_peer\\uisrc\\03_ip\\alip\\ui_HDMI_TX\\hdmi_tx_controller_wrapper.enc.v",
+      "sha256": "30e3666e95e34e9f4ecbbe3e30bf7475ba630969d64d3f560ed045073e32f8e1"
+    }
+  },
+  "reports": {
+    "hdmi_720p60_timing.rpt": "8e9566195c5e3976ab426c8eba2a01aed4d50b644d5f52f16815c8b2048eed9d",
+    "hdmi_720p60_abnormal.rpt": "a4e5f4685518c9a537bd1f7fd5894808add6a2c61d0f75f02592300b77dc71da",
+    "hdmi_720p60.area": "168fda77250f166b1b5a33b7ad00ddb781e4e27a433711ce5e38e903d3dd8926",
+    "hdmi_1080p60_failed_timing.rpt": "821301e4ff599eb7d9f1721c5a282f561f574ac510d6749c0652f39ea58c17eb",
+    "hdmi_1080p30_timing.rpt": "aa4c3b1f3fd4a0d194f084a72a2018b5de6da5645b3fd7894ff9b02344a097db",
+    "hdmi_1080p30_abnormal.rpt": "a4e5f4685518c9a537bd1f7fd5894808add6a2c61d0f75f02592300b77dc71da",
+    "hdmi_1080p30.area": "f8cbf842f761a442ee950cf7ebbbf786fbb6e80871771386ca7f210bc3809132",
+    "hdmi_1080p60_native_timing.rpt": "924740536e638ce5a37e61c75d207fdd6d18623bebfd2142b4b6ae1bf2af6744",
+    "hdmi_1080p60_native_abnormal.rpt": "a4e5f4685518c9a537bd1f7fd5894808add6a2c61d0f75f02592300b77dc71da",
+    "hdmi_1080p60_native.area": "baccea714a54a72c3722fb60a269d95547547c7d53c6f6a1a8459eed217ab66e"
+  },
+  "limits": [
+    "No board frequency measurement",
+    "Real serializer test checks constant clock code, not dynamic TMDS encoding or analog signal",
+    "Vendor tests use +notimingchecks functional mode; vendor missing-port warnings retained",
+    "PLL model did not lock within 100us; no frequency-pass assertion",
+    "Video TB uses clock/TX stubs; no actual PLL or encrypted HDMI core",
+    "No camera/DDR/PCIe in diagnostic bit",
+    "720p60 diagnostic stripes visible by user report; camera path still unaccepted"
+  ],
+  "1080p30": {
+    "project": "D:\\TD\\work\\csi2\\prj\\camera_peer\\_diagnostics\\hdmi_1080p30_20261011_015410",
+    "run": "phy_1",
+    "setup_wns_ns": 0.046,
+    "hold_wns_ns": 0.038,
+    "setup_tns_ns": 0,
+    "hold_tns_ns": 0,
+    "coverage_percent": 99.07,
+    "warnings": [
+      "PHY-5016 PLL clkc is driving an IO without location"
+    ],
+    "bit": {
+      "path": "D:\\TD\\work\\csi2\\prj\\camera_peer\\_evidence\\hdmi_test_1080p30_20261011.bit",
+      "bytes": 5223984,
+      "sha256": "9c3cae067bae467cb57698752ad970680cfeff926dd9327d8739c4244079abef",
+      "downloaded": true,
+      "hardware_result": "user reported frequency out of range after specified SRAM download; no independent measurement"
+    },
+    "inputs": {
+      "hdmi_diagnostic_top.v": {
+        "source": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\fpga\\csi2\\diagnostics\\hdmi\\hdmi_diagnostic_top.v",
+        "sha256": "ba38ea41d5a18407881d707a417470c1feeda3cabf0ed471db678873756805c6"
+      },
+      "hdmi_diagnostic_clocks.v": {
+        "source": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\fpga\\csi2\\diagnostics\\hdmi\\hdmi_diagnostic_clocks.v",
+        "sha256": "a9582b4dbbbf4e773cb88e8391c49e1cc7f2e632c164ba07601e911d97617d6b"
+      },
+      "ph1p_phy_pll_wrapper_raw10_clocks.v": {
+        "source": "D:\\TD\\work\\csi2\\prj\\camera_peer\\uisrc\\03_ip\\raw10_clocks\\RTL\\ph1p_phy_pll_wrapper_raw10_clocks.v",
+        "sha256": "0f16f163a345db488f2846b7c01b7f777104fa9bbd24ed9c787c673baed8318b"
+      },
+      "uivtc.v": {
+        "source": "D:\\TD\\work\\csi2\\prj\\camera_peer\\uisrc\\03_ip\\vtc\\uivtc.v",
+        "sha256": "b2c5bb7de89c230caa96eb0e76437274625af5e4ce2c89284ba58afa76146601"
+      },
+      "ui_HDMI_TX.v": {
+        "source": "D:\\TD\\work\\csi2\\prj\\camera_peer\\uisrc\\03_ip\\alip\\ui_HDMI_TX\\ui_HDMI_TX.v",
+        "sha256": "a076061e2f5254d5ed5419b941efd32af50cd17b00bfd833215ed7d62ef90554"
+      },
+      "lane_lvds_10_1.v": {
+        "source": "D:\\TD\\work\\csi2\\prj\\camera_peer\\uisrc\\03_ip\\alip\\ui_HDMI_TX\\lane_lvds_10_1.v",
+        "sha256": "44ac2832e30df6fc072c90105d6ebd98f882d47155ff01d7d966fbc943902867"
+      },
+      "hdmi_phy_warpper.v": {
+        "source": "D:\\TD\\work\\csi2\\prj\\camera_peer\\uisrc\\03_ip\\alip\\ui_HDMI_TX\\hdmi_phy_warpper.v",
+        "sha256": "54ce5b3d586061d1c87991af90d84d78a273e7a5aa6db8ee5f3c400b63bd455a"
+      },
+      "hdmi_tx_controller_wrapper.enc.v": {
+        "source": "D:\\TD\\work\\csi2\\prj\\camera_peer\\uisrc\\03_ip\\alip\\ui_HDMI_TX\\hdmi_tx_controller_wrapper.enc.v",
+        "sha256": "30e3666e95e34e9f4ecbbe3e30bf7475ba630969d64d3f560ed045073e32f8e1"
+      }
+    }
+  },
+  "decision": {
+    "display_target": "1920x1080 progressive 60Hz",
+    "30Hz_testing": "stopped by user 2026-10-11",
+    "camera_rate": "existing 4K30 RAW10 retained; 60Hz display is not 60 unique camera frames"
+  },
+  "1080p60_native_x5": {
+    "project": "D:\\TD\\work\\csi2\\prj\\camera_peer\\_diagnostics\\hdmi_1080p60_native_x5_20261011_020049",
+    "run": "phy_1",
+    "setup_wns_ns": 3.775,
+    "hold_wns_ns": 0.044,
+    "setup_tns_ns": 0,
+    "hold_tns_ns": 0,
+    "coverage_percent": 99.16,
+    "warnings": [
+      "PHY-5016 PLL clkc is driving an IO without location"
+    ],
+    "bit": {
+      "path": "D:\\TD\\work\\csi2\\prj\\camera_peer\\_evidence\\hdmi_test_1080p60_native_20261011.bit",
+      "bytes": 5223984,
+      "sha256": "c6f1c9431380e250ca1d9223e2d30d37e4ceb1fe054369c5d1ebb73e99b74ac5",
+      "downloaded": true
+    },
+    "inputs": {
+      "hdmi_diagnostic_top.v": {
+        "source": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\fpga\\csi2\\diagnostics\\hdmi\\hdmi_diagnostic_top.v",
+        "sha256": "ba38ea41d5a18407881d707a417470c1feeda3cabf0ed471db678873756805c6"
+      },
+      "hdmi_diagnostic_clocks.v": {
+        "source": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\fpga\\csi2\\diagnostics\\hdmi\\hdmi_diagnostic_clocks.v",
+        "sha256": "a9582b4dbbbf4e773cb88e8391c49e1cc7f2e632c164ba07601e911d97617d6b"
+      },
+      "ph1p_phy_pll_wrapper_raw10_clocks.v": {
+        "source": "D:\\TD\\work\\csi2\\prj\\camera_peer\\uisrc\\03_ip\\raw10_clocks\\RTL\\ph1p_phy_pll_wrapper_raw10_clocks.v",
+        "sha256": "0f16f163a345db488f2846b7c01b7f777104fa9bbd24ed9c787c673baed8318b"
+      },
+      "uivtc.v": {
+        "source": "D:\\TD\\work\\csi2\\prj\\camera_peer\\uisrc\\03_ip\\vtc\\uivtc.v",
+        "sha256": "b2c5bb7de89c230caa96eb0e76437274625af5e4ce2c89284ba58afa76146601"
+      },
+      "ui_HDMI_TX.v": {
+        "source": "D:\\TD\\work\\csi2\\prj\\camera_peer\\uisrc\\03_ip\\alip\\ui_HDMI_TX\\ui_HDMI_TX.v",
+        "sha256": "a076061e2f5254d5ed5419b941efd32af50cd17b00bfd833215ed7d62ef90554"
+      },
+      "hdmi_phy_warpper.v": {
+        "source": "D:\\TD\\work\\csi2\\prj\\camera_peer\\uisrc\\03_ip\\alip\\ui_HDMI_TX\\hdmi_phy_warpper.v",
+        "sha256": "54ce5b3d586061d1c87991af90d84d78a273e7a5aa6db8ee5f3c400b63bd455a"
+      },
+      "hdmi_tx_controller_wrapper.enc.v": {
+        "source": "D:\\TD\\work\\csi2\\prj\\camera_peer\\uisrc\\03_ip\\alip\\ui_HDMI_TX\\hdmi_tx_controller_wrapper.enc.v",
+        "sha256": "30e3666e95e34e9f4ecbbe3e30bf7475ba630969d64d3f560ed045073e32f8e1"
+      },
+      "lane_lvds_native_x5.v": {
+        "source": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\fpga\\csi2\\diagnostics\\hdmi\\lane_lvds_native_x5.v",
+        "sha256": "d4e57f39a3e866cf7550006c74baf5a40bcab3ea82926c7550bb24223289ab36"
+      },
+      "lane_lvds_native_adapter.v": {
+        "source": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\fpga\\csi2\\diagnostics\\hdmi\\lane_lvds_native_adapter.v",
+        "sha256": "7c31b4e66b8cc838dad13bfb403899d8c1a469656517cbb34733416ef263f9ef"
+      }
+    },
+    "electrical_qualification": false,
+    "source_selection": "native adapter replaces legacy lane; production camera RTL unchanged",
+    "hardware_feedback": {
+      "date": "2026-10-11",
+      "source": "user report: 测试成功了",
+      "visible_output_pass": true,
+      "independent_measurement": false,
+      "scope": "independent native DDRX5 1080p60 diagnostic; does not verify real camera or DDR"
+    }
+  },
+  "primary_sources": [
+    {
+      "path": "D:\\TD\\03_F9P_CA05_PH1P50_PH1P100\\V2026\\HW-MLK-F9P-CA05-PH1P100\\02_hardware\\HW-MLK-F9P-CA05-PH1P100\\HW-MLK-F9P-CA05-安路-20260525\\06_芯片手册\\01_FPGA\\安路\\DS1300_PH1P_Datasheet_1.2.1.pdf",
+      "sha256": "4fc9c3eaf69c4b7780deaba7cbb383466c1e522e93efe1dbbecf0cb9f8efa1be",
+      "pdf_pages": [
+        89,
+        90
+      ]
+    },
+    {
+      "path": "D:\\TD\\03_F9P_CA05_PH1P50_PH1P100\\V2026\\HW-MLK-F9P-CA05-PH1P100\\02_hardware\\HW-MLK-F9P-CA05-PH1P100\\HW-MLK-F9P-CA05-安路-20260525\\02_原理图\\MLK-F9P底板.pdf",
+      "sha256": "7d76ca40371bf8926836ce90f11ed2a6b8863f42066f0934d44c47da933b657b",
+      "pdf_pages": [
+        10
+      ]
+    },
+    {
+      "path": "D:\\TD\\08_MLK-CAM005-IMX415\\02_hardware\\IMX415-AAQR-G_E_Datasheet_E19505D2X.pdf",
+      "sha256": "e6d82887370c34754208acc91333d333171eccbb57677bb5eb5d1c85a28ca838",
+      "pdf_pages": [
+        48,
+        49,
+        59,
+        61,
+        62,
+        63
+      ]
+    }
+  ],
+  "io_limit": {
+    "standard_tmds_1080p60_mbps": 1485,
+    "datasheet_hrio_tmds33_max_mbps": 1250,
+    "actual_adc_standard": "LVDS33_E",
+    "datasheet_lvds33_e_output_max_mbps": 332,
+    "qualification": "native DDRX5 functional/STA success does not establish board signal integrity or compliance"
+  },
+  "crop_raw10_candidate": {
+    "source_mode": "4lane 891Mbps all-pixel RAW10",
+    "hmax": 861,
+    "vmax": 1438,
+    "calculated_fps": 59.970051319825735,
+    "status": "mathematical candidate only; FoV/OB/packet margins/receiver acceptance not verified",
+    "existing_hmax1100_max_crop_fps": 55.237315875613746,
+    "binning_output": "RAW12, even though ADC is 10bit"
+  },
+  "preparation_note": "020033 native_x5 preparation did not replace legacy source; not built and marked invalid; superseded by source-verified 020049.",
+  "tools": {
+    "tools/td/prepare_hdmi_diagnostic.py": "49691c276c1c4ee6d1d56827cf1327a241bee785d79cef6ec8c441843496de11",
+    "tools/td/run_hdmi_native_stream.py": "190d841c7f6e40ec63b66c9a846457ad56ac41fb098a7a835bba916ad66fc2c7"
+  }
+}

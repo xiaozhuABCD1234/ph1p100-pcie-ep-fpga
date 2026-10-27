@@ -1,0 +1,28 @@
+# 主传输日志
+- 261026 1446 runtime=Codex；登记用户原话；准备新建规划角色；PROJECT_ROOT=D:\fpga\ph1p100；BATCH_SIZE=1。
+- 261026 1446 runtime=Codex；spawn_agent真实返回规划ID=/root/fpga_review_planner；原话与需求路径已转交。
+- 261026 1458 规划返回ready：task_ids=[T02.chain-input-review]，dispatch.json已按路径读取；spawn_agent真实返回开发ID=/root/fpga_review_dev_t02。
+- 261026 1459 开发 /root/fpga_review_dev_t02 返回外部错误：Selected model is at capacity. Please try a different model. 无ready_for_test/manifest；未自动重试/换模型；已followup_task交原规划 /root/fpga_review_planner 备条件与恢复入口。
+- 261026 1501 原规划返回blocked，needs_user_input=false，problem_id=T02.chain-input-review:API_ERROR:model_capacity；user-summary.md已读取供原样转发；实际修复0轮、综合测试未派发。
+- 261026 1512 用户新增原话：我给权限接着去做；原话文件=D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\user-feedback-20261026-151257.md；准备续原规划角色 /root/fpga_review_planner；不重置既有计数。
+- 261026 1515 原规划返回ready；按dispatch本次followup_task续真实原开发 /root/fpga_review_dev_t02；用户明确恢复授权来源=user-feedback-20261026-151257.md；模型未变、计数保留、非修复轮。
+- 261026 1539 T02开发返回ready_for_test、blocked=null，manifest=T02.chain-input-review/manifest-r0.json，活动结束路径已返回；spawn_single_tester真实返回ID=/root/fpga_review_tester_t02；round0首次综合验收。
+- 261026 1550 T02综合测试者返回round0 PASS，functional/engineering/system均pass；blocked=null、input_status=same；实际修复0轮；已followup_task原规划更新/派发。
+- 261026 1554 原规划返回ready：T06.chain-storage-review；按dispatch新建开发真实ID=/root/fpga_review_dev_t06；保护已验T02产物；round0未开始、实际修复0轮。
+- 261026 1608 用户原话：接着做；恢复原run事件接收；保留T02 round0 PASS及当前T06开发真实ID=/root/fpga_review_dev_t06；不重复派发、不扫描状态、不重置计数；原话文件=D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\user-feedback-20261026-160812.md
+- 261026 1626 用户继续原话已followup_task传T06原开发；随后该角色真实返回Selected model is at capacity；T06无正式manifest/ready_for_test，测试未派发；错误已交原规划备条件，未自动重试/换模型，T02 PASS保留。
+- 261026 1628 原规划返回T06 blocked/API_ERROR:model_capacity，needs_user_input=false；恢复入口handoff.md，user-summary.md已读取供原样转发；T02 round0 PASS保留，T06实际修复0轮且未派发测试。
+- 261026 1631 用户原话：再次尝试做；准备续原规划 /root/fpga_review_planner 恢复T06；保留T02 PASS与既有计数；原话文件=D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\user-feedback-20261026-163157.md
+- 261026 1633 原规划返回T06 ready；已按dispatch与user-feedback-20261026-163157.md授权followup_task续原开发 /root/fpga_review_dev_t06；非修复轮，未换模型/扩范围/操作硬件。
+- 261026 1648 T06开发返回ready_for_test、blocked=null，manifest=T06.chain-storage-review/manifest-r0.json、活动结束路径已返回；spawn_single_tester真实返回ID=/root/fpga_review_tester_t06；round0首次综合验收。
+- 261026 1700 T06综合测试者返回round0 PASS，三维均pass；blocked=null、input_status=same；实际修复0轮、返回补充0；已交原规划更新派发。
+- 261026 1703 原规划返回ready：T10.chain-transform-review；已按dispatch新建本任务开发，真实ID=/root/fpga_review_dev_t10；保护T02/T06已验包；实际修复0轮。
+- 261026 1952 T10原开发 /root/fpga_review_dev_t10 返回usage limit错误，无正式manifest/ready_for_test；随后用户原话：接着做；新授权原话文件=D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\user-feedback-20261026-195235.md；准备交原规划恢复，不重置计数。
+- 261026 1956 原规划返回T10 ready，dispatch记录只读额度快照ordinaryUsageAllowed=true；依新增授权已followup_task续原开发 /root/fpga_review_dev_t10，沿用部分产物与原计数；未自行变更模型或范围。
+- 261026 2000 T10开发正式返回ready_for_test、blocked=null，manifest=T10.chain-transform-review/manifest-r0.json；按spawn_single_tester新建唯一综合测试真实ID=/root/fpga_review_tester_t10；round0首次验收。
+- 261026 2015 T10测试者返回round0 PASS，三维均pass；blocked=null、input_status=same；实际修复0轮、补充0；已followup_task原规划更新派发。
+- 261026 2018 原规划返回ready：T11.chain-egress-review；按dispatch新建最后包开发，真实ID=/root/fpga_review_dev_t11；保护前三包与baseline，实际修复0轮。
+- 261026 2047 T11开发返回ready_for_test、blocked=null，manifest=T11.chain-egress-review/manifest-r0.json，活动结束文件已返回；按spawn_single_tester新建唯一综合测试真实ID=/root/fpga_review_tester_t11；round0首次验收。
+- 261026 2102 T11综合测试者返回round0 PASS，三维均pass；blocked=null、input_status=same；四包均首次验收通过，实际修复各0轮、补充各0；已交原规划收尾并准备原样用户总结。
+- 261026 2108 原规划返回finished、needs_user_input=false；user-summary.md已读取供原样转发。四包PASS见decision-matrix.json；未由主读取完整技术报告或另写技术总结。
+- 261027 0056 用户要求对既有审查问题筛选必要性与投入产出；原话文件=D:\fpga\ph1p100\workflow\runs\20261026-144617_fpga-chain-detail-review\user-feedback-20261027-005613.md；准备交原规划解释已验发现，不自行技术分级、不启动修复或硬件操作。

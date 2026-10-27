@@ -1,0 +1,202 @@
+﻿diff --git "a/C:\\Users\\czz\\OneDrive\\妗岄潰\\瀹為獙瀹\绔炶禌\\宓屽叆寮廫\FPGA鍒涙柊璁捐璧涢亾\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-hit-pipe\\r0\\base-0b084317.a1_deflate_core.v" b/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v
+index a2f7a05..872baf0 100644
+--- "a/C:\\Users\\czz\\OneDrive\\妗岄潰\\瀹為獙瀹\绔炶禌\\宓屽叆寮廫\FPGA鍒涙柊璁捐璧涢亾\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.a1-hit-pipe\\r0\\base-0b084317.a1_deflate_core.v"
++++ b/upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v
+@@ -282,12 +282,16 @@ module a1_deflate_core (
+     // covered by the same-cycle write-first read bypass.
+     // ------------------------------------------------------------------
+     reg [12:0] s1_pos_r;        // stage-1 position
+-    reg [12:0] hd_r;            // stage-1 hdist    (feeds dist_r)
+-    reg [12:0] hp_r;            // stage-1 hent_pos (feeds cand_pos)
++    reg [12:0] hp_r;            // stage-1 hent_pos (feeds cand_pos / hdist)
+     reg [12:0] hf_r;            // stage-1 hent pos+3 field (feeds faddr)
+     reg        hb_r;            // stage-1 tag/byte/valid compare
+-    reg        hrg_r;           // stage-1 hash_ok + distance range
+     reg        s1_vld_r;        // stage-1 result valid
++    // r0 (hit-pipe): the stage-1 distance/range test moved to stage 2 (it is
++    // computed from the hp_r register and pos), so no ERAM clk2q signal drives
++    // the hit/state logic any more.  hd_r/hrg_r are gone.
++    // Extension-byte mismatch, registered: cycle k holds the compare result for
++    // extension byte k, so the S_EXT state enable is driven by a flop only.
++    reg        ext_mis_r;
+ 
+     // ------------------------------------------------------------- functions
+     function [8:0] rev9;
+@@ -474,8 +478,6 @@ module a1_deflate_core (
+     wire [7:0]  s1_b0 = (state == S_SCAN) ? w1 : w0;
+     wire [7:0]  s1_b1 = (state == S_SCAN) ? w2 : w1;
+     wire [7:0]  s1_b2 = x1_r;
+-    wire [12:0] s1_hdist = s1_pos_r - hent_pos;
+-    wire        s1_rng = (s1_hdist <= MAX_DIST) && (hent_pos < s1_pos_r);
+     wire        s1_bytes = hent_v && (hent[65:50] == blk_tag) &&
+                            (hent[23:16] == s1_b0) &&
+                            (hent[15:8]  == s1_b1) &&
+@@ -484,9 +486,17 @@ module a1_deflate_core (
+     wire [9:0]  s1_ins_addr = hash3(s1_b0, s1_b1, s1_b2);
+     wire [65:0] s1_ins_data = {blk_tag, (s1_pos_r + 13'd3), s1_pos_r,
+                                s1_b0, s1_b1, s1_b2};
+-    // Stage 2: registered hit decision (no arithmetic from pos in the enable
+-    // path of thresh_base/thresh_lit any more).
+-    wire        hit2 = s1_vld_r && hb_r && hrg_r;
++    // Stage 2: hit decision from flops only (no ERAM clk2q in the cone).
++    // The distance/range test moved here from stage 1: at the cycle the stage-1
++    // result is consumed, pos equals stage-1's s1_pos_r of the previous cycle
++    // (they advance in lock step on the literal path; on the S_PRE/S_REPOS
++    // rewind cycle s1_pos_r was loaded with pos and pos is held), so
++    //   hdist2 = pos - hp_r  ==  stage-1 s1_pos_r - hent_pos
++    // and the range/limit predicates are identical to the old stage-1 form
++    //   (hent_pos < s1_pos_r) && (hdist <= MAX_DIST) && (s1_pos_r < lim2).
++    wire [12:0] hdist2 = pos - hp_r;
++    wire        rng2   = (hp_r < pos) && (hdist2 <= MAX_DIST) && (pos < lim2);
++    wire        hit2   = s1_vld_r && hb_r && rng2;
+ 
+     // Synchronous read port: the address is one position ahead of the stage-1
+     // window so every scanned position still completes one lookup per cycle.
+@@ -677,13 +687,23 @@ module a1_deflate_core (
+     end
+ 
+     // Read port: one registered address and one registered data word per array.
++    // r0 (hit-pipe): the extension byte pair is prefetched one cycle earlier so
++    // the mismatch flag can be registered without losing a cycle.  On the hit
++    // cycle the bm_a port therefore issues pos+4 (not pos+3) and the bm_b port
++    // issues ref+4 (not ref+3), so the first S_EXT cycle already sees the
++    // second extension byte; the first extension byte is the already-registered
++    // x1_r (bm[pos+3]).  During S_SCAN the bm_b port is otherwise idle (the
++    // window comes from the w0..w2/x1_r shift chain), so it speculatively reads
++    // the candidate entry's pos+3 byte: that is the reference byte of the first
++    // extension byte, available exactly on the hit cycle.
+     wire        bm_hit_a   = (state == S_SCAN) && hit2;
+     wire [12:0] bm_raddr_a = (state == S_EXT) ? ext_raddr
+-                           : bm_hit_a ? p3_r
++                           : bm_hit_a ? (p3_r + 13'd1)
+                            : ((state == S_SLEN) || (state == S_SDATA_R)) ? raddr
+                            : praddr;
+-    wire [12:0] bm_raddr_b = bm_hit_a ? hf_r
++    wire [12:0] bm_raddr_b = bm_hit_a ? (hf_r + 13'd1)
+                            : (state == S_EXT) ? ext_faddr
++                           : s1_en ? hent[49:37]
+                            : raddr;
+     always @(posedge clk) begin
+         bm_a_rd <= bm_a[{enc_bank, bm_raddr_a}];
+@@ -822,11 +842,10 @@ module a1_deflate_core (
+             x1_r           <= 8'd0;
+             praddr         <= 13'd0;
+             s1_pos_r       <= 13'd0;
+-            hd_r           <= 13'd0;
+             hp_r           <= 13'd0;
+             hf_r           <= 13'd0;
+             hb_r           <= 1'b0;
+-            hrg_r          <= 1'b0;
++            ext_mis_r      <= 1'b0;
+             s1_vld_r       <= 1'b0;
+             cand_pos       <= 13'd0;
+             dval_r         <= 14'd0;
+@@ -963,7 +982,7 @@ module a1_deflate_core (
+             praddr         <= 13'd0;
+             s1_vld_r       <= 1'b0;
+             hb_r           <= 1'b0;
+-            hrg_r          <= 1'b0;
++            ext_mis_r      <= 1'b0;
+             rem_blk        <= 13'd0;
+             thresh_base    <= 32'd0;
+             thresh_lit     <= 32'd0;
+@@ -1069,14 +1088,25 @@ module a1_deflate_core (
+             end
+ 
+             // ---- two-cycle hit/threshold path: stage 1 + table insert ------
++            // Stage 1 registers only the ERAM read data (entry position, pos+3
++            // field and the tag/byte compare).  The distance/range test runs in
++            // stage 2 from those registers, so htab/bm ERAM clk2q never drives
++            // the hit decision or the state enable.
+             s1_vld_r <= s1_en;
+             if (s1_en) begin
+-                hd_r  <= s1_hdist;
+                 hp_r  <= hent_pos;
+                 hf_r  <= hent[49:37];
+                 hb_r  <= s1_bytes;
+-                hrg_r <= s1_ok && s1_rng;
+             end
++            // Registered extension-byte mismatch: cycle k holds the compare for
++            // extension byte k.  On the hit cycle the forward byte is the
++            // prefetched x1_r (bm[pos+3]); on every S_EXT cycle both ports are
++            // one byte ahead, i.e. they hold the pair for the following cycle.
++            // Two independent compares (no hit2-dependent mux in the data path)
++            // keep the late pos-derived hit2 out of this flop's D cone; it only
++            // reaches the clock enable.
++            if (state == S_EXT) ext_mis_r <= (bm_a_rd != bm_b_rd);
++            if (bm_hit_a)        ext_mis_r <= (x1_r     != bm_b_rd);
+ 
+             // Adler block-end reduction: 3 cycles, input held by in_ready.
+             case (adler_red_st)
+@@ -1310,7 +1340,7 @@ module a1_deflate_core (
+                 S_SCAN: begin
+ `ifdef A1_DEBUG
+                     $display("SCAN pos=%0d blk_n=%0d w=%02x%02x%02x hit2=%b hent_pos=%0d hdist=%0d",
+-                             pos, blk_n, w0, w1, w2, hit2, hp_r, hd_r);
++                             pos, blk_n, w0, w1, w2, hit2, hp_r, hdist2);
+ `endif
+                     if (pos >= blk_n) begin
+                         state <= S_EOB;
+@@ -1318,20 +1348,23 @@ module a1_deflate_core (
+                         // stage-2 hit: match starts at pos with the registered
+                         // distance / candidate / reference-pos fields.
+                         cand_pos <= hp_r;
+-                        dist_r   <= hd_r;
++                        dist_r   <= hdist2;
+                         len_r    <= 9'd3;
+                         if (p3_r >= blk_n) begin
+                             state <= S_MLEN;
+                         end else begin
+                             raddr     <= p3_r;
+                             faddr     <= hf_r;
+-                            // bm[pos+3] is already registered (x1_r); the
+-                            // synchronous bm_b port is issued hf_r = ref+3 and
+-                            // returns it in the first S_EXT cycle.
++                            // bm[pos+3] is already registered (x1_r) and the
++                            // hit-cycle bm_b read (hf_r = ref+3) returns its
++                            // reference byte, so the first compare is available
++                            // on the hit cycle.  The ports are then shifted one
++                            // byte ahead (pos+4 / ref+4) so every later compare
++                            // is registered one cycle before it is consumed.
+                             cq_r      <= x1_r;
+                             ext_first <= 1'b1;
+-                            ext_raddr <= p3_r + 13'd1;
+-                            ext_faddr <= hf_r + 13'd1;
++                            ext_raddr <= p3_r + 13'd2;
++                            ext_faddr <= hf_r + 13'd2;
+                             ext_rem   <= ext_rem_new;
+                             ext_zero_r<= (ext_rem_new == 13'd0);
+                             len_cap_r <= 1'b0;
+@@ -1364,23 +1397,19 @@ module a1_deflate_core (
+                 end
+ 
+                 S_EXT: begin
+-                    // Compare the byte prefetched in the previous cycle.  The
+-                    // first cycle compares the byte captured at the hit (cq_r =
+-                    // bm[pos+3]); from then on the synchronous read ports supply
+-                    // both bytes of the current cycle (bm_a_rd forward, bm_b_rd
+-                    // reference), with ext_raddr/ext_faddr issued one cycle early.
++                    // The forward/reference byte pair for extension byte k was
++                    // compared during cycle k-1 and lives in ext_mis_r, so the
++                    // state enable is driven by a flop, not by ERAM clk2q.
+                     ext_first <= 1'b0;
+-                    // bm_a_rd is bm[p3_r] on the first extension cycle (the
+-                    // hit-cycle bm_a address is p3_r) and bm[p3_r+k] after
+-                    // that, so the ext_first operand mux is gone.
++                    // ext_raddr/ext_faddr run one byte ahead of the compare
++                    // (pos+4+k / ref+4+k); the flag itself is exact: registered
++                    // at cycle k-1, consumed at cycle k, same cycle count as
++                    // the combinational compare it replaces.
+                     // r2: the loop-stop flags track ext_rem/len_r on every
+-                    // S_EXT cycle, independent of the byte compare.  They are
+-                    // reloaded at each hit and are don't-care once S_EXT is
+-                    // left, so this is exact and keeps bm_b_rd (ERAM clk2q)
+-                    // out of their D/enable path.
++                    // S_EXT cycle, independent of the byte compare.
+                     ext_zero_r <= (ext_rem == 13'd1);
+                     len_cap_r  <= (len_r == 9'd256);
+-                    if (bm_a_rd != bm_b_rd) begin
++                    if (ext_mis_r) begin
+                         state <= S_MLEN;
+                     end else if (ext_zero_r || len_cap_r) begin
+                         len_r <= len_r + 9'd1;

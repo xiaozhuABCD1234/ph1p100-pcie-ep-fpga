@@ -1,0 +1,32 @@
+{
+  "task_ids": ["T06.codex-ddr-readback-int", "T09.codex-production-int"],
+  "status": "blocked",
+  "artifact_paths": [
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/ddr-integration/development-report.md",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/algo-integration/development-report.md",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/candidate/development-result.json"
+  ],
+  "manifest_path": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/candidate/manifest.json",
+  "test_input_paths": ["C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/candidate/evidence-index.json"],
+  "lessons_path": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/lessons-learned.md",
+  "blocked": {
+    "category": "LIMIT_REACHED",
+    "status": "blocked",
+    "missing": "T06联合测试台两次编译失败，达到同命令重试上限；共享生产G2/CWC未运行。全部修改与活动已停止，冻结236项自检通过；ready_for_test=false。"
+  },
+  "problem": {
+    "problem_id": "T06.codex-ddr-readback-int:LIMIT_REACHED:integrated-tb-compile",
+    "reason_code": "LIMIT_REACHED",
+    "new_information": true,
+    "evidence_path": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/ddr-integration/g1/tb_closedloop_writer_checker/vlog.log",
+    "requested_action": "交原规划保留计数、记录部分冻结并处理恢复条件；不得自动重试或换ID绕限。",
+    "resume_input_path": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/candidate/development-result.json"
+  },
+  "retest": {
+    "required_dimensions": ["functional", "engineering", "system"],
+    "required_checks": ["联合读回及所有权/旧响应隔离", "顶层内部abort与恢复", "同候选生产STA/CDC/资源/三分支保留", "CWC物理覆盖与bit配对"],
+    "report_paths": [],
+    "input_status": "changed",
+    "reuse_decision_paths": []
+  }
+}

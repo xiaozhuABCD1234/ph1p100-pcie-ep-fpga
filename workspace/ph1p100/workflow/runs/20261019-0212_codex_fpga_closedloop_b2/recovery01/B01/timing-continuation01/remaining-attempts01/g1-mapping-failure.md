@@ -1,0 +1,5 @@
+# Actual local-tool launch failure and correction
+
+19:48:53 bram-row RAW+algo and HE-negative were launched concurrently by this developer. Both used process-local free-letter detection and raced on temporary T:. RAW vlog failed to open abs.f (exit1), recorded in g1/tb_closedloop_raw_algo-20261019T194853/deadline.log. HE failed before native process creation with NotADirectoryError WinError267; tool output also contained Invalid parameter - T:. Neither result is a numerical DUT failure or PASS. Both actual attempted operations count against their existing cumulative G1 caps. No other user's process or mapping was killed/removed; preexisting R remains untouched.
+
+The following rate run was collected and passed; its mapping was released. All further mapping-using simulations run serially. Native algorithm runner commands now record ownedPID and kill only that process tree at300s; subst is bounded10s. Source RTL/oracle/TB mathematics were not changed for this correction. No blind retry, no erased failed directories. One corrected retry per failed command is performed after this evidence.

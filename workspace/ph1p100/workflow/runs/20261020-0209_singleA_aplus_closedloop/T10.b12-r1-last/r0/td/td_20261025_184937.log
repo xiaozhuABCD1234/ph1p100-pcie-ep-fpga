@@ -1,0 +1,405 @@
+============================================================
+   TD Release_2026.2
+   Copyright (c) 2012-2026 Anlogic Inc.
+   Executable = D:/anlogic/TD_Release_2026.2/bin/td_commands_prompt.exe
+   Build number = 6.2.3.210850
+   Built at =   11:35:58 Aug 19 2026
+   Run by =     czz
+   Run Date =   Sun Oct 25 18:49:38 2026
+
+   Run on =     LAPTOP-HE7N8DN4
+============================================================
+RUN-1002 : start command "create_project a1_board ./ -family PH1 -device PH1P100SBG484 -speed 3 -force"
+PRJ-1005 : Command create_project success.
+RUN-1002 : start command "import_device ph1_100p.db -package PH1P100SBG484"
+RUN-1001 : Using default speed grade: 3
+ARC-1001 : Device Initialization.
+ARC-1001 : -------------------------------------------------------------
+ARC-1001 :           OPTION          |         IO         |   SETTING   
+ARC-1001 : -------------------------------------------------------------
+ARC-1001 :   non_jtag_persist(none)  |       35 IOs       |    gpio    
+ARC-1001 :            jtag           |  /V12/T13/R13/U13  |  dedicate  
+ARC-1001 : -------------------------------------------------------------
+RUN-1003 : finish command "import_device ph1_100p.db -package PH1P100SBG484" in  2.346473s wall, 1.531250s user + 0.218750s system = 1.750000s CPU (74.6%)
+
+RUN-1004 : used memory is 342 MB, reserved memory is 326 MB, peak memory is 375 MB
+RUN-1002 : start command "open_project a1_board.al"
+PRJ-7003 CRITICAL-WARNING: Device speed "3" is invalid for PH1P100SBG484, auto change to default speed "-3".
+RUN-1002 : start command "commit_param -step design"
+RUN-1001 : Print Global Property
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :     Parameters    |   Settings   |  Default Values  |  Note  
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :    enable_seed    |     off      |       off        |        
+RUN-1001 :    hfn_to_clock   |  1000000000  |    1000000000    |        
+RUN-1001 :      message      |   standard   |     standard     |        
+RUN-1001 :    qor_monitor    |      on      |        on        |        
+RUN-1001 :   speedup_effort  |      0       |        0         |        
+RUN-1001 :    syn_ip_flow    |     off      |       off        |        
+RUN-1001 :       thread      |     auto     |       auto       |        
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 : Print Design Property
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :       Parameters       |  Settings  |  Default Values  |  Note  
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :   default_reg_initial  |    auto    |       auto       |        
+RUN-1001 :    hdl_warning_level   |   normal   |      normal      |        
+RUN-1001 :      tcl_afterstep     |            |                  |        
+RUN-1001 :     tcl_beforestep     |            |                  |        
+RUN-1001 : ----------------------------------------------------------------
+RUN-1002 : start command "commit_param -step design"
+RUN-1001 : Print Global Property
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :     Parameters    |   Settings   |  Default Values  |  Note  
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 :    enable_seed    |     off      |       off        |        
+RUN-1001 :    hfn_to_clock   |  1000000000  |    1000000000    |        
+RUN-1001 :      message      |   standard   |     standard     |        
+RUN-1001 :    qor_monitor    |      on      |        on        |        
+RUN-1001 :   speedup_effort  |      0       |        0         |        
+RUN-1001 :    syn_ip_flow    |     off      |       off        |        
+RUN-1001 :       thread      |     auto     |       auto       |        
+RUN-1001 : -------------------------------------------------------------
+RUN-1001 : Print Design Property
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :       Parameters       |  Settings  |  Default Values  |  Note  
+RUN-1001 : ----------------------------------------------------------------
+RUN-1001 :   default_reg_initial  |    auto    |       auto       |        
+RUN-1001 :    hdl_warning_level   |   normal   |      normal      |        
+RUN-1001 :      tcl_afterstep     |            |                  |        
+RUN-1001 :     tcl_beforestep     |            |                  |        
+RUN-1001 : ----------------------------------------------------------------
+HDL-5007 WARNING: could not find top-level module/unit; aborting hierarchy tree creation
+PRJ-1401 : Successfully analyzed 0 source files.
+RUN-1003 : finish command "create_project a1_board ./ -family PH1 -device PH1P100SBG484 -speed 3 -force" in  2.410562s wall, 1.546875s user + 0.218750s system = 1.765625s CPU (73.2%)
+
+RUN-1004 : used memory is 343 MB, reserved memory is 326 MB, peak memory is 375 MB
+RUN-1002 : start command "add_files Y:/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b12-r1-last/r0/changed-src/a1_raw_crop.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files Y:/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b12-r1-last/r0/changed-src/a1_ddr_slot_store.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files Y:/fpga/csi2/src/a1/a1_ddr_arb2.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files Y:/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b12-r1-last/r0/changed-src/a1_uart_export.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files Y:/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b12-r1-last/r0/changed-src/camera_a1_uart_top.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files Y:/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b12-r1-last/r0/changed-src/cam_diag_mailbox.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files Y:/fpga/csi2/src/mem/capture_async_fifo.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files Y:/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b12-r1-last/r0/changed-src/a1_frame_top.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files Y:/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b12-r1-last/r0/changed-src/a1_deflate_core.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/p2_a1_board_top.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/p2_ddrmc_shell.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/p2_ddr_bridge.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/p2_a1_pll.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/f9p_camera_display_core.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/cam_preview_capture.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/mipi_phy_ph1p/rx_phy_ph1p.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/mipi_csi_2/csi_rx_hdr_ecc.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/mipi_csi_2/csi_rx_byte_align.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/mipi_csi_2/csi_rx_clock_det.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/mipi_csi_2/auto_delay_ctl.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/mipi_csi_2/csi_rx_word_align.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/mipi_csi_2/csi_rx_word_gear_box.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/mipi_csi_2/csi_rx_packet_integrity.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/mipi_csi_2/csi_rx_10bit_unpack_checked.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/mipi_csi_2/sfifo.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/mipi_csi_2/wfifo.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/mipi_csi_2/mipi_csi2_rx_ph1p.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/ui_imx415_cfg/ui_i2c.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/ui_imx415_cfg/ui_imx415_reg.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/ui_imx415_cfg/ui_cfg_imx415.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/01_rtl/uart_tx.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/01_rtl/pulse2toggle.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/01_rtl/clk_activity.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/01_rtl/dbg_uart.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/vtc/uivtc.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/tpg/uitpg.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/alip/ui_HDMI_TX/ui_HDMI_TX.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/alip/ui_HDMI_TX/hdmi_phy_warpper.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/alip/ui_HDMI_TX/lane_lvds_10_1.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/alip/ui_HDMI_TX/hdmi_tx_controller_wrapper.enc.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/01_rtl/raw10_display60_clocks.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/01_rtl/camera_startup.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/raw10_clocks/raw10_clocks.xml"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/camera/uisrc/03_ip/ui_pll/ui_pll.xml"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/vendor/rtl/usr_mcu_srcs/usr_mcu_apb_decoder.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/vendor/rtl/usr_mcu_srcs/usr_mcu_apb_gpio.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/vendor/rtl/usr_mcu_srcs/usr_mcu_apb_uart.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/vendor/rtl/usr_mcu_srcs/usr_mcu_core/usr_mcu_core.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/vendor/rtl/usr_mcu_srcs/usr_mcu_core/usr_mcu_core_alu.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/vendor/rtl/usr_mcu_srcs/usr_mcu_core/usr_mcu_core_csr.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/vendor/rtl/usr_mcu_srcs/usr_mcu_core/usr_mcu_core_decoder.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/vendor/rtl/usr_mcu_srcs/usr_mcu_core/usr_mcu_core_mem2apb.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/vendor/rtl/usr_mcu_srcs/usr_mcu_core/usr_mcu_core_reg2mem.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/vendor/rtl/usr_mcu_srcs/usr_mcu_core/usr_mcu_core_regfile_dram.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/vendor/rtl/usr_mcu_srcs/usr_mcu_core/usr_mcu_core_tcm.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/vendor/rtl/usr_mcu_srcs/usr_mcu_wrapper.v"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./src/vendor/ip/ddrmc_x32/ddrmc_x32.xml"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./board_p2.adc"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "add_files ./p2_board.sdc"
+PRJ-1202 : Add files success.
+RUN-1002 : start command "top_module p2_a1_board_top"
+PRJ-1501 : Current top model is p2_a1_board_top.
+RUN-1002 : start command "set_param -run syn_1 rtl retiming on"
+PRJ-1105 : Update param syn_1 rtl::retiming::on succeed.
+RUN-1002 : start command "set_param -run phy_1 route post_route_opt ultra"
+PRJ-1105 : Update param phy_1 route::post_route_opt::ultra succeed.
+RUN-1002 : start command "set_param -run phy_1 route postrt_opt_loc 20"
+PRJ-1103 : Set run phy_1 param: route::postrt_opt_loc::20.
+PRJ-1106 : Update wild param phy_1 route::postrt_opt_loc::20 succeed.
+RUN-1002 : start command "set_param -run phy_1 route postrt_opt_extra_round 4"
+PRJ-1103 : Set run phy_1 param: route::postrt_opt_extra_round::4.
+PRJ-1106 : Update wild param phy_1 route::postrt_opt_extra_round::4 succeed.
+RUN-1002 : start command "launch_runs  syn_1  -jobs 4"
+PRJ-1403 : syn_1 is launched.
+PRJ-1404 : Run log file is T://a1_board_Runs/syn_1/run.log.
+RUN-1002 : start command "wait_run syn_1 -quiet"
+PRJ-1405 : Waiting for run syn_1 to finish.
+PRJ-1409 : launch_runs syn_1  -jobs 4.
+PRJ-1009 : If you need the best result of runs copied into "T://a1_board_Runs/best_result" , please execute "save_best_bits" in the Tcl console after all runs complete, or add "save_best_bits" in tcl script after "wait_run" command.
+PRJ-1406 : Run syn_1 finished.
+RUN-1003 : finish command "wait_run syn_1 -quiet" in  244.408048s wall, 0.187500s user + 2.859375s system = 3.046875s CPU (1.2%)
+
+RUN-1004 : used memory is 32 MB, reserved memory is 326 MB, peak memory is 375 MB
+RUN-1002 : start command "launch_runs  phy_1  -jobs 4"
+PRJ-1403 : phy_1 is launched.
+PRJ-1404 : Run log file is T://a1_board_Runs/phy_1/run.log.
+PRJ-1409 : launch_runs phy_1  -jobs 4.
+RUN-1002 : start command "wait_run phy_1 -quiet"
+PRJ-1405 : Waiting for run phy_1 to finish.
+PRJ-1009 : If you need the best result of runs copied into "T://a1_board_Runs/best_result" , please execute "save_best_bits" in the Tcl console after all runs complete, or add "save_best_bits" in tcl script after "wait_run" command.
+PRJ-1406 : Run phy_1 finished.
+RUN-1003 : finish command "wait_run phy_1 -quiet" in  354.793749s wall, 0.250000s user + 3.718750s system = 3.968750s CPU (1.1%)
+
+RUN-1004 : used memory is 3 MB, reserved memory is 333 MB, peak memory is 375 MB
+RUN-1002 : start command "import_db ./a1_board_Runs/phy_1/a1_board_pr.db"
+RUN-1001 : Database version number 46207
+RUN-1001 : Importing database generated by Tang Dynasty, V6.2.3.210850.
+RUN-1001 : Import flow parameters
+RUN-1001 : Import netlist
+RUN-1001 : Constructing routing connections ...
+PHY-1001 : End build routing graph; 4.448284s wall, 19.171875s user + 1.218750s system = 20.390625s CPU (458.4%)
+
+RUN-1001 : Import phy database
+RUN-1001 : Import timing constraints
+RUN-1001 : Import IO constraints
+RUN-1001 : Import Inst constraints
+RUN-1001 : Import ChipWatcher
+RUN-1001 : Import design success TD_VERSION=Release_2026.2 , DB_VERSION=46207
+RUN-1003 : finish command "import_db ./a1_board_Runs/phy_1/a1_board_pr.db" in  8.927869s wall, 21.921875s user + 1.812500s system = 23.734375s CPU (265.8%)
+
+RUN-1004 : used memory is 1423 MB, reserved memory is 1781 MB, peak memory is 1468 MB
+RUN-1002 : start command "update_timing -mode final"
+RUN-1002 : start command "start_timer"
+USR-1002 : Derived clock:  create_generated_clock -name {u_a1_pll/u_pll/u_PH1P_PHY_PLL.clkc[0]} -source [get_ports {sys_clk50m}] -multiply_by 3.7500 -duty_cycle 50.0000 [get_pins {u_a1_pll/u_pll/u_PH1P_PHY_PLL.clkc[0]}]
+USR-1002 : Derived clock:  create_generated_clock -name {u_camera/X_ui_pll/ph1p_phy_pll_wrapper_Inst/u_PH1P_PHY_PLL.clkc[0]} -source [get_ports {sys_clk50m}] -multiply_by 2.9700 -duty_cycle 50.0000 [get_pins {u_camera/X_ui_pll/ph1p_phy_pll_wrapper_Inst/u_PH1P_PHY_PLL.clkc[0]}]
+USR-1002 : Derived clock:  create_generated_clock -name {u_camera/X_ui_pll/ph1p_phy_pll_wrapper_Inst/u_PH1P_PHY_PLL.clkc[1]} -source [get_ports {sys_clk50m}] -multiply_by 14.8500 -duty_cycle 50.0000 [get_pins {u_camera/X_ui_pll/ph1p_phy_pll_wrapper_Inst/u_PH1P_PHY_PLL.clkc[1]}]
+USR-1002 : Derived clock:  create_generated_clock -name {u_camera/X_ui_pll/ph1p_phy_pll_wrapper_Inst/u_PH1P_PHY_PLL.clkc[2]} -source [get_ports {sys_clk50m}] -divide_by 1.8519 -duty_cycle 50.0000 [get_pins {u_camera/X_ui_pll/ph1p_phy_pll_wrapper_Inst/u_PH1P_PHY_PLL.clkc[2]}]
+USR-1002 : Derived clock:  create_generated_clock -name {u_camera/u_csi_a/u_rx_phy/u_hs_clk_div.clkout} -source [get_ports {mipi_a_clk_hs_p}] -multiply_by 1 [get_pins {u_camera/u_csi_a/u_rx_phy/u_hs_clk_div.clkout}]
+USR-1002 : Derived clock:  create_generated_clock -name {u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll0/u_pll_inst.clkc[0]} -source [get_ports {sys_clk50m}] -multiply_by 4.0000 -duty_cycle 50.0000 [get_pins {u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll0/u_pll_inst.clkc[0]}]
+USR-1002 : Derived clock:  create_generated_clock -name {u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll0/u_pll_inst.clkc[1]} -source [get_ports {sys_clk50m}] -multiply_by 4.0000 -duty_cycle 50.0000 [get_pins {u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll0/u_pll_inst.clkc[1]}]
+USR-1002 : Derived clock:  create_generated_clock -name {u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll0/u_pll_inst.clkc[2]} -source [get_ports {sys_clk50m}] -multiply_by 16.0000 -duty_cycle 50.0000 [get_pins {u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll0/u_pll_inst.clkc[2]}]
+USR-1002 : Derived clock:  create_generated_clock -name {u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll0/u_pll_inst.clkc[3]} -source [get_ports {sys_clk50m}] -multiply_by 1.0000 -duty_cycle 50.0000 [get_pins {u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll0/u_pll_inst.clkc[3]}]
+USR-1002 : Derived clock:  create_generated_clock -name {u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_pll_inst.clkc[0]} -source [get_pins {u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll0/u_pll_inst.clkc[0]}] -multiply_by 1.0000 -duty_cycle 50.0000 [get_pins {u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_pll_inst.clkc[0]}]
+RUN-1003 : finish command "start_timer" in  8.788051s wall, 8.593750s user + 0.156250s system = 8.750000s CPU (99.6%)
+
+RUN-1004 : used memory is 1925 MB, reserved memory is 2295 MB, peak memory is 1929 MB
+TMR-1041 : Net delay calculation accelerates with 32 threads.
+TMR-2502 : Net delay update with mode: Routed
+TMR-1042 : Timing analysis accelerates with 32 threads.
+RUN-1003 : finish command "update_timing -mode final" in  12.012510s wall, 23.921875s user + 0.843750s system = 24.765625s CPU (206.2%)
+
+RUN-1004 : used memory is 2602 MB, reserved memory is 2986 MB, peak memory is 2604 MB
+RUN-1002 : start command "report_timing_summary -file ./routed_timing_summary.rpt"
+RUN-1002 : start command "report_timing_status -file ./routed_timing_status.rpt"
+RUN-1002 : start command "report_area -io_info -file ./routed_area.rpt"
+SYN-4034 : The count of slices with lut is 14805.
+SYN-4035 : The count of slices with lut+ripple is 3841.
+RUN-1001 : standard
+***Report Model: p2_a1_board_top Device: PH1P100SBG484***
+
+Design Statistics
+#IO                       110   out of    286   38.46%
+  #input                   23
+  #output                  41
+  #inout                   46
+#lut6                   19614   out of  71680   27.36%
+#reg                    28689
+  #slice reg            28689   out of 143360   20.01%
+  #pad reg                  0
+
+Utilization Statistics
+#slice                  24715   out of  71680   34.48%
+  #used ram               968
+    #dram lut             680
+    #shifter lut          288
+  #used logic           23747
+    #with luts          14805
+    #with adder          3841
+    #reg only            5101
+#feedthrough            14330
+#f7mux                     32   out of  35840    0.09%
+#f8mux                     16   out of  17920    0.09%
+#eram                     102   out of    300   34.00%
+  #eram20k                102
+  #fifo20k                  0
+#dsp                        0   out of    220    0.00%
+#pcie                       0   out of      1    0.00%
+#hxt quad                   0   out of      1    0.00%
+#ddr_byte                   7   out of     24   29.17%
+#pad                      114   out of    286   39.86%
+#pll                        4   out of     12   33.33%
+#gclk                       9   out of     32   28.12%
+#lclk                       1   out of     24    4.17%
+#sclk                      30   out of     96   31.25%
+#mlclk                      2   out of     24    8.33%
+#ioclk                      4   out of     24   16.67%
+
+
+DataNet Average Fanout:
+
+   Index     Fanout     Nets   
+    #1          1       40835  
+    #2          2       6573   
+    #3          3       3757   
+    #4          4       1794   
+    #5        5-10      3908   
+    #6        11-50     1286   
+    #7       51-100      94    
+    #8       101-500      8    
+  Average     2.25             
+
+RUN-1002 : start command "report_timing -file ./routed_timing.rpt"
+TMR-9002 WARNING: 'report_timing' is obsolete. Please use 'report_timing_summary' instead.
+RUN-1002 : start command "report_timing_summary -file ./routed_timing.rpt"
+RUN-1002 : start command "report_qor -step route -file ./routed_qor.rpt"
+-----------------------------------------------------------
+| QoR metrics               |         value               |
+-----------------------------------------------------------
+| Timing                    |                             |
+|     Setup WNS             |            3                |
+|     Setup TNS             |            0                |
+|     Num of violated S-EP  |            0                |
+|     Hold WNS              |           20                |
+|     Hold TNS              |            0                |
+|     Num of violated H-EP  |            0                |
+-----------------------------------------------------------
+| Routing Resource          |                             |
+|     Wire length           |      7859072                |
+-----------------------------------------------------------
+| Utilization               |                             |
+|     #slices               |        24715                |
+|     slices percentage     |       34.48%                |
+|     #RAMs                 |          102                |
+|     #DSPs                 |            0                |
+|     #DRAMHARDCON          |           85                |
+-----------------------------------------------------------
+Report route stage QoR done.
+
+PHY-1034 : Refresh detailed routing grids ...
+PHY-1032 : Net auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/doa_keep[0] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/doa_keep[1] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/doa_keep[2] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/doa_keep[3] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/doa_keep[4] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/doa_keep[5] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/doa_keep[6] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/doa_keep[7] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/doa_keep[8] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/doa_keep[9] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/doa_keep[10] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/doa_keep[11] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/doa_keep[12] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/doa_keep[13] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/doa_keep[14] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/doa_keep[15] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/doa_keep[16] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/doa_keep[17] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/doa_keep[18] with 1 non-virtual pins; routing is skipped.
+PHY-1032 : Net auto_created_cwc2/wrapper_cwc_top/U_cwc_ram/doa_keep[19] with 1 non-virtual pins; routing is skipped.
+PHY-1032 Similar messages will be suppressed.
+RUN-0008 : Do timing check and 0 issue(s) found.
+RUN-0008 : Do routing resoruce check and 0 issue(s) found.
+RUN-1003 : finish command "report_qor -step route -file ./routed_qor.rpt" in  5.154182s wall, 17.453125s user + 0.515625s system = 17.968750s CPU (348.6%)
+
+RUN-1004 : used memory is 2817 MB, reserved memory is 3213 MB, peak memory is 2829 MB
+RUN-1002 : start command "check_timing -verbose -file ./routed_check_timing.rpt"
+USR-6144 CRITICAL-WARNING: PLL clock frequency mismatch detected on clock pclkx5. Requested frequency: 742.500 MHz, Actual frequency: 742.400 MHz.
+RUN-1003 : finish command "check_timing -verbose -file ./routed_check_timing.rpt" in  2.906127s wall, 2.843750s user + 0.062500s system = 2.906250s CPU (100.0%)
+
+RUN-1004 : used memory is 2912 MB, reserved memory is 3312 MB, peak memory is 2912 MB
+RUN-1002 : start command "report_clock_utilization -file ./routed_clock_utilization.rpt"
+RUN-1002 : start command "report_param -file ./params_after.tcl"
+RUN-1001 : Flow stage "flow" with all default parameters.
+RUN-1001 : Flow stage "design" with all default parameters.
+RUN-1001 : Flow stage "rtl" with all default parameters.
+RUN-1001 : Flow stage "gate" with all default parameters.
+RUN-1001 : Flow stage "place" with all default parameters.
+RUN-1001 : Print Route Property
+RUN-1001 : --------------------------------------------------
+RUN-1001 :     Parameters    |  Settings  |  Default Values  
+RUN-1001 : --------------------------------------------------
+RUN-1001 :   post_route_opt  |   ultra    |       auto       
+RUN-1001 : --------------------------------------------------
+RUN-1001 : Flow stage "timing" with all default parameters.
+RUN-1001 : Flow stage "sim" with all default parameters.
+RUN-1001 : Flow stage "bitgen" with all default parameters.
+RUN-1002 : start command "write_verilog ./routed_netlist.v"
+HDL-1201 : write out verilog file ./routed_netlist.v
+RUN-1003 : finish command "write_verilog ./routed_netlist.v" in  5.470856s wall, 4.953125s user + 0.484375s system = 5.437500s CPU (99.4%)
+
+RUN-1004 : used memory is 2913 MB, reserved memory is 3312 MB, peak memory is 2913 MB

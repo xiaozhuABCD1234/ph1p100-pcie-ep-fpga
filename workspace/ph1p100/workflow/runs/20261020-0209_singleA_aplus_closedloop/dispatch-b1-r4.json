@@ -1,0 +1,160 @@
+{
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "project_root": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+  "output_dir": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop",
+  "task_ids": [
+    "T10.b1-a1-uart-integ"
+  ],
+  "package_id": "T10.b1-a1-uart-integ",
+  "revision": "r4",
+  "package_type": "test-only closeout: MODE=2 fault semantics by frame-length parameterization + tolerant truncated-frame parsing + store-only 2,594,706 B max-length TB; no RTL change",
+  "same_run": true,
+  "new_run": false,
+  "batch_size": 1,
+  "status": "finished",
+  "needs_user_input": false,
+  "round": "r4",
+  "result": {
+    "verdict": "PARTIAL (shell permission TOOL_UNAVAILABLE); RTL unchanged and hash-verified against r3; P1 core PASS-with-boundary",
+    "evidence": "mode2 retimed: roi_frames=9, enc=3, no half-frame, err=0, read_words=96, dup=0; geom=0 because reset clears counters; reset at FRAME_CYC-60 completes; reset at FRAME_CYC/2 (mid-write) times out at 400 s",
+    "not_run": "MODE=3/4, store-only 2,594,706 B max-length, MODE=1 shortened, W=8,H=3 tail; shell denied twice",
+    "budget": "calls 12/15; wall 27/25 min; no TD/bitgen/download",
+    "decision": "accept P1 core PASS-with-boundary; freeze P2 T10.b2-a1-uart-impl; P3 awaiting_user with missing tests + Q1-Q6"
+  },
+  "operation": "spawn_agent",
+  "authorization": {
+    "quote": "请裁决：1. 是否授权测试-only r4（建议 25 min/15 calls）：按帧长参数化 MODE=2 相位、容错解析截断帧、补 store-only 2,594,706 B 最大长度单元 TB；只改 TB/测试脚本，不改 RTL（除已绿候选）。... 3. 若 r4：失败即停止，不自动 r5。",
+    "date": "2026-10-23",
+    "type": "explicit_user_authorization_for_test_only_r4",
+    "basis": "r3 核心链路全绿（8x2/64x8/full 1080p 0 mismatch、四 CRC true、dup=0），但需求明确要求覆盖帧尾/反压/缓存不足/坏帧溢出撤销/复位恢复；MODE=2 目前 geom=0/raw_drop=0，MODE=1/2,594,706 B 未做。测试-only r4 可在不改 RTL 的前提下补齐这些证据。",
+    "round_accounting": "r3 core PASS, fault/max-length open (13/20 calls, 36/35 min). r4 is test-only; if it fails, P1 remains core PASS-with-boundary; no automatic r5.",
+    "not_authorized": [
+      "any RTL change (including a1_deflate_core/a1_frame_top/a1_ddr_slot_store/a1_ddr_arb2/camera_a1_uart_top/a1_uart_export/a1_raw_crop)",
+      "TD synthesis/route/bitgen/download/Flash",
+      "timeout/threshold relaxation or faking fault counts",
+      "half-frame publish",
+      "P2/P3/P4 work",
+      "r5"
+    ]
+  },
+  "r3_facts": {
+    "result": "T10.b1-a1-uart-integ/r3/result-r3.md",
+    "manifest": "T10.b1-a1-uart-integ/r3/CANDIDATE-MANIFEST-b1-a1-uart-integ-r3.json",
+    "core": "8x2/64x8/full 1920x1080 all 0 mismatch; header/stream/xform/raw all true; zlib_ok; dup=0; full read_words=129,600; raw_len=2,592,000; stream_len=40,032; 6,383,945 cycles; raw_sha256=2f34e253...d355e830",
+    "fault": "MODE=2: cap=9 enc=3 exported=1 raw_pub=5 cmp_drop=0 err=0 dup=0; no half-frame, but geom=0/raw_drop=0; reset interrupts in-flight export and truncates the stream; not usable as fault evidence",
+    "mode1": "MODE=1 and 2,594,706 B max-length test not run; full incompressible ~50 min wall; store-only unit TB recommended",
+    "budget": "calls 13/20; wall 36/35 min; no TD/bitgen/download"
+  },
+  "r4_scope": [
+    {
+      "step": 1,
+      "name": "MODE=2 frame-length parameterization + fault phases",
+      "content": "Parameterize MODE=2 phase timing by W/H/ROI and frame length (not fixed 352-cycle/3000-cycle constants). Fix TB-only timing. Run the fault case and require: bad frame -> geom>0/raw_drop>0 and no publish; reset mid-frame -> no published half-frame; recovery -> publish; three quick frames -> cmp_drop/raw_drop>0 without corruption; AW_GAP/R_GAP backpressure. Tolerant parser must discard truncated reset-phase bytes and not count them as a frame.",
+      "timebox_min": 8
+    },
+    {
+      "step": 2,
+      "name": "Store-only 2,594,706 B max-length unit TB",
+      "content": "Add a store-only unit TB that instantiates a1_ddr_slot_store + a1_uart_export (no A+ encoder) and writes/reads/exports 2,594,706 B worst-case length. Verify capacity, publish/read/export, no corruption, no half-frame. This proves the worst-case buffer bound without a 50-min incompressible full-frame sim.",
+      "timebox_min": 5
+    },
+    {
+      "step": 3,
+      "name": "Shortened MODE=1 incompressible (stored fallback)",
+      "content": "Run a shortened MODE=1 incompressible frame (e.g., 128x16 or 64x8) to exercise the stored fallback and inverse transform. Require 0 mismatch/four CRCs on the shortened sample set; write evidence_boundary=shortened_geometry; do not call it a full frame.",
+      "timebox_min": 5
+    },
+    {
+      "step": 4,
+      "name": "Odd-height frame-tail check (if time)",
+      "content": "Run a small odd-height frame (e.g., W=8,H=3) to exercise the TAIL last-block path; require 0 mismatch/four CRCs. If time does not allow, record tail_not_run and do not claim it.",
+      "timebox_min": 5
+    },
+    {
+      "step": 5,
+      "name": "Finalize r4",
+      "content": "Write result-r4.md/manifest with fault counts, max-length test, boundaries, and hash binding to r3 core. No RTL change; no TD/bitgen/download.",
+      "timebox_min": 2
+    }
+  ],
+  "acceptance": {
+    "pass": "MODE=2 fault phases show geom/raw_drop/cmp_drop as applicable, no half-frame, reset no publish, recovery publish, overflow no corruption, backpressure covered; store-only 2,594,706 B max-length test passes; shortened MODE=1 (if run) 0 mismatch/four CRCs with boundary; no RTL change; no TD/bitgen/download",
+    "core_reuse": "r3 full-frame evidence may be reused only if the RTL hashes are unchanged; if any RTL hash differs, stop (r4 is test-only).",
+    "partial": "If MODE=2 still cannot produce geom/raw_drop/cmp_drop or max-length test fails, P1 core remains PASS-with-boundary; return to planner; no r5 and no faked counts.",
+    "hard": [
+      "no RTL change",
+      "no timeout/threshold relaxation",
+      "no faking or ignoring geom/raw_drop/cmp_drop",
+      "no half-frame",
+      "no TD/bitgen/download/Flash"
+    ]
+  },
+  "budget": {
+    "dev_minutes_max": 25,
+    "dev_calls_max": 15,
+    "fault_minutes_max": 8,
+    "store_tb_minutes_max": 5,
+    "mode1_minutes_max": 5,
+    "tail_minutes_max": 5,
+    "finalize_minutes_max": 2,
+    "td_sessions": 0,
+    "synth": 0,
+    "route": 0,
+    "bitgen": 0,
+    "download": 0,
+    "sim_timeout_full_s": 900,
+    "sim_timeout_fault_s": 400,
+    "note": "test-only; no RTL change; r3 core evidence is hash-bound; full 1080p is not rerun unless a TB change is proven to affect it."
+  },
+  "stop_conditions": [
+    "Any RTL change or RTL hash mismatch -> stop immediately (r4 is test-only).",
+    "MODE=2 still cannot produce the required geom/raw_drop/cmp_drop semantics within 8 min -> stop with partial evidence; no fake counts; no r5.",
+    "Store-only 2,594,706 B max-length test fails or cannot be built within 5 min -> stop; P1 core PASS-with-boundary.",
+    "Shortened MODE=1 or odd-height tail does not reach 0 mismatch/four CRCs -> record boundary, do not claim it.",
+    "Any timeout/threshold relaxation, half-frame, TD/bitgen/download/Flash, or P2/P3/P4 work -> stop.",
+    "25 min/15 calls exhausted -> stop with partial evidence; no r5."
+  ],
+  "write_scope": {
+    "modify_existing": [
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r4/sim/tb_camera_a1_uart_top.v (copy of r3 TB; test-only)",
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r4/sim/tb_store_maxlen.v (new)",
+      "tools/a1/verify_p1.py (tolerant truncated-frame parsing only; optional)",
+      "T10.b1-a1-uart-integ/r4/run_p1_r4.ps1 (new/copy)"
+    ],
+    "create_new": [
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b1-a1-uart-integ/r4/**"
+    ],
+    "must_not_modify": [
+      "any RTL file (a1_deflate_core/a1_frame_top/a1_ddr_slot_store/a1_ddr_arb2/camera_a1_uart_top/a1_uart_export/a1_raw_crop)",
+      "SDC 227dd39e",
+      "r3 frozen evidence/manifest",
+      "old runs/manifests",
+      "P2/P3/P4 files"
+    ]
+  },
+  "path_contract": {
+    "sim": "P: = project root, W: = current sim run",
+    "td": "not used in P1",
+    "doc": "tools/td/PATH_CONTRACT.md"
+  },
+  "next_action": "spawn_agent",
+  "next_action_detail": {
+    "role": "fpga-dev",
+    "skill_path": ".agents/skills/fpga-dev/SKILL.md",
+    "task": "T10.b1-a1-uart-integ r4 (test-only): parameterize MODE=2 phases by frame length and fix TB timing; tolerant truncated-frame parsing; produce bad-frame/reset/recovery/three-quick-frame/backpressure semantics; add store-only 2,594,706 B max-length TB; shortened MODE=1 and odd-height tail if time. No RTL change; 25 min/15 calls; no TD/bitgen/download; fail -> P1 core PASS-with-boundary, no r5.",
+    "must_read": [
+      "dev-plan.md §51",
+      "T10.b1-a1-uart-integ/r3/result-r3.md",
+      "T10.b1-a1-uart-integ/r3/run_p1.ps1",
+      "T10.b1-a1-uart-integ/r3/sim/tb_camera_a1_uart_top.v",
+      "T10.b1-a1-uart-integ/r3/CANDIDATE-MANIFEST-b1-a1-uart-integ-r3.json"
+    ],
+    "first_checks": [
+      "confirm RTL hashes match r3 manifest; any mismatch stops",
+      "copy TB to r4 and parameterize phase timings; do not edit RTL",
+      "add st_read_words/st_dup_words-style observability only if already in RTL; otherwise use existing counters",
+      "keep 900 s/400 s timeouts and all thresholds"
+    ]
+  },
+  "user_summary_path": "workflow/runs/20261020-0209_singleA_aplus_closedloop/user-summary.md"
+}

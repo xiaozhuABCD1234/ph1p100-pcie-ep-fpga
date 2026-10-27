@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "kind": "td2026_install",
+  "workpackage": "T01.tool-D (TD 2026.2 parallel install and headless generation verification)",
+  "recorded_at": "2026-10-16T23:2x+08:00",
+  "status": "install_success_user_uac_click_required",
+  "installer": {
+    "file": "C:\\Users\\czz\\Downloads\\TD_Release_2026.2_NL.exe",
+    "bytes": 1969702400,
+    "sha256": "3B92ABE8F201F8D37A5D8CB4BE0BFA1A82E36B151E9CF90F8B5D847526751A0A",
+    "sha256_official_match": true,
+    "pe_version": "TD_Release_2026.2 Installer / FileVersion 210.850.0.0",
+    "signature": "Valid, subject CN=上海安路信息科技股份有限公司 (Anlogic)",
+    "type": "Advanced Installer 21.6.1 bootstrapper EXE + per-machine MSI",
+    "msi": {
+      "product_name": "TD_Release_2026.2",
+      "product_code": "{C96C0B0F-0B46-4B0C-870C-3CA232312350}",
+      "upgrade_code": "{97F3849F-43DA-4DAA-8583-88F488FE2254}",
+      "product_version": "210.850",
+      "allusers": 1,
+      "appdir_property": "APPDIR",
+      "packaging_tool": "Advanced Installer 21.6.1 build 1154d4e3",
+      "observed_command_line": "msiexec.exe /i \"%APPDATA%\\Anlogic\\TD_Release_2026.2 210.850\\install\\2312350\\TD_Release_2026.2_NL.msi\" AI_SETUPEXEPATH=... SETUPEXEDIR=... EXE_CMD_LINE=\"/exenoupdates /forcecleanup /wintime 1792047756\""
+    },
+    "bw_msi_not_installed": {
+      "file": "C:\\Users\\czz\\Downloads\\BW_Release_2026.2.msi",
+      "bytes": 68226048,
+      "sha256": "B399BFF9FE0C695F453EFAAB4B0EFD3C1E0E0727ED9C53271E8C35F92CAA273D",
+      "note": "recorded only; deliberately not installed this round (keep 6.2.2 driver/PATH discipline)"
+    }
+  },
+  "preconditions": {
+    "installer_processes_present_before": false,
+    "current_shell_elevated": false,
+    "uac_policy": "EnableLUA=1 ConsentPromptBehaviorAdmin=5 PromptOnSecureDesktop=1 (consent click required)",
+    "agent_elevation_attempt": "blocked by runtime permission system; plan switched to silent/basicUI + user UAC click",
+    "disk_free_before": {"C_GB": 123.3, "D_GB": 272.0}
+  },
+  "attempts": [
+    {
+      "id": "install_a_probe_quiet_layout",
+      "argv_note": "bootstrapper has no WiX '-quiet/-layout'; command exited 0xE0000001 (1.5s) with no side effects; also one earlier malformed-argv run (PowerShell array/plus precedence bug) stayed idle and was killed - tool untouched",
+      "result": "not usable; classified as non-Burn custom engine flow (later identified as Advanced Installer)"
+    },
+    {
+      "id": "install_b_qn_unelevated",
+      "argv": "TD_Release_2026.2_NL.exe /exenoui /qn /norestart APPDIR=D:\\anlogic\\TD_Release_2026.2 /L*V <installdir>\\msi_silent_unelevated.log",
+      "exit_code": 1603,
+      "wall_seconds": 37,
+      "log": {"path": "td2026_20261016_214505/install/msi_silent_unelevated.log", "bytes": 2648814, "sha256": "4A1284E017A5EC23272F71C601129619A6F1573DBC9CE7465E11B74697EED585"},
+      "root_cause_line": "MSI_LUA: Installation UI level is silent, no credential elevation is possible",
+      "note": "APPDIR and /L*V were confirmed forwarded to msiexec (log 'Command Line:' line)"
+    },
+    {
+      "id": "install_c_qb_user_uac",
+      "argv": "TD_Release_2026.2_NL.exe /exenoui /qb /norestart APPDIR=D:\\anlogic\\TD_Release_2026.2 /L*V <installdir>\\msi_qb.log",
+      "consent_exe_first_seen": "22:37:21 (user approved UAC on the desktop)",
+      "exit_code": 0,
+      "wall_seconds": 106,
+      "log": {"path": "td2026_20261016_214505/install/msi_qb.log", "bytes": 11298744, "sha256": "5E1299022D7E821EE804FF114D3AFE168FB6604ECDE0569E1E8F03AF5C2B529A"},
+      "result": "install success to D:\\anlogic\\TD_Release_2026.2 (2762.5 MB)"
+    }
+  ],
+  "installed_anchors": {
+    "root": "D:\\anlogic\\TD_Release_2026.2",
+    "bin\\td_commands_prompt.exe": {"sha256": "2629E474DF036A871807E564190FEBFBBD9780A09365F600C10463911C8C1223", "bytes": 123372304},
+    "bin\\td.exe": {"sha256": "FA2A5AC6E5342B2F801EFA7A6AA345A5FD02D6F25FFA0D1E6380FF0EBD306A87", "bytes": 123372304},
+    "bin\\IpTool.exe": {"sha256": "5B0654AAA44AE9340EEFCDC8CAC54FAED7490B0643F3FA53908C5706DB175CEC", "bytes": 24507392},
+    "bin\\bw.exe": {"sha256": "89501B2D05CF842E38599F83CC71A982856F4FDEF74BC2CA09DB1FA75D422008", "bytes": 18968840},
+    "arch\\ph1_100p.db": {"sha256": "939EC2948F40546C9C545786AF96AB4CB007A5ECF063F133DA2B7835983FF77B", "bytes": 11037320},
+    "ip\\depot\\MIS_DDRF6F1D0P0_1.2\\Component.xml": {"sha256": "3E854A263A249D4C3878F71903AF0EC36320B22133529F8F871CA311B02BBFB8", "bytes": 229562, "note": "differs from 6.2.2 depot Component.xml FEB4F5BC... (new version)"},
+    "ip\\depot\\MIS_DDRF6F1D0P0_1.2\\Dependency.tcl": {"sha256": "51C2311FA6C5CD06813268CF6CC6E5D5F81735E7276E11F20E183475AE52075A", "bytes": 135645},
+    "version": "TD Release_2026.2, build 6.2.3.210850, built 11:35:58 Aug 19 2026",
+    "tcl_version": "8.6.17",
+    "db_version": "46207 (from 'Import design success TD_VERSION=Release_2026.2 , DB_VERSION=46207' during regression s3 open_run)",
+    "license": {
+      "file": "D:\\anlogic\\TD_Release_2026.2\\license\\Anlogic.lic",
+      "sha256": "DC19FEE62EFF532D4C6A84C04CE34267B03190B753A3198A6788C3EC9E45C1A6",
+      "source": "copied from D:\\downlaod\\license\\Anlogic.lic (same SHA, 258 B, NODELOCKED per historical review)",
+      "why": "fresh install has empty license dir; synthesis worker failed RUN-8008 'Cannot find license file' until copied; after copy the full chain passes"
+    }
+  },
+  "registry_and_shortcuts": {
+    "new_uninstall_key": "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{C96C0B0F-0B46-4B0C-870C-3CA232312350} (DisplayName TD_Release_2026.2, 210.850, InstallLocation D:\\anlogic\\TD_Release_2026.2\\)",
+    "old_622_untouched": "{2A7C3A75-CAEC-4ADC-85FA-176655E781D7} TD_Release_2026.1_SP2 InstallLocation D:\\downlaod\\ unchanged",
+    "desktop_shortcut": "C:\\Users\\Public\\Desktop\\TD_Release_2026.2.lnk -> D:\\anlogic\\TD_Release_2026.2\\bin\\td.exe"
+  },
+  "side_effects_recorded": {
+    "user_path_appended": "D:\\anlogic\\TD_Release_2026.2\\bin\\ (installer behavior; recorded only, no action taken; D:\\downlaod\\bin\\ still earlier in PATH)",
+    "machine_path": "unchanged",
+    "file_association_progid": "Anlogic.TD_Release_2026.2.al created (next to old Anlogic.TD_Release_2026.1_SP2.al)",
+    "vc_redist": "no change observed; system already has v14.51.36247.00 (nested VC_redist 14.30 payload detect condition satisfied)",
+    "services": "no new Anlogic services observed",
+    "appdata_extraction": "%APPDATA%\\Anlogic\\TD_Release_2026.2 210.850\\install: MSI + holders (holder0.aiph 2147483647 B + holder1.aiph 749234822 B) materialized during install, then removed by the installer's own cleanup (we did not delete anything; files=0 after)",
+    "downlaod_622_files": {
+      "bin\\td_commands_prompt.exe": "79EC56674F8F7B889E25E11BDCA91F7D64C24BA0DE99E80680248F00B4F87190 (unchanged)",
+      "bin\\IpTool.exe": "DA9E765EE1AF39594BC546224BA79CF84EAD5700C7BDDFE4A6FCC7BF95A3DE46 (unchanged)",
+      "bin\\td.exe": "B71298886E29F4D3F76834B8DF483468360EFEE527627BFA047CE4FD8DA2AFA (unchanged)"
+    },
+    "disk_free_after": {"C_GB": 122.5, "D_GB": 269.2}
+  },
+  "evidence_files": {
+    "gui_wizard_probe_screenshot": {"path": "td2026_20261016_214505/install/gui_probe_1.png", "sha256": "BA8CF212A3C717F218D329F69F053D2FE6CCF7F5598E02C2280AE8329393BB4A", "note": "pre-install GUI probe of the wizard (window 'TD_Release_2026.2 安装' seen via msiexec child pid; killed after capture)"},
+    "embedded_vc_redist_containers": {
+      "uxA_small.cab": "1BDA6D2081A0694B326BBF7AFE2D10133E92E9D68053B06A768E1651D35B4860 (176972 B)",
+      "uxA_big.cab": "F82AD798CEF563B2C8693E8A54B8CAF721253169FE228FA40F77127E1AE91346 (24608386 B)",
+      "uxB_small.cab": "B3B911C743CAB8D292981C71A3969263F7D333965F383B2BB0960495ADE7C64D (175723 B)",
+      "uxB_big.cab": "B84C5387EA010C702F78CD3B49593E4C07331C39D493B45CCDE3C5A78FDADC52 (24566813 B)",
+      "note": "extracted read-only from the installer binary (offsets 0x726BB45E/0x726E8B9E/0x73ED4016/0x73F016AE) for forensics; contents = nested dd_vcredist_amd64 Burn bundle UX"
+    }
+  },
+  "limits": [
+    "BW (BitWizard) package recorded but not installed.",
+    "No hardware/JTAG/driver actions; no download to board.",
+    "UAC consent click was performed by the user on the desktop (consent.exe observed); the agent itself cannot elevate in this environment."
+  ]
+}

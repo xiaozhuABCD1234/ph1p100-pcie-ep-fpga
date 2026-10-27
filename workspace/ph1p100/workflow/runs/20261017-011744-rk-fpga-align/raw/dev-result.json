@@ -1,0 +1,93 @@
+{
+  "task_id": "T11.rk-align-raw",
+  "task_ids": ["T11.rk-align-raw"],
+  "round": 0,
+  "role": "developer",
+  "status": "ready_for_test",
+  "batch_size": 1,
+  "actual_repair_rounds": 0,
+  "fixed_in_this_round": [
+    "本包为 T11 round0 首次交付；其中「修复 e2e TB 读从机地址错位（阻塞赋值+自增顺序）、e2e 相位语义（ARM 前置发布帧 / 逐相位监视计数复位 / release toggle 双边沿计数）」属于本包内部把新 TB 跑通的开发过程，不计任务修复轮（lessons L1/L2/L3）",
+    "本轮完成了原实例『执行一半』的收尾：写者 RTL/顶层换接/写者 TB 已由原实例产出（写者 TB 当时已 ALL PASS，e2e 首版 FAIL 15 错）；本实例修复 e2e 并补齐 T07 遗留用例、严格解析工具、RK 增量、全量 G1（含 T07 回归与负对照）与 G2 重建"
+  ],
+  "artifact_paths": [
+    "fpga/csi2/pcie_integration/",
+    "tools/pcie_integration/",
+    "workflow/runs/20261017-011744-rk-fpga-align/raw/change-report.md",
+    "workflow/runs/20261017-011744-rk-fpga-align/raw/source-provenance.json",
+    "workflow/runs/20261017-011744-rk-fpga-align/raw/build-entry.md",
+    "workflow/runs/20261017-011744-rk-fpga-align/raw/actual-commands.json",
+    "workflow/runs/20261017-011744-rk-fpga-align/raw/hardware-ready.md",
+    "workflow/runs/20261017-011744-rk-fpga-align/raw/rk-change-list.md",
+    "workflow/runs/20261017-011744-rk-fpga-align/raw/rk-driver-src/",
+    "workflow/runs/20261017-011744-rk-fpga-align/raw/patches/t11-rka1-r10f-fix.patch",
+    "workflow/runs/20261017-011744-rk-fpga-align/raw/patches/apply-check-stat.txt",
+    "workflow/runs/20261017-011744-rk-fpga-align/raw/samples/",
+    "workflow/runs/20261017-011744-rk-fpga-align/raw/g1/",
+    "workflow/runs/20261017-011744-rk-fpga-align/raw/g2/README.md",
+    "workflow/runs/20261017-011744-rk-fpga-align/raw/candidate/prj/",
+    "workflow/runs/20261017-011744-rk-fpga-align/raw/manifest-selfcheck.json",
+    "workflow/runs/20261017-011744-rk-fpga-align/raw/lessons-learned.md"
+  ],
+  "manifest_path": "workflow/runs/20261017-011744-rk-fpga-align/raw/candidate-manifest.json",
+  "manifest_sha256": "aab0cc08ef0134d5fcb18b25e0b70c43e9af1d577513ca2996dc46f22de76975",
+  "manifest_selfcheck": "243 entries / 0 mismatches",
+  "bit_sha256": "14b32037eb0b4aff4f9ea1f61b75160c11ff9381e23f11563f97ecaf5bf5686b",
+  "test_input_paths": [
+    "fpga/csi2/pcie_integration/sim/tb/tb_cam_r10f_writer.v",
+    "fpga/csi2/pcie_integration/sim/tb/tb_t11_r10f_e2e.v",
+    "fpga/csi2/pcie_integration/sim/tb/tb_t11_csi_enable_corner.v",
+    "fpga/csi2/pcie_integration/sim/tb/tb_ddr_frame_pusher_rka1.v",
+    "fpga/csi2/pcie_integration/sim/tb/tb_csi_integrity_diff.v",
+    "fpga/csi2/pcie_integration/sim/tb/tb_csi_checked.v",
+    "fpga/csi2/pcie_integration/sim/tb/tb_ep_bar_win_rka1.v",
+    "fpga/csi2/pcie_integration/sim/tb/tb_ddr_wr_arb_peer.v",
+    "fpga/csi2/pcie_integration/sim/tb/csi_rx_packet_integrity_ref.v",
+    "fpga/csi2/pcie_integration/sim/tb/top_elab_stubs.v",
+    "fpga/csi2/pcie_integration/sim/compile_checked.f",
+    "tools/pcie_integration/run_sim.ps1",
+    "tools/pcie_integration/run_td.ps1",
+    "tools/pcie_integration/gen_manifest_t11.py",
+    "tools/pcie_integration/gen_crc32_flat.py",
+    "tools/pcie_integration/r10f_strict.py",
+    "tools/pcie_integration/r10f_tools_consistency.py",
+    "workflow/runs/20261017-011744-rk-fpga-align/raw/candidate/prj/",
+    "workflow/runs/20261017-011744-rk-fpga-align/raw/patches/t11-rka1-r10f-fix.patch"
+  ],
+  "lessons_path": "workflow/runs/20261017-011744-rk-fpga-align/raw/lessons-learned.md",
+  "blocked": [],
+  "retest": {
+    "required_dimensions": ["functional", "engineering", "system"],
+    "input_status": "changed",
+    "input_changes": [
+      "生产 RTL：新增 rtl/ep_side/ddr/cam_r10f_writer.v + crc32_upd4.v；修改 rtl/ep_side/ph1p_pcie_ep_top.v（A/B 换接 R10F 写者、pusher frame_bytes/ddr_seq/base/status 走新写者、rel_tgl0..3 分路）",
+      "约束/SDC/ADC/al_ip/checked 三文件：**零变化**（SHA 与 T07 manifest 同值）",
+      "测试输入：新增 tb_cam_r10f_writer / tb_t11_r10f_e2e / tb_t11_csi_enable_corner（+原实例的 tb_t11_dbg1 调试台）；compile_checked.f 加写者",
+      "构建：新候选 raw/candidate/prj（bit 14b32037…5686b 取代 T07 的 0943cb36…8b0a；同一交付树、同一入口/判据）",
+      "工具：新增 r10f_strict.py / r10f_tools_consistency.py / gen_crc32_flat.py / gen_manifest_t11.py（T07 的 gen_manifest.py 未改，保持其 SHA 可复算）",
+      "RK 侧：新增增量补丁 t11-rka1-r10f-fix.patch 与 raw/rk-driver-src（修正 T07 草案解析布局 + 发布前严格解析 + r10f_check CLI）"
+    ],
+    "reuse_decision_paths": [
+      "test-reports/T07.rk-align-backend-r3-*.md：T07 的 PASS 判定**不可直接复用**（RTL/bit 已变）；但其对 pusher 安全门/寄存器面/TL 协议/T07 回归 TB 的结论可作为「同一份 pusher 字节未变」的前提，由本包 r_t07_* 复跑重新绑定 T11 manifest（raw/g1/README.md 有对照表）",
+      "workflow/runs/20261017-011744-rk-fpga-align/backend/g2/README.md §5：约束告警逐项解释（2 无根时钟网 + 3 local clock）可复用为模板；本包 G2 实测同类 5 项，见 raw/g2/README.md §3",
+      "backend/change-report.md §8.2：checked 包层差分 oracle 的可复用条件（rtl/checked 三文件本轮零变化）——本包已复跑 tb_csi_integrity_diff（680 拍 0 失配）",
+      "backend/rk-change-list.md：T07 补丁仍必须先用；T11 增量必须叠加（T07 草案解析会拒所有正式帧，见 raw/rk-change-list.md §0）"
+    ],
+    "evidence_refresh": [
+      "G1（本包全新，三个新 TB + 五个 T07 回归 + 一个负对照）：raw/g1/README.md 索引；关键目录 p1_writer_v4 / p2_e2e_v6 / p3_enable / r_t07_* / neg_m1_pack_order；RTL 输出帧另用独立 Python 严格解析复核（raw/g1/msim/p2_e2e_v6/host_check.json = R10F_STRICT_OK）",
+      "G2（本包全新重建，唯一最终 DB）：raw/g2/README.md；SWNS +0.115 / STNS 0.000 / 0 违例 / HWNS +0.020 / Routed / 资源在器件内 / bit 14b32037…5686b 与 best_result 同 SHA；TD 重建 1 次",
+      "RK 增量：raw/patches/apply-check-stat.txt（隔离基线 git apply --check/apply 通过）；raw/g1/r10f_tool_consistency.json（Rust↔Python 25/25）；raw/samples/（与合同向量逐字节相同）",
+      "离线合同复算：raw/g1/r10f_strict_selftest.json（38 项 0 失败，CONTRACT_VECTORS_OK）"
+    ],
+    "blocked_dimension": null
+  },
+  "notices": [
+    "本包不操作硬件：不下载位流、不写 Flash、不发外部消息；G3/G4 留 T07.rk-align-board，组合版交付留 T11.rk-align-release",
+    "几何/相位未板证：W/H/X0/Y0/SKIP_ROWS/BAYER_PHASE 为「按源标定写入的参数」占位，所有帧内容按 synthetic/diagnostic；板测用 0x120..0x12C 复核后回填参数并重跑 G1/G2（raw/hardware-ready.md §4/§5）",
+    "T07 manifest 的 production_inputs 引用同一棵树，T11 修改后其 SHA 已变；T07 manifest 只作历史冻结记录，当前唯一有效清单是 raw/candidate-manifest.json（aab0cc08…6975）",
+    "RK 增量未编译/未安装（本机无 cargo/交叉工具链/KDIR）；「ARM→held→严格解析→ACK→再 ARM」整环仍待 RK 操作者接（raw/rk-change-list.md §4）",
+    "相机字节域余量仍薄（+0.115 ns，67% 布线）：任何后续 RTL/约束改动必须重跑 G2 并以该域 setup ≥ 0 为回归门槛",
+    "tools/pcie_integration/*.ps1 的 UTF-8 BOM 是功能性要求；T07 的 gen_manifest.py 未改动（其 SHA 可复算）",
+    "原实例的失败/调试证据（raw/g1/msim/p2_e2e、p2_dbg*、dbg1 与 test-reports 旧报告）保留未删"
+  ]
+}

@@ -1,0 +1,577 @@
+{
+  "task_id": "T10.ss-g0-prod-sink",
+  "round": 0,
+  "dimension": "integrated",
+  "candidate": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-143924_fpga-1080p30-g0-production\\T10.ss-g0-prod-sink\\r0",
+  "manifest_sha256": "de8a5cffb8044828d2c4eb0ae72d1959c5267a06744a4002bf60a413995aa139",
+  "independent_metrics": {
+    "N": {
+      "bytes_frame1": 1677912,
+      "bytes_steady": 1677336,
+      "frames_steady_equal": true,
+      "S_23": 7475240,
+      "S_34": 7475240,
+      "S_ss": 7475240.0,
+      "tail": {
+        "2": 3354764,
+        "3": 3354764,
+        "4": 3354764
+      },
+      "tail_mean": 3354764.0,
+      "tail_frac": 0.44878345043102297,
+      "tail_frac_from_2x": 0.44877114313386596,
+      "core_interval_mean": 7475238.0,
+      "export_time_mean": 3354672.0,
+      "bottleneck": "core_interval",
+      "sink_limited": false,
+      "margin_G0_pct": -16.39064431376116,
+      "G0": "G0_not_closed",
+      "L_cold_raw": 12440157
+    },
+    "L": {
+      "bytes_frame1": 2156868,
+      "bytes_steady": 2156300,
+      "frames_steady_equal": true,
+      "S_23": 6986955,
+      "S_34": 6986949,
+      "S_ss": 6986952.0,
+      "tail": {
+        "2": 4312692,
+        "3": 4312692,
+        "4": 4312692
+      },
+      "tail_mean": 4312692.0,
+      "tail_frac": 0.6172494100431776,
+      "tail_frac_from_2x": 0.617236242641999,
+      "core_interval_mean": 6986950.666666667,
+      "export_time_mean": 4312600.0,
+      "bottleneck": "core_interval",
+      "sink_limited": true,
+      "margin_G0_pct": -10.547546340664715,
+      "G0": "G0_not_proven",
+      "L_cold_raw": 12901635
+    }
+  },
+  "comp_demand": {
+    "N": {
+      "bytes": 1677336,
+      "rate30": 50.32008,
+      "rate25": 67.09344,
+      "fits30": true,
+      "fits25": true,
+      "util25_pct": 71.566336,
+      "headroom25_pct": 39.73050122336848,
+      "export_cycles": 3354672
+    },
+    "L": {
+      "bytes": 2156300,
+      "rate30": 64.689,
+      "rate25": 86.252,
+      "fits30": true,
+      "fits25": true,
+      "util25_pct": 92.00213333333332,
+      "headroom25_pct": 8.693131753466599,
+      "export_cycles": 4312600
+    }
+  },
+  "raw_band_tiers": {
+    "93.75": {
+      "MBps": 93.75,
+      "cycles": 5189412.0,
+      "cycles_int": 5189412,
+      "ms": 27.676864,
+      "pct_G0": 83.030592
+    },
+    "103.78824": {
+      "MBps": 103.78824,
+      "cycles": 4687500.0,
+      "cycles_int": 4687500,
+      "ms": 25.0,
+      "pct_G0": 75.0
+    },
+    "103.79_rounded": {
+      "MBps": 103.79,
+      "cycles": 4687420.512573466,
+      "cycles_int": 4687421,
+      "ms": 24.999576067058484,
+      "pct_G0": 74.99872820117545
+    },
+    "187.5": {
+      "MBps": 187.5,
+      "cycles": 2594706.0,
+      "cycles_int": 2594706,
+      "ms": 13.838432,
+      "pct_G0": 41.515296
+    }
+  },
+  "raw_band_needs": {
+    "need30": 77.84118,
+    "need25": 103.78824,
+    "short_pct": 10.707456000000004,
+    "short_ms": 2.6768639999999984
+  },
+  "checks": [
+    {
+      "id": "A1_comp_bytes_from_evt",
+      "pass": true,
+      "detail": {
+        "N": 1677336,
+        "L": 2156300,
+        "N_frame1": 1677912,
+        "L_frame1": 2156868
+      }
+    },
+    {
+      "id": "A2_metrics_from_evt",
+      "pass": true,
+      "detail": {
+        "N": {
+          "S_ss": 7475240.0,
+          "tail_frac": 0.44878345043102297,
+          "sink_limited": false,
+          "margin_G0_pct": -16.39064431376116,
+          "G0": "G0_not_closed"
+        },
+        "L": {
+          "S_ss": 6986952.0,
+          "tail_frac": 0.6172494100431776,
+          "sink_limited": true,
+          "margin_G0_pct": -10.547546340664715,
+          "G0": "G0_not_proven"
+        }
+      }
+    },
+    {
+      "id": "A3_p1_json_agreement",
+      "pass": true,
+      "detail": "EVT-derived == P1 content-verdict-r1.json"
+    },
+    {
+      "id": "B1_comp_demand_values",
+      "pass": true,
+      "detail": {
+        "N": {
+          "rate30": 50.32008,
+          "rate25": 67.09344
+        },
+        "L": {
+          "rate30": 64.689,
+          "rate25": 86.252
+        }
+      }
+    },
+    {
+      "id": "B2_comp_under_93_75",
+      "pass": true,
+      "detail": {
+        "N": [
+          50.32008,
+          67.09344
+        ],
+        "L": [
+          64.689,
+          86.252
+        ],
+        "sink": 93.75
+      }
+    },
+    {
+      "id": "B3_export_identity_vs_p1_tail",
+      "pass": true,
+      "detail": {
+        "N": [
+          3354672,
+          3354764.0
+        ],
+        "L": [
+          4312600,
+          4312692.0
+        ]
+      }
+    },
+    {
+      "id": "B4_sink_not_bottleneck",
+      "pass": true,
+      "detail": {
+        "N_ratio": 0.44877126320258964,
+        "L_ratio": 0.6172363604303871
+      }
+    },
+    {
+      "id": "C1_three_tier_arithmetic",
+      "pass": true,
+      "detail": {
+        "93.75": {
+          "cycles": 5189412,
+          "ms": 27.676864,
+          "pct_G0": 83.030592
+        },
+        "103.78824": {
+          "cycles": 4687500,
+          "ms": 25.0,
+          "pct_G0": 75.0
+        },
+        "103.79_rounded": {
+          "cycles": 4687421,
+          "ms": 24.999576,
+          "pct_G0": 74.998728
+        },
+        "187.5": {
+          "cycles": 2594706,
+          "ms": 13.838432,
+          "pct_G0": 41.515296
+        }
+      }
+    },
+    {
+      "id": "C2_raw_need_fits_shortfall",
+      "pass": true,
+      "detail": {
+        "need30": 77.84118,
+        "need25": 103.78824,
+        "short_pct": 10.707456000000004,
+        "short_pct_rounded_4dp": 10.7075,
+        "short_ms": 2.6768639999999984,
+        "slack30_ms": 5.656469333333337
+      }
+    },
+    {
+      "id": "C3_rounded_equiv",
+      "pass": true,
+      "detail": {
+        "cycles_from_rounded": 4687420.512573466,
+        "frozen": 4687500,
+        "delta": 79.48742653429508
+      }
+    },
+    {
+      "id": "C4_raw_band_not_applied_to_comp",
+      "pass": true,
+      "detail": {
+        "N_frac_of_raw_band_pct": 64.64454932466337,
+        "L_frac_of_raw_band_pct": 83.10382756273737
+      }
+    },
+    {
+      "id": "D1_g0_boundary",
+      "pass": true,
+      "detail": {
+        "dev_headline": "unchanged from P1: N G0_not_closed -16.3906%, L G0_not_proven -10.5475%, headline G0_not_proven",
+        "evt_N": "G0_not_closed",
+        "evt_L": "G0_not_proven"
+      }
+    },
+    {
+      "id": "E1_dev_json_matches_independent",
+      "pass": true,
+      "detail": {
+        "N": {
+          "bytes": {
+            "json": 1677336,
+            "indep": 1677336,
+            "ok": true
+          },
+          "rate30": {
+            "json": 50.32008,
+            "indep": 50.32008,
+            "ok": true
+          },
+          "rate25": {
+            "json": 67.09344,
+            "indep": 67.09344,
+            "ok": true
+          },
+          "S_ss": {
+            "json": 7475240.0,
+            "indep": 7475240.0,
+            "ok": true
+          },
+          "tail_frac": {
+            "json": 0.44878345043102297,
+            "indep": 0.448783,
+            "ok": true
+          },
+          "export_cycles": {
+            "json": 3354672,
+            "indep": 3354672,
+            "ok": true
+          },
+          "G0": {
+            "json": "G0_not_closed",
+            "indep": "G0_not_closed",
+            "ok": true
+          }
+        },
+        "L": {
+          "bytes": {
+            "json": 2156300,
+            "indep": 2156300,
+            "ok": true
+          },
+          "rate30": {
+            "json": 64.689,
+            "indep": 64.689,
+            "ok": true
+          },
+          "rate25": {
+            "json": 86.252,
+            "indep": 86.252,
+            "ok": true
+          },
+          "S_ss": {
+            "json": 6986952.0,
+            "indep": 6986952.0,
+            "ok": true
+          },
+          "tail_frac": {
+            "json": 0.6172494100431776,
+            "indep": 0.617249,
+            "ok": true
+          },
+          "export_cycles": {
+            "json": 4312600,
+            "indep": 4312600,
+            "ok": true
+          },
+          "G0": {
+            "json": "G0_not_proven",
+            "indep": "G0_not_proven",
+            "ok": true
+          }
+        }
+      }
+    },
+    {
+      "id": "E2_dev_raw_band_matches",
+      "pass": true,
+      "detail": {
+        "cycles": 5189412,
+        "ms": 27.676864,
+        "pct_of_G0_window": 83.030592,
+        "fits_33_3333ms": true,
+        "fits_25_0ms": false,
+        "shortfall_at_25ms_pct": 10.707456,
+        "shortfall_at_25ms_ms": 2.676864
+      }
+    },
+    {
+      "id": "F1_manifest_sha",
+      "pass": true,
+      "detail": {
+        "manifest_sha": "de8a5cffb8044828d2c4eb0ae72d1959c5267a06744a4002bf60a413995aa139",
+        "expected": "de8a5cffb8044828d2c4eb0ae72d1959c5267a06744a4002bf60a413995aa139"
+      }
+    },
+    {
+      "id": "F2_artifacts_5_of_5",
+      "pass": true,
+      "detail": [
+        {
+          "path": "sink_headroom.py",
+          "manifest": "64106e93a1408da9",
+          "actual": "64106e93a1408da9",
+          "bytes_ok": true,
+          "sha_ok": true
+        },
+        {
+          "path": "sink-headroom.json",
+          "manifest": "63ffb8495720c371",
+          "actual": "63ffb8495720c371",
+          "bytes_ok": true,
+          "sha_ok": true
+        },
+        {
+          "path": "result-r0.md",
+          "manifest": "418c50031f939971",
+          "actual": "418c50031f939971",
+          "bytes_ok": true,
+          "sha_ok": true
+        },
+        {
+          "path": "lessons-r0.md",
+          "manifest": "0e7a6bad00f1e70f",
+          "actual": "0e7a6bad00f1e70f",
+          "bytes_ok": true,
+          "sha_ok": true
+        },
+        {
+          "path": "commands.jsonl",
+          "manifest": "c9db03c36a743fef",
+          "actual": "c9db03c36a743fef",
+          "bytes_ok": true,
+          "sha_ok": true
+        }
+      ]
+    },
+    {
+      "id": "F3_scope_and_zero_hw",
+      "pass": true,
+      "detail": {
+        "write_scope": [
+          "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-143924_fpga-1080p30-g0-production\\T10.ss-g0-prod-sink\\r0/**",
+          "%TEMP%\\opencode\\ss-g0-prod-sink\\**"
+        ],
+        "evidence_rounds": {
+          "vsim": 0,
+          "td": 0,
+          "board": 0,
+          "network": 0
+        },
+        "files_under_cand": [
+          "commands.jsonl",
+          "lessons-r0.md",
+          "manifest-r0.json",
+          "model\\sink_headroom.py",
+          "out\\sink-headroom.json",
+          "result-r0.md"
+        ]
+      }
+    },
+    {
+      "id": "F4_upstream_inputs_bound",
+      "pass": true,
+      "detail": [
+        {
+          "path": "content-verdict-r1.json",
+          "sha_ok": true,
+          "bytes_ok": true
+        },
+        {
+          "path": "manifest-r1.json",
+          "sha_ok": true,
+          "bytes_ok": true
+        },
+        {
+          "path": "T10.ss-g0-prod-content-r1b-integrated.md",
+          "sha_ok": true,
+          "bytes_ok": true
+        },
+        {
+          "path": "T10.ss-g0-prod-coregap-r0-integrated.md",
+          "sha_ok": true,
+          "bytes_ok": true
+        },
+        {
+          "path": "p2-obs-ruling.md",
+          "sha_ok": true,
+          "bytes_ok": true
+        },
+        {
+          "path": "fpga-design-guide.md",
+          "sha_ok": true,
+          "bytes_ok": true
+        },
+        {
+          "path": "dev-plan.md",
+          "sha_ok": true,
+          "bytes_ok": true
+        }
+      ]
+    },
+    {
+      "id": "F5_commands_zero_sim_td",
+      "pass": true,
+      "detail": [
+        {
+          "phase": "model",
+          "rc": 0,
+          "seconds": 0.036,
+          "argv": [
+            "model/sink_headroom.py"
+          ]
+        },
+        {
+          "phase": "manifest",
+          "rc": 0,
+          "seconds": 0.031,
+          "argv": [
+            "model/sink_headroom.py",
+            "--manifest",
+            "--calls",
+            "17",
+            "--minutes",
+            "16"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "G1_script_reproduces_frozen_json",
+      "pass": true,
+      "detail": {
+        "equal": true,
+        "len_regen": 14293,
+        "len_frozen": 14293
+      }
+    },
+    {
+      "id": "G2_dev_checks_all_pass",
+      "pass": true,
+      "detail": {
+        "C1_arithmetic_recomputable": true,
+        "C2_headroom_vs_shortfall": true,
+        "C3_no_production_claim": true,
+        "C4_zero_hardware": true,
+        "C5_g0_unchanged_sink_not_bottleneck": true,
+        "C6_p1_measured_bytes_only": true,
+        "C7_raw_band_separated": true
+      }
+    },
+    {
+      "id": "H1_four_negative_controls",
+      "pass": true,
+      "detail": {
+        "93_75_SINK_AS_103_79": {
+          "mutated_cycles": 4687500,
+          "detected": true,
+          "delta_cycles": 501912,
+          "delta_pct_G0": 8.030592
+        },
+        "RAW_BAND_AS_COMP_STREAM": {
+          "mutated_rate25": {
+            "N": 103.78824,
+            "L": 103.78824
+          },
+          "detected": true,
+          "true_rate25": {
+            "N": 67.09344,
+            "L": 86.252
+          },
+          "N_inflate_pct": 54.69208316044012
+        },
+        "MODEL_AS_RTL": {
+          "claim": "production_sink_implemented=true",
+          "detected": true,
+          "evidence_rounds": {
+            "vsim": 0,
+            "td": 0,
+            "board": 0,
+            "network": 0
+          },
+          "has_sim_or_td_dir": false
+        },
+        "SINK_LIMITED_AS_SINK_BOUND": {
+          "L_tail_frac": 0.6172494100431776,
+          "L_sink_limited": true,
+          "L_export_cycles": 4312600,
+          "L_core_interval": 6986950.666666667,
+          "detected": true
+        }
+      }
+    },
+    {
+      "id": "I1_no_forbidden_claims",
+      "pass": true,
+      "detail": "no assertoric forbidden claim"
+    },
+    {
+      "id": "I2_production_boundary_stated",
+      "pass": true,
+      "detail": {
+        "json_headline": "not implemented / not proven; raw band requirement applies only to RAW fallback (stored) path"
+      }
+    }
+  ],
+  "verdict": "PASS",
+  "failed": []
+}

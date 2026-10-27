@@ -1,0 +1,153 @@
+{
+  "marker": "T02_INPUT_WITNESS_COMPLETE",
+  "status": "witness_reproduced",
+  "method": "generic source-slice evaluation plus independent RAW10 arithmetic and static chronology",
+  "scope": "G1 audit evidence only; no RTL execution or board/DDR inference",
+  "vectors": [
+    {
+      "pixels": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "canonical_wire_word": "e400000000",
+      "producer_word": "00c0200400",
+      "consumer_samples": [
+        0,
+        16,
+        128,
+        768
+      ],
+      "direct_boundary_preserves_pixels": false,
+      "repack_control_preserves_pixels": true
+    },
+    {
+      "pixels": [
+        1023,
+        0,
+        341,
+        682
+      ],
+      "canonical_wire_word": "93aa5500ff",
+      "producer_word": "aa955003ff",
+      "consumer_samples": [
+        1022,
+        14,
+        322,
+        598
+      ],
+      "direct_boundary_preserves_pixels": false,
+      "repack_control_preserves_pixels": true
+    },
+    {
+      "pixels": [
+        17,
+        261,
+        509,
+        777
+      ],
+      "canonical_wire_word": "55c27f4104",
+      "producer_word": "c25fd41411",
+      "consumer_samples": [
+        70,
+        80,
+        848,
+        383
+      ],
+      "direct_boundary_preserves_pixels": false,
+      "repack_control_preserves_pixels": true
+    },
+    {
+      "pixels": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "canonical_wire_word": "0000000000",
+      "producer_word": "0000000000",
+      "consumer_samples": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "direct_boundary_preserves_pixels": true,
+      "repack_control_preserves_pixels": true
+    },
+    {
+      "pixels": [
+        1023,
+        1023,
+        1023,
+        1023
+      ],
+      "canonical_wire_word": "ffffffffff",
+      "producer_word": "ffffffffff",
+      "consumer_samples": [
+        1023,
+        1023,
+        1023,
+        1023
+      ],
+      "direct_boundary_preserves_pixels": true,
+      "repack_control_preserves_pixels": true
+    }
+  ],
+  "single_lane_sweep": {
+    "cases": 4096,
+    "mismatches": 4089
+  },
+  "late_verdict_trace": [
+    {
+      "event": "last_ROI_group",
+      "row_zero_based": 1635,
+      "group_zero_based": 722,
+      "crop_out_last": 1,
+      "crop_done_after_edge": 1,
+      "selected_FE_seen": false
+    },
+    {
+      "event": "remaining_source_line_payload",
+      "remaining_groups": 243,
+      "crop_can_revoke_via_frame_fall": false
+    },
+    {
+      "event": "same_ROI_line_CRC_error",
+      "receiver_abort": 1,
+      "board_has_connected_abort_to_A1": false
+    },
+    {
+      "event": "selected_FE_bad",
+      "crop_done": 1,
+      "crop_frame_fall_abort_guard": false
+    }
+  ],
+  "source_bindings": [
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\T02.chain-input-review\\inputs\\csi_rx_10bit_unpack_checked.v",
+      "sha256": "9b5421c55b0f09871f8a939fb3381d4c7d5726286b30f9d5450cc09404065a12"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0146.v",
+      "sha256": "0064607aceb20ae3ef14133f0aaf5f8b3f489943011a66a1ddc005350dba7109"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0147.v",
+      "sha256": "33a6fee77fd1aa67a31cacf26dd5530e5e2ea474ee655cbd5f1d98d887c5d72d"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0152.v",
+      "sha256": "48881d574352fd2c61f7587d3687f215bb11ea18d5b5d0b4772820a938de561b"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0150.v",
+      "sha256": "acc1eff329aa295d01b16123581fee48ef49d444efdce3b7fe62214555517405"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-144617_fpga-chain-detail-review\\baseline\\snapshot\\0144.v",
+      "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9"
+    }
+  ]
+}

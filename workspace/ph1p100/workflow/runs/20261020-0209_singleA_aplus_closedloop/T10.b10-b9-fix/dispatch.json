@@ -1,0 +1,109 @@
+{
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "project_root": "D:/fpga/ph1p100",
+  "output_dir": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix",
+  "task_ids": ["T10.b10-b9-fix"],
+  "parent_task_id": "T10",
+  "batch_size": 1,
+  "round": "r1",
+  "status": "ready",
+  "needs_user_input": false,
+  "supersedes": "dispatch-r0.json",
+  "frozen_candidate_root": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b9-rawstore/r0",
+  "new_isolated_root": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/r0",
+  "source_freeze": {
+    "rule": "r1 must not change RTL, parameters, SDC, pins or ports; the built sources must hash-match the r0 manifest",
+    "manifest_r0": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/CANDIDATE-MANIFEST-b10-b9-fix-r0.json",
+    "sha256": {
+      "changed-src/a1_uart_export.v": "ff0ce16d6892c5339d806fbfff23a26e373e5d3f3ddf8a6156488f8479f0a7e1",
+      "changed-src/camera_a1_uart_top.v": "612d42a59cb1c304cd5446991ee3fe001402a1bcfbbf3b800584997d0590b22f",
+      "changed-src/a1_ddr_slot_store.v": "86d626465dc8d0643a7bb62e952e79ee89215c2e0c02719fc348a04c4363ed84",
+      "changed-src/a1_raw_crop.v": "33a6fee77fd1aa67a31cacf26dd5530e5e2ea474ee655cbd5f1d98d887c5d72d",
+      "changed-src/cam_diag_mailbox.v": "352af7c85094ea99b575e99da952af8d33871352140e4c6efddff9e6c2407278",
+      "changed-src/a1_deflate_core.v": "6797db053cfc47497540d6345e3a46b7e79cc1d34fa25da5a4c501505fbf35bb",
+      "td/src/p2_ddr_bridge.v": "b9e83481e3d3450b4d2a9d03812cbb1f14189fe80749e0f712aa8585cddfd5f4",
+      "td/src/p2_a1_board_top.v": "98d6c446bcee4fedb483792e229f4a672bd78e3b36f6bfa91f08f1c9c423441f"
+    },
+    "verified": "planner re-hashed all eight files before freeze; camera_a1_uart_top.v L156 is 'wire [39:0] crop_pix;'. The '// T10.b10 R1:' comment blocks describe reverted r0 attempts and must not be edited; the candidate has no functional R1 fix."
+  },
+  "input_paths": [
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/dev-plan.md",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/fpga-design-guide.md",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/handoff.md",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/result-r0.md",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/lessons-r0.md",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/CANDIDATE-MANIFEST-b10-b9-fix-r0.json",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/r0/changed-src",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/r0/td",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/r0/sim",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/r0/board",
+    "D:/fpga/ph1p100/docs/OpenCode_b9审核建议与验证清单_2026-10-25.md",
+    "D:/fpga/ph1p100/tools/td/open_td.ps1",
+    "D:/fpga/ph1p100/tools/td/PATH_CONTRACT.md"
+  ],
+  "write_scope": [
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/**"
+  ],
+  "protected": [
+    "D:/fpga/ph1p100/upstream/**",
+    "D:/fpga/ph1p100/fpga/csi2/src/**",
+    "D:/fpga/ph1p100/work/b9-opencode-audit-20261025/**",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b9-rawstore/**",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b8-crop-geom/**",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b7-cam-diag/**",
+    "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/**",
+    "D:/fpga/ph1p100/TD/**",
+    "D:/TD/work/csi2/**",
+    "any Flash/program path; shared bit/CWC/BID; b9 baseline copies"
+  ],
+  "next_action": {
+    "operation": "subagent",
+    "agent": "fpga-dev",
+    "host_fallback": "spawn_agent (Codex); OpenCode uses subagent(agent=..., description=..., prompt=...)",
+    "task_id": "T10.b10-b9-fix",
+    "prompt_path": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/dev-plan.md",
+    "read_first": [
+      "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/handoff.md",
+      "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/fpga-design-guide.md",
+      "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/result-r0.md",
+      "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/lessons-r0.md"
+    ],
+    "input_status": "r0 is blocked, not a candidate: B9-01/02/03 and P1 three goldens PASS; R2/R3 PASS (R3 residual); R1 and 3-consecutive-frame cases not_covered. TD used 3 synth + 2 route; the s2/s3 netlists were built from sources containing the 1-bit crop_pix defect, so there is no valid bit/CWC and downloads are 0/2. The defect is fixed in r0/changed-src and P1 was re-run identical, but that source has never been synthesised. r1 must rebuild once from the frozen source (1 synth + 1 route + 1 bitgen + 1 CWC), then do one download-first-then-COM8 180 s capture; optional R1/3-frame directed sims only after the board evidence is saved.",
+    "required_outputs": [
+      "r0/td: archived r0-build-evidence (copy of s2/s3 reports/logs) + renamed a1_board_Runs_r0s3 and a1_board_r0.al; a fresh single build (build_console_b10_r1.log) with Routed zero violations, SWNS >= +0.05 ns, TNS 0, hold/period 0; 1 bitgen (bitgen_console_b10_r1.log) + 1 CWC (cwc_console_b10_r1.log), bit byte-identical to cw/compiled.bit",
+      "CANDIDATE-MANIFEST-b10-b9-fix-r1.json + r0/artifact-hashes-r1.txt binding the frozen source hashes, the single bit/CWC/BID and the r1 evidence; keep the r0 manifest untouched",
+      "r0/board/log-r1: download log with B10_DL_OK mode=jtag(sram), bit SHA256, BID SHA256 and B10_DL_DEVICE; one SRAM download only (cumulative 1/2), no Flash",
+      "r0/board/captures_r1: com8_180s.bin/.dec/.stats, status_v3.json with >=2 valid v3 packets (177 B, ver=3, len=177, XOR all OK) and first/last raw_pub/enc_frames/exported deltas; decoded/** with >=1 frame (A5 5A, header/len, stream CRC, zlib 1920x1080/2,592,000 B) when exported>0",
+      "result-r1.md (G2-r1/G3-r1 tables, hashes, counter deltas, decode verdict, TD usage 1 session/1 synth/1 route/1 bitgen/1 CWC, download 1 with cumulative 1/2) and lessons-r1.md if any; parent T10 not marked done",
+      "optional r0/sim/r1-extra: R1 dropped-LAST directed case and 3 consecutive real-frame case reusing the tb_p1_chain camera driver; evidence-only, no RTL edit, no re-synthesis, no re-download"
+    ]
+  },
+  "after_development": {
+    "operation": "spawn_single_tester",
+    "role": "fpga-tester",
+    "task_id": "T10.b10-b9-fix",
+    "input": "same frozen r1 manifest and package only; independent of dev; re-hash every source and compare with the r0 manifest and the r1 manifest; re-derive Routed SWNS/TNS/hold/period/violation counts, resource delta and CDC from the same reports; verify bit/CWC/BID binding and that cw/compiled.bit equals a1_board.bit; re-parse the same COM8 capture (v3 ver/len/XOR, first/last counter deltas) and re-run the 44 B header + stream CRC + zlib decode; confirm the download log/BID and the single-download count; re-check the r0 G1 evidence remains the bound input; treat the optional R1/3-frame extras as evidence-only; no TD rerun, no download, no Flash",
+    "budget": {
+      "minutes": 45,
+      "tool_calls": 30
+    },
+    "report_path": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/test-reports/T10.b10-b9-fix-r1-integrated.md"
+  },
+  "acceptance": {
+    "G2-r1": "Routed zero violations, SWNS >= +0.05 ns, STNS 0, HWNS >= 0, HTNS 0, period 0; resources vs b9 within 5% and ERAM not increased; no new unexplained CDC/comb loop; 1 bitgen + 1 CWC; bit byte-identical to cw/compiled.bit; bit/CWC/BID hashes bound in the r1 manifest",
+    "G3-r1": "download-first-then-listen order; >=2 valid v3 packets; first-to-last deltas of raw_pub, enc_frames and exported all >0; >=1 frame with A5 5A header, valid ver/len, stream_len match, stream CRC OK and zlib decode to 1920x1080/2,592,000 B; status packets only between frames",
+    "partial": "state packets present but any delta is 0 or the frame does not decode -> WARN, keep the candidate and evidence, document the blocker, no second download",
+    "G4-r1": "result-r1.md + lessons-r1.md (if any) + r1 manifest/hashes + independent integrated tester report bound to the same manifest; parent T10 stays blocked/not done"
+  },
+  "scope_limits": "Same T10, same run, same task_id; r1 is a candidate rebuild plus one board round, not a new design round. No RTL/param/SDC/pin/port changes; no comment-only edits (they would break the hash binding); the camera top's stale '// T10.b10 R1:' comments stay as-is and are documented as historical. Do not change the 44 B frame header, stream CRC, zlib, the no-insertion rule inside frames, UART divider, crop geometry, MIPI or display path. Do not delete any old directory; archive by copy/rename only. No new run, no new parent ID, no bulk delete, no overwrite of b9 evidence.",
+  "execution_limits": {
+    "dev": { "minutes": 90, "tool_calls": 50 },
+    "td": { "sessions": 1, "minutes": 60, "synth": 1, "route": 1, "bitgen": 1, "cwc": 1, "download": 1, "flash": 0 },
+    "download_cumulative_limit": 2,
+    "tester": { "minutes": 45, "tool_calls": 30, "td_rerun": 0, "download": 0, "flash": 0 },
+    "retry": "r1 TD and download are single-shot: no first-attempt-plus-one retry. Two consecutive cycles without new evidence -> blocked. A tool/environment-only failure may be retried only with written planner authorisation and without consuming an extra synth/route/download."
+  },
+  "board_authorization": "User authorised exactly one SRAM download in r1 (cumulative <=2 of the existing board budget) plus one 180 s COM8 capture. Order: close COM8 -> download over JTAG/SRAM -> release FTDI/hwserver -> open COM8 -> capture. No Flash, no board swap, no rewiring/power/camera changes. Run tools/td/open_td.ps1 before TD; X: is forbidden. The actual cumulative count must be written into result-r1.md.",
+  "question_path": null,
+  "user_summary_path": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b10-b9-fix/user-summary.md"
+}

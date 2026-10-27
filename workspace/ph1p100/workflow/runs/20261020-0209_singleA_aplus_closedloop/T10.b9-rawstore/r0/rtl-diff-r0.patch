@@ -1,0 +1,576 @@
+# T10.b9-rawstore r0 -- RTL diff against the frozen b8 baseline# (unchanged copies are included on purpose: the patch is the complete#  set of files the b9 build compiles from this package)## changed-src/a1_raw_crop.v  (UNCHANGED)## changed-src/camera_a1_uart_top.v  (CHANGED)--- b8-base/changed-src/camera_a1_uart_top.v
++++ b9/changed-src/camera_a1_uart_top.v
+@@ -54,6 +54,11 @@
+     input  wire        i_a_in_frame,
+     input  wire        i_a_vsync,
+ 
++    // T10.b9 F4: real DDR readiness of the raw slot store.  P2 drives it from
++    // the synchronized ddrphy_rdy; the P1 golden testbench ties it to 1'b1 so
++    // the frozen byte streams are unchanged.
++    input  wire        i_ddr_rdy,
++
+     // r0-diag: camera front-end observability (T10.b7, guide section 3/4/5).
+     // i_dbg_tap/delay_done/rst_out/sync_wait and the three toggles are the
+     // camera core's *existing* internal state, exported by its new o_dbg_*
+@@ -98,7 +103,11 @@
+     output wire [31:0] o_st_geom_err,
+     output wire [31:0] o_st_errors,
+     output wire [31:0] o_st_read_words,
+-    output wire [31:0] o_st_dup_words
++    output wire [31:0] o_st_dup_words,
++    // T10.b9 status packet v3: 20 x u32 raw-store/read-path fields
++    // (field 23 = raw_begin_ok in bits [31:0], field 42 = raw_deny_ddr in
++    //  bits [639:608]).  Observation only; the board top may leave it open.
++    output wire [639:0] o_st_raw_sts
+ );
+     localparam integer GROUPS   = (W * H) / 4;                 // 518,400
+     localparam integer RAW_WORDS = (GROUPS + 3) / 4;           // 129,600
+@@ -248,34 +257,58 @@
+                                 cam_clk_tgl_inc};      //  0 cam_clk_tgl_inc
+ 
+     // ------------------------------------------------------ CDC cam -> A1
++    // T10.b9 F1: a1_raw_crop raises out_abort for exactly one clk_cam cycle
++    // with out_valid = 0 in that cycle, so an abort must be *pushed as its own
++    // FIFO beat*: w_valid = crop_valid | abort, and bit 42 of the beat marks it.
++    // The abort request is held until the FIFO actually accepts it, so a full
++    // FIFO can no longer swallow the only abort of a frame (that was the
++    // permanent WRITE-state hang seen on the board).
+     wire [42:0] fifo_dout;
+     wire        fifo_valid;
+     reg         fifo_ready;
++    wire        fifo_wready;
++    reg         abort_hold;
++    reg  [31:0] fifo_ovf_cnt;          // camera beats offered while the FIFO was full
++
++    wire fifo_wabort = crop_abort | abort_hold;
++    wire fifo_wvalid = crop_valid | fifo_wabort;
++
++    always @(posedge clk_cam) begin
++        if (!rst_n) begin
++            abort_hold  <= 1'b0;
++            fifo_ovf_cnt <= 32'd0;
++        end else begin
++            if (fifo_wvalid && fifo_wready && fifo_wabort) abort_hold <= 1'b0;
++            else if (crop_abort)                          abort_hold <= 1'b1;
++            if (fifo_wvalid && !fifo_wready) fifo_ovf_cnt <= fifo_ovf_cnt + 32'd1;
++        end
++    end
+ 
+     capture_async_fifo #(.WIDTH(43), .ADDR_BITS(FIFO_AW)) u_cam_fifo (
+         .rst_n   (rst_n),
+         .wclk    (clk_cam),
+-        .w_valid (crop_valid),
+-        .w_data  ({crop_abort, crop_last, crop_sof, crop_pix}),
+-        .w_ready (),
++        .w_valid (fifo_wvalid),
++        .w_data  ({fifo_wabort, crop_last, crop_sof, crop_pix}),
++        .w_ready (fifo_wready),
+         .rclk    (clk_a1),
+         .r_valid (fifo_valid),
+         .r_data  (fifo_dout),
+         .r_ready (fifo_ready)
+     );
+ 
++
+     wire [39:0] e_pix   = fifo_dout[39:0];
+     wire        e_sof   = fifo_dout[40];
+     wire        e_last  = fifo_dout[41];
+     wire        e_abort = fifo_dout[42];
+ 
+     // ------------------------------------------------- raw store write path
+-    reg         raw_begin, raw_abort;
++    reg         begin_pend, raw_abort;
+     wire        raw_begin_ready, raw_wr_ready;
+     reg  [31:0] raw_id;
+     reg         skid_valid, skid_last;
+     reg  [39:0] skid_pix;
+-    reg         raw_active, raw_drop;
++    reg         raw_active, skip_frame;
+     reg         raw_rd_close_r, raw_expect_ok;
+     wire        raw_pub, raw_rd_open_ready, raw_rd_close;
+     reg         raw_rd_open;
+@@ -286,45 +319,78 @@
+     wire [31:0] raw_st_pub, raw_st_drop, raw_st_err, raw_st_bytes;
+     wire [31:0] raw_st_read, raw_st_dup;
+ 
++    // T10.b9 v3: raw-store write/read observation (all clk_a1)
++    wire [31:0] raw_wr_beats, raw_wr_words, raw_wr_ptr, raw_wr_state;
++    wire [31:0] raw_st_rd_state, raw_slot_st, raw_slot_len0, raw_slot_len1;
++    wire [31:0] raw_rd_idx, raw_rd_words;
++    wire [31:0] raw_ar_valid, raw_ar_hs, raw_rv_cnt;
++    wire [31:0] raw_rd_open_ok, raw_rd_close_cnt, raw_abort_cnt;
++    wire        raw_free_valid, raw_wr_active_st;
++    reg  [31:0] raw_begin_ok, raw_begin_deny, raw_deny_nofree, raw_deny_ddr;
++
+     wire skid_take = skid_valid && raw_wr_ready;
+     wire skid_free = !skid_valid || skid_take;
+-
++    wire begin_hs  = begin_pend && raw_begin_ready;
++
++    // T10.b9 F2: the old form held fifo_ready = 0 forever when the store could
++    // not accept the SOF, so the 512-deep CDC FIFO filled up and every beat of
++    // the frame was dropped silently with raw_drop still 0.  Now a rejected
++    // SOF latches skip_frame and the *whole* frame is consumed (and counted)
++    // instead of clogging the FIFO; nothing is ever half-written.
+     always @(*) begin
+         fifo_ready = 1'b0;
+         if (fifo_valid) begin
+-            if (e_abort)       fifo_ready = 1'b1;
+-            else if (e_sof)    fifo_ready = skid_free && !raw_active && raw_begin_ready;
+-            else if (raw_drop) fifo_ready = 1'b1;
++            if (e_sof)           fifo_ready = skid_free;
++            else if (skip_frame) fifo_ready = 1'b1;
++            else if (e_abort)    fifo_ready = 1'b1;
+             else if (raw_active) fifo_ready = skid_free;
+         end
+     end
+ 
+     always @(posedge clk_a1) begin
+         if (!rst_n) begin
+-            raw_begin <= 1'b0; raw_abort <= 1'b0; raw_id <= 32'd0;
++            begin_pend <= 1'b0; raw_abort <= 1'b0; raw_id <= 32'd0;
+             skid_valid <= 1'b0; skid_last <= 1'b0; skid_pix <= 40'd0;
+-            raw_active <= 1'b0; raw_drop <= 1'b0;
++            raw_active <= 1'b0; skip_frame <= 1'b0;
++            raw_begin_ok <= 32'd0; raw_begin_deny <= 32'd0;
++            raw_deny_nofree <= 32'd0; raw_deny_ddr <= 32'd0;
+         end else begin
+-            raw_begin   <= 1'b0;
+-            raw_abort   <= 1'b0;
++            raw_abort <= 1'b0;
++            if (begin_hs) begin
++                begin_pend  <= 1'b0;
++                raw_begin_ok <= raw_begin_ok + 32'd1;
++            end
+             // skid consumed by the store
+             if (skid_take) skid_valid <= 1'b0;
+ 
+             if (fifo_valid && fifo_ready) begin
+                 if (e_abort) begin
+-                    if (raw_active) raw_abort <= 1'b1;
++                    // one abort beat = one FIFO entry, no DDR write
++                    if (raw_active) begin
++                        raw_abort    <= 1'b1;
++                    end
+                     raw_active <= 1'b0;
+-                    raw_drop   <= 1'b1;
++                    begin_pend <= 1'b0;
++                    skip_frame <= 1'b1;
+                     skid_valid <= 1'b0;
+                 end else if (e_sof) begin
+-                    raw_begin  <= 1'b1;
+-                    raw_id     <= raw_id + 32'd1;
+-                    raw_active <= 1'b1;
+-                    raw_drop   <= 1'b0;
+-                    skid_pix   <= e_pix;
+-                    skid_last  <= e_last;
+-                    skid_valid <= 1'b1;
+-                end else if (!raw_drop) begin
++                    if (!raw_active && !begin_pend && raw_begin_ready) begin
++                        raw_active <= 1'b1;
++                        begin_pend <= 1'b1;
++                        skip_frame <= 1'b0;
++                        raw_id     <= raw_id + 32'd1;
++                        skid_pix   <= e_pix;
++                        skid_last  <= e_last;
++                        skid_valid <= 1'b1;
++                    end else begin
++                        // whole-frame discard: still counted, never silent
++                        raw_begin_deny <= raw_begin_deny + 32'd1;
++                        if (!i_ddr_rdy)  raw_deny_ddr    <= raw_deny_ddr    + 32'd1;
++                        else             raw_deny_nofree <= raw_deny_nofree + 32'd1;
++                        skip_frame <= 1'b1;
++                        skid_valid <= 1'b0;
++                    end
++                end else if (!skip_frame) begin
+                     skid_pix   <= e_pix;
+                     skid_last  <= e_last;
+                     skid_valid <= 1'b1;
+@@ -347,8 +413,8 @@
+         .MODE (0), .SLOT_WORDS (RAW_WORDS), .BASE_WORD (RAW_BASE), .AWB (18),
+         .EXPECT_BYTES (EXP_RAW_BYTES)
+     ) u_raw_store (
+-        .clk (clk_a1), .rst_n (rst_n), .ddr_ready (1'b1),
+-        .wr_begin (raw_begin), .wr_begin_ready (raw_begin_ready), .wr_id (raw_id),
++        .clk (clk_a1), .rst_n (rst_n), .ddr_ready (i_ddr_rdy),
++        .wr_begin (begin_pend), .wr_begin_ready (raw_begin_ready), .wr_id (raw_id),
+         .wr_data (skid_pix), .wr_keep (4'hF),
+         .wr_valid (skid_valid), .wr_last (skid_last), .wr_ready (raw_wr_ready),
+         .wr_abort (raw_abort),
+@@ -361,7 +427,16 @@
+         .ddr_rdata (raw_rdata), .ddr_rvalid (raw_rvalid), .ddr_rready (raw_rready),
+         .st_published (raw_st_pub), .st_dropped (raw_st_drop),
+         .st_errors (raw_st_err), .st_last_bytes (raw_st_bytes),
+-        .st_read_words (raw_st_read), .st_dup_words (raw_st_dup)
++        .st_read_words (raw_st_read), .st_dup_words (raw_st_dup),
++        .st_wr_beats (raw_wr_beats), .st_wr_words (raw_wr_words),
++        .st_wr_ptr (raw_wr_ptr), .st_wr_state (raw_wr_state),
++        .st_rd_state (raw_st_rd_state), .st_slot_st (raw_slot_st),
++        .st_slot_len0 (raw_slot_len0), .st_slot_len1 (raw_slot_len1),
++        .st_rd_idx (raw_rd_idx), .st_rd_words (raw_rd_words),
++        .st_ar_valid (raw_ar_valid), .st_ar_hs (raw_ar_hs),
++        .st_rv_cnt (raw_rv_cnt), .st_rd_open_ok (raw_rd_open_ok),
++        .st_rd_close_cnt (raw_rd_close_cnt), .st_abort_cnt (raw_abort_cnt),
++        .st_free_valid (raw_free_valid), .st_wr_active_out (raw_wr_active_st)
+     );
+ 
+     // --------------------------------------------------------- A+ frame top
+@@ -517,6 +592,56 @@
+         end
+     end
+ 
++    // ======================================================================
++    // T10.b9 v3: 20 x u32 raw-store / read-path fields (frozen order, field 23
++    // in bits [31:0]).  Every source is a clk_a1 register or a clk_a1 wire, so
++    // the packet snapshot in a1_uart_export latches all 43 fields on ONE edge.
++    // ======================================================================
++    wire [31:0] raw_rd_state32 = {
++        10'd0,               // [31:22]
++        cmp_abort,           // [21]
++        cmp_begin,           // [20]
++        a1_out_last,         // [19]
++        a1_in_ready,         // [18]
++        a1_in_valid,         // [17]
++        fstate,              // [16:15]
++        cmp_begin_ready,     // [14]
++        a1_out_valid,        // [13]
++        a1_busy,             // [12]
++        raw_active,          // [11]
++        fifo_ready,          // [10]
++        fifo_valid,          // [ 9]
++        skid_valid,          // [ 8]
++        skip_frame,          // [ 7]
++        raw_rd_open_ready,   // [ 6]
++        raw_rd_open,         // [ 5]
++        raw_st_rd_state[4:0] // [ 4]=rd_valid [3]=rd_sel [2]=rd_armed [1:0]=rd_state
++    };
++
++    wire [639:0] raw_sts_bus = {
++        raw_deny_ddr,      // 42
++        raw_deny_nofree,   // 41
++        raw_abort_cnt,     // 40
++        raw_rd_close_cnt,  // 39
++        raw_rd_open_ok,    // 38
++        raw_rv_cnt,        // 37
++        raw_ar_hs,         // 36
++        raw_ar_valid,      // 35
++        raw_rd_words,      // 34
++        raw_rd_idx,        // 33
++        raw_slot_len1,     // 32
++        raw_slot_len0,     // 31
++        raw_slot_st,       // 30
++        raw_rd_state32,    // 29
++        raw_wr_state,      // 28
++        raw_wr_ptr,        // 27
++        raw_wr_words,      // 26
++        raw_wr_beats,      // 25
++        raw_begin_deny,    // 24
++        raw_begin_ok};     // 23
++
++    assign o_st_raw_sts = raw_sts_bus;
++
+     // ------------------------------------------------------------- exporter
+     reg         desc_push;
+     reg  [31:0] d_raw_len, d_xlen, d_slen, d_raw_crc, d_xcrc, d_scrc, d_fid;
+@@ -566,7 +691,9 @@
+         .sts_errors     (st_errors_all),
+         .sts_read_words (raw_st_read),
+         // r0-diag: 15 x u32 camera front-end fields (frozen packet order)
+-        .sts_cam        (cam_sts_bus)
++        .sts_cam        (cam_sts_bus),
++        // T10.b9 v3: 20 x u32 raw-store fields (frozen packet order)
++        .sts_raw        (raw_sts_bus)
+     );
+ 
+     // --------------------------------------------------------------- DDR mux
+## changed-src/a1_uart_export.v  (CHANGED)--- b8-base/changed-src/a1_uart_export.v
++++ b9/changed-src/a1_uart_export.v
+@@ -33,25 +33,27 @@
+ // spent per byte on the wire are unchanged (the transmitter still needs
+ // 10*UART_DIV cycles per byte).
+ //
+-// Diagnostic status packet (r1-diag v1 35 B -> T10.b7 r0-diag v2 97 B) --
+-// replaces the 0x55 beacon when STS_DIV > 0.  Once every STS_DIV clk cycles,
+-// and ONLY while the exporter is completely idle (estate == E_IDLE, descriptor
+-// queue empty, no frame open, no byte in flight), it emits one 97-byte packet:
++// Diagnostic status packet (r1-diag v1 35 B -> T10.b7 r0-diag v2 97 B ->
++// T10.b9 r0-diag v3 177 B) -- replaces the 0x55 beacon when STS_DIV > 0.
++// Once every STS_DIV clk cycles, and ONLY while the exporter is completely
++// idle (estate == E_IDLE, descriptor queue empty, no frame open, no byte in
++// flight), it emits one 177-byte packet:
+ //
+ //   off  size  field
+ //   0    1     0xA5        magic 0
+ //   1    1     0x5A        magic 1
+-//   2    1     0x61        LEN = 97
+-//   3    1     0x02        VER = 2
+-//   4    32    8 legacy u32 little-endian, unchanged order:
+-//              cap_frames, raw_pub, enc_frames, exported,
+-//              raw_drop, cmp_drop, errors, read_words
+-//   36   60    15 camera u32 little-endian:
+-//              cam_clk_tgl_inc, cam_pkt_tgl_inc, cam_vs_tgl_inc, cam_pix_beats,
+-//              cam_line_rises, cam_frame_rises, cam_frame_falls,
+-//              cam_last_frame_cycles, crop_roi_frames, crop_groups, crop_short,
+-//              crop_geom_err, cam_phystat, cam_sysstat, cam_nack_cnt
+-//   96   1     xor         bitwise XOR of bytes 0..95
++//   2    1     0xB1        LEN = 177
++//   3    1     0x03        VER = 3
++//   4    172   43 x u32 little-endian, all latched on ONE clk edge:
++//              #1..#23  identical to v2 (legacy 8 + camera 15)
++//              #24 raw_begin_ok   #25 raw_begin_deny  #26 raw_wr_beats
++//              #27 raw_wr_words   #28 raw_wr_ptr       #29 raw_wr_state
++//              #30 raw_rd_state   #31 raw_slot_st      #32 raw_slot_len0
++//              #33 raw_slot_len1  #34 raw_rd_idx       #35 raw_rd_words
++//              #36 raw_ar_valid   #37 raw_ar_hs        #38 raw_rv_cnt
++//              #39 raw_rd_open_ok #40 raw_rd_close     #41 raw_abort_cnt
++//              #42 raw_deny_nofree#43 raw_deny_ddr
++//   176  1     xor         bitwise XOR of bytes 0..175
+ //
+ // All 23 counters are latched into a snapshot when the packet starts, so a
+ // packet is always internally consistent.  The packet is never inserted inside
+@@ -115,7 +117,9 @@
+     input  wire [31:0] sts_errors,
+     input  wire [31:0] sts_read_words,
+     // r0-diag v2: 15 x u32 camera front-end fields, field k in bits [32k+:32]
+-    input  wire [479:0] sts_cam
++    input  wire [479:0] sts_cam,
++    // T10.b9 r0-diag v3: 20 x u32 raw-store fields, field k in bits [32k+:32]
++    input  wire [639:0] sts_raw
+ );
+     localparam [1:0] E_IDLE = 2'd0, E_OPEN = 2'd1, E_HDR = 2'd2, E_PAY = 2'd3;
+     localparam [2:0] P_HDR = 3'd0, P_PAY = 3'd1, P_DONE = 3'd2;
+@@ -146,10 +150,11 @@
+     reg [31:0]  hb_cnt;             // idle beacon divider
+     reg [31:0]  sts_cnt;            // status packet divider
+     reg [1:0]   sstate;             // status packet state
+-    reg [6:0]   sidx;               // status packet byte index 0..96
+-    reg [7:0]   sxacc;              // running XOR over bytes 0..95
++    reg [7:0]   sidx;               // status packet byte index 0..176
++    reg [7:0]   sxacc;              // running XOR over bytes 0..175
+     reg [255:0] ssnap;              // latched legacy snapshot  (8 x u32)
+     reg [479:0] camsnap;            // latched camera snapshot (15 x u32)
++    reg [639:0] rawsnap;            // latched raw-store snapshot (20 x u32)
+     reg [7:0]   dbg_byte_r;         // byte actually handed to the transmitter
+     reg         dbg_byte_valid_r;
+     reg         dbg_hold;
+@@ -162,20 +167,23 @@
+     wire        sts_tick = sts_en && (sts_cnt == (STS_DIV - 1));
+ 
+     localparam [1:0] S_IDLE = 2'd0, S_SEND = 2'd1;
+-    localparam [6:0] STS_LAST = 7'd96;              // last byte = XOR8
+-
+-    // v2 payload byte mux (see the header comment for the 97-byte layout):
+-    // 0xA5, 0x5A, LEN=0x61, VER=0x02, 32 legacy LE bytes, 60 camera LE bytes,
+-    // then the XOR of bytes 0..95.  Byte index -> field bit index is 8*(k-4)
+-    // for the legacy words and 8*(k-36) for the camera words.
+-    wire [6:0]  sbyte_i = sidx - 7'd4;              // 0..92 for sidx 4..96
+-    wire [7:0]  sbyte   = (sidx == 7'd0) ? 8'hA5 :
+-                          (sidx == 7'd1) ? 8'h5A :
+-                          (sidx == 7'd2) ? 8'h61 :
+-                          (sidx == 7'd3) ? 8'h02 :
+-                          (sidx <  7'd36) ? ssnap[{sbyte_i[4:0], 3'b000} +: 8] :
+-                          (sidx <  7'd96) ? camsnap[{(sbyte_i - 7'd32), 3'b000} +: 8] :
+-                                             sxacc;
++    localparam [7:0] STS_LAST = 8'd176;             // last byte = XOR8
++    localparam [7:0] STS_LEN  = 8'd177;             // 5 + 43*4
++    localparam [7:0] STS_VER  = 8'd3;
++
++    // v3 payload byte mux (see the header comment for the 177-byte layout):
++    // 0xA5, 0x5A, LEN=177, VER=3, 8 legacy LE words, 15 camera LE words,
++    // 20 raw-store LE words, then the XOR of bytes 0..175.  All 43 fields are
++    // latched on the same clk edge, so one packet can never mix two counter
++    // values (no multi-bit CDC and no per-field resampling).
++    wire [7:0]  sbyte_i = sidx - 8'd4;                  // 0..171 for sidx 4..175
++    wire [1375:0] allsnap = {rawsnap, camsnap, ssnap};  // field 0 in bits [31:0]
++    wire [7:0]  sbyte   = (sidx == 8'd0) ? 8'hA5 :
++                          (sidx == 8'd1) ? 8'h5A :
++                          (sidx == 8'd2) ? STS_LEN :
++                          (sidx == 8'd3) ? STS_VER :
++                          (sidx <  STS_LAST) ? allsnap[{sbyte_i, 3'b000} +: 8] :
++                                               sxacc;
+ 
+     wire [31:0] hw0 = 32'h31553141;
+     wire [31:0] hw1 = {8'h00, 8'd44, 6'd0, w_profile, 8'h01};
+@@ -236,8 +244,9 @@
+             tx_byte_r <= 8'd0; tx_valid_r <= 1'b0; hb_cnt <= 32'd0;
+             cmp_open <= 1'b0; cmp_close <= 1'b0;
+             st_exported <= 32'd0; st_bytes <= 32'd0; st_err <= 32'd0;
+-            sts_cnt <= 32'd0; sstate <= S_IDLE; sidx <= 7'd0;
++            sts_cnt <= 32'd0; sstate <= S_IDLE; sidx <= 8'd0;
+             sxacc <= 8'd0; ssnap <= 256'd0; camsnap <= 480'd0;
++            rawsnap <= 640'd0;
+         end else begin
+             cmp_open  <= 1'b0;
+             cmp_close <= 1'b0;
+@@ -282,7 +291,8 @@
+                                    sts_raw_drop, sts_exported, sts_enc_frames,
+                                    sts_raw_pub, sts_cap_frames};
+                         camsnap<= sts_cam;
+-                        sidx   <= 7'd0;
++                        rawsnap<= sts_raw;
++                        sidx   <= 8'd0;
+                         sxacc  <= 8'd0;
+                         sstate <= S_SEND;
+                     end
+@@ -293,7 +303,7 @@
+                         tx_valid_r <= 1'b1;
+                         sxacc      <= sxacc ^ sbyte;
+                         if (sidx == STS_LAST) sstate <= S_IDLE;
+-                        else                  sidx   <= sidx + 7'd1;
++                        else                  sidx   <= sidx + 8'd1;
+                     end
+                 end
+                 default: sstate <= S_IDLE;
+## changed-src/cam_diag_mailbox.v  (UNCHANGED)## changed-src/a1_deflate_core.v  (UNCHANGED)## changed-src/a1_ddr_slot_store.v  (CHANGED)--- b8-base/changed-src/a1_ddr_slot_store.v
++++ b9/changed-src/a1_ddr_slot_store.v
+@@ -66,7 +66,31 @@
+     output reg  [31:0] st_last_bytes,
+     // P1 read-path observation: words delivered and adjacent identical read words
+     output reg  [31:0] st_read_words,
+-    output reg  [31:0] st_dup_words
++    output reg  [31:0] st_dup_words,
++    // ------------------------------------------------------------------
++    // T10.b9-rawstore r0: WRITE/READ state observation for status packet v3.
++    // Pure observation: none of these nets feeds back into the ownership or
++    // data path.  Instances that do not need them leave the ports open and
++    // synthesis removes the logic.
++    // ------------------------------------------------------------------
++    output reg  [31:0] st_wr_beats,     // accepted wr_valid beats (5 B each, MODE 0)
++    output reg  [31:0] st_wr_words,     // flushed 256-bit words (AW/W handshakes)
++    output wire [31:0] st_wr_ptr,       // current waddr (word offset inside the slot)
++    output wire [31:0] st_wr_state,     // [31]wr_active [30]wr_slot [29:27]wcnt [26:0]nbytes
++    output wire [31:0] st_rd_state,     // [1:0]rd_state [2]rd_armed [3]rd_sel [4]rd_valid
++    output wire [31:0] st_slot_st,      // [1:0]slot0 [3:2]slot1 [4]seq0 [5]seq1
++    output wire [31:0] st_slot_len0,    // slot_len[0] (bytes, level)
++    output wire [31:0] st_slot_len1,    // slot_len[1] (bytes, level)
++    output wire [31:0] st_rd_idx,       // read FSM word index
++    output wire [31:0] st_rd_words,     // words this read is expected to deliver
++    output reg  [31:0] st_ar_valid,     // cycles with ddr_arvalid = 1
++    output reg  [31:0] st_ar_hs,        // AR handshakes (ddr_arvalid & ddr_arready)
++    output reg  [31:0] st_rv_cnt,       // cycles with ddr_rvalid = 1
++    output reg  [31:0] st_rd_open_ok,   // accepted rd_open
++    output reg  [31:0] st_rd_close_cnt, // rd_close pulses that released a slot
++    output reg  [31:0] st_abort_cnt,    // wr_abort that freed a WRITING slot
++    output wire        st_free_valid,   // at least one FREE slot
++    output wire        st_wr_active_out // mirror of the internal wr_active
+ );
+     localparam [1:0] S_FREE = 2'd0, S_WRITE = 2'd1, S_READY = 2'd2, S_READING = 2'd3;
+     localparam [1:0] R_IDLE = 2'd0, R_AR = 2'd1, R_RW = 2'd2, R_HOLD = 2'd3;
+@@ -136,6 +160,21 @@
+     assign ddr_araddr    = BASE_WORD + (rd_sel ? SLOT_WORDS[31:0] : 32'd0) + rd_idx;
+     assign ddr_rready    = (rd_state == R_RW);
+ 
++    // ------------------------------------------------ T10.b9 observation only
++    // (packed exactly as status packet v3 fields 28..33 require)
++    assign st_wr_ptr         = {{(32-AWB){1'b0}}, waddr};
++    assign st_wr_state       = {wr_active, wr_slot[0], wcnt, nbytes[26:0]};
++    assign st_rd_state       = {27'd0, rd_valid, rd_sel[0], rd_armed, rd_state};
++    assign st_slot_st        = {26'd0, slot_seq[1], slot_seq[0], slot_st[1], slot_st[0]};
++    assign st_slot_len0      = slot_len[0];
++    assign st_slot_len1      = slot_len[1];
++    assign st_rd_idx         = rd_idx;
++    assign st_rd_words       = rd_words;
++    assign st_free_valid     = free_valid;
++    assign st_wr_active_out  = wr_active;
++    wire   wr_word_hs        = ddr_wvalid && ddr_wready;
++    wire   ar_hs             = ddr_arvalid && ddr_arready;
++
+     always @(posedge clk) begin
+         if (!rst_n) begin
+             slot_st[0] <= S_FREE; slot_st[1] <= S_FREE;
+@@ -150,7 +189,17 @@
+             st_published <= 32'd0; st_dropped <= 32'd0; st_errors <= 32'd0;
+             st_last_bytes <= 32'd0; st_read_words <= 32'd0; st_dup_words <= 32'd0;
+             rd_prev <= 256'd0; rd_prev_v <= 1'b0; rd_armed <= 1'b0;
++            st_wr_beats <= 32'd0; st_wr_words <= 32'd0; st_ar_valid <= 32'd0;
++            st_ar_hs <= 32'd0; st_rv_cnt <= 32'd0; st_rd_open_ok <= 32'd0;
++            st_rd_close_cnt <= 32'd0; st_abort_cnt <= 32'd0;
+         end else begin
++            // ------------------------------------------- T10.b9 observation
++            if (wr_ready)      st_wr_beats <= st_wr_beats + 32'd1;
++            if (wr_word_hs)    st_wr_words <= st_wr_words + 32'd1;
++            if (ddr_arvalid)   st_ar_valid <= st_ar_valid + 32'd1;
++            if (ar_hs)         st_ar_hs    <= st_ar_hs    + 32'd1;
++            if (ddr_rvalid)    st_rv_cnt   <= st_rv_cnt   + 32'd1;
++
+             // -------------------------------------------------------- begin
+             if (wr_begin && wr_begin_ready) begin
+                 wr_active <= 1'b1;
+@@ -170,6 +219,7 @@
+                 slot_st[wr_slot] <= S_FREE;
+                 wr_active <= 1'b0;
+                 st_dropped <= st_dropped + 32'd1;
++                st_abort_cnt <= st_abort_cnt + 32'd1;
+             end
+ 
+             // -------------------------------------------------------- write
+@@ -212,6 +262,7 @@
+                         rd_armed <= 1'b0;
+                         rd_prev_v <= 1'b0;
+                         rd_state <= R_AR;
++                        st_rd_open_ok <= st_rd_open_ok + 32'd1;
+                     end
+                 end
+                 R_AR: begin
+@@ -244,6 +295,7 @@
+                         rd_valid <= 1'b0;
+                         slot_st[rd_sel] <= S_FREE;
+                         rd_state <= R_IDLE;
++                        st_rd_close_cnt <= st_rd_close_cnt + 32'd1;
+                     end
+                 end
+                 default: rd_state <= R_IDLE;
+## td/src/p2_ddr_bridge.v  (CHANGED)--- b8-base/td/src/p2_ddr_bridge.v
++++ b9/td/src/p2_ddr_bridge.v
+@@ -173,15 +173,22 @@
+     end
+ 
+     // -------------------------------------------------- DDR-side read engine
++    // T10.b9 F3: the AR must only be issued when the DDR side is actually ready
++    // (ddr_rdy) and when no earlier AR is still outstanding, and the address
++    // FIFO may only be popped by the AR handshake itself.  The old form
++    //   paxi_arvalid = af_rvalid && !ar_pending            (no ddr_rdy)
++    //   af_pop       = af_rvalid && paxi_arready && ddr_rdy (no arvalid)
++    // could pop an address that was never issued (read stalls forever) or
++    // re-issue the same address while ddr_rdy was low (duplicate rdata).
+     reg ar_pending;
+ 
+     assign paxi_araddr  = af_rdata;
+-    assign paxi_arvalid = af_rvalid && !ar_pending;
+-    assign af_pop       = af_rvalid && paxi_arready && ddr_rdy;
++    assign paxi_arvalid = af_rvalid && !ar_pending && ddr_rdy;
++    assign af_pop       = paxi_arvalid && paxi_arready;
+ 
+     always @(posedge clk_ddr or negedge rst_n) begin
+         if (!rst_n) ar_pending <= 1'b0;
+-        else if (af_pop) ar_pending <= 1'b1;
+-        else if (paxi_rvalid && paxi_rready) ar_pending <= 1'b0;
++        else if (af_pop) ar_pending <= 1'b1;                       // AR accepted by the DDR
++        else if (paxi_rvalid && paxi_rready) ar_pending <= 1'b0;   // data returned
+     end
+ endmodule
+## td/src/p2_a1_board_top.v  (CHANGED)--- b8-base/td/src/p2_a1_board_top.v
++++ b9/td/src/p2_a1_board_top.v
+@@ -335,6 +335,10 @@
+         .i_a_in_line         (a_in_line),
+         .i_a_in_frame        (a_in_frame),
+         .i_a_vsync           (a_vsync),
++        // T10.b9 F4: the raw slot store must see real DDR readiness.  This is
++        // the existing 2-FF clk_a1 synchronizer of ddrphy_rdy, so the store's
++        // ddr_ready input is already synchronous to clk_a1.
++        .i_ddr_rdy           (ddr_rdy_sync_a1[1]),
+         .i_dbg_tap           (cam_delay_tap),
+         .i_dbg_delay_done    (cam_delay_done),
+         .i_dbg_rst_out       (cam_rst_out),
+@@ -368,7 +372,10 @@
+         .o_st_geom_err       (dbg_geom_err),
+         .o_st_errors         (dbg_errors),
+         .o_st_read_words     (dbg_read_words),
+-        .o_st_dup_words      (dbg_dup_words)
++        .o_st_dup_words      (dbg_dup_words),
++        // T10.b9: 20 x u32 raw-store fields are packed into the v3 status
++        // packet inside u_a1; the parallel bus is not needed on the board.
++        .o_st_raw_sts        ()
+     );
+ 
+     // ------------------------------------------------------- 187.5 -> dhi_clk bridge

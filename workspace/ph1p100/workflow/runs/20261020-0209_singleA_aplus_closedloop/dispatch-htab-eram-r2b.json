@@ -1,0 +1,281 @@
+{
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "project_root": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+  "output_dir": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop",
+  "task_ids": [
+    "T10.a1-htab-eram"
+  ],
+  "package_id": "T10.a1-htab-eram",
+  "round": "r2",
+  "revision": "r2-b",
+  "continuation_of": "T10.a1-htab-eram r2 s1 (same round scope micro-adjustment; use remaining 1 synth + 1 route)",
+  "batch_size": 1,
+  "status": "finished",
+  "needs_user_input": false,
+  "result": {
+    "verdict": "blocked",
+    "g1": "PASS functional equivalence unchanged",
+    "synth": "hent_pos boundary compare gave -0.548 ns; reverted to r2 0b084317",
+    "route": "0/1; no route",
+    "decision": "r2-b reverted; r2-waive route-only approved"
+  },
+  "operation": "followup_task",
+  "authorization": {
+    "quote": "请批准 r2 范围微调并使用 r2 剩余额度收口",
+    "date": "2026-10-22",
+    "type": "explicit_user_request_to_expand_r2_scope_and_use_remaining_budget",
+    "basis": "用户明确批准 r2 范围微调：只改 htab stage-1 的 hent_pos 比较/寄存，保持 r2 flag 修复与 thresh_lit8/9 冻结；使用剩余 1 次综合 + 1 次布线收口。",
+    "round_accounting": "r2 s1 used 1/2 synth, 0/1 route; r2-b uses the remaining 1 synth and 1 route. No new round, no budget reset, no automatic extension.",
+    "limits_frozen_here": {
+      "td_sessions_remaining": 1,
+      "td_session_minutes_max": 45,
+      "td_total_minutes_max": 60,
+      "td_synth_attempts_remaining": 1,
+      "td_route_attempts_remaining": 1
+    },
+    "not_authorized": [
+      "new round / r3",
+      "A route (150 MHz + CDC/PLL/async FIFO)",
+      "larger device or board change",
+      "QoR strategy changes",
+      "lowering 187.5 MHz or relaxing 5.333 ns",
+      "false path / multicycle / clock-group exceptions",
+      "seed sweep or blind re-run",
+      "bitgen / download / Flash / production integration",
+      "protocol/port/frame semantics/CRC/length/abort/Bayer/SDC changes",
+      "changes outside htab stage-1 hent_pos compare/register"
+    ]
+  },
+  "r2_s1_state": {
+    "g1": "PASS functional equivalence: P2 13/13, P3 20/20, 0 mismatch, 0 X, vlog 0/0; P2 comp 355,261 cycles=81.067 MB/s; 1080p 4.68-4.87M; SHA/len/cycles identical to r0/r1",
+    "synth": "1/2 used; SWNS -0.017, TNS -0.017, 1/4640 endpoint; slice 3,068; ERAM 26; core 22; reg 1,626; DRAM LUT 32",
+    "worst_path": "htab_tag ERAM clk2q -> hent_pos -> 13-bit s1_hdist subtractor/compare -> hrg_r_reg.d, 5.286 ns / 5 levels",
+    "candidate": {
+      "a1_deflate_core.v": "0b084317db0608a56865a77fd18e7312add3ddb87c2a465a48f60816d8545396",
+      "a1_frame_top.v": "18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+      "a1_small_top.sdc": "227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311",
+      "manifest": "T10.a1-htab-eram/CANDIDATE-MANIFEST-htab-eram-r2.json"
+    },
+    "prj_8806": "r1 raw/copy SHA verified; r2 s1 finished normally (PRJ-1406).",
+    "route": "0/1; WNS<0 gate"
+  },
+  "scope_revision": {
+    "reason": "Only 17 ps / one endpoint remains; the endpoint is htab stage-1 distance compare, outside the flag-only r2 scope. User approved a narrow scope micro-adjustment.",
+    "allowed": "Only htab stage-1 hent_pos compare/register: precompute s1_pos_r and s1_pos_r-2048 bounds and compare hent_pos directly, or register hent_pos one stage after htab ERAM read (must re-run P2/P3).",
+    "frozen": "r2 flag fix, thresh_lit8/9, htab/bm storage, protocol/port/frame/CRC/length/abort/Bayer/SDC.",
+    "budget": "remaining 1 synth + 1 route; same 2-session/60-min round cap; no r3."
+  },
+  "input_paths": [
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/dev-plan.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/handoff.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-htab-eram/p4/result-r2.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-htab-eram/r2/td/syn_gate_timing_s1.rpt",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-htab-eram/CANDIDATE-MANIFEST-htab-eram-r2.json",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-htab-eram/r2/td/00_syn_then_route.tcl",
+    "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v",
+    "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v",
+    "upstream/ph1p100-pcie-ep-fpga/tools/codec/run_p2_htab_eram_r2.ps1",
+    "upstream/ph1p100-pcie-ep-fpga/tools/codec/run_p3_htab_eram_r2.ps1",
+    "tools/td/td_env.ps1",
+    "tools/td/PATH_CONTRACT.md",
+    ".agents/skills/fpga-dev/SKILL.md",
+    ".agents/skills/fpga-tester/SKILL.md"
+  ],
+  "write_scope": {
+    "modify_existing_run_owned": [
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v (only htab stage-1 hent_pos compare/register)"
+    ],
+    "must_not_modify": [
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v (locked 18d51b1b...1cbe)",
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_small_top.sdc (locked 227dd39e...6311)",
+      "r2 flag fix, thresh_lit8/9, htab/bm storage, protocol/frame/CRC/abort/Bayer"
+    ],
+    "create_new": [
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/** (new helper files only, if strictly needed)",
+      "upstream/ph1p100-pcie-ep-fpga/sim/tb/codec/**",
+      "upstream/ph1p100-pcie-ep-fpga/tools/codec/**",
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-htab-eram/r2-b/**"
+    ],
+    "td_project_dir": "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-htab-eram/r2-b/td/**",
+    "path_contract": {
+      "td": "T: = current run td, Y: = project root; run tools/td/td_env.ps1; never map X: to project root",
+      "sim": "P: = project root, W: = current sim run",
+      "doc": "tools/td/PATH_CONTRACT.md"
+    },
+    "rules": [
+      "Only htab stage-1 hent_pos compare/register may change; all other logic frozen.",
+      "Functional equivalence + P2 comp <=370,370 + 1080p <=6.25M are hard gates.",
+      "Use only the remaining 1 synth and 1 route; WNS>=0 to route; report_cdc/check_timing separately after route; bitgen not_run.",
+      "PRJ-8806 already verified; preserve evidence.",
+      "TD artifacts stay under r2-b; never overwrite r0/r1/r2 manifests.",
+      "Follow T:/Y: TD and P:/W: simulation."
+    ]
+  },
+  "protected": [
+    "all files outside a1_deflate_core.v and allowed new directories",
+    "a1_frame_top.v and a1_small_top.sdc (locked)",
+    "r2 flag fix, thresh_lit8/9, htab/bm storage, other core logic",
+    "workflow/tasks.json",
+    "old runs/manifests/bit/CWC, production candidate b68c6e18…f9bf",
+    "board, Flash, PCIe/RK, camera configuration"
+  ],
+  "next_action": "followup_task",
+  "next_action_detail": {
+    "role": "fpga-dev",
+    "skill_path": ".agents/skills/fpga-dev/SKILL.md",
+    "task": "T10.a1-htab-eram r2-b：复用 0b084317，只改 htab stage-1 hent_pos 比较/寄存（预计算 s1_pos_r 与 s1_pos_r-2048 边界，或寄存 hent_pos 一级）；功能等价；用剩余 1 次综合、WNS>=0 才布线 1 次；布线后单独 report_cdc/check_timing。",
+    "must_read": [
+      "dev-plan.md §29.9",
+      "p4/result-r2.md §3-§5",
+      "r2/td/syn_gate_timing_s1.rpt",
+      "tools/td/PATH_CONTRACT.md"
+    ],
+    "first_checks": [
+      "确认 core hash = 0b084317db0608a56865a77fd18e7312add3ddb87c2a465a48f60816d8545396",
+      "确认 frame hash = 18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+      "确认 SDC hash = 227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311",
+      "改动前复跑 P2/P3 基线；0 mismatch/0 X/vlog 0/0"
+    ]
+  },
+  "technical_scope": {
+    "primary": "Only htab stage-1 hent_pos compare/register: precompute s1_pos_r and s1_pos_r-2048 (saturated) and compare hent_pos directly, or register hent_pos one stage after htab ERAM read. Freeze r2 flag fix and thresh_lit8/9.",
+    "five_steps": [
+      "Precompute s1_pos_r and s1_pos_r-2048 bounds or register hent_pos one stage; remove hent_pos from the 13-bit subtractor chain.",
+      "P2/P3 functional equivalence: 0 mismatch/0 X/vlog 0/0; P2 comp <=370,370; 1080p <=6.25M; stored bound unchanged.",
+      "Synth (last attempt): WNS>=0 (target +0.3), TNS>=0, slice<=71,680, ERAM 26 consistent.",
+      "Route once if WNS>=0; Routed WNS/TNS/HWNS/HTNS>=0, 0 violations, resources; report_cdc/check_timing separately after route; bitgen not_run.",
+      "Freeze r2-b manifest/result/rollback; independent test."
+    ],
+    "throughput_red_line": {
+      "p2_comp_cycles_max": 370370,
+      "p2_comp_current_cycles": 355261,
+      "p2_comp_min_MBps": 77.76,
+      "1080p_cycles_max": 6250000,
+      "target_97_2_cycles_max": 5000000,
+      "rule": "Functional equivalence; no per-symbol bubble; no throughput trade."
+    },
+    "invariants": [
+      "No change to protocol, ports, frame commit, raw/xform/stream length, CRC, abort, Bayer mapping, zlib/fixed/stored format, SDC.",
+      "r2 flag fix and thresh_lit8/9 frozen.",
+      "Worst-case stored bound must not grow; 0 mismatch with independent zlib + self strict decoder."
+    ]
+  },
+  "gates": {
+    "g1": {
+      "p2": "13/13 PASS, 0 mismatch, 0 X, vlog 0/0",
+      "p3": "20/20 PASS, 0 mismatch, 0 X, vlog 0/0",
+      "decode": "independent zlib 1.2.13 + self strict decoder; negative cases correct",
+      "p2_comp_cycles_max": 370370,
+      "p2_comp_min_MBps": 77.76,
+      "1080p_cycles_max": 6250000,
+      "target_97_2_cycles_max": 5000000,
+      "sha_cycles": "diagnostic only"
+    },
+    "g2_synth": {
+      "top": "a1_eng_top",
+      "device": "PH1P100SBG484 -3",
+      "clock_MHz": 187.5,
+      "period_ns": 5.333,
+      "wns_ns_min": 0.0,
+      "wns_target_ns": 0.3,
+      "tns_ns_min": 0.0,
+      "slice_max": 71680,
+      "eram": "26, consistent with htab/bm/cmem/smem"
+    },
+    "g2_routed": {
+      "status": "Routed",
+      "wns_ns_min": 0.0,
+      "tns_ns_min": 0.0,
+      "hwns_ns_min": 0.0,
+      "htns_ns_min": 0.0,
+      "violating_endpoints": 0,
+      "resources": "within PH1P100SBG484",
+      "cdc_report": "report_cdc actually executed after route in a separate command",
+      "check_timing": "actually executed",
+      "bitgen": "not_run; no .bit/download"
+    }
+  },
+  "td_budget": {
+    "sessions_remaining": 1,
+    "session_minutes_max": 45,
+    "total_minutes_max": 60,
+    "synth_attempts_remaining": 1,
+    "route_attempts_remaining": 1,
+    "route_minutes_max": 40,
+    "dev_minutes_max": 30,
+    "dev_tool_calls_max": 20,
+    "tester_minutes_max": 45,
+    "tester_tool_calls_max": 30,
+    "why": "Only one endpoint/17 ps; single compare/register change; one synth + one route within the existing r2 2-session/60-min cap.",
+    "no_qor_strategy_change": true,
+    "no_clock_change": true
+  },
+  "stop_conditions": [
+    "P2/P3 any mismatch, X, illegal BTYPE, or vlog warning -> stop before TD.",
+    "P2 comp cycles >370,370 or <77.76 MB/s -> stop; do not enter TD.",
+    "1080p any mode >6,250,000 cycles -> stop; do not enter TD.",
+    "Synth WNS <0 or TNS<0 -> do not route; no further synth in r2.",
+    "Synth slice >71,680 or ERAM not consistent -> do not route; report evidence.",
+    "Route not Routed, routed WNS/TNS<0, any violating endpoint, resource overflow -> stop; single route used.",
+    "report_cdc or check_timing not actually executed -> G2 cannot PASS; record evidence gap.",
+    "Remaining 1 synth / 1 route exhausted -> stop; no r3, no automatic extension.",
+    "Any needed change outside htab stage-1 hent_pos compare/register -> stop and return to planner.",
+    "Any request for larger device, QoR strategy, clock change, false path/multicycle, seed sweep, bitgen/download -> stop and return to planner."
+  ],
+  "after_development": {
+    "sequence": [
+      "dev ready_for_test + frozen r2-b manifest -> spawn_single_tester (one new integrated tester)",
+      "tester integrated verdict -> return_to_planner",
+      "dev blocked at P2/P3, throughput, synth, route, or CDC -> return_to_planner, no tester",
+      "r2-b fail -> blocked; no r3"
+    ],
+    "rules": [
+      "New development and new independent tester session; do not reuse prior sessions.",
+      "Tester writes test-reports/T10.a1-htab-eram-r2-integrated.md (same round r2; note revision r2-b) with one unique verdict heading.",
+      "All G1/G2/resource/CDC evidence binds to the r2-b manifest.",
+      "Tester independently re-runs P2/P3, decodes with zlib+self strict, recomputes P2 comp/1080p cycles, parses raw TD reports/hashes, verifies slice/ERAM/route/CDC/check_timing.",
+      "PRJ-8806 already verified; preserve evidence.",
+      "G2 PASS requires Routed WNS/TNS>=0, 0 violations, slice<=71,680, and report_cdc actually executed."
+    ]
+  },
+  "scope_limits": {
+    "main_goal": "Final closeout of T10.a1-htab-eram r2-b: remove hent_pos from stage-1 subtractor and route at 187.5.",
+    "in_scope": [
+      "htab stage-1 hent_pos compare/register",
+      "P2/P3 functional equivalence and throughput",
+      "remaining 1 synth + 1 route",
+      "separate report_cdc/check_timing after route",
+      "r2-b manifest/result/rollback",
+      "one independent integrated tester"
+    ],
+    "out_of_scope": [
+      "r2 flag fix, thresh_lit8/9, htab/bm storage, other core logic",
+      "frame/SDC changes",
+      "A route or clock change",
+      "larger device or QoR strategy",
+      "C-full new compression/microarchitecture",
+      "production integration, bit/CWC, download/Flash, bitgen",
+      "new run or P4 repair-count change",
+      "r3"
+    ],
+    "deferred_themes": [
+      {
+        "theme": "larger device / QoR strategy",
+        "status": "requires_separate_planner_authorization",
+        "conditions": ["r2-b fails", "explicit finite experiment", "same candidate binding"]
+      },
+      {
+        "theme": "A route / clock change",
+        "status": "not_selected",
+        "conditions": ["only if r2-b fails", "explicit user consent"]
+      },
+      {
+        "theme": "board/real-data dependency package",
+        "status": "blocked_awaiting_hardware_awaiting_user",
+        "conditions": ["routed A+ bit", "non-PCIe export transport", "board window and user"]
+      }
+    ]
+  },
+  "question_path": null,
+  "user_summary_path": "workflow/runs/20261020-0209_singleA_aplus_closedloop/user-summary.md"
+}

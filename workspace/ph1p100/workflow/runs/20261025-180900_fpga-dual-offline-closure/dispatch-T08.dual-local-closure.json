@@ -1,0 +1,113 @@
+{
+  "run_id": "20261025-180900_fpga-dual-offline-closure",
+  "project_root": "D:\\fpga\\ph1p100",
+  "output_dir": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure",
+  "task_ids": [
+    "T08.dual-local-closure"
+  ],
+  "batch_size": 1,
+  "status": "ready",
+  "needs_user_input": false,
+  "input_paths": [
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\request.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\input-index.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\fpga-design-guide.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\dev-plan.md",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\planning-input-manifest.json"
+  ],
+  "write_scope": [
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T08.dual-local-closure/**"
+  ],
+  "protected": [
+    "D:/TD/**",
+    "D:/fpga_work/**",
+    "D:/fpga/ph1p100/upstream/**",
+    "D:/fpga/ph1p100/fpga/**",
+    "D:/fpga/ph1p100/tools/**",
+    "D:/fpga/ph1p100/docs/** (junction to OneDrive)",
+    "D:/fpga/ph1p100/work/**",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/** (including OpenCode b11)",
+    "D:/fpga/ph1p100/workflow/runs/20261024-221529_fpga-sim-integration-recovery/**",
+    "all other worktrees, production/bit/CWC/BID/DB, shared drive mappings",
+    "workflow/tasks.json: developer/tester read-only; planner minimum closeout append with concurrency check only",
+    "this run planning/control files, sibling task directories and sibling evidence"
+  ],
+  "next_action": {
+    "operation": "spawn_agent",
+    "role": "fpga-dev",
+    "skill_path": "D:\\fpga\\ph1p100\\.agents\\skills\\fpga-dev\\SKILL.md",
+    "task_id": "T08.dual-local-closure",
+    "task_name": "fpga_dev_dual_local_180900",
+    "fork_turns": "none",
+    "prompt_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\inputs\\T08.dual-local-closure-developer.md",
+    "input_paths": [
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\request.md",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\input-index.md",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\fpga-design-guide.md",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\dev-plan.md",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\planning-input-manifest.json"
+    ],
+    "write_scope": [
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T08.dual-local-closure/**"
+    ],
+    "no_cross_task_reuse": true
+  },
+  "after_development": {
+    "task_id": "T08.dual-local-closure",
+    "when": "ready_for_test AND actual manifest provided AND stopped_modifying=true AND active_commands=0",
+    "operation": "spawn_single_tester",
+    "role": "fpga-tester",
+    "skill_path": "D:\\fpga\\ph1p100\\.agents\\skills\\fpga-tester\\SKILL.md",
+    "task_name": "fpga_tester_dual_local_180900",
+    "fork_turns": "none",
+    "prompt_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\inputs\\T08.dual-local-closure-tester.md",
+    "inputs_from_developer_return": [
+      "manifest_path",
+      "test_input_paths",
+      "artifact_paths",
+      "lessons_path"
+    ],
+    "write_scope": [
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T08.dual-local-closure/**",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\test-reports\\T08.dual-local-closure-r<round>-integrated.md"
+    ],
+    "one_new_tester_only": true
+  },
+  "scope_limits": {
+    "primary_goals": 1,
+    "formal_work_packages": 2,
+    "max_formal_work_packages": 4,
+    "levels": 2,
+    "max_semantic_steps_per_package": 5,
+    "batch_size": 1,
+    "requested_packages_authority": {
+      "quote": "上述两者尝试使用工作流技能派好分配下去做理线闭环",
+      "source": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\request.md",
+      "meaning": "two explicitly referenced work packages, no batch-size override"
+    },
+    "scope_count_overrides": [],
+    "parallelism": "two independent one-task dispatches; do not share developer or tester"
+  },
+  "execution_limits": {
+    "read_search_timeout_seconds": 60,
+    "compile_static_small_case_timeout_seconds": 300,
+    "full_size_t10_case_timeout_seconds": 600,
+    "max_search_rounds_per_problem": 3,
+    "same_failed_command_total_attempts": 2,
+    "retry_requires_new_evidence": true,
+    "no_progress_cycles_before_stop": 2,
+    "development_calls": 60,
+    "development_minutes": 90,
+    "development_compiles": 4,
+    "tester_calls": 45,
+    "tester_minutes": 60,
+    "tester_compiles": 2,
+    "max_case_processes_per_role_per_dispatch": 20,
+    "max_actual_repair_rounds": 3,
+    "td": 0,
+    "hardware": 0,
+    "download": 0,
+    "flash": 0,
+    "reason": "Real production top/I2C readback and real codec full-size two-frame runs require bounded additional offline preparation; limits frozen before dispatch."
+  }
+}

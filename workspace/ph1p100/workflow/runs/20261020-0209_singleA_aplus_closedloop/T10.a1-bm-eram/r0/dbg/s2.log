@@ -1,0 +1,105 @@
+# vsim -c -lib W:\dbg\work_dbg -l W:\dbg\s2.log tb_a1_deflate_core "+IN=W:\p2\cases\p2_dist2048_len258.hex" "+META=W:\p2\cases\p2_dist2048_len258.meta" "+OUT=W:\dbg\o2.hex" "+STAT=W:\dbg\st2.txt" -do "run -all; quit -f" 
+# Start time: 03:55:51 on Oct 22,2026
+# Loading W:\dbg\work_dbg.tb_a1_deflate_core
+# Loading W:\dbg\work_dbg.a1_deflate_core
+# ** Warning: (vsim-PLI-3691) P:/upstream/ph1p100-pcie-ep-fpga/sim/tb/codec/tb_a1_deflate_core.v(100): Expected a system task, not a system function '$value$plusargs'.
+#    Time: 0 ps  Iteration: 0  Instance: /tb_a1_deflate_core File: P:/upstream/ph1p100-pcie-ep-fpga/sim/tb/codec/tb_a1_deflate_core.v
+# ** Warning: (vsim-PLI-3691) P:/upstream/ph1p100-pcie-ep-fpga/sim/tb/codec/tb_a1_deflate_core.v(101): Expected a system task, not a system function '$value$plusargs'.
+#    Time: 0 ps  Iteration: 0  Instance: /tb_a1_deflate_core File: P:/upstream/ph1p100-pcie-ep-fpga/sim/tb/codec/tb_a1_deflate_core.v
+# ** Warning: (vsim-PLI-3691) P:/upstream/ph1p100-pcie-ep-fpga/sim/tb/codec/tb_a1_deflate_core.v(102): Expected a system task, not a system function '$value$plusargs'.
+#    Time: 0 ps  Iteration: 0  Instance: /tb_a1_deflate_core File: P:/upstream/ph1p100-pcie-ep-fpga/sim/tb/codec/tb_a1_deflate_core.v
+# ** Warning: (vsim-PLI-3691) P:/upstream/ph1p100-pcie-ep-fpga/sim/tb/codec/tb_a1_deflate_core.v(103): Expected a system task, not a system function '$value$plusargs'.
+#    Time: 0 ps  Iteration: 0  Instance: /tb_a1_deflate_core File: P:/upstream/ph1p100-pcie-ep-fpga/sim/tb/codec/tb_a1_deflate_core.v
+# ** Warning: (vsim-PLI-3691) P:/upstream/ph1p100-pcie-ep-fpga/sim/tb/codec/tb_a1_deflate_core.v(104): Expected a system task, not a system function '$value$plusargs'.
+#    Time: 0 ps  Iteration: 0  Instance: /tb_a1_deflate_core File: P:/upstream/ph1p100-pcie-ep-fpga/sim/tb/codec/tb_a1_deflate_core.v
+# run -all
+# CP0 st=3 nbits=3 val=0003 off=0 cand_bits=0
+# CP0 st=5 nbits=9 val=00ab off=3 cand_bits=3
+# SCAN pos=0 blk_n=4800 w=aabbcc hit2=0 hent_pos=x hdist=x
+# CP0 st=5 nbits=9 val=01bb off=4 cand_bits=12
+# SCAN pos=1 blk_n=4800 w=bbcc55 hit2=0 hent_pos=x hdist=x
+# CP0 st=5 nbits=9 val=0067 off=5 cand_bits=21
+# SCAN pos=2 blk_n=4800 w=cc5555 hit2=0 hent_pos=x hdist=x
+# CP0 st=5 nbits=8 val=00a1 off=6 cand_bits=30
+# SCAN pos=3 blk_n=4800 w=555555 hit2=0 hent_pos=x hdist=x
+# SCAN pos=4 blk_n=4800 w=555555 hit2=1 hent_pos=3 hdist=1
+# CP0 st=7 nbits=8 val=00a3 off=6 cand_bits=38
+# CP0 st=26 nbits=5 val=0000 off=6 cand_bits=46
+# MDIST pos=4 cand=3 dist=1 len=258 dsym=0 dbase=1 dev=0 dval=0000 dtot=5
+# SCAN pos=262 blk_n=4800 w=555555 hit2=1 hent_pos=4 hdist=258
+# CP0 st=7 nbits=8 val=00a3 off=3 cand_bits=51
+# CP0 st=26 nbits=12 val=0021 off=3 cand_bits=59
+# MDIST pos=262 cand=4 dist=258 len=258 dsym=16 dbase=257 dev=1 dval=0021 dtot=12
+# SCAN pos=520 blk_n=4800 w=555555 hit2=1 hent_pos=262 hdist=258
+# CP0 st=7 nbits=8 val=00a3 off=7 cand_bits=71
+# CP0 st=26 nbits=12 val=0021 off=7 cand_bits=79
+# MDIST pos=520 cand=262 dist=258 len=258 dsym=16 dbase=257 dev=1 dval=0021 dtot=12
+# SCAN pos=778 blk_n=4800 w=555555 hit2=1 hent_pos=520 hdist=258
+# CP0 st=7 nbits=8 val=00a3 off=3 cand_bits=91
+# CP0 st=26 nbits=12 val=0021 off=3 cand_bits=99
+# MDIST pos=778 cand=520 dist=258 len=258 dsym=16 dbase=257 dev=1 dval=0021 dtot=12
+# SCAN pos=1036 blk_n=4800 w=555555 hit2=1 hent_pos=778 hdist=258
+# CP0 st=7 nbits=8 val=00a3 off=7 cand_bits=111
+# CP0 st=26 nbits=12 val=0021 off=7 cand_bits=119
+# MDIST pos=1036 cand=778 dist=258 len=258 dsym=16 dbase=257 dev=1 dval=0021 dtot=12
+# SCAN pos=1294 blk_n=4800 w=555555 hit2=1 hent_pos=1036 hdist=258
+# CP0 st=7 nbits=8 val=00a3 off=3 cand_bits=131
+# CP0 st=26 nbits=12 val=0021 off=3 cand_bits=139
+# MDIST pos=1294 cand=1036 dist=258 len=258 dsym=16 dbase=257 dev=1 dval=0021 dtot=12
+# SCAN pos=1552 blk_n=4800 w=555555 hit2=1 hent_pos=1294 hdist=258
+# CP0 st=7 nbits=8 val=00a3 off=7 cand_bits=151
+# CP0 st=26 nbits=12 val=0021 off=7 cand_bits=159
+# MDIST pos=1552 cand=1294 dist=258 len=258 dsym=16 dbase=257 dev=1 dval=0021 dtot=12
+# SCAN pos=1810 blk_n=4800 w=555555 hit2=1 hent_pos=1552 hdist=258
+# CP0 st=7 nbits=13 val=0c23 off=3 cand_bits=171
+# CP0 st=26 nbits=12 val=0021 off=0 cand_bits=184
+# MDIST pos=1810 cand=1552 dist=258 len=239 dsym=16 dbase=257 dev=1 dval=0021 dtot=12
+# SCAN pos=2049 blk_n=4800 w=bbcc55 hit2=1 hent_pos=1 hdist=2048
+# CP0 st=7 nbits=8 val=00a3 off=4 cand_bits=196
+# CP0 st=26 nbits=14 val=3ff5 off=4 cand_bits=204
+# MDIST pos=2049 cand=1 dist=2048 len=258 dsym=21 dbase=1537 dev=511 dval=3ff5 dtot=14
+# SCAN pos=2307 blk_n=4800 w=555555 hit2=1 hent_pos=1810 hdist=497
+# CP0 st=7 nbits=13 val=0b23 off=2 cand_bits=218
+# CP0 st=26 nbits=12 val=0e11 off=7 cand_bits=231
+# MDIST pos=2307 cand=1810 dist=497 len=238 dsym=17 dbase=385 dev=112 dval=0e11 dtot=12
+# SCAN pos=2545 blk_n=4800 w=555555 hit2=1 hent_pos=2307 hdist=238
+# CP0 st=7 nbits=8 val=00a3 off=3 cand_bits=243
+# CP0 st=26 nbits=11 val=05be off=3 cand_bits=251
+# MDIST pos=2545 cand=2307 dist=238 len=258 dsym=15 dbase=193 dev=45 dval=05be dtot=11
+# SCAN pos=2803 blk_n=4800 w=555555 hit2=1 hent_pos=2545 hdist=258
+# CP0 st=7 nbits=8 val=00a3 off=6 cand_bits=262
+# CP0 st=26 nbits=12 val=0021 off=6 cand_bits=270
+# MDIST pos=2803 cand=2545 dist=258 len=258 dsym=16 dbase=257 dev=1 dval=0021 dtot=12
+# SCAN pos=3061 blk_n=4800 w=555555 hit2=1 hent_pos=2803 hdist=258
+# CP0 st=7 nbits=8 val=00a3 off=2 cand_bits=282
+# CP0 st=26 nbits=12 val=0021 off=2 cand_bits=290
+# MDIST pos=3061 cand=2803 dist=258 len=258 dsym=16 dbase=257 dev=1 dval=0021 dtot=12
+# SCAN pos=3319 blk_n=4800 w=555555 hit2=1 hent_pos=3061 hdist=258
+# CP0 st=7 nbits=8 val=00a3 off=6 cand_bits=302
+# CP0 st=26 nbits=12 val=0021 off=6 cand_bits=310
+# MDIST pos=3319 cand=3061 dist=258 len=258 dsym=16 dbase=257 dev=1 dval=0021 dtot=12
+# SCAN pos=3577 blk_n=4800 w=555555 hit2=1 hent_pos=3319 hdist=258
+# CP0 st=7 nbits=8 val=00a3 off=2 cand_bits=322
+# CP0 st=26 nbits=12 val=0021 off=2 cand_bits=330
+# MDIST pos=3577 cand=3319 dist=258 len=258 dsym=16 dbase=257 dev=1 dval=0021 dtot=12
+# SCAN pos=3835 blk_n=4800 w=555555 hit2=1 hent_pos=3577 hdist=258
+# CP0 st=7 nbits=8 val=00a3 off=6 cand_bits=342
+# CP0 st=26 nbits=12 val=0021 off=6 cand_bits=350
+# MDIST pos=3835 cand=3577 dist=258 len=258 dsym=16 dbase=257 dev=1 dval=0021 dtot=12
+# SCAN pos=4093 blk_n=4800 w=555555 hit2=1 hent_pos=3835 hdist=258
+# CP0 st=7 nbits=8 val=00a3 off=2 cand_bits=362
+# CP0 st=26 nbits=12 val=0021 off=2 cand_bits=370
+# MDIST pos=4093 cand=3835 dist=258 len=258 dsym=16 dbase=257 dev=1 dval=0021 dtot=12
+# SCAN pos=4351 blk_n=4800 w=555555 hit2=1 hent_pos=4093 hdist=258
+# CP0 st=7 nbits=8 val=00a3 off=6 cand_bits=382
+# CP0 st=26 nbits=12 val=0021 off=6 cand_bits=390
+# MDIST pos=4351 cand=4093 dist=258 len=258 dsym=16 dbase=257 dev=1 dval=0021 dtot=12
+# SCAN pos=4609 blk_n=4800 w=555555 hit2=1 hent_pos=4351 hdist=258
+# CP0 st=7 nbits=13 val=1c43 off=2 cand_bits=402
+# CP0 st=26 nbits=12 val=0021 off=7 cand_bits=415
+# MDIST pos=4609 cand=4351 dist=258 len=191 dsym=16 dbase=257 dev=1 dval=0021 dtot=12
+# CP0 st=10 nbits=7 val=0000 off=3 cand_bits=427
+# ** Note: $finish    : P:/upstream/ph1p100-pcie-ep-fpga/sim/tb/codec/tb_a1_deflate_core.v(195)
+#    Time: 98145 ns  Iteration: 1  Instance: /tb_a1_deflate_core
+# End time: 03:55:51 on Oct 22,2026, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 5

@@ -40,6 +40,11 @@ module img_frame_src #(
 
     input  wire        enable,        // 1 = 连续出帧
     input  wire        trigger,       // 单帧触发（1 拍脉冲）
+    // T07 新增：one-shot 捕获停止点。hold=1 时不再启动新一帧写 fb[]，
+    // 已经开始的帧会写完（帧计数器只在整帧写完时 +1），所以「帧计数器变了」
+    // 且 hold 在下一拍就拉起的组合，保证 fb[] 从 claim 起到 release 为止逐字节
+    // 不可变（发生器的 IDLE_CYCLE 空档 ≫ 拉起延迟，见 T07 change-report）。
+    input  wire        hold,
 
     input  wire [31:0] rd_addr,       // 帧缓存读字节地址（来自寄存器块）
     output wire [31:0] rd_data,       // 读数据（1 拍延迟，且只在 host_grant 那拍成立）,
@@ -137,7 +142,7 @@ module img_frame_src #(
     // 一个 32bit 字装 4 个像素：第 j 个字节 = (x+j) + y + 帧号
     wire [7:0] pix_now = x[7:0] + y[7:0] + {6'd0, lane} + frame_cnt_t[7:0] + PIX_ADD;
 
-    wire start = (enable | trigger) && ((ready_t == 1'b0) || (idle >= IDLE_CYCLE));
+    wire start = (enable | trigger) && !hold && ((ready_t == 1'b0) || (idle >= IDLE_CYCLE));
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin

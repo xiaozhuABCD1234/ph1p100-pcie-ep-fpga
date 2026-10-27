@@ -1,0 +1,9 @@
+# Production attempt5/6 — fixed hypothesis before launch
+
+Prior attempt4 actual routed paths: front t_valid->row rb2 -0.645; RGB occupancy->rowRAM -0.555; gray DSP product->m_y -0.609; HE state->Gaussian row -0.539; cameraB integrity tail->gearbox output -0.091. Hold+0.020/TNS0. Old HE->front chain was already cut and is not claimed the current sole cause.
+
+Minimal grouped corrections: conservative front enable=m_ready plus registered RGB room removes t_valid/occupancy decode from high fanout row address control. Exact gray sum split into partial and final registered stages removes the product-to-three-term-add output chain. Three-cycle sidebands move atomically. Independent two-slot Gaussian/HE input queues prevent either branch state/ready from gating the other branch's s_valid/RAM control. Gray abort output marker is transferred only on actual broadcast. No arithmetic or reference/oracle edits; provenance records all differences. The row-window implementation itself is unchanged.
+
+Native physical correction for unchanged protected camB: verified phys_opt -post_route -effort low, then explicit bare fix_hold, final timing/export/bit/CWC in the same fresh full production session. This is a justified setup optimization, no blind seed change. Both setup/hold all applicable clock groups must pass; a residual protected receiver path remains a blocker if native optimization cannot close it.
+
+Before build run affected actual DUT core24/LUT/hold/markers, HE same-bin negative, varying adapter/ROI-negative, RAW overflow/bad-frame recovery, top injection, full1080p and near-continuous two-frame service. Preserve cumulative prior used counts; affectedT09 cap8, writer6/8/controller5/6 unchanged and reused only with loaded-module SHA proof. Actual deadline3600s; source snapshot and owned PID termination preserved. One attempt5, not separate hidden synthesis/checkpoint sessions. Stop on fully qualified attempt5; attempt6 requires new evidence.

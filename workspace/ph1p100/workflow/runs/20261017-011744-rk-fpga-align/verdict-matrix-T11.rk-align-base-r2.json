@@ -1,0 +1,35 @@
+{
+  "task_id": "T11.rk-align-base",
+  "round": 2,
+  "actual_repair_rounds": 2,
+  "manifest_path": "env/artifacts-manifest.json",
+  "manifest_sha256": "ff079ffac43bc7007da9c3bf8d92cdd6ecf5749c46ebe44a4bc091b6a38fc069",
+  "functional": {
+    "report_path": "test-reports/T11.rk-align-base-r2-functional.md",
+    "verdict": "PASS",
+    "agent": "ses_eb73cf302ffeDeeEC3gUhTpWbl",
+    "blocked": []
+  },
+  "engineering": {
+    "report_path": "test-reports/T11.rk-align-base-r2-engineering.md",
+    "verdict": "PASS",
+    "agent": "ses_eb73cf301ffeOswk6jJIrMq3AA",
+    "blocked": []
+  },
+  "system": {
+    "report_path": "test-reports/T11.rk-align-base-r2-system.md",
+    "verdict": "PASS",
+    "agent": "ses_eb73cf300ffep5PGk7MHS1uMwU",
+    "blocked": null
+  },
+  "round_history": {
+    "round0": "functional FAIL（survey S1-1 来源引用+计数口径）/ system FAIL（手册示例 SYS-D1/D2）/ engineering PASS",
+    "repair1": "修 survey/手册示例；r1 = functional FAIL（新缺陷 F1-r1：handbook 无范围绝对断言）/ engineering PASS / system PASS",
+    "repair2": "修 F1-r1 断言范围 + 6 处措辞；r2 = 三维 PASS 绑定 FF079FFA…C069"
+  },
+  "notes": [
+    "全部修复均为文档/记录级；env_check.ps1、清单、受保护树、既有证据 SHA 全程零改动。",
+    "跨任务观察（非本包缺陷，交规划处置）：T11.rk-align-raw r0 的 test-reports/T11.rk-align-raw-r0-engineering.md §6 与 verify_supplement §G 残留同一无范围原句。",
+    "r2 观察：2 处语境为真的绝对短语（零变化文件）登记为观察。"
+  ]
+}

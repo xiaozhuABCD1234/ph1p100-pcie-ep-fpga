@@ -1,0 +1,54 @@
+{"command": ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\upstream\\ph1p100-pcie-ep-fpga\\tools\\pcie_integration\\run_sim.ps1", "-Root", "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\upstream\\ph1p100-pcie-ep-fpga", "-Tb", "tb_closedloop_writer_checker", "-OutDir", "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\workflow\\runs\\20261019-0212_codex_fpga_closedloop_b2\\ddr-integration\\g1\\tb_closedloop_writer_checker", "-TbFiles", "tb/tb_closedloop_writer_checker.v", "-Defines", "MIPI_PHY_SIM_STUB"], "cwd": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\upstream\\ph1p100-pcie-ep-fpga", "seconds": 300}
+project_root = C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\upstream\ph1p100-pcie-ep-fpga
+subst S: -> C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\upstream\ph1p100-pcie-ep-fpga (temporary, removed at end)
+== vlog FAILED (exit 2) ==
+** Warning: S:/sim/../rtl/ep_side/pcie_ep_engine.v(127): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+-- Compiling module pcie_ep_int_handle
+-- Compiling module ph1p_pcie_ep_top
+-- Compiling module ep_ubus_bridge
+-- Compiling module ph1p_pcie_rst_sync
+-- Compiling module ubus2hxt_apb
+-- Compiling module ubus2pcie_apb
+-- Compiling module pcie_uart
+-- Compiling module bps_setting
+-- Compiling module pcie_uprotocol
+-- Compiling module uart_cdc
+-- Compiling module uart_rx_setting
+-- Compiling module uart_tx_setting
+-- Compiling module ddr_frame_readback_checker
+-- Compiling module ph1p_pcie_ep_top_dbg
+-- Compiling module ddr_closedloop_readback
+-- Compiling module algo_diagnostic_sink
+-- Compiling module algo_obuf
+-- Compiling module algo_rowwin3
+-- Compiling module algo_rowwin_reader
+-- Compiling module bayer_raw10_demosaic4
+-- Compiling module cam_algo_diagnostics
+-- Compiling module csi_algo_roi_adapter
+-- Compiling module gray8_gaussian3x3_frame
+-- Compiling module gray8_gaussian3x3_stream
+-- Compiling module gray8_he_cdfmin_frame
+-- Compiling module img_algo_parallel_top
+-- Compiling module rgb8_gray_stream
+-- Compiling module ph1p_pcie_ep_top_closedloop
+-- Compiling module tb_closedloop_writer_checker
+** Error (suppressible): S:/sim/tb/tb_closedloop_writer_checker.v(351): (vlog-2388) 'rb_release' already declared in this scope (tb_closedloop_writer_checker).
+** Error (suppressible): S:/sim/tb/tb_closedloop_writer_checker.v(351): (vlog-2388) 'rb_pub' already declared in this scope (tb_closedloop_writer_checker).
+** Error (suppressible): S:/sim/tb/tb_closedloop_writer_checker.v(352): (vlog-2388) 'rb_seq' already declared in this scope (tb_closedloop_writer_checker).
+** Error (suppressible): S:/sim/tb/tb_closedloop_writer_checker.v(352): (vlog-2388) 'rb_base' already declared in this scope (tb_closedloop_writer_checker).
+** Error (suppressible): S:/sim/tb/tb_closedloop_writer_checker.v(352): (vlog-2388) 'rb_len' already declared in this scope (tb_closedloop_writer_checker).
+** Error (suppressible): S:/sim/tb/tb_closedloop_writer_checker.v(352): (vlog-2388) 'rb_session' already declared in this scope (tb_closedloop_writer_checker).
+** Error (suppressible): S:/sim/tb/tb_closedloop_writer_checker.v(352): (vlog-2388) 'rb_good' already declared in this scope (tb_closedloop_writer_checker).
+** Error (suppressible): S:/sim/tb/tb_closedloop_writer_checker.v(352): (vlog-2388) 'rb_bad' already declared in this scope (tb_closedloop_writer_checker).
+End time: 02:30:13 on Oct 19,2026, Elapsed time: 0:00:01
+Errors: 8, Warnings: 1
+outdir subst removed
+subst S: removed
+vlog failed
+At C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\upstream\ph1p100-pcie-ep-fpga\tools\pcie_integration\run_sim.ps1:132 
+char:9
++         throw "vlog failed"
++         ~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (vlog failed:String) [], RuntimeException
+    + FullyQualifiedErrorId : vlog failed
+ 

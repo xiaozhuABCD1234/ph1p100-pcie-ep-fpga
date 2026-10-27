@@ -1,0 +1,48 @@
+{
+  "run_id": "20261025-180900_fpga-dual-offline-closure",
+  "project_root": "D:\\fpga\\ph1p100",
+  "output_dir": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure",
+  "task_ids": [
+    "T08.dual-local-closure"
+  ],
+  "batch_size": 1,
+  "status": "ready",
+  "needs_user_input": false,
+  "question_path": null,
+  "user_summary_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\user-summary-T08-pass01.md",
+  "input_paths": [
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\partial-closeout-T08-01.json",
+    "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T08-offline-handoff01.md"
+  ],
+  "write_scope": [],
+  "protected": [
+    "All frozen source and evidence",
+    "Parent hardware states, OpenCode/production, T10 active original test"
+  ],
+  "next_action": {
+    "operation": "relay_to_user",
+    "user_summary_path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\user-summary-T08-pass01.md",
+    "no_permission_question": true
+  },
+  "scope_limits": {
+    "T08_offline_closed": true,
+    "run_finished": false,
+    "T10_verdict": "not received",
+    "new_tasks_or_roles": 0,
+    "T08_additional_experiments": 0
+  },
+  "execution_limits": {
+    "root_no_technical_work": true,
+    "wait_agent_max_ms": 60000,
+    "no_polling_scans_progress_questions": true
+  },
+  "event_wait_targets": [
+    "/root/fpga_tester_dual_scheduler_180900"
+  ],
+  "after_T10_actual_return_or_error": {
+    "operation": "return_to_planner",
+    "target": "/root/fpga_plan_dual_offline",
+    "pass_exact_metadata_only": true
+  },
+  "T08_no_retest_or_developer_followup": true
+}

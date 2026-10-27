@@ -1,0 +1,244 @@
+{
+  "task_id": "T10.a1-bm-addr",
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "round": "r0",
+  "date": "2026-10-22",
+  "package_type": "final directed address/CE cone package under T10 (same T10/same run)",
+  "status": "blocked_at_synth_gate",
+  "ready_for_test": false,
+  "tester": null,
+  "status_reason": "G1 is fully green (P2 13/13 with comp cycle count exactly 355,261; P3 20/20 with f1080p_p1d1 = 81,707 B / b769cc66...08ff; all 33 cases field-identical to the T10.a1-bm-prefetch r2 G1-green baseline df6124d4; vlog 0/0). The single authorized synthesis attempt gives global WNS +0.113 ns / TNS 0.000 (up from +0.021) with no ERAM clk2q-start endpoint anywhere in the synthesized report, but the dispatch pre-route gate requires global WNS >= +0.5 ns, which the locked a1_frame_top worst path (+0.113) cannot meet inside this package scope. Per the dispatch stop condition no route was launched (route 0/1), so there is no routed STA and no static-CDC evidence.",
+  "authorization": {
+    "quote": "再试一次A",
+    "date": "2026-10-22",
+    "type": "explicit_final_directed_attempt",
+    "source": "workflow/runs/20261020-0209_singleA_aplus_closedloop/dispatch-bm-addr.json",
+    "dev_plan": "dev-plan.md §36"
+  },
+  "base_candidate": {
+    "source": "T10.a1-bm-prefetch r2 df6124d4 (G1 33/33, comp 355,261, 1080p 81,707 B)",
+    "a1_deflate_core.v": "df6124d4aa48725ea77423f43af7a783d3f5c83c1bc090160e481d09cf114a9c",
+    "copy": "T10.a1-bm-addr/r0/base/a1_deflate_core.df6124d4.v"
+  },
+  "candidate": {
+    "path_in_package": "T10.a1-bm-addr/r0/td/a1_deflate_core.v",
+    "sha256": "35ea736415c5fbfd28fabcf85b78e33275fb2507f8d30a070a95a17a41760942",
+    "bytes": 75877,
+    "diff": "T10.a1-bm-addr/r0/patch.diff",
+    "diff_lines": 68,
+    "chain": [
+      "base df6124d4 (bm-prefetch r2: 2-stage bm read, S_MLEN seed, S_MCHK/R0 seed restore)",
+      "r0 delta: bm_b port address reduced to a single 2:1 mux level from the ERAM read data (bm_b_from_ram ? htab_q[49:37] : bm_b_flop_addr); all alternative sources are flops, including the same-address write-first bypass data htab_byp_data[49:37]",
+      "r0 delta: hf1_r <= hent[49:37] + 13'd1 registered in the same s1_en cycle, so the hit-cycle ref+4 address no longer runs through a pos/hit2 -> adder -> address chain",
+      "r0 delta: S_SCAN window shift w0<=w1/w1<=w2/w2<=x1_r made unconditional (hit and end-of-block paths reload w0..w2 from bm_b_rd in S_REPOS/S_PRE), removing hit2 from the w0/w1/w2 clock-enable cone"
+    ],
+    "scope_check": "only the address/CE cone changed; bm prefetch/ext_mis_r, htab/bm storage width and ports, thresh_lit8/9, protocol/ports/frame/CRC/length/abort/Bayer/SDC untouched; no added pipeline stage"
+  },
+  "frozen_inputs": {
+    "a1_frame_top.v": {
+      "sha256": "18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+      "bytes": 23675,
+      "locked": true,
+      "unchanged": true
+    },
+    "a1_small_top.sdc": {
+      "sha256": "227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311",
+      "bytes": 399,
+      "locked": true,
+      "unchanged": true
+    },
+    "a1_eng_top.v": {
+      "sha256": "544cecfc2eb34a3ab5c03ebf3965730b4ce60b2ff73ac4c2ec2d87772faaf9aa",
+      "bytes": 2671,
+      "note": "bench top, copied unchanged from T10.a1-bm-prefetch/r2/td"
+    },
+    "tb_a1_deflate_core.v": {
+      "sha256": "910aea54e0d8d40a02a7d5e7844b053fff1f86e24cbfc43d1c33f083da5af09e",
+      "bytes": 7539
+    },
+    "tb_a1_frame_top.v": {
+      "sha256": "e7af5320a19fa49322c82680baec3e382fcc6117f9d3bab1dc06bcfb5182d9c8",
+      "bytes": 21191
+    }
+  },
+  "scripts": {
+    "p2": {
+      "path": "upstream/ph1p100-pcie-ep-fpga/tools/codec/run_p2_bm_addr_r0.ps1",
+      "sha256": "7a4ae1bdb8bb6904eb0725850db5b0e692733b812237be183c5c18aefb683577"
+    },
+    "p3": {
+      "path": "upstream/ph1p100-pcie-ep-fpga/tools/codec/run_p3_bm_addr_r0.ps1",
+      "sha256": "3d3a54234c270326b6b59013f97151b2a576d8baa7f6908efc14d97ff57f9257"
+    },
+    "td": {
+      "path": "T10.a1-bm-addr/r0/td/00_syn_then_route.tcl",
+      "sha256": "01242d40dc5e4420a3e7d481cf857436652d254f3be2ad85bda9e1dff263e4a0"
+    }
+  },
+  "gates": {
+    "g1_functional": {
+      "verdict": "PASS",
+      "p2": {
+        "verdict": "PASS",
+        "cases": 13,
+        "pass": 13,
+        "mismatch": 0,
+        "x": 0,
+        "vlog": "Errors: 0, Warnings: 0",
+        "comp": {
+          "len": 50310,
+          "cycles": 355261,
+          "cycles_exact_required": 355261,
+          "sha256": "2601d57cd98d1fe69b2e46fe8423779a5d44bd14c00e1fe2d5faab6ff15a7c05",
+          "mismatch": 0
+        },
+        "rand_cycles": 161479,
+        "exitcodes": "20/20 exit=0 (gen, vlog, 17 vsim, verify)"
+      },
+      "p3": {
+        "verdict": "PASS",
+        "cases": 20,
+        "pass": 20,
+        "mismatch": 0,
+        "x": 0,
+        "vlog": "Errors: 0, Warnings: 0 (incl. vlog -lint)",
+        "f1080p_p1d1": {
+          "len": 81707,
+          "sha256_stream": "b769cc666b33db310532ec980809f5decbbff197f0ff29eb10045f442beb08ff",
+          "cycles": 4677945
+        },
+        "bp_equivalence": true,
+        "exitcodes": "24/24 exit=0 (gen, vlog, vlog-lint, 20 vsim, verify)"
+      },
+      "bit_identical_to_r2_baseline": {
+        "method": "per-case deep JSON comparison (json.dumps sort_keys) of r0 result.json against T10.a1-bm-prefetch/r2 result.json",
+        "p2_cases_compared": 13,
+        "p3_cases_compared": 20,
+        "differing_fields": 0
+      },
+      "throughput": {
+        "comp_cycles": 355261,
+        "comp_hard_max": 370370,
+        "comp_min_MBps": 77.76,
+        "measured_MBps_187p5": 81.067,
+        "f1080p_bytes": 81707,
+        "f1080p_cycles": 4677945,
+        "f1080p_cycles_max": 6250000
+      }
+    },
+    "g2_synth": {
+      "verdict": "FAIL",
+      "attempts_used": "1/2",
+      "wns_ns": 0.113,
+      "tns_ns": 0.0,
+      "gate_wns_required": 0.5,
+      "slice": 3085,
+      "slice_max": 71680,
+      "eram": 26,
+      "core_eram": 22,
+      "reg": 1646,
+      "dram_lut": 32,
+      "worst_paths_reported": [
+        {"slack": 0.113, "from": "u_dut/byte_k_reg[2].clk", "to": "u_dut/smem_waddr_r_reg[14].d", "note": "a1_frame_top, locked"},
+        {"slack": 0.113, "from": "u_dut/byte_k_reg[2].clk", "to": "u_dut/smem_waddr_r_reg[15].d", "note": "a1_frame_top, locked"},
+        {"slack": 0.232, "from": "u_dut/u_core/sdata_ptr_reg[0].clk", "to": "u_dut/u_core/state_reg[0..7].ce", "note": "core, not the address cone"}
+      ],
+      "eram_clk2q_startpoints_in_report": 0,
+      "eram_clk2q_occurrences_in_report": 0,
+      "eram_clk2q_note": "The 10-endpoint-per-group synthesized report (84 KB) contains no 'ERAM (clk2q)' begin point at all, i.e. the htab_p3v/bm_a/bm_b ERAM clk2q -> addrb/ceb cone is out of the synthesized critical set. This is NOT an exhaustive proof that every ERAM clk2q endpoint is >= +0.9 ns: TD Release_2026.2 ignores report_timing -from <pin/cell list> filters (proved byte-identical in T10.a1-bm-prefetch r2-waive §3) and the report is limited to 10 endpoints per path group.",
+      "decision": "SYN_GATE_STOP no_route (wns=0.113 < 0.5)"
+    },
+    "g2_routed": {
+      "status": "not_run",
+      "why": "dispatch stop condition: global synth WNS < +0.5 -> do not route (route 0/1)"
+    },
+    "cdc_static": {
+      "status": "not_run",
+      "why": "routed-stage evidence only; no routed DB exists"
+    },
+    "bitgen": "not_run; no .bit/.cwc under r0; no download"
+  },
+  "td": {
+    "sessions": 1,
+    "session_seconds": 46,
+    "project": "T:/a1_bm_addr.al",
+    "synth_attempts": "1/2",
+    "route_attempts": "0/1",
+    "reports": [
+      "T10.a1-bm-addr/r0/td/syn_gate_timing_a1.rpt",
+      "T10.a1-bm-addr/r0/td/syn_gate_area_a1.rpt",
+      "T10.a1-bm-addr/r0/td/run_console.log"
+    ]
+  },
+  "budget_used": {
+    "dev_minutes_approx": 20,
+    "dev_tool_calls_approx": 31,
+    "td_sessions": "1/2",
+    "td_session_seconds": 46,
+    "synth_attempts": "1/2",
+    "route_attempts": "0/1",
+    "deepseek_calls": 0,
+    "subagents": 0
+  },
+  "forbidden_actions_not_taken": [
+    "no QoR/seed/clock change",
+    "no false path / multicycle / clock group exception",
+    "no frame_top/SDC edit",
+    "no bitgen / .bit / download / Flash",
+    "no route beyond the gate",
+    "no second synth attempt without new evidence",
+    "no changes outside the address/CE cone",
+    "no new run, no new package"
+  ],
+  "artifacts": {
+    "result": "T10.a1-bm-addr/r0/result-r0.md",
+    "lessons": "T10.a1-bm-addr/r0/lessons-r0.md",
+    "manifest": "T10.a1-bm-addr/r0/CANDIDATE-MANIFEST-bm-addr-r0.json",
+    "patch": "T10.a1-bm-addr/r0/patch.diff",
+    "p2": "T10.a1-bm-addr/r0/p2/result.json",
+    "p3": "T10.a1-bm-addr/r0/p3/result.json",
+    "p2_logs": ["T10.a1-bm-addr/r0/p2/logs/exitcodes.txt", "T10.a1-bm-addr/r0/p2/logs/vlog.log"],
+    "p3_logs": ["T10.a1-bm-addr/r0/p3/logs/exitcodes.txt", "T10.a1-bm-addr/r0/p3/logs/vlog.log", "T10.a1-bm-addr/r0/p3/logs/vlog-lint.log"],
+    "td_dir": "T10.a1-bm-addr/r0/td/",
+    "base_copy": "T10.a1-bm-addr/r0/base/a1_deflate_core.df6124d4.v"
+  },
+  "worktree": {
+    "a1_deflate_core.v_restored_to": "df6124d4aa48725ea77423f43af7a783d3f5c83c1bc090160e481d09cf114a9c",
+    "note": "the G1-green baseline is back in the worktree; the blocked r0 candidate only exists as T10.a1-bm-addr/r0/td/a1_deflate_core.v"
+  },
+  "fallback": {
+    "best_g1_green": "df6124d4 (worktree)",
+    "best_routed": "0b084317 (T10.a1-hit-pipe r0; routed -0.436, not G2 PASS)",
+    "bm_prefetch_routed": "df6124d4 r2-waive routed -0.421 / 10 endpoints"
+  },
+  "blocked": {
+    "reason_code": "LIMIT_REACHED",
+    "detail": "The single authorized synthesis attempt reports global WNS +0.113 ns / TNS 0.000 with 26 ERAM and 3,085 slices. The dispatch pre-route gate is WNS >= +0.5 ns, and the limiting path is inside the locked a1_frame_top (byte_k_reg[2] -> smem_waddr_r_reg[14/15].d), which is out of this package's write scope, so the gate is structurally unreachable here. The package target (address/CE cone) is cleared from the synthesized critical set (no ERAM clk2q begin point in the 84 KB report), but the gate forbids routing, so routed STA and static-CDC evidence cannot be produced in this package.",
+    "done": [
+      "address/CE cone restructure (single-mux bm_b port address, registered hf1_r, unconditional S_SCAN window shift)",
+      "G1 33/33 field-identical to the r2 G1-green baseline with exact comp cycles 355,261 and 1080p 81,707 B",
+      "one synthesis with gate parse, ERAM clk2q coverage analysis and stop-before-route"
+    ],
+    "not_done": [
+      "route",
+      "routed STA (WNS/TNS/HWNS/HTNS, violating endpoints, resources)",
+      "report_clock_utilization / check_timing / report_timing_summary on a routed DB",
+      "static CDC evidence",
+      "exhaustive ERAM clk2q endpoint enumeration (tool limitation)"
+    ],
+    "last_evidence": "T10.a1-bm-addr/r0/td/syn_gate_timing_a1.rpt ; T10.a1-bm-addr/r0/td/run_console.log ; T10.a1-bm-addr/r0/p2/result.json ; T10.a1-bm-addr/r0/p3/result.json",
+    "minimal_next_step": "Planner closes T10 as 3/4 PASS + 1 warning per dev-plan §36.5. Any further timing attempt needs a new user authorization outside this package: the locked a1_frame_top byte_k/grp_in_row -> smem_waddr cone or a larger device / QoR strategy.",
+    "resume_entry": "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-bm-addr/r0/"
+  },
+  "retest": {
+    "tester_required": false,
+    "why": "dispatch after_development: dev blocked at synth gate -> return_to_planner, no tester; T10 closes as 3/4 PASS + 1 warning",
+    "if_planner_requests_independent_verification": {
+      "required_dimensions": ["functional", "engineering"],
+      "g1": "re-run P2 13/13 + P3 20/20 on the candidate copy with an independently repaired strict decoder; require comp cycles exactly 355,261 and f1080p_p1d1 = 81,707 B / b769cc66...08ff",
+      "engineering": "re-parse syn_gate_timing_a1.rpt: WNS/TNS, slice, ERAM 26 (core 22), and confirm zero ERAM clk2q begin points; state the 10-endpoint coverage limit",
+      "system": "not applicable: no routed DB, no board, no bitgen, no download",
+      "input_status": "frozen"
+    }
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "schema": "fpga-recovery-manifest/v1",
+  "run_id": "20261019-2117_runD_batch2_continue",
+  "task_id": "T02.codex-singleA-board",
+  "phase": "A-readonly",
+  "generated_at": "2026-10-19T22:15:00+08:00",
+  "status": "NEEDS_USER_SERVER_CLEANUP",
+  "round0_status": "not_completed",
+  "g3": "not_run",
+  "no_download": true,
+  "read_device_id_attempts_this_dispatch": 0,
+  "no_probe_reason": "5555 has no listener; only hwserver PID 37440 remains (parent 45596 gone, no FTDI modules/endpoints); extra td.exe PID 23384 present. Dispatch server-cleanup gate applies.",
+  "b01_identity": {
+    "manifest_sha256": "c7a40897166467f2beafb096701dba9cf836e1007d77ae03d90009d06f80d757",
+    "entries": 699,
+    "bit_sha256": "b68c6e183e97eb0d465db77078f5049feca3a947fac51f99633621dd99b3f9bf",
+    "cwc_sha256": "b28e3d4ee476731b118da0b12c3bad8dcca1dadfbd9b7ae4dc418c4d225a74ce",
+    "bid_sha256": "4dcdc26382f6b49e7ed9b95a40a1d57c05191c0130050812a74b853c16b38f33",
+    "probe_map_sha256": "96eb210bb0c55eed110b2a35a8ae0d3ccd3d8823c3d4286a635f9f9dd46d888a",
+    "match": true
+  },
+  "tool": {
+    "path": "D:\\downlaod\\bin\\bw_commands_prompt.exe",
+    "exists": true,
+    "size": 14752536,
+    "sha256": "5a6aae58ce0c66a5e38fe9194b96789d08b9df9da029a92252b3146f5fc7c0c4",
+    "version_resource": "empty",
+    "server_banner_from_0207_success": "Anlogic hwserver v1.0c (g1deb3940) Build 2024-12-09"
+  },
+  "process_snapshot": {
+    "listeners_5555": 0,
+    "hwserver": [
+      {
+        "pid": 37440,
+        "created": "2026-10-19T21:48:47+08:00",
+        "parent_pid": 45596,
+        "parent_alive": false,
+        "has_ftdi_modules": false,
+        "has_tcp_endpoints": false
+      }
+    ],
+    "td": [
+      {
+        "pid": 45416,
+        "created": "2026-10-19T00:59:16+08:00",
+        "action": "untouched"
+      },
+      {
+        "pid": 23384,
+        "created": "2026-10-19T21:59:27+08:00",
+        "action": "closed by user before 22:41 check"
+      }
+    ],
+    "ftdi_pnp": {
+      "vid_pid": "0403:6042",
+      "com": "COM8",
+      "usb_jtag_cable_status": "OK",
+      "usb_serial_converter_b_status": "OK",
+      "usb_serial_port_status": "OK"
+    }
+  },
+  "parallel_0207": {
+    "board_held_by": "0207 candidate 5B67A8F5...1D52",
+    "preload_record_v6": "21:56 download success, PRG-2014 PH1P100, 100%, 30.04 s",
+    "samples": [
+      "board-samples-01.md",
+      "board-samples-02.md"
+    ],
+    "r0_report": "test-reports/T11.runC-board-checklist-r0-integrated.md",
+    "manifest": "board-checklist/candidate-manifest-v8.json",
+    "t02_overwrote": false,
+    "window_release_confirmed_by_user": false
+  },
+  "artifacts": [
+    {
+      "role": "phase_a_record",
+      "path": "board/t02/recovery01/phase-a-readonly.md",
+      "sha256": "b50ce892cb7094ee0f1ea8d3449bc47c85ea06153e652e5d3de9c5bad1a98e73",
+      "size": 5338
+    },
+    {
+      "role": "read_id_script",
+      "path": "board/t02/recovery01/read_id_v6.bwcmd",
+      "sha256": "07ffe8129f8d2da43c288d99ad61b2a68d02804d60ad5a4f03492092a179dbc2",
+      "size": 85
+    },
+    {
+      "role": "read_id_wrapper",
+      "path": "board/t02/recovery01/run_read_id_v6.py",
+      "sha256": "69b8ef618c38d93ef58edec7f31225fb3d6a832281ddc9e9ea3db9c3504c1fc1",
+      "size": 2224
+    },
+    {
+      "role": "download_draft",
+      "path": "board/t02/recovery01/download_v6.draft.bwcmd",
+      "sha256": "96419834a79c193f15f7617331052e282a71fc9ff57050bccee2ef3753f1e9d3",
+      "size": 305
+    },
+    {
+      "role": "lease_draft",
+      "path": "board/t02/recovery01/lease-draft-v6.json",
+      "sha256": "4b38da11e668edabb1c803f9ffc594b0d7a59fb7c5914f8f16e1c2a42f8c38d2",
+      "size": 2144
+    },
+    {
+      "role": "user_ops",
+      "path": "board/t02/recovery01/user-ops-next.md",
+      "sha256": "2ca3f93aa93cad40c76770499b81df44baa1e113d58259dab4f07d66d070ec05",
+      "size": 7196
+    }
+  ],
+  "next_action": {
+    "owner": "user",
+    "steps": [
+      "do not kill td.exe PID 45416",
+      "close the extra td.exe PID 23384 if it was opened only for checking",
+      "taskkill /PID 37440 /F for the orphan non-FTDI hwserver (user action; not executed by dev)",
+      "start exactly one FTDI-holding hwserver console and confirm Open device vid=0x0403 pid=0x6042",
+      "verify one LISTENING PID on 5555 and one hwserver process",
+      "then resume Phase A for one bounded read_id_v6.bwcmd (<=60 s), still no download"
+    ],
+    "window_choice": [
+      "A: 0207 samples done, window to T02 after server cleanup",
+      "B: explicitly overwrite 0207 candidate and download T02",
+      "C: read-only diagnosis only"
+    ]
+  },
+  "safety": {
+    "downloads_this_dispatch": 0,
+    "flash_efuse_spi_svf": 0,
+    "cli_readback": 0,
+    "gui_automation": 0,
+    "foreign_processes_killed": 0,
+    "commit_push": 0
+  },
+  "prepared_for": "next Phase A read_id_v6 (<=60 s, no download)"
+}

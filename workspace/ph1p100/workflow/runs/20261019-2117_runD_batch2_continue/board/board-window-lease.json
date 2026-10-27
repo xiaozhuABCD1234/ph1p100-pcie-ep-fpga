@@ -1,0 +1,56 @@
+{
+  "lease_id": "20261019-2117_runD_batch2_continue:T02",
+  "run_id": "20261019-2117_runD_batch2_continue",
+  "task_id": "T02.codex-singleA-board",
+  "checked_at": "2026-10-19T21:27:00+08:00",
+  "candidate": {
+    "manifest_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261019-0212_codex_fpga_closedloop_b2\\recovery01\\B01\\timing-continuation01\\remaining-attempts01\\candidate\\manifest.json",
+    "manifest_sha256": "c7a40897166467f2beafb096701dba9cf836e1007d77ae03d90009d06f80d757",
+    "entries": 699,
+    "bit_sha256": "b68c6e183e97eb0d465db77078f5049feca3a947fac51f99633621dd99b3f9bf",
+    "cwc_sha256": "b28e3d4ee476731b118da0b12c3bad8dcca1dadfbd9b7ae4dc418c4d225a74ce",
+    "bid_sha256": "4dcdc26382f6b49e7ed9b95a40a1d57c05191c0130050812a74b853c16b38f33",
+    "probe_map_sha256": "96eb210bb0c55eed110b2a35a8ae0d3ccd3d8823c3d4286a635f9f9dd46d888a",
+    "probe_map_probes": 40,
+    "identity_recheck": "MATCH (all four frozen SHAs recomputed at 21:26 +08:00; 699 entries parsed)"
+  },
+  "process_snapshot": {
+    "no_active_build_or_download": true,
+    "matched_processes": [
+      {"name": "td.exe", "pid": 45416, "started": "2026-10-19T00:59:16+08:00", "action": "untouched GUI"},
+      {"name": "hwserver.exe", "pid": 45596, "started": "2026-10-19T21:19:57+08:00", "port_5555_listening": true, "action": "untouched; not started by this run"},
+      {"name": "bw.exe", "pid": "own probes only (attempt 2 pid 19840)", "action": "own PID tree terminated at 60 s deadline"}
+    ],
+    "absent": ["td_commands_prompt", "run_td", "run_build", "download wrapper", "vsim/vlog"]
+  },
+  "parallel_0207": {
+    "record_path": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261019-0207_runA_ddr_readback_loop\\board-checklist\\preload-record-v4.md",
+    "record_mtime": "2026-10-19T21:23:21+08:00",
+    "downloads_performed": 0,
+    "state": "awaiting_user_gui; PRG-8000 transfer failed at 21:20; user asked to physically check power/USB/JTAG before one bounded preload retry",
+    "window_held": false,
+    "preloaded_unconsumed": false
+  },
+  "read_device_id": {
+    "attempted": true,
+    "attempts": 2,
+    "result": "TIMEOUT (60 s deadline each), empty logs, no PH1P100, no error text captured",
+    "evidence": "board/sram/20261019_213000/probe-result.json"
+  },
+  "decision": "awaiting_hardware",
+  "download": {
+    "attempted": false,
+    "reason": "read_device_id did not return PH1P100 within 60 s; precondition for download failed",
+    "attempts_this_run": 0
+  },
+  "board_state": "UNKNOWN / unchanged by this run; no candidate loaded, no Flash, no CLI readback",
+  "window": "RELEASED — this run makes no exclusive claim and does not block the 0207 line. Any future resume in either line must re-run the mechanical check, obtain PH1P100, and take a fresh lease before download.",
+  "safety": {
+    "sram_only": true,
+    "flash_efuse_spi_svf": 0,
+    "cli_readback": 0,
+    "gui_automation": 0,
+    "killed_foreign_processes": 0,
+    "retries": "read_device_id first + 1 corrected recorder only; download not attempted; no automatic retry"
+  }
+}

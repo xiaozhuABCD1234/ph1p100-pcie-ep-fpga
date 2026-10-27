@@ -1,0 +1,164 @@
+{
+  "run_id": "20261017_162355_fpga_knowledge_book",
+  "task_id": "KB3",
+  "role": "fpga-dev",
+  "round": 1,
+  "created_at": "2026-10-17",
+  "project_root": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道",
+  "status": "ready_for_test",
+  "hash_algorithm": "SHA256",
+  "freeze_note": "KB3 r1（修复轮 round1）冻结快照：以下读入与产出在生成本清单后停止修改；任一输入变化则本清单及其对应结果失效。本清单不含自身哈希（自引用），manifest 文件本身由测试者现场重算核对。r0 清单 `manifests/KB3-manifest.json`（SHA256=87b767fd…31af）与 r0 三维报告**原样保留、不改写**；本清单为 r1 唯一测试输入（同一任务、同一开发者续接、实际修复 1 轮）。",
+  "repair_basis_note": "修复依据与裁定来源：decision-register（`1a408aa1…`，含 rev2–rev4；rev4：TMST-7700 明细枚举完成、M5.7 关闭、无实质约束缺口、mipi_a_byte_clk local 转 M5.5）＋T01-F 记录/证据包（两候选 SRAM 下载观察、早期黑屏=间歇性 DDR 校准、1333 复测工作正常、G4 进行中）＋TMST 调查产物；r0 三维：functional FAIL（D1）、engineering PASS、system FAIL（F1/F2）。本轮修复面=ch10/ch11 文本＋dev-notes 记录＋link-check 计数（engineering O1 顺带最小修正）；README/09/12/05–07 零改动。",
+  "inputs": {
+    "dispatch_required": [
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/requirement.md", "sha256": "fa5dd38e6cb280a4c433f51968d48f484904ed0bc1d72e5c3db9595721d84b43", "bytes": 851},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/dev-plan.md", "sha256": "f177a96fed6e7d88743d12ad66a699b99748e04aefccf8efffdca5e064c37499", "bytes": 40885},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/input-index.md", "sha256": "3cc56be44d4ef65ad955070c0949c5151b50ecc50eee2832987ef3c1e80450c4", "bytes": 8836},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/fpga-design-guide.md", "sha256": "d2e56be01086eb4afb0437f95a1f34f5581dc9be3469a45633b665e4797689b1", "bytes": 8897},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/closeout-KB0.md", "sha256": "aee9d952dc7fc1ab9a3b4c0dd3801df43137688c85f9ba739e33f188617ccae1", "bytes": 6438},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/closeout-KB1.md", "sha256": "f6a8e57260b46ac59f100344b7be019a89124d68d5cceeb39fcb0f89cb143d20", "bytes": 7355},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/closeout-KB2.md", "sha256": "31d1d7898038704b0d742c5df1faeea3d5d3b1e0f6056ffc1b94260255a6051c", "bytes": 6826},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/manifests/KB0-manifest-r1.json", "sha256": "cb31a05071ee01a78ffa75d190e2a379ceefc884fa431f5e89476677c4d36a3d", "bytes": 7101},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/manifests/KB1-manifest-r1.json", "sha256": "21759d7056119faeee5e1b8ee2fc46b3ba621cc60b3ebdf696950bee15190e5e", "bytes": 21638},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/manifests/KB2-manifest.json", "sha256": "b8595734be7c0bb5f62383080e6134c53e8b683e2057d07ce3745bdd9a48cbe2", "bytes": 22903},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/manifests/KB3-manifest.json", "sha256": "87b767fd73600750a63bec2135d1aaab33a2326d3021fb90f73efefd34d131af", "bytes": 26141, "note": "r0 清单（原样保留；r1 测试输入见本文件）"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/dev-notes-KB2.md", "sha256": "5d66fadaaacd1f710a43b5223729e7c6f4597bcbd8ea36fbbd3093dee01b8523", "bytes": 18555},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/link-check-KB1.json", "sha256": "1a262273cb9b7f320c95702b8b2d3cbb77d2e1c6b70a8b23ec5c223e1258110c", "bytes": 12023},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/link-check-KB2.json", "sha256": "15abd6eda35886f42c2297e22b89cad882b4262b594e791420ec20841abb069b", "bytes": 18186},
+      {"path": "docs/知识书/README.md", "sha256": "315237fb1ff0176b76f618147c27a458ed759c3e07a8ab6e5a74a07728f492dc", "bytes": 7238, "note": "r0（R6）修订后值；r1 未触碰"},
+      {"path": "docs/知识书/_写作规范.md", "sha256": "d66e99ca604b359bb05e3cdae8adde68056107ed6187ea40c3a97ad68bc38fad", "bytes": 8906, "note": "未触碰"},
+      {"path": "docs/知识书/_全书大纲.md", "sha256": "bd266a6cafd0fa2153463ed509483eea96f327d557e5bc0645b6aaca2dfcd0e4", "bytes": 15857, "note": "未触碰"},
+      {"path": "docs/知识书/01_从代码到电路.md", "sha256": "f1651187ba52164f03a5cd45b63ff37cf2d315203c11d978d59a2af019fdad4e", "bytes": 26301, "note": "未触碰"},
+      {"path": "docs/知识书/02_时钟复位与余量.md", "sha256": "a4191191ebd51a452d10bae90429925ea5590d4fbcef9058a769bf6574d12b9e", "bytes": 29228, "note": "未触碰"},
+      {"path": "docs/知识书/03_流水线与交接.md", "sha256": "1223ee9e1719f29c752df1bd2c43373d1763ead7277fcb754103a7f049354ec8", "bytes": 25709, "note": "未触碰"},
+      {"path": "docs/知识书/04_数据表示与证据.md", "sha256": "5e793790e037706eb94f55e4e3f8324f43115d6d9d4771d765e445e6a4634f50", "bytes": 23636, "note": "未触碰"},
+      {"path": "docs/知识书/05_MIPI与CSI2入门.md", "sha256": "ebd0d46a6ee29a30092f45379952bb1f6409806f9dcabeee047f29d09f298881", "bytes": 22208, "note": "r0（F7）修订后值；r1 未触碰"},
+      {"path": "docs/知识书/06_相机配置与模式.md", "sha256": "de0f700bf1b135196d3dda778223b62f9fd6ee762ba280f8ed3081abe9b11973", "bytes": 24528, "note": "r0（F7）修订后值；r1 未触碰"},
+      {"path": "docs/知识书/07_CSI包与帧完整性.md", "sha256": "4edf30b19f5be77439ef6e19bdcfcb7667af88e231c0b97ba4330e4d21414f48", "bytes": 21268, "note": "r0（F7）修订后值；r1 未触碰"},
+      {"path": "docs/知识书/08_Bayer与颜色.md", "sha256": "cd5e1902567079e0ccd85e18c82643e9817181902fe7f3cfadc966ee64cee9c1", "bytes": 20737, "note": "未触碰"}
+    ],
+    "repair_sources": [
+      {"path": "workflow/runs/20261017_161109_decisions_compare_freeze/decision-register.md", "sha256": "1a408aa10acdab130c8dd7c020b5f23d9357f17226cc592cd58548556fb8133a", "bytes": 35975, "note": "裁定来源：含 rev2–rev4（rev4：TMST-7700 明细枚举完成、M5.7 关闭、无实质缺口；mipi_a_byte_clk local 转 M5.5；§1.4 重开触发① TMST 子句失效）。〔输入注记更正：r0 清单此条注记『含 rev2/rev3』与冻结字节不符，本 r1 清单已改正〕"},
+      {"path": "workflow/runs/20261017_182621_T01_board_and_tmst7700/dev-notes-F.md", "sha256": "39ad233c8e2feaa65c4c60f3d9736381509f0be03c96ebd786ebbc2c6c711ee0", "bytes": 26759, "note": "板上执行记录（修复依据）：两候选 SRAM 下载/用户观察；早期黑屏=间歇性 DDR 校准；1333 复测工作正常、G3 口径基本达成；G4 进行中"},
+      {"path": "docs/evidence/board_verify_ddr1333_20261017.json", "sha256": "8db60a3f9ddae875b1c74e457182eb49509ca8af04f0f9001c57064c62c6fd38", "bytes": 15174, "note": "T01-F 证据包（8 次下载记录、6 条用户观察）"},
+      {"path": "docs/TMST-7700最小调查_2026-10-17.md", "sha256": "9fb85f5e042290c44afc7864e39e8e27cb1a79a6ce17225c904b3f7c059291f8", "bytes": 24678, "note": "rev4 产物"},
+      {"path": "docs/evidence/tmst7700_20261017.json", "sha256": "4b7e9f9fde0df8970cf016f803372e6d354d2b10e8477ebd42e2dc0da897b8e0", "bytes": 31048, "note": "rev4 产物"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/test-reports/KB3-r0-functional.md", "sha256": "0115c80e805c6f2d4e482ae0b6ffe01db9381e292b76bf1516679206ddc576f4", "bytes": 17446, "note": "r0 FAIL（D1）"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/test-reports/KB3-r0-engineering.md", "sha256": "b084b08e85e0964ed367ccb6aee1ed3f0cf4e53d84c4b3c7dddea5f87fdf53a4", "bytes": 16121, "note": "r0 PASS（O1–O3 非阻断）"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/test-reports/KB3-r0-system.md", "sha256": "91f45ccf525aac1d573f2ec3b818ae3114ccf41f490999ff321f080b839dfb9b", "bytes": 16311, "note": "r0 FAIL（F1/F2）"}
+    ],
+    "run_state": [
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/dispatch.json", "sha256": "e772f66c7e2a8e7f7d695e4ea96972133c17bfaf2f381ad3d8a62f9b1e02e1ce", "bytes": 3468, "note": "KB3 派发版；r1 未改"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/open-questions.md", "sha256": "a0832ad20cf7df6f6a6c2e751043e63bf240efd335163a103aeaf4fbd5f75007", "bytes": 2312, "note": "未改"},
+      {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/main-log.md", "sha256": "87aa53b2a56e820d9c95be2464ac5f17065654a6b134337c8d5df4cffc0ffd00", "bytes": 16556, "semantics": "主代理滚动日志（R1）：本条目为 KB3-r1 冻结时点快照；冻结后继续追加属流程固有行为，复测对其仅核存在性/追加型新增，不以其漂移否定本清单。"}
+    ],
+    "materials_read": [
+      {"path": "docs/RAW10稳定档位_PLL生成与接入交接.md", "sha256": "5c1acab36b735841e2a04dface10f5788c883f01ce4b912e48a8ed8b3248ff3f", "bytes": 12523, "note": "F7 来源（r0）；未变"},
+      {"path": "docs/PH1P100_接收路线证据.md", "sha256": "5783961726526e39d64eb9d703e60da1555e8fb240c6aadc439303759c6dd985", "bytes": 10964},
+      {"path": "docs/RAW10灰度显示与DDR推进记录_2026-10-10.md", "sha256": "54043014314a39e300411599ea626b23d562c767a0efdd4499ddc7c5033766e8", "bytes": 11030},
+      {"path": "docs/DDR完整帧后端实施与上板验证_2026-10-11.md", "sha256": "e96ccd381a98dfdaaba9bcdf09c1c4b77272fe485d6c222742547afe84edf080", "bytes": 9245},
+      {"path": "docs/完整RAW10后端_偏移扩展与保留进度_2026-10-14.md", "sha256": "68c25b3c6338ef44c0761bd3b8dc46f3fe3b5eb7037ec4f3d42c2d9c84925a9f", "bytes": 1920},
+      {"path": "docs/DDR1333候选评估与生成入口_2026-10-15.md", "sha256": "dd21671278abce81fac2670cf7cab61ce9843309cf5666e28d48ac650397e407", "bytes": 7721},
+      {"path": "docs/DDR1333_IPTool再次尝试与人工操作_2026-10-15.md", "sha256": "d894a8254bbc351a8c10561f9a5c687f48de58c4bb87f968e1caa0078a4156ae", "bytes": 10305},
+      {"path": "docs/DDR1333集成与1333vs1600对比_2026-10-17.md", "sha256": "1b9a37d6ebcaf21c1c9382fceea0467fa013530f8ac3a3381c34cc0bb2193bc5", "bytes": 30002},
+      {"path": "docs/evidence/ddr1333_integration_20261017.json", "sha256": "d64ed4a24214cbef90aba7688a84782e663d192e7ec51a9836ac7dc1c0383e1e", "bytes": 12289},
+      {"path": "docs/evidence/ddr1333_build_sta_20261017.json", "sha256": "7c633508480a886ed63aa89f14f0195f068cc4f9a3d01e0abed0c2115fee9010", "bytes": 81640},
+      {"path": "docs/evidence/td2026_gui_bootstrap_20261017.json", "sha256": "741e909d7cf32f4a225248c7dcc2e638cd24e03dd32526ab51b243e49fee0457", "bytes": 6919},
+      {"path": "docs/evidence/td2026_ddr1333_generate_20261017.json", "sha256": "1b5ce40350b1083d36f8de8b16f3d7c0c4b3e1f51428aaa5ac507b42f9a63771", "bytes": 8725},
+      {"path": "docs/evidence/td2026_ddr1333_accept_20261017.json", "sha256": "b85a2405ab0ce2cb1407ccf69ae75ea1d87bd1f8945fe5be916fee1da80f544e", "bytes": 10809},
+      {"path": "docs/evidence/td2026_b_run2_20261017.json", "sha256": "a60f216606d9d8e39d85face037577e11792326f3ecfd18849e2d085080d87fd", "bytes": 7407},
+      {"path": "docs/evidence/td2026_install_20261016.json", "sha256": "ef5545cc08c6b94dac0421a93df50561bc93cfb4b5ef5fb708b380233a825d37", "bytes": 8384},
+      {"path": "docs/evidence/td_cli_commands_20261016.json", "sha256": "6f648f0f048300931a612ab79d7288ad6c41bfd78b3f0cca376bb75955e2544e", "bytes": 100000},
+      {"path": "docs/TD_CLI_IpTool修缮与验证_2026-10-16.md", "sha256": "ed59cf1ebfb28273317c36d61cdd28bcf23ec15343eb775e0e32f60bcb66bb9d", "bytes": 45757},
+      {"path": "docs/superpowers/plans/2026-10-15-fpga-remaining-strategy.md", "sha256": "1f7b4cd95d01a55ce45d62876836ba7bc92cbeb3e89bda9b4302833ff8d55ee7", "bytes": 22621},
+      {"path": "docs/DeepSeek独立检测与现行方案整合_2026-10-16.md", "sha256": "96da69508e9caf965d408f869d1960f608f5d2bc6e3f39acdceb3b0e1a5fa397", "bytes": 15255},
+      {"path": "当前必读/01_FPGA主线学习手册_由浅入深.md", "sha256": "a307548186b09c5e807f8d6aba705511fcf83e4adb681527617adc67dbc883eb", "bytes": 33680},
+      {"path": "fpga/csi2/src/mem/ddr_frame_store.v", "sha256": "e9e95f970abc8cfc35931131b63fb43d8f3e146311bc57153327212bd4b68771", "bytes": 6323},
+      {"path": "tools/td/README.md", "sha256": "304aa81cdf11af2d35f976baba75753d832d27940f25d718230dd0a204bea6c8", "bytes": 28746},
+      {"path": "workflow/runs/20261017_153201_T01_ddr1333_integration/dev-plan.md", "sha256": "363a816c483ec6c3a4254bde90e540670c51cf3dc372e6b33ad00ddbf51fcafa", "bytes": 25986},
+      {"path": "workflow/runs/20261016_185639_td_cli_iptool/upgrade-review.md", "sha256": "c8e1ffc41a9b1d55fb2e53d0d8cf4d4cad6804cf76808c2bae1e03d296be6ba3", "bytes": 20641},
+      {"path": "workflow/tasks.json", "sha256": "bc25cb4c1c1de3f60e786469122beb0292ec9e587f311f8fcf3875be6d87a160", "bytes": 27423, "note": "并行线持续更新的全局任务板；本包只读（未改），此条目为 r1 观测时点快照；T01=active/T06=backlog/T02=awaiting_hardware/T08=backlog 已核"}
+    ],
+    "referenced_project_paths": [
+      {"path": "workflow/runs/20261017_153201_T01_ddr1333_integration/test-reports/T01.tool-E2-r0-functional.md", "sha256": "0762f97370bbf7ff79aa7e8ccb5827f44122cf072be6324b6b461ef8862e56d4", "bytes": 20764},
+      {"path": "workflow/runs/20261017_153201_T01_ddr1333_integration/test-reports/T01.tool-E2-r0-engineering.md", "sha256": "5018053e46e962da6b4f98bdb8dd94e37d098e0404040c8539b0626a46812d3f", "bytes": 22606},
+      {"path": "workflow/runs/20261017_153201_T01_ddr1333_integration/test-reports/T01.tool-E2-r0-system.md", "sha256": "1ad6f3f70dbd4d296b40c57f446978668e97ab5ba517b1ce37973ffc189896fe", "bytes": 21664}
+    ],
+    "skill_and_contracts": [
+      {"path": ".agents/skills/fpga-dev/SKILL.md", "sha256": "491cacc932a822bdedca2cd469d4f940bd6c5a2944d9d655c79187852a399e7d", "bytes": 4166},
+      {"path": ".agents/skills/fpga-orchestrator/references/report-contract.md", "sha256": "6b04a455cb235259ae370e073486cacae980d7f6cbe105e37e44c20a086be057", "bytes": 3098},
+      {"path": ".agents/skills/fpga-orchestrator/references/relay-contract.md", "sha256": "bbf446c4cf2e51ef6520edb6bfdc0ba2c12d2f9da469aec06258ecc1f6dd98f7", "bytes": 4804}
+    ]
+  },
+  "outputs": [
+    {"path": "docs/知识书/09_DDR基础.md", "sha256": "032b56e98ac2522078f9158ecbb187cf780e5fa565b255eb5be50774c378375f", "bytes": 22217, "lines": 244, "kind": "new_chapter", "round1_untouched": true},
+    {"path": "docs/知识书/10_速度等级与1600、1333、800E.md", "sha256": "c6b3283ce798e1ec73fd85a474123820f7e7f1af3ae69842428b911b13e7982c", "bytes": 27755, "lines": 281, "kind": "new_chapter_modified_r1", "before_sha256": "b6ea522a2fe3d0bb4a751fc6e81644b68265d36b59f6222fe87c094616d8c76d", "before_bytes": 25430, "note": "r1：TMST-7700→rev4 口径；板测状态→T01-F 时点表述；重开触发/自测/术语表同步；+r1 版本行"},
+    {"path": "docs/知识书/11_DDR控制器与接口.md", "sha256": "4b1f302287a5a7a08d0e8d3f807de6ad8aa0eb9d11a6b9d9c89fce9fd3fa5d31", "bytes": 22665, "lines": 228, "kind": "new_chapter_modified_r1", "before_sha256": "f034642b5d2610a879fd82cc72cae893c941c4d498dbc91ceb50b1c503efab59", "before_bytes": 21710, "note": "r1：实例第 2–4 条（本批不含下载/T01-F/rev4 已闭环）；对应表 2 行；+r1 版本行"},
+    {"path": "docs/知识书/12_帧缓存与队列.md", "sha256": "96d358c084a861db65311072fe21e80bed9963b304c7cedf0a39c544647d0859", "bytes": 21490, "lines": 226, "kind": "new_chapter", "round1_untouched": true},
+    {"path": "docs/知识书/05_MIPI与CSI2入门.md", "sha256": "ebd0d46a6ee29a30092f45379952bb1f6409806f9dcabeee047f29d09f298881", "bytes": 22208, "lines": 219, "kind": "bounded_revision_F7", "round1_untouched": true},
+    {"path": "docs/知识书/06_相机配置与模式.md", "sha256": "de0f700bf1b135196d3dda778223b62f9fd6ee762ba280f8ed3081abe9b11973", "bytes": 24528, "lines": 236, "kind": "bounded_revision_F7", "round1_untouched": true},
+    {"path": "docs/知识书/07_CSI包与帧完整性.md", "sha256": "4edf30b19f5be77439ef6e19bdcfcb7667af88e231c0b97ba4330e4d21414f48", "bytes": 21268, "lines": 215, "kind": "bounded_revision_F7", "round1_untouched": true},
+    {"path": "docs/知识书/README.md", "sha256": "315237fb1ff0176b76f618147c27a458ed759c3e07a8ab6e5a74a07728f492dc", "bytes": 7238, "lines": 114, "kind": "bounded_update_R6", "round1_untouched": true},
+    {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/link-check-KB3.json", "sha256": "154de06c881a262d7af9494d9c0dfd64a876016f83035bc06bce8b330f856da6", "bytes": 14112, "lines": 51, "kind": "link_check_modified_r1", "before_sha256": "cb21d89c9fdf39e4e321270d50fb1a13d876db8b5a0d0b2925105c04f3a43c77", "before_bytes": 14027, "note": "r1：engineering O1 计数口径最小更正（entries_note＋integrity_statement；枚举未动）"},
+    {"path": "workflow/runs/20261017_162355_fpga_knowledge_book/dev-notes-KB3.md", "sha256": "fedd7f23e1f63902aee9016b903e3f964d01a678fac5271e5748b9e52fe188f8", "bytes": 27431, "lines": 146, "kind": "dev_notes_modified_r1", "before_sha256": "abbc523c092cc153a94f0100b1b9de581ccda586dbdec3fcda17317a08b24fc7", "before_bytes": 20940, "note": "r1：新增 §10 修复轮记录（含两句更正、manifest 输入注记更正、复测清单）；§4/§5/§6 就地更正"}
+  ],
+  "r1_changes": [
+    {"file": "docs/知识书/10_速度等级与1600、1333、800E.md", "item": "round1（D1/F1/F2）", "before_sha256": "b6ea522a2fe3d0bb4a751fc6e81644b68265d36b59f6222fe87c094616d8c76d", "after_sha256": "c6b3283ce798e1ec73fd85a474123820f7e7f1af3ae69842428b911b13e7982c", "change": "13 处：L10 速读卡补 T01-F；L134 现状角色；L150–152 边界三条（板测执行记录＋rev4 关闭＋上板时点）；L177–178 时间线；L180；L193 对应表边界行；L203 B 方案代价；L208 重开触发①；L216 误区 5；L242 自测 5；L247 自测 6；L273–274 术语表；+r1 版本行。未改事实/数字/五步判读。"},
+    {"file": "docs/知识书/11_DDR控制器与接口.md", "item": "round1（D1/F1/F2）", "before_sha256": "f034642b5d2610a879fd82cc72cae893c941c4d498dbc91ceb50b1c503efab59", "after_sha256": "4b1f302287a5a7a08d0e8d3f807de6ad8aa0eb9d11a6b9d9c89fce9fd3fa5d31", "change": "5 处：L121–123 实例第 2–4 条；L137–138 对应表 2 行；+r1 版本行。未改事实/数字。"},
+    {"file": "docs/知识书/README.md", "item": "round1：无改动", "before_sha256": "315237fb1ff0176b76f618147c27a458ed759c3e07a8ab6e5a74a07728f492dc", "after_sha256": "315237fb1ff0176b76f618147c27a458ed759c3e07a8ab6e5a74a07728f492dc", "change": "未触碰（R6 面不受本轮修复影响）。"},
+    {"file": "workflow/runs/20261017_162355_fpga_knowledge_book/link-check-KB3.json", "item": "round1（engineering O1 顺带）", "before_sha256": "cb21d89c9fdf39e4e321270d50fb1a13d876db8b5a0d0b2925105c04f3a43c77", "after_sha256": "154de06c881a262d7af9494d9c0dfd64a876016f83035bc06bce8b330f856da6", "change": "计数口径更正为『14 条网页直取＋1 条米联客课程页＋4 条 B 站（3 视频＋1 专栏）＋1 条 PDF』；entries 枚举未动；JSON 复解析通过。"},
+    {"file": "workflow/runs/20261017_162355_fpga_knowledge_book/dev-notes-KB3.md", "item": "round1 记录", "before_sha256": "abbc523c092cc153a94f0100b1b9de581ccda586dbdec3fcda17317a08b24fc7", "after_sha256": "fedd7f23e1f63902aee9016b903e3f964d01a678fac5271e5748b9e52fe188f8", "change": "新增 §10（触发/依据/修复面/限定自扫/文件级 before-after/复测影响清单/输入注记更正/未触碰声明）；§4 计数、§5 system 语、§6 边界语就地更正（标注〔r1 更正〕）。"}
+  ],
+  "link_check": {
+    "path": "workflow/runs/20261017_162355_fpga_knowledge_book/link-check-KB3.json",
+    "sha256": "154de06c881a262d7af9494d9c0dfd64a876016f83035bc06bce8b330f856da6",
+    "summary": {"attempted": 23, "verified_pass": 20, "failed_or_unverifiable": 3, "entries_by_chapter": {"09": 5, "10": 5, "11": 5, "12": 5, "unused": 3}, "distinct_urls_used_in_tables": 20, "table_rows_by_chapter": {"09": 5, "10": 5, "11": 5, "12": 5, "total_rows": 20}},
+    "notes": "入表 20 全部“在线核验通过 2026-10-17”（修正后分类=14 条网页直取＋1 条米联客课程页＋4 条 B 站（3 视频＋1 专栏）＋1 条 PDF）＋未采用 3（JEDEC 旧链接 404 已替换、AMD UG586 动态壳页、Arm AXI 规范页直取空返回）。r1 仅更正计数口径，枚举未动。"
+  },
+  "self_check": {
+    "template_10_sections": "四章均含 10 节全部节名；自测题各 6 条（含答案）；r1 未改结构。",
+    "length_lines": "09=244 / 10=281 / 11=228 / 12=226 行（规范 120–350）。",
+    "encoding": "四章与全部 KB3 产出 UTF-8（无 BOM）、纯 LF（CR=0）。",
+    "path_scan": "四章合计 26 个唯一路径 token 全部可解析（含 r1 新增的 TMST 报告/证据、board_verify、T01-F 记录）；无断链、无通配占位。",
+    "cross_refs": "引用 N∈{05,09,10,11,12,23} 全在规划内；全库无“（待写）”。",
+    "project_fact_crosscheck": "r0 抽样对核保持有效（未触碰）；r1 改动点逐条与 decision-register rev4/T01-F 记录一致（详见 dev-notes-KB3 §10）。",
+    "chapter10_hard_acceptance": "第 10 章“先把示例问题答掉”五步判读未触碰；用户示例问题仍可在章内直接判读（r0-functional §3 证据可复用）。",
+    "no_forbidden_wording": "无未实测“通过/已批准”式表述；TMST/板测表述均按 rev4/T01-F 按时点归属；G4 明确“进行中”；组织方口径仍标未决。",
+    "bounded_revisions": "r1 面=ch10（13 处）、ch11（5 处）、dev-notes、link-check；README/09/12/05–07 零改动；before/after 均登记。",
+    "self_check_ref": "workflow/runs/20261017_162355_fpga_knowledge_book/dev-notes-KB3.md §10"
+  },
+  "retest": {
+    "round": 1,
+    "required_dimensions": ["functional", "system"],
+    "engineering_note": "engineering r0 PASS；本轮改动面为四文件文本级（哈希/字节已登记），是否复测由原 engineering 测试者裁定（O1 已顺带修正；O2/O3 非本轮硬性要求）。",
+    "input_status": "changed（相对 r0 清单：ch10/ch11/link-check/dev-notes 更新并重冻结；其余 outputs 与全部 dispatch 输入不变）",
+    "changed_entries": [
+      "docs/知识书/10_速度等级与1600、1333、800E.md",
+      "docs/知识书/11_DDR控制器与接口.md",
+      "workflow/runs/20261017_162355_fpga_knowledge_book/link-check-KB3.json",
+      "workflow/runs/20261017_162355_fpga_knowledge_book/dev-notes-KB3.md"
+    ],
+    "unchanged_entries": [
+      "docs/知识书/09_DDR基础.md",
+      "docs/知识书/12_帧缓存与队列.md",
+      "docs/知识书/README.md",
+      "docs/知识书/05_MIPI与CSI2入门.md",
+      "docs/知识书/06_相机配置与模式.md",
+      "docs/知识书/07_CSI包与帧完整性.md"
+    ],
+    "expected_focus": [
+      "functional（必测）：ch10 L150–152/L177–178/L193/L203/L208/L242/L247/L273–274 与 ch11 L121–123/L137–138 的 TMST/板测表述逐句对照 decision-register rev4（M5.7 关闭、无实质缺口、观察点转 M5.5）与 T01-F 记录/证据包（两候选 SRAM 下载观察、1333 复测工作正常、G4 进行中）；重开触发（无 TMST 子句）/自测 5/6/术语表同步正确；r0 已通过项（五步判读硬验收、E/J/K 与 E2/0.300 数字、F7、R6、其余边界句）按 r0 证据复用（绑定本 r1 清单复核未触碰）。",
+      "system（必测）：F1/F2 建议面全覆盖（ch10 L10/L150/L152/L176-178/L193/L203/L208/L247、ch11 L122-123/L137-138）与 rev4/T01-F 口径一致；同时确认 README/09/12/05–07 零改动（哈希=本清单）；链接/路径/恢复入口等 r0 通过项可复用。",
+      "engineering（由原测试者裁定）：四文件 before/after 与字节数、manifest 自洽、输入注记已更正（decision-register 注记=含 rev2–rev4）。"
+    ],
+    "environment_note": "T01-F 板测结论归属该工作包与用户观察；本包只按记录转述并带时点，测试不因“板测结论未在本包闭环”判失败。B 站/PDF 复现环境差异同 r0 提示。"
+  },
+  "compliance": {
+    "write_scope": "r1 修复轮仅改：`docs/知识书/10_…md`、`11_…md`（文本级）、本 run `dev-notes-KB3.md`、`link-check-KB3.json`，并新建 `manifests/KB3-manifest-r1.json`。未覆盖/修改/删除任何其他既有文件（含 README/09/12/05–07、01–04、08、当前必读/、docs/ 旧文档、workflow/tasks.json、fpga/、tools/、parallel/、其它 run、D 盘工程、`main-log.md`）；r0 清单与 r0 报告原样保留。",
+    "zero_hardware": "无 TD/构建/下载/Flash/GUI/外部消息动作；仅文件读写（另：无联网请求，链接状态沿用 r0 快照并仅更正计数口径）。",
+    "self_corrections": [
+      "r1 定位：D1/F1＝TMST rev4 滞后；F2＝板测状态时点滞后（含章内自相矛盾）；O1＝link-check 计数口径差异 1。",
+      "逐处最小面修复并登记 before/after；超范围发现（ch09/ch12 表述）经核不冲突，只记录未改。"
+    ]
+  }
+}

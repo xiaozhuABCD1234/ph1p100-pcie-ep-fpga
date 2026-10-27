@@ -1,0 +1,28 @@
+{
+  "scope": "Actual functional tester commands and returned output; no hardware execution",
+  "cwd": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道",
+  "commands": [
+    {
+      "command": "python --version",
+      "exit_code": 0,
+      "stdout": "Python 3.11.5"
+    },
+    {
+      "command": "python -B 'workflow/runs/20261017-011744-rk-fpga-align/test-reports/functional-r0/independent_check.py'",
+      "exit_code": 0,
+      "stdout": "{\"checks\": 230, \"frozen_file_count\": 254, \"failures\": [], \"elapsed_seconds\": 2.208, \"marker\": \"FUNCTIONAL_INDEPENDENT_OK\"}",
+      "result": "independent-result.json",
+      "nested_candidate_execution": "runpy.run_path(contract/check_contract.py), sys.argv=[checker path], no --out; stdout and structured result saved within tester evidence",
+      "nested_candidate_log": "candidate-check.log",
+      "nested_candidate_result": "candidate-check-result.json"
+    }
+  ],
+  "deepseek": {
+    "task_id": "466c4ec842d54a10a32c7ed37c13c0a8",
+    "status": "completed",
+    "scope": "Text-only finite counterexample review of strict/allowed excerpts and explicit rules",
+    "operation_requests": 0,
+    "used_as_acceptance_evidence": false,
+    "independent_review": "No worker conclusion is relied on for this verdict. Native tester independently executed the oracle and candidate predicates. Real DDR capacity and hardware address/state behavior remain later-package requirements."
+  }
+}

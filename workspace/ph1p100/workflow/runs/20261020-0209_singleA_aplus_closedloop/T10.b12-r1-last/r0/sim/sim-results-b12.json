@@ -1,0 +1,284 @@
+{
+  "v4": {
+    "case": "v4",
+    "ok": true,
+    "rc": 0,
+    "seconds": 3.1,
+    "markers": [
+      "# B11_V4_DONE packets=3 bad=0 len=225 ver=4 fields=55",
+      "# B11_V4_RESULT pass=1"
+    ]
+  },
+  "read_one": {
+    "case": "read_one",
+    "ok": true,
+    "rc": 0,
+    "seconds": 3.1,
+    "markers": [
+      "# B11_READ_WR_DONE words=1 pub=1 wr_words=1 bytes=20",
+      "# B11_READ_STATE case=one cyc=152 ar_hs=1 rv=1 rd_idx=1 rd_words=1 dup=0 rd_state=0 slot=00000000",
+      "# B11_READ_BRIDGE ar_cnt=0 ar_block=0 r_cnt=0 rlast=0 stale=0 br0=00000008",
+      "# B11_READ_MODEL ar=1 r=1 aw=1 w=1",
+      "# B11_READ_DATA ok=1 bad=0 beats=1",
+      "# B11_READ_RESULT case=one pass=1 words=1 bad=0 why=ok"
+    ]
+  },
+  "read_multi": {
+    "case": "read_multi",
+    "ok": true,
+    "rc": 0,
+    "seconds": 3.5,
+    "markers": [
+      "# B11_READ_WR_DONE words=2000 pub=1 wr_words=2000 bytes=40000",
+      "# B11_READ_STATE case=multi cyc=39568 ar_hs=2000 rv=2000 rd_idx=2000 rd_words=2000 dup=0 rd_state=0 slot=00000000",
+      "# B11_READ_BRIDGE ar_cnt=1992 ar_block=0 r_cnt=1992 rlast=1992 stale=0 br0=00000029",
+      "# B11_READ_MODEL ar=2000 r=2000 aw=2000 w=2000",
+      "# B11_READ_DATA ok=2000 bad=0 beats=2000",
+      "# B11_READ_RESULT case=multi pass=1 words=2000 bad=0 why=ok"
+    ]
+  },
+  "read_bp": {
+    "case": "read_bp",
+    "ok": true,
+    "rc": 0,
+    "seconds": 3.5,
+    "markers": [
+      "# B11_READ_WR_DONE words=2000 pub=1 wr_words=2000 bytes=40000",
+      "# B11_READ_STATE case=bp cyc=56876 ar_hs=2000 rv=2000 rd_idx=2000 rd_words=2000 dup=0 rd_state=0 slot=00000000",
+      "# B11_READ_BRIDGE ar_cnt=1994 ar_block=0 r_cnt=1993 rlast=1993 stale=0 br0=0000002b",
+      "# B11_READ_MODEL ar=2000 r=2000 aw=2000 w=2000",
+      "# B11_READ_DATA ok=2000 bad=0 beats=2000",
+      "# B11_READ_RESULT case=bp pass=1 words=2000 bad=0 why=ok"
+    ]
+  },
+  "read_late": {
+    "case": "read_late",
+    "ok": true,
+    "rc": 0,
+    "seconds": 4.7,
+    "markers": [
+      "# B11_READ_WR_DONE words=2000 pub=1 wr_words=2000 bytes=40000",
+      "# B11_READ_STATE case=late cyc=109172 ar_hs=2000 rv=2000 rd_idx=2000 rd_words=2000 dup=0 rd_state=0 slot=00000000",
+      "# B11_READ_BRIDGE ar_cnt=1998 ar_block=0 r_cnt=1997 rlast=1997 stale=0 br0=0000002b",
+      "# B11_READ_MODEL ar=2000 r=2000 aw=2000 w=2000",
+      "# B11_READ_DATA ok=2000 bad=0 beats=2000",
+      "# B11_READ_RESULT case=late pass=1 words=2000 bad=0 why=ok"
+    ]
+  },
+  "read_stray": {
+    "case": "read_stray",
+    "ok": true,
+    "rc": 0,
+    "seconds": 4.0,
+    "markers": [
+      "# B11_READ_WR_DONE words=2000 pub=1 wr_words=2000 bytes=40000",
+      "# B11_READ_STATE case=stray cyc=39568 ar_hs=2000 rv=2000 rd_idx=2000 rd_words=2000 dup=0 rd_state=0 slot=00000000",
+      "# B11_READ_BRIDGE ar_cnt=1992 ar_block=0 r_cnt=1993 rlast=1993 stale=1 br0=00000029",
+      "# B11_READ_MODEL ar=2000 r=2001 aw=2000 w=2000",
+      "# B11_READ_DATA ok=2000 bad=0 beats=2000",
+      "# B11_READ_RESULT case=stray pass=1 words=2000 bad=0 why=ok"
+    ]
+  },
+  "read_dup": {
+    "case": "read_dup",
+    "ok": true,
+    "rc": 0,
+    "seconds": 7.6,
+    "markers": [
+      "# B11_READ_WR_DONE words=9000 pub=1 wr_words=9000 bytes=180000",
+      "# B11_READ_STATE case=dup cyc=177580 ar_hs=9000 rv=9000 rd_idx=9000 rd_words=9000 dup=0 rd_state=0 slot=00000000",
+      "# B11_READ_BRIDGE ar_cnt=8990 ar_block=0 r_cnt=8991 rlast=8991 stale=1 br0=00000029",
+      "# B11_READ_MODEL ar=9000 r=9001 aw=9000 w=9000",
+      "# B11_READ_DATA ok=9000 bad=0 beats=9000",
+      "# B11_READ_RESULT case=dup pass=1 words=9000 bad=0 why=ok"
+    ]
+  },
+  "read_reset": {
+    "case": "read_reset",
+    "ok": true,
+    "rc": 0,
+    "seconds": 3.7,
+    "markers": [
+      "# B11_READ_WR_DONE words=2000 pub=1 wr_words=2000 bytes=40000",
+      "# B11_READ_RESET_STATE pub=0 read=0 free=1 slot=00000000",
+      "# B11_READ_WR_DONE words=2000 pub=1 wr_words=2000 bytes=40000",
+      "# B11_READ_STATE case=reset cyc=55509 ar_hs=2000 rv=2000 rd_idx=2000 rd_words=2000 dup=0 rd_state=0 slot=00000000",
+      "# B11_READ_BRIDGE ar_cnt=1991 ar_block=0 r_cnt=1991 rlast=1991 stale=0 br0=00000029",
+      "# B11_READ_MODEL ar=2000 r=2000 aw=2000 w=2000",
+      "# B11_READ_DATA ok=2000 bad=0 beats=2000",
+      "# B11_READ_RESULT case=reset pass=1 words=2000 bad=0 why=ok"
+    ]
+  },
+  "read_full": {
+    "case": "read_full",
+    "ok": true,
+    "rc": 0,
+    "seconds": 59.5,
+    "markers": [
+      "# B11_READ_WR_DONE words=129600 pub=1 wr_words=129600 bytes=2592000",
+      "# B11_READ_STATE case=full cyc=2555403 ar_hs=129600 rv=129600 rd_idx=129600 rd_words=129600 dup=0 rd_state=0 slot=00000000",
+      "# B11_READ_BRIDGE ar_cnt=129593 ar_block=0 r_cnt=129593 rlast=129593 stale=0 br0=00000029",
+      "# B11_READ_MODEL ar=129600 r=129600 aw=129600 w=129600",
+      "# B11_READ_DATA ok=129600 bad=0 beats=129600",
+      "# B11_READ_RESULT case=full pass=1 words=129600 bad=0 why=ok"
+    ]
+  },
+  "p1_micro8x2": {
+    "case": "p1_micro8x2",
+    "ok": true,
+    "rc": 0,
+    "seconds": 2.6,
+    "sha256": "fa513a2b5a7f268be9f29d62aea6c44aaab796d0f23256b0e1049f50acceedef",
+    "gold_sha256": "fa513a2b5a7f268be9f29d62aea6c44aaab796d0f23256b0e1049f50acceedef",
+    "byte_identical": true
+  },
+  "p1_mid64x8": {
+    "case": "p1_mid64x8",
+    "ok": true,
+    "rc": 0,
+    "seconds": 2.8,
+    "sha256": "ee61e6200d9abca66c5a74a0cbbd9dde982f1d4652647f8b0d67e5964f3e9789",
+    "gold_sha256": "ee61e6200d9abca66c5a74a0cbbd9dde982f1d4652647f8b0d67e5964f3e9789",
+    "byte_identical": true
+  },
+  "p1_full_grad": {
+    "case": "p1_full_grad",
+    "ok": true,
+    "rc": 0,
+    "seconds": 272.1,
+    "sha256": "b992a8ad74063545cfebb67e59efc83b4136133a0c19479a18c05c343d48ada9",
+    "gold_sha256": "b992a8ad74063545cfebb67e59efc83b4136133a0c19479a18c05c343d48ada9",
+    "byte_identical": true
+  },
+  "full": {
+    "case": "full",
+    "ok": true,
+    "rc": 0,
+    "seconds": 757.0,
+    "markers": [
+      "# B11_FULL_READ_DONE read=259200 enc=1 exported=1 cycles=10946427",
+      "# B11_FULL_DONE enc=2 exported=2 read=259200 dup=0 err=0 wd=0",
+      "# B11_FULL_BRIDGE ar=261704 r=261704 rlast=261704 stale=0 block=0",
+      "# B11_FULL_RESULT pass=1"
+    ]
+  },
+  "r1_clean": {
+    "case": "r1_clean",
+    "exit": 0,
+    "check_exit": 0,
+    "seconds": 2.6,
+    "status": "PASS",
+    "errors": [],
+    "stats": {
+      "case": 0,
+      "w": 32,
+      "h": 2,
+      "cap": 1,
+      "rawpub": 1,
+      "enc": 1,
+      "exp": 1,
+      "rawdrop": 0,
+      "cmpdrop": 0,
+      "geom": 0,
+      "err": 0,
+      "reads": 4,
+      "dups": 0,
+      "bytes": 135,
+      "uart_bytes": 135,
+      "sof_accept": 1,
+      "writer_begin": 1,
+      "last_reject": 0,
+      "full_cycles": 0,
+      "rejects": 0,
+      "aborts": 0,
+      "clean_done": 1,
+      "fault_crop": 0,
+      "fault_sof_accept": 0,
+      "fault_writer_begin": 0,
+      "fault_last_reject": 0,
+      "fault_full": 0,
+      "fault_rejects": 0,
+      "fault_aborts": 0,
+      "fault_slot": -1,
+      "fault_pub_base": 0,
+      "post_release_writer": 0,
+      "recovery_inputs": 0,
+      "writer_final": 0,
+      "slot0": 0,
+      "slot1": 0,
+      "raw_abort_cnt": 0,
+      "begin_deny": 0,
+      "result_fail": 0,
+      "cycles": 7118
+    },
+    "failure_evidence": {},
+    "log": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b12-r1-last/r0/sim/logs/sim_r1_clean.log",
+    "case_dir": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b12-r1-last/r0/sim/cases/r1/clean"
+  },
+  "r1_loss": {
+    "case": "r1_loss",
+    "exit": 0,
+    "check_exit": 0,
+    "seconds": 2.7,
+    "status": "PASS",
+    "errors": [],
+    "stats": {
+      "case": 1,
+      "w": 32,
+      "h": 2,
+      "cap": 4,
+      "rawpub": 3,
+      "enc": 3,
+      "exp": 3,
+      "rawdrop": 1,
+      "cmpdrop": 0,
+      "geom": 0,
+      "err": 0,
+      "reads": 12,
+      "dups": 0,
+      "bytes": 405,
+      "uart_bytes": 405,
+      "sof_accept": 4,
+      "writer_begin": 4,
+      "last_reject": 1,
+      "full_cycles": 38,
+      "rejects": 7,
+      "aborts": 0,
+      "clean_done": 1,
+      "fault_crop": 16,
+      "fault_sof_accept": 1,
+      "fault_writer_begin": 1,
+      "fault_last_reject": 1,
+      "fault_full": 35,
+      "fault_rejects": 7,
+      "fault_aborts": 0,
+      "fault_slot": 0,
+      "fault_pub_base": 1,
+      "post_release_writer": 0,
+      "recovery_inputs": 2,
+      "writer_final": 0,
+      "slot0": 0,
+      "slot1": 0,
+      "raw_abort_cnt": 1,
+      "begin_deny": 0,
+      "result_fail": 0,
+      "cycles": 31559
+    },
+    "failure_evidence": {
+      "last_rejected": 1,
+      "sof_accepted": 1,
+      "writer_began": 1,
+      "fault_crop_groups": 16,
+      "recovered_packets": 2,
+      "writer_final": 0,
+      "fault_slot": 0,
+      "fault_slot_final_state": 0,
+      "raw_abort_count": 1,
+      "begin_denials": 0,
+      "rawpub": 3,
+      "exported": 3
+    },
+    "log": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b12-r1-last/r0/sim/logs/sim_r1_loss.log",
+    "case_dir": "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b12-r1-last/r0/sim/cases/r1/loss"
+  }
+}

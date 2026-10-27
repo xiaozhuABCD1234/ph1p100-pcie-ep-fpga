@@ -1,0 +1,750 @@
+FILE:D:\fpga\ph1p100\workflow\runs\20261025-180900_fpga-dual-offline-closure\continue03-recovery-plan.md
+# continue03：实际外部中断后的原角色恢复
+
+授权依据是 `user-feedback-continue03.md` 的用户原话“接着做”，以及原两包离线交付/继续指令。恢复同一个run、两个原任务、原开发和唯一原综合测试者。没有新增任务、批、实现修复轮、模型切换或实验目标。规划本次只读核对中断产物并生成派发，不运行开发或测试脚本，也不探测角色进度。
+
+## 事实与不得推断的部分
+
+T08唯一候选仍是 `T08.dual-local-closure/r1/mode-fix02/manifest-mode-fix02.json`，SHA256 `38e0615341330aa5b8f1e0e1f9ecf4e169abbdc6bc4856912b9e4f929bdfcce3`。本次重新核其314项绑定文件，结果见 `continue03-recovery-audit.json`。r0 FAIL和实际修复1不变，尚无r1综合判定。
+
+原测试者r1 `window-start.json` 记录start为2026-10-25 22:09:16.123864、deadline为22:54:16.123864（上海），30 calls/2 compile/14 cases。当前目录仅有该文件和输入审阅文本。没有观察到本轮编译/案例回执、独立TB、模型库或综合报告，不能把文件数当工具调用数，也不能把没有记录当作已证明零消耗。最后原生usage limit及提示00:44解封原样保留；用户00:50继续是本次一次同原ID恢复的依据，不能声称已经验证额度或模型可用。
+
+T10 `cmp-stall-fix01` 现有6项编译输入全部仍匹配快照，3个正向checker回执哈希仍匹配。已有1 compile、5 cases（已满），24个正向帧、两个有效负对照；均属开发局部证据。最终manifest、execution-accounting和作者停止返回仍缺，不能送首次独立测试。旧窗口22:44:26.9726768已经终止，不回填截止或冻结时间。原faults累计3/3不变，已知累计compile5/case16；完整历史和本阶段calls尚未知，保留unknown。
+
+## 两个可独立机械操作
+
+1. 按 `dispatch-T08-continue03.json` 续 `/root/fpga_tester_dual_local_180900`。第一步从其原native上下文与自己已有记录恢复实际r1消耗、失败命令、编译、case、edges启动记录；先写恢复账。新核账最多4静态调用，已知情况下计入原r1总30，不另给一组30。核账无法确定原消耗，则只返回准确静态交接/blocked，不启实验、不假设剩余值。已确定时，剩余是30减全部已用及当前核账calls、2减实际compile、14减实际case；仅运行原清单尚未有效完成项，同manifest有效独立证据直接复用。
+2. 按 `dispatch-T10-continue03-static.json` 续 `/root/fpga_dev_dual_scheduler_180900`。新有限静态窗口最多10调用/15分钟，只写 `cmp-stall-fix01/static-closeout02/**`。补真实哈希manifest、既有结果映射、实际/未知账、作者停止/活动命令声明及交接。无RTL/TB/runner修改、无编译/仿真、无faults第4次。回原规划核准后才可能启动原未消耗的首次独立验收。
+
+两操作写域不重叠，可分别派发；BATCH_SIZE仍各1，不合批、不增加角色。原ID若实际工具报失效才文件恢复登记映射；额度/容量再次失败直接交规划，不自动重试、换模型或新建替代。
+
+## 时间和计数处理
+
+T08旧绝对deadline和原外部错误不可覆盖。用户继续后的剩余验收冻结一个实际收到followup起30分钟的日历截止，开工前落实到文件；这是外部中断后的有限接续截止，不能写成旧窗口一直有效、不能重新给45分钟，也不恢复任何calls/compile/case/失败次数。保留已知原实际活动时长和不可恢复的时间记录，明确外部等待段与历史超时，不据时间整理追加实验。当前剩余用量需要原测试者从自己上下文确认；预算不足按真实缺项返回，不能绕为新round。
+
+原tester_edges全任务此前已失败1次，只余最多1次纠正输入复跑；必须扣除中断turn中任何已实际启动的尝试，无法确定就不再启动。相同失败命令总限首次+1重试，重命名/路径/库问题也不清零。每一case进程都占14总额，不能将矩阵展开进子进程不记账。
+
+本次静态核账用于必要交接，若证实旧调用已经用满/超用，4次静态核账记作本次必要交付的新静态账并保留旧超用，不能倒改历史；无任何实验余量。T10独立round0尚未启动，不借独立测试预算补开发冻结，不虚构post-FAIL轮数。所有G2/物理CDC/STA/资源、G3/G4继续not_run/awaiting_hardware，父硬件任务不置done。
+
+## 退出
+
+T08返回正式r1综合判定或准确blocked；必要检查不全不能PASS。T10返回冻结/停止齐备的真实ready_for_test，或准确blocked。两个返回分别立即交原规划；主只机械传输，不监控、读技术报告或自行判断门槛。没有返回的旧失败turn不继续空等。
+
+FILE:D:\fpga\ph1p100\workflow\runs\20261025-180900_fpga-dual-offline-closure\descriptor-corrections01-plan.md
+# 两包描述符实现闭合：有界实际修改派发
+
+实际根 `D:/fpga/ph1p100`；run不变；BATCH_SIZE1；仍只有T08.dual-local-closure与T10.dual-aplus-scheduler两个正式包。原开发分别 `/root/fpga_dev_dual_local_180900`、`/root/fpga_dev_dual_scheduler_180900`，双方已结束静态收尾且active_commands=0，分别续原角色，不跨任务复用。
+
+## 决策与轮次
+
+规划读取两包static-closeout01的结果、manifest/source-map、计数、retest与静态反例，并核对对应实际源码。两反例均由真实可达的合法握手/状态转换构成：T08 mode2在空闲边缘同时收到切mode1和pub，会按旧mode建立offer又按新mode本地读回释放，之后转回mode2可出现已释放身份；T10组合优先级cmp_sel会在slot1描述符stall期间因slot0被ACK回收再完成而切到slot0。两者违反本轮已冻结的所有权/ready-valid合同，属于原任务必要实现修正，不是新增功能、硬件、协议或重复许可事项。
+
+本文件是**新的真实RTL修正派发**，不是静态窗口的延长或借静态改代码。旧10次/15分钟静态窗口已结束，0实验增量保留；旧实验窗口、超用和累计计数不回写。预算只为这两个新定位实现缺陷及其受影响验证有限分配，低于原每次派发上限；没有为旧同失败命令增加重试额度。
+
+T08：保留r0 integrated FAIL、已做实际实现修复round1。当前仍未有r1 integrated，新增模式修正是r1提交前的第二段实现闭合，不伪造r1 FAIL或r2验收；后续仍由原tester出r1 integrated。T10：尚无独立integrated round0，本次为提交首次验收前的实现闭合，不记验收后round1，不声称发生独立失败。后续首次tester仍round0。两者最多3轮实际验收修复的历史规则不被此处改写。
+
+## T08：模式/发布/offer生命周期（五步）
+
+输入：`T08.dual-local-closure/r1/static-closeout01/{manifest-r1.json,mode-publication-risk.md,result-r1.md,retest-r1.json,execution-accounting.json}`、原r0报告和r1源码/13项局部结果。只写 `T08.dual-local-closure/r1/mode-fix02/**`；此前所有r0/r1源码、静态交接/manifest/结果均只读。
+
+1. 验证静态manifest与基准SHA，将需修改模块/环境/新TB放本新目录，未变文件可直接只读引用，建立准确源映射。
+2. 修改实际dual_local_closure所有权裁决：切模式要求本拍也没有A/B新pub，且held/sent/offer/pending/outstanding/reader状态满足真正空闲；新pub与mode请求同拍时保留原模式和pub，拒绝/计数该次mode请求，不丢合法pub。离开mode2后不保留能重新露出的旧offer；返回mode2时只呈现实际held且未移交的新身份。原F01的stall字段保持、同拍take/refill和F02的ext_take排斥释放必须继续成立。不得靠禁用模式切换、屏蔽pub或解除槽保护规避。
+3. 新建真实合法接口驱动反例/矩阵，覆盖A/B、两slot、2→1和1→2与pub同拍、两路同拍pub、无pub空闲切换、busy/held/offer/AR/R在途拒切、消费/释放后再切而无phantom/重复描述符。旧源码应由同一合同检查暴露反例，修正源码必须通过；只允许隔离旧fixture，不修改原证据。禁止force held/cs状态来替代可达刺激。
+4. 在新输入上局部验证修正矩阵、原edges/同拍AR-release、真实read-overlap、正常/饱和、drain/LOCK/reset、默认关闭与B释放负对照。可用一个有限矩阵进程组合相邻握手检查；不得重命名旧失败case绕次数。旧I2C特定引脚错误类可提复用，最终由原tester绑定新manifest决定。
+5. 新冻结 `mode-fix02/manifest-mode-fix02.json`、结果/命令/输入SHA/影响/retest/复用提案/lessons/实际本次与历史计数；结束活动并停改才ready_for_test，否则真实blocked。不能把旧13个局部pass直接拼作新模块全通过。
+
+开发本次≤30实际工具调用/60分钟、compile≤2、case进程≤12，定向矩阵与受影响检查优先。tester原r1尚未开始的30调用/45分钟、compile2、case14不变；建议14进程覆盖：新模式矩阵1、原edges1、所有camera/slot/status矩阵1、overlap1、normal1、case10–15共6、contract1、legacy1、B释放mutant1。总14；具体组合由原tester按新manifest确定，不得遗漏门槛或超过预算。
+
+## T10：CMP输出描述符stall保持（五步）
+
+输入：`T10.dual-aplus-scheduler/static-closeout01/{manifest-resume01.json,source-map.json,result-resume01.md,retest.json,execution-accounting.json}`及当前真实三份DUT/已有捕获。只写 `T10.dual-aplus-scheduler/cmp-stall-fix01/**`，不得改先前candidate/静态冻结/脚本/证据。
+
+1. 核对冻结三DUT，复制/引用到新唯一源闭包，仅新scheduler overlay允许行为修改；core/frame SHA必须继续分别6797db05…35bb/c8b24775…a65b。
+2. 实现CMP呈现身份寿命：cmp_valid拉起后，所有cmp_*身份/slot/长度/CRC/prep/pred在cmp_ready=0时保持到握手；其他CMP槽ACK、再分配、真实编码完成不能改变当前offer。握手只将实际呈现slot置READING，另一READY正确保留；同拍commit/take/refill和reset取消符合原合同，不增加完整帧缓存或修改codec/RAW/CRC。
+3. 用真实core与native DDR模型、合法CMP ACK形成slot0 READING、slot1 READY且stall，ACK0后编码第三帧至slot0 READY；检查stall身份不变、之后两个完成的source和实际字节对应且单次导出。覆盖相反可达顺序、同拍ACK/commit/take、两个CMP持有造成背压、ACK错身份拒绝。旧实际源码须由同一检查暴露该反例；不可force内部cs或用stub编码器冒充真实完成。
+4. 局部仅跑该新增名义握手场景的旧反例/修正矩阵、小参数正常多帧、默认1920x1080 A/B双帧内容/metadata及有效输出身份或跨word负对照，严格zlib/逆变换/长度CRC对应新源。**本开发者不得再跑原faults suite、其改名等价或重新注入原完整故障序列**；已用3/3保持，不增加第4次。此新增CMP名义反压/ACK场景是不同根因与不同刺激，独立记账；不得夹带旧故障重试。
+5. 停改/活动结束，新冻结 `cmp-stall-fix01/manifest-cmp-stall-fix01.json`、结果/影响/retest/源映射/复用提案/lessons/实际本次历史计数。若仍有未实现合同或来源不清，blocked，不交半实现给tester；不能声称独立PASS。
+
+开发本次≤30工具调用/60分钟、compile≤2、case进程≤5，建议旧CMP反例1、修正矩阵1、小参数名义多帧1、默认full AB1、有效负对照1。编译列表可包含隔离重命名旧fixture与新DUT，并独占工作库；不能编译/运行旧目录库覆盖历史。核/变换/DDR/恢复等不变项证据只作复用提案，不由开发把历史pass绑定到新scheduler。
+
+之后仍是首次新建**一个**独立综合测试者，原未用45调用/60分钟、compile2/case20、小case300s/full600s不变。独立检查完整原清单加CMP新反例，fresh正常/odd/prep、公平/满CMP/接口stall、容量/phase、错误身份及AXI错误/drain/LOCK/reset、全尺寸严格还原和有效负对照。必要原故障类由独立tester按其原计划首次覆盖，另记独立验收次数；这不重置或增加原开发的faults3/3，不把开发第4次改名成测试。若原预算无法覆盖事先交规划，不自动增额。
+
+## 共同边界、停止与历史账
+
+开发窗口从本派发实际续接计60分钟、由角色开工登记准确绝对截止；此新真实实现窗口不修改旧窗口时间或合规性。读搜60s、编译/小case/局部静态300s，只有T10 full600s；真实进程timeout与cycle watchdog，安全终止仅本角色拥有进程。单问题最多3轮读取，同失败命令原计数累计最多首次+1次有新证据纠正重试、2次无进展或任一上限即停。T08原tester_edges已失败1次，原tester修正输入只剩1次；开发自己的命令史独立保留。
+
+T08已知累计开发：calls125（含r0超用101、r1前静态16、静态8）、compile6、case32；本次加本次实际量，最大calls155/compile8/case44，不说旧125符合旧预算。T10历史完整calls未知，保留原37、恢复期已知13native+8wrapper、静态9及unknown总计，不填0；compile4、case11、faults3；本次最多追加compile2/新名义case5，账为compile最多6/case最多16，原faults仍3，旧实验cap4/4耗尽的历史不追认。新预算来自原范围必要真实实现闭合派发，不是旧静态或旧故障命令重试。
+
+双方静态问题的PERMISSION_MISSING/INPUT_CONFLICT只标当时静态窗口不允许改实现；不意味着人类尚未授权原范围必要修复。本次明确切换到真实修改派发，保留两个稳定problem_id，不用新ID抹问题：T08 `T08.dual-local-closure:PERMISSION_MISSING:mode-publication-stale-offer`；T10 `T10.dual-aplus-scheduler:INPUT_CONFLICT:cmp-descriptor-stall`。补充机会不增加/不重置，不把实现轮当格式机会。
+
+禁止TD/硬件/盘符/COM/RK/位流/下载/Flash/外部消息/Git/批量删除；不改共享协议/几何/频率、上板候选、对方任务目录。G0/G1必要，G2/3/4仍not_run/awaiting_hardware；开发完成不等于独立验收，父任务不置done。
+
+各开发一旦ready或blocked都回原规划，传真实manifest/结果/stop flags/retest及新旧账；主不直接解释技术报告或自动增实验。原规划核对后再派相应独立验收，T08原tester优先、T10首次新tester。只有实际角色调用报ID失效才按文件恢复映射，禁止预防性新建和借换ID重置余额。不得在本次之前的静态窗口偷改源或倒填此次开始时间。
+
+FILE:D:\fpga\ph1p100\workflow\runs\20261025-180900_fpga-dual-offline-closure\T08.dual-local-closure\r1\mode-fix02\dual_local_closure.v
+// Four pulse mailboxes and one exclusive native AXI reader. DHI clock only.
+module dual_local_closure #(
+ parameter integer W=1920,H=1080,PHASE=0,DEFAULT_MODE=1,
+ parameter [31:0] TIMEOUT_CYCLES=2097152
+)(input wire clk,rst,input wire [31:0] epoch,input wire [1:0] requested_mode,
+ input wire abort,
+ input wire a_pub_valid,input wire [31:0] a_pub_seq,a_pub_base,a_pub_len,a_pub_session,
+ input wire b_pub_valid,input wire [31:0] b_pub_seq,b_pub_base,b_pub_len,b_pub_session,
+ output reg [1:0] a_release,b_release,
+ output wire a_desc_valid,input wire a_desc_ready,
+ output wire a_desc_camera_id,
+ output wire a_desc_slot_id,
+ output wire [31:0] a_desc_epoch,
+ output wire [31:0] a_desc_session,
+ output wire [31:0] a_desc_capture_seq,
+ output wire [31:0] a_desc_base,
+ output wire [31:0] a_desc_dma_bytes,
+ output wire [31:0] a_desc_raw_bytes,
+ output wire [15:0] a_desc_width,
+ output wire [15:0] a_desc_height,
+ output wire [1:0] a_desc_bayer_phase,
+ output wire b_desc_valid,input wire b_desc_ready,
+ output wire b_desc_camera_id,
+ output wire b_desc_slot_id,
+ output wire [31:0] b_desc_epoch,
+ output wire [31:0] b_desc_session,
+ output wire [31:0] b_desc_capture_seq,
+ output wire [31:0] b_desc_base,
+ output wire [31:0] b_desc_dma_bytes,
+ output wire [31:0] b_desc_raw_bytes,
+ output wire [15:0] b_desc_width,
+ output wire [15:0] b_desc_height,
+ output wire [1:0] b_desc_bayer_phase,
+ input wire rel_valid,output wire rel_ready,input wire rel_camera_id,rel_slot_id,
+ input wire [31:0] rel_epoch,rel_session,rel_capture_seq,input wire [2:0] rel_status,
+ output reg [31:0] pass_count,fail_count,fault,reject_count,
+ output reg [3:0] held,output reg [1:0] active_mode,
+ output wire [3:0] arid,output wire [28:0] araddr,output wire [7:0] arlen,
+ output wire [2:0] arsize,output wire [1:0] arburst,output wire arvalid,input wire arready,
+ input wire [3:0] rid,input wire [255:0] rdata,input wire [1:0] rresp,
+ input wire rlast,rvalid,output wire rready,
+ input wire [3:0] ext_arid,input wire [28:0] ext_araddr,input wire [7:0] ext_arlen,
+ input wire [2:0] ext_arsize,input wire [1:0] ext_arburst,input wire ext_arvalid,output wire ext_arready,
+ output wire [3:0] ext_rid,output wire [255:0] ext_rdata,output wire [1:0] ext_rresp,
+ output wire ext_rlast,ext_rvalid,input wire ext_rready);
+ localparam [31:0] RAW_BYTES=W*H*5/4,DMA_BYTES=((128+W*H*5/4+4095)/4096)*4096;
+ localparam [15:0] WIDTH=W,HEIGHT=H;localparam [1:0] BAYER_PHASE=PHASE;
+ localparam WAIT=0,START=1,RUN=2,DRAIN=3,LOCK=4;
+ reg [2:0] state;reg [3:0] sent;reg last_camera;
+ reg [31:0] q_seq[0:3],q_sess[0:3],q_epoch[0:3],q_base[0:3],q_len[0:3],ext_bytes[0:3];
+ reg [1:0] current;reg [2:0] current_status;
+ reg ar_pending;reg [28:0] araddr_q;reg [7:0] arlen_q;reg [3:0] arid_q;
+ reg [8:0] outstanding;reg [31:0] drain_wait;reg protocol_bad;reg [1:0] mode_seen;
+ reg [1:0] ext_owner;
+ reg a_offer,b_offer;reg [1:0] a_index,b_index;
+ wire active=(state==START)||(state==RUN);
+ wire c_busy,c_done,c_magic,c_header,c_payload,c_length,c_arvalid,c_rready;
+ wire [7:0] c_error,c_arlen;wire [31:0] c_hcrc,c_pcrc,c_words;wire [28:0] c_araddr;
+ wire c_arready=active&&!ar_pending&&(outstanding==0);
+ assign arvalid=ar_pending;assign araddr=araddr_q;assign arlen=arlen_q;assign arid=arid_q;
+ assign arsize=3'd5;assign arburst=2'b01;
+ assign rready=active_mode==2 ? ((outstanding!=0)&&ext_rready&&!fault) :
+               active ? c_rready : ((state==DRAIN)&&(outstanding!=0));
+ wire ar_fire=arvalid&&arready,r_fire=rvalid&&rready;
+ wire [3:0] available=held & ~sent;
+ wire have_a=|available[1:0],have_b=|available[3:2];
+ wire select_camera=have_a&&have_b ? !last_camera : have_b;
+ wire [1:0] selected=select_camera ? (available[2]?2'd2:2'd3) : (available[0]?2'd0:2'd1);
+ wire [1:0] release_index={rel_camera_id,rel_slot_id};
+ assign rel_ready=active_mode==2;
+ wire [1:0] ai=a_index;
+assign a_desc_valid=active_mode==2 && !fault && a_offer;
+assign a_desc_camera_id=1'b0;
+assign a_desc_slot_id=ai[0];
+assign a_desc_epoch=q_epoch[ai];
+assign a_desc_session=q_sess[ai];
+assign a_desc_capture_seq=q_seq[ai];
+assign a_desc_base=q_base[ai];
+assign a_desc_dma_bytes=q_len[ai];
+assign a_desc_raw_bytes=RAW_BYTES;
+assign a_desc_width=WIDTH;
+assign a_desc_height=HEIGHT;
+assign a_desc_bayer_phase=BAYER_PHASE;
+wire [1:0] bi=b_index;
+assign b_desc_valid=active_mode==2 && !fault && b_offer;
+assign b_desc_camera_id=1'b1;
+assign b_desc_slot_id=bi[0];
+assign b_desc_epoch=q_epoch[bi];
+assign b_desc_session=q_sess[bi];
+assign b_desc_capture_seq=q_seq[bi];
+assign b_desc_base=q_base[bi];
+assign b_desc_dma_bytes=q_len[bi];
+assign b_desc_raw_bytes=RAW_BYTES;
+assign b_desc_width=WIDTH;
+assign b_desc_height=HEIGHT;
+assign b_desc_bayer_phase=BAYER_PHASE;
+
+ wire [32:0] ext_end={4'd0,ext_araddr}+(({25'd0,ext_arlen}+1)<<5);
+ reg ext_valid_range;reg [1:0] ext_index;integer k;
+ always @* begin
+  ext_valid_range=0;ext_index=0;
+  for(integer n=0;n<4;n=n+1)
+   if(held[n]&&sent[n]&&ext_araddr>=q_base[n]&&ext_end<={1'b0,q_base[n]}+q_len[n]) begin ext_valid_range=1;ext_index=n;end
+ end
+ assign ext_arready=active_mode==2&&!fault&&!ar_pending&&outstanding==0&&ext_valid_range&&
+   ext_arid==0&&ext_arsize==5&&ext_arburst==1&&ext_arlen<128&&ext_araddr[4:0]==0&&
+   ({1'b0,ext_araddr[11:0]}+(({5'd0,ext_arlen}+1)<<5)<=4096);
+ wire ext_take=ext_arvalid&&ext_arready;
+ // A publication or current-cycle request cannot be hidden by old registered idle state.
+ wire mode_quiescent=(held==0)&&(sent==0)&&!a_offer&&!b_offer&&
+   !a_pub_valid&&!b_pub_valid&&!ar_pending&&(outstanding==0)&&
+   (state==WAIT)&&!c_busy&&!c_arvalid&&!ext_take&&!rvalid;
+ assign ext_rid=rid;assign ext_rdata=rdata;assign ext_rresp=rresp;assign ext_rlast=rlast;
+ assign ext_rvalid=active_mode==2&&!fault&&outstanding!=0&&rvalid;
+ ddr_frame_readback_checker #(.TIMEOUT_CYCLES(TIMEOUT_CYCLES),.MAX_FRAME_BYTES(8388608)) u_checker(
+ .clk_dhi(clk),.rst_dhi(rst),.start(state==START),.base({32'd0,q_base[current]}),.frame_bytes(q_len[current]),.abort(abort),
+ .expected_check(1'b1),.expected_camera(current[1]),.expected_session(q_sess[current]),.expected_seq(q_seq[current]),
+ .expected_raw(RAW_BYTES),.expected_width(WIDTH),.expected_height(HEIGHT),.expected_phase(BAYER_PHASE),
+ .busy(c_busy),.done(c_done),.magic_ok(c_magic),.hdr_crc_ok(c_header),.payload_crc_ok(c_payload),.length_ok(c_length),
+ .err_code(c_error),.rd_header_crc32(c_hcrc),.rd_payload_crc32(c_pcrc),.words_read(c_words),
+ .smp0(),.smp1(),.smp2(),.smp3(),.smp4(),.smp5(),
+ .m_axi_arid(),.m_axi_araddr(c_araddr),.m_axi_arlen(c_arlen),.m_axi_arsize(),.m_axi_arburst(),
+ .m_axi_arvalid(c_arvalid),.m_axi_arready(c_arready),.m_axi_rid(rid),.m_axi_rdata(rdata),.m_axi_rresp(rresp),
+ .m_axi_rlast(rlast),.m_axi_rvalid(rvalid&&active&&(outstanding!=0)),.m_axi_rready(c_rready));
+ function [31:0] slot_base(input [1:0] index);
+  case(index) 0:slot_base=32'h00100000;1:slot_base=32'h00900000;2:slot_base=32'h01100000;3:slot_base=32'h01900000;endcase
+ endfunction
+ task capture(input bit camera,input [31:0] seq,base,len,session);
+  reg [1:0] idx;
+  begin
+   idx={camera,(base==slot_base({camera,1'b1}))};
+   if((base!=slot_base({camera,1'b0})&&base!=slot_base({camera,1'b1})) || held[idx] ||
+      len!=DMA_BYTES || len>8388608 || base[31:29]!=0 || {1'b0,base}+len>33'h020000000) begin fault<=2;state<=LOCK;end
+   else begin held[idx]<=1;sent[idx]<=0;q_seq[idx]<=seq;q_sess[idx]<=session;q_epoch[idx]<=epoch;q_base[idx]<=base;q_len[idx]<=len;ext_bytes[idx]<=0;end
+  end
+ endtask
+ always @(posedge clk or posedge rst) begin
+  if(rst) begin
+   state<=WAIT;held<=0;sent<=0;last_camera<=1;current<=0;current_status<=0;ar_pending<=0;
+   araddr_q<=0;arlen_q<=0;arid_q<=0;outstanding<=0;drain_wait<=0;protocol_bad<=0;
+   a_offer<=0;b_offer<=0;a_index<=0;b_index<=2;
+   active_mode<=DEFAULT_MODE;mode_seen<=DEFAULT_MODE;ext_owner<=0;a_release<=0;b_release<=0;
+   pass_count<=0;fail_count<=0;fault<=0;reject_count<=0;
+   for(k=0;k<4;k=k+1) begin q_seq[k]<=0;q_sess[k]<=0;q_epoch[k]<=0;q_base[k]<=0;q_len[k]<=0;ext_bytes[k]<=0;end
+  end else begin
+   a_release<=0;b_release<=0;
+   // Offers belong only to mode2; an inactive consumer cannot retain a future valid.
+   if(active_mode!=2) begin a_offer<=0;b_offer<=0;a_index<=0;b_index<=2;end
+   if(requested_mode!==mode_seen && (^requested_mode)!==1'bx) begin
+    mode_seen<=requested_mode;
+    if(mode_quiescent) active_mode<=requested_mode;
+    else reject_count<=reject_count+1;
+   end
+   if(a_pub_valid) capture(0,a_pub_seq,a_pub_base,a_pub_len,a_pub_session);
+   if(b_pub_valid) capture(1,b_pub_seq,b_pub_base,b_pub_len,b_pub_session);
+   if(c_arvalid&&c_arready) begin ar_pending<=1;araddr_q<=c_araddr;arlen_q<=c_arlen;arid_q<=0;end
+   else if(ext_arvalid&&ext_arready) begin ar_pending<=1;araddr_q<=ext_araddr;arlen_q<=ext_arlen;arid_q<=ext_arid;ext_owner<=ext_index;end
+   else if(ar_fire) ar_pending<=0;
+   if(ar_fire) outstanding<={1'b0,arlen}+1'b1;
+   else if(r_fire&&outstanding!=0) outstanding<=outstanding-1'b1;
+   if(r_fire && (rid!=arid_q || rresp!=0 || rlast!=(outstanding==1))) protocol_bad<=1;
+   if(active_mode==2) begin
+    // Registered presentation identity is held until ready/valid transfer.
+    // Exclude the taken slot, retain the other mailbox, and accept simultaneous refill.
+    if(a_desc_valid&&a_desc_ready) sent[ai]<=1;
+    if(b_desc_valid&&b_desc_ready) sent[bi]<=1;
+    if(!a_offer || a_desc_ready) begin
+     if(available[0] && !(a_offer&&a_desc_ready&&ai==0)) begin a_offer<=1;a_index<=0;end
+     else if(available[1] && !(a_offer&&a_desc_ready&&ai==1)) begin a_offer<=1;a_index<=1;end
+     else if(a_pub_valid && (a_pub_base==slot_base(0)||a_pub_base==slot_base(1)) && !held[a_pub_base==slot_base(1)] && a_pub_len==DMA_BYTES) begin
+      a_offer<=1;a_index<=a_pub_base==slot_base(1)?1:0;
+     end else a_offer<=0;
+    end
+    if(!b_offer || b_desc_ready) begin
+     if(available[2] && !(b_offer&&b_desc_ready&&bi==2)) begin b_offer<=1;b_index<=2;end
+     else if(available[3] && !(b_offer&&b_desc_ready&&bi==3)) begin b_offer<=1;b_index<=3;end
+     else if(b_pub_valid && (b_pub_base==slot_base(2)||b_pub_base==slot_base(3)) && !held[b_pub_base==slot_base(3)?3:2] && b_pub_len==DMA_BYTES) begin
+      b_offer<=1;b_index<=b_pub_base==slot_base(3)?3:2;
+     end else b_offer<=0;
+    end
+    if(r_fire) ext_bytes[ext_owner]<=ext_bytes[ext_owner]+32;
+    if(rel_valid&&rel_ready) begin
+     if(held[release_index]&&sent[release_index]&&rel_epoch==q_epoch[release_index]&&
+        rel_session==q_sess[release_index]&&rel_capture_seq==q_seq[release_index]&&rel_status<=2&&
+        !ar_pending&&outstanding==0&&!ext_take&&
+        ((rel_status==0&&ext_bytes[release_index]==q_len[release_index]&&!protocol_bad)||
+         (rel_status==1)||(rel_status==2&&ext_bytes[release_index]==0))) begin
+      held[release_index]<=0;sent[release_index]<=0;
+      if(rel_camera_id) b_release<=rel_slot_id?2:1;else a_release<=rel_slot_id?2:1;
+     end else reject_count<=reject_count+1;
+    end
+    if((ar_pending||outstanding!=0) && !(ar_fire||r_fire)) begin
+     if(drain_wait>=TIMEOUT_CYCLES) begin fault<=1;state<=LOCK;end else drain_wait<=drain_wait+1;
+    end else drain_wait<=0;
+   end else if(active_mode==1) case(state)
+    WAIT: if(available!=0 && !fault) begin
+     current<=selected;sent[selected]<=1;last_camera<=select_camera;protocol_bad<=0;state<=START;
+    end
+    START: state<=RUN;
+    RUN: if(c_done&&!c_busy) begin
+     current_status<=(c_error==0 && c_magic&&c_header&&c_payload&&c_length&&!protocol_bad)?0:1;
+     drain_wait<=0;state<=DRAIN;
+    end
+    DRAIN: if(outstanding==0&&!ar_pending) begin
+     held[current]<=0;sent[current]<=0;
+     if(current[1]) b_release<=current[0]?2:1;else a_release<=current[0]?2:1;
+     if(current_status==0) pass_count<=pass_count+1;else fail_count<=fail_count+1;
+     state<=WAIT;
+    end else if(ar_fire||r_fire) drain_wait<=0;
+    else if(drain_wait>=TIMEOUT_CYCLES) begin fault<=1;state<=LOCK;end
+    else drain_wait<=drain_wait+1;
+    LOCK: begin end
+    default: begin fault<=3;state<=LOCK;end
+   endcase
+   // Invalid mode is fail closed: writers retain every complete frame.
+  end
+ end
+ initial begin
+  if(W<4 || W%4!=0 || H<2 || DMA_BYTES>8388608) $error("invalid dual local geometry/capacity");
+ end
+endmodule
+
+
+FILE:D:\fpga\ph1p100\workflow\runs\20261025-180900_fpga-dual-offline-closure\T08.dual-local-closure\r1\mode-fix02\tb_mode_matrix.sv
+`timescale 1ns/1ps
+module tb_mode_matrix #(parameter integer DUT_KIND=0);
+ reg clk=0,rst=1;always #4 clk=~clk;
+ reg [1:0] req_mode=2;reg ap=0,bp=0,adr=0,bdr=0,rv=0,rc=0,rs=0,xv=0,stall_ar=0,pause_r=0;
+ reg [31:0] abase=32'h00100000,bbase=32'h01100000,aseq=100,bseq=200,rseq=100,repoch=7;
+ reg [2:0] status=2;reg [28:0] xaddr=0;reg [7:0] xlen=0;
+ wire av,bv,aslot,bslot,xready,arvalid,rready;wire [31:0] aq,bq,ab,bb,passes,fails,fault,rejects;
+ wire [3:0] held;wire [1:0] arel,brel,mode;wire [28:0] araddr;wire [7:0] arlen;
+ reg rd_active=0;reg [8:0] rd_left=0;integer ar_count=0,r_count=0;
+ wire arready=!stall_ar&&!rd_active;
+ wire rvalid=rd_active&&!pause_r,rlast=rd_left==1;
+ integer failures=0,mode_pub_hits=0,busy_hits=0,race_hits=0,refill_hits=0;
+ generate
+ if(DUT_KIND==0)begin:g_dut0
+dual_local_closure #(.W(8),.H(2),.DEFAULT_MODE(2),.TIMEOUT_CYCLES(2000)) dut(
+.clk(clk),.rst(rst),.epoch(32'd7),.requested_mode(req_mode),.abort(1'b0),
+.a_pub_valid(ap),.a_pub_seq(aseq),.a_pub_base(abase),.a_pub_len(32'd4096),.a_pub_session(32'd42),
+.b_pub_valid(bp),.b_pub_seq(bseq),.b_pub_base(bbase),.b_pub_len(32'd4096),.b_pub_session(32'd42),
+.a_release(arel),.b_release(brel),.a_desc_valid(av),.a_desc_ready(adr),.a_desc_slot_id(aslot),.a_desc_capture_seq(aq),.a_desc_base(ab),
+.b_desc_valid(bv),.b_desc_ready(bdr),.b_desc_slot_id(bslot),.b_desc_capture_seq(bq),.b_desc_base(bb),
+.rel_valid(rv),.rel_ready(),.rel_camera_id(rc),.rel_slot_id(rs),.rel_epoch(repoch),.rel_session(32'd42),.rel_capture_seq(rseq),.rel_status(status),
+.pass_count(passes),.fail_count(fails),.fault(fault),.reject_count(rejects),.held(held),.active_mode(mode),
+.arid(),.araddr(araddr),.arlen(arlen),.arsize(),.arburst(),.arvalid(arvalid),.arready(arready),
+.rid(4'd0),.rdata(256'd0),.rresp(2'd0),.rlast(rlast),.rvalid(rvalid),.rready(rready),
+.ext_arid(4'd0),.ext_araddr(xaddr),.ext_arlen(xlen),.ext_arsize(3'd5),.ext_arburst(2'd1),.ext_arvalid(xv),.ext_arready(xready),.ext_rready(1'b1));
+end
+else if(DUT_KIND==1)begin:g_dut1
+dual_local_closure_old_mode #(.W(8),.H(2),.DEFAULT_MODE(2),.TIMEOUT_CYCLES(2000)) dut(
+.clk(clk),.rst(rst),.epoch(32'd7),.requested_mode(req_mode),.abort(1'b0),
+.a_pub_valid(ap),.a_pub_seq(aseq),.a_pub_base(abase),.a_pub_len(32'd4096),.a_pub_session(32'd42),
+.b_pub_valid(bp),.b_pub_seq(bseq),.b_pub_base(bbase),.b_pub_len(32'd4096),.b_pub_session(32'd42),
+.a_release(arel),.b_release(brel),.a_desc_valid(av),.a_desc_ready(adr),.a_desc_slot_id(aslot),.a_desc_capture_seq(aq),.a_desc_base(ab),
+.b_desc_valid(bv),.b_desc_ready(bdr),.b_desc_slot_id(bslot),.b_desc_capture_seq(bq),.b_desc_base(bb),
+.rel_valid(rv),.rel_ready(),.rel_camera_id(rc),.rel_slot_id(rs),.rel_epoch(repoch),.rel_session(32'd42),.rel_capture_seq(rseq),.rel_status(status),
+.pass_count(passes),.fail_count(fails),.fault(fault),.reject_count(rejects),.held(held),.active_mode(mode),
+.arid(),.araddr(araddr),.arlen(arlen),.arsize(),.arburst(),.arvalid(arvalid),.arready(arready),
+.rid(4'd0),.rdata(256'd0),.rresp(2'd0),.rlast(rlast),.rvalid(rvalid),.rready(rready),
+.ext_arid(4'd0),.ext_araddr(xaddr),.ext_arlen(xlen),.ext_arsize(3'd5),.ext_arburst(2'd1),.ext_arvalid(xv),.ext_arready(xready),.ext_rready(1'b1));
+end
+else if(DUT_KIND==2)begin:g_dut2
+dual_local_closure_bad_b #(.W(8),.H(2),.DEFAULT_MODE(2),.TIMEOUT_CYCLES(2000)) dut(
+.clk(clk),.rst(rst),.epoch(32'd7),.requested_mode(req_mode),.abort(1'b0),
+.a_pub_valid(ap),.a_pub_seq(aseq),.a_pub_base(abase),.a_pub_len(32'd4096),.a_pub_session(32'd42),
+.b_pub_valid(bp),.b_pub_seq(bseq),.b_pub_base(bbase),.b_pub_len(32'd4096),.b_pub_session(32'd42),
+.a_release(arel),.b_release(brel),.a_desc_valid(av),.a_desc_ready(adr),.a_desc_slot_id(aslot),.a_desc_capture_seq(aq),.a_desc_base(ab),
+.b_desc_valid(bv),.b_desc_ready(bdr),.b_desc_slot_id(bslot),.b_desc_capture_seq(bq),.b_desc_base(bb),
+.rel_valid(rv),.rel_ready(),.rel_camera_id(rc),.rel_slot_id(rs),.rel_epoch(repoch),.rel_session(32'd42),.rel_capture_seq(rseq),.rel_status(status),
+.pass_count(passes),.fail_count(fails),.fault(fault),.reject_count(rejects),.held(held),.active_mode(mode),
+.arid(),.araddr(araddr),.arlen(arlen),.arsize(),.arburst(),.arvalid(arvalid),.arready(arready),
+.rid(4'd0),.rdata(256'd0),.rresp(2'd0),.rlast(rlast),.rvalid(rvalid),.rready(rready),
+.ext_arid(4'd0),.ext_araddr(xaddr),.ext_arlen(xlen),.ext_arsize(3'd5),.ext_arburst(2'd1),.ext_arvalid(xv),.ext_arready(xready),.ext_rready(1'b1));
+end
+ endgenerate
+ // Native AXI response model only. Zero data intentionally exercises safe CRC-fail release
+ // when mode1 owns a low-level descriptor; full production cases validate actual R10F bytes.
+ always @(posedge clk) begin
+  if(rst)begin rd_active<=0;rd_left<=0;ar_count<=0;r_count<=0;end
+  else begin
+   if(arvalid&&arready)begin rd_active<=1;rd_left<={1'b0,arlen}+1;ar_count<=ar_count+1;end
+   else if(rvalid&&rready)begin r_count<=r_count+1;rd_left<=rd_left-1;if(rd_left==1)rd_active<=0;end
+  end
+ end
+ task tick;@(negedge clk);endtask
+ task ck(input bit ok,input string label);
+  if(!ok)begin failures=failures+1;$display("MODE_FAIL %s kind=%0d mode=%0d held=%h Avalid=%0d Bvalid=%0d seqA=%0d seqB=%0d",label,DUT_KIND,mode,held,av,bv,aq,bq);end
+ endtask
+ function [31:0] base(input integer c,s);base=(c?32'h01100000:32'h00100000)+(s?32'h00800000:0);endfunction
+ task reset_to(input integer initial_mode);
+  rst=1;req_mode=2;ap=0;bp=0;adr=0;bdr=0;rv=0;xv=0;stall_ar=0;pause_r=0;repoch=7;status=2;xlen=0;
+  repeat(3)tick();rst=0;repeat(2)tick();
+  if(initial_mode!=2)begin req_mode=initial_mode;repeat(3)tick();end
+  ck(mode==initial_mode,"idle_mode_change_is_supported");
+ endtask
+ task publish(input integer c,s,seq);
+  if(c==0)begin abase=base(c,s);aseq=seq;ap=1;end else begin bbase=base(c,s);bseq=seq;bp=1;end
+  tick();ap=0;bp=0;tick();
+ endtask
+ task take_desc(input integer c);
+  integer n;
+  begin n=0;while(!(c==0?av:bv)&&n<20)begin tick();n=n+1;end
+   ck(c==0?av:bv,"actual_presented_descriptor_before_take");
+   if(c==0)adr=1;else bdr=1;tick();adr=0;bdr=0;tick();
+  end
+ endtask
+ task release_desc(input integer c,s,seq,st);
+  rc=c;rs=s;rseq=seq;status=st;repoch=7;rv=1;tick();rv=0;
+  ck(!held[c*2+s],"matching_release_clears_only_owned_slot");
+  if(c==0)ck(arel==(s?2:1)&&brel==0,"A_release_routes_only_A");
+  else ck(brel==(s?2:1)&&arel==0,"B_release_routes_only_B");
+  tick();
+ endtask
+ task wait_free;
+  integer n;
+  begin n=0;while(held!=0&&n<10000)begin tick();n=n+1;end
+   ck(held==0&&!rd_active&&!arvalid,"local_read_drains_before_free");repeat(3)tick();
+  end
+ endtask
+ task wait_read_done;
+  integer n;
+  begin n=0;while((rd_active||arvalid)&&n<10000)begin tick();n=n+1;end
+   ck(!rd_active&&!arvalid,"accepted_native_read_completed");repeat(2)tick();
+  end
+ endtask
+ task idle_roundtrip;
+  req_mode=2;repeat(3)tick();req_mode=1;repeat(3)tick();ck(mode==1,"empty_transition_to_mode1");
+  req_mode=2;repeat(3)tick();ck(mode==2,"empty_transition_to_mode2");
+  ck(held==0&&!av&&!bv,"no_phantom_after_idle_roundtrip");
+ endtask
+ initial begin
+  // Both directions, cameras and slots use legal pulse descriptors, no forced state.
+  for(integer initial_mode=1;initial_mode<=2;initial_mode=initial_mode+1)
+   for(integer c=0;c<2;c=c+1)for(integer s=0;s<2;s=s+1)begin
+    reset_to(initial_mode);req_mode=initial_mode==2?1:2;
+    if(c==0)begin abase=base(c,s);aseq=100+c*10+s;ap=1;end
+    else begin bbase=base(c,s);bseq=100+c*10+s;bp=1;end
+    tick();ap=0;bp=0;
+    ck(mode==initial_mode&&held[c*2+s],"publication_must_keep_current_mode");
+    ck(rejects>0,"publication_mode_request_is_counted_rejected");
+    if(mode==2)begin take_desc(c);release_desc(c,s,100+c*10+s,2);end
+    else wait_free();
+    idle_roundtrip();mode_pub_hits=mode_pub_hits+1;
+   end
+  // Simultaneous A/B pulses and complete identity ownership, followed by valid idle changes.
+  reset_to(2);req_mode=1;abase=base(0,0);aseq=201;bbase=base(1,1);bseq=202;ap=1;bp=1;tick();ap=0;bp=0;
+  ck(mode==2&&held==9,"two_publications_reject_mode_change_without_loss");
+  if(mode==2)begin
+   ck(av&&bv&&aq==201&&bq==202,"both_real_offers_retained");adr=1;bdr=1;tick();adr=0;bdr=0;tick();
+   release_desc(0,0,201,2);release_desc(1,1,202,2);
+  end else wait_free();
+  idle_roundtrip();
+  // Stalled offer, transferred held descriptor, offered AR and accepted R all reject changes.
+  reset_to(2);publish(0,0,300);req_mode=1;repeat(3)tick();
+  ck(mode==2&&av&&aq==300&&held==1,"held_stalled_offer_rejects_mode_change");
+  req_mode=2;tick();take_desc(0);req_mode=1;repeat(2)tick();ck(mode==2&&held==1,"sent_held_descriptor_rejects_mode_change");
+  req_mode=2;tick();stall_ar=1;pause_r=1;xaddr=base(0,0);xlen=0;xv=1;#1;ck(xready,"external_read_accepts");tick();xv=0;
+  req_mode=1;repeat(3)tick();ck(mode==2&&arvalid&&held==1,"pending_AR_rejects_mode_change_and_stays_valid");
+  stall_ar=0;repeat(2)tick();req_mode=0;repeat(3)tick();ck(mode==2&&rd_active&&held==1,"accepted_AR_missing_R_rejects_mode_change");
+  pause_r=0;wait_read_done();release_desc(0,0,300,1);idle_roundtrip();busy_hits=busy_hits+4;
+  // Real checker busy/drain is reached through a legal mode1 publication.
+  reset_to(1);pause_r=1;publish(1,1,401);wait(rd_active);req_mode=2;repeat(3)tick();
+  ck(mode==1&&held==8&&!bv,"local_reader_busy_rejects_mode_change");pause_r=0;wait_free();idle_roundtrip();busy_hits=busy_hits+1;
+  // F02: all twelve statuses/cameras/slots, including a full prior read for status0.
+  for(integer c=0;c<2;c=c+1)for(integer s=0;s<2;s=s+1)for(integer st=0;st<3;st=st+1)begin
+   reset_to(2);publish(c,s,500+c*10+s);take_desc(c);xaddr=base(c,s);
+   if(st==0)begin xlen=127;xv=1;#1;ck(xready,"prior_full_read_accepts");tick();xv=0;wait_read_done();ck(r_count==128,"prior_full_DMA_return_count");end
+   xlen=0;stall_ar=1;pause_r=1;status=st;rc=c;rs=s;rseq=500+c*10+s;rv=1;xv=1;#1;ck(xready,"same_cycle_AR_accepts");
+   tick();rv=0;xv=0;ck(held[c*2+s]&&arel==0&&brel==0&&arvalid,"accepted_AR_blocks_same_cycle_release");
+   repeat(3)tick();ck(held[c*2+s]&&arvalid,"AR_stall_preserves_ownership");
+   stall_ar=0;repeat(3)tick();pause_r=0;wait_read_done();release_desc(c,s,500+c*10+s,1);race_hits=race_hits+1;
+  end
+  // F01 same-edge take/refill, both cameras; fields and alternate mailbox are retained.
+  for(integer c=0;c<2;c=c+1)begin
+   reset_to(2);publish(c,1,601);
+   if(c==0)begin abase=base(c,0);aseq=602;ap=1;adr=1;end else begin bbase=base(c,0);bseq=602;bp=1;bdr=1;end
+   tick();ap=0;bp=0;adr=0;bdr=0;
+   ck(c==0?(av&&aslot==0&&aq==602&&ab==base(c,0)):(bv&&bslot==0&&bq==602&&bb==base(c,0)),"same_edge_take_refill_identity");
+   take_desc(c);release_desc(c,1,601,2);release_desc(c,0,602,2);refill_hits=refill_hits+1;
+  end
+  // Old epoch and duplicate releases cannot clear/recreate an offer.
+  reset_to(2);publish(1,0,701);take_desc(1);rc=1;rs=0;rseq=701;repoch=6;status=2;rv=1;tick();rv=0;
+  ck(held==4&&arel==0&&brel==0&&rejects>0,"stale_epoch_rejected");tick();release_desc(1,0,701,2);
+  rv=1;tick();rv=0;tick();ck(held==0&&arel==0&&brel==0,"duplicate_release_rejected");idle_roundtrip();
+  // Common reset cancels the model queue and ownership, never a consumer-only reset.
+  reset_to(2);publish(0,1,801);take_desc(0);pause_r=1;xaddr=base(0,1);xv=1;tick();xv=0;repeat(3)tick();
+  ck(rd_active&&held==2,"reset_case_has_actual_outstanding_read");reset_to(2);ck(held==0&&!av&&!bv&&!rd_active,"common_reset_cancels_all_ownership");
+  if(failures)$fatal(1,"MODE_MATRIX_FAIL count=%0d",failures);
+  $display("MODE_MATRIX_PASS mode_pub=%0d both_pub=1 busy=%0d AR_release=%0d take_refill=%0d stale_duplicate=1 reset=1",mode_pub_hits,busy_hits,race_hits,refill_hits);$finish;
+ end
+ initial begin #1000000;$fatal(1,"mode matrix watchdog");end
+endmodule
+
+
+FILE:D:\fpga\ph1p100\workflow\runs\20261025-180900_fpga-dual-offline-closure\T08.dual-local-closure\r1\tb_repair_matrix.sv
+`timescale 1ns/1ps
+module tb_repair_matrix;
+ reg clk=0,rst=1;always #4 clk=~clk;
+ reg ap=0,bp=0,adr=0,bdr=0,rv=0,rc=0,rs=0,xv=0,ddr_ready=0;
+ reg [31:0] abase=32'h00100000,bbase=32'h01100000,aseq=100,bseq=200,rseq=100;
+ reg [2:0] status=2;reg [28:0] xaddr=0;reg [7:0] xlen=0;
+ reg rvalid=0,rlast=0;reg [255:0] rdata=0;
+ wire av,bv,aslot,bslot,xready,arvalid,rready;wire [31:0] aq,bq,ab,bb;
+ wire [3:0] held;wire [1:0] arel,brel;wire [31:0] fault;
+ integer matrix_hits=0,stall_hits=0,refill_hits=0;
+ dual_local_closure #(.W(8),.H(2),.DEFAULT_MODE(2),.TIMEOUT_CYCLES(40)) dut(
+ .clk(clk),.rst(rst),.epoch(32'd7),.requested_mode(2'd2),.abort(1'b0),
+ .a_pub_valid(ap),.a_pub_seq(aseq),.a_pub_base(abase),.a_pub_len(32'd4096),.a_pub_session(32'd42),
+ .b_pub_valid(bp),.b_pub_seq(bseq),.b_pub_base(bbase),.b_pub_len(32'd4096),.b_pub_session(32'd42),
+ .a_release(arel),.b_release(brel),.a_desc_valid(av),.a_desc_ready(adr),.a_desc_slot_id(aslot),.a_desc_capture_seq(aq),.a_desc_base(ab),
+ .b_desc_valid(bv),.b_desc_ready(bdr),.b_desc_slot_id(bslot),.b_desc_capture_seq(bq),.b_desc_base(bb),
+ .rel_valid(rv),.rel_ready(),.rel_camera_id(rc),.rel_slot_id(rs),.rel_epoch(32'd7),.rel_session(32'd42),.rel_capture_seq(rseq),.rel_status(status),
+ .fault(fault),.held(held),.arvalid(arvalid),.arready(ddr_ready),.rid(4'd0),.rdata(rdata),.rresp(2'd0),.rlast(rlast),.rvalid(rvalid),.rready(rready),
+ .ext_arid(4'd0),.ext_araddr(xaddr),.ext_arlen(xlen),.ext_arsize(3'd5),.ext_arburst(2'd1),.ext_arvalid(xv),.ext_arready(xready),.ext_rready(1'b1));
+ task tick;@(negedge clk);endtask
+ task ck(input bit ok,input string why);if(!ok)$fatal(1,"MATRIX_FAIL %s",why);endtask
+ function [31:0] base(input integer c,s);base=(c?32'h01100000:32'h00100000)+(s?32'h00800000:0);endfunction
+ task reset_all;
+  rst=1;ap=0;bp=0;adr=0;bdr=0;rv=0;xv=0;ddr_ready=0;rvalid=0;rlast=0;repeat(3)tick();rst=0;tick();
+ endtask
+ task publish(input integer c,s,seq);
+  if(c==0)begin abase=base(c,s);aseq=seq;ap=1;end else begin bbase=base(c,s);bseq=seq;bp=1;end
+  tick();ap=0;bp=0;tick();
+ endtask
+ task take(input integer c);
+  if(c==0)adr=1;else bdr=1;tick();adr=0;bdr=0;tick();
+ endtask
+ task return_burst(input integer beats);
+  ddr_ready=1;tick();ddr_ready=0;repeat(3)tick();
+  for(integer n=0;n<beats;n=n+1)begin
+   rvalid=1;rlast=n==beats-1;tick();ck(rready||n==beats-1,"consumer accepts each R");rvalid=0;rlast=0;tick();
+  end
+ endtask
+ initial begin
+  // Both cameras and both initial slot orders; incoming alternate pub never changes a stalled offer.
+  for(integer c=0;c<2;c=c+1)for(integer s=0;s<2;s=s+1)begin
+   reset_all();publish(c,s,101);ck(c==0?(av&&aslot==s&&aq==101&&ab==base(c,s)):(bv&&bslot==s&&bq==101&&bb==base(c,s)),"initial offered identity");
+   publish(c,1-s,102);
+   repeat(4)begin tick();ck(c==0?(av&&aslot==s&&aq==101&&ab==base(c,s)):(bv&&bslot==s&&bq==101&&bb==base(c,s)),"all stalled identity fields stable after other-slot publication");end
+   stall_hits=stall_hits+1;take(c);
+   ck(c==0?(av&&aslot==1-s&&aq==102):(bv&&bslot==1-s&&bq==102),"other slot presented after first take");take(c);
+   ck(held==(c==0?3:12),"both transferred slots retained until release");
+  end
+  // A transfer and the other-slot publication occur on the same edge.
+  for(integer c=0;c<2;c=c+1)begin
+   reset_all();publish(c,1,301);
+   if(c==0)begin abase=base(0,0);aseq=302;ap=1;adr=1;end else begin bbase=base(1,0);bseq=302;bp=1;bdr=1;end
+   tick();ap=0;bp=0;adr=0;bdr=0;
+   ck(c==0?(av&&aslot==0&&aq==302):(bv&&bslot==0&&bq==302),"same-cycle take/refill presents exact new identity");take(c);refill_hits=refill_hits+1;
+  end
+  // All status/camera/slot race combinations. Status0 starts with a complete prior DMA read.
+  for(integer c=0;c<2;c=c+1)for(integer s=0;s<2;s=s+1)for(integer st=0;st<3;st=st+1)begin
+   reset_all();publish(c,s,500+c*10+s);take(c);rc=c;rs=s;rseq=500+c*10+s;xaddr=base(c,s);
+   if(st==0)begin xlen=127;xv=1;#1;ck(xready,"full prior read accepts");tick();xv=0;return_burst(128);ck(dut.ext_bytes[c*2+s]==4096,"prior DMA length exact");end
+   xlen=0;status=st;rv=1;xv=1;#1;ck(xready,"AR accepted in release race");tick();rv=0;xv=0;
+   ck(held[c*2+s]&&arel==0&&brel==0&&dut.ar_pending,"accepted AR atomically blocks release for all statuses");
+   repeat(3)begin tick();ck(arvalid&&held[c*2+s]&&arel==0&&brel==0,"pending AR and ownership remain stable");end
+   return_burst(1);status=1;rv=1;tick();rv=0;
+   ck(!held[c*2+s]&&(c==0?arel==(s?2:1):brel==(s?2:1)),"release only after the accepted read drains");
+   tick();ck(fault==0,"no spurious lock on delayed legal response");matrix_hits=matrix_hits+1;
+  end
+  // Permanent absence of R keeps the accepted slot locked until common reset.
+  reset_all();publish(1,1,901);take(1);xaddr=base(1,1);xv=1;#1;ck(xready,"lock AR accepted");tick();xv=0;ddr_ready=1;tick();ddr_ready=0;
+  repeat(45)tick();ck(fault!=0&&held==8&&arel==0&&brel==0,"missing R locks ownership");reset_all();ck(held==0&&fault==0,"common reset clears ownership and read state");
+  $display("MATRIX_PASS stall_orders=%0d take_refill=%0d status_camera_slot_races=%0d late_R=12 lock_reset=1",stall_hits,refill_hits,matrix_hits);$finish;
+ end
+ initial begin #1000000;$fatal(1,"matrix watchdog");end
+endmodule
+
+FILE:D:\fpga\ph1p100\workflow\runs\20261025-180900_fpga-dual-offline-closure\T08.dual-local-closure\r1\tb_dual_contract.sv
+`timescale 1ns/1ps
+module tb_dual_contract;
+ reg clk=0,rst=1;always #4 clk=~clk;
+ reg ap=0,bp=0,ar=0,br=0,rv=0,rc=0,rs=0;reg [31:0] re=7,rss=42,rseq=101;
+ wire av,bv;wire [31:0] aseq,bseq;wire [3:0] held;wire [1:0] arel,brel;
+ wire [31:0] rejects,fault;
+ dual_local_closure #(.W(8),.H(2),.DEFAULT_MODE(2),.TIMEOUT_CYCLES(30)) dut(
+ .clk(clk),.rst(rst),.epoch(32'd7),.requested_mode(2'd2),.abort(1'b0),
+ .a_pub_valid(ap),.a_pub_seq(32'd101),.a_pub_base(32'h00100000),.a_pub_len(32'd4096),.a_pub_session(32'd42),
+ .b_pub_valid(bp),.b_pub_seq(32'd202),.b_pub_base(32'h01100000),.b_pub_len(32'd4096),.b_pub_session(32'd42),
+ .a_release(arel),.b_release(brel),.a_desc_valid(av),.a_desc_ready(ar),.a_desc_capture_seq(aseq),
+ .b_desc_valid(bv),.b_desc_ready(br),.b_desc_capture_seq(bseq),
+ .rel_valid(rv),.rel_ready(),.rel_camera_id(rc),.rel_slot_id(rs),.rel_epoch(re),.rel_session(rss),.rel_capture_seq(rseq),.rel_status(3'd2),
+ .pass_count(),.fail_count(),.fault(fault),.reject_count(rejects),.held(held),.active_mode(),
+ .arid(),.araddr(),.arlen(),.arsize(),.arburst(),.arvalid(),.arready(1'b0),
+ .rid(4'd0),.rdata(256'd0),.rresp(2'd0),.rlast(1'b0),.rvalid(1'b0),.rready(),
+ .ext_arid(4'd0),.ext_araddr(29'd0),.ext_arlen(8'd0),.ext_arsize(3'd5),.ext_arburst(2'd1),.ext_arvalid(1'b0),.ext_arready(),
+ .ext_rid(),.ext_rdata(),.ext_rresp(),.ext_rlast(),.ext_rvalid(),.ext_rready(1'b0));
+ task check(input bit ok,input string why);if(!ok)$fatal(1,"CONTRACT_FAIL %s",why);endtask
+ task tick;@(negedge clk);endtask
+ initial begin
+  repeat(3)tick();rst=0;tick();ap=1;bp=1;tick();ap=0;bp=0;tick();
+  check(held==5 && av && bv && aseq==101 && bseq==202,"simultaneous pulse captured in two independent slots");
+  repeat(5)begin tick();check(av&&bv&&aseq==101&&bseq==202,"all identities stable while stalled");end
+  ar=1;br=1;tick();ar=0;br=0;tick();check(!av&&!bv&&held==5,"same-cycle desc transfers retained ownership");
+  rv=1;rc=1;rseq=101;tick();rv=0;tick();check(held==5&&rejects==1&&arel==0&&brel==0,"wrong camera cannot release A");
+  rv=1;rc=0;re=6;tick();rv=0;tick();check(held==5&&rejects==2,"old epoch cannot release");
+  rv=1;rc=1;re=7;rseq=202;tick();rv=0;check(brel==1&&arel==0,"B release routes only to B");tick();check(held==1,"A remains protected");
+  rv=1;tick();rv=0;tick();check(held==1&&rejects==3,"duplicate B release rejected");
+  rv=1;rc=0;rseq=101;tick();rv=0;check(arel==1&&brel==0,"A release routes only to A");tick();check(held==0&&fault==0,"all slots free");
+  $display("CONTRACT_PASS simultaneous_pub=1 simultaneous_desc=1 stall=1 wrong_camera=1 stale_epoch=1 duplicate=1 mismatch=0");$finish;
+ end
+ initial begin #100000;$fatal(1,"contract watchdog");end
+endmodule
+
+FILE:D:\fpga\ph1p100\workflow\runs\20261025-180900_fpga-dual-offline-closure\T08.dual-local-closure\r1\mode-fix02\reuse-proposal.json
+{
+  "decision": "proposal_only; original integrated tester decides against this manifest",
+  "must_fresh_retest": [
+    "mode/publication matrix",
+    "original tester_edges: one remaining original-tester attempt",
+    "all-camera/slot/status ownership matrix",
+    "real production read/arrival overlap",
+    "normal six pairs",
+    "case10/11/12/13/14/15",
+    "contract",
+    "legacy",
+    "B-release-to-A negative"
+  ],
+  "possible_unchanged_reuse": [
+    "old I2C-specific cases1-9 after exact RTL/table/clock/parameter/stimulus and impact binding"
+  ],
+  "do_not_reuse_as_current_pass": [
+    "old blocked implementation",
+    "old F01/F02 failure",
+    "old missing overlap",
+    "G2/G3/G4"
+  ],
+  "developer_combined_matrix_substitutions": [
+    "full12 status/camera/slot races",
+    "same-cycle dual publication and release routes",
+    "stale/duplicate release",
+    "take/refill and common reset"
+  ],
+  "independent_reference_TBs": [
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T08.dual-local-closure\\r1\\tb_repair_matrix.sv",
+      "sha256": "e0ed58923a31346c6908000a3860743c978bab4c42c9fc9e7ae25db2b2b8ba65"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261025-180900_fpga-dual-offline-closure\\T08.dual-local-closure\\r1\\tb_dual_contract.sv",
+      "sha256": "6165085b2d643959407b22b25a565da70797613d77cc8e5d89a362d4435d5ed0"
+    }
+  ]
+}
+FILE:D:\fpga\ph1p100\workflow\runs\20261025-180900_fpga-dual-offline-closure\T08.dual-local-closure\r1\mode-fix02\result-mode-fix02.md
+# T08 mode-fix02 developer result
+
+This is the existing repair1 pre-submission closure. The original r0 integrated FAIL and blocked static manifest remain unchanged; no r2 or independent r1 verdict is fabricated.
+
+Mode changes now require current-cycle publication absence and truly empty ownership/offer/AR/R/reader state. A rejected mode request is counted without dropping the publication. Presentation state is cleared outside mode2. Valid idle switching remains enabled. Ports, geometry, clock frequency and the rest of the production RTL are unchanged.
+
+|Local check|Outcome|
+|---|---|
+|old-mode-negative|required marker/ownership or captured-byte oracle satisfied; 2.727s|
+|mode-matrix|required marker/ownership or captured-byte oracle satisfied; 2.663s|
+|original-edges|required marker/ownership or captured-byte oracle satisfied; 2.457s|
+|case16|required marker/ownership or captured-byte oracle satisfied; 33.403s|
+|case00|required marker/ownership or captured-byte oracle satisfied; 30.398s|
+|case10|required marker/ownership or captured-byte oracle satisfied; 31.081s|
+|case11|required marker/ownership or captured-byte oracle satisfied; 31.146s|
+|case12|required marker/ownership or captured-byte oracle satisfied; 31.792s|
+|case13|required marker/ownership or captured-byte oracle satisfied; 56.533s|
+|case14|required marker/ownership or captured-byte oracle satisfied; 59.402s|
+|legacy|required marker/ownership or captured-byte oracle satisfied; 25.341s|
+|bad-b-negative|required marker/ownership or captured-byte oracle satisfied; 1.603s|
+
+The same legal mode matrix rejects isolated old RTL on publication-mode arbitration and the actual post-release phantom-descriptor trace; the corrected RTL passes. No force of held/FSM state is used. The mode matrix also checks all12 AR-release status combinations, dual publication, routes, stale/duplicate release, take/refill and common reset. The separately aliased B-routing mutant is rejected by the same route assertion. Expected mutant Fatal markers are distinguished from DUT passes and exit0 alone is never sufficient.
+
+Fresh full-top cases cover overlap16, normal0, CRC10, stalled-AR abort11, late-R drain12, permanent-missing-R LOCK/reset13, protected saturation14 and default-disabled legacy. Actual R bytes, frame identity, standard CRC, source pattern and tail zeros are checked; case16 reconstructs accepted AR to final-R intervals and requires both-camera new SOFs and alternate-slot publication, protected whole-frame drop and recovery.
+
+Current window: 17/30 conservative tool calls, 1/2 compiles, 12/12 cases. Historical125 calls/6 compiles/32 cases are retained; cumulative=142/7/44. The r0 overrun and missed old timely handoff are not reclassified by this new actual-modification window. The original tester still has one remaining original-edge attempt.
+
+G0/G1 require original independent tester acceptance. G2/3/4 remain not_run/awaiting_hardware. There was no TD, board, download, Flash, mapping, Git or external-message action. Small offline vectors do not prove dual1080p30 or exposure timing. All previous frozen files and compiled-source inputs show drift0.
+
+Canonical source/compile entry is run_mode_fix.py compile_all with its explicit sources.json; the copied run_t08.py is used only for the unchanged native command utility. Independent testing uses its own allowed output directories, deadline and command harness. sources.f/integration-sources.tcl are integration entries only; they invoke no TD.
+
+Rollback: stop adopting mode-fix02. No production or earlier frozen source was overwritten.
+
+COMPILE_SOURCES_COMPACT
+0 MODE_FIX02\candidate\rtl\checked\csi_rx_10bit_unpack_checked.v
+1 MODE_FIX02\candidate\rtl\checked\csi_rx_packet_integrity.v
+2 MODE_FIX02\candidate\rtl\common\BDF.v
+3 MODE_FIX02\candidate\rtl\common\eram.v
+4 MODE_FIX02\candidate\rtl\common\PCIE_REG_TABLE.v
+5 MODE_FIX02\candidate\rtl\common\ph1p_pcie_case_param.v
+6 MODE_FIX02\candidate\rtl\common\ph1p_pcie_rst_sync.v
+7 MODE_FIX02\candidate\rtl\common\TLP_FMT_TYPE.v
+8 MODE_FIX02\candidate\rtl\common\ubus2hxt_apb.v
+9 MODE_FIX02\candidate\rtl\common\ubus2pcie_apb.v
+10 MODE_FIX02\candidate\rtl\common\uart\bps_setting.v
+11 MODE_FIX02\candidate\rtl\common\uart\pcie_uart.v
+12 MODE_FIX02\candidate\rtl\common\uart\pcie_uprotocol.v
+13 MODE_FIX02\candidate\rtl\common\uart\uart_cdc.v
+14 MODE_FIX02\candidate\rtl\common\uart\uart_rx_setting.v
+15 MODE_FIX02\candidate\rtl\common\uart\uart_tx_setting.v
+16 MODE_FIX02\candidate\rtl\ep_side\pcie_ep_engine.v
+17 MODE_FIX02\candidate\rtl\ep_side\pcie_ep_int_handle.v
+18 MODE_FIX02\candidate\rtl\ep_side\ph1p_pcie_ep_top.v
+19 MODE_FIX02\candidate\rtl\ep_side\cam\auto_delay_ctl.v
+20 MODE_FIX02\candidate\rtl\ep_side\cam\clk_activity.v
+21 MODE_FIX02\candidate\rtl\ep_side\cam\csi_rx_10bit_unpack.v
+22 MODE_FIX02\candidate\rtl\ep_side\cam\csi_rx_byte_align.v
+23 MODE_FIX02\candidate\rtl\ep_side\cam\csi_rx_clock_det.v
+24 MODE_FIX02\candidate\rtl\ep_side\cam\csi_rx_hdr_ecc.v
+25 MODE_FIX02\candidate\rtl\ep_side\cam\csi_rx_packet_handler.v
+26 MODE_FIX02\candidate\rtl\ep_side\cam\csi_rx_word_align.v
+27 MODE_FIX02\candidate\rtl\ep_side\cam\csi_rx_word_gear_box.v
+28 MODE_FIX02\candidate\rtl\ep_side\cam\mipi_csi2_rx_ph1p.v
+29 MODE_FIX02\candidate\rtl\ep_side\cam\mipi_csi2_rx_ph1p_checked.v
+30 MODE_FIX02\candidate\rtl\ep_side\cam\pulse2toggle.v
+31 MODE_FIX02\candidate\rtl\ep_side\cam\rx_phy_ph1p.v
+32 MODE_FIX02\candidate\rtl\ep_side\cam\sfifo.v
+33 MODE_FIX02\candidate\rtl\ep_side\cam\ui_cfg_imx415.v
+34 MODE_FIX02\candidate\rtl\ep_side\cam\ui_i2c.v
+35 MODE_FIX02\candidate\rtl\ep_side\cam\ui_imx415_reg.v
+36 MODE_FIX02\candidate\rtl\ep_side\cam\wfifo.v
+37 MODE_FIX02\candidate\rtl\ep_side\cam\sync_offline\sync_offline_top.v
+38 MODE_FIX02\candidate\rtl\ep_side\cam\sync_offline\sync_reset.v
+39 MODE_FIX02\candidate\rtl\ep_side\cam\sync_offline\sync_sof_mailbox.v
+40 MODE_FIX02\candidate\rtl\ep_side\cam\sync_offline\sync_sof_pair.v
+41 MODE_FIX02\candidate\rtl\ep_side\cam\sync_offline\sync_start_ctrl.v
+42 MODE_FIX02\candidate\rtl\ep_side\codec\a1_deflate_core.v
+43 MODE_FIX02\candidate\rtl\ep_side\codec\a1_frame_top.v
+44 MODE_FIX02\candidate\rtl\ep_side\ddr\cam_ddr_writer.v
+45 MODE_FIX02\candidate\rtl\ep_side\ddr\cam_r10f_writer.v
+46 MODE_FIX02\candidate\rtl\ep_side\ddr\ddr_frame_pusher.v
+47 MODE_FIX02\candidate\rtl\ep_side\ddr\ddr_frame_readback_checker.v
+48 MODE_FIX02\candidate\rtl\ep_side\ddr\ddr_wr_arb.v
+49 MODE_FIX02\candidate\rtl\ep_side\ddr\closedloop\ddr_closedloop_readback.v
+50 MODE_FIX02\candidate\rtl\ep_side\debug\ph1p_pcie_ep_top_closedloop.v
+51 MODE_FIX02\candidate\rtl\ep_side\debug\ph1p_pcie_ep_top_dbg.v
+52 MODE_FIX02\candidate\rtl\ep_side\img\ep_bar_win.v
+53 MODE_FIX02\candidate\rtl\ep_side\img\img_frame_src.v
+54 MODE_FIX02\candidate\rtl\ep_side\img\img_regs.v
+55 MODE_FIX02\candidate\rtl\ep_side\img\algo\algo_diagnostic_sink.v
+56 MODE_FIX02\candidate\rtl\ep_side\img\algo\algo_obuf.v
+57 MODE_FIX02\candidate\rtl\ep_side\img\algo\algo_rowwin3.v
+58 MODE_FIX02\candidate\rtl\ep_side\img\algo\algo_rowwin_reader.v
+59 MODE_FIX02\candidate\rtl\ep_side\img\algo\bayer_raw10_demosaic4.v
+60 MODE_FIX02\candidate\rtl\ep_side\img\algo\cam_algo_diagnostics.v
+61 MODE_FIX02\candidate\rtl\ep_side\img\algo\csi_algo_roi_adapter.v
+62 MODE_FIX02\candidate\rtl\ep_side\img\algo\gray8_gaussian3x3_frame.v
+63 MODE_FIX02\candidate\rtl\ep_side\img\algo\gray8_gaussian3x3_stream.v
+64 MODE_FIX02\candidate\rtl\ep_side\img\algo\gray8_he_cdfmin_frame.v
+65 MODE_FIX02\candidate\rtl\ep_side\img\algo\img_algo_parallel_top.v
+66 MODE_FIX02\candidate\rtl\ep_side\img\algo\rgb8_gray_stream.v
+67 MODE_FIX02\candidate\rtl\ep_side\ubus_bridge\ep_ubus_bridge.v
+68 MODE_FIX02\dual_local_closure.v
+69 MODE_FIX02\sync_i2c_config.v
+70 MODE_FIX02\sync_frame_gate.v
+71 MODE_FIX02\vendor_env.sv
+72 MODE_FIX02\sensor_i2c.sv
+73 MODE_FIX02\tb_production_sync.sv
+74 MODE_FIX02\tb_production_sync_legacy.sv
+75 MODE_FIX02\tb_tester_edges.sv
+76 MODE_FIX02\tb_mode_matrix.sv
+77 MODE_FIX02\fixtures\old_mode.v
+78 MODE_FIX02\fixtures\bad_b_release.v
+OWN_ORIGINAL_EDGES_EQ True
+FIXTURE_MODULES
+bad_b_release.v ['module dual_local_closure_bad_b #(']
+old_mode.v ['module dual_local_closure_old_mode #(']
+

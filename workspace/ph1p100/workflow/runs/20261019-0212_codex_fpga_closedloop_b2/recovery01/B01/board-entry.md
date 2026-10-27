@@ -1,0 +1,14 @@
+# B01 board entry — BLOCKED, no eligible SRAM candidate
+Manifest `5a5ebf3d5160c28dadb81684ba048bcca3c1fe6d66091175f09d07d988b1547b` is frozen with ready_for_test=false. Final routed STA={'SWNS': -0.766, 'STNS': -38.113, 'HWNS': -0.075, 'HTNS': -1.242}, production attempts3/3 used. Native CWC mapping0fail/bit pair equality/resources/source binding do not override setup/hold failure. No download or GUI capture was executed. No independent round0 has started.
+
+The unqualified native artifacts are preserved only for review:
+- `C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261019-0212_codex_fpga_closedloop_b2\recovery01\B01\build\attempt3\prj\ph1p_pcie_integration_Runs\phy_1\ph1p_pcie_integration_pr.db` SHA256 `a36f17d10c3ee7953b7316c04ff486bca76ca3ad3a4a47090533afefed2d88a3`
+- `C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261019-0212_codex_fpga_closedloop_b2\recovery01\B01\build\attempt3\prj\ph1p_pcie_integration_Runs\phy_1\ph1p_pcie_integration_pr.timing` SHA256 `ae37ac30d5313c303a8a2994dd53fb1fcb33382bf5a6330cc25e76f6628750b7`
+- `C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261019-0212_codex_fpga_closedloop_b2\recovery01\B01\candidate\probe-map.json` SHA256 `3c980c8fd2da788d3ef5f442dfe5c7c21db37bf05d275a6c206c3b408744b309`
+- `C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261019-0212_codex_fpga_closedloop_b2\recovery01\B01\candidate\rejected.bid` SHA256 `55da0535123875234fea86a522cfc18d6b8284b69eac862e7c9eb1b92952a2f7`
+- `C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261019-0212_codex_fpga_closedloop_b2\recovery01\B01\candidate\rejected.bit` SHA256 `8048eb8803ab49897b139d82a2131398e3271763cdfcce4c25ccc9a2aacca938`
+- `C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261019-0212_codex_fpga_closedloop_b2\recovery01\B01\candidate\rejected.cwc` SHA256 `2300c0b9565d1f97e64955bb927bf87faeffe85518e2fb40689f7d475d49fb49`
+
+`scripts/run_sram.py` and `board/download_sram.tcl` are prepared guarded SRAM-only entry sources; this rejected manifest cannot satisfy their gate. There is no current.bit/current.cwc eligible for board entry. Original planner must receive new allowed execution conditions and qualify a new source/DB/manifest before scheduling T02. Do not wait for T08 to resolve a future qualified B01 board window.
+
+Rollback remains `C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1631_runA_fpga_side_readchannel\debug-fix3\prj\ph1p_pcie_integration_Runs\phy_1\cw/compiled.bit` SHA256 `bfafdf97ff78d6f6d2646ffc706542a0bbbb7e11869043ba754cf68a270813d0` with matching `C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261018-1631_runA_fpga_side_readchannel\debug-fix3\prj\ph1p_pcie_integration_Runs\phy_1\cw/compiled.cwc` SHA256 `8d2998b96ef1763c14a1302118235a687488297ce496692b1f6cd95d76981026`. No Flash/PCIe/RK operation is authorized here.

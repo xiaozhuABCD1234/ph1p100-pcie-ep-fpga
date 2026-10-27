@@ -1,0 +1,51 @@
+{
+  "test": "chain",
+  "baseline": false,
+  "production_width": false,
+  "accepted": true,
+  "commands": [
+    {
+      "command": [
+        "vlib.exe",
+        "work"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "vlog.exe",
+        "-sv",
+        "tb_csi_preview_integrity.sv",
+        "csi_rx_hdr_ecc.v",
+        "csi_rx_packet_integrity.v",
+        "csi_rx_10bit_unpack_checked.v",
+        "bayer332_capture.v",
+        "gray_frame_pack_guarded.v",
+        "capture_async_fifo.v",
+        "ddr_frame_store.v"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "vsim.exe",
+        "-c",
+        "work.tb_csi_preview_integrity",
+        "-do",
+        "run -all; quit -f"
+      ],
+      "returncode": 0
+    }
+  ],
+  "inputs": {
+    "tb_csi_preview_integrity.sv": "2b26576165ce5b6f9262a58ba3e12f74cb42731f472a63dd1bf355d79bb636ed",
+    "csi_rx_hdr_ecc.v": "f20bf32792a6734c49fed579f8cb4ab086da7c1254d9e00570cbb1c834634b76",
+    "csi_rx_packet_integrity.v": "9e46297e4e1bfee5462657112544f509fe2eec83644edf5d07aedc4df990ac08",
+    "csi_rx_10bit_unpack_checked.v": "9b5421c55b0f09871f8a939fb3381d4c7d5726286b30f9d5450cc09404065a12",
+    "bayer332_capture.v": "9af05e87b64ebcd3d2be02db89328b646a06f136af802a96696b0964bbcb388e",
+    "gray_frame_pack_guarded.v": "ce365e1d09133a1346ba13987df8122619e54a3cf0a08bc7eefc19659bc46e92",
+    "capture_async_fifo.v": "59dd6dcb5b7e7774f7d6518f50f56cafbc8be6b70e8ae1508236bac2b5af531d",
+    "ddr_frame_store.v": "c600420683a607a486661a678655a6fd23f13f29e1ae652fe1af8befe23a879a"
+  },
+  "snapshot_transform": "chain substitutes RGB332 capture and independent RGB332 golden; production=4800-byte CSI lines with compact vertical geometry"
+}

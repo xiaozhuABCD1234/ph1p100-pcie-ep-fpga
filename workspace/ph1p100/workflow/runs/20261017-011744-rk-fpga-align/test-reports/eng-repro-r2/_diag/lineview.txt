@@ -1,0 +1,51 @@
+Get-Content Count        = 136
+ReadAllLines Count       = 144
+ReadAllText split(n)     = 145
+ReadAllText contains CR  = False
+----- Get-Content lines 55..100 (PS view) -----
+PS055|     if ($substDrive -and $p.StartsWith($root, [System.StringComparison]::OrdinalIgnoreCase)) {
+PS056|         return "$mappedRoot" + $p.Substring($root.Length).TrimStart('\')
+PS057|     }
+PS058|     return $p
+PS059| }
+PS060| 
+PS061| $intRoot  = To-Mapped (Join-Path $root "fpga\csi2\pcie_integration")
+PS062| $outDirF  = Join-Path $root $OutDir
+PS063| New-Item -ItemType Directory -Force -Path $outDirF | Out-Null
+PS064| $outMapped = To-Mapped $outDirF
+PS065| 
+PS066| $vlogLog = Join-Path $outDirF "vlog.log"
+PS067| $vsimLog = Join-Path $outDirF "vsim.log"
+PS068| $cmdLog  = Join-Path $outDirF "commands.log"
+PS069| 
+PS070| "# run_sim.ps1 $(Get-Date -Format o)" | Out-File -Encoding utf8 $cmdLog
+PS071| "root        = $root"                | Out-File -Encoding utf8 -Append $cmdLog
+PS072| "mapped_root = $mappedRoot"          | Out-File -Encoding utf8 -Append $cmdLog
+PS073| "tb          = $Tb"                  | Out-File -Encoding utf8 -Append $cmdLog
+PS074| "outdir      = $outDirF"             | Out-File -Encoding utf8 -Append $cmdLog
+PS075| "defines     = $Defines"             | Out-File -Encoding utf8 -Append $cmdLog
+PS076| 
+PS077| # ---- 生成绝对路径文件清单（把 -f 的相对路径按 sim 根展开�?---
+PS078| $flist = Join-Path $outDirF "abs.f"
+PS079| $simRoot = (($intRoot -replace '\\','/') + "/sim")
+PS080| $lines = Get-Content (Join-Path $root "fpga\csi2\pcie_integration\sim\compile_checked.f")
+PS081| $abs = @()
+PS082| foreach ($ln in $lines) {
+PS083|     $t = $ln.Trim()
+PS084|     if ($t -eq "" -or $t.StartsWith("#")) { continue }
+PS085|     if ($t -match '^[A-Za-z]:') { $abs += ($t -replace '\\','/') }
+PS086|     else { $abs += ($simRoot + "/" + $t) }
+PS087| }
+PS088| foreach ($f in $TbFiles) {
+PS089|     if ($f -match '^[A-Za-z]:') { $abs += ($f -replace '\\','/') }
+PS090|     else { $abs += ($simRoot + "/" + $f) }
+PS091| }
+PS092| $abs | Out-File -Encoding ascii $flist
+PS093| 
+PS094| Push-Location $outMapped
+PS095| try {
+PS096|     $ErrorActionPreference = "Continue"   # 原生命令�?stderr 不当异常
+PS097|     $defArgs = @()
+PS098|     if ($Defines -ne "") { foreach ($d in $Defines.Split(',')) { if ($d.Trim() -ne "") { $defArgs += "+define+$($d.Trim())" } } }
+PS099| 
+PS100|     "vlib work" | Out-File -Encoding utf8 -Append $cmdLog

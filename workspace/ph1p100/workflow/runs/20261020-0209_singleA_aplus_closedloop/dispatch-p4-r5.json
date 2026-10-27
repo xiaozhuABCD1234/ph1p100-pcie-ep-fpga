@@ -1,0 +1,270 @@
+{
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "project_root": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+  "output_dir": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop",
+  "continuation_of": "T10.a1-eng-freeze r4 (same run, same task ID; r5 is a user-authorized 5th actual repair with architecture-level rework)",
+  "task_ids": [
+    "T10.a1-eng-freeze"
+  ],
+  "batch_size": 1,
+  "status": "finished",
+  "needs_user_input": false,
+  "result": {
+    "verdict": "blocked",
+    "g1": "PASS: P2 13/13, P3 20/20, 0 mismatch, vlog 0/0; P2 comp 81.067 MB/s; 1080p 103.892 MB/s",
+    "g2": "FAIL: S1 WNS -0.957 ns / 158.983 MHz; S2 best WNS -0.949 ns, TNS -303.718 ns, Fmax 159.185 MHz, 420/143,419 endpoints",
+    "route": "not_run",
+    "td_used": "3/3 synthesis, 0/1 route; wall ~18 min",
+    "decision": "r5 FAIL; no r6; T10 remains incomplete"
+  },
+  "round": "r5",
+  "operation": "spawn_agent",
+  "authorization": {
+    "quote": "授权 r5 架构重排（3 会话/150 分钟）",
+    "date": "2026-10-20",
+    "type": "explicit_user_override_of_3_repair_cap",
+    "basis": "用户在看到 r4 FAIL（S2 WNS -2.446 ns、Fmax 128.551 MHz、未 route）后，明确授权 r5 架构重排并给出有限 TD 预算 3 会话/150 分钟。r5 是 P4 第 5 次实际修复，明确超出三轮上限；规划据此记录覆盖值，不扩到其他目标。",
+    "round_accounting": "P4: round0 first acceptance; r1/r2/r3 = 3 actual repairs; r4 = 4th (user authorized); r5 = 5th (user authorized).",
+    "limits_frozen_here": {
+      "td_sessions_max": 3,
+      "td_session_minutes_max": 75,
+      "td_total_minutes_max": 150,
+      "td_synth_attempts_max": 3,
+      "td_route_attempts_max": 1
+    },
+    "not_authorized": [
+      "C / RK / PCIe / dual-camera / G4",
+      "lowering 187.5 MHz or relaxing the 5.333 ns constraint",
+      "false path / multicycle / clock-group exceptions",
+      "seed sweep or blind re-run",
+      "bitgen / download / Flash / production integration",
+      "board window or real RAW assumption",
+      "new package ID, rename, or new run to bypass limits",
+      "automatic r6"
+    ]
+  },
+  "r4_state": {
+    "g1": "PASS: P2 13/13, P3 20/20, 0 mismatch, vlog 0/0; 1080p p1d1 103.892 MB/s; P2 comp 81.084 MB/s",
+    "g2": "FAIL: S1 WNS -2.107 ns / 134.409 MHz; S2 WNS -2.446 ns, TNS -183.480 ns, Fmax 128.551 MHz, 388/12,201 endpoints; route not_run",
+    "candidate": {
+      "a1_deflate_core.v": "d76f77edf2cb6e0d9b9444d61f50e02d0d5ec1f6651ee8b30d52dc98034a1a0d",
+      "a1_frame_top.v": "3c32803b41378629622ae3a709ab64373b2fb13286bfc7ea789e7e1dbf190961",
+      "manifest": "T10.a1-eng-freeze/CANDIDATE-MANIFEST-r4.json"
+    },
+    "critical_path": "len_r_reg[1] -> lval/ltot -> left_shift -> cstage/accw -> cmem, 11 levels, 7.578 ns",
+    "td_used": "2/2 synthesis, 0/1 route"
+  },
+  "input_paths": [
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/dev-plan.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/handoff.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/fpga-design-guide.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-eng-freeze/p4/result-r4.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-eng-freeze/r4/reports/syn_gate_timing_s2.rpt",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-eng-freeze/CANDIDATE-MANIFEST-r4.json",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-eng-freeze/r4/td/00_all.tcl",
+    "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v",
+    "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v",
+    "upstream/ph1p100-pcie-ep-fpga/tools/codec/run_p2_r4.ps1",
+    "upstream/ph1p100-pcie-ep-fpga/tools/codec/run_p3_r4.ps1",
+    ".agents/skills/fpga-dev/SKILL.md",
+    ".agents/skills/fpga-tester/SKILL.md"
+  ],
+  "write_scope": {
+    "modify_existing_run_owned": [
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v",
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v (only if a pure pipeline adaptation is strictly required; ports/frame semantics/CRC/length/abort/Bayer must not change; report new hash)"
+    ],
+    "create_new": [
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/** (new helper files only)",
+      "upstream/ph1p100-pcie-ep-fpga/sim/tb/codec/**",
+      "upstream/ph1p100-pcie-ep-fpga/tools/codec/**",
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-eng-freeze/r5/**"
+    ],
+    "td_project_dir": "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-eng-freeze/r5/td/**",
+    "rules": [
+      "Only the two run-owned codec RTL files may be modified; every other upstream file remains read-only.",
+      "Never edit ph1p_pcie_ep_top.al, build.tcl, sim/compile_checked.f, constraints/, SDC, existing TB, or production RTL.",
+      "TD projects and all generated artifacts stay under the run r5 directory, never in the upstream tree.",
+      "Do not overwrite r0/r1/r2/r3/r4 manifests, reports, logs, or p4/result*.md."
+    ]
+  },
+  "protected": [
+    "all existing files in upstream/ph1p100-pcie-ep-fpga outside the two run-owned codec RTL files and the three allowed new directories",
+    "upstream/ph1p100-pcie-ep-fpga/ph1p_pcie_ep_top.al, build.tcl, constraints, SDC, sim/compile_checked.f",
+    "workflow/tasks.json",
+    "workflow/runs/20261016_* through 20261019-2117_* (read-only)",
+    "frozen manifests CANDIDATE-MANIFEST.json / -r1 / -r2 / -r3 / -r4, old test reports, bit/CWC/BID",
+    "docs/protocol/** and R10F contract",
+    "board, Flash, PCIe/RK, camera configuration, production candidate b68c6e18…f9bf"
+  ],
+  "next_action": "spawn_agent",
+  "next_action_detail": {
+    "role": "fpga-dev",
+    "skill_path": ".agents/skills/fpga-dev/SKILL.md",
+    "task": "T10.a1-eng-freeze r5：按 dev-plan.md §15 做 candidate packer/输出级架构级重排，保持每符号 1 cycle 与吞吐红线；先跑 P2/P3，再执行 TD 综合门槛与唯一一次条件布线，冻结新 manifest。",
+    "must_read": [
+      "dev-plan.md §15",
+      "p4/result-r4.md §4、§6",
+      "r4/reports/syn_gate_timing_s2.rpt",
+      "fpga-design-guide.md §1-§3、§7"
+    ],
+    "first_checks": [
+      "确认 a1_deflate_core.v 当前 hash = d76f77edf2cb6e0d9b9444d61f50e02d0d5ec1f6651ee8b30d52dc98034a1a0d",
+      "确认 a1_frame_top.v 当前 hash = 3c32803b41378629622ae3a709ab64373b2fb13286bfc7ea789e7e1dbf190961",
+      "改动前复跑 P2/P3 基线；任一 mismatch 立即停止"
+    ]
+  },
+  "technical_scope": {
+    "primary": "Architecture-level rework of the candidate packer/output stage to split len_r_reg[1] -> lval/ltot -> left_shift -> cstage/accw -> cmem (11 levels, 7.578 ns) without losing one-symbol-per-cycle throughput.",
+    "required_changes": [
+      "Register length/distance code and extra-bit generation (table/precompute) instead of feeding left_shift combinationally from len_r.",
+      "Split left_shift and cstage/accw into 2 pipeline stages.",
+      "Register cmem write data (and, if needed, a write FIFO) so the ERAM write path is not in the same cycle as the shift/accumulate chain.",
+      "Add a small skid/FIFO (4-8 entries) between the packer and cmem/output to absorb variable symbol lengths and backpressure.",
+      "Separate block-end/abort/commit control from the datapath; use registered flags so control does not recreate the long arithmetic path."
+    ],
+    "throughput_red_line": {
+      "one_symbol_per_cycle": true,
+      "no_per_symbol_multicycle_fsm": true,
+      "p2_comp_min_MBps": 77.76,
+      "1080p_p1d1_min_MBps": 77.76,
+      "report_vs_97_2_MBps": true,
+      "rule": "Pipelining may add latency but must not add a per-symbol bubble. If the rework needs a multi-cycle schedule per symbol, stop and return to planner; do not trade throughput for timing."
+    },
+    "invariants": [
+      "No change to protocol, ports, frame commit, raw/xform/stream length, CRC, abort, Bayer mapping, zlib/fixed/stored format.",
+      "No change to external timing contract or TB behavior.",
+      "Full-frame P3 must prove block boundaries, backpressure, abort/reset, stored fallback and A/B semantics unchanged."
+    ]
+  },
+  "gates": {
+    "g1_guard": {
+      "p2": "13/13 PASS",
+      "p3": "20/20 PASS",
+      "mismatch": 0,
+      "vlog": "Errors 0 / Warnings 0",
+      "throughput_min_MBps": 77.76,
+      "report_vs_97_2_MBps": true,
+      "behavior_unchanged": "1080p p1d1/p1d2, stored, abort/reset, A/B frame semantics unchanged"
+    },
+    "g2_synth": {
+      "top": "a1_eng_top",
+      "device": "PH1P100SBG484 -3",
+      "clock_MHz": 187.5,
+      "period_ns": 5.333,
+      "wns_ns_min": 0.0,
+      "tns_ns_min": 0.0,
+      "violating_endpoints": 0,
+      "sdc_changed": false,
+      "false_path_or_multicycle": false
+    },
+    "g2_routed": {
+      "status": "Routed",
+      "wns_ns_min": 0.0,
+      "tns_ns_min": 0.0,
+      "hwns_ns_min": 0.0,
+      "htns_ns_min": 0.0,
+      "violating_endpoints": 0,
+      "resources": "within PH1P100SBG484",
+      "cdc_report": "report_cdc executed; no unsynchronized CDC; single-clock structure confirmed",
+      "bitgen": "not_run"
+    },
+    "forbidden_substitutions": [
+      "lowering clock frequency or relaxing the 5.333 ns constraint",
+      "false_path / multicycle / set_clock_groups exceptions",
+      "changing seed and re-running without a concrete RTL change",
+      "bitgen, download, Flash, efuse, SPI, svf",
+      "claiming G2 PASS from synthesis-only or unrouted results",
+      "using G0/G1 PASS to claim T10 or G2 complete",
+      "per-symbol multi-cycle FSM to buy timing"
+    ]
+  },
+  "stop_conditions": [
+    "P2/P3 any mismatch, X propagation, illegal BTYPE, or vlog warning -> stop before TD, return blocked.",
+    "Any throughput regression below 77.76 MB/s (P2 comp or 1080p p1d1) -> stop; do not enter TD.",
+    "S1 synthesis WNS<0 or TNS<0 -> do not route; at most one concrete architecture-fix retry (S2) and one final retry (S3) within the 3-synth cap.",
+    "S2/S3 synthesis still WNS<0 or TNS<0 -> stop; do not route; no fourth synthesis.",
+    "Synthesis WNS>=0 -> route in that same session; route must finish within the 60 min route window and the 75 min session cap.",
+    "Route not Routed, routed WNS/TNS<0, any violating endpoint, resource overflow, or CDC unsynchronized -> stop, keep logs; the single route attempt is used, no route retry.",
+    "After r5, if best WNS < -1 ns -> stop and reassess microarchitecture; do not start r6 automatically.",
+    "Any WNS<0 at the end of r5 is FAIL/blocked and does not auto-start r6.",
+    "TD budget reached (3 sessions / 150 min) -> stop; no further session in this run.",
+    "Any request to relax 187.5 MHz, add false path/multicycle, run bitgen/download, or expand scope -> stop and return to planner."
+  ],
+  "execution_limits": {
+    "batch_size": 1,
+    "dev_tool_calls_max": 30,
+    "dev_minutes_max": 45,
+    "tester_tool_calls_max": 30,
+    "tester_minutes_max": 45,
+    "planner_tool_calls_max": 30,
+    "planner_minutes_max": 15,
+    "read_search_seconds_max": 60,
+    "single_tb_minutes_max": 5,
+    "package_regression_minutes_max": 15,
+    "td_sessions_max": 3,
+    "td_session_minutes_max": 75,
+    "td_synth_attempts_max": 3,
+    "td_synth_minutes_max": 15,
+    "td_route_attempts_max": 1,
+    "td_route_minutes_max": 60,
+    "td_total_minutes_max": 150,
+    "retry_policy": "architecture-fix retries only with a concrete new critical path; no seed sweep; two consecutive no-progress attempts -> blocked"
+  },
+  "td_budget_rationale": {
+    "sessions": 3,
+    "total_minutes": 150,
+    "why": "Architecture-level packer/output rework needs up to three synthesis attempts to validate successive pipeline cuts, plus one route. A full session is 75 min (synth ~10 min + 60 min route); the 150 min total cap prevents three full-length route sessions. Synthesis is cheap (~1-2 min); the single route attempt is the expensive step and is gated by WNS/TNS>=0.",
+    "not_a_seed_sweep": true,
+    "history": "P4 r0-r4 used 8 TD sessions (r0 2, r1 1, r2 1, r3 2, r4 2); r5 is a new explicit user budget after the 3-repair cap, not a reset of the B01 production budget."
+  },
+  "after_development": {
+    "sequence": [
+      "dev ready_for_test + frozen r5 manifest -> spawn_single_tester (one new integrated tester)",
+      "tester integrated verdict -> return_to_planner",
+      "dev blocked at P2/P3 or synth gate -> return_to_planner, no tester, planner closes r5",
+      "r5 FAIL -> keep warning; no automatic r6"
+    ],
+    "rules": [
+      "One new development session and one new independent tester session.",
+      "Tester writes test-reports/T10.a1-eng-freeze-r5-integrated.md with a single unique verdict heading.",
+      "No PASS assembled from r4 and r5 inputs; all G1/G2 evidence must bind to the r5 manifest.",
+      "Tester must independently re-run P2/P3 and independently parse raw TD reports/hashes; must not rely on dev prose.",
+      "G2 PASS requires Routed with WNS/TNS>=0; synthesis-only cannot PASS.",
+      "Same integrated tester contract as prior rounds; one report per round."
+    ]
+  },
+  "scope_limits": {
+    "main_goal": "T10 A+ small-top G2 timing closure at 187.5 MHz through architecture-level packer/output rework, with no protocol or throughput regression.",
+    "in_scope": [
+      "candidate packer/output stage architecture rework in a1_deflate_core.v",
+      "code/extra-bit registration, left_shift + cstage/accw 2-stage split, registered cmem write, skid/FIFO, control/datapath separation",
+      "P2/P3 regression and throughput proof",
+      "TD synthesis gate (<=3) + single route attempt + post-route STA/CDC/resource",
+      "new r5 manifest, result, rollback note",
+      "one independent integrated tester"
+    ],
+    "out_of_scope": [
+      "board test, real camera/RAW, non-PCIe export execution",
+      "C, RK/PCIe, dual-camera, G4",
+      "production integration, bit/CWC, download/Flash",
+      "protocol/port/frame commit/CRC/length/abort/Bayer changes",
+      "new formal packages or new task IDs",
+      "automatic r6"
+    ],
+    "deferred_themes": [
+      {
+        "theme": "board/real-data dependency package (demand 2/3)",
+        "status": "blocked_awaiting_hardware_awaiting_user",
+        "conditions": ["G2 PASS routed", "non-PCIe export transport verified", "board window and user present", "explicit one-shot download authorization", "derived production candidate"]
+      },
+      {
+        "theme": "C: block DEFLATE / bounded Rice / RAW adaptive",
+        "status": "not_started_by_user_decision",
+        "conditions": ["T10 A+ fully PASS", "separate explicit slice"]
+      }
+    ]
+  },
+  "question_path": null,
+  "user_summary_path": "workflow/runs/20261020-0209_singleA_aplus_closedloop/user-summary.md"
+}

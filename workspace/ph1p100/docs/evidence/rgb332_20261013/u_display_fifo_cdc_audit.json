@@ -1,0 +1,2200 @@
+{
+  "netlist": "D:\\TD\\work\\csi2\\prj\\camera_rgb332_20261013_161550\\capture_routed.v",
+  "sha256": "c273ec0fdd003213d29ae0a5fc1a7d9aed49869a5a5748f36d2563f829c214fd",
+  "q_drivers": 54,
+  "same_bit_stage_links": 36,
+  "selected_slice_cells": 36,
+  "rows": {
+    "rgray[5]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin_reg[5]_syn_2",
+      "q_port": "oqb",
+      "netlist_line": 267738,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "ic": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[6]",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[5]",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/add1_syn_38",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[5]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[5]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IE",
+        "LUT5B_SD2": "ID",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rgray[0]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray_reg[0]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 267843,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/fetch",
+        "ic": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[0]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[1]",
+        "ofb": "u_ddrmc_test_top/u_capture/u_display_fifo/add1_syn_22",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[0]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IC",
+        "LUT5A_SD1": "IMF",
+        "LUT5B_SD2": "ID",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rgray[1]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray_reg[1]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 267876,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[2]",
+        "ic": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[1]",
+        "id": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/fetch",
+        "imb": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[0]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/add1_syn_22",
+        "ofb": "u_ddrmc_test_top/u_capture/u_display_fifo/add1_syn_30",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[1]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IC",
+        "LUT5A_SD1": "IMF",
+        "LUT5B_SD2": "IMB",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rgray[2]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray_reg[2]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 267911,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[3]",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/add1_syn_22",
+        "ima": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[1]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[2]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[2]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IMA",
+        "LUT5A_SD1": "IMF",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OQAMUX": "QA",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rgray[3]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray_reg[3]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 267940,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/add1_syn_30",
+        "id": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "ima": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[4]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[3]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[3]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IMA",
+        "LUT5A_SD1": "IMF",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OQAMUX": "QA",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rgray[4]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray_reg[4]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 267968,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/add1_syn_30",
+        "ib": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[4]",
+        "ima": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[5]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[3]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[4]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IMA",
+        "LUT5A_SD1": "IMF",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OQAMUX": "QA",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rgray[6]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray_reg[6]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 267997,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/add1_syn_38",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[6]",
+        "id": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "ima": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[7]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[5]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[6]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IMA",
+        "LUT5A_SD1": "IMF",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OQAMUX": "QA",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rgray[7]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray_reg[7]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 268026,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[7]",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[6]",
+        "ic": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[5]",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/add1_syn_38",
+        "ie": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[8]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[7]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUTMODE": "LUT6",
+        "OFA_SD": "LUT6",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "OFA",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rgray[8]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray_reg[8]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 268057,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[7]",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[5]",
+        "ic": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[6]",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/add1_syn_38",
+        "ie": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[8]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[8]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/rbin[8]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUTMODE": "LUT6",
+        "OFA_SD": "LUT6",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "OFA",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rq1_wgray[0]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray_reg[0]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 268092,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[0]",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[5]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[0]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[5]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5B_SD2": "ID",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rq1_wgray[5]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray_reg[0]_syn_2",
+      "q_port": "oqb",
+      "netlist_line": 268092,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[0]",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[5]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[0]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[5]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5B_SD2": "ID",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rq1_wgray[1]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray_reg[1]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 268125,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[1]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[1]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[1]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[1]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IMF",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rq2_wgray[1]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray_reg[1]_syn_2",
+      "q_port": "oqb",
+      "netlist_line": 268125,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[1]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[1]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[1]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[1]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IMF",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rq1_wgray[3]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray_reg[3]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 268158,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[3]",
+        "ic": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[2]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[3]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[2]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IC",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rq1_wgray[2]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray_reg[3]_syn_2",
+      "q_port": "oqb",
+      "netlist_line": 268158,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[3]",
+        "ic": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[2]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[3]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[2]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IC",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rq1_wgray[6]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray_reg[6]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 268191,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[4]",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[6]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[6]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[4]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IE",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rq1_wgray[4]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray_reg[6]_syn_2",
+      "q_port": "oqb",
+      "netlist_line": 268191,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[4]",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[6]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[6]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[4]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IE",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rq1_wgray[8]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray_reg[8]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 268224,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[8]",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[7]",
+        "id": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[8]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[7]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5B_SD2": "ID",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rq1_wgray[7]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray_reg[8]_syn_2",
+      "q_port": "oqb",
+      "netlist_line": 268224,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[8]",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[7]",
+        "id": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[8]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[7]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5B_SD2": "ID",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rq2_wgray[0]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray_reg[0]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 268257,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[5]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[0]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[0]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[5]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IMF",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rq2_wgray[5]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray_reg[0]_syn_2",
+      "q_port": "oqb",
+      "netlist_line": 268257,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[5]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[0]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[0]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[5]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IMF",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rq2_wgray[2]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray_reg[2]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 268290,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[2]",
+        "ic": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[3]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[2]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[3]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IC",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rq2_wgray[3]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray_reg[2]_syn_2",
+      "q_port": "oqb",
+      "netlist_line": 268290,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[2]",
+        "ic": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[3]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[2]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[3]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IC",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rq2_wgray[6]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray_reg[6]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 268323,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[4]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[6]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[6]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[4]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IMF",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rq2_wgray[4]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray_reg[6]_syn_2",
+      "q_port": "oqb",
+      "netlist_line": 268323,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[4]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[6]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[6]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[4]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IMF",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rq2_wgray[8]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray_reg[8]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 268356,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[7]",
+        "ima": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[8]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[8]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[7]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IMA",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "rq2_wgray[7]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray_reg[8]_syn_2",
+      "q_port": "oqb",
+      "netlist_line": 268356,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_camera/X_ui_pll/bufg_c0_auto_created_sclk_s_1_l_bk3_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_pixels/rst_n",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[7]",
+        "ima": "u_ddrmc_test_top/u_capture/u_display_fifo/rq1_wgray[8]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[8]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[7]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IMA",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wgray[3]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin_reg[4]_syn_2",
+      "q_port": "oqb",
+      "netlist_line": 270031,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[3]",
+        "ic": "u_ddrmc_test_top/u_capture/u_display_fifo/add0_syn_30",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[4]",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[4]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[3]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IC",
+        "LUT5A_SD1": "IE",
+        "LUT5B_SD2": "ID",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wgray[6]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin_reg[7]_syn_2",
+      "q_port": "oqb",
+      "netlist_line": 270127,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[6]",
+        "ic": "u_ddrmc_test_top/u_capture/u_display_fifo/add0_syn_42",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[7]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[7]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[6]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IC",
+        "LUT5A_SD1": "IE",
+        "LUT5B_SD2": "ID",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wgray[0]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray_reg[0]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 270181,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[1]",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/push",
+        "ima": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[0]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[0]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IMA",
+        "LUT5A_SD1": "IMF",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OQAMUX": "QA",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wgray[1]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray_reg[1]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 270209,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray_b[1]_syn_8",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[3]",
+        "imb": "u_ddrmc_test_top/u_capture/u_display_fifo/full_n_syn_10",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[2]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[1]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[2]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IMF",
+        "LUT5B_SD2": "IMB",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wgray[2]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray_reg[1]_syn_2",
+      "q_port": "oqb",
+      "netlist_line": 270209,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray_b[1]_syn_8",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[3]",
+        "imb": "u_ddrmc_test_top/u_capture/u_display_fifo/full_n_syn_10",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[2]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[1]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[2]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IMF",
+        "LUT5B_SD2": "IMB",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wgray[4]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray_reg[4]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 270245,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[4]",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[5]",
+        "ima": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[3]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/add0_syn_30",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[4]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IMA",
+        "LUT5A_SD1": "IMF",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OQAMUX": "QA",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wgray[5]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray_reg[5]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 270274,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[6]",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[3]",
+        "ic": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[5]",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/add0_syn_30",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[4]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[5]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUTMODE": "LUT6",
+        "OFA_SD": "LUT6",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "OFA",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wgray[7]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray_reg[7]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 270305,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[7]",
+        "ic": "u_ddrmc_test_top/u_capture/u_display_fifo/add0_syn_42",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[6]",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[8]",
+        "ofb": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin_b[8]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[7]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin[8]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IC",
+        "LUT5A_SD1": "IE",
+        "LUT5B_SD2": "ID",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wq1_rgray[0]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray_reg[0]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 270343,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[0]",
+        "ic": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[0]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[0]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray[0]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wq2_rgray[0]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray_reg[0]_syn_2",
+      "q_port": "oqb",
+      "netlist_line": 270343,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[0]",
+        "ic": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[0]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[0]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray[0]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wq1_rgray[2]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray_reg[2]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 270375,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[2]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[2]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[2]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray[2]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IMF",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wq2_rgray[2]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray_reg[2]_syn_2",
+      "q_port": "oqb",
+      "netlist_line": 270375,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[2]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[2]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[2]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray[2]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IMF",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wq1_rgray[4]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray_reg[4]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 270408,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[4]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[4]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[4]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray[4]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IMF",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wq2_rgray[4]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray_reg[4]_syn_2",
+      "q_port": "oqb",
+      "netlist_line": 270408,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[4]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[4]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[4]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray[4]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IMF",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wq1_rgray[5]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray_reg[5]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 270441,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[1]",
+        "ima": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[5]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[5]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[1]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IMA",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wq1_rgray[1]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray_reg[5]_syn_2",
+      "q_port": "oqb",
+      "netlist_line": 270441,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[1]",
+        "ima": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[5]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[5]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[1]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IMA",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wq1_rgray[6]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray_reg[6]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 270474,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[6]",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[6]",
+        "ic": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[7]",
+        "imb": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[7]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "ofb": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray_b[7]_syn_8",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[6]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IMF",
+        "LUT5B_SD2": "IMB",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wq1_rgray[7]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray_reg[7]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 270507,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray_b[7]_syn_8",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[7]",
+        "ic": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray_b[7]_syn_10",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray_b[7]_syn_14",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray_b[7]_syn_12",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "ofb": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray_b[7]_syn_16",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[7]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IMF",
+        "LUT5B_SD2": "ID",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wq1_rgray[8]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray_reg[8]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 270541,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[4]",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[8]",
+        "ic": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[8]",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[4]",
+        "imb": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin_b[8]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "ofb": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray_b[7]_syn_14",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[8]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[8]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IMF",
+        "LUT5B_SD2": "ID",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "IMB",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wgray[8]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray_reg[8]_syn_2",
+      "q_port": "oqb",
+      "netlist_line": 270541,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[4]",
+        "ib": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[8]",
+        "ic": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[8]",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/rq2_wgray[4]",
+        "imb": "u_ddrmc_test_top/u_capture/u_display_fifo/wbin_b[8]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "ofb": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray_b[7]_syn_14",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[8]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/wgray[8]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IMF",
+        "LUT5B_SD2": "ID",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "IMB",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wq2_rgray[1]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray_reg[1]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 270579,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "ic": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[1]",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[5]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray[1]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray[5]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IC",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wq2_rgray[5]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray_reg[1]_syn_2",
+      "q_port": "oqb",
+      "netlist_line": 270579,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "ic": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[1]",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[5]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray[1]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray[5]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IC",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wq2_rgray[3]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray_reg[3]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 270612,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[3]",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[3]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray[3]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[3]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IMF",
+        "LUT5B_SD2": "ID",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wq1_rgray[3]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray_reg[3]_syn_2",
+      "q_port": "oqb",
+      "netlist_line": 270612,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/rgray[3]",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "imf": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[3]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray[3]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[3]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IMF",
+        "LUT5B_SD2": "ID",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wq2_rgray[6]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray_reg[6]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 270646,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "id": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[6]",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray[6]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD1": "IE",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OQAMUX": "QA",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wq2_rgray[7]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray_reg[7]_syn_2",
+      "q_port": "oqa",
+      "netlist_line": 270669,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[8]",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "ima": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[7]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray[7]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray[8]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IMA",
+        "LUT5A_SD1": "IE",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    },
+    "wq2_rgray[8]": {
+      "instance": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray_reg[7]_syn_2",
+      "q_port": "oqb",
+      "netlist_line": 270669,
+      "pins": {
+        "asr": "u_ddrmc_test_top/u_capture/run_rst_n_dup_953",
+        "clk": "u_ddrmc_test_top/u_ddrmc_x32/ph1p_ddrmc_wrapper/ph1p_ddrmc_top/u_ddr_phy/u_ddrphy_top/u_ddrphy_clk/u_pll1/u_bufg_fbclk_auto_created_sclk_s_1_l_bk4_sclk_outnet",
+        "ia": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[8]",
+        "ie": "u_ddrmc_test_top/u_capture/u_display_fifo/wr_reset[1]",
+        "ima": "u_ddrmc_test_top/u_capture/u_display_fifo/wq1_rgray[7]",
+        "oqa": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray[7]",
+        "oqb": "u_ddrmc_test_top/u_capture/u_display_fifo/wq2_rgray[8]"
+      },
+      "params": {
+        "ASRMUX": "INV",
+        "CEAMUX": "1",
+        "CEBMUX": "1",
+        "CLKMUX": "SIG",
+        "LATCHMODE": "DFF",
+        "LUT5A_SD0": "IMA",
+        "LUT5A_SD1": "IE",
+        "LUTMODE": "DLUT5",
+        "OFA_SD": "LUT5A",
+        "OFB_SD": "LUTX",
+        "OQAMUX": "QA",
+        "OQBMUX": "QB",
+        "REGA_REGSET_ASYNC": "RESET",
+        "REGA_REGSET_SYNC": "RESET",
+        "REGA_SD": "LUT5A",
+        "REGB_REGSET_ASYNC": "RESET",
+        "REGB_REGSET_SYNC": "RESET",
+        "REGB_SD": "LUT6",
+        "SSRMUX": "0",
+        "SSROVERCE": "ENABLE"
+      }
+    }
+  },
+  "links": [
+    {
+      "from": "wgray[0]",
+      "to": "rq1_wgray[0]",
+      "input_pins": [
+        "ib"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "wgray[1]",
+      "to": "rq1_wgray[1]",
+      "input_pins": [
+        "imf"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "wgray[2]",
+      "to": "rq1_wgray[2]",
+      "input_pins": [
+        "ie"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "wgray[3]",
+      "to": "rq1_wgray[3]",
+      "input_pins": [
+        "ib"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "wgray[4]",
+      "to": "rq1_wgray[4]",
+      "input_pins": [
+        "ib"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "wgray[5]",
+      "to": "rq1_wgray[5]",
+      "input_pins": [
+        "id"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "wgray[6]",
+      "to": "rq1_wgray[6]",
+      "input_pins": [
+        "ie"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "wgray[7]",
+      "to": "rq1_wgray[7]",
+      "input_pins": [
+        "ib"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "wgray[8]",
+      "to": "rq1_wgray[8]",
+      "input_pins": [
+        "ia"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "rq1_wgray[0]",
+      "to": "rq2_wgray[0]",
+      "input_pins": [
+        "imf"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "rq1_wgray[1]",
+      "to": "rq2_wgray[1]",
+      "input_pins": [
+        "ie"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "rq1_wgray[2]",
+      "to": "rq2_wgray[2]",
+      "input_pins": [
+        "ib"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "rq1_wgray[3]",
+      "to": "rq2_wgray[3]",
+      "input_pins": [
+        "ie"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "rq1_wgray[4]",
+      "to": "rq2_wgray[4]",
+      "input_pins": [
+        "ie"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "rq1_wgray[5]",
+      "to": "rq2_wgray[5]",
+      "input_pins": [
+        "ie"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "rq1_wgray[6]",
+      "to": "rq2_wgray[6]",
+      "input_pins": [
+        "imf"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "rq1_wgray[7]",
+      "to": "rq2_wgray[7]",
+      "input_pins": [
+        "ie"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "rq1_wgray[8]",
+      "to": "rq2_wgray[8]",
+      "input_pins": [
+        "ima"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "rgray[0]",
+      "to": "wq1_rgray[0]",
+      "input_pins": [
+        "ib"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "rgray[1]",
+      "to": "wq1_rgray[1]",
+      "input_pins": [
+        "ie"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "rgray[2]",
+      "to": "wq1_rgray[2]",
+      "input_pins": [
+        "imf"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "rgray[3]",
+      "to": "wq1_rgray[3]",
+      "input_pins": [
+        "ia"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "rgray[4]",
+      "to": "wq1_rgray[4]",
+      "input_pins": [
+        "imf"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "rgray[5]",
+      "to": "wq1_rgray[5]",
+      "input_pins": [
+        "ima"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "rgray[6]",
+      "to": "wq1_rgray[6]",
+      "input_pins": [
+        "ib"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "rgray[7]",
+      "to": "wq1_rgray[7]",
+      "input_pins": [
+        "ib"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "rgray[8]",
+      "to": "wq1_rgray[8]",
+      "input_pins": [
+        "ib"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "wq1_rgray[0]",
+      "to": "wq2_rgray[0]",
+      "input_pins": [
+        "ic"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "wq1_rgray[1]",
+      "to": "wq2_rgray[1]",
+      "input_pins": [
+        "ic"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "wq1_rgray[2]",
+      "to": "wq2_rgray[2]",
+      "input_pins": [
+        "ie"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "wq1_rgray[3]",
+      "to": "wq2_rgray[3]",
+      "input_pins": [
+        "imf"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "wq1_rgray[4]",
+      "to": "wq2_rgray[4]",
+      "input_pins": [
+        "ie"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "wq1_rgray[5]",
+      "to": "wq2_rgray[5]",
+      "input_pins": [
+        "ie"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "wq1_rgray[6]",
+      "to": "wq2_rgray[6]",
+      "input_pins": [
+        "id"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "wq1_rgray[7]",
+      "to": "wq2_rgray[7]",
+      "input_pins": [
+        "ima"
+      ],
+      "kind": "direct_input_presence"
+    },
+    {
+      "from": "wq1_rgray[8]",
+      "to": "wq2_rgray[8]",
+      "input_pins": [
+        "ia"
+      ],
+      "kind": "direct_input_presence"
+    }
+  ],
+  "boundary": "Q-driver and input-presence checks, plus an exact single-LUT local-reset AND topology. Selected FF LUT equations, reset-alias origin, clocks, skew and metastability behavior require separate review."
+}

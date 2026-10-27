@@ -1,0 +1,79 @@
+# env_check — 2026-10-17T15:39:25.5708939+08:00
+script_sha256 = 72C8598685D8ECC6753E8574569B1B41E04651A5A9C878ACED336001EE25074F
+root = C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道
+verdict = PASS  (PASS=12 FAIL=0 WARN=0 INFO=3)
+
+[INFO] host_ps | 主机 / PowerShell / 代码页
+    cmd : $PSVersionTable + HKLM:\...\Nls\CodePage + [Console]::OutputEncoding
+    cwd : C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道
+    exit: 0
+    ->  PS 5.1.26100.9711 (Desktop), ACP=936, OEMCP=936, culture=zh-CN
+[PASS] host_ps_known_trap | 已知坑前提（PS5.1 + ACP936）
+    ->  与 run_sim.ps1/run_td.ps1 BOM 修复的前提一致；所有 .ps1 必须带 UTF-8 BOM
+[PASS] tools_td | TD 6.2.3 工具链
+    cmd : Test-Path + Get-FileHash D:\anlogic\TD_Release_2026.2\bin\*
+    cwd : C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道
+    exit: 0
+    ->  5 个二进制齐备，SHA 已取
+[PASS] tools_td_license | TD license 文件
+    cmd : Test-Path D:\anlogic\TD_Release_2026.2\license\Anlogic.lic
+    cwd : C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道
+    exit: 0
+    ->  存在（RUN-8008 类问题的根因文件）
+[PASS] td_cli_probe | TD CLI 只读版本探针
+    cmd : td_commands_prompt.exe td_probe.tcl (cwd=临时 subst S: → env/logs)
+    cwd : C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261017-011744-rk-fpga-align/test-reports/T11.rk-align-base-r0-functional-evidence/rerun_tdprobe
+    exit: 0
+    ->  version=2026.2 build=6.2.3.210850 tcl=8.6.17 registered=11 marker=True
+[PASS] tools_modelsim | ModelSim 入口
+    cmd : vsim -version / vlog -version @ D:\intelFPGA\18.1\modelsim_ase\win32aloem
+    cwd : D:\intelFPGA\18.1\modelsim_ase\win32aloem
+    exit: 0
+    ->  vsim: Model Technology ModelSim ALTERA STARTER EDITION vsim 10.5b Simulator 2016.10 Oct  5 2016 | vlog: Model Technology ModelSim ALTERA vlog 10.5b Compiler 2016.10 Oct  5 2016
+[PASS] tools_compilers | Python / GCC / Git / tclsh
+    cmd : python --version; gcc --version; git --version
+    cwd : C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道
+    exit: 0
+    ->  python: Python 3.11.5 | gcc: gcc.exe (Rev3, Built by MSYS2 project) 13.2.0 | git: git version 2.54.0.windows.1 | tclsh: 8.6.12
+[PASS] entry_scripts_bom | 入口脚本 BOM/编码
+    cmd : ReadAllBytes first3 == EF BB BF
+    cwd : C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道
+    exit: 0
+    ->  3 个 .ps1 均存在且带 UTF-8 BOM（功能性要求）
+[PASS] entry_td_sim_scripts | TD/仿真入口脚本
+    cmd : Test-Path tools/pcie_integration/td/*.tcl + sim/compile_checked.f
+    cwd : C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道
+    exit: 0
+    ->  00_all/01/02/03 + compile_checked.f 齐备（00_all 为唯一可跑入口）
+[INFO] subst_report | subst 映射（只报告）
+    cmd : subst
+    cwd : C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道
+    exit: 0
+    ->  R:\: => C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261017-011744-rk-fpga-align\test-reports\T07-functional-r2\neg-shadow
+[PASS] output_dirs | 输出目录可达
+    cmd : write+delete probe in env/logs
+    cwd : C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261017-011744-rk-fpga-align/test-reports/T11.rk-align-base-r0-functional-evidence/rerun_tdprobe
+    exit: 0
+    ->  env/logs 可写；env/test-reports/tools/env 存在性已记录
+[PASS] d_readonly | D 盘只读约定
+    cmd : Test-Path D:\ ; 只读约定（本脚本不写 D:）
+    cwd : C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道
+    exit: 0
+    ->  D: 存在=True；约定：TD/ModelSim/IP 工具只读使用；不安装、不改全局；工具运行产物经 subst 限定在项目/run 内
+[INFO] git_state | Git 状态（只报告）
+    cmd : git -C <root> rev-parse HEAD; git status --porcelain
+    cwd : C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道
+    exit: 0
+    ->  HEAD=ba0fca5f2c39 dirty=37 条
+[PASS] inventory_consistency | 环境清单一致性
+    cmd : 核对 C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261017-011744-rk-fpga-align\env\environment-inventory.json
+    cwd : C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道
+    exit: 0
+    ->  TD 二进制 SHA 与清单一致（清单版本: 1）
+[PASS] selfcheck_encoding | 脚本编码自检（哨兵）
+    cmd : 脚本内 SelfCheck 哨兵计数
+    cwd : C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道
+    exit: 0
+    ->  SelfCheck=6/6；自身 BOM=True
+
+JSON: C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261017-011744-rk-fpga-align\test-reports\T11.rk-align-base-r0-functional-evidence\rerun_tdprobe\env_check_20261017-153922.json

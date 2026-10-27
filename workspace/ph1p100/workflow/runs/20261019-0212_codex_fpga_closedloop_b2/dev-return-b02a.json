@@ -1,0 +1,49 @@
+{
+  "task_ids": ["T08.codex-sync-offline"],
+  "status": "blocked",
+  "artifact_paths": [
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/sync-offline/development-report.md",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/sync-offline/development-result.json",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/sync-offline/evidence-index.json",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/sync-offline/b01-after.json"
+  ],
+  "manifest_path": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/sync-offline/manifest.json",
+  "test_input_paths": [
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/task-T08-sync-offline.md",
+    "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/sync-offline/development-report.md"
+  ],
+  "lessons_path": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/sync-offline/lessons-learned.md",
+  "blocked": {
+    "category": "command_attempt_limit",
+    "status": "blocked",
+    "ready_for_test": false,
+    "command_attempts": 2,
+    "retry_allowance_used": 1,
+    "integrated_round0_occurred": false,
+    "actual_repair_rounds_used": 0,
+    "td_attempts": 0,
+    "missing": ["G1成功编译与仿真", "有效负对照", "G2最终STA/CDC/资源"],
+    "stopped_modification": true,
+    "owned_processes_active": false,
+    "b01_entries_verified": 236,
+    "b01_hash_drift": 0,
+    "manifest_entries": 26,
+    "manifest_hash_drift": 0,
+    "manifest_sha256": "94FF1150859062081461D7B083731B2906FD28927A71377FB50A00676B7DF06A"
+  },
+  "retest": {
+    "required_dimensions": ["functional", "engineering", "system"],
+    "required_checks": ["授权恢复后的G1与负对照", "自身G2/STA/CDC/资源", "冻结输入与B01哈希"],
+    "report_paths": [],
+    "input_status": "changed",
+    "reuse_decision_paths": []
+  },
+  "problem": {
+    "problem_id": "T08.codex-sync-offline:LIMIT_REACHED:offline-tb-compile",
+    "reason_code": "LIMIT_REACHED",
+    "new_information": true,
+    "evidence_path": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/sync-offline/g1/positive-r2/vlog.log",
+    "requested_action": "交原规划保留两次编译计数及部分冻结；仅真实新增用户输入或条件变化并明确有限恢复后续原开发，本轮不得第三次编译或派综合测试。",
+    "resume_input_path": "C:/Users/czz/OneDrive/桌面/实验室/竞赛/嵌入式/FPGA创新设计赛道/workflow/runs/20261019-0212_codex_fpga_closedloop_b2/sync-offline/development-result.json"
+  }
+}

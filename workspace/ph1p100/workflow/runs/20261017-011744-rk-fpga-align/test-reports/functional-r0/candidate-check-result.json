@@ -1,0 +1,532 @@
+{
+  "scope": "T03 contract/fixture consistency only; not production RTL, Linux build, G2, or hardware",
+  "checks": 84,
+  "failures": 0,
+  "results": [
+    {
+      "id": "CRC32-IEEE-check-123456789",
+      "expected": 3421780262,
+      "actual": 3421780262,
+      "pass": true
+    },
+    {
+      "id": "small-sha256",
+      "expected": "c855e03def94dea1686cb74f1a75356077377f4106cf3de9fd081f4aed8be6e0",
+      "actual": "c855e03def94dea1686cb74f1a75356077377f4106cf3de9fd081f4aed8be6e0",
+      "pass": true
+    },
+    {
+      "id": "small-stride_bytes",
+      "expected": 10,
+      "actual": 10,
+      "pass": true
+    },
+    {
+      "id": "small-raw_bytes",
+      "expected": 40,
+      "actual": 40,
+      "pass": true
+    },
+    {
+      "id": "small-payload_bytes",
+      "expected": 40,
+      "actual": 40,
+      "pass": true
+    },
+    {
+      "id": "small-content_bytes",
+      "expected": 168,
+      "actual": 168,
+      "pass": true
+    },
+    {
+      "id": "small-dma_bytes",
+      "expected": 4096,
+      "actual": 4096,
+      "pass": true
+    },
+    {
+      "id": "small-tail_pad",
+      "expected": 3928,
+      "actual": 3928,
+      "pass": true
+    },
+    {
+      "id": "small-mwr_packets",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "id": "small-ddr_read_bursts",
+      "expected": 1,
+      "actual": 1,
+      "pass": true
+    },
+    {
+      "id": "small-host_stride",
+      "expected": 8192,
+      "actual": 8192,
+      "pass": true
+    },
+    {
+      "id": "small-host_total_alloc",
+      "expected": 12288,
+      "actual": 12288,
+      "pass": true
+    },
+    {
+      "id": "small-sample-group",
+      "expected": [
+        0,
+        1,
+        1022,
+        1023
+      ],
+      "actual": [
+        0,
+        1,
+        1022,
+        1023
+      ],
+      "pass": true
+    },
+    {
+      "id": "small-raw-crc",
+      "expected": 2548473314,
+      "actual": 2548473314,
+      "pass": true
+    },
+    {
+      "id": "small-header-crc",
+      "expected": 1851548142,
+      "actual": 1851548142,
+      "pass": true
+    },
+    {
+      "id": "small-valid",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "id": "small-truncated",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "small-nonzero-tail",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "small-bad-payload-crc",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "small-bad-header-crc",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "small-unknown-codec",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "small-bad-frame",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "small-partial-frame",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "small-oversize-frame",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "small-illegal-payload-length",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "1080p-sha256",
+      "expected": "646ebaedc19bdd6feb595430989b736f01913bb23caee26a132c922cfe5e9bff",
+      "actual": "646ebaedc19bdd6feb595430989b736f01913bb23caee26a132c922cfe5e9bff",
+      "pass": true
+    },
+    {
+      "id": "1080p-stride_bytes",
+      "expected": 2400,
+      "actual": 2400,
+      "pass": true
+    },
+    {
+      "id": "1080p-raw_bytes",
+      "expected": 2592000,
+      "actual": 2592000,
+      "pass": true
+    },
+    {
+      "id": "1080p-payload_bytes",
+      "expected": 2592000,
+      "actual": 2592000,
+      "pass": true
+    },
+    {
+      "id": "1080p-content_bytes",
+      "expected": 2592128,
+      "actual": 2592128,
+      "pass": true
+    },
+    {
+      "id": "1080p-dma_bytes",
+      "expected": 2592768,
+      "actual": 2592768,
+      "pass": true
+    },
+    {
+      "id": "1080p-tail_pad",
+      "expected": 640,
+      "actual": 640,
+      "pass": true
+    },
+    {
+      "id": "1080p-mwr_packets",
+      "expected": 20256,
+      "actual": 20256,
+      "pass": true
+    },
+    {
+      "id": "1080p-ddr_read_bursts",
+      "expected": 633,
+      "actual": 633,
+      "pass": true
+    },
+    {
+      "id": "1080p-host_stride",
+      "expected": 2596864,
+      "actual": 2596864,
+      "pass": true
+    },
+    {
+      "id": "1080p-host_total_alloc",
+      "expected": 2600960,
+      "actual": 2600960,
+      "pass": true
+    },
+    {
+      "id": "1080p-sample-group",
+      "expected": [
+        0,
+        1,
+        1022,
+        1023
+      ],
+      "actual": [
+        0,
+        1,
+        1022,
+        1023
+      ],
+      "pass": true
+    },
+    {
+      "id": "1080p-raw-crc",
+      "expected": 3491449518,
+      "actual": 3491449518,
+      "pass": true
+    },
+    {
+      "id": "1080p-header-crc",
+      "expected": 108710859,
+      "actual": 108710859,
+      "pass": true
+    },
+    {
+      "id": "1080p-valid",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "id": "1080p-truncated",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "1080p-nonzero-tail",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "1080p-bad-payload-crc",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "1080p-bad-header-crc",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "1080p-unknown-codec",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "1080p-bad-frame",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "1080p-partial-frame",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "1080p-oversize-frame",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "1080p-illegal-payload-length",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "legacy-bit4-arm-reject",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "legacy-bit4-arm-reject-reserved-read0",
+      "expected": 97,
+      "actual": 97,
+      "pass": true
+    },
+    {
+      "id": "new-A-arm-bits",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "id": "new-A-arm-bits-reserved-read0",
+      "expected": 97,
+      "actual": 97,
+      "pass": true
+    },
+    {
+      "id": "new-B-select",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "id": "new-B-select-reserved-read0",
+      "expected": 353,
+      "actual": 353,
+      "pass": true
+    },
+    {
+      "id": "old-plus16-crosses4k",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "old-plus16-crosses4k-first-index",
+      "expected": 31,
+      "actual": 31,
+      "pass": true
+    },
+    {
+      "id": "old-plus16-crosses4k-first-address",
+      "expected": 4294971280,
+      "actual": 4294971280,
+      "pass": true
+    },
+    {
+      "id": "new-plus128-aligned",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "id": "reset-default-no-grant",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "short-capacity",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "exact-capacity",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "id": "native-mailbox-push_dbell-offset",
+      "expected": 32,
+      "actual": 32,
+      "pass": true
+    },
+    {
+      "id": "native-mailbox-size",
+      "expected": 64,
+      "actual": 64,
+      "pass": true
+    },
+    {
+      "id": "native-slot-header-size",
+      "expected": 16,
+      "actual": 16,
+      "pass": true
+    },
+    {
+      "id": "dma-positive-auth-domain",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "id": "zero-dst",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "unaligned-dst",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "u64-overflow",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "zero-doorbell",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "unaligned-doorbell",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "overlapping-doorbell",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "short-cap",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "ungranted",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "reset-session",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "busy",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "held",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "source-misaligned",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "source-high-truncation",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "source-range-overflow",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "ack-matching",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "id": "ack-old-session",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "ack-wrong-seq",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    },
+    {
+      "id": "ack-not-held",
+      "expected": false,
+      "actual": false,
+      "pass": true
+    }
+  ],
+  "marker": "CONTRACT_FIXTURES_OK"
+}

@@ -1,0 +1,29 @@
+# 主传输日志
+- 261026 2138 runtime=OpenCode；登记用户原话；准备新建规划角色；PROJECT_ROOT=D:\fpga\ph1p100；BATCH_SIZE=1。
+- 261026 2138 用户额外授权：正常防死循环预算的5倍（用户于2026-10-26 21:38明确授权），仅限当前任务。
+- 261026 2139 runtime=OpenCode；subagent真实返回规划ID=ses_e878f228fffe1WiRGCeh5JEQTn；原话与需求路径已转交。
+- 261026 2139 规划返回ready：task_ids=[INT.P1]，dispatch.json已按路径读取；准备按dispatch新建开发角色。
+- 261026 2140 runtime=OpenCode；subagent真实返回开发ID=ses_e8786fac7ffe2761wiDzV8leRM；INT.P1 round0首次开发。
+- 261026 2140 INT.P1开发返回ready_for_test、blocked=none；manifest=INT.P1-r0-manifest.json；按spawn_single_tester新建唯一综合测试者。
+- 261026 2140 runtime=OpenCode；subagent真实返回测试者ID=ses_e87746d59ffeM0vuFJhZpKGHox；INT.P1 round0首次综合验收。
+- 261026 2140 INT.P1 round0综合测试者返回FAIL：functional=fail, engineering=fail, system=not_run(G3/G4 not_applicable/awaiting_hardware)；blocked=null；实际修复0轮；按同任务修复分支续原开发。
+- 261026 2140 原开发session ses_e8786fac7ffe2761wiDzV8leRM 无法续接（subagent session not found），创建新开发session ses_e8762f2c8ffejnJC2oXSHAk0jV 继续INT.P1 round1修复，登记新旧ID映射。
+- 261026 2140 INT.P1 round1开发返回ready_for_test、blocked=none；manifest=INT.P1-r1-manifest.json；D1-D5已修复；生产RTL编译0错误/0警告；按spawn_single_tester新建唯一综合测试者。
+- 261026 2140 INT.P1 round1综合测试者返回PASS：functional=pass, engineering=pass, system=not_run(G3/G4 awaiting_hardware), G0-G2=pass, G5=partial；blocked=null；实际修复1轮；交原规划更新/派发。
+- 261026 2140 runtime=OpenCode；subagent真实返回规划ID=ses_e874597f2ffeE20SvhVRsPbTIU；INT.P2 ready；dispatch.json已按路径读取；准备按dispatch新建开发角色。
+- 261026 2140 runtime=OpenCode；subagent真实返回开发ID=ses_e873c33f1ffe53cH0p3tAAOtV2；INT.P2 round0首次开发。
+- 261026 2140 INT.P2开发返回ready_for_test、blocked=RK real PCIe transport pending(待联调)；manifest=INT.P2-r0-manifest.json；生产RTL vlog 0 errors/0 warnings；TB_APLUS_PCIE_EGRESS_ADAPTER PASS；a1u1_decode A1U1_DECODE OK；按spawn_single_tester新建唯一综合测试者。
+- 261026 2140 runtime=OpenCode；subagent真实返回测试者ID=ses_e872f4406ffeJpqu6kyiuVmRLQ；INT.P2 round0首次综合验收。
+- 261026 2140 INT.P2 round0综合测试者返回PASS：functional=pass, engineering=pass, system=pass(interface/data-path/RAW-preserved pass; board G3/G4 not_run/awaiting_hardware; G5 partial)；blocked=RK real PCIe transport pending(待联调), awaiting_hardware；实际修复0轮；交原规划更新/派发。
+- 261026 2140 runtime=OpenCode；subagent真实返回规划ID=ses_e87233a19ffe95SoXCiVFTtwfg；INT.P3 ready；dispatch.json已按路径读取；准备按dispatch新建开发角色。
+- 261026 2140 runtime=OpenCode；subagent真实返回开发ID=ses_e871c1535ffeI0O5BCmnqDrye6；INT.P3 round0首次开发。
+- 261026 2140 INT.P3开发返回ready_for_test、blocked=A-channel real b20 timing result pending(a_enable gating); G2 synthesis/STA and G3/G4 board tests pending；manifest=INT.P3-r0-manifest.json；按spawn_single_tester新建唯一综合测试者。
+- 261026 2140 runtime=OpenCode；subagent真实返回测试者ID=ses_e8709f518ffe4DPKSE432czm7u；INT.P3 round0首次综合验收。
+- 261026 2140 INT.P3 round0综合测试者返回FAIL：functional=fail(valid/ready backpressure stall defect), engineering=not_run, system=not_run/blocked；blocked非空(A b20 pending/G2 not run/G3-G4 awaiting hardware)；实际修复0轮；按同任务修复分支续原开发。
+- 261027 0030 主复核（新模型）：原开发续接失败；INT.P3 round1修复session=ses_e86fe9b43ffessWJ4VLtCHsdqq 在返回前被中断(aborted)，但已留下冻结产物 INT.P3-r1-manifest.json（2026-10-27 00:22:40）与RTL修复（out_stall门控已存在），manifest全部哈希复核一致、stopped_modifying=true；未重复开发，改按round1冻结输入派发新综合测试者。
+- 261027 0030 准备新建INT.P3 round1综合测试者，输入=INT.P3-r1-manifest.json；实际修复1轮。
+- 261027 0035 runtime=OpenCode；subagent真实返回INT.P3 round1测试者ID=ses_e86f68425ffe1b0tckrhwng2Y8。
+- 261027 0035 INT.P3 round1综合测试者返回PASS：functional=pass(D1已关闭，独立TB 17 accepted/16 consumed/1复位丢弃，0 errors；MUT1 62 FAIL+TIMEOUT，MUT2 errors=3)，engineering=partial(哈希一致、lint 0/0；G2 deferred INT.P4)，system=not_run(G3/G4 awaiting_hardware；A b20 pending)；blocked=[]；实际修复1轮；交原规划更新/派发。
+- 261027 0045 runtime=OpenCode；subagent真实返回规划ID=ses_e86e64572ffeJqzjuMI4tr8CLd；INT.P4 ready；dispatch.json已按路径读取。
+- 261027 0045 用户新增原话（系统注入）：当前P4完成并验收后沿同一工作线继续板级集成，复用已通A/B工程，接入真实相机/DDR/PCIe，补板级顶层、时钟复位/CDC、引脚约束、构建入口，完成整机bit；下一目标先B后A真实单路压缩帧PCIe完整导出；推进度优先，长稳/非阻塞优化后置。已在AGENTS.md记录权威协作仓库（FPGA/RK两仓，main直更，不fork）；当前run不搬动。P4验收后交原规划定义后续包。
+- 261027 0045 准备按dispatch新建INT.P4开发角色（round0，含TD综合与条件布线，bitgen=0/download=0）。

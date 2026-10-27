@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "task_id": "INT.P1",
+  "round": 0,
+  "candidate_root": "fpga/csi2/src/integrated_delivery",
+  "production_inputs": [
+    {
+      "path": "fpga/csi2/src/integrated_delivery/frame_good_publish_cancel.v",
+      "sha256": "170ba0caf09ee1d7817c83885616962b185313f830c3e6c6e823f5aaadcbdd3e",
+      "size": 5200
+    },
+    {
+      "path": "fpga/csi2/src/integrated_delivery/integrated_input_processing_top.v",
+      "sha256": "ae5f778befbad7c6f98851e7733bfa78afbf313ae03d78936243d2d0a23a60e4",
+      "size": 6639
+    },
+    {
+      "path": "fpga/csi2/src/integrated_delivery/raw10_sample_vector_to_packed.v",
+      "sha256": "48eb39331816a638bff9024fb0a57ebbea1f2b15eb00d039352c4d1f81905b20",
+      "size": 1887
+    },
+    {
+      "path": "fpga/csi2/src/integrated_delivery/tb_raw10_packer.v",
+      "sha256": "3c3a13ba71b71cc44299839a1313981ab447eeb372651b0e168f91fdffc61ed3",
+      "size": 1335
+    }
+  ],
+  "tool_inputs": [
+    {
+      "path": "tools/integrated_delivery/__pycache__/raw10_pack.cpython-311.pyc",
+      "sha256": "c926a9af258145b2f7d08434a28851e8ccbc077d7dae45a00f84abccb7244e9e",
+      "size": 4482
+    },
+    {
+      "path": "tools/integrated_delivery/evidence/golden_input_processing.json",
+      "sha256": "2c420c8621c6cfb2833cc731db58b6cd667175b8cb102b48e23a1c8be55fe929",
+      "size": 879
+    },
+    {
+      "path": "tools/integrated_delivery/evidence/verify_report.json",
+      "sha256": "7e257d07237b7c75584de9d54c3c0f0bf47f416291ad48efd432bccb62beffc1",
+      "size": 405
+    },
+    {
+      "path": "tools/integrated_delivery/gen_manifest_intp1.py",
+      "sha256": "f61d9f05ba9c37f9dec602b49ee7232f7bb3b7c5f98f3ac30eafaded60250366",
+      "size": 2104
+    },
+    {
+      "path": "tools/integrated_delivery/raw10_pack.py",
+      "sha256": "f286cd2739eac0c325b8b6cd8d13ebf822de08266af9e7823b72e693b30503cb",
+      "size": 2439
+    },
+    {
+      "path": "tools/integrated_delivery/verify_input_processing.py",
+      "sha256": "9ce33260377014e5d2aca2cad6f05b6e30c9684b36bebfcbe71347941e2bb96c",
+      "size": 3351
+    }
+  ],
+  "test_inputs": [
+    "tools/integrated_delivery/evidence/golden_input_processing.json",
+    "tools/integrated_delivery/evidence/verify_report.json"
+  ],
+  "local_checks": {
+    "raw10_pack": "tools/integrated_delivery/raw10_pack.py -> RAW10_PACK PASS",
+    "verify_input_processing": "tools/integrated_delivery/verify_input_processing.py -> INT.P1_VERIFY PASS"
+  },
+  "stopped_modifying": true,
+  "notes": [
+    "INT.P1 round0 first acceptance; no hardware download performed.",
+    "G3/G4 not applicable (software/RTL integration package, no board window)."
+  ],
+  "test_input_entries": [
+    {
+      "path": "tools/integrated_delivery/evidence/golden_input_processing.json",
+      "sha256": "2c420c8621c6cfb2833cc731db58b6cd667175b8cb102b48e23a1c8be55fe929",
+      "size": 879
+    },
+    {
+      "path": "tools/integrated_delivery/evidence/verify_report.json",
+      "sha256": "7e257d07237b7c75584de9d54c3c0f0bf47f416291ad48efd432bccb62beffc1",
+      "size": 405
+    }
+  ]
+}

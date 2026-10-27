@@ -1,0 +1,180 @@
+{
+  "schema": 1,
+  "utc": "20261015T142400_565606",
+  "project_root": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053",
+  "run_dir": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\task3-commandhold-20261015T142400_565606",
+  "scope": "simulation-only abstract ready/valid single-task fixed-pattern MWr",
+  "positive": {
+    "run_dir": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\task3-commandhold-20261015T142400_565606\\positive",
+    "mutation": null,
+    "sources": {
+      "fpga\\csi2\\src\\pcie\\c2h_fixed_pattern_tx.v": {
+        "sha256_before": "d31bc322e7e96afd44fc482a1ba3dfac6822431b7facc1e2f81f10c73498db86",
+        "frozen_sha256": "d31bc322e7e96afd44fc482a1ba3dfac6822431b7facc1e2f81f10c73498db86",
+        "simulation_sha256": "d31bc322e7e96afd44fc482a1ba3dfac6822431b7facc1e2f81f10c73498db86",
+        "sha256_after": "d31bc322e7e96afd44fc482a1ba3dfac6822431b7facc1e2f81f10c73498db86",
+        "source_unchanged": true
+      },
+      "fpga\\csi2\\tb\\tb_c2h_fixed_pattern_tx.sv": {
+        "sha256_before": "d30b03c999fd5cafc69fccdcd1b744ad5a939946783b54246197a99864aab07e",
+        "frozen_sha256": "d30b03c999fd5cafc69fccdcd1b744ad5a939946783b54246197a99864aab07e",
+        "sha256_after": "d30b03c999fd5cafc69fccdcd1b744ad5a939946783b54246197a99864aab07e",
+        "source_unchanged": true
+      },
+      "tools\\rtl_checks\\verify_c2h_pattern.py": {
+        "sha256_before": "45ad3eb5ade4b6b4707d962e21c1d9ba48e528ced75ef45b96f4a8290a57b249",
+        "frozen_sha256": "45ad3eb5ade4b6b4707d962e21c1d9ba48e528ced75ef45b96f4a8290a57b249",
+        "sha256_after": "45ad3eb5ade4b6b4707d962e21c1d9ba48e528ced75ef45b96f4a8290a57b249",
+        "source_unchanged": true
+      }
+    },
+    "vector_sha256": "9f596545e3d7d9315a9b817c6ed476f46b50b7039bad2c78d91a8dddc7b2c797",
+    "builds": [
+      {
+        "command": [
+          "vlib.exe",
+          "work"
+        ],
+        "exit_code": 0,
+        "log": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\task3-commandhold-20261015T142400_565606\\positive\\build_0.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "vlog.exe",
+          "-sv",
+          "c2h_fixed_pattern_tx.v",
+          "tb_c2h_fixed_pattern_tx.sv"
+        ],
+        "exit_code": 0,
+        "log": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\task3-commandhold-20261015T142400_565606\\positive\\build_1.log",
+        "log_sha256": "ab8ae343771b490ec7fcf05c50d9c4c8b3bc97a89109a9aa454a36534d0feebd"
+      }
+    ],
+    "simulation": {
+      "command": [
+        "vsim.exe",
+        "-c",
+        "-onfinish",
+        "stop",
+        "-l",
+        "transcript.log",
+        "work.tb_c2h_fixed_pattern_tx",
+        "-do",
+        "run.do"
+      ],
+      "exit_code": 0,
+      "log": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\task3-commandhold-20261015T142400_565606\\positive\\simulation.log",
+      "log_sha256": "abb0bdfca1d2e318666d35a6fa237181395b68e18301709a684de1ab49efc125"
+    },
+    "explicit_pass": true,
+    "oracle": {
+      "commands": 155,
+      "legal": 136,
+      "invalid": 19,
+      "packets": 1492,
+      "accepted_beats": 10876,
+      "reassembled_bytes": 301312,
+      "reset_tasks": 2,
+      "completed": 154,
+      "acked": 153,
+      "tail_masks": [
+        "80",
+        "c0",
+        "e0",
+        "f0",
+        "f8",
+        "fc",
+        "fe",
+        "ff"
+      ],
+      "first_stalls": 829,
+      "middle_stalls": 4108,
+      "last_stalls": 790,
+      "done_stalls": 1016,
+      "busy_command_cycles": 18115
+    },
+    "oracle_error": null,
+    "trace": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\task3-commandhold-20261015T142400_565606\\positive\\trace.txt",
+    "trace_sha256": "6879e98070637694f0aa16fe85cf932d4bca0f2fb5c7e60e7c3931e1ba7f1dad",
+    "passed": true
+  },
+  "negative_high_address": {
+    "run_dir": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\task3-commandhold-20261015T142400_565606\\negative_high_address",
+    "mutation": "high_address_xor_1",
+    "sources": {
+      "fpga\\csi2\\src\\pcie\\c2h_fixed_pattern_tx.v": {
+        "sha256_before": "d31bc322e7e96afd44fc482a1ba3dfac6822431b7facc1e2f81f10c73498db86",
+        "frozen_sha256": "d31bc322e7e96afd44fc482a1ba3dfac6822431b7facc1e2f81f10c73498db86",
+        "simulation_sha256": "c0bb50436b7bb220eefe2c55f5eea54ec872159c70625e6e779a04bcfb8feab3",
+        "sha256_after": "d31bc322e7e96afd44fc482a1ba3dfac6822431b7facc1e2f81f10c73498db86",
+        "source_unchanged": true
+      },
+      "fpga\\csi2\\tb\\tb_c2h_fixed_pattern_tx.sv": {
+        "sha256_before": "d30b03c999fd5cafc69fccdcd1b744ad5a939946783b54246197a99864aab07e",
+        "frozen_sha256": "d30b03c999fd5cafc69fccdcd1b744ad5a939946783b54246197a99864aab07e",
+        "sha256_after": "d30b03c999fd5cafc69fccdcd1b744ad5a939946783b54246197a99864aab07e",
+        "source_unchanged": true
+      },
+      "tools\\rtl_checks\\verify_c2h_pattern.py": {
+        "sha256_before": "45ad3eb5ade4b6b4707d962e21c1d9ba48e528ced75ef45b96f4a8290a57b249",
+        "frozen_sha256": "45ad3eb5ade4b6b4707d962e21c1d9ba48e528ced75ef45b96f4a8290a57b249",
+        "sha256_after": "45ad3eb5ade4b6b4707d962e21c1d9ba48e528ced75ef45b96f4a8290a57b249",
+        "source_unchanged": true
+      }
+    },
+    "vector_sha256": "9f596545e3d7d9315a9b817c6ed476f46b50b7039bad2c78d91a8dddc7b2c797",
+    "builds": [
+      {
+        "command": [
+          "vlib.exe",
+          "work"
+        ],
+        "exit_code": 0,
+        "log": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\task3-commandhold-20261015T142400_565606\\negative_high_address\\build_0.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "vlog.exe",
+          "-sv",
+          "c2h_fixed_pattern_tx.v",
+          "tb_c2h_fixed_pattern_tx.sv"
+        ],
+        "exit_code": 0,
+        "log": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\task3-commandhold-20261015T142400_565606\\negative_high_address\\build_1.log",
+        "log_sha256": "ba94de9354cd818289d8ddc6081288c8af4b33de687bfd9fea751e3357dd7db2"
+      }
+    ],
+    "simulation": {
+      "command": [
+        "vsim.exe",
+        "-c",
+        "-onfinish",
+        "stop",
+        "-l",
+        "transcript.log",
+        "work.tb_c2h_fixed_pattern_tx",
+        "-do",
+        "run.do"
+      ],
+      "exit_code": 3,
+      "log": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\task3-commandhold-20261015T142400_565606\\negative_high_address\\simulation.log",
+      "log_sha256": "7052ce7953cbbca4831def4fbbe7ca9825d1e2b6464d868768953698e31ba71b"
+    },
+    "explicit_pass": false,
+    "oracle": null,
+    "oracle_error": "HIGH_ADDRESS: command 2: expected 00000001, got 00000000",
+    "trace": "C:\\Users\\czz\\.codex\\worktrees\\bayer-codec-reference\\parallel_round2_runs\\task3-commandhold-20261015T142400_565606\\negative_high_address\\trace.txt",
+    "trace_sha256": "f21037ea5da5f7a1acb7aa3687f569ef369584d74ba1d0a2eb2ffa555be94366",
+    "expected_assertion": "HIGH_ADDRESS",
+    "passed": true
+  },
+  "passed": true,
+  "limitations": [
+    "No PCIe IP, credits, wait or cfg encoding/adapter validation.",
+    "done is local TL-submitted status, not host-memory visibility.",
+    "DW within-byte ordering still needs matching IP confirmation.",
+    "No BAR ABI, arbitration, driver, board, synthesis or Fmax claims."
+  ]
+}

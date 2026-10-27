@@ -1,0 +1,1071 @@
+
+## references/peer-fpga-2a4b253/rtl/ep_side/img/ep_bar_win.v SHA256=885f95e7e8faf8ffe3c378bd1e18ee586c65234185144241d40d7c293fca36a8
+240:             if (req_rd) begin
+241:                 rd_addr32     <= tlp_addr;
+242:                 memrd_addr_lo <= tlp_addr[6:0];
+243:                 rd_len_dw     <= tlp_len;
+244:                 rd_data_go    <= req_is_data;          // 下一拍有效（与完成包取样同拍）
+245:             end
+246: 
+247:             if (req_wr) begin
+248:                 case (tlp_addr[11:0])
+249:                     12'h44: begin
+250:                         ctrl_enable  <= tlp_dw_s[0];
+251:                         ctrl_trigger <= tlp_dw_s[1];     // 下一拍自动清 → 单帧脉冲
+252:                         ctrl_pattern_r <= tlp_dw_s[3:2];
+253:                         ctrl_cam_ab    <= tlp_dw_s[8];   // 1 = B 路（0 = A 路，默认）
+254:                         ctrl_ddr_en    <= tlp_dw_s[5];   // 1 = 每完成一帧自动搬进 DDR3
+255:                         ctrl_push_en   <= tlp_dw_s[6];   // 1 = 每有一帧就推给主机
+256:                         ctrl_push_src  <= tlp_dw_s[7];   // 1 = 推帧数据源取片内 ERAM 帧缓存
+257:                     end
+258:                     12'h5C: ptr     <= ptr_fix(tlp_dw_s);
+259:                     12'h9C: cam_tap_cfg   <= tlp_dw_s[6:0];   // A 路 tap
+260:                     12'hD4: cam_tap_b_cfg <= tlp_dw_s[6:0];   // B 路 tap
+261:                     12'hB0: push_dst_lo <= tlp_dw_s;
+262:                     12'hB4: push_dst_hi <= tlp_dw_s;
+263:                     12'hB8: push_db_lo  <= tlp_dw_s;
+264:                     12'hBC: push_db_hi  <= tlp_dw_s;
+265:                     12'h6C: scratch <= tlp_dw_s;
+266:                     12'h74: last_wr <= tlp_dw_s;
+267:                     default: ;
+268:                 endcase
+269:             end else begin
+270:                 ctrl_trigger <= 1'b0;
+271:             end
+272: 
+340:         end
+341:     end
+342: 
+343:     // ------------------------------------------------------------------
+344:     // 读数据组装（组合）
+345:     // ------------------------------------------------------------------
+346: 
+347:     reg [31:0] rd_dw_comb;
+348:     always @(*) begin
+349:         case (r_idx)
+350:             12'h40:  rd_dw_comb = MAGIC;
+351:             // 位序必须逐位对上 CTRL：bit0 enable / bit1 trigger / [3:2] pattern /
+352:             //   bit4 保留（写 0 读 0）/ bit5 ddr_en / bit6 push_en / bit7 push_src /
+353:             //   bit8 cam_ab —— 中间那个保留位不能省，少一位整段就整体错位。
+354:             12'h44:  rd_dw_comb = {23'd0, ctrl_cam_ab, ctrl_push_src, ctrl_push_en, ctrl_ddr_en,
+355:                                     1'b0, ctrl_pattern_r, ctrl_trigger, ctrl_enable};
+356:             12'h48:  rd_dw_comb = {30'd0, st_busy, st_ready};
+357:             12'h4C:  rd_dw_comb = st_frame_cnt;
+358:             12'h50:  rd_dw_comb = {16'd0, st_width};
+359:             12'h54:  rd_dw_comb = {16'd0, st_height};
+360:             12'h58:  rd_dw_comb = st_data_len;
+361:             12'h5C:  rd_dw_comb = ptr;
+362:             12'h60:  rd_dw_comb = pf0;
+363:             12'h64:  rd_dw_comb = VERSION;
+364:             12'h68:  rd_dw_comb = {23'd0, CLK_MHZ};
+365:             12'h6C:  rd_dw_comb = scratch;
+366:             12'h70:  rd_dw_comb = pf0;
+367:             12'h74:  rd_dw_comb = last_wr;
+368:             12'h78:  rd_dw_comb = fb_raddr;
+369:             12'h7C:  rd_dw_comb = dbg_rd_idx;
+370:             12'h80:  rd_dw_comb = cam_stat[31:0];
+371:             12'h84:  rd_dw_comb = cam_stat[63:32];
+372:             12'h88:  rd_dw_comb = cam_stat[95:64];
+373:             12'h8C:  rd_dw_comb = cam_stat[127:96];
+374:             12'h90:  rd_dw_comb = cam_stat[159:128];
+375:             12'h94:  rd_dw_comb = cam_stat[191:160];
+376:             12'h98:  rd_dw_comb = cam_stat[223:192];
+377:             12'h9C:  rd_dw_comb = {25'd0, cam_tap_cfg};   // 读回 A 路 tap 配置
+378:             12'hD4:  rd_dw_comb = {25'd0, cam_tap_b_cfg}; // 读回 B 路 tap 配置
+379:             12'hD8:  rd_dw_comb = cam_diag_b;            // CAM_DDR_DIAG_B
+380:             // A 路丢帧诊断：0xDC={notack[15:0], stuck[15:0]}，0xF0={bad[15:0], last_wcnt[15:0]}
+381:             12'hDC:  rd_dw_comb = cam_drop_a[31:0];       // CAM_DROP_A
+382:             12'hF0:  rd_dw_comb = cam_drop_a[63:32];      // CAM_DROP_A2
+383:             12'hF4:  rd_dw_comb = cam_drop_a[95:64];      // CAM_DROP_A3 = {24'd0, verdict_snap}
+384:             12'hE0:  rd_dw_comb = ddr_ro_b[31:0];        // DDR_FRAME_SEQ_B
+385:             12'hE4:  rd_dw_comb = ddr_ro_b[63:32];       // DDR_BASE_B
+386:             12'hE8:  rd_dw_comb = ddr_ro_b[95:64];       // DDR_STATUS_B
+387:             12'hEC:  rd_dw_comb = ddr_ro_b[127:96];      // DDR_LEN_B
+388:             // 相机 4K 直通通路的诊断字（cam_ddr_writer 的 dbg_*）：借 cam_stat 的
+389:             // [255:224] 那一段（read 路径上方 8 个 dw 只用到 [223:0]，这段原来是 0）。
+390:             //   [15:0]  = max_grp_per_line：一行最多收到几个组（裁剪前数）→ 量真实行宽
+391:             //   [31:16] = lines_per_frame ：一帧多少行（含 embedded/哑行）→ 量真实帧高
+392:             12'hD0:  rd_dw_comb = cam_stat[255:224];      // CAM_DDR_DIAG
+393:             // 整帧搬运握手（cam_ddr_writer，见 rtl/ep_side/ddr/）
+394:             12'hA0:  rd_dw_comb = ddr_ro[31:0];           // DDR_FRAME_SEQ
+395:             12'hA4:  rd_dw_comb = ddr_ro[63:32];          // DDR_BASE
+396:             12'hA8:  rd_dw_comb = ddr_ro[95:64];          // DDR_STATUS
+397:             12'hAC:  rd_dw_comb = ddr_ro[127:96];         // DDR_LEN
+398:             // 推帧（ddr_frame_pusher，见 rtl/ep_side/ddr/）
+399:             12'hB0:  rd_dw_comb = push_dst_lo;            // PUSH_DST_LO
+400:             12'hB4:  rd_dw_comb = push_dst_hi;            // PUSH_DST_HI
+401:             12'hB8:  rd_dw_comb = push_db_lo;             // PUSH_DB_LO
+402:             12'hBC:  rd_dw_comb = push_db_hi;             // PUSH_DB_HI
+403:             12'hC0:  rd_dw_comb = push_ro[31:0];          // PUSH_DONE（已推帧数）
+404:             12'hC4:  rd_dw_comb = push_ro[63:32];         // PUSH_STATUS
+405:             12'hC8:  rd_dw_comb = push_ro[95:64];         // PUSH_ERR
+406:             12'hCC:  rd_dw_comb = push_ro[127:96];        // PUSH_TLP_CNT
+407:             default: rd_dw_comb = 32'hDEAD_BEEF;
+408:         endcase
+409:     end
+410: 
+411:     // 完成包载荷布局（实测）：第 0 个 dw 在 [255:224]，之后依次向下
+412:     wire [31:0] p_dw0 = bswap32(rd_is_data ? pf0 : rd_dw_comb);
+
+## references/peer-fpga-2a4b253/rtl/ep_side/ddr/ddr_frame_pusher.v SHA256=397fc5f645ce42384e5bde419242e2356b1c48e6e079d615553e617d258bcd7c
+175:     input  wire [31:0]  dst_hi,        // 0xB4 目标地址高 32 位
+176:     input  wire [31:0]  db_lo,         // 0xB8 门铃地址低 32 位
+177:     input  wire [31:0]  db_hi,         // 0xBC 门铃地址高 32 位
+178:     output reg  [31:0]  st_done,       // 0xC0 已推帧数
+179:     output wire [31:0]  st_status,     // 0xC4 状态（位定义见文件头）
+180:     output reg  [7:0]   st_err,        // 0xC8 最近一次错误码
+181:     output reg  [31:0]  st_tlp_cnt,    // 0xCC 最近一帧发出的 MWr 数（不含门铃）
+182: 
+183:     // ---- 本帧字节数（帧开头锁存）----
+184:     //   DDR 源：0xAC DDR_LEN（640x480 = 307200 / 4K = 8294400）；ERAM 源：fb 的 DATA_LEN。
+185:     //   ★ 必须满足：frame_bytes % TLP_BYTES == 0 且 % BURST_BYTES == 0（两个尺寸都满足：
+186:     //     307200 = 2400x128 = 75x4096、8294400 = 64800x128 = 2025x4096）。
+187:     //     否则 MWr 数/突发数不是整数，帧尾会对不上（本模块不再按 W*H 推）。
+188:     input  wire [31:0]  frame_bytes,
+189: 
+190:     // ---- DDR 搬运握手（ddr_frame_writer 的只读字）----
+191:     input  wire [31:0]  ddr_seq,       // 0xA0 已整帧落 DDR3 的帧号
+192:     input  wire [31:0]  ddr_base,      // 0xA4 该帧在 DDR3 里的字节基址
+193:     input  wire [31:0]  ddr_status,    // 0xA8 bit0 valid / bit1 busy / bit2 err /
+194:                                        //       bit3 alive / bit4 cal_done
+195: 
+196:     // ---- ERAM 帧缓存源（CTRL[7]=1；见文件头「数据源」）----
+197:     input  wire         src_sel,       // 1 = 数据源取片内 ERAM 帧缓存（绕开 DDR）
+475: 
+476:     // 起始条件：使能 + 本源已有一帧可推 + 帧号与上次处理过的不一样。
+477:     //   · DDR 源（src_sel=0）：要 ddr_frame_writer 发布过一帧（ddr_status[0]）；
+478:     //   · ERAM 源（src_sel=1）：片内帧缓存的帧计数器一变就推（它只在 EOF 递增，
+479:     //     所以读到的必定是刚写完整的那一帧）。
+480:     // 声明放在 ERAM 打包器之前（打包器要用 start 复位字指针）。
+481:     wire [31:0] src_seq = src_sel ? fb_frame_cnt : ddr_seq;
+482:     wire        src_rdy = src_sel ? 1'b1        : ddr_status[0];
+483:     wire        start   = push_en && src_rdy && (src_seq != last_seq) && (p_st == S_IDLE);
+484: 
+485:     // ========================================================================
+486:     //  ERAM 数据源（CTRL[7]=1）：直接从片内帧缓存凑「一拍 256bit」
+487:     //   · 与 ddr_frame_writer 的拼拍写法逐字一致：lane k 的字放 [32k +: 32]，
+488:     //     所以下游的 bswap256（TL 要求首字节在高位）与 DDR 模式走完全同一条路
+489:     //     ⇒ 主机拿到的字节序与 MMIO 0x60 读到的、以及 DDR 里的都一致。
+490:     //   · 读口是 img_frame_src 那唯一一份，与主机预取 / DDR 搬运共用：
+491:     //     用 fb_req 申请，拿到 fb_grant 那一拍才发地址（数据晚 1 拍）。
+492:     //   · 一帧 = FRAME_BYTES/4 = 76800 字 = 9600 拍；攒满一拍就停（e_rdy=1），
+493:     //     等 TL 侧把这一拍吃掉再接着攒 —— 只提前攒一拍，不预读整帧。
+494:     // ========================================================================
+495:     localparam integer EWORDS = FRAME_BYTES / 4;
+640:             last_ok    <= 1'b0;
+641:             db_sent    <= 1'b0;
+642:             tlp_cnt    <= 32'd0;
+643:             st_done    <= 32'd0;
+644:             st_err     <= E_NONE;
+645:             st_tlp_cnt <= 32'd0;
+646:         end else begin
+647:             // ---- 等 tl_tx_wait 超时：口子给了我们、链路却一直不收 ----
+648:             if (utx_sel && beat_present && tl_tx_wait) begin
+649:                 if (wt_cnt == WAIT_LIMIT) begin
+650:                     flush <= 1'b1;
+651:                     if (err_r == E_NONE) err_r <= E_WAIT_TO;
+652:                 end else begin
+653:                     wt_cnt <= wt_cnt + 16'd1;
+654:                 end
+655:             end else if (utx_ack) begin
+656:                 wt_cnt <= 16'd0;
+657:             end
+658: 
+659:             // ---- AXI 读响应非 OKAY：本帧不要了（err_sticky 随帧结束清）----
+660:             if (derr_s2 && (p_st != S_IDLE) && (err_r == E_NONE)) begin
+661:                 err_r <= E_AXI;
+662:                 flush <= 1'b1;
+663:             end
+664: 
+665:             case (p_st)
+666:                 // ------------------------------------------------------------
+667:                 S_IDLE: begin
+668:                     if (start) begin
+669:                         if ((dst_lo == 32'd0) && (dst_hi == 32'd0)) begin
+670:                             // 目标地址没配：整帧不发。错误码要**当拍就写到 0xC8**，
+671:                             // 否则主机只看到 done 不涨、err 恒 0，跟「引擎没使能」分不清
+672:                             // （本 TB 的 PHASE0 就是拿这一条做判据的）。
+673:                             err_r  <= E_NO_DST;
+674:                             st_err <= E_NO_DST;
+675:                         end else begin
+676:                             last_seq  <= src_seq;   // 这一帧只处理一次
+677:                             src_lat   <= src_sel;   // 本帧用哪个源（帧内不再变）
+678:                             base_lat  <= ddr_base;
+679:                             ntlp_m1_lat   <= ntlp_m1_w;     // 本帧的 MWr 数/突发数
+680:                             nburst_m1_lat <= nburst_m1_w;   // （4K/640x480 都在这儿定死）
+681:                             addr_q    <= {dst_hi, dst_lo};
+682:                             db_a_q    <= {db_hi, db_lo};
+683:                             db_ena    <= (db_lo != 32'd0) || (db_hi != 32'd0);
+684:                             db_val    <= st_done + 32'd1;   // 门铃里写本帧序号
+685:                             req_level <= ~src_sel;          // ERAM 源不叫 ddr 侧读
+686:                             flush     <= 1'b0;
+687:                             err_r     <= ((db_lo == 32'd0) && (db_hi == 32'd0))
+688:                                          ? E_NO_DB : E_NONE;
+689:                             last_ok   <= 1'b0;
+690:                             db_sent   <= 1'b0;
+691:                             db_phase  <= 1'b0;
+692:                             tlp_cnt   <= 32'd0;
+693:                             tlp       <= {NTLP_CW{1'b0}};
+694:                             k         <= 3'd0;
+695:                             p_st      <= S_FILL;    // 先等第一个载荷字到位
+770:                         db_phase  <= 1'b0;
+771:                         k         <= 3'd0;
+772:                         tlp       <= {NTLP_CW{1'b0}};
+773:                         p_st      <= S_IDLE;
+774:                     end
+775:                 end
+776: 
+777:                 // ------------------------------------------------------------
+778:                 // 出错：不发 TLP，但要把 FIFO 排空，否则 ddr 侧会卡在 FIFO 满上、
+779:                 // 永远报不出 done，本模块也就永远回不到 IDLE。
+780:                 S_DRAIN: begin
+781:                     // !fifo_empty 时由 pop_drain 一直 pop（拿到的字直接丢掉）
+782:                     if (fifo_empty && (done_s2 | src_lat)) begin
+783:                         st_err     <= err_r;
+784:                         st_tlp_cnt <= tlp_cnt;
+785:                         last_ok    <= 1'b0;
+786:                         err_cnt    <= err_cnt + 16'd1;
+787:                         req_level  <= 1'b0;
+788:                         flush      <= 1'b0;
+789:                         k          <= 3'd0;
+790:                         tlp        <= {NTLP_CW{1'b0}};
+830:                         a_st          <= A_AR;
+831:                         // 突发地址 = 本帧基址 + 已完成突发数 × 4KB。
+832:                         // 注意不能把基址先存进寄存器再用：base_s2 与 req_s2 是同一个
+833:                         // 同步器的同一拍跳变的，存下来的会是上一帧的基址。
+834:                         m_axi_araddr  <= base_s2[28:0] + a_bcnt * BURST_STEP;   // 步长=突发字节数（别写死 4KB）
+835:                         m_axi_arlen   <= ARLEN;
+836:                         m_axi_arvalid <= 1'b1;
+837:                     end else if (!req_s2) begin
+838:                         // 一帧收工（或还没开始）：突发计数与出错一起清
+839:                         a_bcnt     <= {NBURST_CW{1'b0}};
+840:                         err_sticky <= 1'b0;
+841:                     end
+842:                 end
+
+## references/peer-fpga-2a4b253/rtl/ep_side/ddr/cam_ddr_writer.v SHA256=7bb43a31a6a30539e743b13f9b07461084ed384ed9d8c1b5b152876a3abd9ab9
+110: `timescale 1ns/1ps
+111: 
+112: module cam_ddr_writer #(
+113:     // ---- 帧几何：与 cam_fb_writer / 顶层 CAM_* 用同一组 W/H/X0/Y0/SKIP_ROWS ----
+114:     parameter integer W           = 3840,          // 帧宽（像素，须为 4 的倍数）
+115:     parameter integer H           = 2160,          // 帧高（行）
+116:     parameter [15:0]  X0          = 16'd0,         // 裁剪窗左上角（图像域内，裁前坐标）
+117:     parameter [15:0]  Y0          = 16'd0,
+118:     parameter [15:0]  SKIP_ROWS   = 16'd37,        // 帧头 embedded + 哑行数（4K 实测 37）
+119:     // ---- DDR3 双缓冲基址（字节，4KB 对齐，两块互不重叠且都不小于 W*H）----
+120:     parameter [31:0]  BASE0       = 32'h0010_0000, // 1MB
+121:     parameter [31:0]  BASE1       = 32'h0090_0000, // 9MB（4K 一帧 7.9MB，两块不重叠）
+122:     // ---- 异步 FIFO 深度 = 2**FIFO_AW 条（每条约 4 像素）----
+123:     //   1024 条 = 4KB ≈ 1.07 行（4K）。为什么够：一行 960 条在 5.12us 内涌入
+124:     //   （1.5Gbps x 4 lane），而 ddr 域 1 拍吐 1 条（100MHz）：
+125:     //   5.12us 只吐掉 512 条 ⇒ 积压 448 条 < 1024，且行间空档还会继续吐。
+180:     //   bad    = 发布了但判定坏（字数/EOF/拍数/非 OKAY bresp）
+181:     //   last_wcnt = 最后一帧实际收到的像素字数（正常 = W*H/4）
+182:     output wire [95:0]   dbg_drop
+183: );
+184: 
+185:     // ========================================================================
+186:     //  参数推导（魔数只在这里出现）
+187:     // ========================================================================
+188:     localparam integer BEAT_BYTES     = 32;                            // 256bit/8
+189:     localparam integer WORDS_PER_BEAT = BEAT_BYTES / 4;                // 每拍 8 个字
+190:     localparam integer FRAME_WORDS    = (W * H) / 4;                    // 每帧字数
+191:     localparam integer FRAME_BYTES    = W * H;                          // 1 字节 1 像素
+192:     localparam integer PART_WORDS     = FRAME_WORDS % WORDS_PER_BEAT;   // 末尾残拍字数（0=整拍）
+193:     localparam integer NBEATS         = (FRAME_WORDS + WORDS_PER_BEAT - 1) / WORDS_PER_BEAT;
+194:     localparam [31:0]  WR_LEN_W       = FRAME_BYTES;
+195: 
+196:     localparam [2:0]   AXI_SIZE       = 3'd5;      // 2**5 = 32 字节/拍
+197:     localparam [1:0]   AXI_BURST      = 2'b01;     // INCR
+198: 
+199:     function integer clogb2;
+200:         input integer v;
+201:         integer i;
+202:         begin
+203:             clogb2 = 0;
+204:             for (i = v - 1; i > 0; i = i >> 1)
+205:                 clogb2 = clogb2 + 1;
+
+## references/peer-driver-a0215c5/include/anlogic_pci_ioctl.h SHA256=a9c00ae1e3d692561fa5538741c695d0a54da731266a2e735752be89171b7468
+20: #define ANLOGIC_XCL_MAGIC   0X586C0C6C
+21: 
+22: enum ANLOGIC_IOC_TYPES {
+23:     ANLOGIC_IOC_NOP,
+24:     ANLOGIC_IOC_INFO,
+25:     ANLOGIC_IOC_OFFLINE,
+26:     ANLOGIC_IOC_ONLINE,
+27:     ANLOGIC_IOC_MAX
+28: };
+29: 
+30: struct anlogic_ioc_base {
+31:     unsigned int magic;
+32:     unsigned int command;
+33: };
+34: 
+35: struct anlogic_ioc_info {
+36:     struct anlogic_ioc_base base;
+37:     unsigned short      vendor;
+38:     unsigned short      device;
+39:     unsigned short      subsystem_vendor;
+40:     unsigned short      subsystem_device;
+41:     unsigned int        dma_engine_version;
+42:     unsigned int        driver_version;
+43:     unsigned long long  feature_id;
+44:     unsigned short      domain;
+45:     unsigned char       bus;
+46:     unsigned char       dev;
+47:     unsigned char       func;
+48: };
+49: 
+50: struct anlogic_ioc_bar {
+51:     unsigned short    bar_id;
+52:     unsigned short    bar_type;
+53:     unsigned int      bar_offaddr;
+54:     unsigned int      wdata;   /* write data */
+55:     unsigned int      rdata;   /* read data */
+56: };
+57: 
+58: /*
+59:  * BULK 单次 ioctl 可以带多少个 dw（驱动按此上限校验 bar_len，再把整段按
+60:  * 4 dw 一块推进；每个读回值都先过 BAR0 的 0x40 MAGIC 门禁，读到 0xffffffff
+61:  * 立即以 -EIO 熔断）。
+62:  */
+63: #define MAX_DATA_SIZE   100
+64: 
+65: struct anlogic_ioc_bar_bulk {
+66:     unsigned short    bar_id;
+67:     unsigned short    bar_type;
+68:     unsigned int      bar_offaddr;
+69:     unsigned int      bar_len;
+70:     unsigned int      wdata[MAX_DATA_SIZE];   /* write data */
+71:     unsigned int      rdata[MAX_DATA_SIZE];   /* read data */
+72: };
+73: 
+74: /* 配置空间读写：寄存器偏移 + 值 */
+75: typedef struct cfgwrite {
+76:     int reg;
+77:     int value;
+78: } cfgwr;
+79: 
+80: /*
+81:  * 收帧缓冲（DMA 一致性内存）：FPGA 侧用 MWr 把整帧推进来，用户态只读。
+82:  *
+83:  * 缓冲由驱动 dma_alloc_coherent 分配（物理地址连续、页对齐）。内存布局：
+84:  *   偏移 0 起 stride*slots   槽区：stride*i 处是 struct anlogic_frame_slot_hdr
+85:  *                           （16 字节），其后是一帧像素；i = (seq-1) % slots
+86:  *   偏移 mb_off（页对齐）       struct anlogic_frame_mailbox（64 字节，独占一页）
+87:  * FPGA 侧的 MWr 目标 = phys_addr + stride * 槽位号 + hdr_bytes（= 该槽**像素区起点**，
+88:  * 槽头那 16 字节由驱动写，不能被推来的帧盖掉），像素从槽头之后开始；
+89:  * 本板推帧引擎不逐帧轮换目标地址，所以推来的帧永远落在槽 0。
+90:  * ioctl 把 mb_off 一并报给用户态，用户态靠它定位 mailbox（不要自己按固定偏移猜）。
+91:  *
+92:  * 握手约定：
+93:  *   - 驱动分配完就把 magic/slot_bytes/slots/stride/width/height 写进 mailbox，
+94:  *     FPGA 可以先读它拿几何参数；magic == ANLOGIC_FRAME_MAGIC 才算有效。
+95:  *     magic 必须是最后一笔写，且前面用屏障挡开（写到 DRAM 必须可见才算就绪）。
+96:  *   - 每写完一帧：先写该槽的槽头（seq/len/flags），**最后**才把 mailbox.seq
+97:  *     更新成该帧序号（seq 从 1 起、每帧 +1，槽位 = (seq-1) % slots），同时
+98:  *     mailbox.count 也 +1。序号那一笔 MWr 不能带 Relaxed Ordering 位，否则
+99:  *     可能先于帧数据到达（PCIe 允许 posted write 重排）。
+100:  *   - 主机侧一律轮询 mailbox.seq 判「帧就绪」，本 EP 目前只有 Legacy 中断、
+101:  *     没有 MSI，所以这一层不做中断；FPGA 没接上时 seq 恒 0 →「无新帧」。
+102:  *   - 槽区布局在驱动加载后固定不变：slot_bytes / slots / stride 不随帧变化，FPGA
+103:  *     不要自行换算 stride，一律用 ioctl 报出来的 mb_off 与 stride。
+104:  *
+105:  * 本板推帧通路的实际分工（与上面那套约定的差异，按 FPGA 侧现状写实）：
+106:  *   推帧引擎（fpga/rtl/ep_side/ddr/ddr_frame_pusher.v）只把整帧 MWr 到主机给的
+107:  *   目标地址（0xB0/0xB4），**不写槽头、也不碰 mailbox.seq/count**；它只在推完
+108:  *   一帧后往门铃地址（0xB8/0xBC）单独写一个 dw，内容是本帧的已推帧数（1 起）。
+109:  *   所以那三项由驱动在看门铃时补齐：门铃写进 mailbox 页里的 push_dbell 字，
+110:  *   驱动见到它变大就把对应槽的槽头、mailbox.seq/count 一并写好，用户态照旧
+111:  *   只轮询 mailbox.seq。推帧目标地址是固定的一块（推帧引擎不做逐帧轮换），
+112:  *   因此多槽下只有槽 0 会收到推来的帧 —— frame_slots 默认取 1。
+113:  */
+114: #define ANLOGIC_FRAME_MAGIC     0x4D524641u   /* 小端字节序为 'A','F','R','M' */
+115: 
+116: /* 收帧缓冲的规模上限：驱动侧拿它们夹 module param，等待超时的上限两边共用 */
+117: #define ANLOGIC_FRAME_MAX_SLOTS         16
+118: #define ANLOGIC_FRAME_MAX_SLOT_BYTES    (64u * 1024u * 1024u)
+119: #define ANLOGIC_FRAME_MAX_WAIT_MS       600000u
+120: 
+121: struct anlogic_frame_mailbox {
+122:     unsigned int magic;        /* 驱动写 ANLOGIC_FRAME_MAGIC：本描述符有效 */
+123:     unsigned int seq;          /* 已完成帧的序号，每帧 +1，从 1 起；0 = 还没帧 */
+124:     unsigned int count;        /* 累计完成帧数（单调 +1，用来分辨序号回绕） */
+125:     unsigned int slot_bytes;   /* 一帧像素字节数 */
+126:     unsigned int slots;        /* 槽位数 */
+127:     unsigned int stride;       /* 槽位步长（字节，页对齐） */
+128:     unsigned int width;        /* 每帧宽度（像素） */
+129:     unsigned int height;       /* 每帧高度（像素） */
+130:     unsigned int push_dbell;   /* 推帧门铃：EP 写本帧的已推帧数（1 起），驱动见它变大就补 seq/count/槽头 */
+131:     unsigned int reserved[7];  /* 补齐到 64 字节 */
+132: };
+133: 
+134: struct anlogic_frame_slot_hdr {
+135:     unsigned int seq;          /* 本槽是第几帧，取帧时要与 mailbox.seq 核对 */
+136:     unsigned int len;          /* 本槽有效像素字节数（≤ slot_bytes） */
+137:     unsigned int flags;        /* ANLOGIC_FRAME_FLAG_COMPLETE 表示整帧完整 */
+138:     unsigned int reserved;
+139: };
+140: 
+141: #define ANLOGIC_FRAME_FLAG_COMPLETE     0x1u
+142: 
+143: /* 收帧缓冲查询：FPGA 要拿 phys_addr 当 MWr 基址，用户态要拿几何与序号 */
+144: struct anlogic_ioc_frame {
+145:     unsigned long long  phys_addr;  /* 缓冲起始物理（PCIe 总线）地址 */
+146:     unsigned long long  size;       /* 缓冲总字节数（页对齐） */
+147:     unsigned int        stride;     /* 槽位步长 */
+148:     unsigned int        slot_bytes; /* 一帧像素字节数 */
+149:     unsigned int        hdr_bytes;  /* 槽头字节数（sizeof(anlogic_frame_slot_hdr)） */
+150:     unsigned int        slots;      /* 槽位数 */
+180:  */
+181: #define ANLOGIC_BAR_CTRL_OFF        0x44u   /* CTRL：bit 定义见下 */
+182: #define ANLOGIC_BAR_FRAME_CNT_OFF   0x4Cu   /* 帧缓存已完成帧数 */
+183: #define ANLOGIC_BAR_CAM_A_STAT_OFF  0x80u   /* A 路相机状态字（帧缓存写源就是 A 路） */
+184: #define ANLOGIC_BAR_CAM_B_STAT_OFF  0x84u   /* B 路相机状态字 */
+185: #define ANLOGIC_BAR_DDR_SEQ_OFF     0xA0u   /* 已整帧落 DDR3 的帧号 */
+186: #define ANLOGIC_BAR_DDR_BASE_OFF    0xA4u   /* 该帧在 DDR3 里的字节基址 */
+187: #define ANLOGIC_BAR_DDR_STATUS_OFF  0xA8u   /* DDR 握手状态 */
+188: #define ANLOGIC_BAR_DDR_LEN_OFF     0xACu   /* 每帧字节数 */
+189: #define ANLOGIC_BAR_PUSH_DST_LO_OFF 0xB0u   /* 推帧目标地址低 32 位 */
+190: #define ANLOGIC_BAR_PUSH_DST_HI_OFF 0xB4u   /* 推帧目标地址高 32 位 */
+191: #define ANLOGIC_BAR_PUSH_DB_LO_OFF  0xB8u   /* 门铃地址低 32 位 */
+192: #define ANLOGIC_BAR_PUSH_DB_HI_OFF  0xBCu   /* 门铃地址高 32 位 */
+193: #define ANLOGIC_BAR_PUSH_DONE_OFF   0xC0u   /* 已推帧数（1 起） */
+194: #define ANLOGIC_BAR_PUSH_STATUS_OFF 0xC4u   /* 推帧状态 */
+195: #define ANLOGIC_BAR_PUSH_ERR_OFF    0xC8u   /* 最近一次推帧错误码 */
+196: #define ANLOGIC_BAR_PUSH_TLP_OFF    0xCCu   /* 最近一帧发出的 MWr 数（正常 2400） */
+197: 
+198: /* 本驱动要读写的寄存器里偏移最大的那个（+1），用来判 BAR0 映射长度够不够 */
+199: #define ANLOGIC_BAR_LINK_WIN_END    (ANLOGIC_BAR_PUSH_TLP_OFF + 4u)
+200: 
+201: /* CTRL（0x44）位定义 */
+202: #define ANLOGIC_CTRL_ENABLE     0x00000001u  /* bit0  总使能 */
+203: #define ANLOGIC_CTRL_TRIGGER    0x00000002u  /* bit1  单帧触发（自清，测试图源用） */
+204: #define ANLOGIC_CTRL_MCLK_SEL   0x00000004u  /* bit2  电平一变就重跑一次传感器初始化（xclr 拉放 + 201 条表） */
+205: #define ANLOGIC_CTRL_CAM_SEL    0x00000010u  /* bit4  帧缓存写源：1 = 相机，0 = 测试图 */
+206: #define ANLOGIC_CTRL_DDR_EN     0x00000020u  /* bit5  每完成一帧自动搬进 DDR3 */
+207: #define ANLOGIC_CTRL_PUSH_EN    0x00000040u  /* bit6  每有一帧就用 MWr 推给主机 */
+208: #define ANLOGIC_CTRL_PUSH_SRC   0x00000080u  /* bit7  推帧数据源：0 = DDR3，1 = 片内 ERAM */
+209: 
+210: /*
+211:  * 探测时初始化链路的位：总使能 + 相机写源 + DDR 搬运 + 推帧，bit7 保持 0。
+212:  * bit7=0 是必须的：DDR3 那一帧才是「相机 → DDR → 主机」这条链路的中间站，
+213:  * 片内 ERAM 源会与 DDR 搬运抢帧缓存唯一的读口（见 ep_bar_win.v 的说明）。
+214:  * bit2 不在里面：它是重触发电平，由驱动按当前值就地翻转（见 anlogic_pci_link.c）。
+215:  */
+216: #define ANLOGIC_CTRL_ARM_BITS   (ANLOGIC_CTRL_ENABLE | ANLOGIC_CTRL_CAM_SEL | \
+217:                                  ANLOGIC_CTRL_DDR_EN | ANLOGIC_CTRL_PUSH_EN)
+218: 
+219: /* A 路相机状态字（0x80）里的 lane_valid：bit[4:1]，非 0 = MIPI 链路已锁 */
+220: #define ANLOGIC_CAM_STAT_LANE_SHIFT     1u
+221: #define ANLOGIC_CAM_STAT_LANE_MASK      0x0000001eu
+222: #define ANLOGIC_CAM_STAT_BCLK_RUNNING   0x00000001u
+223: #define ANLOGIC_CAM_STAT_CFG_DONE       0x00000020u
+224: #define ANLOGIC_CAM_STAT_BUS_ERR        0x00000040u
+225: 
+226: #define ANLOGIC_CAM_LANE_VALID(stat) \
+227:     (((stat) & ANLOGIC_CAM_STAT_LANE_MASK) >> ANLOGIC_CAM_STAT_LANE_SHIFT)
+228: 
+229: /* DDR 握手状态（0xA8）位定义 */
+230: #define ANLOGIC_DDR_STATUS_VALID    0x00000001u
+231: #define ANLOGIC_DDR_STATUS_BUSY     0x00000002u
+232: #define ANLOGIC_DDR_STATUS_ERR      0x00000004u
+233: #define ANLOGIC_DDR_STATUS_ALIVE    0x00000008u
+234: #define ANLOGIC_DDR_STATUS_CAL_DONE 0x00000010u
+235: 
+236: /* 推帧状态（0xC4）位定义；[31:16] 是累计错误数 */
+237: #define ANLOGIC_PUSH_STATUS_BUSY        0x00000001u
+238: #define ANLOGIC_PUSH_STATUS_LAST_OK     0x00000002u
+239: #define ANLOGIC_PUSH_STATUS_DB_SENT     0x00000004u
+240: #define ANLOGIC_PUSH_STATUS_DDR_ALIVE   0x00000008u
+241: #define ANLOGIC_PUSH_STATUS_DDR_CAL     0x00000010u
+242: 
+243: /* 推帧错误码（0xC8） */
+244: #define ANLOGIC_PUSH_ERR_NONE       0u  /* 正常：数据与门铃都发了 */
+245: #define ANLOGIC_PUSH_ERR_NO_DST     1u  /* 目标地址未配置 */
+246: #define ANLOGIC_PUSH_ERR_WAIT_TO    2u  /* 等 tl_tx_wait 超时 */
+247: #define ANLOGIC_PUSH_ERR_AXI        3u  /* AXI 读响应非 OKAY */
+248: #define ANLOGIC_PUSH_ERR_NO_DB      4u  /* 门铃地址未配置（数据推了、门铃没发） */
+249: 
+250: /*
+
+## references/peer-driver-a0215c5/src/anlogic_pci_frame.c SHA256=57c24bf87d75624ffec6155a0a385097dd3da393b1178c4ae97e31f45d58d76b
+110:  *   ③ **最后**才更新 mailbox.seq —— 与头文件里给 FPGA 定的是同一个顺序：
+111:  *      用户态看到序号变化时，槽头一定已经在内存里了（序号是最后一笔写）。
+112:  * 推帧目标地址由驱动在探测时写好且不逐帧轮换，所以推来的帧都在同一个槽里；
+113:  * frame_slots 默认 1，(done-1)%slots 恒为 0。
+114:  * 读门铃用 READ_ONCE + dma_rmb()：先看到门铃，再去看它标记的那一帧。
+115:  */
+116: static void anlogic_pci_frame_push_sync(struct anlogic_pci_hw *hw)
+117: {
+118:     struct anlogic_frame_mailbox *mb = hw->frame_mb;
+119:     struct anlogic_frame_slot_hdr *hdr;
+120:     unsigned int slot;
+121:     u32 done;
+122: 
+123:     if (!mb || !hw->frame_slots || !hw->frame_stride)
+124:         return;
+125: 
+126:     done = READ_ONCE(mb->push_dbell);
+127:     dma_rmb();
+128:     if (!done || done == hw->frame_push_done)
+129:         return;
+130: 
+131:     slot = (done - 1) % hw->frame_slots;
+132:     hdr = (struct anlogic_frame_slot_hdr *)((u8 *)hw->frame_virt +
+133:                                             (size_t)slot * hw->frame_stride);
+134:     WRITE_ONCE(hdr->seq, done);
+135:     WRITE_ONCE(hdr->len, hw->frame_slot_bytes);
+136:     WRITE_ONCE(hdr->flags, ANLOGIC_FRAME_FLAG_COMPLETE);
+137:     WRITE_ONCE(hdr->reserved, 0);
+138:     dma_wmb();
+139:     WRITE_ONCE(mb->count, done);
+140:     dma_wmb();
+141:     WRITE_ONCE(mb->seq, done);
+142:     dma_wmb();
+143:     hw->frame_push_done = done;
+144: 
+145:     pr_debug("收帧缓冲：门铃 %u，补齐槽 %u 的槽头与 mailbox.seq/count。\n",
+146:              done, slot);
+147: }
+148: 
+149: /*
+150:  * 分配收帧缓冲。物理地址连续、页对齐，槽位步长也页对齐（FPGA 侧按
+151:  * phys + stride * n 算 MWr 目标，不用再对齐）。
+152:  * 返回 0 表示分配成功且描述符已就绪；失败返回负值（调用方走清理路径）。
+153:  */
+154: int anlogic_pci_frame_alloc(struct anlogic_pci_hw *hw)
+155: {
+156:     struct anlogic_frame_mailbox *mb;
+157:     unsigned int width = frame_width;
+158:     unsigned int height = frame_height;
+159:     unsigned int slot_bytes = frame_slot_bytes;
+160:     unsigned int slots = frame_slots;
+161:     unsigned int hdr_bytes = sizeof(struct anlogic_frame_slot_hdr);
+162:     unsigned int stride;
+163:     size_t size;
+164: 
+165:     if (!hw || !hw->pdev) {
+166:         pr_err("收帧缓冲：hw/pdev 为空。\n");
+167:         return -EINVAL;
+168:     }
+169: 
+170:     /* 模块参数是 root 可控的，先夹到合法区间，别让 0 槽/0 字节流下去 */
+171:     if (!width || width > ANLOGIC_FRAME_MAX_W) {
+172:         pr_warn("收帧缓冲：frame_width=%u 非法，改用默认 %u。\n", width,
+173:                 ANLOGIC_FRAME_DEF_WIDTH);
+174:         width = ANLOGIC_FRAME_DEF_WIDTH;
+175:     }
+176:     if (!height || height > ANLOGIC_FRAME_MAX_H) {
+177:         pr_warn("收帧缓冲：frame_height=%u 非法，改用默认 %u。\n", height,
+178:                 ANLOGIC_FRAME_DEF_HEIGHT);
+179:         height = ANLOGIC_FRAME_DEF_HEIGHT;
+180:     }
+181:     if (!slot_bytes)
+182:         slot_bytes = width * height;
+183:     if (slot_bytes > ANLOGIC_FRAME_MAX_SLOT_BYTES) {
+184:         pr_warn("收帧缓冲：frame_slot_bytes=%u 超过上限 %u，夹到上限。\n",
+185:                 slot_bytes, ANLOGIC_FRAME_MAX_SLOT_BYTES);
+186:         slot_bytes = ANLOGIC_FRAME_MAX_SLOT_BYTES;
+187:     }
+188:     if (!slots || slots > ANLOGIC_FRAME_MAX_SLOTS) {
+189:         pr_warn("收帧缓冲：frame_slots=%u 非法，改用 %u。\n", slots,
+190:                 ANLOGIC_FRAME_DEF_SLOTS);
+191:         slots = ANLOGIC_FRAME_DEF_SLOTS;
+192:     }
+193: 
+194:     /* 每槽页对齐：槽头 + 一帧像素，再向上取整到页 */
+195:     stride = (unsigned int)PAGE_ALIGN((size_t)hdr_bytes + slot_bytes);
+196:     /*
+197:      * 布局（与 include/anlogic_pci_ioctl.h 的说明一致，FPGA 按这个算 MWr 目标）：
+198:      *   [0, stride*slots)            槽区，槽 i 在 stride*i，槽头后是像素
+199:      *   [stride*slots, +一页)         mailbox 描述符，页对齐、与槽区不重叠
+200:      */
+201:     size = (size_t)stride * slots + PAGE_SIZE;
+202: 
+203:     hw->frame_virt = dma_alloc_coherent(&hw->pdev->dev, size, &hw->frame_phys,
+204:                                         GFP_KERNEL);
+205:     if (!hw->frame_virt) {
+206:         pr_err("收帧缓冲：dma_alloc_coherent(%zu 字节) 失败。\n", size);
+207:         return -ENOMEM;
+208:     }
+209:     /* FPGA 侧按物理地址算 MWr 目标，页对齐是硬要求（DMA API 本来就保证） */
+210:     if (hw->frame_phys & (PAGE_SIZE - 1)) {
+211:         pr_err("收帧缓冲：物理地址 0x%llx 不是页对齐，放弃。\n",
+212:                (unsigned long long)hw->frame_phys);
+213:         dma_free_coherent(&hw->pdev->dev, size, hw->frame_virt,
+214:                           hw->frame_phys);
+215:         hw->frame_virt = NULL;
+216:         hw->frame_phys = 0;
+217:         return -EINVAL;
+218:     }
+219: 
+220:     /* 清零：序号从 0 起，FPGA 没接上时用户态一问就是「无新帧」 */
+
+## references/peer-driver-a0215c5/src/anlogic_pci_link.c SHA256=6fadc165ed232e3cc00e60e830bce27551ad4da0b94a19cbdb5493209df1c79b
+240: {
+241:     u32 ctrl, cam_stat = 0, ddr_status = 0, ddr_seq = 0, pushed = 0, frame_cnt = 0;
+242:     u32 dst_lo, dst_hi, db_lo, db_hi;
+243:     u64 dst, db;
+244:     unsigned int waited = 0;
+245:     int armed = 0;
+246:     int rv;
+247: 
+248:     if (!hw || !hw->pdev)
+249:         return -EINVAL;
+250: 
+251:     /* 收帧缓冲必须先分配好：推帧目标就是它，门铃字也在它里面 */
+252:     if (!hw->frame_virt || !hw->frame_mb) {
+253:         pr_err("链路：收帧缓冲还没分配好，无法初始化推帧（先看收帧缓冲的报错）。\n");
+254:         return -EINVAL;
+255:     }
+256: 
+257:     rv = anlogic_pci_link_magic_gate(hw);
+258:     if (rv < 0)
+259:         return rv;
+260: 
+261:     /*
+262:      * ① 推帧目标 = 槽 0 的**像素区起点** = 槽基址 + 槽头字节数（16）。
+263:      *    槽基址那 16 字节由驱动写在看门铃时补的槽头（seq/len/flags）占用，
+264:      *    推帧引擎若从槽基址写起，帧的头 16 字节就会被槽头盖掉；而主机
+265:      *    （frame_grab）取像素的起点是 slot*stride + hdr_bytes，正好也是像素区
+266:      *    起点 —— 两边对上，帧既不会被槽头覆盖，也不会被整块搬移。
+267:      *    推帧引擎不逐帧轮换目标地址，所以推来的帧永远落在槽 0。
+268:      *    门铃地址 = 缓冲内 mailbox 页里的门铃字（推帧引擎每推完一帧往那儿写
+269:      *    本帧的已推帧数，驱动见它变大就补槽头与 mailbox.seq/count）。
+270:      */
+271:     dst = (u64)hw->frame_phys + (u64)hw->frame_hdr_bytes;
+272:     db = (u64)hw->frame_phys + (u64)hw->frame_mb_off +
+273:          (u64)offsetof(struct anlogic_frame_mailbox, push_dbell);
+274:     dst_lo = (u32)dst;
+275:     dst_hi = (u32)(dst >> 32);
+276:     db_lo = (u32)db;
+277:     db_hi = (u32)(db >> 32);
+278: 
+279:     rv = anlogic_pci_link_write32(hw, ANLOGIC_BAR_PUSH_DST_LO_OFF, dst_lo);
+280:     if (!rv)
+281:         rv = anlogic_pci_link_write32(hw, ANLOGIC_BAR_PUSH_DST_HI_OFF, dst_hi);
+282:     if (!rv)
+283:         rv = anlogic_pci_link_write32(hw, ANLOGIC_BAR_PUSH_DB_LO_OFF, db_lo);
+284:     if (!rv)
+285:         rv = anlogic_pci_link_write32(hw, ANLOGIC_BAR_PUSH_DB_HI_OFF, db_hi);
+286:     if (rv < 0) {
+287:         pr_err("链路：写推帧目标/门铃地址失败 %d，初始化中断。\n", rv);
+288:         return rv;
+289:     }
+290: 
+291:     /* 复核两笔：写入没生效（老映像没有这几个口）时要当场看出来，别当成功 */
+292:     rv = anlogic_pci_link_read32(hw, ANLOGIC_BAR_PUSH_DST_LO_OFF, &ctrl);
+293:     if (rv < 0)
+294:         return rv;
+295:     if (ctrl != dst_lo) {
+296:         pr_err("链路：0xB0 回读 0x%08x != 写入 0x%08x，推帧目标没配好。\n",
+297:                ctrl, dst_lo);
+298:         return -EIO;
+299:     }
+300:     rv = anlogic_pci_link_read32(hw, ANLOGIC_BAR_PUSH_DB_LO_OFF, &ctrl);
+301:     if (rv < 0)
+302:         return rv;
+303:     if (ctrl != db_lo) {
+304:         pr_err("链路：0xB8 回读 0x%08x != 写入 0x%08x，门铃地址没配好。\n",
+305:                ctrl, db_lo);
+306:         return -EIO;
+307:     }
+308:     hw->link_push_dst = dst;
+309:     hw->link_push_db = db;
+310: 
+311:     /*
+312:      * ② CTRL 使能位：总使能 + 相机写源 + 允许相机帧写进 DDR3 + 允许推帧
+313:      *    （bit7=0 走 DDR3 源，见 include/anlogic_pci_ioctl.h 的 ANLOGIC_CTRL_ARM_BITS）。
+314:      *    bit2 保持当前值不动 —— 它是重触发电平，翻了就等于做一次传感器初始化。
+315:      */
+316:     rv = anlogic_pci_link_ctrl_update(hw, ANLOGIC_CTRL_ARM_BITS, 0, &ctrl);
+317:     if (rv < 0) {
+318:         pr_err("链路：写 0x44 CTRL 失败 %d，初始化中断。\n", rv);
+319:         return rv;
+320:     }
+321:     if ((ctrl & ANLOGIC_CTRL_ARM_BITS) != ANLOGIC_CTRL_ARM_BITS) {
+322:         pr_err("链路：0x44 回读 0x%08x 里使能位没置全（要 0x%08x），初始化中断。\n",
+323:                ctrl, ANLOGIC_CTRL_ARM_BITS);
+324:         return -EIO;
+325:     }
+326:     armed = 1;
+327: 
+328:     pr_info("链路：推帧目标 0x%llx、门铃 0x%llx（都在收帧缓冲 0x%llx 里），"
+329:             "0x44 CTRL=0x%08x。\n",
+330:             (unsigned long long)dst, (unsigned long long)db,
+331:             (unsigned long long)hw->frame_phys, ctrl);
+332: 
+333:     /*
+334:      * ③ 按需重触发相机初始化：只在链路完全没锁（lane_valid==0）时做 —— 已经有 lane
+335:      *    对齐说明传感器在出帧，再翻转一次 CTRL[2] 会打断正在跑的采集。
+336:      *    分两步：先等一会看 FPGA 自己的上电初始化（xclr + 201 条表）能不能把它带起来，
+337:      *    还起不来才补一次重触发；重触发之后再等几秒（本板实测 lane 全对齐要几秒）。
+338:      */
+339:     rv = anlogic_pci_link_read_cam(hw, &cam_stat);
+340:     if (rv < 0)
+341:         return rv;
+342:     if (ANLOGIC_CAM_LANE_VALID(cam_stat)) {
+343:         pr_info("链路：A 路 lane_valid=0x%x（共 4 条 lane），不重触发（免得打断采集）。\n",
+344:                 ANLOGIC_CAM_LANE_VALID(cam_stat));
+345:     } else {
+400:  * 卸载时把推帧使能位关掉：收帧缓冲是 dma_alloc_coherent 分配的系统内存，模块一
+401:  * 卸就把这块内存还给内核了；FPGA 若还在往那个地址 MWr，就是往别人刚拿到的内存里
+402:  * 写数据。使能位只在推帧引擎的帧间空闲拍采样（ddr_frame_pusher.v），所以关掉之后
+403:  * 还要等一会儿，让可能正在飞的那一帧（链路满速约 0.4ms，一帧几十毫秒才来一次）
+404:  * 落完，再去释放缓冲。
+405:  *
+406:  * bit5（DDR3 搬运）不动：那条通路只写 FPGA 板上的 DDR3，不碰主机内存。
+407:  */
+408: void anlogic_pci_link_disarm(struct anlogic_pci_hw *hw)
+409: {
+410:     u32 ctrl;
+411:     int rv;
+412: 
+413:     if (!hw || !hw->link_armed)
+414:         return;
+415: 
+416:     rv = anlogic_pci_link_read32(hw, ANLOGIC_BAR_CTRL_OFF, &ctrl);
+417:     if (rv < 0) {
+418:         pr_warn("链路：卸载时读 0x44 失败 %d（设备可能已经没了），跳过关推帧。\n",
+419:                 rv);
+420:         hw->link_armed = 0;
+421:         return;
+422:     }
+423:     rv = anlogic_pci_link_write32(hw, ANLOGIC_BAR_CTRL_OFF,
+424:                                   ctrl & ~ANLOGIC_CTRL_PUSH_EN);
+425:     if (rv < 0) {
+426:         pr_warn("链路：卸载时关推帧使能失败 %d。\n", rv);
+427:     } else {
+428:         pr_info("链路：卸载前已关推帧使能（0x44 = 0x%08x），等一帧落地。\n",
+429:                 ctrl & ~ANLOGIC_CTRL_PUSH_EN);
+430:         msleep(20);
+431:     }
+432: 
+433:     hw->link_armed = 0;
+434: }
+435: 
+436: /* 状态查询：把 BAR0 里与链路/推帧有关的那几个字全读出来，一项读失败就整条失败 */
+437: static long anlogic_pci_link_status(struct anlogic_pci_hw *hw,
+438:                                     struct anlogic_ioc_link_status *st)
+439: {
+440:     struct anlogic_frame_mailbox *mb = hw->frame_mb;
+441:     int rv;
+442: 
+443:     memset(st, 0, sizeof(*st));
+444: 
+445:     rv = anlogic_pci_link_read32(hw, ANLOGIC_BAR_CTRL_OFF, &st->ctrl);
+575:             rt.lane_valid = ANLOGIC_CAM_LANE_VALID(cam_stat);
+576:             rt.cam_locked = rt.lane_valid ? 1u : 0u;
+577:             rt.frame_cnt = frame_cnt;
+578:             rt.frames_flowing = flowing;
+579:             rt.waited_ms = waited;
+580: 
+581:             if (copy_to_user((void __user *)arg, &rt, sizeof(rt))) {
+582:                 pr_err("链路 ioctl：copy_to_user(重触发) 失败。\n");
+583:                 return -EFAULT;
+584:             }
+585:             pr_info("链路：手动重触发完成，等了 %u ms，lane_valid=0x%x、0x4C=%u（帧%s）。\n",
+586:                     waited, rt.lane_valid, frame_cnt,
+587:                     flowing ? "在出" : "没出");
+588:         }
+589:         break;
+590: 
+591:     case ANLOGIC_IOCPUSHCFG:
+592:         {
+593:             struct anlogic_ioc_push_cfg cfg;
+594:             u32 rb, ctrl;
+595:             unsigned int applied = 0;
+596: 
+597:             if (copy_from_user((void *)&cfg, (void __user *)arg, sizeof(cfg))) {
+598:                 pr_err("链路 ioctl：copy_from_user(推帧地址) 失败。\n");
+599:                 return -EFAULT;
+600:             }
+601:             if (cfg.flags & ~(ANLOGIC_PUSH_CFG_SET_DST |
+602:                               ANLOGIC_PUSH_CFG_SET_DB)) {
+603:                 pr_err("链路 ioctl：flags 0x%x 有不认识的位。\n", cfg.flags);
+604:                 return -EINVAL;
+605:             }
+606: 
+607:             if (cfg.flags & ANLOGIC_PUSH_CFG_SET_DST) {
+608:                 rv = anlogic_pci_link_write32(hw, ANLOGIC_BAR_PUSH_DST_LO_OFF,
+609:                                               cfg.dst_lo);
+610:                 if (!rv)
+611:                     rv = anlogic_pci_link_write32(hw,
+612:                                                   ANLOGIC_BAR_PUSH_DST_HI_OFF,
+613:                                                   cfg.dst_hi);
+614:                 if (rv < 0) {
+615:                     pr_err("链路 ioctl：写推帧目标失败 %d。\n", rv);
+616:                     return rv;
+617:                 }
+618:                 rv = anlogic_pci_link_read32(hw, ANLOGIC_BAR_PUSH_DST_LO_OFF,
+619:                                              &rb);
+620:                 if (rv < 0)
+621:                     return rv;
+622:                 if (rb != cfg.dst_lo) {
+623:                     pr_err("链路 ioctl：0xB0 回读 0x%08x != 写入 0x%08x。\n",
+624:                            rb, cfg.dst_lo);
+625:                     return -EIO;
+626:                 }
+627:                 /* 只有当两个地址都写进同一片缓冲里，驱动才算「已初始化」 */
+628:                 applied |= ANLOGIC_PUSH_CFG_SET_DST;
+629:                 hw->link_push_dst = ((u64)cfg.dst_hi << 32) | cfg.dst_lo;
+630:             }
+631: 
+632:             if (cfg.flags & ANLOGIC_PUSH_CFG_SET_DB) {
+633:                 rv = anlogic_pci_link_write32(hw, ANLOGIC_BAR_PUSH_DB_LO_OFF,
+634:                                               cfg.db_lo);
+635:                 if (!rv)
+
+## references/peer-driver-a0215c5/app/rs/src/bin/frame_grab.rs SHA256=9b57e132213f173926962e9333291d7eebf4d2ca2a0a47479cdfa35af9a39fca
+365: 
+366:     // ---- 6. 搬像素（不整帧就补 0 并告警）----
+367:     let npix = info.width as usize * info.height as usize;
+368:     /*
+369:      * width/height 来自 module param，最大分别可到 65535（乘积可达约 4.29 GB）。
+370:      * 直接 `vec![0u8; npix]` 在分配失败时是 abort（退出码 134），不在文件头声明的
+371:      * 0..6 里。改用 try_reserve，失败按 EX_OUTPUT 返回。
+372:      */
+373:     let mut img: Vec<u8> = Vec::new();
+374:     if img.try_reserve_exact(npix).is_err() {
+375:         eprintln!(
+376:             "!! 分配 {} 字节帧缓冲失败（几何 {}x{} 过大或内存不足）",
+377:             npix, info.width, info.height
+378:         );
+379:         return EX_OUTPUT;
+380:     }
+381:     img.resize(npix, 0u8);
+382:     let mut copy = hdr_len as usize;
+383:     if copy > info.slot_bytes as usize {
+384:         eprintln!("!! 槽头 len={} 超过一帧 {} 字节，按一帧夹紧", hdr_len, info.slot_bytes);
+385:         copy = info.slot_bytes as usize;
+386:         rc = EX_INCONSISTENT;
+387:     }
+388:     if copy > npix {
+389:         eprintln!(
+390:             "!! 槽头 len={} 大于 {}x{} 需要的 {} 字节，按图大小夹紧",
+391:             hdr_len, info.width, info.height, npix
+392:         );
+393:         copy = npix;
+394:     }
+395:     let src = map.as_ptr() as usize + slot as usize * info.stride as usize + info.hdr_bytes as usize;
+396:     // SAFETY: 源地址在只读映射内（descriptor_check 已核对 stride/slots/mb_off 都合得上）
+397:     unsafe {
+398:         std::ptr::copy_nonoverlapping(src as *const u8, img.as_mut_ptr(), copy);
+399:     }
+400:     if copy < npix {
+401:         eprintln!("!! 帧数据只有 {}/{} 字节，缺的用 0 补（图不完整）", copy, npix);
+402:         rc = EX_INCONSISTENT;
+403:     }
+404: 
+405:     // ---- 7. 搬运转查：只有环形缓冲绕回一圈才可能盖掉刚取的这一帧 ----
+406:     // （与 C 版一样重新问一次，覆盖同一个 info）
+407:     if frame_info(fd, &mut info).is_err() {
+408:         return EX_DEV;
+409:     }
+410:     let seq2 = info.seq;
+411:     if seq2 != wait.seq {
+412:         let advanced = seq2.wrapping_sub(wait.seq);
+413:         println!(
+414:             "  搬运期间序号 {} → {}（新出 {} 帧，环上一共 {} 槽）{}",
+415:             wait.seq,
+416:             seq2,
+417:             advanced,
+418:             info.slots,
+419:             if advanced >= info.slots {
+420:                 " ← 已经绕回，这一槽可能被覆盖过！"
+
+## references/peer-driver-a0215c5/app/rs/src/bin/cam_grab.rs SHA256=4d08566e61a6b29c46ad2a009bcdde31f2e9950cfb6331c2a8494ec3a69a7a53
+1: // SPDX-License-Identifier: GPL-2.0
+2: /*!
+3:  * cam_grab —— 从 PH1P100 PCIe EP 的 BAR0 抓一帧 640x480 灰度图，写成 PGM
+4:  * （原 app/cam_grab.c 的 Rust 版，抓帧时序/寄存器语义/输出格式都不变）
+5:  *
+6:  * --------------------------------------------------------------------------
+7:  * 一、寄存器语义（依据 fpga/rtl/ep_side/img/ep_bar_win.v 的读 mux :215-241）
+8:  * --------------------------------------------------------------------------
+9:  *   0x40 MAGIC     只读，期望 0x50434946                   (:216)
+10:  *   0x44 CTRL      R/W bit0 enable / bit1 trigger / [3:2] pattern / bit4 cam_sel
+11:  *                  - 写：ctrl_enable<=bit0、ctrl_trigger<=bit1、pattern<=[3:2]、
+12:  *                    ctrl_cam_sel<=bit4                                (:157-161)
+13:  *                  - trigger 是「写 1 出单帧」的单拍脉冲：没有写 CTRL 的拍会被
+14:  *                    自动清 0（:168-170），主机读回恒为 0
+15:  *                  - 读回布局 {…, cam_sel, pattern, trigger, enable}   (:217)
+16:  *                  注意：写 CTRL 会把 [3:2] 一起覆盖，所以必须先把原值读出来带上。
+17:  *   0x48 STATUS    R   bit0 ready / bit1 busy                        (:218)
+18:  *   0x4C FRAME_CNT R   已完成帧数，写源由 CTRL[4] 决定               (:219)
+19:  *   0x50/0x54      R   宽 / 高 = 640 / 480                           (:220-221)
+20:  *   0x58 DATA_LEN  R   每帧字节数                                    (:222)
+21:  *   0x5C PTR       R/W 帧数据读指针（字节，写 0 复位）               (:223 + :162)
+22:  *   0x60 DATA      R   返回 PTR 处一个 dw，PTR 自动 +4               (:224 + :175-181)
+23:  *   0x64 VERSION / 0x68 CLK_MHZ / 0x6C SCRATCH                       (:225-227)
+24:  *   0x70..0x7C     调试口（PF0/last_wr/fb_raddr/dbg_idx）            (:228-231)
+25:  *   0x80..0x98     cam_stat[31:0] .. cam_stat[223:192]               (:232-238)
+26:  *   0x9C           cam_tap_cfg {manual_en,tap[5:0]}（不是 cam_stat[255:224]）(:239)
+27:  *   未登记 offset 读回 0xDEADBEEF（:240），本工具据此自检「有没有打到别的地址」。
+28:  *   完成包第 0 个 dw 在 [255:224] 且已逐 dw bswap32，所以主机小端读到的就是原值
+29:  *   （:244-248，这也是 MAGIC 能读成 0x50434946 的原因）。
+30:  *
+31:  * --------------------------------------------------------------------------
+32:  * 二、CTRL 的用法（按 RTL 实际语义，不是猜的）
+33:  * --------------------------------------------------------------------------
+34:  *   enable  bit0：只门控「测试图发生器」，对相机写源没有作用
+35:  *                 —— img_frame_src.v:133 `start = (enable | trigger) && (…空闲…)`
+
+## references/local-inputs/fpga/csi2/src/csi/csi_rx_packet_integrity.v SHA256=9e46297e4e1bfee5462657112544f509fe2eec83644edf5d07aedc4df990ac08
+1: `timescale 1ns/1ps
+2: // Four-lane / 32-bit, per-packet PHY synchronization profile.
+3: // CRC16 is streamed; pixels are speculative until selected FE confirms a frame.
+4: // No ECC correction or continuous-HS back-to-back packet support is claimed.
+5: module csi_rx_packet_integrity #(
+6:  parameter VC_ID=0,IMAGE_DT=6'h2b,IMAGE_WC=0,EXPECTED_LINES=0,CHECK_FRAME_ID=0,
+7:  parameter PACKET_IDLE_CYCLES=32,FRAME_TIMEOUT_CYCLES=16777216
+8: )(
+9:  input I_clock,I_reset_n,I_enable,input[31:0] I_data,input I_data_valid,
+10:  output reg O_packet_done,output O_sync_wait,
+11:  output reg[31:0] O_payload_out,output reg O_payload_valid,output reg[3:0] O_payload_keep,
+12:  output O_vsync_out,output O_in_frame,output reg O_in_line,
+13:  output reg O_frame_end,O_frame_good,O_frame_abort,
+14:  output reg[31:0] O_crc_errors,O_header_errors,O_packet_timeouts,O_frame_timeouts,O_good_frames,O_bad_frames,
+15:  output reg[15:0] O_last_wc,O_last_lines
+16: );
+17:  localparam IDLE=0,HEADER=1,BODY=2,END_PACKET=3;
+18:  reg[1:0] state;reg[15:0] wc,crc,received_crc,frame_id,line_count,frame_wc;
+19:  localparam IDLE_BITS=(PACKET_IDLE_CYCLES<=1)?1:$clog2(PACKET_IDLE_CYCLES);
+20:  localparam AGE_BITS=(FRAME_TIMEOUT_CYCLES<=1)?1:$clog2(FRAME_TIMEOUT_CYCLES);
+21:  reg[16:0] consumed;reg[IDLE_BITS-1:0] idle_cycles;reg[AGE_BITS-1:0] frame_age;
+22:  reg selected,check_crc,frame_open,frame_bad;
+23:  wire[5:0] dt=I_data[5:0];wire selected_vc=I_data[7:6]==VC_ID;
+24:  wire[7:0] expected_ecc;csi_rx_hdr_ecc u_ecc(.data(I_data[23:0]),.ecc(expected_ecc));
+25:  wire header_ok=I_data_valid&&(I_data[31:24]==expected_ecc)&&((dt<=3)||(dt>=6'h10&&dt<=6'h37));
+26:  wire raw_header=header_ok&&selected_vc&&(dt==IMAGE_DT);
+27:  wire image_ok=raw_header&&(I_data[23:8]!=0)&&(I_data[23:8]%5==0)&&
+28:    ((IMAGE_WC==0)||(I_data[23:8]==IMAGE_WC))&&((frame_wc==0)||(frame_wc==I_data[23:8]));
+29:  wire fe_geometry=(line_count!=0)&&((EXPECTED_LINES==0)||(line_count==EXPECTED_LINES))&&
+30:    ((!CHECK_FRAME_ID)||(frame_id==I_data[23:8]));
+31:  function[31:0] inc(input[31:0] c);inc=(&c)?c:c+1'b1;endfunction
+32:  function[15:0] crc_byte(input[15:0] c,input[7:0] b);
+33:   reg[15:0] v;integer k;begin v=c^{8'd0,b};for(k=0;k<8;k=k+1)v=(v>>1)^(v[0]?16'h8408:0);crc_byte=v;end
+34:  endfunction
+35:  reg[15:0] crc_next,received_next;reg[3:0] keep;reg[31:0] masked;integer b;
+36:  always @*begin
+37:   crc_next=crc;received_next=received_crc;keep=0;masked=0;
+38:   for(b=0;b<4;b=b+1)begin
+39:    if(consumed+b<{1'b0,wc})begin crc_next=crc_byte(crc_next,I_data[b*8+:8]);keep[b]=1;masked[b*8+:8]=I_data[b*8+:8];end
+40:    else if(consumed+b=={1'b0,wc})received_next[7:0]=I_data[b*8+:8];
+41:    else if(consumed+b=={1'b0,wc}+1)received_next[15:8]=I_data[b*8+:8];
+42:   end
+43:  end
+44:  assign O_sync_wait=(state==HEADER);
+45:  assign O_vsync_out=I_enable&&(state==HEADER)&&header_ok&&selected_vc&&(dt==0);
+46:  assign O_in_frame=frame_open;
+47:  always @(posedge I_clock or negedge I_reset_n)begin
+48:   if(!I_reset_n)begin
+49:    state<=IDLE;wc<=0;crc<=16'hffff;received_crc<=0;consumed<=0;idle_cycles<=0;
+50:    selected<=0;check_crc<=0;frame_open<=0;frame_bad<=0;frame_id<=0;frame_wc<=0;line_count<=0;frame_age<=0;
+51:    O_packet_done<=0;O_payload_out<=0;O_payload_valid<=0;O_payload_keep<=0;O_in_line<=0;
+52:    O_frame_end<=0;O_frame_good<=0;O_frame_abort<=0;
+53:    O_crc_errors<=0;O_header_errors<=0;O_packet_timeouts<=0;O_frame_timeouts<=0;O_good_frames<=0;O_bad_frames<=0;O_last_wc<=0;O_last_lines<=0;
+54:   end else begin
+55:    O_packet_done<=0;O_payload_out<=0;O_payload_valid<=0;O_payload_keep<=0;O_in_line<=0;
+56:    O_frame_end<=0;O_frame_good<=0;O_frame_abort<=0;
+57:    if(!I_enable)begin
+58:     state<=IDLE;frame_open<=0;selected<=0;
+59:     if(frame_open)begin O_frame_abort<=1;if(!frame_bad)O_bad_frames<=inc(O_bad_frames);end
+60:    end else if(frame_open&&frame_age>=FRAME_TIMEOUT_CYCLES-1)begin
+61:     state<=END_PACKET;frame_open<=0;selected<=0;O_packet_done<=1;O_frame_abort<=1;
+62:     O_frame_timeouts<=inc(O_frame_timeouts);if(!frame_bad)O_bad_frames<=inc(O_bad_frames);
+63:    end else begin
+64:     if(frame_open)frame_age<=frame_age+1'b1;
+65:     case(state)
+66:      IDLE:state<=HEADER;
+67:      HEADER:if(I_data_valid)begin
+68:       if(!header_ok)begin
+69:        state<=END_PACKET;O_packet_done<=1;O_header_errors<=inc(O_header_errors);
+70:        if(frame_open)begin frame_bad<=1;O_frame_abort<=1;if(!frame_bad)O_bad_frames<=inc(O_bad_frames);end
+71:       end else if(dt<=3)begin
+72:        state<=END_PACKET;O_packet_done<=1;
+73:        if(selected_vc&&dt==0)begin
+74:         if(frame_open)begin O_frame_abort<=1;if(!frame_bad)O_bad_frames<=inc(O_bad_frames);end
+75:         frame_open<=1;frame_bad<=0;frame_id<=I_data[23:8];frame_wc<=0;line_count<=0;frame_age<=0;
+76:        end else if(selected_vc&&dt==1&&frame_open)begin
+77:         O_frame_end<=1;frame_open<=0;O_last_lines<=line_count;
+78:         if(!frame_bad&&fe_geometry)begin O_frame_good<=1;O_good_frames<=inc(O_good_frames);end
+79:         else begin O_frame_abort<=1;if(!frame_bad)O_bad_frames<=inc(O_bad_frames);end
+80:        end
+81:       end else begin
+82:        state<=BODY;wc<=I_data[23:8];consumed<=0;idle_cycles<=0;crc<=16'hffff;received_crc<=0;
+83:        check_crc<=selected_vc;selected<=image_ok&&frame_open&&!frame_bad;O_in_line<=image_ok&&frame_open&&!frame_bad;
+84:        if(raw_header&&frame_open)begin
+85:         O_last_wc<=I_data[23:8];
+86:         if(line_count!=16'hffff)line_count<=line_count+1'b1;
+87:         if(frame_wc==0&&image_ok)frame_wc<=I_data[23:8];
+88:         if(!image_ok||line_count==16'hffff)begin frame_bad<=1;O_frame_abort<=1;if(!frame_bad)O_bad_frames<=inc(O_bad_frames);end
+89:        end
+90:       end
+91:      end
+92:      BODY:begin
+93:       if(I_data_valid)begin
+94:        consumed<=consumed+17'd4;idle_cycles<=0;crc<=crc_next;received_crc<=received_next;
+95:        if(selected&&keep!=0)begin O_payload_out<=masked;O_payload_valid<=1;O_payload_keep<=keep;end
+96:        if(consumed+17'd4>={1'b0,wc}+17'd2)begin
+97:         state<=END_PACKET;O_packet_done<=1;
+98:         if(check_crc&&crc_next!=received_next)begin
+99:          O_crc_errors<=inc(O_crc_errors);
+100:          if(frame_open)begin frame_bad<=1;O_frame_abort<=1;if(!frame_bad)O_bad_frames<=inc(O_bad_frames);end
+101:         end
+102:        end
+103:       end else if(idle_cycles>=PACKET_IDLE_CYCLES-1)begin
+104:        state<=END_PACKET;O_packet_done<=1;O_packet_timeouts<=inc(O_packet_timeouts);
+105:        if(frame_open)begin frame_bad<=1;O_frame_abort<=1;if(!frame_bad)O_bad_frames<=inc(O_bad_frames);end
+106:       end else idle_cycles<=idle_cycles+1'b1;
+107:      end
+108:      // packet_done clears the upstream aligners, but their registered word
+109:      // output and gearbox still deliver tail beats. Keep sync acquisition
+110:      // disabled until that pipeline is empty; tail bytes are not headers.
+111:      END_PACKET:if(!I_data_valid)state<=IDLE;
+112:     endcase
+113:    end
+114:   end
+115:  end
+
+## references/local-inputs/fpga/csi2/src/csi/csi_rx_10bit_unpack_checked.v SHA256=9b5421c55b0f09871f8a939fb3381d4c7d5726286b30f9d5450cc09404065a12
+1: `timescale 1ns/1ps
+2: // A contiguous low-byte keep is supplied by the checked packet handler.
+3: // Buffer at most four bytes; each five-byte RAW10 group emits four pixels.
+4: module csi_rx_10bit_unpack_checked(
+5:  input I_clock,I_reset_n,I_enable,I_line_in,
+6:  input[31:0] I_data_in,input[3:0] I_keep,input I_din_valid,
+7:  output reg[39:0] O_data_out,output reg O_dout_valid
+8: );
+9:  reg[31:0] pending;
+10:  reg[2:0] count;
+11:  reg[39:0] group_data;reg group_valid;
+12:  wire[2:0] incoming=(I_keep==4'b1111)?4:(I_keep==4'b0111)?3:
+13:                        (I_keep==4'b0011)?2:(I_keep==4'b0001)?1:0;
+14:  wire[3:0] total={1'b0,count}+{1'b0,incoming};
+15:  wire[63:0] joined={32'd0,pending}|({32'd0,I_data_in}<<{count,3'b000});
+16:  always @(posedge I_clock or negedge I_reset_n)begin
+17:   if(!I_reset_n)begin pending<=0;count<=0;group_data<=0;group_valid<=0;O_data_out<=0;O_dout_valid<=0;end
+18:   else begin
+19:    group_valid<=0;O_dout_valid<=0;O_data_out<=0;
+20:    if(I_enable)begin
+21:     if(I_line_in)begin pending<=0;count<=0;end
+22:     else begin
+23:      if(I_din_valid&&incoming!=0)begin
+24:       if(total>=5)begin
+25:        group_data<=joined[39:0];group_valid<=1;pending<=joined[63:40];count<=total-5;
+26:       end else begin pending<=joined[31:0];count<=total;end
+27:      end
+28:      if(group_valid)begin
+29:       O_dout_valid<=1;
+30:       O_data_out<={group_data[31:24],group_data[39:38],group_data[23:16],group_data[37:36],
+31:                    group_data[15:8],group_data[35:34],group_data[7:0],group_data[33:32]};
+32:      end
+33:     end
+34:    end
+35:   end
+36:  end
+37: endmodule

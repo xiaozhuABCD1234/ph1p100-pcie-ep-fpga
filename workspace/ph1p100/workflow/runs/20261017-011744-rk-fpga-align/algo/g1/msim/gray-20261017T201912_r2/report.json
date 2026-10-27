@@ -1,0 +1,131 @@
+{
+  "case": "gray",
+  "mutation": "none",
+  "sim_dir": "C:\\Users\\czz\\OneDrive\\\u684c\u9762\\\u5b9e\u9a8c\u5ba4\\\u7ade\u8d5b\\\u5d4c\u5165\u5f0f\\FPGA\u521b\u65b0\u8bbe\u8ba1\u8d5b\u9053\\workflow\\runs\\20261017-011744-rk-fpga-align\\algo\\g1\\msim\\gray-20261017T201912_r2",
+  "stamp": "20261017T201912_r2",
+  "sources": {
+    "algo_rowwin_reader.v": {
+      "origin": "fpga\\csi2\\src\\img\\algo_rowwin_reader.v",
+      "sha256": "bbd3f9d3e2e231b7ead693df0b3b74440d7baafc352e2f243fa887b6ac666da2"
+    },
+    "algo_rowwin3.v": {
+      "origin": "fpga\\csi2\\src\\img\\algo_rowwin3.v",
+      "sha256": "46a6ceb10844b9ccb2054b8b2a911624dc04db0ca167ef72b8b86c9e08571384"
+    },
+    "algo_obuf.v": {
+      "origin": "fpga\\csi2\\src\\img\\algo_obuf.v",
+      "sha256": "07404282d02256541cabf282087499e2540ef800580387de29e3871515c8de81"
+    },
+    "bayer_raw10_demosaic4.v": {
+      "origin": "fpga\\csi2\\src\\img\\bayer_raw10_demosaic4.v",
+      "sha256": "138e7124de1f57bd199c9f6ea340ed9da8fbb4355326f74c15ef6c85795fdbef"
+    },
+    "gray8_gaussian3x3_stream.v": {
+      "origin": "fpga\\csi2\\src\\img\\gray8_gaussian3x3_stream.v",
+      "sha256": "c358174f56aeb2d4a64a2b7484c53ea9feed2f6cd857ac06c315250110a55dd6"
+    },
+    "gray8_he_cdfmin_frame.v": {
+      "origin": "fpga\\csi2\\src\\img\\gray8_he_cdfmin_frame.v",
+      "sha256": "bf6696a9683bc3d3eb0c450554d1c0ab2bb937b6b43907db2f7d68982d4851cf"
+    },
+    "rgb8_gray_stream.v": {
+      "origin": "fpga\\csi2\\src\\img\\rgb8_gray_stream.v",
+      "sha256": "e16095a0e71528008b269653f3e15d38c1d88b479abe49d2eb44f694421d8c81"
+    },
+    "img_algo_parallel_top.v": {
+      "origin": "fpga\\csi2\\src\\img\\img_algo_parallel_top.v",
+      "sha256": "16e999e52242404f860898c01b52f7ed3e7dfbcc3d9b559940fba75318529198"
+    },
+    "tb_rgb8_gray_stream.sv": {
+      "origin": "tools\\algo\\tb\\tb_rgb8_gray_stream.sv",
+      "sha256": "0e9d8925d8bdc73d7c51c7b3c5d0ec0beb55b8a26bcc591c831a5c8dfd13f8c0"
+    },
+    "gray_mod.vec": {
+      "origin": "workflow\\runs\\20261017-011744-rk-fpga-align\\algo\\vectors\\gray_mod.vec",
+      "sha256": "603557e7010b7f7037616ddf8965656f067f8776bfef997abe01e713c2c312ae"
+    }
+  },
+  "mutations": [],
+  "commands": [
+    {
+      "cmd": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlib.exe",
+        "work"
+      ],
+      "cwd": "S:\\workflow\\runs\\20261017-011744-rk-fpga-align\\algo\\g1\\msim\\gray-20261017T201912_r2",
+      "exit": 0,
+      "seconds": 0.1
+    },
+    {
+      "cmd": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlog.exe",
+        "-sv",
+        "algo_rowwin_reader.v",
+        "algo_rowwin3.v",
+        "algo_obuf.v",
+        "bayer_raw10_demosaic4.v",
+        "gray8_gaussian3x3_stream.v",
+        "gray8_he_cdfmin_frame.v",
+        "rgb8_gray_stream.v",
+        "img_algo_parallel_top.v",
+        "tb_rgb8_gray_stream.sv"
+      ],
+      "cwd": "S:\\workflow\\runs\\20261017-011744-rk-fpga-align\\algo\\g1\\msim\\gray-20261017T201912_r2",
+      "exit": 0,
+      "seconds": 0.3
+    },
+    {
+      "cmd": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vsim.exe",
+        "-c",
+        "-l",
+        "vsim.log",
+        "-do",
+        "run.do",
+        "work.tb_rgb8_gray_stream",
+        "+VECTORS=gray_mod.vec"
+      ],
+      "cwd": "S:\\workflow\\runs\\20261017-011744-rk-fpga-align\\algo\\g1\\msim\\gray-20261017T201912_r2",
+      "exit": 0,
+      "seconds": 2.3
+    }
+  ],
+  "logs": {
+    "vlib": {
+      "exit": 0,
+      "seconds": 0.1,
+      "log": "vlib.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "vlog": {
+      "exit": 0,
+      "seconds": 0.3,
+      "log": "vlog.log",
+      "log_sha256": "06d9c307d2a91e37f8cfb1d61794d65e43ba3d384a7f5522723aca72f181b58f"
+    },
+    "vsim": {
+      "exit": 0,
+      "seconds": 2.3,
+      "log": "vsim.log",
+      "log_sha256": "5b5a63d5bd45842be7badffff102a2279dbc4051c7dcec7ca1fa7f971ae3fd60"
+    }
+  },
+  "simulator_errors": false,
+  "pass_marker": true,
+  "fail_marker": false,
+  "mismatch_sample": [],
+  "coverage": {
+    "accepted": "307",
+    "emitted": "306",
+    "stalls": "41",
+    "gaps": "12",
+    "resets": "1",
+    "hold": "41"
+  },
+  "lut_check": null,
+  "verdict": "PASS",
+  "limitations": [
+    "RTL simulation only; no synthesis, timing, resource or board evidence in this runner",
+    "Finite directed coverage, not exhaustive or formal"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "run_id": "20261018-1347_runA_offline_sim",
+  "project_root": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+  "output_dir": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261018-1347_runA_offline_sim",
+  "task_ids": [],
+  "batch_size": 1,
+  "status": "finished",
+  "needs_user_input": true,
+  "input_paths": {
+    "handoff": "workflow\\runs\\20261018-1347_runA_offline_sim\\handoff.md",
+    "final_summary": "workflow\\runs\\20261018-1347_runA_offline_sim\\final-summary.md",
+    "user_summary": "workflow\\runs\\20261018-1347_runA_offline_sim\\user-summary.md",
+    "question_01": "workflow\\runs\\20261018-1347_runA_offline_sim\\question-01.md",
+    "test_reports": "workflow\\runs\\20261018-1347_runA_offline_sim\\test-reports",
+    "evidence": ["board-selfcheck", "bringup-kit", "ddr-readback-checker"]
+  },
+  "write_scope": [],
+  "protected": [
+    "上游仓既有全部（本轮新增仅本地 commit 48be9f20、c89ab758，均未推送）",
+    "全部既有证据目录（只读保留）",
+    "bit e81d353b…2b9a（配对 commit ab811c8f；板上 SRAM 易失）"
+  ],
+  "next_action": {
+    "operation": "relay_to_user",
+    "notes": "本轮终态 finished。用户回来先读 user-summary.md 与 question-01.md；上板轮入口='/fpga-orchestrator 执行：<需求>' 或 '恢复：<本 run 路径>；本轮目标：<目标>'；建议目标=解决寄存器读通道后做 B2 采集/读回。"
+  },
+  "after_development": null,
+  "scope_limits": {
+    "main_objectives": 1,
+    "formal_packages": 4,
+    "package_status": {
+      "T11.runA-board-selfcheck": "blocked（已接受；G3 partial：SRAM 下载+器件 ID；寄存器读通道缺失）",
+      "T11.runA-board-capture-readback": "awaiting_conditions（留用户在场轮）",
+      "T11.runA-bringup-kit": "PASS（r0；manifest 7e0ae0a0…；commit 48be9f20）",
+      "T11.runA-readback-checker": "PASS（r0；含 1 次成功补收；manifest f202afb8…；commit c89ab758）"
+    },
+    "statistics": "首次通过 2（KIT/P1）；blocked 1（B1）；awaiting 1（B2）；实际修复轮 0；补收 1 次成功；⚠未通过 0",
+    "budget_observations": "B1 41/30 calls；KIT 25/25；P1 首轮 ~30 + 会话级 Permission denied（补收正常）；P1 测试者约 10/8 min 超时登记",
+    "window": "3 小时窗（user-input-02；13:47–≈16:47），收尾于 ≈15:57，未用尽"
+  },
+  "execution_limits": {
+    "final": "本轮已结束；未追加新包、未触硬件（除既授权 SRAM 下载）、未推送、未写 Flash"
+  },
+  "question_path": "workflow\\runs\\20261018-1347_runA_offline_sim\\question-01.md",
+  "user_summary_path": "workflow\\runs\\20261018-1347_runA_offline_sim\\user-summary.md"
+}

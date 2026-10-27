@@ -1,0 +1,71 @@
+{
+  "test": "capture",
+  "baseline": false,
+  "production": true,
+  "high_alias": false,
+  "scope": "Offline native-PAXI backend; no real camera, DDR PHY, display or performance acceptance.",
+  "inputs": {
+    "tb_capture_chain.sv": "3d557704640c41ad046a81112fb120e85df71cf4d0b54014a7d46d1cc037d9da",
+    "ddr_frame_store.v": "e9e95f970abc8cfc35931131b63fb43d8f3e146311bc57153327212bd4b68771",
+    "capture_async_fifo.v": "59dd6dcb5b7e7774f7d6518f50f56cafbc8be6b70e8ae1508236bac2b5af531d",
+    "ddr_capture_check.v": "f6f26861ef7bfdd816273f740d295eb10b0e479bfcaa75058be80c3fa0c9693c",
+    "gray_frame_pack.v": "173ff085e5f41b77f2871b2ab0ddd769e6f417e7e53f4d976e2e2d0f3b639138",
+    "camera_ddr_capture.v": "6f05b5366663b8f2dfcc365a09f7c8d7114be9fd367f8b31005dea42af6e9dbf"
+  },
+  "source_paths": {
+    "tb_capture_chain.sv": "fpga/csi2/tb/tb_capture_chain.sv",
+    "ddr_frame_store.v": "fpga/csi2/src/mem/ddr_frame_store.v",
+    "capture_async_fifo.v": "fpga/csi2/src/mem/capture_async_fifo.v",
+    "ddr_capture_check.v": "fpga/csi2/src/mem/ddr_capture_check.v",
+    "gray_frame_pack.v": "fpga/csi2/src/mem/gray_frame_pack.v",
+    "camera_ddr_capture.v": "fpga/csi2/src/mem/camera_ddr_capture.v"
+  },
+  "commands": [
+    {
+      "command": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlib.exe",
+        "work"
+      ],
+      "cwd": "D:\\TD\\work\\csi2\\_validation\\raw10_frame_20261014_141836_777467",
+      "log": "0.log",
+      "exit_code": 0,
+      "reported_errors": [],
+      "reported_warnings": []
+    },
+    {
+      "command": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlog.exe",
+        "-sv",
+        "tb_capture_chain.sv",
+        "ddr_frame_store.v",
+        "capture_async_fifo.v",
+        "ddr_capture_check.v",
+        "gray_frame_pack.v",
+        "camera_ddr_capture.v"
+      ],
+      "cwd": "D:\\TD\\work\\csi2\\_validation\\raw10_frame_20261014_141836_777467",
+      "log": "1.log",
+      "exit_code": 0,
+      "reported_errors": [
+        0
+      ],
+      "reported_warnings": [
+        0
+      ]
+    },
+    {
+      "command": [
+        "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vsim.exe",
+        "-c",
+        "-gFRAME_BYTES=2592000",
+        "work.tb_capture_chain",
+        "-do",
+        "run -all; quit -f"
+      ],
+      "cwd": "D:\\TD\\work\\csi2\\_validation\\raw10_frame_20261014_141836_777467",
+      "log": "2.log"
+    }
+  ],
+  "accepted": false,
+  "error": "TimeoutExpired(['D:\\\\intelFPGA\\\\18.1\\\\modelsim_ase\\\\win32aloem\\\\vsim.exe', '-c', '-gFRAME_BYTES=2592000', 'work.tb_capture_chain', '-do', 'run -all; quit -f'], 300)"
+}

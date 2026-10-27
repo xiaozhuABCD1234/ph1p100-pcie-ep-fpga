@@ -1,0 +1,125 @@
+{
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "project_root": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+  "output_dir": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop",
+  "task_ids": [
+    "T10.a1-pipe-split-final"
+  ],
+  "package_id": "T10.a1-pipe-split-final",
+  "package_type": "final integrated verification of the accepted G2 small-top candidate (pipe-split r0); no new development",
+  "same_run": true,
+  "new_run": false,
+  "batch_size": 1,
+  "status": "finished",
+  "needs_user_input": false,
+  "round": "r0",
+  "operation": "spawn_agent",
+  "result": {
+    "verdict": "PASS (G2 small-top, with caveat)",
+    "functional": "33 cases; P3 19/20 only because multi1080p keeps a single-frame stream file, not a failure; 0 mismatch/0 X; comp 355,261; 1080p 81,707 B / 4,677,945 cycles; third-party zlib 17/17 decompression hashes match",
+    "engineering": "SWNS +0.047 ns, STNS 0, 0/4,649 violations; hold +0.021/0; Fmax 189.179 MHz; slice 3,032/4.23%; ERAM 26; DSP 0; single clk 187.512 MHz; CC no/no; 0 comb loops; bitgen not_run",
+    "caveats": [
+      "47 ps margin only",
+      "offline small-top, not board signoff",
+      "no post-route phys_opt",
+      "IO unconstrained 47/73; STA coverage 96.40%",
+      "no gate-level/formal equivalence",
+      "multi1080p single-frame artifact gap"
+    ],
+    "candidate": "core bf6af390...1080; frame 18d51b1b; SDC 227dd39e",
+    "report": "test-reports/T10.a1-pipe-split-final-r0-integrated.md",
+    "decision": "G2 small-top marked done with caveat; T10 parent remains blocked for demands 2/3; no bit/CWC, no production integration"
+  },
+  "next_role": "fpga-tester",
+  "authorization": {
+    "quote": "是否接受 Routed 零违例 +47 ps 作为 G2 PASS（小顶、离线）...若接受，请更新验收口径（+0.2 是稳健性目标，不替代零违例）并派新包新测试者做最终 integrated 核验",
+    "date": "2026-10-23",
+    "type": "planner_adjudication_with_user_authority",
+    "basis": "原始 G2 判据为 Routed 零违例 + 必要 STA/CDC/资源检查；+0.2 ns 是本轮稳健性目标，不替代零违例。pipe-split r0 达到 Routed 零违例（+0.047 ns / 0 violations），因此接受为 G2 小顶 PASS，带薄余量 caveat，并派新包新测试者做最终 integrated 核验。",
+    "acceptance_basis_updated": {
+      "g2_small_top": "Routed zero violations; hold >= 0; resources within device; single-clock static CDC + no combinational loops; reports direct -file; bitgen not_run; no .bit/download",
+      "robustness_target_not_met": "+0.2 ns setup margin is NOT met (actual +0.047 ns); recorded as a robustness caveat, not a G2 failure",
+      "caveats": [
+        "margin is thin: +0.047 ns only",
+        "offline small-top result only; not a board-level signoff",
+        "no bit/CWC, no download, no production integration",
+        "re-run STA and keep margin if later bitgen/board work is authorized"
+      ]
+    }
+  },
+  "candidate": {
+    "package": "T10.a1-pipe-split r0",
+    "rtl": "structural split: rng1_r at stage 1 + stage-2 all-flop hit2 (cycle-neutral); exact core hash from manifest",
+    "frame": "18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+    "sdc": "227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311",
+    "manifest": "T10.a1-pipe-split/CANDIDATE-MANIFEST-pipe-split-r0.json",
+    "result": "T10.a1-pipe-split/r0/result-r0.md",
+    "routed_report": "T10.a1-pipe-split/r0/td/routed_timing_summary.rpt",
+    "route_qor": "T10.a1-pipe-split/r0/td/route.qor",
+    "functional_evidence": "same candidate evidence; RTL unchanged since pipe-split r0"
+  },
+  "verification_scope": {
+    "functional": [
+      "reuse the same-candidate functional evidence; verify hash binding to the pipe-split manifest",
+      "P2 13/13, P3 20/20 bit-identical; 0 mismatch/0 X; vlog 0/0",
+      "comp 355,261 (cycle-neutral); 1080p 81,707 B / 4,677,945 cycles"
+    ],
+    "engineering": [
+      "independently parse routed_timing_summary.rpt / route.qor: SWNS +0.047 ns, STNS 0, 0/4,649 violations",
+      "hold +0.021/0; Fmax 189.179 MHz",
+      "resources: slice 3,032 (4.23%), LUT6 2,945, reg 1,712, ERAM 26, DSP 0, IO 121; within PH1P100SBG484",
+      "single clock 187.512 MHz; CC-From/To = no/no; 0 combinational loops; static single-clock CDC evidence",
+      "frame/SDC hashes; no bitgen/.bit/download"
+    ],
+    "system": [
+      "throughput 81.067 MB/s >= 77.76 MB/s; P2 comp 355,261",
+      "1080p 81,707 B / 4,677,945 cycles",
+      "no bit/CWC; offline small-top caveat recorded"
+    ]
+  },
+  "acceptance": {
+    "pass": "all three dimensions verified with no contradiction; G2 small-top PASS accepted with thin-margin/offline/no-bit caveats",
+    "fail": "any functional mismatch/X, hash mismatch, routed report contradiction, missing evidence, or unsupported claim -> FAIL; return to planner; T10 stays 3/4 PASS + 1 warning",
+    "note": "do NOT fail the candidate solely because setup margin < +0.2 ns; the +0.2 target is a robustness goal, not the G2 criterion. Record the 47 ps margin explicitly."
+  },
+  "tester_rules": [
+    "New package tester; do not reuse prior testers.",
+    "Do not modify RTL/SDC/scripts and do not rerun TD synthesis/route; verify the frozen candidate evidence.",
+    "Independently parse raw reports and recompute the key numbers; do not copy dev summaries as proof.",
+    "Do not claim report_cdc; TD 2026.2 lacks it; use static single-clock evidence + report_clock_utilization/check_timing.",
+    "Write exactly one integrated report: test-reports/T10.a1-pipe-split-final-r0-integrated.md with one unique verdict heading.",
+    "Return to planner with verdict, evidence paths, caveats, and any discrepancy."
+  ],
+  "td_budget": {
+    "sessions_max": 0,
+    "synth_attempts_max": 0,
+    "route_attempts_max": 0,
+    "tester_minutes_max": 45,
+    "tester_tool_calls_max": 30,
+    "note": "verification only; no TD runs, no bitgen, no download"
+  },
+  "stop_conditions": [
+    "Any functional mismatch/X or hash mismatch -> FAIL.",
+    "Routed report does not show zero violations or contradicts the stated numbers -> FAIL.",
+    "Missing manifest/report/evidence -> FAIL.",
+    "Any attempt to rerun TD, modify RTL/SDC, bitgen, or download -> stop and report.",
+    "Budget 45 min/30 calls exhausted -> stop with partial verdict."
+  ],
+  "write_scope": {
+    "create_new": [
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/test-reports/T10.a1-pipe-split-final-r0-integrated.md"
+    ],
+    "must_not_modify": [
+      "RTL/SDC",
+      "TD project/scripts",
+      "old manifests/results"
+    ]
+  },
+  "protected": [
+    "pipe-split r0 candidate evidence",
+    "SDC 227dd39e",
+    "workflow/tasks.json T10 blocked/not done",
+    "board, Flash, PCIe/RK, camera configuration"
+  ],
+  "user_summary_path": "workflow/runs/20261020-0209_singleA_aplus_closedloop/user-summary.md"
+}

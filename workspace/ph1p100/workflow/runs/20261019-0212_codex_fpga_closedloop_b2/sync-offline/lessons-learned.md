@@ -1,0 +1,7 @@
+# T08 partial implementation lessons
+
+1. ModelSim 10.5b sqlite database paths can fail on this project's Unicode pathname. Resolve tooling to an owned ASCII drive alias before the first compiler command; verify the alias resolves into the actual project and release only that alias in finally. Preserve the failure log rather than overwriting it.
+2. An unconnected positional module port is not written `()`. Prefer named `.src_busy()` connections when leaving the handshake source-busy diagnostic unconnected. This task stopped at the two-attempt compile cap before applying the correction; it is not a verified fix.
+3. Command attempt accounting spans different output directories and different error symptoms. First path failure plus corrected-path syntax failure already consumes the frozen initial+one-retry allowance. A third compile requires the original planner's authorized finite recovery; renaming directories does not permit it.
+4. An accepted I2C transaction that times out may still respond late. Poison the transport until a real reset/flush and distinguish logical stop from physical sensor standby/Hi-Z proof. NACK cleanup ACKs and real hardware effects are different evidence.
+5. An SOF mailbox must retain its stable payload until ACK and explicitly count fast events it cannot accept. A cumulative lost count delivered with the next accepted event has delayed observability; frame-ordinal equality cannot be assumed after a physically missing source event. Both remain unverified implementation decisions in this partial candidate.

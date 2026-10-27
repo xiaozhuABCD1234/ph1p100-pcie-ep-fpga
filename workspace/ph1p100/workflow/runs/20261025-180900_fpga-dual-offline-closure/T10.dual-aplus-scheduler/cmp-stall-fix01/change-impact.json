@@ -1,0 +1,19 @@
+{
+  "task_id": "T10.dual-aplus-scheduler",
+  "scope": "pre-first-integrated-acceptance CMP offer correction",
+  "changed_RTL": [
+    "dual_aplus_scheduler.sv"
+  ],
+  "unchanged_core": true,
+  "external_ports_unchanged": true,
+  "added_state_bits": 2,
+  "frame_buffer_added": false,
+  "impact": [
+    "CMP descriptor timing/ownership/take-refill/reset and ACK interleaving",
+    "nominal real-codec output source identity correspondence"
+  ],
+  "old_problem": "T10.dual-aplus-scheduler:INPUT_CONFLICT:cmp-descriptor-stall",
+  "local_disposition": "targeted old failure reproduced; new matrix and nominal pass locally",
+  "integrated_round0_started": false,
+  "post_acceptance_repair_round": 0
+}

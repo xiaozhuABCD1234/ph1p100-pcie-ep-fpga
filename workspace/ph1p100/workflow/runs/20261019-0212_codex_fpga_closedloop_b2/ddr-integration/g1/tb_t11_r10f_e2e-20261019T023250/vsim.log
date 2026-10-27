@@ -1,0 +1,37 @@
+# vsim -c -l vsim.log -do "run.do" tb_t11_r10f_e2e 
+# Start time: 02:32:53 on Oct 19,2026
+# Loading work.tb_t11_r10f_e2e
+# Loading work.mipi_csi2_rx_ph1p_checked
+# Loading work.csi_rx_packet_integrity
+# Loading work.csi_rx_hdr_ecc
+# Loading work.csi_rx_10bit_unpack_checked
+# Loading work.cam_r10f_writer
+# Loading work.ddr_frame_pusher
+# ** Warning: (vsim-3017) U:/sim/tb/tb_t11_r10f_e2e.v(218): [TFMPC] - Too few port connections. Expected 50, found 42.
+#    Time: 0 ps  Iteration: 0  Instance: /tb_t11_r10f_e2e/u_wr File: U:/sim/../rtl/ep_side/ddr/cam_r10f_writer.v
+# ** Warning: (vsim-3722) U:/sim/tb/tb_t11_r10f_e2e.v(218): [TFMPC] - Missing connection for port 'cl_release'.
+# ** Warning: (vsim-3722) U:/sim/tb/tb_t11_r10f_e2e.v(218): [TFMPC] - Missing connection for port 'cl_pub_valid'.
+# ** Warning: (vsim-3722) U:/sim/tb/tb_t11_r10f_e2e.v(218): [TFMPC] - Missing connection for port 'cl_pub_seq'.
+# ** Warning: (vsim-3722) U:/sim/tb/tb_t11_r10f_e2e.v(218): [TFMPC] - Missing connection for port 'cl_pub_base'.
+# ** Warning: (vsim-3722) U:/sim/tb/tb_t11_r10f_e2e.v(218): [TFMPC] - Missing connection for port 'cl_pub_session'.
+# ** Warning: (vsim-3722) U:/sim/tb/tb_t11_r10f_e2e.v(218): [TFMPC] - Missing connection for port 'cl_pub_len'.
+# ** Warning: (vsim-3722) U:/sim/tb/tb_t11_r10f_e2e.v(218): [TFMPC] - Missing connection for port 'cl_good_count'.
+# ** Warning: (vsim-3722) U:/sim/tb/tb_t11_r10f_e2e.v(218): [TFMPC] - Missing connection for port 'cl_bad_count'.
+# do run.do
+# === E0 未 ARM：出帧 → 无 TLP + E_NOT_ARM + release ===
+# === E1 ARM → 帧2（block1）→ 32 MWr + 1 门铃 → held → ACK ===
+#   [model] seq=2 sess=20261017 hdrcrc=fff22667 paycrc=97e69de2
+# === E2 再 ARM → 帧3（block0，seq=3）→ 发送 → ACK ===
+#   [model] seq=3 sess=20261017 hdrcrc=39b8e6df paycrc=97e69de2
+#   E2 RELDBG rel0=2 rel1=1
+# === E3 慢消费长 wait → held 保护 → 新帧拒绝(8) → ACK ===
+#   [model] seq=4 sess=20261017 hdrcrc=07dfaf34 paycrc=97e69de2
+#   E3 RELDBG rel0=3 rel1=2
+# === E4 reset 隔离 + 新 session 全流程 ===
+#   [model] seq=6 sess=20261017 hdrcrc=503b2805 paycrc=97e69de2
+#   [model] seq=2 sess=20261018 hdrcrc=3eaa3163 paycrc=97e69de2
+# ALL PASS
+# ** Note: $finish    : U:/sim/tb/tb_t11_r10f_e2e.v(775)
+#    Time: 202552 ns  Iteration: 1  Instance: /tb_t11_r10f_e2e
+# End time: 02:32:54 on Oct 19,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 9

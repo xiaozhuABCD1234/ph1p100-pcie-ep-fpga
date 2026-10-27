@@ -1,0 +1,190 @@
+{
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "project_root": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道",
+  "output_dir": "C:\\Users\\czz\\OneDrive\\桌面\\实验室\\竞赛\\嵌入式\\FPGA创新设计赛道\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop",
+  "task_ids": [
+    "T10.a1-htab-eram"
+  ],
+  "package_id": "T10.a1-htab-eram",
+  "round": "r2",
+  "revision": "r2-waive",
+  "continuation_of": "T10.a1-htab-eram r2 s1 candidate 0b084317 (route-only; r2-b reverted)",
+  "batch_size": 1,
+  "status": "finished",
+  "needs_user_input": false,
+  "result": {
+    "verdict": "blocked",
+    "g1": "PASS functional equivalence unchanged",
+    "route": "not_started; PRJ-8001: settings.cfg device/package empty; no import_device; no routed DB/CDC/bitgen",
+    "decision": "r2-waive2 corrected route-only retry approved"
+  },
+  "operation": "followup_task",
+  "authorization": {
+    "quote": "请裁决：是否批准一次例外布线（r2-waive），直接对 r2 0b084317 布线，不再要求综合 WNS>=0",
+    "date": "2026-10-22",
+    "type": "explicit_one_time_pre_route_synth_gate_waiver",
+    "basis": "用户明确批准一次例外布线，并给出条件：仅 17 ps、1 端点、DRAM 长线已消除、资源充裕；布线 1 次；Routed 全门槛；失败即停止。",
+    "round_accounting": "r2 synth 2/2 and sessions 2/2 used; this is a one-time route-only waiver, not a new round and not a reset. No r3.",
+    "limits_frozen_here": {
+      "td_sessions_max": 1,
+      "td_session_minutes_max": 60,
+      "td_synth_attempts_max": 0,
+      "td_route_attempts_max": 1
+    },
+    "not_authorized": [
+      "new synthesis or RTL change",
+      "new round / r3",
+      "A route or clock change",
+      "larger device or QoR strategy",
+      "false path / multicycle / clock-group exceptions",
+      "seed sweep",
+      "bitgen / download / Flash / production integration",
+      "protocol/port/frame semantics/CRC/length/abort/Bayer/SDC changes"
+    ]
+  },
+  "waiver": {
+    "type": "one_time_pre_route_synth_gate_waiver",
+    "original_gate": "synth WNS >= 0 before route",
+    "waived_for": "route-only on r2 candidate 0b084317",
+    "not_waived": "all final routed gates: Routed, WNS/TNS/HWNS/HTNS>=0, 0 violations, resources in device, report_cdc/check_timing actually executed, bitgen not_run",
+    "reason": "Only -0.017 ns / 1 endpoint remains; this is within synthesis/route noise and derating. DRAM LUT is 32 (was 8,432), ERAM 26, slice 3,068; the physical route result is the only remaining evidence. No RTL/synthesis change.",
+    "risk": "Route may still fail; then stop and keep r2 0b084317 as best candidate; no automatic extension.",
+    "evidence": "r2/td/syn_gate_timing_s1.rpt, result-r2.md, CANDIDATE-MANIFEST-htab-eram-r2.json"
+  },
+  "r2_state": {
+    "g1": "PASS functional equivalence: P2 13/13, P3 20/20, 0 mismatch, 0 X, vlog 0/0; P2 comp 355,261 cycles=81.067 MB/s; 1080p 4.68-4.87M; SHA/len/cycles identical to r0/r1",
+    "synth": "2/2 used; s1 -0.017, TNS -0.017, 1/4640 endpoint; slice 3,068; ERAM 26; core 22; reg 1,626; DRAM LUT 32",
+    "worst_path": "htab_tag ERAM clk2q -> hent_pos -> 13-bit s1_hdist subtractor/compare -> hrg_r_reg.d, 5.286 ns / 5 levels",
+    "candidate": {
+      "a1_deflate_core.v": "0b084317db0608a56865a77fd18e7312add3ddb87c2a465a48f60816d8545396",
+      "a1_frame_top.v": "18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+      "a1_small_top.sdc": "227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311",
+      "manifest": "T10.a1-htab-eram/CANDIDATE-MANIFEST-htab-eram-r2.json"
+    },
+    "r2b": "hent_pos boundary compare gave -0.548 and was reverted; worktree restored to 0b084317",
+    "route": "0/1; no route yet"
+  },
+  "input_paths": [
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/dev-plan.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/handoff.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-htab-eram/p4/result-r2.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-htab-eram/r2/td/syn_gate_timing_s1.rpt",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-htab-eram/CANDIDATE-MANIFEST-htab-eram-r2.json",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-htab-eram/r2/td/00_syn_then_route.tcl",
+    "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v",
+    "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v",
+    "tools/td/td_env.ps1",
+    "tools/td/PATH_CONTRACT.md",
+    ".agents/skills/fpga-dev/SKILL.md",
+    ".agents/skills/fpga-tester/SKILL.md"
+  ],
+  "write_scope": {
+    "modify_existing_run_owned": [],
+    "must_not_modify": [
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v (keep 0b084317)",
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v (18d51b1b)",
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_small_top.sdc (227dd39e)"
+    ],
+    "create_new": [
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-htab-eram/r2-waive/**",
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-htab-eram/r2/td/02_route_only.tcl (tooling only, no RTL)"
+    ],
+    "td_project_dir": "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-htab-eram/r2/td/**",
+    "path_contract": {
+      "td": "T: = r2/td, Y: = project root; run tools/td/td_env.ps1 -Force -TdDir ...; never map X: to project root",
+      "sim": "P: = project root, W: = current sim run",
+      "doc": "tools/td/PATH_CONTRACT.md"
+    },
+    "rules": [
+      "No RTL change; no synthesis. Route-only on existing r2 syn_1 result.",
+      "Use a route-only flow (launch_runs phy_1 -to_step route or equivalent); do not call bitgen. If the flow cannot stop before bitgen, stop and report before generating .bit.",
+      "After route, run report_cdc/check_timing separately; do not rely on bitgen flow end.",
+      "If route fails or routed WNS<0, stop; keep r2 0b084317 as best candidate; no automatic extension.",
+      "Follow T:/Y: TD and P:/W: simulation."
+    ]
+  },
+  "protected": [
+    "a1_deflate_core.v 0b084317, frame 18d51b1b, SDC 227dd39e",
+    "all old manifests/reports",
+    "workflow/tasks.json",
+    "production candidate b68c6e18…f9bf",
+    "board, Flash, PCIe/RK, camera configuration"
+  ],
+  "next_action": "followup_task",
+  "next_action_detail": {
+    "role": "fpga-dev",
+    "skill_path": ".agents/skills/fpga-dev/SKILL.md",
+    "task": "T10.a1-htab-eram r2-waive：不综合、不改 RTL；对 r2 0b084317 做一次 route-only（T:=r2/td，Y:=项目根），Routed 全门槛；布线后单独 report_cdc/check_timing；bitgen not_run。若 routed WNS<0 或失败，停止并保留 r2。",
+    "must_read": [
+      "dev-plan.md §29.10",
+      "p4/result-r2.md §3-§5",
+      "r2/td/syn_gate_timing_s1.rpt",
+      "tools/td/PATH_CONTRACT.md"
+    ],
+    "first_checks": [
+      "确认 core hash = 0b084317db0608a56865a77fd18e7312add3ddb87c2a465a48f60816d8545396",
+      "确认 frame hash = 18d51b1b80002e3549b6afd74956cff9d323d0a0272a7a08d617365a01611cbe",
+      "确认 SDC hash = 227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311",
+      "确认 r2/td 的 syn_1 结果存在且未被 r2-b 覆盖"
+    ]
+  },
+  "route_scope": {
+    "primary": "Route-only on r2 0b084317; no synthesis, no RTL change.",
+    "flow": "T: = r2/td; open existing syn_1; launch phy_1 route-only; do not invoke bitgen; after route open phy_1 and run report_timing_summary/status, report_area, report_cdc, check_timing separately.",
+    "gates": {
+      "status": "Routed",
+      "wns_ns_min": 0.0,
+      "tns_ns_min": 0.0,
+      "hwns_ns_min": 0.0,
+      "htns_ns_min": 0.0,
+      "violating_endpoints": 0,
+      "resources": "within PH1P100SBG484",
+      "cdc_report": "actually executed",
+      "check_timing": "actually executed",
+      "bitgen": "not_run; no .bit/download"
+    },
+    "if_fail": "Stop; keep r2 0b084317 as best candidate; no automatic next round."
+  },
+  "td_budget": {
+    "sessions_max": 1,
+    "session_minutes_max": 60,
+    "total_minutes_max": 60,
+    "synth_attempts_max": 0,
+    "route_attempts_max": 1,
+    "route_minutes_max": 60,
+    "dev_minutes_max": 60,
+    "dev_tool_calls_max": 20,
+    "tester_minutes_max": 45,
+    "tester_tool_calls_max": 30,
+    "why": "One route-only attempt on the existing r2 candidate; no synth. 17 ps is within synth/route noise; route is the only remaining evidence.",
+    "no_qor_strategy_change": true,
+    "no_clock_change": true
+  },
+  "stop_conditions": [
+    "Any RTL change or synthesis needed -> stop; this waiver is route-only.",
+    "Route not Routed -> stop; keep r2 0b084317.",
+    "Routed WNS<0 or TNS<0 -> stop; keep r2; no automatic extension.",
+    "Routed HWNS<0 or HTNS<0 -> stop.",
+    "Any violating endpoint or resource overflow -> stop.",
+    "report_cdc or check_timing not actually executed -> G2 cannot PASS; record evidence gap.",
+    "bitgen invoked or .bit generated -> stop and report; no download.",
+    "1 session/60 min or 1 route exhausted -> stop; no r3.",
+    "Any request for false path/multicycle/seed sweep/clock change/QoR strategy -> stop and return to planner."
+  ],
+  "after_development": {
+    "sequence": [
+      "dev ready_for_test + frozen r2-waive manifest -> spawn_single_tester (one new integrated tester)",
+      "tester integrated verdict -> return_to_planner",
+      "dev blocked at route/report -> return_to_planner, no tester",
+      "r2-waive fail -> blocked; keep r2 best; no r3"
+    ],
+    "rules": [
+      "New development and new independent tester session.",
+      "Tester writes test-reports/T10.a1-htab-eram-r2-integrated.md (note revision r2-waive).",
+      "Tester independently parses raw routed reports/hashes, verifies Routed WNS/TNS/HWNS/HTNS, 0 violations, resources, report_cdc/check_timing, bitgen not_run.",
+      "G2 PASS requires Routed WNS/TNS>=0, 0 violations, resources in device, report_cdc actually executed."
+    ]
+  },
+  "question_path": null,
+  "user_summary_path": "workflow/runs/20261020-0209_singleA_aplus_closedloop/user-summary.md"
+}

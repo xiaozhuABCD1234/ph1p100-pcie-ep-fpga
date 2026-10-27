@@ -1,0 +1,93 @@
+{
+  "cases": [
+    {
+      "case": "real_multipiece",
+      "expect_accept": true,
+      "exit": 0,
+      "accepted": true,
+      "reason": null,
+      "mode": "multipiece",
+      "pass": true,
+      "pieces": 15,
+      "data_coverage": "288/288",
+      "map_bits": 289,
+      "map_data_bits": 288,
+      "map_status_bits": 1,
+      "map_ok": true
+    },
+    {
+      "case": "real_strict",
+      "expect_accept": false,
+      "exit": 1,
+      "accepted": false,
+      "reason": "auto_created_cwc1: BID width mismatch",
+      "mode": "strict",
+      "pass": true
+    },
+    {
+      "case": "single_strict",
+      "expect_accept": true,
+      "exit": 0,
+      "accepted": true,
+      "reason": null,
+      "mode": "strict",
+      "pass": true
+    },
+    {
+      "case": "single_multipiece",
+      "expect_accept": true,
+      "exit": 0,
+      "accepted": true,
+      "reason": null,
+      "mode": "multipiece",
+      "pass": true
+    },
+    {
+      "case": "neg_gap",
+      "expect_accept": false,
+      "exit": 1,
+      "accepted": false,
+      "reason": "auto_created_cwc1: data range gap/overlap at bit 100 (piece starts 101)",
+      "mode": "multipiece",
+      "pass": true
+    },
+    {
+      "case": "neg_overlap",
+      "expect_accept": false,
+      "exit": 1,
+      "accepted": false,
+      "reason": "auto_created_cwc1: data range gap/overlap at bit 120 (piece starts 110)",
+      "mode": "multipiece",
+      "pass": true
+    },
+    {
+      "case": "neg_width_overflow",
+      "expect_accept": false,
+      "exit": 1,
+      "accepted": false,
+      "reason": "auto_created_cwc1: piece width exceeds BID logic_width",
+      "mode": "multipiece",
+      "pass": true
+    },
+    {
+      "case": "neg_mode_mismatch",
+      "expect_accept": false,
+      "exit": 1,
+      "accepted": false,
+      "reason": "auto_created_cwc1: working depth mismatch",
+      "mode": "multipiece",
+      "pass": true
+    },
+    {
+      "case": "neg_wrong_rid",
+      "expect_accept": false,
+      "exit": 1,
+      "accepted": false,
+      "reason": "auto_created_cwc1: wrong/duplicate BID identity (65535, 'auto_created_cwc1/wrapper_cwc_top/U_cwc_ram/mem_syn_305')",
+      "mode": "multipiece",
+      "pass": true
+    }
+  ],
+  "failed": 0,
+  "total": 9
+}

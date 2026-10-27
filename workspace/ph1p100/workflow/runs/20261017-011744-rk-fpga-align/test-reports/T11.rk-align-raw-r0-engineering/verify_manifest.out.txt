@@ -1,0 +1,47 @@
+== T11 manifest self-recompute (independent) ==
+manifest   : C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\workflow\runs\20261017-011744-rk-fpga-align\raw\candidate-manifest.json
+manifest SHA256 : aab0cc08ef0134d5fcb18b25e0b70c43e9af1d577513ca2996dc46f22de76975
+manifest mtime  : 2026-10-17 09:47:00
+schema=2 task=T11.rk-align-raw round=0
+[production_inputs] entries=155 ok=155 missing=0 mismatch=0 size_bad=0 mtime 2026-10-12 14:27:16 .. 2026-10-17 09:18:54
+[build_scripts] entries=12 ok=12 missing=0 mismatch=0 size_bad=0 mtime 2026-10-17 04:01:00 .. 2026-10-17 09:45:41
+[test_inputs] entries=12 ok=12 missing=0 mismatch=0 size_bad=0 mtime 2026-10-17 01:30:23 .. 2026-10-17 09:43:51
+[rk_patch_inputs] entries=29 ok=29 missing=0 mismatch=0 size_bad=0 mtime 2026-10-17 01:30:26 .. 2026-10-17 09:32:16
+[build_artifacts] entries=35 ok=35 missing=0 mismatch=0 size_bad=0 mtime 2026-10-17 09:32:12 .. 2026-10-17 09:41:50
+TOTAL entries=243 OK=243 MISSING=0 MISMATCH=0 SIZE_MISMATCH=0
+selfcheck file says: {'entries': 243, 'mismatches': []}
+covered files with mtime later than manifest mtime (2026-10-17 09:47:00): 0
+
+== T07 (68f9f4d0) manifest -> T11 delta, shared sections ==
+[production_inputs] T07=153 T11=155 changed=1 added=2 removed=0
+  CHANGED fpga/csi2/pcie_integration/rtl/ep_side/ph1p_pcie_ep_top.v
+    T07=7e90de202934f23c13238f31392f104779c1f104be2d69ff17f31fccd028bbf8
+    T11=817d1949134479de6429ba514a493e8df49300f25a5d5d37c335864d5cfac7ce
+  ADDED   fpga/csi2/pcie_integration/rtl/ep_side/ddr/cam_r10f_writer.v
+  ADDED   fpga/csi2/pcie_integration/rtl/ep_side/ddr/crc32_upd4.v
+[build_scripts] T07=8 T11=12 changed=1 added=4 removed=0
+  CHANGED tools/pcie_integration/td/00_all.tcl
+    T07=6e4ffd1ef5442c34391eb8d6e6806269d4b86fd41c94a7ff9eafbe8941a32e2b
+    T11=2448c17023de4c8af2d7485ac7e076204d0b6a906c047d398f2501612f0e3115
+  ADDED   tools/pcie_integration/gen_crc32_flat.py
+  ADDED   tools/pcie_integration/gen_manifest_t11.py
+  ADDED   tools/pcie_integration/r10f_strict.py
+  ADDED   tools/pcie_integration/r10f_tools_consistency.py
+[test_inputs] T07=8 T11=12 changed=1 added=4 removed=0
+  CHANGED fpga/csi2/pcie_integration/sim/compile_checked.f
+    T07=c075ccab6b4cc5861c17da22cf1410894f2c9929493b8c1b6a87eb803db5100c
+    T11=b66bad40fcf538f3dbe76ad1565a46beb8ae190cb49001b6cecd01590c1151a1
+  ADDED   fpga/csi2/pcie_integration/sim/tb/tb_cam_r10f_writer.v
+  ADDED   fpga/csi2/pcie_integration/sim/tb/tb_t11_csi_enable_corner.v
+  ADDED   fpga/csi2/pcie_integration/sim/tb/tb_t11_dbg1.v
+  ADDED   fpga/csi2/pcie_integration/sim/tb/tb_t11_r10f_e2e.v
+[rk_patch_inputs] T07=28 T11=29 added=['raw/patches/apply-check-stat.txt', 'raw/patches/t11-rka1-r10f-fix.patch', 'raw/rk-driver-src/.gitignore', 'raw/rk-driver-src/Makefile', 'raw/rk-driver-src/README.md', 'raw/rk-driver-src/app/rs/.cargo/config.toml', 'raw/rk-driver-src/app/rs/Cargo.lock', 'raw/rk-driver-src/app/rs/Cargo.toml', 'raw/rk-driver-src/app/rs/src/bin/cam_grab.rs', 'raw/rk-driver-src/app/rs/src/bin/frame_grab.rs', 'raw/rk-driver-src/app/rs/src/bin/link_ctl.rs', 'raw/rk-driver-src/app/rs/src/bin/pci_bar.rs', 'raw/rk-driver-src/app/rs/src/bin/pcie_check.rs', 'raw/rk-driver-src/app/rs/src/bin/r10f_check.rs', 'raw/rk-driver-src/app/rs/src/getopt.rs', 'raw/rk-driver-src/app/rs/src/ioctl.rs', 'raw/rk-driver-src/app/rs/src/lib.rs', 'raw/rk-driver-src/app/rs/src/parse.rs', 'raw/rk-driver-src/app/rs/src/rka1.rs', 'raw/rk-driver-src/app/rs/src/sys.rs', 'raw/rk-driver-src/include/anlogic_pci_ioctl.h', 'raw/rk-driver-src/src/anlogic_pci.h', 'raw/rk-driver-src/src/anlogic_pci_chrdev.c', 'raw/rk-driver-src/src/anlogic_pci_ctrl.c', 'raw/rk-driver-src/src/anlogic_pci_frame.c', 'raw/rk-driver-src/src/anlogic_pci_hw.c', 'raw/rk-driver-src/src/anlogic_pci_link.c', 'raw/rk-driver-src/src/anlogic_pci_main.c', 'raw/rk-driver-src/src/anlogic_pci_rka1.c'] removed=['backend/patches/apply-check-stat.txt', 'backend/patches/rka1-driver.patch', 'backend/rk-driver-src/.gitignore', 'backend/rk-driver-src/Makefile', 'backend/rk-driver-src/README.md', 'backend/rk-driver-src/app/rs/.cargo/config.toml', 'backend/rk-driver-src/app/rs/Cargo.lock', 'backend/rk-driver-src/app/rs/Cargo.toml', 'backend/rk-driver-src/app/rs/src/bin/cam_grab.rs', 'backend/rk-driver-src/app/rs/src/bin/frame_grab.rs', 'backend/rk-driver-src/app/rs/src/bin/link_ctl.rs', 'backend/rk-driver-src/app/rs/src/bin/pci_bar.rs', 'backend/rk-driver-src/app/rs/src/bin/pcie_check.rs', 'backend/rk-driver-src/app/rs/src/getopt.rs', 'backend/rk-driver-src/app/rs/src/ioctl.rs', 'backend/rk-driver-src/app/rs/src/lib.rs', 'backend/rk-driver-src/app/rs/src/parse.rs', 'backend/rk-driver-src/app/rs/src/rka1.rs', 'backend/rk-driver-src/app/rs/src/sys.rs', 'backend/rk-driver-src/include/anlogic_pci_ioctl.h', 'backend/rk-driver-src/src/anlogic_pci.h', 'backend/rk-driver-src/src/anlogic_pci_chrdev.c', 'backend/rk-driver-src/src/anlogic_pci_ctrl.c', 'backend/rk-driver-src/src/anlogic_pci_frame.c', 'backend/rk-driver-src/src/anlogic_pci_hw.c', 'backend/rk-driver-src/src/anlogic_pci_link.c', 'backend/rk-driver-src/src/anlogic_pci_main.c', 'backend/rk-driver-src/src/anlogic_pci_rka1.c']
+
+== *.bit scan under raw/candidate ==
+14b32037eb0b4aff4f9ea1f61b75160c11ff9381e23f11563f97ecaf5bf5686b    5224023  2026-10-17 09:41:50  raw/candidate/prj/ph1p_pcie_integration_Runs/best_result/ph1p_pcie_integration.bit
+14b32037eb0b4aff4f9ea1f61b75160c11ff9381e23f11563f97ecaf5bf5686b    5224023  2026-10-17 09:41:50  raw/candidate/prj/ph1p_pcie_integration_Runs/phy_1/ph1p_pcie_integration.bit
+
+== CWC files under raw/candidate: 0 ==
+
+baseline (T07 r3) bit per T11 manifest: 0943cb36feeb873decc6ea5aae1c2777b3ab4881ebe2954b43bee040ceb38b0a
+T07 manifest selfcheck: {'entries': 232, 'mismatches': []}

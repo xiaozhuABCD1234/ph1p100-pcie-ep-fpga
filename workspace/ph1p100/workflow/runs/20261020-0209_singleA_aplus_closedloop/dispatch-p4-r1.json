@@ -1,0 +1,116 @@
+{
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "parent_dispatch": "workflow/runs/20261020-0209_singleA_aplus_closedloop/dispatch.json",
+  "task_ids": ["T10.a1-eng-freeze"],
+  "package": "T10.a1-eng-freeze",
+  "round": "r1",
+  "batch_size": 1,
+  "status": "blocked",
+  "needs_user_input": false,
+  "adjudication": {
+    "decision": "append_one_bounded_repair",
+    "new_package": false,
+    "task_id_changed": false,
+    "reason": "G2 is a hard gate of the round's main goal; the failure is an implementable timing/RAM-inference defect, not a missing tool or device. The G0/G1 candidate is stable and resource headroom is large (ERAM 4/300).",
+    "t10_complete": false,
+    "not_claimed": ["G2 PASS", "routed implementation", "bit/CWC", "board/G3/G4", "real RAW", "single-A actual chain"]
+  },
+  "candidate_binding": {
+    "frame_top_sha256": "3c32803b41378629622ae3a709ab64373b2fb13286bfc7ea789e7e1dbf190961",
+    "deflate_core_sha256": "6cd35881a864faec3a7fe9f8355d71a66f775bf2c037202959f315d42a799d9f",
+    "p3_manifest": "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-frame-top/CANDIDATE-MANIFEST.json",
+    "p4_r0_manifest": "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-eng-freeze/CANDIDATE-MANIFEST.json",
+    "rule": "repair creates a new derived candidate; old manifests are read-only and must not be edited or reused as PASS for the new hashes"
+  },
+  "scope": {
+    "objective": "Fix the 187.5 MHz timing failure by removing combinational distributed-RAM reads (cmem[4096x16], htab[1024x53]) and pipelining as needed, then rerun G1 regression and one TD G2 attempt on the same small top.",
+    "allowed_changes": [
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/** (new/modified codec RTL only)",
+      "new TB/scripts under upstream/ph1p100-pcie-ep-fpga/sim/tb/codec/** and upstream/ph1p100-pcie-ep-fpga/tools/codec/**",
+      "all new evidence under workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-eng-freeze/**"
+    ],
+    "forbidden_changes": [
+      "external port/interface semantics or frame commit/abort behavior",
+      "format-v1.md frozen format, zlib wrapper, fixed+stored subset, Bayer mapping",
+      "187.5 MHz target clock, SDC thresholds, adding false paths or multicycle exceptions",
+      "production files, top-level integration, three algorithms, R10F/T03 enums",
+      "old manifests/reports, workflow/tasks.json, old runs"
+    ],
+    "semantic_steps": [
+      "1. Replace combinational reads of cmem/htab with synchronous ERAM/registered-read structures; pipeline match/emit path only as needed to preserve interface and throughput.",
+      "2. Keep external ports and frame commit/abort/CRC/length semantics byte-identical; record diff and new hashes.",
+      "3. Rerun P2 13/13 + P3 20/20 regressions on the new candidate; require 0 mismatch, vlog Errors 0 / Warnings 0, no X; stop if any fails.",
+      "4. Run exactly one TD session (the remaining 3rd of the package budget) on the same a1_eng_top and 187.5 MHz SDC; synth+route within 30 minutes; save logs, timing, area, CDC-if-available.",
+      "5. Freeze new manifest (new file, do not overwrite r0), write p4/result-r1.md with routed WNS/TNS/resources/throughput and explicit PASS/FAIL; no bitgen/download."
+    ]
+  },
+  "gates": {
+    "G1_regression": "P2 13/13 + P3 20/20, 0 sample/byte mismatch, vlog 0/0, no X; must complete before TD.",
+    "G2": "TD exit=0; Confidence=Routed; SWNS/STNS/HWNS >= 0 (record values); 0 violations; resources within PH1P100SBG484; no broad false paths.",
+    "throughput": "recomputed from G1 cycles at 187.5 MHz; 1080p >= 77.76 MB/s required, 97.2 target; do not use theoretical bandwidth.",
+    "evidence": "new candidate manifest with per-file SHA256 and 0 mismatches; raw logs; timing/area reports; independent tester report."
+  },
+  "budget": {
+    "dev_minutes_max": 45,
+    "dev_tool_calls_max": 30,
+    "regression_minutes_max": 15,
+    "td_new_sessions": 1,
+    "td_total_sessions_for_package": 3,
+    "td_session_minutes_max": 30,
+    "td_total_minutes_max": 90,
+    "tester_minutes_max": 45,
+    "tester_tool_calls_max": 30,
+    "production_builds": 0,
+    "downloads": 0,
+    "bitgen": 0
+  },
+  "stop_conditions": [
+    "Any P2/P3 regression mismatch, X propagation, or vlog error -> stop before TD.",
+    "After the RTL fix, if synthesis WNS < 0 -> stop; do not route, do not try another seed.",
+    "If route does not reach Routed within the single 30-minute session -> stop; no 4th session.",
+    "If G2 passes but throughput drops below 77.76 MB/s -> FAIL, no threshold change.",
+    "Two consecutive no-progress attempts or any request to relax constraints -> blocked, return evidence."
+  ],
+  "write_scope": {
+    "upstream_new_or_modified_only": [
+      "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/**",
+      "upstream/ph1p100-pcie-ep-fpga/sim/tb/codec/**",
+      "upstream/ph1p100-pcie-ep-fpga/tools/codec/**"
+    ],
+    "run_output_only": [
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-eng-freeze/**",
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/test-reports/T10.a1-eng-freeze-r1-integrated.md",
+      "workflow/runs/20261020-0209_singleA_aplus_closedloop/dispatch-p4-r1.json"
+    ],
+    "rule": "do not overwrite T10.a1-eng-freeze/CANDIDATE-MANIFEST.json or p4/result.md (r0 evidence); use -r1 names"
+  },
+  "protected": [
+    "all existing files outside the allowed codec dirs and the P4 run dir",
+    "P1/P2/P3 frozen manifests and reports",
+    "production top, B01 bit/CWC, old runs, workflow/tasks.json",
+    "R10F contract, T03 enums, SDC files other than the P4 r1 copy"
+  ],
+  "after_development": {
+    "tester": "one new independent integrated tester for T10.a1-eng-freeze r1",
+    "tester_must": [
+      "bind the new r1 manifest and hashes",
+      "independently rerun P2 13/13 and P3 20/20 on the new candidate",
+      "verify routed G2 report, WNS/TNS, resources, and throughput recomputation",
+      "write test-reports/T10.a1-eng-freeze-r1-integrated.md with one unique verdict heading"
+    ],
+    "on_pass": "P4 PASS (G0/G1/G2 small top); T10 A+ offline closed loop established, but no G3/board/real-data claim.",
+    "on_fail": "P4 remains WARN/blocked; round closes at 3/4 PASS; timing repair becomes next-round theme."
+  },
+  "input_paths": [
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-eng-freeze/p4/result.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-eng-freeze/p4/reports/syn_gate_timing.rpt",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.a1-frame-top/CANDIDATE-MANIFEST.json",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/test-reports/T10.a1-frame-top-r1-integrated.md",
+    "workflow/runs/20261020-0209_singleA_aplus_closedloop/test-reports/T10.a1-enc-rtl-r0-integrated.md",
+    "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_deflate_core.v",
+    "upstream/ph1p100-pcie-ep-fpga/rtl/ep_side/codec/a1_frame_top.v"
+  ],
+  "next_action": "dispatch_development_repair",
+  "question_path": null,
+  "user_summary_path": "workflow/runs/20261020-0209_singleA_aplus_closedloop/user-summary.md"
+}

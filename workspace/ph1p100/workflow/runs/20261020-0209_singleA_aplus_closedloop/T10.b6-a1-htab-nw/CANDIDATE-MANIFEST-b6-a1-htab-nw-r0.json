@@ -1,0 +1,552 @@
+{
+  "task_id": "T10.b6-a1-htab-nw",
+  "round": "r0",
+  "run_id": "20261020-0209_singleA_aplus_closedloop",
+  "status": "ready_for_test",
+  "scope": "remove the r5 per-match S_EXT wait cycle by restoring the r4 hit-cycle first-extension compare; bm_b read address is driven by fabric flops only",
+  "single_rtl_change": {
+    "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\changed-src\\a1_deflate_core.v",
+    "exists": true,
+    "bytes": 80196,
+    "sha256": "6797db053cfc47497540d6345e3a46b7e79cc1d34fa25da5a4c501505fbf35bb"
+  },
+  "rtl_diff": {
+    "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\rtl-diff-r0.patch",
+    "exists": true,
+    "bytes": 31946,
+    "sha256": "93739750ded00bea89cd7cb490c65b9df0b6a754efccf834c45333e51cc90c48"
+  },
+  "rtl_diff_vs_upstream_r4": {
+    "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\rtl-diff-vs-r4.patch",
+    "exists": true,
+    "bytes": 24346,
+    "sha256": "24769f75f7e5ea985fa17b19effe36bdc6fbf40366c74ee62cbeee545a0e7ae5"
+  },
+  "inputs_read_only": {
+    "r5_core": {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b5-a1-htab-pipe\\r0\\changed-src\\a1_deflate_core.v",
+      "sha256": "29b1e3e1a66abef78c228c4189322b0139a266d43bf02827dd1ebe498cdc9828"
+    },
+    "r4_upstream_core": {
+      "path": "D:\\fpga\\ph1p100\\upstream\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\codec\\a1_deflate_core.v",
+      "sha256": "d4b799612519d4cb6c32a0c0e87807be84dec711fc01e2146b054d464d1b88de"
+    },
+    "p2_vectors": {
+      "comp_in_hex": {
+        "path": "D:\\fpga\\ph1p100\\work\\parallel-sim-20261024-2204\\codec-throughput\\comp\\in.hex",
+        "exists": true,
+        "bytes": 614400,
+        "sha256": "edbfdeaedb06824ced20ad76b260979e95e1322d6f6e3bab5e7a951a268f9849"
+      },
+      "comp_in_meta": {
+        "path": "D:\\fpga\\ph1p100\\work\\parallel-sim-20261024-2204\\codec-throughput\\comp\\in.meta",
+        "exists": true,
+        "bytes": 330,
+        "sha256": "e98c9a1c3e0fe621c9aa65aaadbcacbef13c2437a0bbbafcde17d2ff471f80fe"
+      },
+      "comp_in_xform": {
+        "path": "D:\\fpga\\ph1p100\\work\\parallel-sim-20261024-2204\\codec-throughput\\comp\\in.xform",
+        "exists": true,
+        "bytes": 153600,
+        "sha256": "b836b51df0bc98045f3768cf497bb5a76f88fa301e0598c63514284e2fbfba7a"
+      },
+      "rand_in_hex": {
+        "path": "D:\\fpga\\ph1p100\\work\\parallel-sim-20261024-2204\\codec-throughput\\rand\\in.hex",
+        "exists": true,
+        "bytes": 614400,
+        "sha256": "dcc80e7adeef41e4804390ba52dd1f6d2c12e1b99d851cccd50e246c082595bd"
+      },
+      "rand_in_meta": {
+        "path": "D:\\fpga\\ph1p100\\work\\parallel-sim-20261024-2204\\codec-throughput\\rand\\in.meta",
+        "exists": true,
+        "bytes": 330,
+        "sha256": "e98c9a1c3e0fe621c9aa65aaadbcacbef13c2437a0bbbafcde17d2ff471f80fe"
+      },
+      "rand_in_xform": {
+        "path": "D:\\fpga\\ph1p100\\work\\parallel-sim-20261024-2204\\codec-throughput\\rand\\in.xform",
+        "exists": true,
+        "bytes": 153600,
+        "sha256": "230204cf76298c0f0ba2cb05da3c475d6bd39b0af2ae424046d5ff878dba4586"
+      }
+    },
+    "p2_tb": {
+      "path": "D:\\fpga\\ph1p100\\upstream\\ph1p100-pcie-ep-fpga\\sim\\tb\\codec\\tb_a1_deflate_core.v",
+      "exists": true,
+      "bytes": 7539,
+      "sha256": "910aea54e0d8d40a02a7d5e7844b053fff1f86e24cbfc43d1c33f083da5af09e"
+    },
+    "p1_tb": {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b1-a1-uart-integ\\r0\\sim\\tb_camera_a1_uart_top.v",
+      "exists": true,
+      "bytes": 11420,
+      "sha256": "d47e7a1dbe6674ff18f04fb79b68e2233066f078f3980ab11cee1cb00e79e994"
+    },
+    "p1_goldens_b5": {
+      "micro8x2": {
+        "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b5-a1-htab-pipe\\r0\\sim\\captures\\micro8x2.dec",
+        "exists": true,
+        "bytes": 249,
+        "sha256": "fa513a2b5a7f268be9f29d62aea6c44aaab796d0f23256b0e1049f50acceedef"
+      },
+      "mid64x8": {
+        "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b5-a1-htab-pipe\\r0\\sim\\captures\\mid64x8.dec",
+        "exists": true,
+        "bytes": 625,
+        "sha256": "ee61e6200d9abca66c5a74a0cbbd9dde982f1d4652647f8b0d67e5964f3e9789"
+      },
+      "full_grad": {
+        "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b5-a1-htab-pipe\\r0\\sim\\captures\\full_grad.dec",
+        "exists": true,
+        "bytes": 180425,
+        "sha256": "b992a8ad74063545cfebb67e59efc83b4136133a0c19479a18c05c343d48ada9"
+      }
+    },
+    "sdc_and_pins_unchanged": {
+      "p2_board.sdc": {
+        "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\p2_board.sdc",
+        "exists": true,
+        "bytes": 3989,
+        "sha256": "9284982452c37f308fc4dcd396eb94b8da4962337bdd5740a23ce830d3856d95"
+      },
+      "a1_small_top.sdc": {
+        "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\a1_small_top.sdc",
+        "exists": true,
+        "bytes": 399,
+        "sha256": "227dd39e3dba8834af510013c71242450d4571307267d6bac4938cb8ef696311"
+      },
+      "board_p2.adc": {
+        "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\board_p2.adc",
+        "exists": true,
+        "bytes": 7154,
+        "sha256": "1cb30346fa17da6bb0e77802ca72c4b4bb4aecc1445711e19391cf4ee2271580"
+      }
+    }
+  },
+  "functional": {
+    "p2": {
+      "comp": {
+        "stats": {
+          "in_bytes": 153600,
+          "out_bytes": 50310,
+          "first_cycle": 7,
+          "done_cycle": 355268,
+          "run_cycles": 355261,
+          "done": 1,
+          "out_last": 1,
+          "stopped_early": 0,
+          "bp": 0,
+          "gap": 0,
+          "stat_blocks": 32,
+          "stat_fixed": 32,
+          "stat_stored": 0,
+          "stat_literals": 19200,
+          "stat_matches": 19200,
+          "stat_cand_aborts": 0,
+          "stat_stall": 184528,
+          "stat_max_match": 7,
+          "stat_max_dist": 351,
+          "timeout_hit": 0
+        },
+        "tb_pass": true,
+        "output_bytes": 50310,
+        "output_sha256": "2601d57cd98d1fe69b2e46fe8423779a5d44bd14c00e1fe2d5faab6ff15a7c05",
+        "zlib_ok": true,
+        "zlib_err": "",
+        "zlib_mismatch": 0,
+        "strict_ok": true,
+        "strict_err": "",
+        "strict_mismatch": 0,
+        "run_cycles": 355261,
+        "MBps_at_187p5MHz": 81.06715907459586
+      },
+      "rand": {
+        "stats": {
+          "in_bytes": 153600,
+          "out_bytes": 153766,
+          "first_cycle": 7,
+          "done_cycle": 161486,
+          "run_cycles": 161479,
+          "done": 1,
+          "out_last": 1,
+          "stopped_early": 0,
+          "bp": 0,
+          "gap": 0,
+          "stat_blocks": 32,
+          "stat_fixed": 0,
+          "stat_stored": 32,
+          "stat_literals": 2655,
+          "stat_matches": 0,
+          "stat_cand_aborts": 32,
+          "stat_stall": 2872,
+          "stat_max_match": 0,
+          "stat_max_dist": 0,
+          "timeout_hit": 0
+        },
+        "tb_pass": true,
+        "output_bytes": 153766,
+        "output_sha256": "54f262f2a600a3e2f12129f2937a390737d1ec8018d8f0236979e604760496dd",
+        "zlib_ok": true,
+        "zlib_err": "",
+        "zlib_mismatch": 0,
+        "strict_ok": true,
+        "strict_err": "",
+        "strict_mismatch": 0,
+        "run_cycles": 161479,
+        "MBps_at_187p5MHz": 178.35136457372164
+      }
+    },
+    "p1": {
+      "micro8x2": {
+        "dec_bytes": 249,
+        "dec_sha256": "fa513a2b5a7f268be9f29d62aea6c44aaab796d0f23256b0e1049f50acceedef",
+        "gold_bytes": 249,
+        "gold_sha256": "fa513a2b5a7f268be9f29d62aea6c44aaab796d0f23256b0e1049f50acceedef",
+        "byte_identical": true,
+        "stats": {
+          "STAT": "mode=0 cap=1 enc=1 exported=1 exp_bytes=19 raw_pub=1 raw_drop=0 cmp_drop=0 geom=0 err=0 cap_bytes=63 cycles=3809 read_words=1 dup_words=0"
+        }
+      },
+      "mid64x8": {
+        "dec_bytes": 625,
+        "dec_sha256": "ee61e6200d9abca66c5a74a0cbbd9dde982f1d4652647f8b0d67e5964f3e9789",
+        "gold_bytes": 625,
+        "gold_sha256": "ee61e6200d9abca66c5a74a0cbbd9dde982f1d4652647f8b0d67e5964f3e9789",
+        "byte_identical": true,
+        "stats": {
+          "STAT": "mode=0 cap=1 enc=1 exported=1 exp_bytes=106 raw_pub=1 raw_drop=0 cmp_drop=0 geom=0 err=0 cap_bytes=150 cycles=5172 read_words=32 dup_words=0"
+        }
+      },
+      "full_grad": {
+        "dec_bytes": 180425,
+        "dec_sha256": "b992a8ad74063545cfebb67e59efc83b4136133a0c19479a18c05c343d48ada9",
+        "gold_bytes": 180425,
+        "gold_sha256": "b992a8ad74063545cfebb67e59efc83b4136133a0c19479a18c05c343d48ada9",
+        "byte_identical": true,
+        "stats": {
+          "STAT": "mode=0 cap=1 enc=1 exported=1 exp_bytes=40032 raw_pub=1 raw_drop=0 cmp_drop=0 geom=0 err=0 cap_bytes=40076 cycles=6421414 read_words=129600 dup_words=0"
+        }
+      }
+    },
+    "boundaries": {
+      "status": "PASS_EXPLORATORY",
+      "cases": [
+        {
+          "name": "odd8x3",
+          "status": "PASS",
+          "checks": {
+            "tb_done": true,
+            "no_timeout": true,
+            "one_frame": true,
+            "no_half_frame": true,
+            "captured_length": true,
+            "one_export": true,
+            "raw_pub": true,
+            "cap_enc": true,
+            "no_drop_geom_errors": true,
+            "header_crc_ok": true,
+            "stream_crc_ok": true,
+            "xform_crc_ok": true,
+            "raw_crc_ok": true,
+            "zlib_ok": true,
+            "raw_len_ok": true,
+            "xform_len_ok": true,
+            "worstcase_ok": true,
+            "raw_exact": true,
+            "xform_exact": true,
+            "header_geometry": true,
+            "export_bytes": true,
+            "stream_length": true,
+            "read_words": true
+          },
+          "stats": {
+            "mode": 0,
+            "cap": 1,
+            "enc": 1,
+            "exported": 1,
+            "exp_bytes": 28,
+            "raw_pub": 1,
+            "raw_drop": 0,
+            "cmp_drop": 0,
+            "geom": 0,
+            "err": 0,
+            "cap_bytes": 72,
+            "cycles": 3875,
+            "read_words": 2,
+            "dup_words": 0
+          },
+          "first_deflate_btype": 1
+        },
+        {
+          "name": "random64x8",
+          "status": "PASS",
+          "checks": {
+            "tb_done": true,
+            "no_timeout": true,
+            "one_frame": true,
+            "no_half_frame": true,
+            "captured_length": true,
+            "one_export": true,
+            "raw_pub": true,
+            "cap_enc": true,
+            "no_drop_geom_errors": true,
+            "header_crc_ok": true,
+            "stream_crc_ok": true,
+            "xform_crc_ok": true,
+            "raw_crc_ok": true,
+            "zlib_ok": true,
+            "raw_len_ok": true,
+            "xform_len_ok": true,
+            "worstcase_ok": true,
+            "raw_exact": true,
+            "xform_exact": true,
+            "header_geometry": true,
+            "export_bytes": true,
+            "stream_length": true,
+            "read_words": true,
+            "stored_fallback_observed": true
+          },
+          "stats": {
+            "mode": 1,
+            "cap": 1,
+            "enc": 1,
+            "exported": 1,
+            "exp_bytes": 666,
+            "raw_pub": 1,
+            "raw_drop": 0,
+            "cmp_drop": 0,
+            "geom": 0,
+            "err": 0,
+            "cap_bytes": 710,
+            "cycles": 6935,
+            "read_words": 32,
+            "dup_words": 0
+          },
+          "first_deflate_btype": 0
+        }
+      ],
+      "runner": {
+        "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\run_boundaries.py",
+        "exists": true,
+        "bytes": 9260,
+        "sha256": "7f78d58c215aca7e0e3e982a23a5240a6b2110f40d345562594ba15386bf715d"
+      }
+    },
+    "sim_runner": {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\run_sim.py",
+      "exists": true,
+      "bytes": 6992,
+      "sha256": "a973cb073dca3dc531c832f4e2f498cb8696adabd6201fd196f2e030b0f52b0e"
+    },
+    "sim_logs": [
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\sim_p1_full_grad.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\sim_p1_micro8x2.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\sim_p1_mid64x8.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\sim_p2_comp.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\sim_p2_rand.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\vlib_p1.stderr.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\vlib_p1.stdout.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\vlib_p2.stderr.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\vlib_p2.stdout.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\vlog_p1.stderr.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\vlog_p1.stdout.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\vlog_p2.stderr.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\vlog_p2.stdout.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\vsim_p1_full_grad.stderr.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\vsim_p1_full_grad.stdout.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\vsim_p1_micro8x2.stderr.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\vsim_p1_micro8x2.stdout.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\vsim_p1_mid64x8.stderr.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\vsim_p1_mid64x8.stdout.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\vsim_p2_comp.stderr.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\vsim_p2_comp.stdout.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\vsim_p2_rand.stderr.log",
+      "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\sim\\logs\\vsim_p2_rand.stdout.log"
+    ]
+  },
+  "engineering": {
+    "syn_gate_timing": {
+      "SWNS": 0.28,
+      "STNS": 0.0,
+      "HWNS": 0.0,
+      "HTNS": 0.0,
+      "PWNS": 2.2,
+      "viol_endpoints": 0,
+      "total_endpoints": 15102
+    },
+    "syn_gate_area": {
+      "lut6": 8528,
+      "reg": 16030,
+      "eram": 72,
+      "slice": 16767
+    },
+    "routed_timing": {
+      "SWNS": 0.119,
+      "STNS": 0.0,
+      "HWNS": 0.02,
+      "HTNS": 0.0,
+      "PWNS": 2.2,
+      "viol_endpoints": 0,
+      "total_endpoints": 19779
+    },
+    "routed_timing_flow": {
+      "SWNS": 0.119,
+      "STNS": 0.0,
+      "HWNS": 0.02,
+      "HTNS": 0.0,
+      "PWNS": 2.2,
+      "viol_endpoints": 0,
+      "total_endpoints": 19779
+    },
+    "routed_area": {
+      "lut6": 18743,
+      "reg": 25135,
+      "eram": 102
+    },
+    "reports": {
+      "syn_gate_timing.rpt": {
+        "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\syn_gate_timing.rpt",
+        "exists": true,
+        "bytes": 2006740,
+        "sha256": "e514bd663f54d723fc837f12a293a51148b540d89afbe9d568ebab8505e3e0f9"
+      },
+      "syn_gate_area.rpt": {
+        "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\syn_gate_area.rpt",
+        "exists": true,
+        "bytes": 39656,
+        "sha256": "6182f5fced6c76832a5203a4b67b1ecf1603f17f8e0656446104a78616401c83"
+      },
+      "routed_timing.rpt": {
+        "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\routed_timing.rpt",
+        "exists": true,
+        "bytes": 5747710,
+        "sha256": "d933d185418ca2120e51ed5f2b932e6966ffa4f9025f1fa3548906d4d19b2e50"
+      },
+      "routed_timing_summary.rpt": {
+        "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\routed_timing_summary.rpt",
+        "exists": true,
+        "bytes": 5747710,
+        "sha256": "47faf8be3b1bef8c41c24e701034aeb860e2d89c1f177c6ec30bd53dc5f92d26"
+      },
+      "routed_qor.rpt": {
+        "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\routed_qor.rpt",
+        "exists": true,
+        "bytes": 1313,
+        "sha256": "22423cbb09ad44f3af3846147fdb977317301e418a1afa35f2ae28239783f8f2"
+      },
+      "routed_area.rpt": {
+        "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\routed_area.rpt",
+        "exists": true,
+        "bytes": 76288,
+        "sha256": "27edfb90a36a7d9d8ba3440e6f16f3203375466a731d466ac9bbcf7688ef0f34"
+      },
+      "routed_check_timing.rpt": {
+        "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\routed_check_timing.rpt",
+        "exists": true,
+        "bytes": 17918,
+        "sha256": "d5d018c330096010cac2af68ff7318b89f9b0c448828b586114e529292873a22"
+      },
+      "routed_timing_status.rpt": {
+        "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\routed_timing_status.rpt",
+        "exists": true,
+        "bytes": 62,
+        "sha256": "c709dec5d02bf407085aed778bf08c70b299532e0929d97a4cdd01b23feb9182"
+      },
+      "route_flow.status": {
+        "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\route_flow.status",
+        "exists": true,
+        "bytes": 1732,
+        "sha256": "2b3886aa788087bd09f4610c2f4120601eaa41e70f0bd8da84f227851a2508ae"
+      },
+      "place_flow.status": {
+        "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\place_flow.status",
+        "exists": true,
+        "bytes": 1537,
+        "sha256": "41aa5d5ede449653dd82d45591ee8e21453b64c9906da6ee130289ee1f9c5d2b"
+      },
+      "build_console_r0.log": {
+        "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\build_console_r0.log",
+        "exists": true,
+        "bytes": 58074,
+        "sha256": "9bceea7c4e176af0d1ad76351cc526c4584c7ffccdb71b18e613f6b003d41de9"
+      }
+    },
+    "tcl": {
+      "01_build.tcl": {
+        "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\01_build.tcl",
+        "exists": true,
+        "bytes": 10457,
+        "sha256": "1975ff8da0f5e3a7053e283fb9dfe405bd309e49b249456b0d54b11902f8afc1"
+      },
+      "02_bitgen.tcl": {
+        "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\02_bitgen.tcl",
+        "exists": true,
+        "bytes": 1849,
+        "sha256": "ea7e8689339c5d4b18d4f6475c6ca3e73605c55127b446728abd4172e7e6caf0"
+      },
+      "03_cwc.tcl": {
+        "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\03_cwc.tcl",
+        "exists": true,
+        "bytes": 1830,
+        "sha256": "2e1c71d1dc2d87d7d2770174b461b884a47e96fd712f8e8ad2291aeaec8257f0"
+      }
+    }
+  },
+  "system": {
+    "interfaces_unchanged": "a1_deflate_core port list, clock, reset unchanged; only htab entry/read structure and the hit-cycle reference byte source changed",
+    "frame_crc_ddr_uart_unchanged": true,
+    "board_and_download": "not_run (this round explicitly forbids download/Flash)"
+  },
+  "candidate": {
+    "bit": {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\a1_board.bit",
+      "exists": true,
+      "bytes": 5224022,
+      "sha256": "a2757d40bcfed7ec4e8a3b0e3985e1c14fdc0311307a096ffa1e1f46c2edffa2"
+    },
+    "cwc": {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\a1_board.cwc",
+      "exists": true,
+      "bytes": 110168,
+      "sha256": "dc477c8fea06d94666b72b522b16acfa448f5a6b1bc9b1cab4404cda8c24dc57"
+    },
+    "bid": {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\a1_board_inst.bid",
+      "exists": true,
+      "bytes": 96813,
+      "sha256": "2bf011c51bc19fca0112f487a7a86eae06e0a3e47f81d8a00f847607afc7d730"
+    },
+    "compiled_bit_matches_parent": true,
+    "compiled_cwc_matches_parent": true,
+    "bitgen_console": {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\bitgen_console_r0.log",
+      "exists": true,
+      "bytes": 46522,
+      "sha256": "4f89b3bea4747afa73048ffd98a48d813666ca969f88574716429d7ca9c2281e"
+    },
+    "cwc_console": {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b6-a1-htab-nw\\r0\\td\\cwc_console_r0.log",
+      "exists": true,
+      "bytes": 305484,
+      "sha256": "ad8d9ab1b101db15ee79a2e0ec8a7b04c6e29e955d12b1752f254b487f8093fa"
+    }
+  },
+  "tools": {
+    "modelsim": "ModelSim Intel FPGA Edition 10.5b (vlog/vsim 10.5b, 2016.10)",
+    "td": "Anlogic TD Release_2026.2 (PH1P100SBG484 -3)",
+    "python": "3.11.5"
+  },
+  "budget": {
+    "td_sessions_used": 3,
+    "syn_runs": 1,
+    "route_runs": 1,
+    "bitgen": 1,
+    "cwc": 1,
+    "download": 0
+  },
+  "caveats": [
+    "board/hardware validation not run (download forbidden this round); G4 not_run",
+    "routed WNS 0.119 ns is between the +0.05 floor and +0.20; thin margin, same class as b5 r0 +0.100",
+    "synthesis SWNS 0.280 ns < +0.3 (b5 r0 was +0.222, still routed to 0 violations); gate-level source is not this cone",
+    "implementation note: the frozen design guide section 4.1 p3v shadow table was NOT used; the same timing goal was met by carrying bm[ref+3] inside the hash entry (htab_b3) and deleting the speculative bm_b read. Bytes/cycles are provably r4-identical and the bm_b address is flop-only, so the structural and functional acceptance conditions are unchanged."
+  ]
+}

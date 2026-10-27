@@ -1,0 +1,11 @@
+﻿# run_sim.ps1 2026-10-17T09:30:24.1690797+08:00
+root        = C:\Users\czz\AppData\Local\Temp\opencode\t11neg_1968226492
+mapped_root = C:\Users\czz\AppData\Local\Temp\opencode\t11neg_1968226492
+tb          = tb_cam_r10f_writer
+outdir      = C:\Users\czz\AppData\Local\Temp\opencode\t11neg_1968226492\neg_writer_m1
+defines     = MIPI_PHY_SIM_STUB
+vlib work
+vlog +define+MIPI_PHY_SIM_STUB -f abs.f  (cwd=C:\Users\czz\AppData\Local\Temp\opencode\t11neg_1968226492\neg_writer_m1)
+vlog exit=0
+cmd /c "vsim -c -l vsim.log -do run.do tb_cam_r10f_writer"  (cwd=C:\Users\czz\AppData\Local\Temp\opencode\t11neg_1968226492\neg_writer_m1)
+vsim exit=0

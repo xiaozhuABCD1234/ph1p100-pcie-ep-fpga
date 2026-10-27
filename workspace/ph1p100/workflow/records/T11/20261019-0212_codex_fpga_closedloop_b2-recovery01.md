@@ -1,0 +1,1 @@
+# T11 recovery01  parent_state=active  2026-10-19 recovery01：用户真实新增“接着做，给你足够的尝试机会，接着完善”并确认当前在场。规划已冻结同失败编译历史2次+新增最多6次/累计8，scope不扩、计数不清零；先续原B01开发，B01验收后优先T02人工窗口，T08仍续原开发离线；此前收尾blocked为恢复前历史。详见本run recovery01-plan.md与problem-ledger-recovery01.json。  没有新增编译/综合/板测结果。原两处各2次、补充0、实际修复0保存；此记录是规划恢复，不是验收通过。

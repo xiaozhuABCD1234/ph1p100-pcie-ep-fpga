@@ -41,9 +41,7 @@ module tb_ep_bar_win;
     wire         ctrl_enable, ctrl_trigger, ctrl_ddr_en, ctrl_push_en, ctrl_push_src;
     reg  [255:0] cam_stat_r = 256'h0;   // 相机状态字（0xD0 读它的 [255:224]）
     wire [1:0]   ctrl_pattern;   // {CTRL[3], CTRL[2]}（测试图源图案，[0] 兼作重触发）
-    // B 路推帧寄存器面（0x100~0x11C）：与 A 路同一套字段，另一组寄存器
-    wire         ctrl_push_b_en;  // CTRL[8] = B 路推帧使能
-    wire [31:0]  push_dst_lo_b, push_dst_hi_b, push_db_lo_b, push_db_hi_b;
+    wire         cam_ab_sel;      // CTRL[8]：A/B 路选择
     wire [31:0]  push_dst_lo, push_dst_hi, push_db_lo, push_db_hi;
     wire         host_rd_prio;
     wire         host_grant = 1'b1;
@@ -62,13 +60,8 @@ module tb_ep_bar_win;
     localparam [7:0]  P_ERR    = 8'h02;          // 0xC8 只占 {24'd0, err} 里的低 8 位
     localparam [31:0] P_STATUS = 32'h0003_0007;   // err_cnt=3, cal|alive|db_sent|last_ok|busy
     localparam [31:0] P_DONE   = 32'd42;
-    localparam [31:0] QB_DONE  = 32'd17;          // B 路已推帧数
-    localparam [31:0] QB_STAT  = 32'h0005_0003;   // B 路状态（err_cnt=5, db_sent|last_ok）
-    localparam [7:0]  QB_ERR   = 8'h04;           // B 路错误码 = 门铃地址未配置
-    localparam [31:0] QB_TLP   = 32'd64800;       // B 路 4K 一帧的 MWr 数
-    wire [127:0] ddr_ro    = {D_LEN, D_STATUS, D_BASE, D_SEQ};
-    wire [127:0] push_ro   = {P_TLP, 24'd0, P_ERR, P_STATUS, P_DONE};
-    wire [127:0] push_ro_b = {QB_TLP, 24'd0, QB_ERR, QB_STAT, QB_DONE};
+    wire [127:0] ddr_ro  = {D_LEN, D_STATUS, D_BASE, D_SEQ};
+    wire [127:0] push_ro = {P_TLP, 24'd0, P_ERR, P_STATUS, P_DONE};
 
     ep_bar_win #(
         .MAGIC(32'h5043_4946), .VERSION(32'h0002_0000),
@@ -79,15 +72,13 @@ module tb_ep_bar_win;
         .mrdata_rd_data(mrdata_rd_data), .memrd_addr_lo(memrd_addr_lo),
         .cam_tap_cfg(cam_tap_cfg),
         .cam_tap_b_cfg(cam_tap_b_cfg),
+        .cam_ab_sel(cam_ab_sel),
         .ctrl_enable(ctrl_enable), .ctrl_trigger(ctrl_trigger),
         .ctrl_pattern(ctrl_pattern),
         .ctrl_ddr_en(ctrl_ddr_en), .ddr_ro(ddr_ro),
         .push_ro(push_ro), .ctrl_push_en(ctrl_push_en), .ctrl_push_src(ctrl_push_src),
         .push_dst_lo(push_dst_lo), .push_dst_hi(push_dst_hi),
         .push_db_lo(push_db_lo), .push_db_hi(push_db_hi),
-        .push_ro_b(push_ro_b), .ctrl_push_b_en(ctrl_push_b_en),
-        .push_dst_lo_b(push_dst_lo_b), .push_dst_hi_b(push_dst_hi_b),
-        .push_db_lo_b(push_db_lo_b), .push_db_hi_b(push_db_hi_b),
         .host_rd_prio(host_rd_prio), .host_grant(host_grant),
         .st_ready(1'b1), .st_busy(1'b0), .st_frame_cnt(32'h0000_7004),
         .st_width(16'd640), .st_height(16'd480), .st_data_len(32'h0004_B000),
@@ -168,25 +159,25 @@ module tb_ep_bar_win;
 
         // ---- 0x44 CTRL：位域与读回 ----
         //  位义（见 ep_bar_win.v 头部表）：bit0 enable / bit1 trigger(自清) /
-        //  [3:2] pattern / bit4 保留 / bit5 ddr_en / bit6 push_en(A 路) /
-        //  bit7 push_src / bit8 push_b(B 路推帧使能)
+        //  [3:2] pattern / bit3,bit4 保留 / bit5 ddr_en / bit6 push_en /
+        //  bit7 push_src / bit8 cam_ab
         tlp_wr(12'h44, 32'h0000_00C1);                  // enable|push_en|push_src（不含 bit5 ddr_en）
         tlp_rd(12'h44, v); check("0x44 CTRL      ", v, 32'h0000_00C1);
         if (ctrl_enable !== 1'b1)    begin $display("ERROR: CTRL bit0 enable 没生效"); errors=errors+1; end
         if (ctrl_push_en !== 1'b1)   begin $display("ERROR: CTRL bit6 push_en 没生效"); errors=errors+1; end
         if (ctrl_push_src !== 1'b1)  begin $display("ERROR: CTRL bit7 push_src 没生效"); errors=errors+1; end
-        if (ctrl_push_b_en !== 1'b0) begin $display("ERROR: CTRL bit8 默认应为 0（只推 A 路）"); errors=errors+1; end
+        if (cam_ab_sel !== 1'b0)     begin $display("ERROR: CTRL bit8 默认应为 0（A 路）"); errors=errors+1; end
         if (ctrl_ddr_en !== 1'b0)    begin $display("ERROR: CTRL bit5 ddr_en 应为 0"); errors=errors+1; end
         // CTRL[3:2] 原样送出（0x1E1 的 bit3:2 = 00）
         if (ctrl_pattern[1:0] !== 2'b00) begin $display("ERROR: CTRL bit3:2 没送到 ctrl_pattern"); errors=errors+1; end
-        tlp_wr(12'h44, 32'h0000_01ED);                  // 再加 bit5 ddr_en + bit3:2=11 + bit8 push_b
+        tlp_wr(12'h44, 32'h0000_01ED);                  // 再加 bit5 ddr_en + bit3:2=11 + bit8 cam_ab
         tlp_rd(12'h44, v); check("0x44 CTRL pat  ", v, 32'h0000_01ED);
         if (ctrl_pattern[1:0] !== 2'b11) begin $display("ERROR: CTRL bit3:2=11 没送到 ctrl_pattern"); errors=errors+1; end
         if (ctrl_ddr_en !== 1'b1)    begin $display("ERROR: CTRL bit5 ddr_en 没生效"); errors=errors+1; end
-        if (ctrl_push_b_en !== 1'b1) begin $display("ERROR: CTRL bit8 push_b 没送到 ctrl_push_b_en"); errors=errors+1; end
-        tlp_wr(12'h44, 32'h0000_00ED);                  // 清 bit8（只推 A 路）
+        if (cam_ab_sel !== 1'b1)     begin $display("ERROR: CTRL bit8 cam_ab 没送到 cam_ab_sel"); errors=errors+1; end
+        tlp_wr(12'h44, 32'h0000_00ED);                  // 清 bit8（cam_ab 回 A 路）
         tlp_rd(12'h44, v); check("0x44 CTRL clr  ", v, 32'h0000_00ED);
-        if (ctrl_push_b_en !== 1'b0) begin $display("ERROR: CTRL bit8 push_b 清不掉"); errors=errors+1; end
+        if (cam_ab_sel !== 1'b0)     begin $display("ERROR: CTRL bit8 cam_ab 清不掉"); errors=errors+1; end
         // bit4 是保留位：写 1 不该读回 1（bit3 是 pattern 高位，读回应保留）
         tlp_wr(12'h44, 32'h0000_0019);
         tlp_rd(12'h44, v); check("0x44 CTRL rsvd ", v, 32'h0000_0009);
@@ -230,23 +221,6 @@ module tb_ep_bar_win;
         tlp_rd(12'hC4, v); check("0xC4 PUSH_STATUS  ", v, P_STATUS);
         tlp_rd(12'hC8, v); check("0xC8 PUSH_ERR     ", v, P_ERR);
         tlp_rd(12'hCC, v); check("0xCC PUSH_TLP_CNT ", v, P_TLP);
-
-        // ---- B 路推帧寄存器（0x100~0x11C）：与 A 路同一套字段、另一组寄存器 ----
-        $display("---+ B 路推帧寄存器（0x100~0x11C）");
-        tlp_wr(12'h100, 32'hFF7E_B000);
-        tlp_rd(12'h100, v); check("0x100 PUSH_DST_LO_B  ", v, 32'hFF7E_B000);
-        tlp_wr(12'h104, 32'h0000_0000);
-        tlp_rd(12'h104, v); check("0x104 PUSH_DST_HI_B  ", v, 32'h0000_0000);
-        tlp_wr(12'h108, 32'hFFFD_5020);
-        tlp_rd(12'h108, v); check("0x108 PUSH_DB_LO_B   ", v, 32'hFFFD_5020);
-        tlp_wr(12'h10C, 32'h0000_0000);
-        tlp_rd(12'h10C, v); check("0x10C PUSH_DB_HI_B   ", v, 32'h0000_0000);
-        tlp_rd(12'h110, v); check("0x110 PUSH_DONE_B    ", v, QB_DONE);
-        tlp_rd(12'h114, v); check("0x114 PUSH_STATUS_B  ", v, QB_STAT);
-        tlp_rd(12'h118, v); check("0x118 PUSH_ERR_B     ", v, QB_ERR);
-        tlp_rd(12'h11C, v); check("0x11C PUSH_TLP_CNT_B ", v, QB_TLP);
-        // 写 B 路不能动 A 路
-        tlp_rd(12'hB0, v); check("写 B 后 A 路 0xB0 不变", v, 32'hFFE0_0000);
 
         // ---- 0x60 数据口：PTR 自动前进（一次读 +4）----
         tlp_wr(12'h5C, 32'h0000_0000);

@@ -1,0 +1,34 @@
+project_root = C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\upstream\ph1p100-pcie-ep-fpga
+subst S: -> C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道\upstream\ph1p100-pcie-ep-fpga (temporary, removed at end)
+== result (vsim exit 12) ==
+# vsim -c -l vsim.log -do "run.do" tb_t11_r10f_e2e 
+# Start time: 15:34:01 on Oct 18,2026
+# Loading work.tb_t11_r10f_e2e
+# Loading work.mipi_csi2_rx_ph1p_checked
+# Loading work.rx_phy_ph1p
+# ** Error: (vsim-3033) S:/sim/../rtl/ep_side/cam/rx_phy_ph1p.v(64): Instantiation of 'PH1P_LOGIC_IBUF_DIFF' failed. The design unit was not found.
+#    Time: 0 ps  Iteration: 0  Instance: /tb_t11_r10f_e2e/u_csi/u_rx_phy File: S:/sim/../rtl/ep_side/cam/rx_phy_ph1p.v
+#         Searched libraries:
+#             T:/work
+# ** Error: (vsim-3033) S:/sim/../rtl/ep_side/cam/rx_phy_ph1p.v(78): Instantiation of 'PH1P_PHY_LCLK' failed. The design unit was not found.
+#    Time: 0 ps  Iteration: 0  Instance: /tb_t11_r10f_e2e/u_csi/u_rx_phy File: S:/sim/../rtl/ep_side/cam/rx_phy_ph1p.v
+#         Searched libraries:
+#             T:/work
+# ** Error: (vsim-3033) S:/sim/../rtl/ep_side/cam/rx_phy_ph1p.v(86): Instantiation of 'PH1P_LOGIC_BUFG' failed. The design unit was not found.
+#    Time: 0 ps  Iteration: 0  Instance: /tb_t11_r10f_e2e/u_csi/u_rx_phy File: S:/sim/../rtl/ep_side/cam/rx_phy_ph1p.v
+#         Searched libraries:
+#             T:/work
+# Loading work.csi_rx_clock_det
+# Loading work.auto_delay_ctl
+# Loading work.csi_rx_word_align
+# Loading work.csi_rx_word_gear_box
+# Loading work.csi_rx_packet_integrity
+# Loading work.csi_rx_hdr_ecc
+# Loading work.csi_rx_10bit_unpack_checked
+# Loading work.cam_r10f_writer
+# Loading work.ddr_frame_pusher
+# Error loading design
+# End time: 15:34:02 on Oct 18,2026, Elapsed time: 0:00:01
+# Errors: 3, Warnings: 0
+outdir subst removed
+subst S: removed
