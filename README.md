@@ -1,4 +1,6 @@
-> **当前项目入口（2026-10-27）**：先读 [当前代码、队友材料与活动 run](docs/PROJECT_SYNC_20261027.md)。
+> **当前阶段（2026-10-27）**：FPGA 板由队友持有。本地只做仿真、接口核对和证据整理，构建与实机联调由队友推进。
+> 先读 [仿真状态、未验证项与队友接续顺序](docs/FPGA_SIM_ONLY_HANDOFF_20261027.md)，候选与原始证据见 [本轮交接包](handoff/fpga-sim-only-20261027/README.md)。
+> [早期代码、队友材料与同步记录](docs/PROJECT_SYNC_20261027.md) 保留作为历史来源；其中活动 run 快照停留在各自同步时点。
 > FPGA：[本原仓 main](https://github.com/xiaozhuABCD1234/ph1p100-pcie-ep-fpga/tree/main)；RK：[驱动与应用原仓 main](https://github.com/xiaozhuABCD1234/ph1p100-pcie-ep-driver/tree/main)。
 > 当前代码在 [rtl/](rtl/)；父工作区源码、文档、工作流与候选快照在 [workspace/ph1p100/](workspace/ph1p100/)，同名文件须按 SHA 区分。
 > 队友从 [B 路真帧交接包](handoff/rk-a1u1-b18-20261026/README.md) 开始；配套 bit/CWC/BID 在 [artifacts/](artifacts/)。

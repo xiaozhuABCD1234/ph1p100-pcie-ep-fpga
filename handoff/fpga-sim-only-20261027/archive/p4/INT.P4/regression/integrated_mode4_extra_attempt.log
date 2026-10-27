@@ -1,0 +1,69 @@
+﻿Reading D:/intelFPGA/18.1/modelsim_ase/tcl/vsim/pref.tcl
+
+# 10.5b
+
+# vsim -c -quiet -do "run -all; quit -f" tb_integrated_delivery_top "+MODE=4" "+SAMPLE=1" "+SAMPLE_DIR=D:/fpga/ph1p100/tools/integrated_delivery/evidence" 
+# Start time: 02:07:23 on Oct 27,2026
+# run -all
+# === T1: B channel, mode=4, prep=0/pred=0, A+ sample ===
+# DRIVE start ch=1
+# DRIVE ch=1 beat=0 y=0
+# DRIVE ch=1 beat=128 y=8
+# DRIVE ch=1 beat=256 y=16
+# DRIVE ch=1 beat=384 y=24
+# DRIVE ch=1 beat=512 y=32
+# DRIVE ch=1 beat=640 y=40
+# DRIVE done ch=1 beat=768
+#   ok   : T1 ap_commit observed
+#   ok   : T1 pk_bytes == raw_len
+#   ok   : T1 payload_bytes == stream_len
+#   ok   : T1 raw_len == W*H*10/8
+#   ok   : T1 xform_len == raw_len (prep=0)
+#   ok   : T1 release observed
+#   ok   : T1 release camera = B
+#   ok   : T1 release slot/epoch/session/seq
+#   ok   : T1 release status = completed
+#   ok   : T1 descriptor arm count == 1
+#   ok   : T1 frame_bytes 4096 aligned
+#   ok   : T1 desc stream_len == payload bytes
+#   ok   : T1 desc session
+#   ok   : T1 desc dst/db
+#   ok   : T1 desc src_sel=0 (DDR)
+#   ok   : T1 desc identity (cam/slot/seq/epoch)
+#   info : T1 m_beats=768 sof=1 eol=48 eof=1 mons=0 m_mode=4 mv=7554 cv=7554 sr=768 pk=768 cfg_err=0
+#   ok   : T1 monitor routed to configured mode
+#   ok   : T1 raw bypass monitor beats
+#   ok   : T1 raw bypass eol count
+#   ok   : T1 raw bypass eof count
+#   ok   : T1 raw bypass sof count
+#   ok   : T1 monitor raw/y8 separation
+#   ok   : T1 drain words == ceil(stream/32)
+#   ok   : T1 store published
+#   ok   : T1 exported
+#   ok   : T1 scheduler completed
+# SAMPLE_WRITTEN D:/fpga/ph1p100/tools/integrated_delivery/evidence/integrated_sample.a1u1 payload=3965
+# RAW_WRITTEN D:/fpga/ph1p100/tools/integrated_delivery/evidence/integrated_sample.raw bytes=3840
+# JSON_WRITTEN D:/fpga/ph1p100/tools/integrated_delivery/evidence/integrated_sample.json
+# === T2: A channel, mode=4 raw bypass, A+ prep/pred, DDR stalls ===
+# T2DBG granted committed=0
+# DRIVE start ch=0
+# DRIVE ch=0 beat=0 y=0
+# DRIVE ch=0 beat=128 y=8
+# DRIVE ch=0 beat=256 y=16
+# DRIVE ch=0 beat=384 y=24
+# DRIVE ch=0 beat=512 y=32
+# DRIVE ch=0 beat=640 y=40
+# TB_INTEGRATED_DELIVERY_TOP TIMEOUT state=0
+# ADMIT free=1 hasrdy=0 egr=0 drain=0 apbusy=0 wrst=0 dirty=0 ovld=0
+#        gs=0 dr=0 drainreq=0 slot_st=00000000000000000000000000000000 a_rdy=0 b_rdy=0 a_en=1
+#        storepub=1 export=1 release=1 schedacc=1 adm=1
+#        AP ist=0 dst=0 act=0 bank=00 cbusy=0 cirdy=0 svld=0 slast=0
+#        ST act=0 wcnt=0 nby=3927 wrrdy=0 coutv=0 coutrdy=0
+#        DDR awv=0 awr=1 wv=0 wr=1 arv=0 arr=1 rv=0 stall=0
+#        FRAME raw=3840 strm=3927 commits=1 aborts=0 blk=0 grp=0 row=0 dblk=0 cdone=0
+#        TB p1_rdy=0 pk_rdy=0 capv=0 a_rdy=0 b_rdy=0
+# TB_INTEGRATED_DELIVERY_TOP FAIL errors=1
+# ** Note: $finish    : D:/fpga/ph1p100/fpga/csi2/src/integrated_delivery/tb_integrated_delivery_top.v(1100)
+#    Time: 2 ms  Iteration: 0  Instance: /tb_integrated_delivery_top
+# End time: 02:07:35 on Oct 27,2026, Elapsed time: 0:00:12
+# Errors: 0, Warnings: 0

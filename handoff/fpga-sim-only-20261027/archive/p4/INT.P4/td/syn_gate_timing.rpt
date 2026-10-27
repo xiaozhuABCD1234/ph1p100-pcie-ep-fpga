@@ -1,0 +1,1102 @@
+Created by          : Tang Dynasty Release_2026.2
+                    : Copyright (c) 2012-2026 Anlogic Inc.
+Generated           : Tue Oct 27 04:40:40 2026
+
+Top Model           : integrated_delivery_synth_wrap
+Device              : PH1P100SBG484
+Speed               : 3
+STA coverage        : 95.76%
+Constraint File     : D:/fpga/ph1p100/workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/integrated_core.sdc;
+Confidence          : Synthesized
+Check Corner        : Both (Slow and Fast)
+CRPR Enabled        : Yes
+Report Scheme       : 10 end point(s) per path group, 1 path(s) per end point
+
+
+Check Status
+-------------
+
+Corner   | Max      Min     
+------------------------------------
+Slow     | yes      yes     
+Fast     | yes      yes     
+
+
+Timing Status
+--------------------
+	SWNS: -0.637ns, STNS: -69.776ns
+	HWNS: 0.000ns, HTNS: 0.000ns
+	Period Check WNS: 2.533ns
+
+
+Clock Summary
+--------------------
+
+       Clock-Id:       C-Freq       Fanout   Clock-Name
+--------------------------------------------------------------------------------
+           clk0:      187.512         8390   clk
+--------------------------------------------------------------------------------
+
+       Name            Type         Rise(ns)   Fall(ns)          C-Period(ns)     C-Freq(MHz)          R-Period(ns)     R-Freq(MHz)         SWNS(ns)   STNS(ns)         HWNS(ns)   HTNS(ns)         Skew(ns)           Fanout        Max-Level        CC-From    CC-To
+       clk0           local            0.000      2.667                 5.333         187.512                 5.970         167.504           -0.637    -69.776            0.000      0.000            0.000             8390                7             no       no
+
+Notes
+----------
+C-Period  :  constraint period
+C-Freq    :  constraint freq
+R-Period  :  report min period
+R-Freq    :  report fmax
+CC-From   :  has path(s) from cross-domain clock
+CC-To     :  has path(s) to cross-domain clock
+
+
+*   Clock R-Period data only takes intra-clock timing. SWNS/STNS/HWNS/HTNS take both intra-clock and inter-clock timing.
+*   If there is mismatch between R-Period and SWNS, check inter-clock timing of this clock as capture clock.
+*   SWNS/STNS/HWNS/HTNS of timing exception (SMCP/SMD) only counted in global Timing Status, not counted in Clock Summary.
+
+Intra clock domain timing
+--------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+Path Group     :     clk -> clk
+Type           :     Self
+From Clock     :     clk
+To Clock       :     clk
+Min Period     :     5.970ns
+Fmax           :     167.504MHz
+
+Statistics:
+Max            : SWNS     -0.637ns, STNS    -69.776ns,       112 Viol Endpoints,     16770 Total Endpoints
+Min            : HWNS      0.000ns, HTNS      0.000ns,         0 Viol Endpoints,         0 Total Endpoints
+----------------------------------------------------------------------------------------------------
+
+Max Paths
+----------------------------------------------------------------------------------------------------
+Slack               : -0.637ns
+Begin Point         : u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[0].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.906ns (cell 2.304ns (39%), net 3.602ns (61%))
+Clock Skew          : 0.000ns
+Logic Level         : 7 ( LUT5=3  LUT6=2  LUT2=1  DRAM=1 )
+Max Fanout          : 256
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=6198)                           0.000          0.000          net: clk_dup_1,  ../../../../../../../tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v(48)
+                                                                      pin: u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].q
+net (fo=9)                              0.458          0.534          net: u_dut/u_p1/u_algo/u_obuf_gau/count[0],  ../../../../../../../fpga/csi2/src/img/algo_obuf.v(45)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/p_eof_reg_syn_4.b
+LUT5                                    0.273    f     0.807       1  pin: u_dut/u_p1/u_algo/u_gau/p_eof_reg_syn_4.o
+net (fo=199)                            0.600          1.407          net: u_dut/u_p1/u_algo/u_gau/pipe_en,  ../../../../../../../fpga/csi2/src/img/gray8_gaussian3x3_stream.v(83)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb2_b[30]_syn_7.a
+LUT5                                    0.273    f     1.680       2  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb2_b[30]_syn_7.o
+net (fo=155)                            0.586          2.266          net: u_dut/u_p1/u_algo/u_gau/u_row/evt_en,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(144)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_1.a
+LUT6                                    0.315    f     2.581       3  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_1.o
+net (fo=10)                             0.432          3.013          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_2,  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2]_syn_1.a
+LUT5                                    0.273    f     3.286       4  pin: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2]_syn_1.o
+net (fo=256)                            0.614          3.900          net: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2],  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(190)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1023.ib
+DRAM                                    0.341    f     4.241       5  pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1023.ofb
+net (fo=1)                              0.304          4.545          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_207,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_432.ib
+LUT6                                    0.322    f     4.867       6  pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_432.relut6
+net (fo=1)                              0.000          4.867          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_434[1],  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_337.muxi[1]
+F7MUX                                   0.053    f     4.920          pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_337.muxo
+net (fo=1)                              0.000          4.920          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_436,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_431.f78i
+                                        0.064    f     4.984          pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_431.ofa
+net (fo=1)                              0.304          5.288          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b2[0],  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[0]_syn_1.a
+LUT2                                    0.273    f     5.561       7  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[0]_syn_1.o
+net (fo=1)                              0.304          5.865          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[0],  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[0].d
+SEQ (reg)                               0.041    f     5.906               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.906               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=6198)                           0.000          0.000          net: clk_dup_1,  ../../../../../../../tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v(48)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[0].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.637               
+
+Slack               : -0.637ns
+Begin Point         : u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[1].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.906ns (cell 2.304ns (39%), net 3.602ns (61%))
+Clock Skew          : 0.000ns
+Logic Level         : 7 ( LUT5=3  LUT6=2  LUT2=1  DRAM=1 )
+Max Fanout          : 256
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=6198)                           0.000          0.000          net: clk_dup_1,  ../../../../../../../tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v(48)
+                                                                      pin: u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].q
+net (fo=9)                              0.458          0.534          net: u_dut/u_p1/u_algo/u_obuf_gau/count[0],  ../../../../../../../fpga/csi2/src/img/algo_obuf.v(45)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/p_eof_reg_syn_4.b
+LUT5                                    0.273    f     0.807       1  pin: u_dut/u_p1/u_algo/u_gau/p_eof_reg_syn_4.o
+net (fo=199)                            0.600          1.407          net: u_dut/u_p1/u_algo/u_gau/pipe_en,  ../../../../../../../fpga/csi2/src/img/gray8_gaussian3x3_stream.v(83)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb2_b[30]_syn_7.a
+LUT5                                    0.273    f     1.680       2  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb2_b[30]_syn_7.o
+net (fo=155)                            0.586          2.266          net: u_dut/u_p1/u_algo/u_gau/u_row/evt_en,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(144)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_1.a
+LUT6                                    0.315    f     2.581       3  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_1.o
+net (fo=10)                             0.432          3.013          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_2,  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2]_syn_1.a
+LUT5                                    0.273    f     3.286       4  pin: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2]_syn_1.o
+net (fo=256)                            0.614          3.900          net: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2],  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(190)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1024.ib
+DRAM                                    0.341    f     4.241       5  pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1024.ofb
+net (fo=1)                              0.304          4.545          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_208,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_438.ib
+LUT6                                    0.322    f     4.867       6  pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_438.relut6
+net (fo=1)                              0.000          4.867          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_440[1],  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_340.muxi[1]
+F7MUX                                   0.053    f     4.920          pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_340.muxo
+net (fo=1)                              0.000          4.920          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_442,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_437.f78i
+                                        0.064    f     4.984          pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_437.ofa
+net (fo=1)                              0.304          5.288          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b2[1],  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[1]_syn_1.a
+LUT2                                    0.273    f     5.561       7  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[1]_syn_1.o
+net (fo=1)                              0.304          5.865          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[1],  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[1].d
+SEQ (reg)                               0.041    f     5.906               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.906               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=6198)                           0.000          0.000          net: clk_dup_1,  ../../../../../../../tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v(48)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[1].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.637               
+
+Slack               : -0.637ns
+Begin Point         : u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[2].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.906ns (cell 2.304ns (39%), net 3.602ns (61%))
+Clock Skew          : 0.000ns
+Logic Level         : 7 ( LUT5=3  LUT6=2  LUT2=1  DRAM=1 )
+Max Fanout          : 256
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=6198)                           0.000          0.000          net: clk_dup_1,  ../../../../../../../tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v(48)
+                                                                      pin: u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].q
+net (fo=9)                              0.458          0.534          net: u_dut/u_p1/u_algo/u_obuf_gau/count[0],  ../../../../../../../fpga/csi2/src/img/algo_obuf.v(45)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/p_eof_reg_syn_4.b
+LUT5                                    0.273    f     0.807       1  pin: u_dut/u_p1/u_algo/u_gau/p_eof_reg_syn_4.o
+net (fo=199)                            0.600          1.407          net: u_dut/u_p1/u_algo/u_gau/pipe_en,  ../../../../../../../fpga/csi2/src/img/gray8_gaussian3x3_stream.v(83)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb2_b[30]_syn_7.a
+LUT5                                    0.273    f     1.680       2  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb2_b[30]_syn_7.o
+net (fo=155)                            0.586          2.266          net: u_dut/u_p1/u_algo/u_gau/u_row/evt_en,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(144)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_1.a
+LUT6                                    0.315    f     2.581       3  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_1.o
+net (fo=10)                             0.432          3.013          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_2,  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2]_syn_1.a
+LUT5                                    0.273    f     3.286       4  pin: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2]_syn_1.o
+net (fo=256)                            0.614          3.900          net: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2],  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(190)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1025.ib
+DRAM                                    0.341    f     4.241       5  pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1025.ofb
+net (fo=1)                              0.304          4.545          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_209,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_444.ib
+LUT6                                    0.322    f     4.867       6  pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_444.relut6
+net (fo=1)                              0.000          4.867          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_446[1],  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_343.muxi[1]
+F7MUX                                   0.053    f     4.920          pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_343.muxo
+net (fo=1)                              0.000          4.920          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_448,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_443.f78i
+                                        0.064    f     4.984          pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_443.ofa
+net (fo=1)                              0.304          5.288          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b2[2],  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[2]_syn_1.a
+LUT2                                    0.273    f     5.561       7  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[2]_syn_1.o
+net (fo=1)                              0.304          5.865          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[2],  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[2].d
+SEQ (reg)                               0.041    f     5.906               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.906               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=6198)                           0.000          0.000          net: clk_dup_1,  ../../../../../../../tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v(48)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[2].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.637               
+
+Slack               : -0.637ns
+Begin Point         : u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[3].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.906ns (cell 2.304ns (39%), net 3.602ns (61%))
+Clock Skew          : 0.000ns
+Logic Level         : 7 ( LUT5=3  LUT6=2  LUT2=1  DRAM=1 )
+Max Fanout          : 256
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=6198)                           0.000          0.000          net: clk_dup_1,  ../../../../../../../tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v(48)
+                                                                      pin: u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].q
+net (fo=9)                              0.458          0.534          net: u_dut/u_p1/u_algo/u_obuf_gau/count[0],  ../../../../../../../fpga/csi2/src/img/algo_obuf.v(45)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/p_eof_reg_syn_4.b
+LUT5                                    0.273    f     0.807       1  pin: u_dut/u_p1/u_algo/u_gau/p_eof_reg_syn_4.o
+net (fo=199)                            0.600          1.407          net: u_dut/u_p1/u_algo/u_gau/pipe_en,  ../../../../../../../fpga/csi2/src/img/gray8_gaussian3x3_stream.v(83)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb2_b[30]_syn_7.a
+LUT5                                    0.273    f     1.680       2  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb2_b[30]_syn_7.o
+net (fo=155)                            0.586          2.266          net: u_dut/u_p1/u_algo/u_gau/u_row/evt_en,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(144)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_1.a
+LUT6                                    0.315    f     2.581       3  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_1.o
+net (fo=10)                             0.432          3.013          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_2,  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2]_syn_1.a
+LUT5                                    0.273    f     3.286       4  pin: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2]_syn_1.o
+net (fo=256)                            0.614          3.900          net: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2],  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(190)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1026.ib
+DRAM                                    0.341    f     4.241       5  pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1026.ofb
+net (fo=1)                              0.304          4.545          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_210,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_450.ib
+LUT6                                    0.322    f     4.867       6  pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_450.relut6
+net (fo=1)                              0.000          4.867          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_452[1],  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_346.muxi[1]
+F7MUX                                   0.053    f     4.920          pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_346.muxo
+net (fo=1)                              0.000          4.920          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_454,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_449.f78i
+                                        0.064    f     4.984          pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_449.ofa
+net (fo=1)                              0.304          5.288          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b2[3],  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[3]_syn_1.a
+LUT2                                    0.273    f     5.561       7  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[3]_syn_1.o
+net (fo=1)                              0.304          5.865          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[3],  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[3].d
+SEQ (reg)                               0.041    f     5.906               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.906               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=6198)                           0.000          0.000          net: clk_dup_1,  ../../../../../../../tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v(48)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[3].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.637               
+
+Slack               : -0.637ns
+Begin Point         : u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[4].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.906ns (cell 2.304ns (39%), net 3.602ns (61%))
+Clock Skew          : 0.000ns
+Logic Level         : 7 ( LUT5=3  LUT6=2  LUT2=1  DRAM=1 )
+Max Fanout          : 256
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=6198)                           0.000          0.000          net: clk_dup_1,  ../../../../../../../tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v(48)
+                                                                      pin: u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].q
+net (fo=9)                              0.458          0.534          net: u_dut/u_p1/u_algo/u_obuf_gau/count[0],  ../../../../../../../fpga/csi2/src/img/algo_obuf.v(45)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/p_eof_reg_syn_4.b
+LUT5                                    0.273    f     0.807       1  pin: u_dut/u_p1/u_algo/u_gau/p_eof_reg_syn_4.o
+net (fo=199)                            0.600          1.407          net: u_dut/u_p1/u_algo/u_gau/pipe_en,  ../../../../../../../fpga/csi2/src/img/gray8_gaussian3x3_stream.v(83)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb2_b[30]_syn_7.a
+LUT5                                    0.273    f     1.680       2  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb2_b[30]_syn_7.o
+net (fo=155)                            0.586          2.266          net: u_dut/u_p1/u_algo/u_gau/u_row/evt_en,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(144)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_1.a
+LUT6                                    0.315    f     2.581       3  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_1.o
+net (fo=10)                             0.432          3.013          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_2,  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2]_syn_1.a
+LUT5                                    0.273    f     3.286       4  pin: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2]_syn_1.o
+net (fo=256)                            0.614          3.900          net: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2],  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(190)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1027.ib
+DRAM                                    0.341    f     4.241       5  pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1027.ofb
+net (fo=1)                              0.304          4.545          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_211,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_456.ib
+LUT6                                    0.322    f     4.867       6  pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_456.relut6
+net (fo=1)                              0.000          4.867          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_458[1],  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_349.muxi[1]
+F7MUX                                   0.053    f     4.920          pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_349.muxo
+net (fo=1)                              0.000          4.920          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_460,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_455.f78i
+                                        0.064    f     4.984          pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_455.ofa
+net (fo=1)                              0.304          5.288          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b2[4],  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[4]_syn_1.a
+LUT2                                    0.273    f     5.561       7  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[4]_syn_1.o
+net (fo=1)                              0.304          5.865          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[4],  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[4].d
+SEQ (reg)                               0.041    f     5.906               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.906               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=6198)                           0.000          0.000          net: clk_dup_1,  ../../../../../../../tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v(48)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[4].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.637               
+
+Slack               : -0.637ns
+Begin Point         : u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[5].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.906ns (cell 2.304ns (39%), net 3.602ns (61%))
+Clock Skew          : 0.000ns
+Logic Level         : 7 ( LUT5=3  LUT6=2  LUT2=1  DRAM=1 )
+Max Fanout          : 256
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=6198)                           0.000          0.000          net: clk_dup_1,  ../../../../../../../tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v(48)
+                                                                      pin: u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].q
+net (fo=9)                              0.458          0.534          net: u_dut/u_p1/u_algo/u_obuf_gau/count[0],  ../../../../../../../fpga/csi2/src/img/algo_obuf.v(45)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/p_eof_reg_syn_4.b
+LUT5                                    0.273    f     0.807       1  pin: u_dut/u_p1/u_algo/u_gau/p_eof_reg_syn_4.o
+net (fo=199)                            0.600          1.407          net: u_dut/u_p1/u_algo/u_gau/pipe_en,  ../../../../../../../fpga/csi2/src/img/gray8_gaussian3x3_stream.v(83)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb2_b[30]_syn_7.a
+LUT5                                    0.273    f     1.680       2  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb2_b[30]_syn_7.o
+net (fo=155)                            0.586          2.266          net: u_dut/u_p1/u_algo/u_gau/u_row/evt_en,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(144)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_1.a
+LUT6                                    0.315    f     2.581       3  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_1.o
+net (fo=10)                             0.432          3.013          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_2,  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2]_syn_1.a
+LUT5                                    0.273    f     3.286       4  pin: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2]_syn_1.o
+net (fo=256)                            0.614          3.900          net: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2],  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(190)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1028.ib
+DRAM                                    0.341    f     4.241       5  pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1028.ofb
+net (fo=1)                              0.304          4.545          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_212,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_462.ib
+LUT6                                    0.322    f     4.867       6  pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_462.relut6
+net (fo=1)                              0.000          4.867          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_464[1],  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_352.muxi[1]
+F7MUX                                   0.053    f     4.920          pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_352.muxo
+net (fo=1)                              0.000          4.920          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_466,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_461.f78i
+                                        0.064    f     4.984          pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_461.ofa
+net (fo=1)                              0.304          5.288          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b2[5],  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[5]_syn_1.a
+LUT2                                    0.273    f     5.561       7  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[5]_syn_1.o
+net (fo=1)                              0.304          5.865          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[5],  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[5].d
+SEQ (reg)                               0.041    f     5.906               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.906               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=6198)                           0.000          0.000          net: clk_dup_1,  ../../../../../../../tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v(48)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[5].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.637               
+
+Slack               : -0.637ns
+Begin Point         : u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[6].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.906ns (cell 2.304ns (39%), net 3.602ns (61%))
+Clock Skew          : 0.000ns
+Logic Level         : 7 ( LUT5=3  LUT6=2  LUT2=1  DRAM=1 )
+Max Fanout          : 256
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=6198)                           0.000          0.000          net: clk_dup_1,  ../../../../../../../tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v(48)
+                                                                      pin: u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].q
+net (fo=9)                              0.458          0.534          net: u_dut/u_p1/u_algo/u_obuf_gau/count[0],  ../../../../../../../fpga/csi2/src/img/algo_obuf.v(45)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/p_eof_reg_syn_4.b
+LUT5                                    0.273    f     0.807       1  pin: u_dut/u_p1/u_algo/u_gau/p_eof_reg_syn_4.o
+net (fo=199)                            0.600          1.407          net: u_dut/u_p1/u_algo/u_gau/pipe_en,  ../../../../../../../fpga/csi2/src/img/gray8_gaussian3x3_stream.v(83)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb2_b[30]_syn_7.a
+LUT5                                    0.273    f     1.680       2  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb2_b[30]_syn_7.o
+net (fo=155)                            0.586          2.266          net: u_dut/u_p1/u_algo/u_gau/u_row/evt_en,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(144)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_1.a
+LUT6                                    0.315    f     2.581       3  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_1.o
+net (fo=10)                             0.432          3.013          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_2,  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2]_syn_1.a
+LUT5                                    0.273    f     3.286       4  pin: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2]_syn_1.o
+net (fo=256)                            0.614          3.900          net: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2],  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(190)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1029.ib
+DRAM                                    0.341    f     4.241       5  pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1029.ofb
+net (fo=1)                              0.304          4.545          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_213,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_468.ib
+LUT6                                    0.322    f     4.867       6  pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_468.relut6
+net (fo=1)                              0.000          4.867          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_470[1],  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_355.muxi[1]
+F7MUX                                   0.053    f     4.920          pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_355.muxo
+net (fo=1)                              0.000          4.920          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_472,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_467.f78i
+                                        0.064    f     4.984          pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_467.ofa
+net (fo=1)                              0.304          5.288          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b2[6],  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[6]_syn_1.a
+LUT2                                    0.273    f     5.561       7  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[6]_syn_1.o
+net (fo=1)                              0.304          5.865          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[6],  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[6].d
+SEQ (reg)                               0.041    f     5.906               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.906               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=6198)                           0.000          0.000          net: clk_dup_1,  ../../../../../../../tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v(48)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[6].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.637               
+
+Slack               : -0.637ns
+Begin Point         : u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[7].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.906ns (cell 2.304ns (39%), net 3.602ns (61%))
+Clock Skew          : 0.000ns
+Logic Level         : 7 ( LUT5=3  LUT6=2  LUT2=1  DRAM=1 )
+Max Fanout          : 256
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=6198)                           0.000          0.000          net: clk_dup_1,  ../../../../../../../tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v(48)
+                                                                      pin: u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].q
+net (fo=9)                              0.458          0.534          net: u_dut/u_p1/u_algo/u_obuf_gau/count[0],  ../../../../../../../fpga/csi2/src/img/algo_obuf.v(45)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/p_eof_reg_syn_4.b
+LUT5                                    0.273    f     0.807       1  pin: u_dut/u_p1/u_algo/u_gau/p_eof_reg_syn_4.o
+net (fo=199)                            0.600          1.407          net: u_dut/u_p1/u_algo/u_gau/pipe_en,  ../../../../../../../fpga/csi2/src/img/gray8_gaussian3x3_stream.v(83)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb2_b[30]_syn_7.a
+LUT5                                    0.273    f     1.680       2  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb2_b[30]_syn_7.o
+net (fo=155)                            0.586          2.266          net: u_dut/u_p1/u_algo/u_gau/u_row/evt_en,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(144)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_1.a
+LUT6                                    0.315    f     2.581       3  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_1.o
+net (fo=10)                             0.432          3.013          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_2,  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2]_syn_1.a
+LUT5                                    0.273    f     3.286       4  pin: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2]_syn_1.o
+net (fo=256)                            0.614          3.900          net: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2],  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(190)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1030.ib
+DRAM                                    0.341    f     4.241       5  pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1030.ofb
+net (fo=1)                              0.304          4.545          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_214,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_474.ib
+LUT6                                    0.322    f     4.867       6  pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_474.relut6
+net (fo=1)                              0.000          4.867          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_476[1],  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_358.muxi[1]
+F7MUX                                   0.053    f     4.920          pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_358.muxo
+net (fo=1)                              0.000          4.920          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_478,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_473.f78i
+                                        0.064    f     4.984          pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_473.ofa
+net (fo=1)                              0.304          5.288          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b2[7],  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[7]_syn_1.a
+LUT2                                    0.273    f     5.561       7  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[7]_syn_1.o
+net (fo=1)                              0.304          5.865          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[7],  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[7].d
+SEQ (reg)                               0.041    f     5.906               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.906               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=6198)                           0.000          0.000          net: clk_dup_1,  ../../../../../../../tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v(48)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[7].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.637               
+
+Slack               : -0.637ns
+Begin Point         : u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[8].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.906ns (cell 2.304ns (39%), net 3.602ns (61%))
+Clock Skew          : 0.000ns
+Logic Level         : 7 ( LUT5=3  LUT6=2  LUT2=1  DRAM=1 )
+Max Fanout          : 256
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=6198)                           0.000          0.000          net: clk_dup_1,  ../../../../../../../tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v(48)
+                                                                      pin: u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].q
+net (fo=9)                              0.458          0.534          net: u_dut/u_p1/u_algo/u_obuf_gau/count[0],  ../../../../../../../fpga/csi2/src/img/algo_obuf.v(45)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/p_eof_reg_syn_4.b
+LUT5                                    0.273    f     0.807       1  pin: u_dut/u_p1/u_algo/u_gau/p_eof_reg_syn_4.o
+net (fo=199)                            0.600          1.407          net: u_dut/u_p1/u_algo/u_gau/pipe_en,  ../../../../../../../fpga/csi2/src/img/gray8_gaussian3x3_stream.v(83)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb2_b[30]_syn_7.a
+LUT5                                    0.273    f     1.680       2  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb2_b[30]_syn_7.o
+net (fo=155)                            0.586          2.266          net: u_dut/u_p1/u_algo/u_gau/u_row/evt_en,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(144)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_1.a
+LUT6                                    0.315    f     2.581       3  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_1.o
+net (fo=10)                             0.432          3.013          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_2,  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2]_syn_1.a
+LUT5                                    0.273    f     3.286       4  pin: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2]_syn_1.o
+net (fo=256)                            0.614          3.900          net: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2],  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(190)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1043.ib
+DRAM                                    0.341    f     4.241       5  pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1043.ofb
+net (fo=1)                              0.304          4.545          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_215,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_480.ib
+LUT6                                    0.322    f     4.867       6  pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_480.relut6
+net (fo=1)                              0.000          4.867          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_482[1],  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_361.muxi[1]
+F7MUX                                   0.053    f     4.920          pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_361.muxo
+net (fo=1)                              0.000          4.920          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_484,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_479.f78i
+                                        0.064    f     4.984          pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_479.ofa
+net (fo=1)                              0.304          5.288          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b2[8],  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[8]_syn_1.a
+LUT2                                    0.273    f     5.561       7  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[8]_syn_1.o
+net (fo=1)                              0.304          5.865          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[8],  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[8].d
+SEQ (reg)                               0.041    f     5.906               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.906               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=6198)                           0.000          0.000          net: clk_dup_1,  ../../../../../../../tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v(48)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[8].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.637               
+
+Slack               : -0.637ns
+Begin Point         : u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].clk (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+End Point           : u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[9].d (rising edge triggered by clock clk  { rise@0.000000ns  fall@2.667000ns  period=5.333000 })
+Check Type          : setup
+Process             : slow_125c
+Budget              : 5.333ns { clk rising@5.333ns - clk rising@0.000ns }
+Data Path Delay     : 5.906ns (cell 2.304ns (39%), net 3.602ns (61%))
+Clock Skew          : 0.000ns
+Logic Level         : 7 ( LUT5=3  LUT6=2  LUT2=1  DRAM=1 )
+Max Fanout          : 256
+Clock Uncertainty   : 0.000ns (sdc uncertainty: 0.000ns, default uncertainty: 0.000ns)
+
+Delay Type          Location             Incr           Path   Level  Netlist Info
+--------------------------------------------------------------------  ---------------
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=6198)                           0.000          0.000          net: clk_dup_1,  ../../../../../../../tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v(48)
+                                                                      pin: u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].clk
+launch edge                             0.000    r     0.000               
+--------------------------------------------------------------------  ---------------
+SEQ (clk2q)                             0.076    f     0.076          pin: u_dut/u_p1/u_algo/u_obuf_gau/count_reg[0].q
+net (fo=9)                              0.458          0.534          net: u_dut/u_p1/u_algo/u_obuf_gau/count[0],  ../../../../../../../fpga/csi2/src/img/algo_obuf.v(45)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/p_eof_reg_syn_4.b
+LUT5                                    0.273    f     0.807       1  pin: u_dut/u_p1/u_algo/u_gau/p_eof_reg_syn_4.o
+net (fo=199)                            0.600          1.407          net: u_dut/u_p1/u_algo/u_gau/pipe_en,  ../../../../../../../fpga/csi2/src/img/gray8_gaussian3x3_stream.v(83)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb2_b[30]_syn_7.a
+LUT5                                    0.273    f     1.680       2  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb2_b[30]_syn_7.o
+net (fo=155)                            0.586          2.266          net: u_dut/u_p1/u_algo/u_gau/u_row/evt_en,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(144)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_1.a
+LUT6                                    0.315    f     2.581       3  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_1.o
+net (fo=10)                             0.432          3.013          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[30]_syn_2,  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2]_syn_1.a
+LUT5                                    0.273    f     3.286       4  pin: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2]_syn_1.o
+net (fo=256)                            0.614          3.900          net: u_dut/u_p1/u_algo/u_gau/u_row/ra0[2],  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(190)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1044.ib
+DRAM                                    0.341    f     4.241       5  pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1044.ofb
+net (fo=1)                              0.304          4.545          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_216,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_486.ib
+LUT6                                    0.322    f     4.867       6  pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_486.relut6
+net (fo=1)                              0.000          4.867          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_488[1],  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_364.muxi[1]
+F7MUX                                   0.053    f     4.920          pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_364.muxo
+net (fo=1)                              0.000          4.920          net: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_490,  ../../../../../../../fpga/csi2/src/img/algo_rowwin3.v(69)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_485.f78i
+                                        0.064    f     4.984          pin: u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_485.ofa
+net (fo=1)                              0.304          5.288          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b2[9],  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[9]_syn_1.a
+LUT2                                    0.273    f     5.561       7  pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[9]_syn_1.o
+net (fo=1)                              0.304          5.865          net: u_dut/u_p1/u_algo/u_gau/u_row/rb0_b[9],  NOFILE(0)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[9].d
+SEQ (reg)                               0.041    f     5.906               
+--------------------------------------------------------------------  ---------------
+Arrival                                                5.906               
+
+source latency                          0.000          0.000               
+port                                    0.000          0.000          pin: clk
+hierarchy                               0.000          0.000          pin: clk_syn_2.ipad
+PAD                                     0.000          0.000          pin: clk_syn_2.sg09_di
+PAD                                     0.000          0.000          pin: clk_syn_2.di
+net (fo=6198)                           0.000          0.000          net: clk_dup_1,  ../../../../../../../tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v(48)
+                                                                      pin: u_dut/u_p1/u_algo/u_gau/u_row/rb0_reg[9].clk
+capture edge                            5.333    r     5.333               
+--------------------------------------------------------------------  ---------------
+setup                                  -0.064          5.269               
+clock uncertainty                       0.000          5.269               
+clock pessimism                         0.000          5.269               
+--------------------------------------------------------------------  ---------------
+Required                                               5.269               
+--------------------------------------------------------------------  ---------------
+Slack                                                 -0.637               
+
+
+Period Check
+----------------------------------------------------------------------------------------------------
+    Type       Setting(ns)      Required(ns)         Slack(ns)   Point
+--------------------------------------------------------------------------------
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_b3_syn_223.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_aplus/u_core/opq_mem_syn_40.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_aplus/u_core/fifo_mem_syn_146.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_obuf_he/mem_syn_260.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_stage_b/mem_syn_65.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_aplus/u_core/wq_mem_syn_45.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_ofifo/mem_syn_150.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1456.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1456.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_obuf_y8/mem_syn_260.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_obuf_gau/mem_syn_260.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1456.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1251.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_1251.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_1251.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_a0_syn_223.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_a1_syn_223.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_a2_syn_223.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_a3_syn_223.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_b0_syn_223.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_b1_syn_223.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_b2_syn_223.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo_in/mem_syn_46.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1256.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1276.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1296.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1316.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_996.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1016.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1016.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1036.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1056.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1076.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_691.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_711.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_731.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_751.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_771.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_791.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_811.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_831.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_851.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_871.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_891.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_911.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_931.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_951.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_971.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1096.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1116.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1256.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1276.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1296.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1316.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1336.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1356.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1376.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1396.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1416.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1436.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_676.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_696.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_811.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_831.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_851.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_871.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_891.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_911.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_931.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_751.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_771.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_791.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_811.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_831.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_851.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_871.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_891.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_911.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_931.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_951.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_971.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_991.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_1011.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_1031.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_951.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_971.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_991.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_991.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_1011.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_1031.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_1051.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_1071.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_1091.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_1111.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_1131.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_1151.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_1171.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_1191.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_1211.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_1231.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_a0_syn_163.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_a0_syn_183.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1011.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1031.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1051.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_716.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_736.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_756.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1136.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1156.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1176.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1196.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1216.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_1236.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_956.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_976.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_996.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_776.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_796.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_816.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_836.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_856.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_876.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_896.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1336.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1356.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1376.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1396.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1416.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1436.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_631.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_651.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_671.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_691.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_711.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_731.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_751.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_771.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_1051.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_1071.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_1091.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_a0_syn_203.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_a1_syn_163.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_a1_syn_183.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_a1_syn_203.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_a2_syn_163.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_a2_syn_183.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_a2_syn_203.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_a3_syn_163.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_a3_syn_183.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_a3_syn_203.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_b0_syn_163.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_b0_syn_183.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_b0_syn_203.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_1111.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_1131.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_1151.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_1171.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_1191.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_1211.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_1231.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_631.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_651.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank2_syn_671.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_791.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_916.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_936.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_956.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_976.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1036.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1056.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1076.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1071.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1091.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1111.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1131.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1151.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1171.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1191.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1211.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank0_syn_1231.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_631.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_651.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_671.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_691.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_711.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_gau/u_row/bank1_syn_731.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1096.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1116.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1136.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1156.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1176.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1196.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1216.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank2_syn_1236.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_b1_syn_163.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_b1_syn_183.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_b1_syn_203.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_b2_syn_163.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_b2_syn_183.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_b2_syn_203.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_b3_syn_163.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_b3_syn_183.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_he/lut_b3_syn_203.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_obuf_gau/mem_syn_220.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_obuf_gau/mem_syn_240.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_obuf_he/mem_syn_220.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_obuf_he/mem_syn_240.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_obuf_y8/mem_syn_220.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_obuf_y8/mem_syn_240.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_stage_b/mem_syn_25.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_stage_b/mem_syn_45.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo_in/mem_syn_26.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_936.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo_in/mem_syn_66.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_aplus/u_core/wq_mem_syn_25.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_ofifo/mem_syn_30.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_ofifo/mem_syn_50.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_ofifo/mem_syn_70.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_ofifo/mem_syn_90.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_ofifo/mem_syn_110.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_ofifo/mem_syn_130.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_676.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_696.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_716.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_736.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_756.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_776.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_796.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_816.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_836.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_856.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_876.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_896.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_916.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_936.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_956.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_976.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_996.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1016.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1036.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1056.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1076.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1096.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1116.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1136.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1156.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1176.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1196.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1216.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1236.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1256.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1276.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1296.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1316.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1336.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1356.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1376.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1396.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1416.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank0_syn_1436.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_676.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_696.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_716.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_736.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_756.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_776.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_796.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_816.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_836.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_856.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_876.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_896.wclk
+    DRAM             5.333             2.800             2.533   u_dut/u_p1/u_algo/u_front/u_row/bank1_syn_916.wclk
+
+Min Paths
+----------------------------------------------------------------------------------------------------
+
+Inter clock domain timing
+--------------------------------------------------
+
+IP timing
+--------------------------------------------------

@@ -1,5 +1,7 @@
 # 当前代码与交接入口（2026-10-27）
 
+> **后续阶段更新**：板卡已交队友，本地仅仿真与证据整理。当前状态和分工以 [FPGA_SIM_ONLY_HANDOFF_20261027.md](FPGA_SIM_ONLY_HANDOFF_20261027.md) 为准，最新离线成果和候选见 [交接包](../handoff/fpga-sim-only-20261027/README.md)。以下正文保留原先 01:32 同步时点的来源说明，不能作为后续候选已通过的结论。
+
 以后主要从这两个原仓库推进，均使用 `main`：
 
 - [FPGA 主仓库](https://github.com/xiaozhuABCD1234/ph1p100-pcie-ep-fpga)：本仓，当前代码见 [rtl](../rtl/)、[约束](../constraints/)、[IP](../al_ip/)、[工具](../tools/)；工程入口为 [ph1p_pcie_ep_top.al](../ph1p_pcie_ep_top.al)、[create_project.tcl](../create_project.tcl) 和 [build.tcl](../build.tcl)。

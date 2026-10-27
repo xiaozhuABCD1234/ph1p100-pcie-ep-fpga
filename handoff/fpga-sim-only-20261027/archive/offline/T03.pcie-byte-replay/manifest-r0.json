@@ -1,0 +1,806 @@
+{
+  "schema": 2,
+  "task_id": "T03.pcie-byte-replay",
+  "round": 0,
+  "status": "ready_for_test",
+  "project_root": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga",
+  "package_root": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay",
+  "stopped_modifying": true,
+  "active_commands": 0,
+  "created_utc": "2026-10-26T22:25:28.997748+00:00",
+  "source_binding_path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\source-binding.json",
+  "input_entries": [
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workspace\\ph1p100\\fpga\\csi2\\src\\integrated_delivery\\aplus_pcie_egress_adapter.v",
+      "sha256": "39301dc7598faaa3df5fb81748f53a82e9e346618c99ed766f442817f85ea71c",
+      "size": 8863,
+      "original_manifest": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workspace\\ph1p100\\workflow\\runs\\20261026-2138_fpga-integrated-delivery\\INT.P2-r0-manifest.json",
+      "original_path": "fpga/csi2/src/integrated_delivery/aplus_pcie_egress_adapter.v",
+      "sha_matches": true
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workspace\\ph1p100\\fpga\\csi2\\src\\integrated_delivery\\tb_aplus_pcie_egress_adapter.v",
+      "sha256": "30b069d6d2813fbffb4799f1aaab2484187aa20bdf725c6a24ca81127af8f896",
+      "size": 4097,
+      "original_manifest": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workspace\\ph1p100\\workflow\\runs\\20261026-2138_fpga-integrated-delivery\\INT.P2-r0-manifest.json",
+      "original_path": "fpga/csi2/src/integrated_delivery/tb_aplus_pcie_egress_adapter.v",
+      "sha_matches": true
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workspace\\ph1p100\\fpga\\csi2\\src\\integrated_delivery\\dual_channel_capture_scheduler.v",
+      "sha256": "0ec7c80c45ec5b787bbef390dc75b82f30c5e89f152657cd688f23ff92e4c529",
+      "size": 7962,
+      "original_manifest": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workspace\\ph1p100\\workflow\\runs\\20261026-2138_fpga-integrated-delivery\\INT.P3-r1-manifest.json",
+      "original_path": "fpga/csi2/src/integrated_delivery/dual_channel_capture_scheduler.v",
+      "sha_matches": true
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workspace\\ph1p100\\fpga\\csi2\\src\\integrated_delivery\\tb_dual_channel_capture_scheduler.v",
+      "sha256": "59d3421854bf354652222198d4ba9ac457bff5cc1c5a5e3fde3c771b7d95a49d",
+      "size": 6540,
+      "original_manifest": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workspace\\ph1p100\\workflow\\runs\\20261026-2138_fpga-integrated-delivery\\INT.P3-r1-manifest.json",
+      "original_path": "fpga/csi2/src/integrated_delivery/tb_dual_channel_capture_scheduler.v",
+      "sha_matches": true
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\AGENTS.md",
+      "sha256": "5cf4afbc4c53f4da234c5c0197c59b6b68b7a8cea1d35853a20ed706ec6b1b8e",
+      "size": 2730,
+      "role": "read_only_source_or_contract"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\docs\\PROJECT_SYNC_20261027.md",
+      "sha256": "9341c93334802e53f84aaf2ddfb93b1d4858eb289d2cbb1c8cebc0db85dac8b8",
+      "size": 4168,
+      "role": "read_only_source_or_contract"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workspace\\ph1p100\\fpga\\csi2\\src\\a1\\a1_ddr_slot_store.v",
+      "sha256": "8bab440d528a192d558081ab0b52f96d9116d3bb5713c821e2fa74a97f74d09a",
+      "size": 11069,
+      "role": "read_only_source_or_contract"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\rtl\\ep_side\\ddr\\ddr_frame_pusher.v",
+      "sha256": "f928165656733bd95158768e95cd890e013ea87197e11062a39449fd858c33f4",
+      "size": 49955,
+      "role": "read_only_source_or_contract"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workspace\\ph1p100\\tools\\integrated_delivery\\a1u1_decode.py",
+      "sha256": "42083f52335cd69983e7f224516019afbd11c0daeb0262602330eac20342b1a2",
+      "size": 4156,
+      "role": "read_only_source_or_contract"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\handoff\\rk-a1u1-b18-20261026\\decode_sample.py",
+      "sha256": "b4631cac3bd38c656c21be536a7efda158f16229d84e82097500c006fe40b2af",
+      "size": 3220,
+      "role": "read_only_source_or_contract"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\handoff\\rk-a1u1-b18-20261026\\reference\\a1_ref.py",
+      "sha256": "bf662a2ccd2b11e8655c31e3a33292e2fe81b18a0cf9593a5efb947b3faae5dc",
+      "size": 16305,
+      "role": "read_only_source_or_contract"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\handoff\\rk-a1u1-b18-20261026\\reference\\a1_inflate_strict.py",
+      "sha256": "8db2b6886f77fcec52f34d5f4aa5ae15b7922592e312c625c022ef0031027e88",
+      "size": 10232,
+      "role": "read_only_source_or_contract"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\handoff\\rk-a1u1-b18-20261026\\samples\\b18_b_1080p.a1u1",
+      "sha256": "2892b3fb66654aa68e4a10609e97bc8737c3b5fb86a9fc4d5cdffc4ae5349d05",
+      "size": 2594750,
+      "role": "read_only_source_or_contract"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\handoff\\rk-a1u1-b18-20261026\\expected.json",
+      "sha256": "82e54ce43f1dc899e11490f97bf5b4c3d18b17ef24da14a3d93bc0f3a3853e87",
+      "size": 788,
+      "role": "read_only_source_or_contract"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\handoff\\rk-a1u1-b18-20261026\\provenance.json",
+      "sha256": "2d29089e8dff8dd2ef89064998a1bf2da3c03aa128b5c3f8f7d9b402e1923dd1",
+      "size": 1169,
+      "role": "read_only_source_or_contract"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workspace\\ph1p100\\workflow\\runs\\20261026-2138_fpga-integrated-delivery\\INT.P2-r0-manifest.json",
+      "sha256": "b5073d559fb054b558ae58c9f5487717a8c4e3106339359ada7f8f9ab42ea110",
+      "size": 2016,
+      "role": "read_only_source_or_contract"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workspace\\ph1p100\\workflow\\runs\\20261026-2138_fpga-integrated-delivery\\INT.P3-r1-manifest.json",
+      "sha256": "9d0dea0881fcd07c87296d056c87694d645e35dc987b62a2c21cd018e82dccc9",
+      "size": 1913,
+      "role": "read_only_source_or_contract"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workspace\\ph1p100\\workflow\\runs\\20261026-2138_fpga-integrated-delivery\\test-reports\\INT.P2-r0-integrated.md",
+      "sha256": "7c535af21879e536249d8a5d00e4d19ec6e302493af0343e233956d7ce9f99df",
+      "size": 6496,
+      "role": "read_only_source_or_contract"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workspace\\ph1p100\\workflow\\runs\\20261026-2138_fpga-integrated-delivery\\test-reports\\INT.P3-r1-integrated.md",
+      "sha256": "70a3941d2222367841061fad5c0e565ee30df4a18ccae0516e9ed48e78d3f7fa",
+      "size": 20416,
+      "role": "read_only_source_or_contract"
+    },
+    {
+      "path": "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-2138_fpga-integrated-delivery\\INT.P4-protocol.md",
+      "sha256": "627c313914f2da6ed9f464522c31a55a8b9dbb9cf92c1a6878c23a687a4e3d6a",
+      "size": 7931,
+      "role": "read_only_source_or_contract"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\request.md",
+      "sha256": "4412405a86df94c9b6063970e0fbaaf85a71c98fee03923a9e8ae8a4995f0b76",
+      "size": 3459,
+      "role": "read_only_source_or_contract"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\dev-plan.md",
+      "sha256": "cff217a9298d2790c48d8daab5e8b7d9199c2323d5c883dadc071826a9141c16",
+      "size": 10767,
+      "role": "read_only_source_or_contract"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\fpga-design-guide.md",
+      "sha256": "7ed2b0667593660cd0c2eec5ffa855b853ce6cbcc2a2810f1837ba781d1d90c6",
+      "size": 6737,
+      "role": "read_only_source_or_contract"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\input-index.md",
+      "sha256": "20f26c294a24c59af66a6a1e14774490d9389a0a9eda6c299f539ea24046f5c0",
+      "size": 5321,
+      "role": "read_only_source_or_contract"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\dispatch.json",
+      "sha256": "414c1a73922841519625649bec72bd92408b262bddfec4bef7ba989ab33cdfc4",
+      "size": 14100,
+      "role": "read_only_source_or_contract"
+    }
+  ],
+  "artifact_entries": [
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\byte-responsibility.md",
+      "relative_path": "byte-responsibility.md",
+      "size": 4859,
+      "sha256": "80e47ed0598573aaff57a1ddc61f287fb76ec2c641e895db18434bf7243fe1b9"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\check-final.log",
+      "relative_path": "check-final.log",
+      "size": 85,
+      "sha256": "fd218cf0230b186c089b0d1fe831d5f3894b8166a86b434c362b3f24f916d496"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\check.log",
+      "relative_path": "check.log",
+      "size": 85,
+      "sha256": "2944a3bee07e0c98eaaec762c7a26085ac5028317c000df0480919c5e2881f84"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\cli-camera0.log",
+      "relative_path": "cli-camera0.log",
+      "size": 550,
+      "sha256": "1004ad9b968bd1c7e9654bcbc4a21b3320a8f04d500760184293d0bd538f0b9d"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\cli-camera1.log",
+      "relative_path": "cli-camera1.log",
+      "size": 58,
+      "sha256": "d0d0dd705788767b59929ec43311f889122c695b829044b562ef1dfdab5c1be0"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\cli-checks.json",
+      "relative_path": "cli-checks.json",
+      "size": 1862,
+      "sha256": "dc9a23189bf078165698935703ccb76b2924ac3e8f2640f185a373fe8ea54e0b"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\execution.jsonl",
+      "relative_path": "execution.jsonl",
+      "size": 3692,
+      "sha256": "5459e0e1805f0c916b408bf1140d9f0ea0e6401fa11a2961a8618a842bc8a2c2"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\freeze-evidence.json",
+      "relative_path": "freeze-evidence.json",
+      "size": 735,
+      "sha256": "dae0c004da22125156b9a7522eef5036ad18603a9176524784286cb0df4d0788"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\freeze.py",
+      "relative_path": "freeze.py",
+      "size": 4883,
+      "sha256": "baf024eec9c82d90c1f301b9be7a35c4d6969ba81ab12dc22c462e1af875c809"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\handoff.md",
+      "relative_path": "handoff.md",
+      "size": 3389,
+      "sha256": "1fecf255a1629e6f76a1879e296d6a3bc8f7d77b62d157d48c59b8f72162737f"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\lessons.md",
+      "relative_path": "lessons.md",
+      "size": 1154,
+      "sha256": "76d7aa0255cbf0d17a7f693cda97dda5f61d022be9ab0ffa22ffd6f3070ed407"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\prepare.log",
+      "relative_path": "prepare.log",
+      "size": 50,
+      "sha256": "d10f3d7d790eda0c4a2901a5b7ab381867a4ea247195dadabb13986151de1e00"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\commands.jsonl",
+      "relative_path": "r0/commands.jsonl",
+      "size": 2660,
+      "sha256": "04f9f08dfe49eb75ebb0232e6c5b35bf1fe7d2c9674394ac666f494ff5e4f158"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\compile.log",
+      "relative_path": "r0/compile.log",
+      "size": 557,
+      "sha256": "b4cb9dffffb71f9c8b3234e9c53b411581651a1e70469e4ba9c5b2c518c4846e"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\expected.json",
+      "relative_path": "r0/expected.json",
+      "size": 3319,
+      "sha256": "7d33001f3d4d943d755935bccb9d4da57d953af8cfc87d32fe335fca81d93671"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\fixture-config.vh",
+      "relative_path": "r0/fixture-config.vh",
+      "size": 21,
+      "sha256": "46b34560634449d17cca787c41a32d0f0f1e9ef3c22b9a795db5d0402abff1da"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\historical-b18\\current-dma.bin",
+      "relative_path": "r0/historical-b18/current-dma.bin",
+      "size": 2596864,
+      "sha256": "9875f2d5c4d8c6f51eed3cb026d4cec62310bfdd60b6660beb7cfaa6c7db7910"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\historical-b18\\current-slot.bin",
+      "relative_path": "r0/historical-b18/current-slot.bin",
+      "size": 2594706,
+      "sha256": "17a8d8277d91edca743b05739f15196fc870640c12422bd13c95f8a3ed618183"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\historical-b18\\expected.raw10",
+      "relative_path": "r0/historical-b18/expected.raw10",
+      "size": 2592000,
+      "sha256": "4f97a0d5ab9973b45d3e20fd56667deea50df857f2dd14496b5218abfc1ddfd7"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\historical-b18\\proposed-a1u1-dma.bin",
+      "relative_path": "r0/historical-b18/proposed-a1u1-dma.bin",
+      "size": 2596864,
+      "sha256": "9d55baee4c92d5a01ff68ab1a7bcaf0e688b518a528615bce460eb59f0ec01a9"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\historical-b18\\reconstructed.a1u1",
+      "relative_path": "r0/historical-b18/reconstructed.a1u1",
+      "size": 2594750,
+      "sha256": "2892b3fb66654aa68e4a10609e97bc8737c3b5fb86a9fc4d5cdffc4ae5349d05"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\historical-b18\\replay-metadata.json",
+      "relative_path": "r0/historical-b18/replay-metadata.json",
+      "size": 1718,
+      "sha256": "6c25f94196f3a11ee918487483f16cf7b055ccf2670fcc34e4ceb28143eaf8d9"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\historical-b18-input-metadata.json",
+      "relative_path": "r0/historical-b18-input-metadata.json",
+      "size": 1153,
+      "sha256": "324bc62a7df45615adc7e18a6aa37d7bbbc2969ebc7a099c3945683537c36665"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\modelsim.ini",
+      "relative_path": "r0/modelsim.ini",
+      "size": 32,
+      "sha256": "301d28b87756cd9e750dca76bb9add304be51173d9681e1a2f82f065546f00a1"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negative-results.json",
+      "relative_path": "r0/negative-results.json",
+      "size": 1833,
+      "sha256": "e97eb81af7fb089771cf9fca91173b463a34cf595e7c9145de660530e3c3e825"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\current-dma-nonzero\\current-dma.bin",
+      "relative_path": "r0/negatives/current-dma-nonzero/current-dma.bin",
+      "size": 4096,
+      "sha256": "cb8545aac7eac75f2e6c521aafbbeafd79b9ea798040760cf2aab2a4fb805d40"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\current-dma-nonzero\\current-slot.bin",
+      "relative_path": "r0/negatives/current-dma-nonzero/current-slot.bin",
+      "size": 70,
+      "sha256": "4bd27692898c51febb88043bfd3464cff3c7f2c63bcda2c03c0f55b6dd48fa4f"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\current-dma-nonzero\\expected.raw10",
+      "relative_path": "r0/negatives/current-dma-nonzero/expected.raw10",
+      "size": 80,
+      "sha256": "90223856d4941bd946b079d24ddda6b8450d97802a334c31f78ea454c71bea08"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\current-dma-nonzero\\proposed-a1u1-dma.bin",
+      "relative_path": "r0/negatives/current-dma-nonzero/proposed-a1u1-dma.bin",
+      "size": 4096,
+      "sha256": "532736777e1e78283244a78c8be969a190d0037a47874db8c38d5e1a74f5eedf"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\current-dma-nonzero\\reconstructed.a1u1",
+      "relative_path": "r0/negatives/current-dma-nonzero/reconstructed.a1u1",
+      "size": 114,
+      "sha256": "735bc6798993995f08da59b44cf445f188ec7153982bce11c02dcf610b151943"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\current-dma-nonzero\\replay-metadata.json",
+      "relative_path": "r0/negatives/current-dma-nonzero/replay-metadata.json",
+      "size": 1521,
+      "sha256": "8ae62a78cd3dbdb5e8f341fc781e2a97dd1819eccd28681ee1f135c96b5bf0ef"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\extra-zlib.a1u1",
+      "relative_path": "r0/negatives/extra-zlib.a1u1",
+      "size": 127,
+      "sha256": "e814b1b0a19f66031869af83d3beee834a1f9e1480db0f9ca18d9df81e547131"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\header-crc.a1u1",
+      "relative_path": "r0/negatives/header-crc.a1u1",
+      "size": 114,
+      "sha256": "be5f13a2f699fc99f402f61d517d85e9ce10fdbebf3e4b2d36faea979b3f6016"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\proposed-a1u1-dma-nonzero\\current-dma.bin",
+      "relative_path": "r0/negatives/proposed-a1u1-dma-nonzero/current-dma.bin",
+      "size": 4096,
+      "sha256": "d87f070e3a003655ce48f1d9d56f0ecf041cfe22b13484a860ca4d0f4654a78d"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\proposed-a1u1-dma-nonzero\\current-slot.bin",
+      "relative_path": "r0/negatives/proposed-a1u1-dma-nonzero/current-slot.bin",
+      "size": 70,
+      "sha256": "4bd27692898c51febb88043bfd3464cff3c7f2c63bcda2c03c0f55b6dd48fa4f"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\proposed-a1u1-dma-nonzero\\expected.raw10",
+      "relative_path": "r0/negatives/proposed-a1u1-dma-nonzero/expected.raw10",
+      "size": 80,
+      "sha256": "90223856d4941bd946b079d24ddda6b8450d97802a334c31f78ea454c71bea08"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\proposed-a1u1-dma-nonzero\\proposed-a1u1-dma.bin",
+      "relative_path": "r0/negatives/proposed-a1u1-dma-nonzero/proposed-a1u1-dma.bin",
+      "size": 4096,
+      "sha256": "f82fb2cc32f5f33db2966697e090b540fe5bfea99a2dbdea76b8fbd7ca795a6c"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\proposed-a1u1-dma-nonzero\\reconstructed.a1u1",
+      "relative_path": "r0/negatives/proposed-a1u1-dma-nonzero/reconstructed.a1u1",
+      "size": 114,
+      "sha256": "735bc6798993995f08da59b44cf445f188ec7153982bce11c02dcf610b151943"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\proposed-a1u1-dma-nonzero\\replay-metadata.json",
+      "relative_path": "r0/negatives/proposed-a1u1-dma-nonzero/replay-metadata.json",
+      "size": 1521,
+      "sha256": "8ae62a78cd3dbdb5e8f341fc781e2a97dd1819eccd28681ee1f135c96b5bf0ef"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\raw-crc.a1u1",
+      "relative_path": "r0/negatives/raw-crc.a1u1",
+      "size": 114,
+      "sha256": "063335d5a239863a9bbb264157c69b05b3523d2a2d0fb54482dd31b7048c4999"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\raw-length.a1u1",
+      "relative_path": "r0/negatives/raw-length.a1u1",
+      "size": 114,
+      "sha256": "ae0e3ebdcdb36562ec1948a1b82b9eda532e85b00a8445089494df8461fc96cf"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\reserved-flags.a1u1",
+      "relative_path": "r0/negatives/reserved-flags.a1u1",
+      "size": 114,
+      "sha256": "a42ca1720da5ccb9a8389b3c58b31b0c0f072ccd0c753efd54d6d37d91524ec8"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\stream-crc.a1u1",
+      "relative_path": "r0/negatives/stream-crc.a1u1",
+      "size": 114,
+      "sha256": "132271315690c56f5354974832ccdef005bf1a88f8b467bf03aa260254388887"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\truncated-header.a1u1",
+      "relative_path": "r0/negatives/truncated-header.a1u1",
+      "size": 43,
+      "sha256": "bd5363b82d2cff3c2a5f7e399f20ea6a0d09009ebd3040557115ce1ad7ca358d"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\truncated-stream.a1u1",
+      "relative_path": "r0/negatives/truncated-stream.a1u1",
+      "size": 113,
+      "sha256": "ed9d0ef8f7ccc0f1c0200c317ea4942405352df7c1ad88b411c19c2f41c801f9"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\truncated-zlib-reframed.a1u1",
+      "relative_path": "r0/negatives/truncated-zlib-reframed.a1u1",
+      "size": 113,
+      "sha256": "6b39445dac71652ed8d5224dc927a8afb6f5a1738daae79e4903f76936335e39"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\version.a1u1",
+      "relative_path": "r0/negatives/version.a1u1",
+      "size": 114,
+      "sha256": "8e33ed5d447ad00c1d283b84f9c0579e03ccc61815c3e80e2605b3628a62dfe5"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\xform-crc.a1u1",
+      "relative_path": "r0/negatives/xform-crc.a1u1",
+      "size": 114,
+      "sha256": "c638eb264737bd36efacd610df2d35083e156eb30d8fcf8ecacf062cbc63ed10"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negatives\\xform-length.a1u1",
+      "relative_path": "r0/negatives/xform-length.a1u1",
+      "size": 114,
+      "sha256": "507aa5a0138b66f585aedaa26c5d33fa867f193da2f409d907547aac48b05f9b"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\p2-descriptors.jsonl",
+      "relative_path": "r0/p2-descriptors.jsonl",
+      "size": 5758,
+      "sha256": "d3ee7ca819ff5cd91486b7c1ab46f1a5f70ca8c7aee7bf010f3f8fddb32d3a82"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\positive-results.json",
+      "relative_path": "r0/positive-results.json",
+      "size": 3606,
+      "sha256": "9d9dda4100364a5bd7c93936447e6c99b8120f4d65e4a6807e71ad0c0d4bd81f"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\rtl-results.json",
+      "relative_path": "r0/rtl-results.json",
+      "size": 16687,
+      "sha256": "33627d520b5f5d69a2f32fb1e7fe1c315c56972e556159f91385dc6d5e4ac152"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\rtl-slot-read.bin",
+      "relative_path": "r0/rtl-slot-read.bin",
+      "size": 70,
+      "sha256": "4bd27692898c51febb88043bfd3464cff3c7f2c63bcda2c03c0f55b6dd48fa4f"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\rtl-slot-word-padding.bin",
+      "relative_path": "r0/rtl-slot-word-padding.bin",
+      "size": 96,
+      "sha256": "8ca77ec09a189e4af84ee8986b2336bd2e2b3aff68a60c12361a733c17c9e337"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\simulation-retry.log",
+      "relative_path": "r0/simulation-retry.log",
+      "size": 1051,
+      "sha256": "dc229869d445c4b1ea360f328ceb20a9a50884f8941d57892c2d7e34cd0ff664"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\simulation.log",
+      "relative_path": "r0/simulation.log",
+      "size": 387,
+      "sha256": "59765cc1cd41059d74bdd3af99127a65278c511de164fa3bafd0d6ec48f902e7"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\source-binding.json",
+      "relative_path": "r0/source-binding.json",
+      "size": 8969,
+      "sha256": "7cf3a416c2990f566be91c3eaa96355aedabd7c9de4c00308678370c15b889c1"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\sources.f",
+      "relative_path": "r0/sources.f",
+      "size": 348,
+      "sha256": "b2124f097add35bd43ab1ace05c0c13b87b9000c0e4837e3e568d1df18737ebe"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\stream.mem",
+      "relative_path": "r0/stream.mem",
+      "size": 280,
+      "sha256": "9dc39a0188643287e4418fccfd77b87030a76434a6512304439bb434dbfa8bd6"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\synthetic-flags0\\current-dma.bin",
+      "relative_path": "r0/synthetic-flags0/current-dma.bin",
+      "size": 4096,
+      "sha256": "e19fb010f75c3a0703cf55540637f960180ebb55c59c28c604937fe349dc9f1f"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\synthetic-flags0\\current-slot.bin",
+      "relative_path": "r0/synthetic-flags0/current-slot.bin",
+      "size": 94,
+      "sha256": "1cd7dcf4f1b1b61d6c66e3c4c0610a3233af4b2d92ca29f4d1df1e5167f1ff61"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\synthetic-flags0\\expected.raw10",
+      "relative_path": "r0/synthetic-flags0/expected.raw10",
+      "size": 80,
+      "sha256": "90223856d4941bd946b079d24ddda6b8450d97802a334c31f78ea454c71bea08"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\synthetic-flags0\\proposed-a1u1-dma.bin",
+      "relative_path": "r0/synthetic-flags0/proposed-a1u1-dma.bin",
+      "size": 4096,
+      "sha256": "258d40d6a27738cbcb0485bb038a0301d5cdb6a823cbc0ae81bd330bb185a558"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\synthetic-flags0\\reconstructed.a1u1",
+      "relative_path": "r0/synthetic-flags0/reconstructed.a1u1",
+      "size": 138,
+      "sha256": "93cc81557308925175f9bac2d8f98f7b2051316bdc3d0fea8c8ede66373aefff"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\synthetic-flags0\\replay-metadata.json",
+      "relative_path": "r0/synthetic-flags0/replay-metadata.json",
+      "size": 1520,
+      "sha256": "828ebebe60f4ce475a936cdb1b4dc2f9d6d790aaec00ef0e74c79f249d29b598"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\synthetic-flags0-input-metadata.json",
+      "relative_path": "r0/synthetic-flags0-input-metadata.json",
+      "size": 987,
+      "sha256": "07d44dab778adabe4be08df988c6b37378a71597a9208048d3d5c745a698d188"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\synthetic-flags1\\current-dma.bin",
+      "relative_path": "r0/synthetic-flags1/current-dma.bin",
+      "size": 4096,
+      "sha256": "de130a794d6f46bbfae89ab4dd4ae830764e19f1ed64120d5ce99eb94ad3e0ae"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\synthetic-flags1\\current-slot.bin",
+      "relative_path": "r0/synthetic-flags1/current-slot.bin",
+      "size": 94,
+      "sha256": "1a7a70c36c99d27e716f37f37a614ad4d2a14ffcb8e04804420df3c20e4f4fc9"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\synthetic-flags1\\expected.raw10",
+      "relative_path": "r0/synthetic-flags1/expected.raw10",
+      "size": 80,
+      "sha256": "90223856d4941bd946b079d24ddda6b8450d97802a334c31f78ea454c71bea08"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\synthetic-flags1\\proposed-a1u1-dma.bin",
+      "relative_path": "r0/synthetic-flags1/proposed-a1u1-dma.bin",
+      "size": 4096,
+      "sha256": "a8a1c48ebd7b9f715d8d133e21a3fedd2b7dc20558ea678a528490a321ab7afa"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\synthetic-flags1\\reconstructed.a1u1",
+      "relative_path": "r0/synthetic-flags1/reconstructed.a1u1",
+      "size": 138,
+      "sha256": "6187c1a4410bb4ad54e96b78626afb2f17c5c674d50b47b4a6b50e4880f7afd4"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\synthetic-flags1\\replay-metadata.json",
+      "relative_path": "r0/synthetic-flags1/replay-metadata.json",
+      "size": 1520,
+      "sha256": "7981959db395344f1b6c08e99dbae3d299d596f5699ca2fcf43a043c06c46151"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\synthetic-flags1-input-metadata.json",
+      "relative_path": "r0/synthetic-flags1-input-metadata.json",
+      "size": 987,
+      "sha256": "53827d41b0b4d8b2f51b52a8a7f123d4331bfdde8a29a9142e9fb160681e5bb2"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\synthetic-flags3\\current-dma.bin",
+      "relative_path": "r0/synthetic-flags3/current-dma.bin",
+      "size": 4096,
+      "sha256": "d87f070e3a003655ce48f1d9d56f0ecf041cfe22b13484a860ca4d0f4654a78d"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\synthetic-flags3\\current-slot.bin",
+      "relative_path": "r0/synthetic-flags3/current-slot.bin",
+      "size": 70,
+      "sha256": "4bd27692898c51febb88043bfd3464cff3c7f2c63bcda2c03c0f55b6dd48fa4f"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\synthetic-flags3\\expected.raw10",
+      "relative_path": "r0/synthetic-flags3/expected.raw10",
+      "size": 80,
+      "sha256": "90223856d4941bd946b079d24ddda6b8450d97802a334c31f78ea454c71bea08"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\synthetic-flags3\\proposed-a1u1-dma.bin",
+      "relative_path": "r0/synthetic-flags3/proposed-a1u1-dma.bin",
+      "size": 4096,
+      "sha256": "532736777e1e78283244a78c8be969a190d0037a47874db8c38d5e1a74f5eedf"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\synthetic-flags3\\reconstructed.a1u1",
+      "relative_path": "r0/synthetic-flags3/reconstructed.a1u1",
+      "size": 114,
+      "sha256": "735bc6798993995f08da59b44cf445f188ec7153982bce11c02dcf610b151943"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\synthetic-flags3\\replay-metadata.json",
+      "relative_path": "r0/synthetic-flags3/replay-metadata.json",
+      "size": 1521,
+      "sha256": "8ae62a78cd3dbdb5e8f341fc781e2a97dd1819eccd28681ee1f135c96b5bf0ef"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\synthetic-flags3-input-metadata.json",
+      "relative_path": "r0/synthetic-flags3-input-metadata.json",
+      "size": 987,
+      "sha256": "ac3dba12ef12382cc6d34a8d4421062e368e8eec668b2dc1ef6741c42a0959cc"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\vlib.log",
+      "relative_path": "r0/vlib.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\work\\_info",
+      "relative_path": "r0/work/_info",
+      "size": 2008,
+      "sha256": "c16e205c04b970fde8263dfc5cdebb7b9468d98292cba94ac0aff55ef32ccad9"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\work\\_lib.qdb",
+      "relative_path": "r0/work/_lib.qdb",
+      "size": 49152,
+      "sha256": "cc571b3e599b907cc8e8bb7380d54d246dc18082b56ea97e3bdda3154d8a61d9"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\work\\_lib1_0.qdb",
+      "relative_path": "r0/work/_lib1_0.qdb",
+      "size": 32768,
+      "sha256": "5316a495ba7d4aa5a545f4b7ad8b82b73e0be7ac58f136519dc75b4b4fc2b9e6"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\work\\_lib1_0.qpg",
+      "relative_path": "r0/work/_lib1_0.qpg",
+      "size": 253952,
+      "sha256": "40b42792d85b33922f5e367ac0b3af0997ad542f07571de86bddbbd76134a57a"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\work\\_lib1_0.qtl",
+      "relative_path": "r0/work/_lib1_0.qtl",
+      "size": 44689,
+      "sha256": "4a51ee75ac506f5d3772b7f1607cecb5996bd68efdcc0cc9a979563e45925799"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\work\\_vmake",
+      "relative_path": "r0/work/_vmake",
+      "size": 29,
+      "sha256": "d287f8a335408d3f94fea840ad628f2cbed3775952c49131049ef8f60fd337c9"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\replay.py",
+      "relative_path": "replay.py",
+      "size": 7038,
+      "sha256": "a8dbeb8a29c3cdad7822640b3648aeec6d1a030d212b9266de7a65ef223d1154"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\result-r0.md",
+      "relative_path": "result-r0.md",
+      "size": 3933,
+      "sha256": "296918cd4ae2fd2807ba7da3c72d43134c8cc8e9323e1bd1917b715e2c72312c"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\runner.py",
+      "relative_path": "runner.py",
+      "size": 13908,
+      "sha256": "b46a3f5d1deeae49b9aea9e3d71c87a829f0d1cb724515919e47881199436039"
+    },
+    {
+      "path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\tb_byte_replay.v",
+      "relative_path": "tb_byte_replay.v",
+      "size": 5032,
+      "sha256": "76c55261b05a2a4a8928b5ea89c47af738b9bae207e0b63c6b3c6795a233e7eb"
+    }
+  ],
+  "tools": [
+    {
+      "path": "C:\\Program Files\\Python311\\python.exe",
+      "version": "3.11.5 (tags/v3.11.5:cce6ba9, Aug 24 2023, 14:38:34) [MSC v.1936 64 bit (AMD64)]",
+      "sha256": "5be4ea9f930ff31f567d0505d76fe86ad6ffe8ee50f81e2739a142829f19a10d"
+    },
+    {
+      "path": "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vlog.exe",
+      "version": "ModelSim Intel FPGA Edition 10.5b Compiler 2016.10",
+      "sha256": "e900c70a4750c3a4985a04c96e8c105209e78a7c2b59541fffec92c54c6c2e50"
+    },
+    {
+      "path": "D:\\intelFPGA\\18.1\\modelsim_ase\\win32aloem\\vsim.exe",
+      "version": "ModelSim Intel FPGA Edition 10.5b",
+      "sha256": "e9dbcea3c5f08667bdcafa5e25958d3b880f12eb574e33ac87d3675d323bdf23"
+    }
+  ],
+  "parameters": {
+    "W": 16,
+    "H": 4,
+    "raw_bytes": 80,
+    "rtl_zlib_bytes": 70,
+    "flags": 3,
+    "slot_mode": 1,
+    "slot_words": 128,
+    "AWB": 8,
+    "BASE_WORD": 0,
+    "P2_SLOT_BYTES": 3000000,
+    "ALIGN_BYTES": 4096,
+    "session": 7,
+    "clock_period_ns": 10
+  },
+  "test_input_paths": [
+    "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\runner.py",
+    "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\replay.py",
+    "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\tb_byte_replay.v",
+    "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\sources.f",
+    "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\expected.json",
+    "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\source-binding.json",
+    "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\rtl-results.json",
+    "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\positive-results.json",
+    "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\r0\\negative-results.json"
+  ],
+  "local_validation": {
+    "input_entries": 25,
+    "input_drift_count": 0,
+    "positive_cases": 4,
+    "negative_rejects": 17,
+    "real_rtl_slot_byte_differences": 0,
+    "descriptor_count": 48,
+    "boundary_length_fixtures": 45,
+    "boundary_page_increases": 44,
+    "compile_processes": 1,
+    "simulation_processes": 2,
+    "simulation_completed_processes": 1,
+    "directed_case_processes_conservative": 7,
+    "hardware_operations": 0,
+    "external_messages": 0,
+    "active_owned_children_at_entry": 0,
+    "known_failed_attempt": "vsim modelsimini backslash argument rc12; only simulation retried once",
+    "deadline_deviation": "first two read-only entry calls had no independent hard deadline; remaining reads and all compile/sim/replay checks bounded"
+  },
+  "limits": {
+    "tool_calls_max": 30,
+    "tool_calls_through_final_verification_expected": 25,
+    "compile_max": 2,
+    "directed_case_process_max": 8,
+    "role_minutes_max": 45
+  },
+  "model_boundaries": [
+    "DDR memory is a TB native-port model",
+    "P2 backend completion/ACK inputs are environment stimulus",
+    "No real pusher/PCIe data-plane connection",
+    "Only final32B slot word padding observed; DMA page tail is an explicit offline assumption",
+    "44B A1U1 header reconstructed offline only",
+    "camera/session sidecar context is not a new on-wire field",
+    "b18 historical UART control; sensor pixel oracle false and physical phase unknown",
+    "length4052..4096 fixtures are not compressor output",
+    "G2/G3/G4 not_run; no TD/board/RK operation"
+  ],
+  "responsibility_path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\byte-responsibility.md",
+  "result_path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\result-r0.md",
+  "lessons_path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T03.pcie-byte-replay\\lessons.md",
+  "manifest_exclusion": "This manifest alone is excluded from its artifact hash table to avoid self reference",
+  "blocked": [],
+  "retest": null
+}

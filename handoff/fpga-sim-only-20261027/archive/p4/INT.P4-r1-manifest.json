@@ -1,0 +1,814 @@
+{
+  "schema": 1,
+  "task_id": "INT.P4",
+  "round": 1,
+  "run_id": "20261026-2138_fpga-integrated-delivery",
+  "candidate_root": "fpga/csi2/src/integrated_delivery",
+  "clock": {
+    "name": "clk",
+    "period_ns": 5.333,
+    "target_mhz": 187.5,
+    "domains": 1,
+    "cdc_added": false
+  },
+  "top": "fpga/csi2/src/integrated_delivery/integrated_delivery_top.v",
+  "synthesis_top": "tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v",
+  "synthesis_top_note": "Synthesis-only harness: instantiates the frozen top unchanged and replaces the off-chip capture/DDR/descriptor/PCIe/observation pins with on-chip models plus a 32-bit XOR observation register (2813 -> 42 IO) so TD can map the real logic inside the 286-pin device. Not a board shell; no pin/ADC/timing exception fabricated; IO timing unconstrained (G2 gap).",
+  "parameters": {
+    "sim": {
+      "W": 64,
+      "H": 48,
+      "SLOT_WORDS": 1024
+    },
+    "synth": {
+      "W": 1920,
+      "H": 1080,
+      "SLOT_WORDS": 81085,
+      "note": "module defaults; the TD run used them"
+    }
+  },
+  "readonly_a1_inputs": [
+    {
+      "path": "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b20-a-timing/r0/changed-src/a1_frame_top.v",
+      "sha256": "cda28c941321f28df8318dacaf291f6268ea5e4d6ea9faf9921ed824b3a2160c",
+      "size": 27245,
+      "expected_sha256": "cda28c941321f28df8318dacaf291f6268ea5e4d6ea9faf9921ed824b3a2160c",
+      "match": true
+    },
+    {
+      "path": "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b20-a-timing/r0/changed-src/a1_deflate_core.v",
+      "sha256": "a91c2ed82fbef654c4e065b64ae1cc268ca232feaa26fdd313c58d8740f81b3e",
+      "size": 80501,
+      "expected_sha256": "a91c2ed82fbef654c4e065b64ae1cc268ca232feaa26fdd313c58d8740f81b3e",
+      "match": true
+    },
+    {
+      "path": "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b20-a-timing/r0/changed-src/a1_ddr_slot_store.v",
+      "sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+      "size": 22093,
+      "expected_sha256": "6c619cf90e54385d667f1ec0f63cc87ee58aadd3c42143330ac4945eb47defe9",
+      "match": true
+    },
+    {
+      "path": "workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b20-a-timing/r0/changed-src/a1_ddr_arb2.v",
+      "sha256": "b84019bda057afe82ff558e0848d6171fa12732bd8cdb7c6239cb71b3f81d6ba",
+      "size": 4164,
+      "expected_sha256": "b84019bda057afe82ff558e0848d6171fa12732bd8cdb7c6239cb71b3f81d6ba",
+      "match": true
+    }
+  ],
+  "new_files": [
+    {
+      "path": "fpga/csi2/src/integrated_delivery/integrated_delivery_top.v",
+      "sha256": "149e89c1a6b014663ec8eb48a172442f37fe01d4ca8638d9a4789350089bdc8a",
+      "size": 36284
+    },
+    {
+      "path": "fpga/csi2/src/integrated_delivery/integrated_input_processing_top.v",
+      "sha256": "8cd7d35bd1fe04f3fc308eedd9d22f5f57ee605704d87384b544913ec7ff3fd0",
+      "size": 10044
+    },
+    {
+      "path": "fpga/csi2/src/integrated_delivery/tb_integrated_delivery_top.v",
+      "sha256": "5438cba14fe406ea9c7c8cfe90a46d4659af02153d75e2f24eacc55aff7773ca",
+      "size": 53111
+    },
+    {
+      "path": "tools/integrated_delivery/run_integrated_sim.ps1",
+      "sha256": "df1458f27ba261ae3017812130865b8d3740499c97c0b2d3deac2424e93bfa36",
+      "size": 4784
+    },
+    {
+      "path": "tools/integrated_delivery/run_integrated_build.ps1",
+      "sha256": "fa22dc96a33a9b9a14d8798e6beb2fe5d919c99736d4fd06e8bfaebd621311e0",
+      "size": 1502
+    },
+    {
+      "path": "tools/integrated_delivery/td/01_synth.tcl",
+      "sha256": "a1d0f13e7641682bed255fbe53b55b8edd5b7eed7689f4ac9f9fe311c2e53b68",
+      "size": 4973
+    },
+    {
+      "path": "tools/integrated_delivery/td/02_route.tcl",
+      "sha256": "68f1dffd37db1c76d9b8424d0547570aa2d64c4b96aa26d071cacde717bbd5a2",
+      "size": 720
+    },
+    {
+      "path": "tools/integrated_delivery/td/integrated_core.sdc",
+      "sha256": "b8058aa4f2479510ac2906a10b66cf6b8b9261d9b8f41e5a3dfb9338972c5895",
+      "size": 396
+    },
+    {
+      "path": "tools/integrated_delivery/synth/integrated_delivery_synth_wrap.v",
+      "sha256": "6af74720dfa47aa6f07ce1559dd7c460997640fda506862903a6350ba00cbe50",
+      "size": 19296
+    },
+    {
+      "path": "tools/integrated_delivery/gen_manifest_intp4.py",
+      "sha256": "c0d473ff3f9ca9b4fa18e2df8a16dd9c9c3a1e002bd406814c7a30c684cd354b",
+      "size": 12449
+    },
+    {
+      "path": "tools/integrated_delivery/verify_integrated_sample.py",
+      "sha256": "862d1b37e2c651d82c9bac8fc9d7b749b73674e2f9b7ae9ad89991e02c5136b5",
+      "size": 3755
+    },
+    {
+      "path": "tools/integrated_delivery/evidence/integrated_sample.a1u1",
+      "sha256": "79e35f28d465d6f3cec6787416f332d8b717f87fa34fa29eeb74cb2e5ead04f6",
+      "size": 4009
+    },
+    {
+      "path": "tools/integrated_delivery/evidence/integrated_sample.raw",
+      "sha256": "1357408f05e25a42debfda726554fa9f66ee6380a0b1ea514ddc0a942ac1564d",
+      "size": 3840
+    },
+    {
+      "path": "tools/integrated_delivery/evidence/integrated_sample.json",
+      "sha256": "76d88910efce37c2692ea7468d17bb9a7ed887758c8a9607e8596e3cf680c236",
+      "size": 825
+    }
+  ],
+  "docs": [
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4-protocol.md",
+      "sha256": "8048daccedc5a26c674fc9b47689c0cb580ccd2045f84c0c6c6620b50c685f62",
+      "size": 5196
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4-build-entry.md",
+      "sha256": "1fa08b6ff2cc48a2ae59bb9c44527f764dd81d8cf80fec3593b02cca149ca203",
+      "size": 4886
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4-shortest-steps.md",
+      "sha256": "e4861352bf352a00918efe996953a60fb0537f2f8a6c555eb75a1498ae017a52",
+      "size": 2369
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4-lessons.md",
+      "sha256": "9f18adad1cb695684975c1ddbeff309295088d9159f683380d5ed6a51738fa98",
+      "size": 4046
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/result-r0.md",
+      "sha256": "945b4e46e61bf0fb430468cc362f20e09fa80346178040c4bdc6bcb073f151c3",
+      "size": 2117
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/result-r1.md",
+      "sha256": "5162b89bf1bb66beb3bf9f23ec68090e148fb8bf4c1c548bd1a00c7516e37e91",
+      "size": 8390
+    }
+  ],
+  "legacy_untracked": [
+    {
+      "path": "fpga/csi2/src/integrated_delivery/sim_output.txt",
+      "sha256": "cde99b4bc6b5fc842dbb23dae7cd8cc16f43ebdf7031caef5c6e4d9826804660",
+      "size": 1130,
+      "note": "pre-INT.P4 leftover in the candidate directory (mtime before P4 dispatch); not part of the candidate, not referenced by any build/TB; deletion is blocked by the batch-delete ban, so it is registered instead"
+    },
+    {
+      "path": "fpga/csi2/src/integrated_delivery/transcript",
+      "sha256": "aa9e199394e68b6ce5f728a44838d6154c1912eec7e63b33ea603735645c1ecd",
+      "size": 559,
+      "note": "pre-INT.P4 leftover in the candidate directory (mtime before P4 dispatch); not part of the candidate, not referenced by any build/TB; deletion is blocked by the batch-delete ban, so it is registered instead"
+    }
+  ],
+  "p1p2p3_hash_verification": [
+    {
+      "manifest": "INT.P1-r1-manifest.json",
+      "manifest_sha256": "d6c524f68940d2b0ab3799747fd45f74c32f9eefea7c7da4e8169053f6c75f0b",
+      "files": [
+        {
+          "path": "fpga/csi2/src/integrated_delivery/frame_good_publish_cancel.v",
+          "sha256": "3e3d0b9162a28753888382e8bb0510b8e7890592a02da27d69191dc412adf0af",
+          "size": 5202,
+          "expected_sha256": "3e3d0b9162a28753888382e8bb0510b8e7890592a02da27d69191dc412adf0af",
+          "expected_size": 5202,
+          "match": true
+        },
+        {
+          "path": "fpga/csi2/src/integrated_delivery/integrated_input_processing_top.v",
+          "sha256": "8cd7d35bd1fe04f3fc308eedd9d22f5f57ee605704d87384b544913ec7ff3fd0",
+          "size": 10044,
+          "expected_sha256": "802cd752a43d82f54f71165ae43b06c76ebf345cd2b4daba09fea9b5ff20f5c4",
+          "expected_size": 7820,
+          "match": true,
+          "override": {
+            "previous_sha256": "802cd752a43d82f54f71165ae43b06c76ebf345cd2b4daba09fea9b5ff20f5c4",
+            "released_by": "INT.P4",
+            "round": 1,
+            "reason": "r1 single-beat dual-consumer handshake: pk_valid/algo_s_valid/m_valid are gated by the other consumer's ready, s_ready = both ready, and only the selected algorithm may backpressure the shared stream (fixes r0 F1 backpressure duplication/deadlock and F3 mode1 Y8 stall)."
+          },
+          "note": "declared INT.P1-r1 hash superseded by the recorded r1 version (see source_version_overrides); new hash bound to this manifest"
+        },
+        {
+          "path": "fpga/csi2/src/integrated_delivery/raw10_sample_vector_to_packed.v",
+          "sha256": "48eb39331816a638bff9024fb0a57ebbea1f2b15eb00d039352c4d1f81905b20",
+          "size": 1887,
+          "expected_sha256": "48eb39331816a638bff9024fb0a57ebbea1f2b15eb00d039352c4d1f81905b20",
+          "expected_size": 1887,
+          "match": true
+        },
+        {
+          "path": "fpga/csi2/src/integrated_delivery/tb_raw10_packer.v",
+          "sha256": "31f639727d7bee44aaada696d6d13d5feef167eefbfd13367dad079cbf5b4943",
+          "size": 1282,
+          "expected_sha256": "31f639727d7bee44aaada696d6d13d5feef167eefbfd13367dad079cbf5b4943",
+          "expected_size": 1282,
+          "match": true
+        },
+        {
+          "path": "tools/integrated_delivery/evidence/golden_input_processing.json",
+          "sha256": "2c420c8621c6cfb2833cc731db58b6cd667175b8cb102b48e23a1c8be55fe929",
+          "size": 879,
+          "expected_sha256": "2c420c8621c6cfb2833cc731db58b6cd667175b8cb102b48e23a1c8be55fe929",
+          "expected_size": 879,
+          "match": true
+        },
+        {
+          "path": "tools/integrated_delivery/evidence/verify_report.json",
+          "sha256": "7e257d07237b7c75584de9d54c3c0f0bf47f416291ad48efd432bccb62beffc1",
+          "size": 405,
+          "expected_sha256": "7e257d07237b7c75584de9d54c3c0f0bf47f416291ad48efd432bccb62beffc1",
+          "expected_size": 405,
+          "match": true
+        },
+        {
+          "path": "tools/integrated_delivery/gen_manifest_intp1.py",
+          "sha256": "d45fc1b8fc1620ff78f047e4a1f97ad248f225fdce5355d290a4f5e572e7781a",
+          "size": 2158,
+          "expected_sha256": "d45fc1b8fc1620ff78f047e4a1f97ad248f225fdce5355d290a4f5e572e7781a",
+          "expected_size": 2158,
+          "match": true
+        },
+        {
+          "path": "tools/integrated_delivery/raw10_pack.py",
+          "sha256": "f286cd2739eac0c325b8b6cd8d13ebf822de08266af9e7823b72e693b30503cb",
+          "size": 2439,
+          "expected_sha256": "f286cd2739eac0c325b8b6cd8d13ebf822de08266af9e7823b72e693b30503cb",
+          "expected_size": 2439,
+          "match": true
+        },
+        {
+          "path": "tools/integrated_delivery/verify_input_processing.py",
+          "sha256": "9ce33260377014e5d2aca2cad6f05b6e30c9684b36bebfcbe71347941e2bb96c",
+          "size": 3351,
+          "expected_sha256": "9ce33260377014e5d2aca2cad6f05b6e30c9684b36bebfcbe71347941e2bb96c",
+          "expected_size": 3351,
+          "match": true
+        }
+      ]
+    },
+    {
+      "manifest": "INT.P2-r0-manifest.json",
+      "manifest_sha256": "b5073d559fb054b558ae58c9f5487717a8c4e3106339359ada7f8f9ab42ea110",
+      "files": [
+        {
+          "path": "fpga/csi2/src/integrated_delivery/aplus_pcie_egress_adapter.v",
+          "sha256": "39301dc7598faaa3df5fb81748f53a82e9e346618c99ed766f442817f85ea71c",
+          "size": 8863,
+          "expected_sha256": "39301dc7598faaa3df5fb81748f53a82e9e346618c99ed766f442817f85ea71c",
+          "expected_size": 8863,
+          "match": true
+        },
+        {
+          "path": "fpga/csi2/src/integrated_delivery/tb_aplus_pcie_egress_adapter.v",
+          "sha256": "30b069d6d2813fbffb4799f1aaab2484187aa20bdf725c6a24ca81127af8f896",
+          "size": 4097,
+          "expected_sha256": "30b069d6d2813fbffb4799f1aaab2484187aa20bdf725c6a24ca81127af8f896",
+          "expected_size": 4097,
+          "match": true
+        },
+        {
+          "path": "tools/integrated_delivery/a1u1_decode.py",
+          "sha256": "42083f52335cd69983e7f224516019afbd11c0daeb0262602330eac20342b1a2",
+          "size": 4156,
+          "expected_sha256": "42083f52335cd69983e7f224516019afbd11c0daeb0262602330eac20342b1a2",
+          "expected_size": 4156,
+          "match": true
+        },
+        {
+          "path": "tools/integrated_delivery/gen_a1u1_sample.py",
+          "sha256": "2df05f9b7a88a8f2096b5736af8316687daced1fb4a0f245a6fd8419f6682f15",
+          "size": 1984,
+          "expected_sha256": "2df05f9b7a88a8f2096b5736af8316687daced1fb4a0f245a6fd8419f6682f15",
+          "expected_size": 1984,
+          "match": true
+        },
+        {
+          "path": "tools/integrated_delivery/evidence/a1u1_sample.a1u1",
+          "sha256": "0cbba9a65fbfe06eee52201146c5eb362a60493c849a536aadaeab0f1fb8a8df",
+          "size": 4096,
+          "expected_sha256": "0cbba9a65fbfe06eee52201146c5eb362a60493c849a536aadaeab0f1fb8a8df",
+          "expected_size": 4096,
+          "match": true
+        }
+      ]
+    },
+    {
+      "manifest": "INT.P3-r1-manifest.json",
+      "manifest_sha256": "9d0dea0881fcd07c87296d056c87694d645e35dc987b62a2c21cd018e82dccc9",
+      "files": [
+        {
+          "path": "fpga/csi2/src/integrated_delivery/dual_channel_capture_scheduler.v",
+          "sha256": "0ec7c80c45ec5b787bbef390dc75b82f30c5e89f152657cd688f23ff92e4c529",
+          "size": 7962,
+          "expected_sha256": "0ec7c80c45ec5b787bbef390dc75b82f30c5e89f152657cd688f23ff92e4c529",
+          "expected_size": 7962,
+          "match": true
+        },
+        {
+          "path": "fpga/csi2/src/integrated_delivery/tb_dual_channel_capture_scheduler.v",
+          "sha256": "59d3421854bf354652222198d4ba9ac457bff5cc1c5a5e3fde3c771b7d95a49d",
+          "size": 6540,
+          "expected_sha256": "59d3421854bf354652222198d4ba9ac457bff5cc1c5a5e3fde3c771b7d95a49d",
+          "expected_size": 6540,
+          "match": true
+        },
+        {
+          "path": "tools/integrated_delivery/dual_channel_schedule.py",
+          "sha256": "fe0e879297723289ac600ed79949398018aae0eee775e168de62e10dac105b82",
+          "size": 4551,
+          "expected_sha256": "fe0e879297723289ac600ed79949398018aae0eee775e168de62e10dac105b82",
+          "expected_size": 4551,
+          "match": true
+        },
+        {
+          "path": "tools/integrated_delivery/gen_manifest_intp3.py",
+          "sha256": "04b4e5162f9661a232b0ae1d8fa15b9f8fd381b1319ed7ec4990db3e825a54ba",
+          "size": 1969,
+          "expected_sha256": "04b4e5162f9661a232b0ae1d8fa15b9f8fd381b1319ed7ec4990db3e825a54ba",
+          "expected_size": 1969,
+          "match": true
+        }
+      ]
+    }
+  ],
+  "source_version_overrides": {
+    "fpga/csi2/src/integrated_delivery/integrated_input_processing_top.v": {
+      "previous_sha256": "802cd752a43d82f54f71165ae43b06c76ebf345cd2b4daba09fea9b5ff20f5c4",
+      "released_by": "INT.P4",
+      "round": 1,
+      "reason": "r1 single-beat dual-consumer handshake: pk_valid/algo_s_valid/m_valid are gated by the other consumer's ready, s_ready = both ready, and only the selected algorithm may backpressure the shared stream (fixes r0 F1 backpressure duplication/deadlock and F3 mode1 Y8 stall)."
+    }
+  },
+  "tool_inputs": [
+    {
+      "path": "tools/integrated_delivery/a1u1_decode.py",
+      "sha256": "42083f52335cd69983e7f224516019afbd11c0daeb0262602330eac20342b1a2",
+      "size": 4156
+    },
+    {
+      "path": "tools/integrated_delivery/evidence/a1u1_sample.a1u1",
+      "sha256": "0cbba9a65fbfe06eee52201146c5eb362a60493c849a536aadaeab0f1fb8a8df",
+      "size": 4096
+    },
+    {
+      "path": "tools/integrated_delivery/evidence/golden_input_processing.json",
+      "sha256": "2c420c8621c6cfb2833cc731db58b6cd667175b8cb102b48e23a1c8be55fe929",
+      "size": 879
+    },
+    {
+      "path": "tools/integrated_delivery/evidence/verify_report.json",
+      "sha256": "7e257d07237b7c75584de9d54c3c0f0bf47f416291ad48efd432bccb62beffc1",
+      "size": 405
+    }
+  ],
+  "evidence": [
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/integrated_mode1.log",
+      "sha256": "9f8a744010a7244dd9547c9fbf0967273a6484d2f5497c76c0a20760e96255fa",
+      "size": 4986
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/integrated_mode1_extra.log",
+      "sha256": "8e9abca52198445ee8855535837f4b9aec0949100b7933eab03d4acfa502b8ef",
+      "size": 10440
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/integrated_mode1_y8_attempt.log",
+      "sha256": "f899564fd10a93ae7536ef813f731781594e6beef1183fb6fb2ace10cec6b3ca",
+      "size": 2348
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/integrated_mode2.log",
+      "sha256": "6f16f69e5b09dff70158616dfcc403d31f2e52e6f53e8b6eae83a893665c1c12",
+      "size": 4494
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/integrated_mode4.log",
+      "sha256": "b62904f9edbf2e7a41c837948e639592867df0a451745ff31dbad9f1d97d167e",
+      "size": 5058
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/integrated_mode4_default.log",
+      "sha256": "89037df52b6da094158ea831007181efe4f1aa247dfe0e5101e674460914cd93",
+      "size": 2433
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/integrated_mode4_extra.log",
+      "sha256": "94af07774621ec00dc183ba18a7892062897f60a60cad56f1b4373b830322eb8",
+      "size": 10440
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/integrated_mode4_extra_attempt.log",
+      "sha256": "61419517fda9e7148b8ffc1aa10273c3f25524837819889e5819597a77c05809",
+      "size": 3133
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/p1_raw10_pack.log",
+      "sha256": "22d9c2655cd15d908a90ad552ae056aa55b6d22bf62f3c492821009e238697ec",
+      "size": 90
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/p1_tb_raw10_packer.log",
+      "sha256": "e410be09537e8b2fd74f91fff0cc3fdf0866d3b2b5d4df459ee961a14d797a38",
+      "size": 894
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/p1_verify_input_processing.log",
+      "sha256": "7d064bf62cfef8bf6d3078f35a43f45c4ec7200804980d6bedda8e2801b85b4b",
+      "size": 48
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/p2_decode_sample.log",
+      "sha256": "faff3cff77204523c06940be2d7735529635c32021a1a3882dee1ebddf8284b6",
+      "size": 62
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/p2_tb_egress.log",
+      "sha256": "9f73446d7630542f0eb0eda296bc5336040a83d65c5035a8314dd1c7abb6a00e",
+      "size": 1004
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/p3_schedule_oracle.log",
+      "sha256": "24ea7cf8a3ce4aab29c67990d98784c5835362d849881a82b4e2a48d5b349a2f",
+      "size": 58
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/p3_tb_scheduler.log",
+      "sha256": "b740b33134c8c4ea0e01c813bbe066bd73438662c6c65e5210e3754a3b2185c5",
+      "size": 1046
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/py_a1u1_decode.log",
+      "sha256": "fd87aafd97d2e3b22f7160675ba03c0bd4b4725f4739d105be14048ae5c80994",
+      "size": 810
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/py_dual_channel_schedule.log",
+      "sha256": "24ea7cf8a3ce4aab29c67990d98784c5835362d849881a82b4e2a48d5b349a2f",
+      "size": 58
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/py_raw10_pack.log",
+      "sha256": "c90ca2e7b87e06a4c17d6c00f92ea3f784f0dac80d583c3d0f7196765c2a6656",
+      "size": 182
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/py_verify_input_processing.log",
+      "sha256": "872b8a77e0431d465d6e5436acaab5b3f82d218a8feaf2783f6319df0692f544",
+      "size": 856
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/py_verify_integrated_sample.log",
+      "sha256": "89f3d1e133080d1b46153dd8551dcb9ccd31b801851fb3560e83202af0e8827c",
+      "size": 1748
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/regression_status.txt",
+      "sha256": "e0ec389e7534de1c724503143186f1e4953ecc43dbe899453c6747c6cbce0bca",
+      "size": 127
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/regression/sample_verify.log",
+      "sha256": "89f3d1e133080d1b46153dd8551dcb9ccd31b801851fb3560e83202af0e8827c",
+      "size": 1748
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/sim/run/extra_dbg.log",
+      "sha256": "b4e3e3b0f9f605e7c241799d5c19f03be1a8954fad3d8a50d4ba5bef5acbb402",
+      "size": 4290
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/sim/run/integrated_mode1.log",
+      "sha256": "1e02d09529a52a12f0143335aab91536193f16c4d69f9d6f9dc2ee9b4c6362cd",
+      "size": 4330
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/sim/run/integrated_mode4.log",
+      "sha256": "5f008a2e76b59d863f1109039ac725a76d8652b39e57f804a4113cf439c01899",
+      "size": 5058
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/sim/run/sim_dbg.log",
+      "sha256": "a33a75cc61a4e5e6479c962ee0306d76a85680b04408aa639d41dcdeb6d772cc",
+      "size": 2822
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/sim/run/sim_dbg2.log",
+      "sha256": "d363fbc09677095e20f53d098c551b8eff4d7c0fb40d646003e99b78d9f4ad61",
+      "size": 2822
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/sim/run/sim_dbg3.log",
+      "sha256": "8ba16618e499e69256e5bf2341739cb9599a2aeb3aa22196c31a28fe2bddbcb0",
+      "size": 2822
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/sim/run/sim_default.log",
+      "sha256": "89037df52b6da094158ea831007181efe4f1aa247dfe0e5101e674460914cd93",
+      "size": 2433
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/sim/run/sim_mode1_r4.log",
+      "sha256": "f899564fd10a93ae7536ef813f731781594e6beef1183fb6fb2ace10cec6b3ca",
+      "size": 2348
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/sim/run/sim_mode4_r5.log",
+      "sha256": "693ae47b787c8b2114930d62909834ffc70f78a9ed1dad2ea1ee70c78330d5e5",
+      "size": 2375
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/sim/run/sim_mode4_r6.log",
+      "sha256": "5607dd4d1c91432d97aaf8c83ddabff8aeef2ed7b17e26b48e6e19a63cca2a4c",
+      "size": 2621
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/sim/run/sim_mode4_r7.log",
+      "sha256": "3ae080c252e41e6bce9adce9ce27af9b277be6ef225fc49fdc734cbc234e8031",
+      "size": 1243
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/sim/run/sim_mode4_r8.log",
+      "sha256": "fa0132112d96832eadf7cf27bb4d1f27aadaaf5d8bfba4cca589be649433ecb2",
+      "size": 3133
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/sim/run/sim_mode4_r9.log",
+      "sha256": "61419517fda9e7148b8ffc1aa10273c3f25524837819889e5819597a77c05809",
+      "size": 3133
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/sim/run/sim_r0.log",
+      "sha256": "c3dedc7d035380b82d1ee5008985259f15c91e84c2d6d63db239a899728b3aa7",
+      "size": 2728
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/sim/run/sim_r1.log",
+      "sha256": "952e1ed8afd35b01c92d6c16228bf547d558f6a299c88888083746489673feb6",
+      "size": 2263
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/sim/run/sim_r2.log",
+      "sha256": "6048b392dff041801c827c812263e6a084756889a8f42a26a30ec8527d221db3",
+      "size": 2022
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/sim/run/sim_r3.log",
+      "sha256": "3837781181c6535458cdef081b33fc5002ec1e4063bdee262533607fb37acd4b",
+      "size": 2078
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/sim/run/mode1_sample/integrated_sample.a1u1",
+      "sha256": "79e35f28d465d6f3cec6787416f332d8b717f87fa34fa29eeb74cb2e5ead04f6",
+      "size": 4009
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/sim/run/mode1_sample/integrated_sample.json",
+      "sha256": "76d88910efce37c2692ea7468d17bb9a7ed887758c8a9607e8596e3cf680c236",
+      "size": 825
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/sim/run/mode1_sample/integrated_sample.raw",
+      "sha256": "1357408f05e25a42debfda726554fa9f66ee6380a0b1ea514ddc0a942ac1564d",
+      "size": 3840
+    }
+  ],
+  "td": [
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/01_synth.tcl",
+      "sha256": "a1d0f13e7641682bed255fbe53b55b8edd5b7eed7689f4ac9f9fe311c2e53b68",
+      "size": 4973
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4.al",
+      "sha256": "5a7586e4f240dee461b42822587852643d083c302c149990ee5e23965e48541b",
+      "size": 10589
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/integrated_core.sdc",
+      "sha256": "b8058aa4f2479510ac2906a10b66cf6b8b9261d9b8f41e5a3dfb9338972c5895",
+      "size": 396
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/preflight.txt",
+      "sha256": "6333ff16226140c9f2f4e097422362a71d017c46046c9cca03b64731b3167767",
+      "size": 30
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/syn_gate_area.rpt",
+      "sha256": "f1508cb0fa3bfabd1574fd30e0b97093353d15868eadba6286a67ac262fcd0bc",
+      "size": 6954
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/syn_gate_timing.rpt",
+      "sha256": "4d95c5a748b0db532337bb9b2f418013c894771cda0850c808bf5ddf3771b053",
+      "size": 115235
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/synth_console_r0.log",
+      "sha256": "1dd00cdfa3ade6a157cc6d42e207907d09cdfd9a5cd2c29cc85a09cbea8b43eb",
+      "size": 1022
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/synth_console_r1.log",
+      "sha256": "eb6a0c8dd9ba64210852e8a20185f67ce369f2af7a944f427e9c85b933fcb626",
+      "size": 17909
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/td_01_synth_console.log",
+      "sha256": "191422453bc5c99efa91887a8faed477557dc0a4c2d21a2cd075a85d6741ed01",
+      "size": 19091
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/td_20261027_021001.log",
+      "sha256": "fdc0b5dc014518570d71a3e3d1e338de07d72eb236663813776d84e03ebd0fcc",
+      "size": 490
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/td_20261027_021001.logw",
+      "sha256": "722c4f82c9c404e953aba8bf297e228cabf44c0b463ae5f55a37481f37353a8c",
+      "size": 428
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/td_20261027_021027.log",
+      "sha256": "c2423ff8c58d0091a5e712d986845df2aa3445e5569d7a2b40b7ded491943e9f",
+      "size": 8802
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/td_20261027_021027.logw",
+      "sha256": "11c58f26f01955b058259fa5ad213c0dba9eb6f084990fd5bce001265c68e526",
+      "size": 680
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/td_20261027_032058.log",
+      "sha256": "bb62df484c1237f90338ddb114d4618dce3dc3b9daa3eb26209388bbec91f5ba",
+      "size": 9125
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/td_20261027_032058.logw",
+      "sha256": "28965569c164ce5db5dd0e7e638c158ad493417949d5b3d6811ac6bb885093e9",
+      "size": 518
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/td_20261027_032433.log",
+      "sha256": "8bf3aa0cce20a100ca0106d803b73c71e4b7b3f7117985f42cc77987c1aa889d",
+      "size": 9126
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/td_20261027_032433.logw",
+      "sha256": "985dc4f9d382370b26ca6665d8bd7cbef92ae8701185e03910f22873b37380cb",
+      "size": 518
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/.opt_gate.begin.f",
+      "sha256": "4f95875f8c478ad8388781742a0bd2a84825ea5443304791a82b61cd4db04384",
+      "size": 159
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/.opt_gate.end.f",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/.opt_rtl.begin.f",
+      "sha256": "4f95875f8c478ad8388781742a0bd2a84825ea5443304791a82b61cd4db04384",
+      "size": 159
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/.opt_rtl.end.f",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/.read_design.begin.f",
+      "sha256": "4f95875f8c478ad8388781742a0bd2a84825ea5443304791a82b61cd4db04384",
+      "size": 159
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/.read_design.end.f",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/flow.status",
+      "sha256": "74c42207b59516419acde1e7f26b7e3eec50a3fabb32f35b806f761fe8bef9e2",
+      "size": 1522
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/gate.params",
+      "sha256": "d100dbffea2a5ec2065cd42bccbc89d29c23b0f128a85ea075a13ec397352e41",
+      "size": 355
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/gate.qor",
+      "sha256": "9e5356b7ae75b82717f58aa858bf782c8ff9186f2b06c4887c2fc6edccc4efa0",
+      "size": 8517
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/gate_qor_suggestion.tcl",
+      "sha256": "dbdb0513538e29b841a394b64c0bead288ef08e1820df3ef5510709b9d147f27",
+      "size": 143
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/int_p4.prj",
+      "sha256": "425a36bbc5683f7b0ecf5a91f826b648dd499f1a6745d6aad7aca3c8c446ba43",
+      "size": 10054
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/int_p4.tcl",
+      "sha256": "4fc07e5ead2bfa3f1d9d8a60b1667887ceee8f345f5a20bdf6f1ff7771ee2dc0",
+      "size": 9452
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/int_p4_elaborate.db",
+      "sha256": "8986509fdbc74c0abe1532c7e9e337d11420dedfb8c36af45ccedfd847487c9c",
+      "size": 5175664
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/int_p4_gate.area",
+      "sha256": "f1508cb0fa3bfabd1574fd30e0b97093353d15868eadba6286a67ac262fcd0bc",
+      "size": 6954
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/int_p4_gate.db",
+      "sha256": "64ad7e01da3bea959a9c90a925b394399cc70fed5b677c95065da68599d25a9f",
+      "size": 6092698
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/int_p4_gate.timing",
+      "sha256": "4d95c5a748b0db532337bb9b2f418013c894771cda0850c808bf5ddf3771b053",
+      "size": 115235
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/int_p4_gate.ts",
+      "sha256": "825a792d7682f06c3978d2bcde6194ecb9249f75e917439e207b694523d4ed6e",
+      "size": 66
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/int_p4_rtl.area",
+      "sha256": "738675336a0f12438598b6ad48d0646c8226299dcf2e5a337fe9979b69b46535",
+      "size": 3068
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/int_p4_rtl.db",
+      "sha256": "a68a4b4bfc78586b2755acdf1f50348e08f346461e162fb703284381bfd72ace",
+      "size": 3954050
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/run.bat",
+      "sha256": "945a74572e9c609ac264e768d9f975b6804738b7a2602d5d25f601358df0eff2",
+      "size": 283
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/run.log",
+      "sha256": "8023b3054db58ac9e44cc66035c71a9780a8a9117d43fcf3939f79cd9844d251",
+      "size": 64447
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/run.logw",
+      "sha256": "306df235cc852725160695626b068bfd2f1c936987dc3a5b4c0c26899085dc5d",
+      "size": 220637
+    },
+    {
+      "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/td/int_p4_Runs/syn_1/settings.cfg",
+      "sha256": "9d66cead58aabf4f5f1241193d40ce536abf3fa1b58b4f22fe3a15f80631e829",
+      "size": 350
+    }
+  ],
+  "gates": {
+    "G0": "pass - one clk/rst_n domain, 5.333ns target, no CDC/async FIFO, single create_clock; A1U1 vs R10F separated; RAW (m_is_raw) vs Y8/processed separated",
+    "G1": "pass (RTL sim, reduced 64x48) - single frame B, A second frame with monitor+DDR backpressure, abort, A-disabled/B-priority, bad-ACK then good-ACK, truncated-frame rejection all executed in the same frozen candidate; A1U1 sample independent recomputation PASS; P1/P2/P3 TB+tools rerun PASS. Not a board/PCIe claim.",
+    "G2": "FAIL (synthesis completed) - IO 42/286, ERAM+CWC 32/300, hold WNS/TNS 0.000/0.000, setup WNS -1.549 / TNS -271.427 (10 negative endpoints, worst path inside u_p1/u_algo shared-stream ready chain), STA coverage 96.53%; route=not_run because setup did not converge; IO timing unconstrained (no board shell) recorded as gap; bitgen/CWC/download/Flash = 0",
+    "G3": "not_run - awaiting_hardware (no integrated bit / board window; nothing fabricated)",
+    "G4": "not_run - deferred (pipeline depth 1 frame; long-run/throughput out of scope)",
+    "G5": "pass for the delivered pack - manifest/protocol/build entry/decode tool/sample/shortest steps all present and hash-bound to the same candidate; RK real PCIe transport still pending (explicitly not claimed)"
+  },
+  "stopped_modifying": true,
+  "honesty": "No bit, board, real PCIe or A-path-on-hardware pass is claimed. The b20 bit is a separate historical candidate and is NOT this integrated delivery. Synthesis completed but setup timing did not converge, so G2 is recorded as FAIL and route/bitgen/CWC/download/Flash were not run.",
+  "budget_notes": {
+    "synth_runs_r1": 2,
+    "synth_run_1": "rejected as G2 evidence: the global worst path was inside the synthesis harness's own modulo-by-480 row-end arithmetic (-8.360ns), so the harness was corrected and re-run",
+    "synth_run_2": "bound as G2 evidence (syn_gate_timing.rpt / syn_gate_area.rpt / td_01_synth_console.log)",
+    "route": 0,
+    "bitgen": 0,
+    "cwc": 0,
+    "download": 0,
+    "flash": 0
+  },
+  "drift_count": 0
+}

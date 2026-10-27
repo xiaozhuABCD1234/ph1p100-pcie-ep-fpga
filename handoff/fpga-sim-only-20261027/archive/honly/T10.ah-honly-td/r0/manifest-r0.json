@@ -1,0 +1,272 @@
+﻿{
+    "schema":  "t10.ah-honly-td/manifest/r0-td-execution",
+    "task":  "T10.ah-honly-td",
+    "line":  "B",
+    "round":  "r0 (TD execution / recovery)",
+    "status":  "blocked",
+    "reason_code":  "DUT_SYNTH_ELABORATION_ERROR",
+    "reason_detail":  "TD 6.2.3 HDL-8007 multiple drivers on cmem_lo[15] (a1_deflate_core.v L673 vs L964); module black-boxed, syn_1 failed, no gate DB",
+    "eligible_for_next_stage":  false,
+    "generated_local":  "2026-10-27T07:42:27+08:00",
+    "generated_utc":  "2026-10-26T23:42:27Z",
+    "stopped_modifying":  true,
+    "active_commands":  0,
+    "lease":  {
+                  "grant_reference":  "r0-ruling.md §2 (2026-10-27 07:30)",
+                  "preflight":  "r0/preflight-r1.json",
+                  "processes":  0,
+                  "int_p4_td_quiet_min":  91.4,
+                  "int_p4_r3_quiet_min":  91,
+                  "manifest_present":  true,
+                  "verdict":  "GRANTED_ok_to_run",
+                  "t_drive_remapped":  false
+              },
+    "dut":  {
+                "core":  {
+                             "path":  "D:/fpga/ph1p100/workflow/runs/20261026-231711_fpga-a-plus-h-prototype/T10.ah-honly/r0/changed-src/a1_deflate_core.v",
+                             "bytes":  85192,
+                             "sha256":  "8acd20b244b27ddf992432c39bffc34cf00e8394b01443571d9bdb8e3717b17b"
+                         },
+                "frame_top":  {
+                                  "path":  "D:/fpga/ph1p100/workflow/runs/20261026-231711_fpga-a-plus-h-prototype/T10.ah-honly/r0/changed-src/a1_frame_top.v",
+                                  "bytes":  29207,
+                                  "sha256":  "4afc26e246fbae4e32c5ab7e88dffb496048d10966c5ee42b290b3e71f60e30a"
+                              },
+                "changed":  false,
+                "repo_copy_used":  false
+            },
+    "tool":  {
+                 "name":  "TD Release_2026.2",
+                 "build":  "6.2.3.210850",
+                 "cli":  "D:/anlogic/TD_Release_2026.2/bin/td_commands_prompt.exe",
+                 "cli_bytes":  123372304
+             },
+    "td_runs":  [
+                    {
+                        "run":  "syn_1",
+                        "dir":  "r0/td/run-syn1",
+                        "command":  "td_commands_prompt.exe ./01_synth.tcl",
+                        "cwd":  "r0/td/run-syn1",
+                        "timeout_s":  1800,
+                        "seconds":  6.49,
+                        "timed_out":  false,
+                        "script_exit_marker":  "AH_SYN_REPORT_MISSING",
+                        "design_ok":  false,
+                        "gate_db":  false,
+                        "timing_report":  false,
+                        "area_report":  false,
+                        "flow_status":  false,
+                        "error":  "HDL-8007 cmem_lo[15] multiple drivers (a1_deflate_core.v L673 vs L964)"
+                    }
+                ],
+    "quota":  {
+                  "synth_max":  1,
+                  "synth_used":  1,
+                  "route_max":  2,
+                  "route_used":  0,
+                  "analysis_max":  1,
+                  "analysis_used":  0,
+                  "bitgen":  0,
+                  "cwc":  0,
+                  "download":  0,
+                  "flash":  0,
+                  "board":  0,
+                  "network":  0,
+                  "rk":  0
+              },
+    "gates":  {
+                  "synth_reports_complete":  false,
+                  "routed_wns_ge_0":  "not_evaluated",
+                  "hold_ge_0":  "not_evaluated",
+                  "num_feps_0":  "not_evaluated",
+                  "eram_cwc_le_300":  "not_evaluated",
+                  "slice_le_71680":  "not_evaluated",
+                  "io_le_286":  "not_evaluated",
+                  "sta_coverage":  "absent",
+                  "check_timing":  "not_run",
+                  "cdc":  "not_run",
+                  "bitgen_zero":  true
+              },
+    "scripts":  [
+                    {
+                        "path":  "r0/td/a1_ah_eng_top.v",
+                        "bytes":  3638,
+                        "sha256":  "3e2be8eaf88fc1196d1565de19d6ca41b35e85470f3bbd9271af5067526670c7"
+                    },
+                    {
+                        "path":  "r0/td/a1_ah_small_top.sdc",
+                        "bytes":  509,
+                        "sha256":  "6d948bba2087d1b86e772ef4a05486b261c2ddb445950739701bdcc0655b94bf"
+                    },
+                    {
+                        "path":  "r0/td/01_synth.tcl",
+                        "bytes":  5421,
+                        "sha256":  "43b8b8e19bef249e6cd40f55599a145179807000f6c0b56fccbed299e9ab29bf"
+                    },
+                    {
+                        "path":  "r0/td/02_route.tcl",
+                        "bytes":  3005,
+                        "sha256":  "0f243e092a49e2d83b3b4dd31bf68e5afe57213f6100937123be7df6ccce303f"
+                    },
+                    {
+                        "path":  "r0/td/03_2096_analysis.tcl",
+                        "bytes":  1757,
+                        "sha256":  "5506e778df63ae548e5ce5dde517cceb5509ed3f1889eb0a4a0a21bb438a7cfd"
+                    },
+                    {
+                        "path":  "r0/td/README.md",
+                        "bytes":  3890,
+                        "sha256":  "75834505609284697574e11087b42d093a542edbfdff27966fa9d481debeeaff"
+                    },
+                    {
+                        "path":  "r0/td/frozen-r0/01_synth.tcl.frozen-r0",
+                        "bytes":  5063,
+                        "sha256":  "33ea48d933ccd50fd7e53d4962817461f6bb200e12cefb5aa8c24b6246768630"
+                    },
+                    {
+                        "path":  "r0/td/frozen-r0/README.md.frozen-r0",
+                        "bytes":  3976,
+                        "sha256":  "b867866124018b5df57063b44d2f5d6d4cf40e00442e8fbbff34ba1eb305e284"
+                    },
+                    {
+                        "path":  "r0/td/run-syn1/01_synth.tcl",
+                        "bytes":  5421,
+                        "sha256":  "43b8b8e19bef249e6cd40f55599a145179807000f6c0b56fccbed299e9ab29bf"
+                    }
+                ],
+    "run_artifacts":  [
+                          {
+                              "path":  "r0/td/run-syn1/01_synth.tcl",
+                              "bytes":  5421,
+                              "sha256":  "43b8b8e19bef249e6cd40f55599a145179807000f6c0b56fccbed299e9ab29bf"
+                          },
+                          {
+                              "path":  "r0/td/run-syn1/a1_ah.al",
+                              "bytes":  3267,
+                              "sha256":  "2c37420796a765f8f79671bd00aab5d4ed02868f902e9a4e21dac534fc9e5274"
+                          },
+                          {
+                              "path":  "r0/td/run-syn1/synth_console.err.log",
+                              "bytes":  0,
+                              "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                          },
+                          {
+                              "path":  "r0/td/run-syn1/synth_console.log",
+                              "bytes":  7518,
+                              "sha256":  "045cdc0178cfda40ba58375db1b4f29200d5c3c0857d86539a33e118f511f67a"
+                          },
+                          {
+                              "path":  "r0/td/run-syn1/td_20261027_074021.log",
+                              "bytes":  6904,
+                              "sha256":  "83088675047171a9e3409ef1d04fa0789f4e1e690fbfadf3dd0663c881970f47"
+                          },
+                          {
+                              "path":  "r0/td/run-syn1/td_20261027_074021.logw",
+                              "bytes":  717,
+                              "sha256":  "99a00f4cff831f87faf0b183d43a10a5a2341ef2ef83cbce193cb8bc8b933103"
+                          },
+                          {
+                              "path":  "r0/td/run-syn1/a1_ah_Runs/syn_1/.read_design.begin.f",
+                              "bytes":  159,
+                              "sha256":  "a524fdf7fd1058c4e381319ebb304b206e6d24829027d315703571171d7b5f09"
+                          },
+                          {
+                              "path":  "r0/td/run-syn1/a1_ah_Runs/syn_1/.read_design.error.f",
+                              "bytes":  0,
+                              "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                          },
+                          {
+                              "path":  "r0/td/run-syn1/a1_ah_Runs/syn_1/a1_ah.prj",
+                              "bytes":  2607,
+                              "sha256":  "359febedaf339d79bc360b0e2c9fbc67cf5714d07d3f790754355ab031183bf6"
+                          },
+                          {
+                              "path":  "r0/td/run-syn1/a1_ah_Runs/syn_1/a1_ah.tcl",
+                              "bytes":  9452,
+                              "sha256":  "4fc07e5ead2bfa3f1d9d8a60b1667887ceee8f345f5a20bdf6f1ff7771ee2dc0"
+                          },
+                          {
+                              "path":  "r0/td/run-syn1/a1_ah_Runs/syn_1/run.bat",
+                              "bytes":  283,
+                              "sha256":  "945a74572e9c609ac264e768d9f975b6804738b7a2602d5d25f601358df0eff2"
+                          },
+                          {
+                              "path":  "r0/td/run-syn1/a1_ah_Runs/syn_1/run.log",
+                              "bytes":  9425,
+                              "sha256":  "a2ee0554bc956fee7fb62ed5bc363679612bdbfa3b8f40579bbeacb2759b614d"
+                          },
+                          {
+                              "path":  "r0/td/run-syn1/a1_ah_Runs/syn_1/run.logw",
+                              "bytes":  765,
+                              "sha256":  "08d91a168b321f6e505baef1b7f23aa5515cce3623aa696d56fa8a32790910e6"
+                          },
+                          {
+                              "path":  "r0/td/run-syn1/a1_ah_Runs/syn_1/settings.cfg",
+                              "bytes":  335,
+                              "sha256":  "b5606303ac346b4cd3f6ebba96b334e27377958acad9cabe497144bd7cbffd55"
+                          }
+                      ],
+    "reports":  [
+                    {
+                        "path":  "r0/reports/synth-187.5.md",
+                        "bytes":  4022,
+                        "sha256":  "a9771eb909967e5fcf494cb2ddfb41443f85d7aa99962f56d0a813de66143e23"
+                    },
+                    {
+                        "path":  "r0/reports/routed-sta.md",
+                        "bytes":  842,
+                        "sha256":  "645c8fd5857131cbee7319e55cfb204e1cb0decf1c9c4d0494965f6807d7dfff"
+                    },
+                    {
+                        "path":  "r0/reports/resources.md",
+                        "bytes":  820,
+                        "sha256":  "3828318aed2ff8f9daffd13aaba1d9fff7e60aaafd131bf3c771ecf3328504b4"
+                    },
+                    {
+                        "path":  "r0/reports/critical-path-attribution.md",
+                        "bytes":  1530,
+                        "sha256":  "7fd2643e221b34cfb155e68c5155049e0b425a75fb1036d26978d4171f56fc11"
+                    },
+                    {
+                        "path":  "r0/reports/cdc-and-check-timing.md",
+                        "bytes":  974,
+                        "sha256":  "36fd4510a681582b2fa3d35d125c9afec923ce10463a686b0c3093ac0d8fa063"
+                    },
+                    {
+                        "path":  "r0/result-r0.md",
+                        "bytes":  3844,
+                        "sha256":  "cebc7a9c0688336fa8ea61213829d9b4674f138ae385ed9f736c117061622a51"
+                    },
+                    {
+                        "path":  "r0/lessons-r0.md",
+                        "bytes":  5575,
+                        "sha256":  "3285d5448697c5075748ad737fb25e6686e5c27a56ab3cdd940ee55a24648e41"
+                    },
+                    {
+                        "path":  "r0/preflight-r1.json",
+                        "bytes":  2415,
+                        "sha256":  "8c9810d18534e96ebc62f8b69be652af2b4fea46c0a1d379b4af86042832233e"
+                    },
+                    {
+                        "path":  "r0/preflight-r0.json",
+                        "bytes":  4732,
+                        "sha256":  "de8117a6264280294cb28d2e1bb87e677d9817005b021fb82c87c7302155f3dd"
+                    },
+                    {
+                        "path":  "r0/manifest-inputs-r0.json",
+                        "bytes":  21925,
+                        "sha256":  "3679307c16c9267e4cc3031ddedc5ce4ef832c27f99d46c93ed029735b8f6781"
+                    },
+                    {
+                        "path":  "r0/prepared/REPO-BINDING.md",
+                        "bytes":  5486,
+                        "sha256":  "48d8f623c48866b718edc7d15d2a08cdfd464723a056379b04004e59f71847e4"
+                    }
+                ],
+    "previous":  {
+                     "input_manifest":  "r0/manifest-inputs-r0.json",
+                     "honly_manifest":  "workflow/runs/20261026-231711_fpga-a-plus-h-prototype/T10.ah-honly/r1/manifest-r1.json",
+                     "honly_manifest_sha256":  "f752ae09790cbbbaa5828c5fe1b6ed786a97485b400ef374fb191191b2c1a112"
+                 },
+    "resume_text":  "恢复：D:\\fpga\\ph1p100\\workflow\\runs\\20261027-055621_fpga-honly-td-and-ah；本轮目标：按 T10.ah-honly-td 报告处理 cmem_lo 多驱动修复后的 TD 重新综合（需新配额与逐字节等价证明）；Line A 按既有状态不动"
+}

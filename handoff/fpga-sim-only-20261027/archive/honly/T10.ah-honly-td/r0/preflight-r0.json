@@ -1,0 +1,70 @@
+﻿{
+    "schema":  "t10.ah-honly-td/preflight/r0",
+    "task":  "T10.ah-honly-td",
+    "line":  "B",
+    "round":  "r0",
+    "mode":  "TD-free preparation",
+    "generated_local":  "2026-10-27T06:20:13+08:00",
+    "generated_utc":  "2026-10-26T22:20:13Z",
+    "td_invocations_this_round":  0,
+    "td_commands_prompt_called":  false,
+    "td_exe_called":  false,
+    "run_exe_called":  false,
+    "td_flow_calls":  0,
+    "drive_mapping_created_or_changed":  false,
+    "t_drive_touched":  false,
+    "hardware_touched":  false,
+    "process_check":  {
+                          "command":  "Get-Process -Name pnmain,td,td_commands_prompt,run,tdsynth",
+                          "count":  0,
+                          "processes":  [
+
+                                        ]
+                      },
+    "integrated_delivery":  {
+                                "run_dir":  "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-2138_fpga-integrated-delivery",
+                                "int_p4_td_latest_write":  {
+                                                               "path":  "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-2138_fpga-integrated-delivery\\INT.P4\\td\\README-EVIDENCE.md",
+                                                               "last_write_local":  "2026-10-27T06:07:52",
+                                                               "source":  "deep-scan probe"
+                                                           },
+                                "int_p4_r3_latest_write":  {
+                                                               "path":  "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-2138_fpga-integrated-delivery\\INT.P4\\r3\\patch_docs_r3.py",
+                                                               "last_write_local":  "2026-10-27T06:08:17",
+                                                               "source":  "deep-scan probe"
+                                                           },
+                                "int_p4_r3_manifest":  {
+                                                           "exists":  true,
+                                                           "path":  "D:\\fpga\\ph1p100\\workflow\\runs\\20261026-2138_fpga-integrated-delivery\\INT.P4-r3-manifest.json",
+                                                           "last_write_local":  "2026-10-27T06:10:50",
+                                                           "size_bytes":  93274
+                                                       },
+                                "written_by_this_task":  false
+                            },
+    "t_drive":  {
+                    "subst_raw":  "T:\\: =\u003e D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b20-a-timing\\r0\\td\r\nY:\\: =\u003e D:\\fpga\\ph1p100",
+                    "target":  "D:\\fpga\\ph1p100\\workflow\\runs\\20261020-0209_singleA_aplus_closedloop\\T10.b20-a-timing\\r0\\td",
+                    "path_resolves":  true,
+                    "owned_by_this_task":  false,
+                    "action_taken":  "none (read-only probe; no map/remap)"
+                },
+    "tool":  {
+                 "cli":  "D:\\anlogic\\TD_Release_2026.2\\bin\\td_commands_prompt.exe",
+                 "cli_bytes":  123372304,
+                 "cli_mtime_local":  "2026-09-09T14:46:26",
+                 "present":  true
+             },
+    "lease":  {
+                  "dispatch_declared_state":  "held_by_other_run (INT.P4-r3-manifest.json absent at dispatch time)",
+                  "observed_state":  "r3 manifest EXISTS at preflight; TD processes 0; latest INT.P4 write 06:07:52 / 06:08:17",
+                  "line_b_td_allowed_this_round":  false,
+                  "decision":  "Round r0 stays TD-free by dispatch; TD execution requires the planner to re-verify the lease (dev-plan §8: manifest present + 0 TD processes + no INT.P4/td or INT.P4/r3 writes within 20 min).",
+                  "blocked_reason_code":  "DEVICE_MISSING",
+                  "blocked_semantics":  "exclusive TD resource busy/lease not granted to this task; not a missing user input"
+              },
+    "notes":  [
+                  "Deep-scan probe of INT.P4/td and INT.P4/r3 ran read-only and produced the timestamps above; that probe command was cut by the tool timeout after printing all facts, no TD command was involved and no file outside this task directory was written.",
+                  "T: still points to the finished b20 TD directory (stale mapping); it was only read, never remapped.",
+                  "No silent rejection of shell errors: any missing item is recorded above rather than assumed."
+              ]
+}

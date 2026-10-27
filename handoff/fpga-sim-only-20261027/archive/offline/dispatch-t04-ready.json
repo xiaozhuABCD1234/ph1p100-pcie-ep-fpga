@@ -1,0 +1,126 @@
+{
+  "run_id": "20261027-060708_fpga-parallel-offline-delivery",
+  "project_root": "D:/fpga/repos/ph1p100-pcie-ep-fpga",
+  "output_dir": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery",
+  "previous_dispatch_path": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/dispatch.json",
+  "previous_dispatch_sha256": "414C1A73922841519625649BEC72BD92408B262BDDFEC4BEF7BA989AB33CDFC4",
+  "control_file_policy": "原dispatch.json在已冻结输入中，故不修改原dispatch/共同dev-plan/guide/index。本新增dispatch推进原queued任务，所有原门槛、禁令、预算持续有效。",
+  "task_ids": [
+    "T04.real-raw10-benchmark"
+  ],
+  "all_task_ids": [
+    "T03.pcie-byte-replay",
+    "T08.freerun-isolation",
+    "T04.real-raw10-benchmark"
+  ],
+  "batch_size": 1,
+  "status": "ready",
+  "needs_user_input": false,
+  "input_paths": [
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/request.md",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/dev-plan.md",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/fpga-design-guide.md",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/input-index.md"
+  ],
+  "write_scope": [
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T04.real-raw10-benchmark/**"
+  ],
+  "protected": [
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/rtl/**",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/tools/**",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/constraints/**",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/al_ip/**",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workspace/**",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/handoff/**",
+    "D:/fpga/ph1p100/**",
+    "D:/TD/**",
+    "D:/fpga/repos/ph1p100-pcie-ep-driver/**",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T03.pcie-byte-replay/**",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T08.freerun-isolation/**",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/test-reports/**",
+    "global configuration",
+    "hardware/COM/JTAG/Flash",
+    "authoritative GitHub repositories"
+  ],
+  "next_action": {
+    "operation": "spawn_agent",
+    "role": "fpga-dev",
+    "skill_path": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workspace/ph1p100/.agents/skills/fpga-dev/SKILL.md",
+    "task_id": "T04.real-raw10-benchmark",
+    "batch_size": 1,
+    "input_paths": [
+      "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/request.md",
+      "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/dev-plan.md",
+      "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/fpga-design-guide.md",
+      "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/input-index.md"
+    ],
+    "write_scope": [
+      "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T04.real-raw10-benchmark/**"
+    ],
+    "instruction": "机械新建T04一个独立开发会话，禁止派生。读取实际根AGENTS、本dispatch及四个共同输入，执行原dev-plan的T04五步。先交有限本地inventory、明确输入schema/provenance门、可执行benchmark工具与synthetic controls。合格真实RAW10缺失时不空转、不联网抓大图集/安装依赖，不把b18/N/L/合成内容纳入real-summary：real_sample_count=0、ratio=null、benchmark_result=blocked，停改活动0冻结manifest/result/lessons，并按relay-contract返回blocked及准确缺项，由原规划决定下一动作。只写本包，不改其他包、冻结输入或run控制文件；实际project_root必须本checkout。T08正在唯一独立验收，不读取其活动日志、不推断结果、不共用角色。"
+  },
+  "after_development": {
+    "operation": "return_to_planner",
+    "role_slot": "/root/fpga_plan_parallel_delivery",
+    "instruction": "收到T04真实开发返回后先续原规划，传其状态、manifest/产物/入口、blocked及准确缺项；主不自作数据真实性或范围判断。缺真实输入/仅准备完成时不得机械spawn真实收益tester或声称PASS，原规划按原计划决定有限工具核验/备条件。若完整真实门槛满足，原规划再派此task一个新综合测试者。"
+  },
+  "scope_limits": {
+    "main_goals": 1,
+    "formal_packages": 3,
+    "levels": 2,
+    "semantic_steps_per_package_max": 5,
+    "batch_size": 1,
+    "scope_override": null,
+    "authorization_source": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/request.md",
+    "production_rtl_changes": false
+  },
+  "execution_limits": {
+    "tool_calls_per_role_turn_max": 30,
+    "developer_minutes_max": 45,
+    "runner_process_max": 6,
+    "read_search_deadline_seconds": 60,
+    "local_compile_sim_deadline_seconds": 300,
+    "same_issue_read_rounds_max": 3,
+    "same_failed_command_attempts_max": 2,
+    "no_progress_cycles_max": 2,
+    "actual_repairs_max": 3,
+    "problem_supplement_chances_max": 2,
+    "td_synth_route_bit_cwc_download_flash_com_jtag_rk_install_commit_push_external_message": 0,
+    "timeout_requirement": "实际subprocess deadline并仅安全终止自身子进程；yield不是timeout；不杀其他角色进程。"
+  },
+  "task_states": {
+    "T03.pcie-byte-replay": {
+      "status": "offline_accepted",
+      "verdict": "PASS",
+      "round": 0,
+      "actual_repairs": 0,
+      "developer": "/root/fpga_dev_pcie_byte_replay",
+      "tester": "/root/fpga_test_pcie_byte_replay",
+      "manifest_path": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T03.pcie-byte-replay/manifest-r0.json",
+      "manifest_sha256": "E1FB0ABBB64A352DCDDBA0A7D328AAB31088C99F24DA34EBD1A6058CADBB00B2",
+      "report_path": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/test-reports/T03.pcie-byte-replay-r0-integrated.md",
+      "report_sha256": "1EEF7AEE0BFBD5FE38CBE388B1757D31A6739D82C4F9E57576519C26046A6AF3",
+      "parent_tasks_done": false
+    },
+    "T08.freerun-isolation": {
+      "status": "in_independent_test",
+      "verdict": null,
+      "round": 0,
+      "actual_repairs": 0,
+      "developer": "/root/fpga_dev_freerun_isolation",
+      "tester": "/root/fpga_test_freerun_isolation",
+      "manifest_path": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T08.freerun-isolation/manifest-r0.json",
+      "manifest_sha256": "07CE985DD46C7B6797282384B81BB743D5715C6E03CA82B2037CDF8FF2C85D4D",
+      "state_source": "主传回真实冻结/派发元数据，无最终判定"
+    },
+    "T04.real-raw10-benchmark": {
+      "status": "ready_for_preparation",
+      "measurement_status": "blocked_missing_qualified_real_raw10",
+      "verdict": null
+    }
+  },
+  "question_path": null,
+  "user_summary_path": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/user-summary-after-t03.md",
+  "blocked": null,
+  "transmission_rule": "T04收到任何最终/blocked/停止返回均交原规划。T08仍只接收唯一测试者事件，T03已r0离线PASS不重跑。不提前收尾run，不修改已冻结共同输入。角色真实ID由主登记main-log。"
+}

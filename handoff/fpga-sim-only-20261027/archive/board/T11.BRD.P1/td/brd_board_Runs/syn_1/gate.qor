@@ -1,0 +1,128 @@
+-----------------------------------------------------------
+| QoR metrics               |         value               |
+-----------------------------------------------------------
+| Timing                    |                             |
+|     Setup WNS             |        -2273                |
+|     Setup TNS             |       -31547                |
+|     Num of violated S-EP  |           79                |
+-----------------------------------------------------------
+| Utilization               |                             |
+|     #registers            |        15226                |
+|     #luts                 |        16350                |
+|     #lut1                 |          108                |
+|     #lut1(~A)             |          108                |
+|     #slices               |         3612                |
+|     slices percentage     |        5.04%                |
+|     #RAMs                 |           41                |
+|     #DSPs                 |            0                |
+|     #f7mux                |        0.36%                |
+|     #MACROs               |          310                |
+|     #insts in MACRO       |         3770                |
+-----------------------------------------------------------
+| kept_net                  |                             |
+|     #syn_keep             |         1566                |
+|     #keep_hier            |            0                |
+|     #dont_touch           |           76                |
+|     #mark_debug           |            0                |
+|     #max_fanout_keep      |            0                |
+|     #async_reg            |            0                |
+-----------------------------------------------------------
+| Top 1% datanet fanout#    |        47.82                |
+| dff(single fanout)->dff   |          918                |
+| dff(single fanout)->dram  |          258                |
+-----------------------------------------------------------
+| Over-quota path num*      |                             |
+|     clk_core              |           17                |
+|     cam_a_by...           |          114                |
+|     cam_b_by...           |           34                |
+|     Total Number          |          165                |
+|     Total Level Slack     |         -232                |
+|     Worst Level Slack     |           -2                |
+-----------------------------------------------------------
+| Rent**                    |                             |
+-----------------------------------------------------------
+Note*: Over-quota path shows the over-path-level-threshold path number of each clock.
+       The clock will not be shown if no path is with path level over the threshold.
+       The threshold is defined as worst path_margin / 1000ps.
+Note**: Rent shows the rent exponent value of the modules whose rent value exceeds the threshold.
+        Only modules under top are reported, and the threshold is defined as 0.7.
+
+Over-quota Path Details
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      Clock       |  Index  |  Budget(Period)  |  Level(Quota)  |                                   Cell Type List                                   |        Reason        |  Slack  
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+     clk_core     |    1    |    6591(6667)    |      7(7)      |  SEQ,ADDER,ADDER,ADDER,ADDER,ADDER,ADDER,ADDER,ADDER,LUT4,LUT5,LUT6,LUT5,LUT6,SEQ  |        normal        |  1856   
+                  |    2    |    6591(6667)    |      7(7)      |           SEQ,ADDER,ADDER,ADDER,ADDER,ADDER,LUT2,LUT6,LUT4,LUT4,LUT4,SEQ           |        normal        |  1934   
+                  |    3    |    1335(6667)    |      3(2)      |                                 LUT4,LUT6,LUT3,SEQ                                 |  large launch delay  |  -2273  
+                  |    4    |    1335(6667)    |      2(2)      |                                   LUT4,LUT4,SEQ                                    |  large launch delay  |  -1755  
+                  |    5    |    1335(6667)    |      2(2)      |                                   LUT4,LUT4,SEQ                                    |  large launch delay  |  -1755  
+  cam_a_byte_clk  |    1    |    5256(5332)    |      7(6)      |                     SEQ,LUT6,LUT6,LUT6,LUT6,LUT6,LUT6,LUT5,SEQ                     |        normal        |   -90   
+                  |    2    |    5256(5332)    |      7(6)      |                     SEQ,LUT6,LUT6,LUT6,LUT6,LUT6,LUT6,LUT5,SEQ                     |        normal        |   -90   
+                  |    3    |    5256(5332)    |      7(6)      |                     SEQ,LUT6,LUT6,LUT6,LUT6,LUT6,LUT6,LUT5,SEQ                     |        normal        |   -90   
+                  |    4    |    5256(5332)    |      7(6)      |                     SEQ,LUT6,LUT6,LUT6,LUT6,LUT6,LUT6,LUT5,SEQ                     |        normal        |   -90   
+                  |    5    |    5256(5332)    |      7(6)      |                     SEQ,LUT6,LUT6,LUT6,LUT6,LUT6,LUT6,LUT5,SEQ                     |        normal        |   -90   
+  cam_b_byte_clk  |    1    |    5256(5332)    |      7(6)      |                     SEQ,LUT6,LUT6,LUT6,LUT6,LUT5,LUT6,LUT6,SEQ                     |        normal        |   -62   
+                  |    2    |    5256(5332)    |      7(6)      |                     SEQ,LUT6,LUT6,LUT6,LUT6,LUT5,LUT6,LUT6,SEQ                     |        normal        |   -62   
+                  |    3    |    5256(5332)    |      7(6)      |                     SEQ,LUT6,LUT6,LUT6,LUT6,LUT5,LUT6,LUT6,SEQ                     |        normal        |   -62   
+                  |    4    |    5256(5332)    |      7(6)      |                     SEQ,LUT6,LUT6,LUT6,LUT6,LUT5,LUT6,LUT6,SEQ                     |        normal        |   -62   
+                  |    5    |    5256(5332)    |      7(6)      |                     SEQ,LUT6,LUT6,LUT6,LUT6,LUT5,LUT6,LUT6,SEQ                     |        normal        |   -62   
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Note: Table only show top 5 paths for each clock group in default
+
+Logic Level Distribution
+---------------------------------------------------------------------------------------------------------------------------------------------------
+  Clock                                 |  Period             |  0     |  1     |  2     |  3     |  4     |  5     |  6     |  7    |  8    |  9
+---------------------------------------------------------------------------------------------------------------------------------------------------
+  cam_a_byte_clk                        |  5.332ns (187MHz)   |  356   |  287   |  250   |  381   |  367   |  19    |  81    |  33   |  0    |  0
+  cam_a_clk_lane                        |  1.333ns (750MHz)   |  0     |  0     |  0     |  0     |  0     |  0     |  0     |  0    |  0    |  0
+  cam_b_byte_clk                        |  5.332ns (187MHz)   |  356   |  308   |  204   |  404   |  431   |  37    |  1     |  33   |  0    |  0
+  cam_b_clk_lane                        |  1.333ns (750MHz)   |  0     |  0     |  0     |  0     |  0     |  0     |  0     |  0    |  0    |  0
+  clk_core                              |  6.667ns (150MHz)   |  777   |  2529  |  1226  |  1662  |  1532  |  775   |  209   |  2    |  0    |  0
+  sys_clk                               |  20.000ns (50MHz)   |  0     |  0     |  0     |  0     |  0     |  0     |  0     |  0    |  0    |  0
+  tl_clk_user                           |  16.000ns (62MHz)   |  3061  |  970   |  669   |  230   |  392   |  204   |  64    |  90   |  200  |  2
+  u_csi_a/u_rx_phy/u_hs_clk_div.clkout  |  1.333ns (750MHz)   |  0     |  0     |  0     |  0     |  0     |  0     |  0     |  0    |  0    |  0
+  u_csi_b/u_rx_phy/u_hs_clk_div.clkout  |  1.333ns (750MHz)   |  0     |  0     |  0     |  0     |  0     |  0     |  0     |  0    |  0    |  0
+  u_ddr3_mc_0/ctl_clk                   |  10.000ns (100MHz)  |  0     |  0     |  0     |  0     |  0     |  0     |  0     |  0    |  0    |  0
+  u_ddr3_mc_0/ddr_clk                   |  2.500ns (400MHz)   |  0     |  0     |  0     |  0     |  0     |  0     |  0     |  0    |  0    |  0
+  u_ddr3_mc_0/mcu_clk                   |  20.000ns (50MHz)   |  456   |  142   |  183   |  221   |  101   |  7     |  3     |  0    |  0    |  0
+  u_ddr3_mc_0/ref_clk                   |  10.000ns (100MHz)  |  0     |  0     |  0     |  0     |  0     |  0     |  0     |  0    |  0    |  0
+  u_ddr3_mc_0/usr_clk                   |  10.000ns (100MHz)  |  4513  |  2767  |  2182  |  2186  |  730   |  651   |  737   |  179  |  0    |  0
+  Total                                 |  NA                 |  9519  |  7003  |  4714  |  5084  |  3553  |  1693  |  1095  |  337  |  200  |  2
+---------------------------------------------------------------------------------------------------------------------------------------------------
+Hierarchical Rent Exponent Report
++---------------------------------------------------------------------------------------+
+|Inst               |Model                       |Rent     |Cell     |Pin     |Term     |
++---------------------------------------------------------------------------------------+
+|top                |brd_integrated_top          |0.21     |38792    |178873  |43       |
+|  u_pcie_ep_engine |pcie_ep_engine_11           |0.68     |1776     |8307    |761      |
+|  u_datapath       |brd_board_datapath_8        |0.54     |10085    |48455   |708      |
+|  u_csi_b          |mipi_csi2_rx_ph1p_checked_7 |0.46     |2666     |11920   |175      |
+|  u_csi_a          |mipi_csi2_rx_ph1p_checked_6 |0.46     |2654     |11842   |170      |
+|  u_ddr3_mc_0      |ddr3_mc_0_9                 |0.46     |19516    |87996   |416      |
++---------------------------------------------------------------------------------------+
+Note: Cell represents total number of cells inside module; Pin represents total number of pins
+      which have net connection inside module; Term represents total number of PIs and POs of module.
+      Rent represents the relationship between number of terms and number of cells in module.
+      A module with higher rent corresponds to highly connected logic and strong connectivity with others.
+Report gate stage QoR done.
+
+QoR Evaluation
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+  ID        |  Priority  |  Description                                                     |  Suggestion
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+  QOR-1002  |  HIGH      |  - 165 over-quota path exist.                                    |  - Try following setting to reduce over-quota:
+            |            |                                                                  |      set_param gate map_mode logic_level_prior
+            |            |                                                                  |      set_param gate map_strategy 2
+            |            |                                                                  |      set_param place logic_level_opt on
+            |            |                                                                  |  
+  QOR-3100  |  HIGH      |  - Long carry chain on over quota path, which may introduce lar  |  - Try to use directive "use_ripple = 0" to break the carry cha
+            |            |    ge data path delay.                                           |    in.
+            |            |                                                                  |    Try following method to reduce length of carry chain:
+            |            |                                                                  |      set_param rtl min_ripple_len 17
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+Note* (*) means this parameter has been set already.
+      (+) means this parameter has been set, suggest to upgrade higher effort level.
+Note** plesae resolve priority MUST FIX and HIGH issues firstly
+       because these have highly possible to block the timing convergence even stop the flow.
+Note*** some suggested settings are not suitable to use together
+        take care of using them separately if suggestion mentioned.

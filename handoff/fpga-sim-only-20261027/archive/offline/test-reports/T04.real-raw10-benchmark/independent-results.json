@@ -1,0 +1,771 @@
+{
+  "status": "independent_checks_pass",
+  "checks": [
+    {
+      "check": "frozen_test_config_reproduced",
+      "result": "pass"
+    },
+    {
+      "check": "tester_raw10_u16_LE_BE_shift6",
+      "result": "pass"
+    },
+    {
+      "check": "tester_known_RAW10_bytes",
+      "result": "pass"
+    },
+    {
+      "check": "no_real_summary_benchmark-mode00",
+      "result": "pass"
+    },
+    {
+      "check": "independent_roundtrip_benchmark-mode00_packed_raw10",
+      "result": "pass"
+    },
+    {
+      "check": "independent_lengths_ratios_fallback_benchmark-mode00_packed_raw10",
+      "result": "pass",
+      "expected": {
+        "raw_bytes": 100,
+        "zlib_bytes": 48,
+        "a1u1_bytes": 92,
+        "dma_bytes": 4096,
+        "header_bytes": 44,
+        "alignment_bytes": 4004,
+        "block_count": 3,
+        "stored_blocks": 0,
+        "stored_raw_bytes": 0,
+        "ratio_raw_over_zlib": 2.0833333333333335,
+        "ratio_raw_over_a1u1": 1.0869565217391304,
+        "ratio_raw_over_dma": 0.0244140625,
+        "fallback_block_ratio": 0.0,
+        "fallback_raw_byte_ratio": 0.0,
+        "decoded_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+        "original_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+        "normalized_raw_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+        "raw_crc32": "4344a614",
+        "xform_crc32": "4344a614",
+        "stream_crc32": "25ae479c",
+        "header_crc32": "4bf494af",
+        "byte_differences": 0
+      }
+    },
+    {
+      "check": "independent_roundtrip_benchmark-mode00_little_u16",
+      "result": "pass"
+    },
+    {
+      "check": "independent_lengths_ratios_fallback_benchmark-mode00_little_u16",
+      "result": "pass",
+      "expected": {
+        "raw_bytes": 100,
+        "zlib_bytes": 48,
+        "a1u1_bytes": 92,
+        "dma_bytes": 4096,
+        "header_bytes": 44,
+        "alignment_bytes": 4004,
+        "block_count": 3,
+        "stored_blocks": 0,
+        "stored_raw_bytes": 0,
+        "ratio_raw_over_zlib": 2.0833333333333335,
+        "ratio_raw_over_a1u1": 1.0869565217391304,
+        "ratio_raw_over_dma": 0.0244140625,
+        "fallback_block_ratio": 0.0,
+        "fallback_raw_byte_ratio": 0.0,
+        "decoded_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+        "original_sha256": "cb2e34e7580d6b059914f59871142c2791ead3a7bbc6edca1d080fe5963f6653",
+        "normalized_raw_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+        "raw_crc32": "4344a614",
+        "xform_crc32": "4344a614",
+        "stream_crc32": "25ae479c",
+        "header_crc32": "4bf494af",
+        "byte_differences": 0
+      }
+    },
+    {
+      "check": "independent_roundtrip_benchmark-mode00_big_u16",
+      "result": "pass"
+    },
+    {
+      "check": "independent_lengths_ratios_fallback_benchmark-mode00_big_u16",
+      "result": "pass",
+      "expected": {
+        "raw_bytes": 100,
+        "zlib_bytes": 48,
+        "a1u1_bytes": 92,
+        "dma_bytes": 4096,
+        "header_bytes": 44,
+        "alignment_bytes": 4004,
+        "block_count": 3,
+        "stored_blocks": 0,
+        "stored_raw_bytes": 0,
+        "ratio_raw_over_zlib": 2.0833333333333335,
+        "ratio_raw_over_a1u1": 1.0869565217391304,
+        "ratio_raw_over_dma": 0.0244140625,
+        "fallback_block_ratio": 0.0,
+        "fallback_raw_byte_ratio": 0.0,
+        "decoded_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+        "original_sha256": "5cc9a0c775a23238295ba374b80cf9e3510d5e8344ed798e62eaebd514971aa8",
+        "normalized_raw_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+        "raw_crc32": "4344a614",
+        "xform_crc32": "4344a614",
+        "stream_crc32": "25ae479c",
+        "header_crc32": "4bf494af",
+        "byte_differences": 0
+      }
+    },
+    {
+      "check": "independent_roundtrip_benchmark-mode00_noise_raw10",
+      "result": "pass"
+    },
+    {
+      "check": "independent_lengths_ratios_fallback_benchmark-mode00_noise_raw10",
+      "result": "pass",
+      "expected": {
+        "raw_bytes": 800,
+        "zlib_bytes": 821,
+        "a1u1_bytes": 865,
+        "dma_bytes": 4096,
+        "header_bytes": 44,
+        "alignment_bytes": 3231,
+        "block_count": 3,
+        "stored_blocks": 3,
+        "stored_raw_bytes": 800,
+        "ratio_raw_over_zlib": 0.97442143727162,
+        "ratio_raw_over_a1u1": 0.9248554913294798,
+        "ratio_raw_over_dma": 0.1953125,
+        "fallback_block_ratio": 1.0,
+        "fallback_raw_byte_ratio": 1.0,
+        "decoded_sha256": "6be2dcc92bf3a246e3d59fe99832a3a2ed3cae3e7b067c71593cc87f3c7355c5",
+        "original_sha256": "6be2dcc92bf3a246e3d59fe99832a3a2ed3cae3e7b067c71593cc87f3c7355c5",
+        "normalized_raw_sha256": "6be2dcc92bf3a246e3d59fe99832a3a2ed3cae3e7b067c71593cc87f3c7355c5",
+        "raw_crc32": "b4200439",
+        "xform_crc32": "b4200439",
+        "stream_crc32": "f9e6d272",
+        "header_crc32": "a4925c44",
+        "byte_differences": 0
+      }
+    },
+    {
+      "check": "independent_roundtrip_benchmark-mode00_flat_raw10",
+      "result": "pass"
+    },
+    {
+      "check": "independent_lengths_ratios_fallback_benchmark-mode00_flat_raw10",
+      "result": "pass",
+      "expected": {
+        "raw_bytes": 100,
+        "zlib_bytes": 31,
+        "a1u1_bytes": 75,
+        "dma_bytes": 4096,
+        "header_bytes": 44,
+        "alignment_bytes": 4021,
+        "block_count": 3,
+        "stored_blocks": 0,
+        "stored_raw_bytes": 0,
+        "ratio_raw_over_zlib": 3.225806451612903,
+        "ratio_raw_over_a1u1": 1.3333333333333333,
+        "ratio_raw_over_dma": 0.0244140625,
+        "fallback_block_ratio": 0.0,
+        "fallback_raw_byte_ratio": 0.0,
+        "decoded_sha256": "7918385e35a3a62521db47173cc74cb2ae44068aeaacc820d1f65123a0abb533",
+        "original_sha256": "7918385e35a3a62521db47173cc74cb2ae44068aeaacc820d1f65123a0abb533",
+        "normalized_raw_sha256": "7918385e35a3a62521db47173cc74cb2ae44068aeaacc820d1f65123a0abb533",
+        "raw_crc32": "8674b3ff",
+        "xform_crc32": "8674b3ff",
+        "stream_crc32": "f7c136cb",
+        "header_crc32": "e9a6980c",
+        "byte_differences": 0
+      }
+    },
+    {
+      "check": "no_real_summary_benchmark-mode10",
+      "result": "pass"
+    },
+    {
+      "check": "independent_roundtrip_benchmark-mode10_packed_raw10",
+      "result": "pass"
+    },
+    {
+      "check": "independent_lengths_ratios_fallback_benchmark-mode10_packed_raw10",
+      "result": "pass",
+      "expected": {
+        "raw_bytes": 100,
+        "zlib_bytes": 59,
+        "a1u1_bytes": 103,
+        "dma_bytes": 4096,
+        "header_bytes": 44,
+        "alignment_bytes": 3993,
+        "block_count": 3,
+        "stored_blocks": 0,
+        "stored_raw_bytes": 0,
+        "ratio_raw_over_zlib": 1.694915254237288,
+        "ratio_raw_over_a1u1": 0.970873786407767,
+        "ratio_raw_over_dma": 0.0244140625,
+        "fallback_block_ratio": 0.0,
+        "fallback_raw_byte_ratio": 0.0,
+        "decoded_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+        "original_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+        "normalized_raw_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+        "raw_crc32": "4344a614",
+        "xform_crc32": "5300b949",
+        "stream_crc32": "e4f2a496",
+        "header_crc32": "4b5913f1",
+        "byte_differences": 0
+      }
+    },
+    {
+      "check": "no_real_summary_benchmark-mode11",
+      "result": "pass"
+    },
+    {
+      "check": "independent_roundtrip_benchmark-mode11_packed_raw10",
+      "result": "pass"
+    },
+    {
+      "check": "independent_lengths_ratios_fallback_benchmark-mode11_packed_raw10",
+      "result": "pass",
+      "expected": {
+        "raw_bytes": 100,
+        "zlib_bytes": 64,
+        "a1u1_bytes": 108,
+        "dma_bytes": 4096,
+        "header_bytes": 44,
+        "alignment_bytes": 3988,
+        "block_count": 3,
+        "stored_blocks": 0,
+        "stored_raw_bytes": 0,
+        "ratio_raw_over_zlib": 1.5625,
+        "ratio_raw_over_a1u1": 0.9259259259259259,
+        "ratio_raw_over_dma": 0.0244140625,
+        "fallback_block_ratio": 0.0,
+        "fallback_raw_byte_ratio": 0.0,
+        "decoded_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+        "original_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+        "normalized_raw_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+        "raw_crc32": "4344a614",
+        "xform_crc32": "27a05b0e",
+        "stream_crc32": "102fbe02",
+        "header_crc32": "855554ad",
+        "byte_differences": 0
+      }
+    },
+    {
+      "check": "no_real_summary_historical-exclusion",
+      "result": "pass"
+    },
+    {
+      "check": "independent_roundtrip_historical-exclusion_packed_raw10",
+      "result": "pass"
+    },
+    {
+      "check": "independent_lengths_ratios_fallback_historical-exclusion_packed_raw10",
+      "result": "pass",
+      "expected": {
+        "raw_bytes": 100,
+        "zlib_bytes": 48,
+        "a1u1_bytes": 92,
+        "dma_bytes": 4096,
+        "header_bytes": 44,
+        "alignment_bytes": 4004,
+        "block_count": 3,
+        "stored_blocks": 0,
+        "stored_raw_bytes": 0,
+        "ratio_raw_over_zlib": 2.0833333333333335,
+        "ratio_raw_over_a1u1": 1.0869565217391304,
+        "ratio_raw_over_dma": 0.0244140625,
+        "fallback_block_ratio": 0.0,
+        "fallback_raw_byte_ratio": 0.0,
+        "decoded_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+        "original_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+        "normalized_raw_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+        "raw_crc32": "4344a614",
+        "xform_crc32": "4344a614",
+        "stream_crc32": "25ae479c",
+        "header_crc32": "4bf494af",
+        "byte_differences": 0
+      }
+    },
+    {
+      "check": "actual_empty_cli_0_null_blocked",
+      "result": "pass"
+    },
+    {
+      "check": "empty_real_CSV_header_only",
+      "result": "pass"
+    },
+    {
+      "check": "historical_b18_not_qualified",
+      "result": "pass"
+    },
+    {
+      "check": "unchanged_ROOT_and_model_paths",
+      "result": "pass"
+    },
+    {
+      "check": "no_real_summary_tester-mixed-run",
+      "result": "pass"
+    },
+    {
+      "check": "independent_roundtrip_tester-mixed-run_tester_mixed",
+      "result": "pass"
+    },
+    {
+      "check": "independent_lengths_ratios_fallback_tester-mixed-run_tester_mixed",
+      "result": "pass",
+      "expected": {
+        "raw_bytes": 800,
+        "zlib_bytes": 507,
+        "a1u1_bytes": 551,
+        "dma_bytes": 4096,
+        "header_bytes": 44,
+        "alignment_bytes": 3545,
+        "block_count": 3,
+        "stored_blocks": 2,
+        "stored_raw_bytes": 480,
+        "ratio_raw_over_zlib": 1.5779092702169626,
+        "ratio_raw_over_a1u1": 1.4519056261343013,
+        "ratio_raw_over_dma": 0.1953125,
+        "fallback_block_ratio": 0.6666666666666666,
+        "fallback_raw_byte_ratio": 0.6,
+        "decoded_sha256": "f7e845ca57ebb18449232a6164362c54deff4bf279e594364a4a5406f45dd05c",
+        "original_sha256": "f7e845ca57ebb18449232a6164362c54deff4bf279e594364a4a5406f45dd05c",
+        "normalized_raw_sha256": "f7e845ca57ebb18449232a6164362c54deff4bf279e594364a4a5406f45dd05c",
+        "raw_crc32": "feedb57e",
+        "xform_crc32": "feedb57e",
+        "stream_crc32": "ca8bb975",
+        "header_crc32": "eeaf5922",
+        "byte_differences": 0
+      }
+    },
+    {
+      "check": "different_block_and_byte_fallback",
+      "result": "pass",
+      "block_fraction": 0.6666666666666666,
+      "byte_fraction": 0.6
+    },
+    {
+      "check": "tester_negative_all_four_CRCs_valid",
+      "result": "pass",
+      "crc_states": {
+        "header": true,
+        "stream": true,
+        "xform": true,
+        "raw": true
+      },
+      "declared_width": 20,
+      "actual_raw_bytes": 100,
+      "geometry_requires_raw_bytes": 125
+    },
+    {
+      "check": "independent_valid_CRC_wrong_geometry",
+      "result": "reject",
+      "reason": "record geometry/length"
+    },
+    {
+      "check": "candidate_valid_CRC_wrong_geometry",
+      "result": "reject",
+      "reason": "bad record geometry"
+    },
+    {
+      "check": "independent_wrong_endian",
+      "result": "reject",
+      "reason": "u16 range or padding"
+    },
+    {
+      "check": "candidate_wrong_endian",
+      "result": "reject",
+      "reason": "u16 range/padding invalid; truncation forbidden"
+    },
+    {
+      "check": "independent_bad_evidence_SHA",
+      "result": "pass"
+    },
+    {
+      "check": "candidate_bad_evidence_SHA",
+      "result": "reject",
+      "reason": "pixel evidence SHA mismatch"
+    },
+    {
+      "check": "candidate_rejects_exact_evidence_SHA_gate",
+      "result": "pass"
+    },
+    {
+      "check": "bad_evidence_CLI_rc2_and_no_real_leak",
+      "result": "pass",
+      "exit_code": 2
+    }
+  ],
+  "parsed_rows": [
+    {
+      "folder": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\test-reports\\T04.real-raw10-benchmark\\local\\controls-rerun\\benchmark-mode00",
+      "sample_id": "packed_raw10",
+      "blocks": [
+        {
+          "type": 1,
+          "raw_bytes": 40
+        },
+        {
+          "type": 1,
+          "raw_bytes": 40
+        },
+        {
+          "type": 1,
+          "raw_bytes": 20
+        }
+      ],
+      "raw_bytes": 100,
+      "zlib_bytes": 48,
+      "a1u1_bytes": 92,
+      "dma_bytes": 4096,
+      "header_bytes": 44,
+      "alignment_bytes": 4004,
+      "block_count": 3,
+      "stored_blocks": 0,
+      "stored_raw_bytes": 0,
+      "ratio_raw_over_zlib": 2.0833333333333335,
+      "ratio_raw_over_a1u1": 1.0869565217391304,
+      "ratio_raw_over_dma": 0.0244140625,
+      "fallback_block_ratio": 0.0,
+      "fallback_raw_byte_ratio": 0.0,
+      "decoded_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+      "original_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+      "normalized_raw_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+      "raw_crc32": "4344a614",
+      "xform_crc32": "4344a614",
+      "stream_crc32": "25ae479c",
+      "header_crc32": "4bf494af",
+      "byte_differences": 0
+    },
+    {
+      "folder": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\test-reports\\T04.real-raw10-benchmark\\local\\controls-rerun\\benchmark-mode00",
+      "sample_id": "little_u16",
+      "blocks": [
+        {
+          "type": 1,
+          "raw_bytes": 40
+        },
+        {
+          "type": 1,
+          "raw_bytes": 40
+        },
+        {
+          "type": 1,
+          "raw_bytes": 20
+        }
+      ],
+      "raw_bytes": 100,
+      "zlib_bytes": 48,
+      "a1u1_bytes": 92,
+      "dma_bytes": 4096,
+      "header_bytes": 44,
+      "alignment_bytes": 4004,
+      "block_count": 3,
+      "stored_blocks": 0,
+      "stored_raw_bytes": 0,
+      "ratio_raw_over_zlib": 2.0833333333333335,
+      "ratio_raw_over_a1u1": 1.0869565217391304,
+      "ratio_raw_over_dma": 0.0244140625,
+      "fallback_block_ratio": 0.0,
+      "fallback_raw_byte_ratio": 0.0,
+      "decoded_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+      "original_sha256": "cb2e34e7580d6b059914f59871142c2791ead3a7bbc6edca1d080fe5963f6653",
+      "normalized_raw_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+      "raw_crc32": "4344a614",
+      "xform_crc32": "4344a614",
+      "stream_crc32": "25ae479c",
+      "header_crc32": "4bf494af",
+      "byte_differences": 0
+    },
+    {
+      "folder": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\test-reports\\T04.real-raw10-benchmark\\local\\controls-rerun\\benchmark-mode00",
+      "sample_id": "big_u16",
+      "blocks": [
+        {
+          "type": 1,
+          "raw_bytes": 40
+        },
+        {
+          "type": 1,
+          "raw_bytes": 40
+        },
+        {
+          "type": 1,
+          "raw_bytes": 20
+        }
+      ],
+      "raw_bytes": 100,
+      "zlib_bytes": 48,
+      "a1u1_bytes": 92,
+      "dma_bytes": 4096,
+      "header_bytes": 44,
+      "alignment_bytes": 4004,
+      "block_count": 3,
+      "stored_blocks": 0,
+      "stored_raw_bytes": 0,
+      "ratio_raw_over_zlib": 2.0833333333333335,
+      "ratio_raw_over_a1u1": 1.0869565217391304,
+      "ratio_raw_over_dma": 0.0244140625,
+      "fallback_block_ratio": 0.0,
+      "fallback_raw_byte_ratio": 0.0,
+      "decoded_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+      "original_sha256": "5cc9a0c775a23238295ba374b80cf9e3510d5e8344ed798e62eaebd514971aa8",
+      "normalized_raw_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+      "raw_crc32": "4344a614",
+      "xform_crc32": "4344a614",
+      "stream_crc32": "25ae479c",
+      "header_crc32": "4bf494af",
+      "byte_differences": 0
+    },
+    {
+      "folder": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\test-reports\\T04.real-raw10-benchmark\\local\\controls-rerun\\benchmark-mode00",
+      "sample_id": "noise_raw10",
+      "blocks": [
+        {
+          "type": 0,
+          "raw_bytes": 320
+        },
+        {
+          "type": 0,
+          "raw_bytes": 320
+        },
+        {
+          "type": 0,
+          "raw_bytes": 160
+        }
+      ],
+      "raw_bytes": 800,
+      "zlib_bytes": 821,
+      "a1u1_bytes": 865,
+      "dma_bytes": 4096,
+      "header_bytes": 44,
+      "alignment_bytes": 3231,
+      "block_count": 3,
+      "stored_blocks": 3,
+      "stored_raw_bytes": 800,
+      "ratio_raw_over_zlib": 0.97442143727162,
+      "ratio_raw_over_a1u1": 0.9248554913294798,
+      "ratio_raw_over_dma": 0.1953125,
+      "fallback_block_ratio": 1.0,
+      "fallback_raw_byte_ratio": 1.0,
+      "decoded_sha256": "6be2dcc92bf3a246e3d59fe99832a3a2ed3cae3e7b067c71593cc87f3c7355c5",
+      "original_sha256": "6be2dcc92bf3a246e3d59fe99832a3a2ed3cae3e7b067c71593cc87f3c7355c5",
+      "normalized_raw_sha256": "6be2dcc92bf3a246e3d59fe99832a3a2ed3cae3e7b067c71593cc87f3c7355c5",
+      "raw_crc32": "b4200439",
+      "xform_crc32": "b4200439",
+      "stream_crc32": "f9e6d272",
+      "header_crc32": "a4925c44",
+      "byte_differences": 0
+    },
+    {
+      "folder": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\test-reports\\T04.real-raw10-benchmark\\local\\controls-rerun\\benchmark-mode00",
+      "sample_id": "flat_raw10",
+      "blocks": [
+        {
+          "type": 1,
+          "raw_bytes": 40
+        },
+        {
+          "type": 1,
+          "raw_bytes": 40
+        },
+        {
+          "type": 1,
+          "raw_bytes": 20
+        }
+      ],
+      "raw_bytes": 100,
+      "zlib_bytes": 31,
+      "a1u1_bytes": 75,
+      "dma_bytes": 4096,
+      "header_bytes": 44,
+      "alignment_bytes": 4021,
+      "block_count": 3,
+      "stored_blocks": 0,
+      "stored_raw_bytes": 0,
+      "ratio_raw_over_zlib": 3.225806451612903,
+      "ratio_raw_over_a1u1": 1.3333333333333333,
+      "ratio_raw_over_dma": 0.0244140625,
+      "fallback_block_ratio": 0.0,
+      "fallback_raw_byte_ratio": 0.0,
+      "decoded_sha256": "7918385e35a3a62521db47173cc74cb2ae44068aeaacc820d1f65123a0abb533",
+      "original_sha256": "7918385e35a3a62521db47173cc74cb2ae44068aeaacc820d1f65123a0abb533",
+      "normalized_raw_sha256": "7918385e35a3a62521db47173cc74cb2ae44068aeaacc820d1f65123a0abb533",
+      "raw_crc32": "8674b3ff",
+      "xform_crc32": "8674b3ff",
+      "stream_crc32": "f7c136cb",
+      "header_crc32": "e9a6980c",
+      "byte_differences": 0
+    },
+    {
+      "folder": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\test-reports\\T04.real-raw10-benchmark\\local\\controls-rerun\\benchmark-mode10",
+      "sample_id": "packed_raw10",
+      "blocks": [
+        {
+          "type": 1,
+          "raw_bytes": 40
+        },
+        {
+          "type": 1,
+          "raw_bytes": 40
+        },
+        {
+          "type": 1,
+          "raw_bytes": 20
+        }
+      ],
+      "raw_bytes": 100,
+      "zlib_bytes": 59,
+      "a1u1_bytes": 103,
+      "dma_bytes": 4096,
+      "header_bytes": 44,
+      "alignment_bytes": 3993,
+      "block_count": 3,
+      "stored_blocks": 0,
+      "stored_raw_bytes": 0,
+      "ratio_raw_over_zlib": 1.694915254237288,
+      "ratio_raw_over_a1u1": 0.970873786407767,
+      "ratio_raw_over_dma": 0.0244140625,
+      "fallback_block_ratio": 0.0,
+      "fallback_raw_byte_ratio": 0.0,
+      "decoded_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+      "original_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+      "normalized_raw_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+      "raw_crc32": "4344a614",
+      "xform_crc32": "5300b949",
+      "stream_crc32": "e4f2a496",
+      "header_crc32": "4b5913f1",
+      "byte_differences": 0
+    },
+    {
+      "folder": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\test-reports\\T04.real-raw10-benchmark\\local\\controls-rerun\\benchmark-mode11",
+      "sample_id": "packed_raw10",
+      "blocks": [
+        {
+          "type": 1,
+          "raw_bytes": 40
+        },
+        {
+          "type": 1,
+          "raw_bytes": 40
+        },
+        {
+          "type": 1,
+          "raw_bytes": 20
+        }
+      ],
+      "raw_bytes": 100,
+      "zlib_bytes": 64,
+      "a1u1_bytes": 108,
+      "dma_bytes": 4096,
+      "header_bytes": 44,
+      "alignment_bytes": 3988,
+      "block_count": 3,
+      "stored_blocks": 0,
+      "stored_raw_bytes": 0,
+      "ratio_raw_over_zlib": 1.5625,
+      "ratio_raw_over_a1u1": 0.9259259259259259,
+      "ratio_raw_over_dma": 0.0244140625,
+      "fallback_block_ratio": 0.0,
+      "fallback_raw_byte_ratio": 0.0,
+      "decoded_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+      "original_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+      "normalized_raw_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+      "raw_crc32": "4344a614",
+      "xform_crc32": "27a05b0e",
+      "stream_crc32": "102fbe02",
+      "header_crc32": "855554ad",
+      "byte_differences": 0
+    },
+    {
+      "folder": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\test-reports\\T04.real-raw10-benchmark\\local\\controls-rerun\\historical-exclusion",
+      "sample_id": "packed_raw10",
+      "blocks": [
+        {
+          "type": 1,
+          "raw_bytes": 40
+        },
+        {
+          "type": 1,
+          "raw_bytes": 40
+        },
+        {
+          "type": 1,
+          "raw_bytes": 20
+        }
+      ],
+      "raw_bytes": 100,
+      "zlib_bytes": 48,
+      "a1u1_bytes": 92,
+      "dma_bytes": 4096,
+      "header_bytes": 44,
+      "alignment_bytes": 4004,
+      "block_count": 3,
+      "stored_blocks": 0,
+      "stored_raw_bytes": 0,
+      "ratio_raw_over_zlib": 2.0833333333333335,
+      "ratio_raw_over_a1u1": 1.0869565217391304,
+      "ratio_raw_over_dma": 0.0244140625,
+      "fallback_block_ratio": 0.0,
+      "fallback_raw_byte_ratio": 0.0,
+      "decoded_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+      "original_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+      "normalized_raw_sha256": "4e7408ccefd243b4120d3c72dfaa76eb38b2cec4a679ee956e91745b9ef2d33d",
+      "raw_crc32": "4344a614",
+      "xform_crc32": "4344a614",
+      "stream_crc32": "25ae479c",
+      "header_crc32": "4bf494af",
+      "byte_differences": 0
+    },
+    {
+      "folder": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\test-reports\\T04.real-raw10-benchmark\\tester-mixed-run",
+      "sample_id": "tester_mixed",
+      "blocks": [
+        {
+          "type": 0,
+          "raw_bytes": 320
+        },
+        {
+          "type": 1,
+          "raw_bytes": 320
+        },
+        {
+          "type": 0,
+          "raw_bytes": 160
+        }
+      ],
+      "raw_bytes": 800,
+      "zlib_bytes": 507,
+      "a1u1_bytes": 551,
+      "dma_bytes": 4096,
+      "header_bytes": 44,
+      "alignment_bytes": 3545,
+      "block_count": 3,
+      "stored_blocks": 2,
+      "stored_raw_bytes": 480,
+      "ratio_raw_over_zlib": 1.5779092702169626,
+      "ratio_raw_over_a1u1": 1.4519056261343013,
+      "ratio_raw_over_dma": 0.1953125,
+      "fallback_block_ratio": 0.6666666666666666,
+      "fallback_raw_byte_ratio": 0.6,
+      "decoded_sha256": "f7e845ca57ebb18449232a6164362c54deff4bf279e594364a4a5406f45dd05c",
+      "original_sha256": "f7e845ca57ebb18449232a6164362c54deff4bf279e594364a4a5406f45dd05c",
+      "normalized_raw_sha256": "f7e845ca57ebb18449232a6164362c54deff4bf279e594364a4a5406f45dd05c",
+      "raw_crc32": "feedb57e",
+      "xform_crc32": "feedb57e",
+      "stream_crc32": "ca8bb975",
+      "header_crc32": "eeaf5922",
+      "byte_differences": 0
+    }
+  ],
+  "pure_software_only": true,
+  "real_sample_count": 0,
+  "ratio": null,
+  "real_summary": null,
+  "negative_fixtures_are_fictional_not_real_evidence": true,
+  "independence": "Positive oracle imports neither encoder nor strict parser; byte-offset A1U1 parsing, sequential fixed/stored DEFLATE bit walker, native zlib agreement, slice-based pixel reconstruction and explicit normalization. Candidate is called only to compare rejection and generate a synthetic mixed control.",
+  "unchanged_ROOT": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga",
+  "redirected_HERE": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\test-reports\\T04.real-raw10-benchmark",
+  "candidate_sha256": "a27aeee822c52dc91ba80ab9db7a5aab38273fa35a62e9fc5594448347f25ce6",
+  "python_executable": "C:\\Program Files\\Python311\\python.exe",
+  "python_version": "3.11.5 (tags/v3.11.5:cce6ba9, Aug 24 2023, 14:38:34) [MSC v.1936 64 bit (AMD64)]"
+}

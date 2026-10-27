@@ -1,0 +1,564 @@
+{
+ "checks": [
+  {
+   "section": "A",
+   "check": "manifest sha256",
+   "ok": true,
+   "detail": "034777c55d5a7857f18d9860afbb73f7554940f65213d9228c449bbc5855e510 bytes=49616"
+  },
+  {
+   "section": "A",
+   "check": "declared core sha/bytes",
+   "ok": true,
+   "detail": "d2960cfe0111b7b61aff281e3f16427834dda26107f37867d5c7c89ac346aad8 85221 r0/changed-src/a1_deflate_core.v"
+  },
+  {
+   "section": "A",
+   "check": "declared frame_top sha/bytes",
+   "ok": true,
+   "detail": "4afc26e246fbae4e32c5ab7e88dffb496048d10966c5ee42b290b3e71f60e30a 29207"
+  },
+  {
+   "section": "A",
+   "check": "frame_top declared unchanged vs frozen input",
+   "ok": true,
+   "detail": "unchanged=true, frozen_input==copy"
+  },
+  {
+   "section": "A",
+   "check": "core differs from frozen input (fix applied)",
+   "ok": true,
+   "detail": "frozen 8acd20b2... -> fixed d2960cfe..."
+  },
+  {
+   "section": "A",
+   "check": "previous manifest sha = f752ae09...",
+   "ok": true,
+   "detail": "f752ae09790cbbba..."
+  },
+  {
+   "section": "A",
+   "check": "previous manifest file recomputes",
+   "ok": true,
+   "detail": "f752ae09790cbbba... bytes=24979"
+  },
+  {
+   "section": "A",
+   "check": "previous manifest references frozen core/frame_top",
+   "ok": true,
+   "detail": "both frozen hashes present in r1 manifest"
+  },
+  {
+   "section": "A",
+   "check": "artifact_count field/len",
+   "ok": true,
+   "detail": "field=75 len=75"
+  },
+  {
+   "section": "A",
+   "check": "all 75 artifact hashes+bytes",
+   "ok": true,
+   "detail": "75/75 match"
+  },
+  {
+   "section": "A",
+   "check": "reference count",
+   "ok": true,
+   "detail": "len=31"
+  },
+  {
+   "section": "A",
+   "check": "all 31 reference hashes+bytes",
+   "ok": true,
+   "detail": "31/31 match"
+  },
+  {
+   "section": "A",
+   "check": "command ledger size",
+   "ok": true,
+   "detail": "len=15"
+  },
+  {
+   "section": "A",
+   "check": "only vlib/vlog/vsim executables",
+   "ok": true,
+   "detail": "['vlib.exe', 'vlog.exe', 'vsim.exe']"
+  },
+  {
+   "section": "A",
+   "check": "all rc=0 / no timeout",
+   "ok": true,
+   "detail": "rcs=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] timeouts=[False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]"
+  },
+  {
+   "section": "A",
+   "check": "every command log exists",
+   "ok": true,
+   "detail": "missing=[]"
+  },
+  {
+   "section": "A",
+   "check": "all command cwd inside own scratch root",
+   "ok": true,
+   "detail": "bad=[]"
+  },
+  {
+   "section": "A",
+   "check": "vsim wall clock vs declared",
+   "ok": true,
+   "detail": "sum=3359.61 declared=3359.61 cap=7200"
+  },
+  {
+   "section": "A",
+   "check": "longest vsim <= 2700",
+   "ok": true,
+   "detail": "n-4f=1680.46s declared=1680.46"
+  },
+  {
+   "section": "A",
+   "check": "bench/adapter each <= 300 s",
+   "ok": true,
+   "detail": "{'b8-comp': 6.81, 'b8-rand': 4.67, 'b16-comp': 5.62, 'b16-rand': 4.72, 'adapter': 2.09}"
+  },
+  {
+   "section": "A",
+   "check": "declared timeout_s caps respected",
+   "ok": true,
+   "detail": "no command exceeded its own timeout"
+  },
+  {
+   "section": "A",
+   "check": "zero TD/bitgen/board/network commands",
+   "ok": true,
+   "detail": "no td_commands_prompt / pnmain / tcl in ledger"
+  },
+  {
+   "section": "A",
+   "check": "frozen flags",
+   "ok": true,
+   "detail": "stopped_modifying=true, active_commands=0, td_calls=0, probe_runs=0"
+  },
+  {
+   "section": "A",
+   "check": "no unmanifested file in task tree",
+   "ok": true,
+   "detail": "76 files = 75 artifacts + manifest"
+  },
+  {
+   "section": "A",
+   "check": "no write after freeze (mtime<=manifest)",
+   "ok": true,
+   "detail": "all artifacts older than manifest"
+  },
+  {
+   "section": "A",
+   "check": "TD r0 tree not written by this package",
+   "ok": true,
+   "detail": "newest TD file synth_console.log @ 1793058026 < earliest synthfix-generated file @ 1793059951"
+  },
+  {
+   "section": "A",
+   "check": "no td/ dir inside synthfix task",
+   "ok": true,
+   "detail": "absent"
+  },
+  {
+   "section": "B",
+   "check": "frozen core identity",
+   "ok": true,
+   "detail": "8acd20b244b27ddf... 85192 B"
+  },
+  {
+   "section": "B",
+   "check": "fixed core identity",
+   "ok": true,
+   "detail": "d2960cfe0111b7b6... 85221 B"
+  },
+  {
+   "section": "B",
+   "check": "frame_top byte-identical (same sha, same bytes)",
+   "ok": true,
+   "detail": "4afc26e246fbae4e... 29207 B"
+  },
+  {
+   "section": "B",
+   "check": "exactly 2 changed regions",
+   "ok": true,
+   "detail": "[('replace', 674, 674, 674, 679), ('delete', 1042, 1044, 1046, 1046)]"
+  },
+  {
+   "section": "B",
+   "check": "normalised diff == whitelist (hunkA + hunkB only)",
+   "ok": true,
+   "detail": "[('hunkA', True, 'frozen L674-674 -> fixed L674-678', ['        if (cmem_flush) begin'], ['        if (!rst_n) begin', \"            cmem_lo      <= 16'd0;\", \"            cmem_lo_pend <= 1'b0;\", \"            cmem_lo_addr <= 12'd0;\", '        end else if (cmem_flush) begin']), ('hunkB', True, 'frozen L1042-1044 deleted -> fixed insert at L1046', [\"            cmem_lo        <= 16'd0;\", \"            cmem_lo_pend   <= 1'b0;\", \"            cmem_lo_addr   <= 12'd0;\"], [])]"
+  },
+  {
+   "section": "B",
+   "check": "no cmem[] assignment in new reset branch",
+   "ok": true,
+   "detail": "new branch: if (!rst_n) begin | cmem_lo      <= 16'd0; | cmem_lo_pend <= 1'b0; | cmem_lo_addr <= 12'd0;"
+  },
+  {
+   "section": "B",
+   "check": "branch priority !rst_n > cmem_flush > cmem_we_c",
+   "ok": true,
+   "detail": "if (!rst_n) begin / end else if (cmem_flush) begin / end else if (cmem_we_c) begin"
+  },
+  {
+   "section": "B",
+   "check": "construct count unchanged: ifdef",
+   "ok": true,
+   "detail": "frozen=3 fixed=3"
+  },
+  {
+   "section": "B",
+   "check": "construct count unchanged: force",
+   "ok": true,
+   "detail": "frozen=0 fixed=0"
+  },
+  {
+   "section": "B",
+   "check": "construct count unchanged: initial",
+   "ok": true,
+   "detail": "frozen=0 fixed=0"
+  },
+  {
+   "section": "B",
+   "check": "construct count unchanged: assert",
+   "ok": true,
+   "detail": "frozen=0 fixed=0"
+  },
+  {
+   "section": "B",
+   "check": "cmem_flush definition unchanged",
+   "ok": true,
+   "detail": "same single wire statement"
+  },
+  {
+   "section": "B",
+   "check": "SCOPE-EXTENSION declares 0 extension lines",
+   "ok": true,
+   "detail": "0 extension lines vs limit 8"
+  },
+  {
+   "section": "C",
+   "check": "positive control: scanner rediscovers frozen 3-register defect",
+   "ok": true,
+   "detail": "pre-fix cross-block=['cmem_lo', 'cmem_lo_addr', 'cmem_lo_pend'] blocks=[673, 964]"
+  },
+  {
+   "section": "C",
+   "check": "post-fix root cause gone: core 0 cross-block",
+   "ok": true,
+   "detail": "cross_block={}"
+  },
+  {
+   "section": "C",
+   "check": "post-fix frame_top 0 cross-block",
+   "ok": true,
+   "detail": "cross_block={}"
+  },
+  {
+   "section": "C",
+   "check": "no mixed procedural/continuous drivers (both files)",
+   "ok": true,
+   "detail": "{} / {}"
+  },
+  {
+   "section": "C",
+   "check": "no force/release introduced",
+   "ok": true,
+   "detail": "core=[] ft=[]"
+  },
+  {
+   "section": "C",
+   "check": "frozen frame_top already clean (0)",
+   "ok": true,
+   "detail": "pre-fix frame_top has no cross-block driver"
+  },
+  {
+   "section": "D",
+   "check": "TD r0 log carries HDL-8007 @673",
+   "ok": true,
+   "detail": "HDL-8007 ERROR: net 'cmem_lo[15]' is constantly driven from multiple places in ../../../../../../../20261026-231711_fpga-a-plus-h-prototype/T10.ah-honly/r0/changed-src/a1_deflate_core.v(673)"
+  },
+  {
+   "section": "D",
+   "check": "TD r0 log carries HDL-5007 @964",
+   "ok": true,
+   "detail": "HDL-5007 WARNING: found another driver here in ../../../../../../../20261026-231711_fpga-a-plus-h-prototype/T10.ah-honly/r0/changed-src/a1_deflate_core.v(964)"
+  },
+  {
+   "section": "D",
+   "check": "no synthesis result artifact (flow.status absent)",
+   "ok": true,
+   "detail": "flow.status exists=False; elaborate reject => no netlist/DB/timing"
+  },
+  {
+   "section": "D",
+   "check": "read_design.error.f present (core became black box)",
+   "ok": true,
+   "detail": "['r0\\\\td\\\\run-syn1\\\\a1_ah_Runs\\\\syn_1\\\\.read_design.error.f']"
+  },
+  {
+   "section": "E",
+   "check": "N4 four export events",
+   "ok": true,
+   "detail": "[11161098, 17356702, 23553452, 29750201]"
+  },
+  {
+   "section": "E",
+   "check": "N4 S_ss exact",
+   "ok": true,
+   "detail": "S_23=6196750 S_34=6196749 S_ss=6196749.5 gate=6196749.5"
+  },
+  {
+   "section": "E",
+   "check": "N4 frm whole-file sha == frozen",
+   "ok": true,
+   "detail": "new=b9cb5359ce2f22b4... frozen=b9cb5359ce2f22b4... bytes=958"
+  },
+  {
+   "section": "E",
+   "check": "N4 hdr whole-file sha == frozen",
+   "ok": true,
+   "detail": "new=c7fe281c7d3c28cf... frozen=c7fe281c7d3c28cf... bytes=1024"
+  },
+  {
+   "section": "E",
+   "check": "N4 counters",
+   "ok": true,
+   "detail": "cap=4 enc=4 exported=4 read=518400 raw_bad=0 err=0 wd=0 drops=0/0"
+  },
+  {
+   "section": "E",
+   "check": "N4 frame header records = 4",
+   "ok": true,
+   "detail": "lines=4"
+  },
+  {
+   "section": "E",
+   "check": "N4 4x A1U1 header parse (magic/len==payload)",
+   "ok": true,
+   "detail": "magic/length consistent for 4 records; stream_len=[1677912, 1677336, 1677336, 1677336]"
+  },
+  {
+   "section": "E",
+   "check": "N4 .hdr[0:44] == frame-1 header record",
+   "ok": true,
+   "detail": "hdr bytes=256, magic=b'A1U1'"
+  },
+  {
+   "section": "E",
+   "check": "N4 sum(stream_len)==exp_bytes and cap_bytes==exp+176",
+   "ok": true,
+   "detail": "sum_len=6709920 exp_bytes=6709920 cap_bytes=6710096"
+  },
+  {
+   "section": "E",
+   "check": "N4 no stall/timeout markers",
+   "ok": true,
+   "detail": "{'SS_STALL': 0, 'B11_FULL_TIMEOUT': 0}"
+  },
+  {
+   "section": "E",
+   "check": "N4 log free of Fatal/Error",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "section": "E",
+   "check": "L4 four export events",
+   "ok": true,
+   "detail": "[11753864, 17587668, 23422608, 29257548]"
+  },
+  {
+   "section": "E",
+   "check": "L4 S_ss exact",
+   "ok": true,
+   "detail": "S_23=5834940 S_34=5834940 S_ss=5834940.0 gate=5834940.0"
+  },
+  {
+   "section": "E",
+   "check": "L4 frm whole-file sha == frozen",
+   "ok": true,
+   "detail": "new=8aad90993df37ba7... frozen=8aad90993df37ba7... bytes=956"
+  },
+  {
+   "section": "E",
+   "check": "L4 hdr whole-file sha == frozen",
+   "ok": true,
+   "detail": "new=864d2fbac57c8d68... frozen=864d2fbac57c8d68... bytes=1024"
+  },
+  {
+   "section": "E",
+   "check": "L4 counters",
+   "ok": true,
+   "detail": "cap=4 enc=4 exported=4 read=518400 raw_bad=0 err=0 wd=0 drops=0/0"
+  },
+  {
+   "section": "E",
+   "check": "L4 frame header records = 4",
+   "ok": true,
+   "detail": "lines=4"
+  },
+  {
+   "section": "E",
+   "check": "L4 4x A1U1 header parse (magic/len==payload)",
+   "ok": true,
+   "detail": "magic/length consistent for 4 records; stream_len=[2156868, 2156300, 2156300, 2156300]"
+  },
+  {
+   "section": "E",
+   "check": "L4 .hdr[0:44] == frame-1 header record",
+   "ok": true,
+   "detail": "hdr bytes=256, magic=b'A1U1'"
+  },
+  {
+   "section": "E",
+   "check": "L4 sum(stream_len)==exp_bytes and cap_bytes==exp+176",
+   "ok": true,
+   "detail": "sum_len=8625768 exp_bytes=8625768 cap_bytes=8625944"
+  },
+  {
+   "section": "E",
+   "check": "L4 no stall/timeout markers",
+   "ok": true,
+   "detail": "{'SS_STALL': 0, 'B11_FULL_TIMEOUT': 0}"
+  },
+  {
+   "section": "E",
+   "check": "L4 log free of Fatal/Error",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "section": "E",
+   "check": "bench b8-comp length",
+   "ok": true,
+   "detail": "decoded=50310 stats=50310"
+  },
+  {
+   "section": "E",
+   "check": "bench b8-comp payload sha",
+   "ok": true,
+   "detail": "2601d57cd98d1fe6..."
+  },
+  {
+   "section": "E",
+   "check": "bench b8-comp zlib.decompress == input",
+   "ok": true,
+   "detail": "decoded 153600 B == input 153600 B"
+  },
+  {
+   "section": "E",
+   "check": "bench b8-comp cycles",
+   "ok": true,
+   "detail": "run_cycles=304961 done=1 timeout_hit=0"
+  },
+  {
+   "section": "E",
+   "check": "bench b8-rand length",
+   "ok": true,
+   "detail": "decoded=153766 stats=153766"
+  },
+  {
+   "section": "E",
+   "check": "bench b8-rand payload sha",
+   "ok": true,
+   "detail": "54f262f2a600a3e2..."
+  },
+  {
+   "section": "E",
+   "check": "bench b8-rand zlib.decompress == input",
+   "ok": true,
+   "detail": "decoded 153600 B == input 153600 B"
+  },
+  {
+   "section": "E",
+   "check": "bench b8-rand cycles",
+   "ok": true,
+   "detail": "run_cycles=161479 done=1 timeout_hit=0"
+  },
+  {
+   "section": "E",
+   "check": "bench b16-comp length",
+   "ok": true,
+   "detail": "decoded=50310 stats=50310"
+  },
+  {
+   "section": "E",
+   "check": "bench b16-comp payload sha",
+   "ok": true,
+   "detail": "2601d57cd98d1fe6..."
+  },
+  {
+   "section": "E",
+   "check": "bench b16-comp zlib.decompress == input",
+   "ok": true,
+   "detail": "decoded 153600 B == input 153600 B"
+  },
+  {
+   "section": "E",
+   "check": "bench b16-comp cycles",
+   "ok": true,
+   "detail": "run_cycles=304961 done=1 timeout_hit=0"
+  },
+  {
+   "section": "E",
+   "check": "bench b16-rand length",
+   "ok": true,
+   "detail": "decoded=153766 stats=153766"
+  },
+  {
+   "section": "E",
+   "check": "bench b16-rand payload sha",
+   "ok": true,
+   "detail": "54f262f2a600a3e2..."
+  },
+  {
+   "section": "E",
+   "check": "bench b16-rand zlib.decompress == input",
+   "ok": true,
+   "detail": "decoded 153600 B == input 153600 B"
+  },
+  {
+   "section": "E",
+   "check": "bench b16-rand cycles",
+   "ok": true,
+   "detail": "run_cycles=161479 done=1 timeout_hit=0"
+  },
+  {
+   "section": "E",
+   "check": "adapter 12/12",
+   "ok": true,
+   "detail": "cases=12 pass_line=True"
+  },
+  {
+   "section": "E",
+   "check": "compile vlog-bench8.log 0 errors",
+   "ok": true,
+   "detail": "Error=0 Warning=0"
+  },
+  {
+   "section": "E",
+   "check": "compile vlog-bench16.log 0 errors",
+   "ok": true,
+   "detail": "Error=0 Warning=0"
+  },
+  {
+   "section": "E",
+   "check": "compile vlog-adapter.log 0 errors",
+   "ok": true,
+   "detail": "Error=0 Warning=0"
+  },
+  {
+   "section": "E",
+   "check": "compile vlog-frame.log 0 errors",
+   "ok": true,
+   "detail": "Error=0 Warning=0"
+  }
+ ],
+ "pass": 93,
+ "fail": 0
+}

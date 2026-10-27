@@ -1,0 +1,183 @@
+{
+  "schema": 1,
+  "task_id": "T11.BRD.P1",
+  "run_id": "20261027-0726_fpga-board-integration",
+  "round": 0,
+  "created_at": "2026-10-27T08:35+08:00",
+  "stopped_modifying": true,
+  "drift_count": 0,
+  "status": "ready_for_test",
+  "verdict_summary": "G0 pass / G1 FAIL (positive export never arms; arbiter negative PASS) / G2p FAIL (150MHz synth WNS -2.273ns, 79 endpoints -> no route, no bit) / G5 pass / G3_G4 not_run. NO BITSTREAM.",
+
+  "inherited_facts": {
+    "p4_status": "warning",
+    "p4_r2": "functional + system pass, G2 fail: 112 endpoints, WNS -0.637ns, TNS -69.776ns @187.5MHz",
+    "p4_r3": "G2 pass (0 endpoints, +0.072ns) but derived-variant equivalence FAIL",
+    "rule": "r2 and r3 evidence must never be spliced; the r3 derived files must not enter any board compile",
+    "function_baseline": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4-r2-manifest.json",
+    "function_baseline_sha256": "DFAB7F9D7FF7B7F8FB1D9B4401844F3D76102064C99FC4338192FB8A0C59B32E",
+    "note": "every timing number in this manifest belongs to THIS board top; none of it is P4's 187.5MHz or r3 number"
+  },
+
+  "p4_dependencies": {
+    "why": "bayer_raw10_demosaic4_p4.v instantiates algo_rowwin3_p4 and img_algo_parallel_top_p4.v instantiates gray8_gaussian3x3_stream_p4, so the r2 candidate cannot elaborate without them",
+    "r2_hash_bound_files": [
+      { "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/r2-timing-experiment/algo_rowwin3_p4.v", "sha256": "F3F345EDD10D40BFB24EBA85DF7D454A21333A330311CE30D81345311F6473B0" },
+      { "path": "workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/r2-timing-experiment/gray8_gaussian3x3_stream_p4.v", "sha256": "158AAE4D876CD044417795B44A7782A63108EA2E6F04C3232213F02967FA23E3" }
+    ],
+    "rejected_r3_files": [
+      { "path": "fpga/csi2/src/integrated_delivery/algo_rowwin3_p4.v", "sha256": "863932B3D42FBB4F97AD2A6A9397E477A012B61B534CD4DBEAD1997AF73A44BC", "reason": "r3-era variant, differs from the r2 manifest hash, rejected by the filelist guard" },
+      { "path": "fpga/csi2/src/integrated_delivery/gray8_gaussian3x3_stream_p4.v", "sha256": "B8096430C060BE77BE408B1D4103DE87F543193F94E78DE418189EA32C412B64", "reason": "r3-era variant, differs from the r2 manifest hash, rejected by the filelist guard" }
+    ]
+  },
+
+  "gates": {
+    "G0_ports_clocks_resets_cdc": {
+      "result": "pass",
+      "detail": "top port set = the reference ph1p_pcie_ep_top 43 ports; pcie_power_on_rst (R14) appears once; clk_core 150.000MHz; C1-C7 plus C3b/C6b are mapped to concrete instance names in T11.BRD.P1/cdc-list.md",
+      "evidence": ["workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/cdc-list.md"]
+    },
+    "G1_scaled_top_simulation": {
+      "result": "fail",
+      "positive": "FAIL -- camera frame is complete (768 groups, 0 abort, 0 FIFO overflow), P4 commits one frame (st_frames_committed=1, st_store_published=1, drain_words=124), but the egress adapter never asserts desc_arm, so no DDR slot read, no MWr TLP and no doorbell (tlp=0, db=0)",
+      "negative_missing_eof": "not_run (depends on the same export path; the arm check would be vacuous)",
+      "negative_wrong_ack": "not_run (depends on the same export path)",
+      "negative_read_arbiter": "PASS -- no owner change inside a burst, bridge got its single beat, orphan/late beat counted once and not re-routed (o_switch_err=0)",
+      "x_checks": "no X after the reset fix; 0 mismatches were reachable because no TLP was ever produced (the payload comparison did not run)",
+      "evidence": [
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/sim/g1_scen0.log",
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/sim/g1_arb.log"
+      ]
+    },
+    "G2p_real_top_sta": {
+      "result": "fail",
+      "synth": "launch_runs syn_1 @ clk_core 150.000MHz (6.667ns): Setup WNS -2.273ns, TNS -31.547ns, 79 violated endpoints; Hold: 0 endpoints (basic mode, not verified)",
+      "decision": "per fpga-design-guide.md section 5: WNS < +0.127ns -> do NOT route; 125MHz retry (synth#2) NOT executed because the TD session quota (4) is exhausted",
+      "route_bitgen_cwc": "not_run",
+      "resources_fit": "slice 14870/71680 (20.74%), LUT 19962, REG 15226, ERAM 41/300, DSP 0/220, IO 107/286, PLL 4/12, pcie 1/1, ddr_byte 7/24 -- all inside the device",
+      "unconstrained_io": "22 top ports from ph1p_pcie_case_ep.adc, the other 21 (ref_pad_clk, pcie_rx/tx, ddr_*) from the IP set_ippin_assignment; TD reported no unassigned pin and completed placement-ready synthesis",
+      "evidence": [
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/td/brd_board_Runs/syn_1/flow.status",
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/td/brd_board_Runs/syn_1/gate.qor",
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/td/brd_board_Runs/syn_1/brd_board_gate.area",
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/td/td_01_synth_20261027_081523.log"
+      ]
+    },
+    "G5_build_entry": {
+      "result": "pass",
+      "detail": "single guarded filelist (70 sources), rejects *.v.stale, */src/src/*, peer-ref-2a4b253, the two r3-era candidate copies and missing files; T: repointed with tools/td/td_env.ps1 -Force; Y: verified; foreign pnmain preflight; nothing downloaded and no Flash",
+      "bit_or_cwc_hash": "n/a (no bit produced)"
+    },
+    "G3_G4": "not_run (P1 does not download; G4 deferred by the user)"
+  },
+
+  "td_counts": {
+    "sessions_used": 4,
+    "sessions_max": 4,
+    "synth_launched": 3,
+    "synth_effective": 1,
+    "route": 0,
+    "bitgen": 0,
+    "cwc": 0,
+    "download": 0,
+    "flash": 0,
+    "note": "sessions 1-2 aborted before synthesis (Tcl path escaping, HDL-8007); session 3 launched syn_1 and failed at elaboration (missing r2 dependency + cam_diag_mailbox); session 4 launched syn_1 successfully. All four sessions were this task's own; no other TD process existed at each preflight."
+  },
+
+  "artifacts": {
+    "bit": null,
+    "cwc": null,
+    "routed_db": null,
+    "synth_evidence": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/td/brd_board_Runs/syn_1/"
+  },
+
+  "deviations_from_frozen_guide": [
+    {
+      "id": "D1-slot-geometry",
+      "what": "P4 instantiated with SLOT_WORDS=81920 (640KiB, 4KiB aligned stride) and SLOT_BASE_WORD=2048 (byte 0x1_0000) instead of 81085 / base 0",
+      "why": "ddr_frame_pusher's ARM rule requires ddr_base != 0 AND ddr_base[11:0]==0; 81085 words = 2,594,720B is not a 4KiB multiple so slot 1 could never be exported, and base 0 is rejected",
+      "scope": "parameter override only; P4 r2 sources unchanged",
+      "needs": "planner ratification, or a changed pusher rule / slot mapping"
+    },
+    {
+      "id": "D2-bar-extension",
+      "what": "BAR 0x130..0x13C and CTRL[9..11] are NOT implemented; a_enable=0, trigger_mode=0, p4_desc_owner=1 are tied",
+      "why": "ep_bar_win.v / pcie_ep_engine.v are read-only protected; no read-only copy was extended this round",
+      "result": "P4 status is aggregated inside the datapath (o_p4_st[127:0]) but not readable by the host yet"
+    },
+    {
+      "id": "D3-ddr-address-remap",
+      "what": "the bridge PAXI address is multiplied by 4 ({paxi_addr, 2'b00}) before the DDR AXI port",
+      "why": "P4 emits 256-bit word indices, p2_ddr_bridge emits word*8, the reference writer/pusher use byte addresses (32B per beat)",
+      "evidence_boundary": "validated only in the G1 simulation with the TB's own byte-addressed model; NOT validated on hardware -- P2 must confirm first"
+    },
+    {
+      "id": "D4-a-channel",
+      "what": "both CSI front ends are in the netlist but only the B path is simulated; A descriptors are gated by a_enable=0",
+      "why": "P1 scope: B first (user requirement) and no A/B board run before P2"
+    },
+    {
+      "id": "D5-bayer-phase",
+      "what": "cfg_phase = 0 (b18 unproven placeholder), prep/pred = 1/1 (b18 board-proven)",
+      "why": "no board evidence to set the phase yet"
+    }
+  ],
+
+  "files": [
+    { "path": "fpga/csi2/src/board_integration/brd_integrated_top.v", "sha256": "79A91ACA25C6F8B80DD8C03C246810B719E109746190B4020592F52AD56B9759", "size": 93563 },
+    { "path": "fpga/csi2/src/board_integration/brd_board_datapath.v", "sha256": "C47557E26FCE1BD412158D1B2BBDE0259E4AA94540AEDC4C9A69A52E8EE77A27", "size": 28597 },
+    { "path": "fpga/csi2/src/board_integration/brd_cam_fe.v", "sha256": "C96A6575250E0D48EBF6EEB489A3295191741743CDAEC55A553506A4E3785EA5", "size": 6462 },
+    { "path": "fpga/csi2/src/board_integration/brd_cdc_mailboxes.v", "sha256": "0F47DF97BCD65139B3C882C7A8F5ACE4AC7699EA15E076E515B75255B46D8E16", "size": 17826 },
+    { "path": "fpga/csi2/src/board_integration/brd_ddr_rd_arb.v", "sha256": "66AE727C73E5D70B513DAEFE9C3FB61D7C074D4ADB5EE2BDA887C092CCABE396", "size": 6934 },
+    { "path": "fpga/csi2/src/board_integration/brd_a1_core_pll.v", "sha256": "6E484834EE0274B5D985DC87D266027B96A1BB87144FBAF0BA026E2AAD5FB89F", "size": 3654 },
+    { "path": "fpga/csi2/src/board_integration/a1_raw_crop.v", "sha256": "33A6FEE77FD1AA67A31CACF26DD5530E5E2EA474EE655CBD5F1D98D887C5D72D", "size": 7257, "note": "byte-identical copy of b18 changed-src" },
+    { "path": "fpga/csi2/src/board_integration/p2_ddr_bridge.v", "sha256": "790D8226EC69499C87B92B0E4A05AC0F26915F57B96BD541AFFDCDAC8E740A61", "size": 31332, "note": "byte-identical copy of b18 changed-src" },
+    { "path": "fpga/csi2/src/board_integration/ddr_frame_pusher.v", "sha256": "59B7ADB926C0513B5BC054EBC2D1DF95427EC474931E9250497637DA148343EC", "size": 810, "note": "NOT a source: comment-only placeholder replacing an accidental copy (the pusher has ../../common includes). The compiled pusher is fpga/csi2/pcie_integration/rtl/ep_side/ddr/ddr_frame_pusher.v" },
+    { "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/td/filelist.tcl", "sha256": "54A457AF0B6959A682D5502736CBA59C361EF284FFAD8BE405A8418AEFE3EFBB", "size": 6909 },
+    { "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/td/brd_board.sdc", "sha256": "B387B80F7AC9C47952CC2B657194DBB10164772B3637F8D139FB50553090A771", "size": 4047 },
+    { "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/td/ph1p_pcie_case_ep.adc", "sha256": "67831295AEF0F5AFBEC9F2DFBF062922B793A6586E56C074ACE21787B6365C98", "size": 5668, "note": "byte-identical copy of the reference board constraints" },
+    { "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/td/01_synth.tcl", "sha256": "ED3A66AF23B669821F7633F12544B2BB9332D63C377874FEEB5B40A23140368D", "size": 1068 },
+    { "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/td/02_route.tcl", "sha256": "18DA1C67DE48C4E2EE1CBEB8615D6E728D07F921870E4F015B0B44F887075A00", "size": 1057 },
+    { "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/td/03_bitgen.tcl", "sha256": "6193A23C2B15F42589AF16D9A2B8C5B06FEC7510877E2D669B844A8AD917926D", "size": 2099 },
+    { "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/td/04_cwc.tcl", "sha256": "1B216F6B0CBEF1A4C780CC02B2839EDF54122F269F18725BE484BDF3A77AE1CF", "size": 1792 },
+    { "path": "tools/board_integration/run_td.ps1", "sha256": "BBC86E090B0790CC7BD72BBD12354A588283F48483129D5874E3A2C4D52A453F", "size": 3323 },
+    { "path": "tools/board_integration/run_sim.ps1", "sha256": "6E6E5C2871DF083778FE216813F620231A101F1C1429C49EFDFFA5156D014941", "size": 3613 },
+    { "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/sim/tb_brd_g1.v", "sha256": "B8FBDBF5740EF39ECD8B565B9C9A99E44250F659F041BC6D978A8C9FE3EC2461", "size": 29378 },
+    { "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/sim/g1_scen0.log", "sha256": "F56D85A95BD67C6D89BB7D45745372993DD6B57B0A950324492ADB10C90E5826", "size": 1480 },
+    { "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/sim/g1_arb.log", "sha256": "D90361B94997385B321F415EAFD27CD3A308767A24BEB2A4C3F6409F24B350C9", "size": 1348 },
+    { "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/cdc-list.md", "sha256": "B9B620C24E413B68120684FC838CA58E03A1DAFB6432F68795543E228230B979", "size": 3477 },
+    { "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/build-entry.md", "sha256": "7D707DB211711E621DEE7645C352FBE37BD1BFA7132D02C99184E79501B73442", "size": 3754 },
+    { "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/lessons.md", "sha256": "E83A664904CD9F6C51BAF368DED5F532BF29041EEF595BB135C61D7F184B76A3", "size": 6359 },
+    { "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/td/brd_board_Runs/syn_1/flow.status", "sha256": "D6948AE59B05FD774FDC2F4A0B58B100A04F1CBC636EE0E700FACEC7C3311235", "size": 1616 },
+    { "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/td/brd_board_Runs/syn_1/gate.qor", "sha256": "F6F1AA1F8EDDF1554D5FBF7B398EAF74AF47026681F9995E00C604B29904885E", "size": 13069 },
+    { "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/result-r0.md", "sha256": "4B9B9D54DC94606B98E649D8B022BBD0CA18EFA6062FF81EDFF40E7072607A60", "size": 9223 }
+  ],
+
+  "scratch_files": [
+    { "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/_tail.v", "note": "build-time splice fragment used to replace the tail of the copied top with the T11 datapath instantiation; NOT a source, not in the filelist; kept because batch delete is forbidden" }
+  ],
+
+  "canary_files": [
+    { "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/td/a1_eng_top.v", "note": "comment-only canary for tools/td/td_env.ps1; contains no module; not in the filelist" },
+    { "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/td/a1_small_top.sdc", "note": "comment-only canary for tools/td/td_env.ps1; not in the filelist" }
+  ],
+
+  "open_items_for_planner": [
+    "125MHz gear untested (TD quota exhausted). Either grant a session and let this task re-synthesise at 125MHz, or split the timing work into its own package.",
+    "G1 positive stops at desc_arm: the egress adapter never arms even though P4 commits the frame. Needs the next dev round with the aplus_pcie_egress_adapter/INT.P4-protocol ARM conditions read in detail.",
+    "D1 slot geometry and D3 DDR address remap need ratification before any hardware attempt.",
+    "BAR 0x130..0x13C / CTRL[9..11] still missing (blocks P2 register readback of P4 state)."
+  ],
+
+  "test_input_paths": [
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/manifest-brd-p1-r0.json",
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/result-r0.md",
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/cdc-list.md",
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/build-entry.md",
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/td/filelist.tcl",
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/sim/g1_scen0.log",
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/sim/g1_arb.log",
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/td/brd_board_Runs/syn_1/flow.status",
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/td/brd_board_Runs/syn_1/gate.qor"
+  ]
+}
