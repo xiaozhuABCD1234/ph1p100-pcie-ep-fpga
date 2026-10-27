@@ -83,6 +83,22 @@ MIPI 侧 A 路的 `CSI_DIAG_A` 只有 37 个 good 包、`CSI_DIAG_A2` 的 last_l
 A 路这条待修：先在 A 路把 `lines/grp` 的裁剪计数与真实 2192 行 4830 字节/行的流对齐
 （`SKIP_ROWS`/`Y0` 与 `GROUP_TOT` 的推导），再用同样的脚本复跑。
 
+## 4b. 重复性：两帧各自独立校验
+
+不用重烧也能连续取帧（每次 ACK 释放后重新 ARM）：
+
+| 帧 | 结果 | SHA256 |
+| --- | --- | --- |
+| 第 1 帧（probe 那次 ARM） | `R10F_STRICT_OK` | `9937a359b108e099fd5d4b6a112b4d61035c2df6abeed28e1ea0b84e4c7db39f` |
+| 第 2 帧（ACK 后重新 ARM） | `R10F_STRICT_OK` | `3515f02f118ef139c6edc829638d584e61d3c1a6f887e503b30da7907609e982` |
+
+两帧 SHA 不同（是活数据，不是常量图），且 `0xC0` 单调 +1（1→2→3→4）。
+另外发现并修掉一个驱动侧坑：**上一次没 ACK 就把模块卸掉，FPGA 会停在 held**，
+下次 probe 的 CONFIGURE 会被 RTL 以「活动期拒绝改配置」（错误码 10 / 返回 -16）挡回来，
+整条初始化就失败。现在 `anlogic_pci_link_arm()` 在 CONFIGURE 之前先看 TX_STATUS，
+busy/held/draining 就先 CANCEL 收回 IDLE 再配置（日志形如
+`链路：FPGA 还停在 TX_STATUS=0x00000004（上一次没 ACK 就结束了），先 CANCEL 收回 IDLE。`）。
+
 ## 5. 复跑要点
 
 - 位流是 SRAM 配置：**一掉电/复位就没了**，重烧后必须重启 RK3588 让它重新枚举；
