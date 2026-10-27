@@ -52,7 +52,8 @@ ACK        held=0（释放成功）
 帧 SHA256 `a7063149c4bbb953ce7fdeacfb280fa677097f03c69862cfae9b1e07437e4edb`；
 几何 1920x1080、stride 2400、roi (960,540)、三层长度与三段 CRC 全部对齐。
 把 packed RAW10 解回 10bit 后得到的是真实场景（吊顶空调、显示器一角、走线），
-不是常量图样。
+不是常量图样：[/docs/board-20261027/rka1_frame_gray.png](board-20261027/rka1_frame_gray.png)（灰度）、
+[GRBG 直出彩色预览](board-20261027/rka1_frame_grbg_preview.png)（没做 AWB，偏绿是相位/白平衡未处理所致）。
 
 ## 4. 板级发现的缺陷：A 路 R10F 写者从不发布
 
