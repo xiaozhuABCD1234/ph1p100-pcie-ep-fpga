@@ -170,34 +170,23 @@ wire         w_cam_ddr_want_a, w_cam_ddr_want_b;
  * 不会卡。若当前持有方在 WATCHDOG 周期内一帧都没发布，也强制换手，
  * 保证任何一路卡死都不会把另一路饿死。
  */
-localparam [15:0] CAM_TX_WATCHDOG = 16'd30000;  // ≈ 0.48s @62.5MHz（够一帧 16fps 发布）
+/*
+ * 定时换手（替代原先「按发布事件翻转」的实现）。
+ *
+ * 原实现挂在 power_on_rst_dly 上做异步复位，板测发现 owner 一直停在 0 ——
+ * 结果 A 路被永久 armed、B 路一次都没 arm 过（B 的 verdict=0 是「没被 arm」，不是「轮转等待」）。
+ * 现在改成**自由运行的定时器**：不依赖任何复位，每 2^24 个 tl_clk_user 周期换一次手
+ * （62.5MHz 下约 268ms ≈ 4 帧），两路各拿一半时间，各约 7.8 fps。
+ * 没被 arm 的那一路走设计里已有的 skip 路径（跳过不写），不会卡。
+ */
+localparam integer CAM_TX_ROT_BITS = 24;
+reg [CAM_TX_ROT_BITS-1:0] cam_tx_rot_cnt;
+reg                       cam_tx_owner;         // 0 = A 路持有发包权，1 = B 路
 
-reg        cam_tx_owner;                        // 0 = A 路持有发包权，1 = B 路
-reg [31:0] cam_tx_seq_a_d, cam_tx_seq_b_d;
-reg [15:0] cam_tx_wait;
-
-wire cam_tx_a_pub = (w_camddr_seq   != cam_tx_seq_a_d);
-wire cam_tx_b_pub = (w_camddr_b_seq != cam_tx_seq_b_d);
-
-always @(posedge tl_clk_user or posedge power_on_rst_dly) begin
-    if (power_on_rst_dly) begin
-        cam_tx_owner   <= 1'b0;
-        cam_tx_seq_a_d <= 32'd0;
-        cam_tx_seq_b_d <= 32'd0;
-        cam_tx_wait    <= 16'd0;
-    end else begin
-        cam_tx_seq_a_d <= w_camddr_seq;
-        cam_tx_seq_b_d <= w_camddr_b_seq;
-        if ((cam_tx_owner && cam_tx_b_pub) || (~cam_tx_owner && cam_tx_a_pub)) begin
-            cam_tx_owner <= ~cam_tx_owner;
-            cam_tx_wait  <= 16'd0;
-        end else if (cam_tx_wait == CAM_TX_WATCHDOG) begin
-            cam_tx_owner <= ~cam_tx_owner;      // 持有方一直不出帧：强制换手
-            cam_tx_wait  <= 16'd0;
-        end else begin
-            cam_tx_wait  <= cam_tx_wait + 16'd1;
-        end
-    end
+always @(posedge tl_clk_user) begin
+    cam_tx_rot_cnt <= cam_tx_rot_cnt + 1'b1;
+    if (cam_tx_rot_cnt == {CAM_TX_ROT_BITS{1'b1}})
+        cam_tx_owner <= ~cam_tx_owner;
 end
 
 assign w_cam_ddr_want   = img_ddr_en;

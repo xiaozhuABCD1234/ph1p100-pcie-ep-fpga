@@ -88,3 +88,43 @@ B 路空闲干净。
    翻转逻辑挂在 `power_on_rst_dly` 上，实测不翻转（B 路从未 armed）。要当特性用，
    应先确认这个复位的极性/脉冲，改成明确的定时轮转（例如每 0.5 s 换手）再上板。
 3. 单路 15.6~15.7 fps、R10F 严格校验通过这条链路是稳的，可以继续当基线用。
+## 第六轮：改成「定时换手」，两路终于同时出帧（已上板验证）
+
+把帧级轮转从「按发布事件翻转 + power_on_rst_dly 异步复位」改成**自由运行定时器**：
+
+```verilog
+localparam integer CAM_TX_ROT_BITS = 24;
+reg [CAM_TX_ROT_BITS-1:0] cam_tx_rot_cnt;
+reg                       cam_tx_owner;
+always @(posedge tl_clk_user) begin
+    cam_tx_rot_cnt <= cam_tx_rot_cnt + 1'b1;
+    if (cam_tx_rot_cnt == {CAM_TX_ROT_BITS{1'b1}}) cam_tx_owner <= ~cam_tx_owner;
+end
+```
+
+不依赖任何复位，62.5MHz 下每 2^24 拍（≈268ms ≈ 4 帧）换一次手。
+
+### 板测结果（连续 60s）
+
+| | 帧率 | verdict | 写者诊断 `{beats,wcnt}` |
+| --- | --- | --- | --- |
+| A 路 | **7.8 fps**（+78/10s） | 0x20（pub_ok） | `0x3c80e900` = 整帧 518400 组 |
+| B 路 | **7.9 fps**（+79/10s） | 0x20（pub_ok） | `0x3c80e900` = 整帧 518400 组 |
+
+**两路同时连续出帧，都是整帧、判定通过** —— 这是本设计第一次在真板上做到。
+
+### 收帧校验（各取一帧，严格 R10F）
+
+| 路 | sha256 | 结果 |
+| --- | --- | --- |
+| A | `5c8d8c87aa14d27b3c35944cd367127e1fc615a7d298fa18af804ec8bc43080c` | **R10F_STRICT_OK** |
+| B（新推的第 6 帧） | `ce6b9e16963c4e82d32f008d95f1efbb6852fabc9d69f95ed44bfae2f3c70781` | **R10F_STRICT_OK** |
+
+两帧 SHA 不同 ⇒ 是两路各自的数据，不是同一块缓冲被读两遍。
+
+### 代价与边界
+
+- 每路帧率是单路基线的一半（15.6 → 7.8 fps），因为同一时刻只有一路 arm。
+  这是「DDR 写口按整帧独占」这个根因未修时的最优折中。
+- 真正修根因（突发级分时）的四次尝试（v1..v6）都败在 `pop` 与 `beat_vld` 的耦合上，
+  需要重构取数/发数 datapath，见上一节。
