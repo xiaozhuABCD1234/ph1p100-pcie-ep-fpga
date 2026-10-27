@@ -155,7 +155,54 @@ wire         img_cam_ab_sel;   // CTRL[8]：推帧引擎取哪一路的已落 DD
 // A/B 两路各在自己的字节时钟域收帧，只在 DDR 域用 ddr_wr_arb 分时复用 AXI 写口。
 // T07：img_ddr_en 的声明已提前到文件前部（见那里的说明）。
 wire         w_cam_ddr_want;
-assign w_cam_ddr_want  = img_ddr_en;
+wire         w_cam_ddr_want_a, w_cam_ddr_want_b;
+
+/*
+ * 帧级轮转（T07 收帧卡死规避）：一次只 arm 一路写者。
+ *
+ * 板测事实：两片 cam_r10f_writer 同时 armed 时，DDR 写口上会有一路永久卡在
+ * 「AW 已发、等不到 wready」，它 axi_busy 一直为 1、把仲裁器的授权压住，
+ * 整条通路（像素 FIFO 塞满 1023 组 → 整帧补零 → 判定坏）再也回不来，
+ * 只有重新 arm 一次才能恢复。原因在仲裁器与 DDR 写通道的交互上，还没定死。
+ *
+ * 在查清之前先用帧级轮转绕开：谁刚发布一帧就把「发包权」交给另一路。
+ * 空闲的那一路 arm=0，走的是设计里已有的 skip 路径（跳过但不写），
+ * 不会卡。若当前持有方在 WATCHDOG 周期内一帧都没发布，也强制换手，
+ * 保证任何一路卡死都不会把另一路饿死。
+ */
+localparam [15:0] CAM_TX_WATCHDOG = 16'd30000;  // ≈ 0.48s @62.5MHz（够一帧 16fps 发布）
+
+reg        cam_tx_owner;                        // 0 = A 路持有发包权，1 = B 路
+reg [31:0] cam_tx_seq_a_d, cam_tx_seq_b_d;
+reg [15:0] cam_tx_wait;
+
+wire cam_tx_a_pub = (w_camddr_seq   != cam_tx_seq_a_d);
+wire cam_tx_b_pub = (w_camddr_b_seq != cam_tx_seq_b_d);
+
+always @(posedge tl_clk_user or posedge power_on_rst_dly) begin
+    if (power_on_rst_dly) begin
+        cam_tx_owner   <= 1'b0;
+        cam_tx_seq_a_d <= 32'd0;
+        cam_tx_seq_b_d <= 32'd0;
+        cam_tx_wait    <= 16'd0;
+    end else begin
+        cam_tx_seq_a_d <= w_camddr_seq;
+        cam_tx_seq_b_d <= w_camddr_b_seq;
+        if ((cam_tx_owner && cam_tx_b_pub) || (~cam_tx_owner && cam_tx_a_pub)) begin
+            cam_tx_owner <= ~cam_tx_owner;
+            cam_tx_wait  <= 16'd0;
+        end else if (cam_tx_wait == CAM_TX_WATCHDOG) begin
+            cam_tx_owner <= ~cam_tx_owner;      // 持有方一直不出帧：强制换手
+            cam_tx_wait  <= 16'd0;
+        end else begin
+            cam_tx_wait  <= cam_tx_wait + 16'd1;
+        end
+    end
+end
+
+assign w_cam_ddr_want   = img_ddr_en;
+assign w_cam_ddr_want_a = img_ddr_en & ~cam_tx_owner;
+assign w_cam_ddr_want_b = img_ddr_en &  cam_tx_owner;
 // img_pattern[0] = CTRL[2] 用作「传感器重触发」（见顶层相机段说明）。
 wire [255:0] w_cam_stat;      // 声明必须早于例化处使用（否则 TD 造 1 位隐式网）
 wire [6:0]   cam_tap_cfg;     // A 路 tap（0x9C）
@@ -1582,7 +1629,7 @@ cam_r10f_writer #(
     .clk_ddr       (w_ddr_dhi_clk     ),
     .rst_ddr       (~w_ddrphy_rst_n   ),
     .ddr_cal_done  (w_ddrphy_rdy      ),
-    .arm           (w_cam_ddr_want    ),
+    .arm           (w_cam_ddr_want_a  ),
     .axi_busy      (w_camw_busy       ),
     .cl_release(cl_release),.cl_pub_valid(cl_pub_valid),.cl_pub_seq(cl_pub_seq),.cl_pub_base(cl_pub_base),
     .cl_pub_len(cl_pub_len),.cl_pub_session(cl_pub_session),.cl_good_count(cl_writer_good),.cl_bad_count(cl_writer_bad),
@@ -1647,7 +1694,7 @@ cam_r10f_writer #(
     .clk_ddr       (w_ddr_dhi_clk     ),
     .rst_ddr       (~w_ddrphy_rst_n   ),
     .ddr_cal_done  (w_ddrphy_rdy      ),
-    .arm           (w_cam_ddr_want    ),
+    .arm           (w_cam_ddr_want_b  ),
     .axi_busy      (w_camw_busy_b     ),
 
     .m_axi_awaddr  (w_camw_b_awaddr   ),

@@ -94,6 +94,9 @@ module csi_rx_packet_integrity #(
                       keep_d[1]?d1:8'h00, keep_d[0]?d0:8'h00};
 
  assign O_sync_wait=(state==HEADER);
+ // 板测记录（2026-10-27）：把 header_ok 从这一行拿掉会让 FS 之外的包也触发
+ // vsync（dt 位没校验就不可信），A/B 两路都会被打断成 0 帧，所以这里保持原判据。
+ // B 路出不了帧的真实原因还没定死，见 docs/DDR_WRITER_HANG_20261027.md。
  assign O_vsync_out=I_enable&&(state==HEADER)&&header_ok&&selected_vc&&(dt==0);
  assign O_in_frame=frame_open;
  always @(posedge I_clock or negedge I_reset_n)begin

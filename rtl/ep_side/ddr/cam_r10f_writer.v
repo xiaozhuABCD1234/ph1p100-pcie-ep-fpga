@@ -289,6 +289,8 @@ module cam_r10f_writer #(
                 if ((cur_grp + 16'd1) > max_grp) max_grp <= cur_grp + 16'd1;
                 if (in_win && frame_armed) win_grp <= win_grp + 16'd1;
             end
+            // 自愈：写指针已被清掉，帧窗口也一起放开，等下一条 SOF 重新武装
+            if (self_flush_cam) frame_armed <= 1'b0;
         end
     end
 
@@ -320,8 +322,16 @@ module cam_r10f_writer #(
     always @(posedge cam_clk)
         if (f_wr) f_mem[wptr_bin[FIFO_AW-1:0]] <= f_din;
 
+    // ddr 域自愈请求同步到 cam 域（self_flush 有 255 拍宽，2 级同步够用）
+    reg [1:0] self_flush_c1;
     always @(posedge cam_clk or posedge rst_cam_all) begin
-        if (rst_cam_all) begin
+        if (rst_cam_all) self_flush_c1 <= 2'b00;
+        else             self_flush_c1 <= {self_flush_c1[0], self_flush};
+    end
+    wire self_flush_cam = self_flush_c1[1];
+
+    always @(posedge cam_clk or posedge rst_cam_all) begin
+        if (rst_cam_all || self_flush_cam) begin
             wptr_bin  <= {(FIFO_AW+1){1'b0}};
             wptr_gray <= {(FIFO_AW+1){1'b0}};
         end else if (f_wr) begin
@@ -533,7 +543,7 @@ module cam_r10f_writer #(
     wire cam_flush = (cam_flush_cnt != 8'd0);
 
     always @(posedge clk_ddr or posedge rst_ddr) begin
-        if (rst_ddr || cam_flush) begin
+        if (rst_ddr || cam_flush || self_flush) begin
             rptr_bin  <= {(FIFO_AW+1){1'b0}};
             rptr_gray <= {(FIFO_AW+1){1'b0}};
             ent_vld   <= 1'b0;
@@ -548,6 +558,19 @@ module cam_r10f_writer #(
 
     always @(posedge clk_ddr)
         f_dout <= f_mem[pop ? rptr_bin_nxt[FIFO_AW-1:0] : rptr_bin[FIFO_AW-1:0]];
+
+    /*
+     * 连续坏帧自愈（板测：某一路会永久卡在「整帧补零」状态，只有重新 arm 才恢复）。
+     *
+     * 触发：连续 8 帧判定坏 → 拉 255 拍 self_flush。
+     * 动作：ddr 域把读指针归零、流状态机回 S_SYNC；cam 域收到同步后的 self_flush 后把
+     *       写指针归零并让 frame_armed 掉下来，等下一条 SOF 重新开始。
+     * 为什么安全：两侧指针同时归零 → FIFO 回到「空且对齐」；被扔掉的那一帧本来就是
+     *       坏帧（会进 err_cnt），不会发布给主机。
+     */
+    reg  [3:0]  bad_streak_ddr;
+    reg  [7:0]  self_flush_cnt;
+    wire        self_flush = (self_flush_cnt != 8'd0);
 
     always @(posedge clk_ddr or posedge rst_ddr) begin
         if (rst_ddr) begin wgray_s1 <= {(FIFO_AW+1){1'b0}}; wgray_s2 <= {(FIFO_AW+1){1'b0}}; end
@@ -793,6 +816,10 @@ module cam_r10f_writer #(
 
             default: s_state <= S_SYNC;
             endcase
+
+            // 自愈期间把流状态机拨回 S_SYNC，等下一条 SOF 重新对齐
+            // （self_flush_cnt 的递减在 a_st 那个 always 块里做，避免同一寄存器多驱动）
+            if (self_flush) s_state <= S_SYNC;
         end
     end
 
@@ -880,6 +907,9 @@ module cam_r10f_writer #(
             if (rel0_evt) protect0 <= 1'b0;
             if (rel1_evt) protect1 <= 1'b0;
 
+            // 自愈窗口计数（唯一定义处；触发在下面的 A_IDLE 判定分支里）
+            if (self_flush_cnt != 8'd0) self_flush_cnt <= self_flush_cnt - 8'd1;
+
             case (a_st)
                 A_IDLE: begin
                     if (skip_frm_done) begin
@@ -950,6 +980,19 @@ module cam_r10f_writer #(
                         end else begin
                             err_cnt  <= err_cnt + 16'd1;
                             c_notack <= c_notack + 16'd1;
+                        end
+                        // 连续坏帧计数：8 帧都坏就自愈一次（清 FIFO + 回 S_SYNC）。
+                        // 板测：某一路会永久卡在「整帧补零」，只有重新 arm 才恢复，
+                        // 自愈把这条恢复路径搬进 RTL，不用主机插手。
+                        if (verdict_bad) begin
+                            if (bad_streak_ddr == 4'd7) begin
+                                bad_streak_ddr <= 4'd0;
+                                self_flush_cnt <= 8'hFF;
+                            end else begin
+                                bad_streak_ddr <= bad_streak_ddr + 4'd1;
+                            end
+                        end else begin
+                            bad_streak_ddr <= 4'd0;
                         end
                         rw_done_r   <= 1'b0;
                         frame_close <= 1'b1;
