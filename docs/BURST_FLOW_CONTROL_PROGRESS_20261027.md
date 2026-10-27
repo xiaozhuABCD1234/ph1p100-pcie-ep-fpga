@@ -45,3 +45,22 @@
 - 位流：帧级轮转 + 坏帧自愈（`fpga` HEAD `57611168`/后续文档提交），20:16 构建，`PRG-2014` 通过。
 - A 路 15.6~15.7 fps 稳定、`verdict=0x20`、`wcnt=0xE900`（整帧）；B 路空闲干净（`verdict=0x0`）。
 - 取帧校验：`r10f_strict.py check` → **R10F_STRICT_OK**，sha256 `afb15c02265cefb5f994a343736e247c5e6b5ad53639f3a302ae54ed0a2df8c7`。
+## 第四轮补充（2026-10-27 晚）
+
+- **v4（加了 `burst_beats = min(beats_left, awlen+1)` 与位宽修正）**：上板结果与 v3 完全一样 ——
+  两路 0 帧、`verdict=0x4`、`wcnt=0xE8FC=59644`（518400 − 4）。所以「少 4 组」**不是**最后一笔
+  拍数算错，另有来源。
+- 最有说服力的假设：加了突发门槛后 FIFO 长期贴满（阈值 827 / 深度 1024），
+  末段 `wfull` 会把最后几个组丢掉（`push_blocked` / `drop_cnt`），于是 `pay_written` 停在
+  2591980，整帧差 4 组。验证方法：把 `drop_cnt/ovf_cnt`（现在是 `dbg_anomaly`，只出一位）
+  或 `pay_written` 接到 0x188/0x18C 这类空闲只读字上，直接看丢了多少。
+- 顺手试了 **`FIFO_AW 10 → 11`**（把 5KB 缓冲加倍）：TD **两次段错误**（exit 139）都没出位流，
+  已回退。下次要么换更大 ERAM 配置并确认 `f_wr` 位宽没溢出，要么先只降门槛（`BURST_GROUPS`
+  从 827 降到 ~600）看丢组是否消失。
+
+## 环境教训（本轮又踩一次）
+
+- **烧写的读回校验会失败**：本轮一次 `bw.sh` 虽然打印 `PRG-2014`，但紧接着
+  `PRG-1000 recv timeout` / `PRG-9507 read = 0xFFFFFFD0 ref = 0x01`，位流其实没落上，
+  板子重启后 `lspci` 直接看不到 `1edb:abcd`。**判据要看完整日志里没有 PRG-1000/9507**，
+  只看 PRG-2014 不够；失败就 `pkill -x hwserver` 后重烧一次（第二次成功）。
