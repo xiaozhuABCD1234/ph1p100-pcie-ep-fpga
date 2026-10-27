@@ -85,7 +85,13 @@ module cam_r10f_writer #(
     parameter [31:0]  MODE_ID          = 32'd1,
     // ---- 帧内停滞兜底超时（丢标记/帧中止时的收口；仿真可调小）----
     parameter integer CLOSEDLOOP_EN = 0, // debug-only DHI ownership; default preserves legacy
-    parameter [20:0]  TMO_LIMIT        = 21'h1F_FFFF
+    parameter [20:0]  TMO_LIMIT        = 21'h1F_FFFF,
+    // ---- 数据侧长看门狗：mid_frame 期间锁住 tmo，光靠 TMO_LIMIT 兜不住
+    //      「相机中途停流、帧尾组数永远到不了突发门槛」的永久卡死（板测已见）。
+    //      这里单独计「等数据」的时长，超限就按坏帧自愈（不依赖帧内 tmo）。
+    //      0xC0_0000 = 12,582,912 拍 @100MHz ≈ 125.8ms ≈ 3.8 个 30fps 帧周期；
+    //      正常等满 410 组只需约 11us，余量 >10000 倍，低帧率模式也不会误触发。
+    parameter [23:0]  WDT_LIMIT        = 24'hC0_0000
 )(
     // ---------------- MIPI CSI-2 字节时钟域（187.5MHz）----------------
     input  wire          cam_clk,
@@ -456,6 +462,7 @@ module cam_r10f_writer #(
     reg  [31:0] crc_hdr_q;
     reg  [31:0] hdr_crc_r;
     reg  [20:0] tmo;
+    reg  [23:0] wdt;                 // 「等突发数据」连续拍数（数据侧长看门狗）
     reg         st_frame_go;
     reg         st_skip_done;
 
@@ -705,6 +712,12 @@ module cam_r10f_writer #(
     wire tail_app = (s_state == S_TAIL) & hdr_room & data_ready & tail_need;
 
     wire tmo_hit = (tmo == TMO_LIMIT);
+
+    // ---- 数据侧长看门狗（与帧内 tmo 独立）----
+    // 条件「A_IDLE 里还有突发没发、但 FIFO 永远攒不到 410 组」= 相机停流/丢标记，
+    // 此时 mid_frame=1 让帧内 tmo 一直被清零，只能靠这条长计时兜底。
+    wire wdt_hit      = (wdt == WDT_LIMIT);
+    wire waiting_data = (a_st == A_IDLE) && mid_frame && !burst_ok_ddr;
 
     // ========================================================================
     //  ddr 域：流状态机 + 消费路径（块 A）
@@ -958,6 +971,16 @@ module cam_r10f_writer #(
     wire [BTL_CW-1:0] next_beats  = beats_left - burst_beats;
     wire [7:0]        next_awlen  = (next_beats > BURST_BEATS_S) ? (BURST_BEATS - 1)
                                                                  : (next_beats - 8'd1);
+    // ---- AXI4 强制要求：单笔突发不得跨 4KiB 边界 ----
+    // 帧首 4 拍头之后地址恒为 base+128B（不是 4KiB 对齐），64 拍 × 32B = 2048B 的
+    // 定长突发必然在第二笔跨 4096。这里按「到下一个 4KiB 边界还剩几拍」钳制本笔
+    // awlen：起始地址 32B 对齐 ⇒ 余量恒为 32B 的整数倍（1..128 拍），钳制后正好
+    // 落在边界上，随后所有突发都从 4KiB 对齐地址起步、2048B 整除 4096，不再跨越。
+    // 代价：每帧仅多 1 笔突发（634 → 635），总拍数、字节流内容完全不变。
+    wire [28:0]       nxt_addr    = addr_r + burst_step;
+    wire [12:0]       nxt_page_l  = 13'd4096 - {1'b0, nxt_addr[11:0]};
+    wire [7:0]        nxt_page_m1 = nxt_page_l[12:5] - 8'd1;       // 到边界可发的拍数-1
+    wire [7:0]        next_awlen_c = (next_awlen > nxt_page_m1) ? nxt_page_m1 : next_awlen;
 
     assign m_axi_awsize  = AXI_SIZE;
     assign m_axi_awburst = AXI_BURST;
@@ -1035,6 +1058,7 @@ module cam_r10f_writer #(
             axi_err       <= 1'b0;
             rw_done_r     <= 1'b0;
             mid_frame     <= 1'b0;
+            wdt           <= 24'd0;
             need_first    <= 1'b0;
             pub_base      <= BASE0;
             pub_ok        <= 1'b0;
@@ -1064,11 +1088,25 @@ module cam_r10f_writer #(
             // 自愈窗口计数（唯一定义处；触发在下面的 A_IDLE 判定分支里）
             if (self_flush_cnt != 8'd0) self_flush_cnt <= self_flush_cnt - 8'd1;
 
+            // ---- 数据侧长看门狗计时（放在 case 之前，好让下面的超限动作覆盖它）----
+            if (waiting_data) begin
+                if (!wdt_hit) wdt <= wdt + 24'd1;
+            end else wdt <= 24'd0;
+
             case (a_st)
                 A_IDLE: begin
                     // 换手点：停在这里就是交还端口（awvalid/wvalid/bready 全 0）。
                     if (mid_frame) begin
-                        if (need_first || burst_ok_ddr) begin
+                        if (wdt_hit) begin
+                            // 长看门狗超限：相机中途停流，本帧的突发永远补不齐。
+                            // 交还写口 + 清流控 + 请求自愈（回 S_SYNC 等下一帧 SOF），
+                            // 本帧按「未发布」丢弃，比永久卡在 S_PAY 强。
+                            mid_frame      <= 1'b0;
+                            need_first     <= 1'b0;
+                            axi_err        <= 1'b1;
+                            wdt            <= 24'd0;
+                            self_flush_cnt <= 8'hFF;
+                        end else if (need_first || burst_ok_ddr) begin
                             mid_frame     <= 1'b0;
                             need_first    <= 1'b0;
                             m_axi_awvalid <= 1'b1;
@@ -1195,7 +1233,7 @@ module cam_r10f_writer #(
                         beats_left    <= next_beats;
                         addr_r        <= addr_r + burst_step;
                         m_axi_awaddr  <= addr_r + burst_step;
-                        m_axi_awlen   <= next_awlen;
+                        m_axi_awlen   <= next_awlen_c;
                         m_axi_awvalid <= 1'b0;      // 先交还端口，回 A_IDLE 等数据
                         mid_frame     <= 1'b1;
                         a_st          <= A_IDLE;
@@ -1332,6 +1370,7 @@ module cam_r10f_writer #(
     reg [31:0] lat_push, lat_drop, lat_ovf, lat_cyc, lat_gcnt;
     reg [15:0] lat_lines, lat_y, lat_mg;
     reg        lat_eb, lat_pbad, lat_peof, lat_tmo, tmo_seen;
+    reg        lat_wdt, wdt_seen;
 
     always @(posedge clk_ddr or posedge rst_ddr) begin
         if (rst_ddr) begin
@@ -1344,6 +1383,7 @@ module cam_r10f_writer #(
             lat_cyc  <= 32'd0; lat_gcnt <= 32'd0;
             lat_lines <= 16'd0; lat_y <= 16'd0; lat_mg <= 16'd0;
             lat_eb <= 1'b0; lat_pbad <= 1'b0; lat_peof <= 1'b0; lat_tmo <= 1'b0;
+            lat_wdt <= 1'b0; wdt_seen <= 1'b0;
         end else begin
             s_push1 <= sn_push;  s_push2 <= s_push1;
             s_drop1 <= sn_drop;  s_drop2 <= s_drop1;
@@ -1357,10 +1397,12 @@ module cam_r10f_writer #(
             if (st_frame_go) begin
                 fr_cyc   <= 32'd0;
                 tmo_seen <= 1'b0;
+                wdt_seen <= 1'b0;
             end else if ((s_state != S_SYNC) && (s_state != S_WAIT)) begin
                 fr_cyc <= fr_cyc + 32'd1;
             end
             if (tmo_hit) tmo_seen <= 1'b1;
+            if (wdt_hit) wdt_seen <= 1'b1;
 
             if (frame_close) begin
                 lat_push  <= s_push2;
@@ -1375,11 +1417,12 @@ module cam_r10f_writer #(
                 lat_pbad  <= p_bad;
                 lat_peof  <= p_eof_seen;
                 lat_tmo   <= tmo_seen;
+                lat_wdt   <= wdt_seen;
             end
         end
     end
 
-    assign dbg_frame = {27'd0, lat_tmo, lat_pbad, lat_peof, lat_eb,   // [255:224]
+    assign dbg_frame = {26'd0, lat_wdt, lat_tmo, lat_pbad, lat_peof, lat_eb, // [255:224]
                         lat_gcnt,                                    // [223:192]
                         lat_cyc,                                     // [191:160]
                         lat_ovf,                                     // [159:128]
