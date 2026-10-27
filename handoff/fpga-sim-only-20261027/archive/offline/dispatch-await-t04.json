@@ -1,0 +1,86 @@
+{
+  "run_id": "20261027-060708_fpga-parallel-offline-delivery",
+  "project_root": "D:/fpga/repos/ph1p100-pcie-ep-fpga",
+  "output_dir": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery",
+  "task_ids": [
+    "T04.real-raw10-benchmark"
+  ],
+  "batch_size": 1,
+  "status": "ready",
+  "needs_user_input": false,
+  "previous_dispatch_path": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/dispatch-t04-ready.json",
+  "input_paths": [
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/request.md",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/dev-plan.md",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/fpga-design-guide.md",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/input-index.md",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/dispatch-t04-ready.json"
+  ],
+  "write_scope": [],
+  "protected": [
+    "全部已经冻结的共同输入及各包候选",
+    "root production RTL/tools/IP/constraints",
+    "old runs",
+    "hardware/TD/COM/JTAG/Flash",
+    "RK/global configuration"
+  ],
+  "next_action": {
+    "operation": "return_to_planner",
+    "trigger": "仅当T04现有开发实际返回最终/blocked/停止元数据",
+    "dispatch_now": false,
+    "role_slot": "/root/fpga_plan_parallel_delivery",
+    "active_task_id": "T04.real-raw10-benchmark",
+    "active_developer_id": "/root/fpga_dev_real_raw10_benchmark",
+    "instruction": "本次没有新角色/命令需要派发。仅等T04现有开发返回事件，然后把真实返回路径/状态原样续原规划；不现在重复续规划，不轮询/催促、不重复新建T04、不让主接管。T03/T08的离线PASS已记录且不需要当前重跑。本run尚未收尾。"
+  },
+  "after_development": {
+    "operation": "return_to_planner",
+    "role_slot": "/root/fpga_plan_parallel_delivery",
+    "instruction": "沿dispatch-t04-ready.json的after_development处理，无新测试者/范围授权。"
+  },
+  "scope_limits": {
+    "main_goals": 1,
+    "formal_packages": 3,
+    "levels": 2,
+    "semantic_steps_per_package_max": 5,
+    "batch_size": 1,
+    "scope_override": null
+  },
+  "execution_limits": {
+    "current_new_role_or_command_dispatches": 0,
+    "existing_T04_limits": "dispatch-t04-ready.json维持30工具/45min/6 runner/300s deadline等，不重置"
+  },
+  "task_states": {
+    "T03.pcie-byte-replay": {
+      "status": "offline_accepted",
+      "verdict": "PASS",
+      "round": 0,
+      "actual_repairs": 0,
+      "record_path": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/records/T03.pcie-byte-replay.md"
+    },
+    "T08.freerun-isolation": {
+      "status": "offline_accepted",
+      "verdict": "PASS",
+      "round": 0,
+      "actual_repairs": 0,
+      "developer": "/root/fpga_dev_freerun_isolation",
+      "tester": "/root/fpga_test_freerun_isolation",
+      "manifest_path": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T08.freerun-isolation/manifest-r0.json",
+      "manifest_sha256": "07CE985DD46C7B6797282384B81BB743D5715C6E03CA82B2037CDF8FF2C85D4D",
+      "report_path": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/test-reports/T08.freerun-isolation-r0-integrated.md",
+      "report_sha256": "A7D037E722F3C500E7F1F933ABAB8F2CF1E8F4CDB6B2A828F5A12EE899D47B14",
+      "record_path": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/records/T08.freerun-isolation.md",
+      "parent_tasks_done": false
+    },
+    "T04.real-raw10-benchmark": {
+      "status": "in_development",
+      "developer": "/root/fpga_dev_real_raw10_benchmark",
+      "measurement_status": "input_gate_pending_actual_developer_return",
+      "verdict": null,
+      "state_source": "主原样传回真实已派发ID；未读取活动日志或推断结果"
+    }
+  },
+  "question_path": null,
+  "user_summary_path": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/user-summary-after-t08.md",
+  "blocked": null
+}

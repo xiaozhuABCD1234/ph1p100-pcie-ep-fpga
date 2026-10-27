@@ -1,0 +1,31 @@
+== tester TB dump ==
+  ok   : DUT pk bytes == independent pattern model dut=3840 model=3840
+  ok   : DUT raw_crc == crc32(model) dut=0xedbac353 model=0xedbac353
+  ok   : DUT stream_len == bytes captured from ap_* 3965 vs 3965
+  ok   : DUT raw_len == 3840 3840
+  ok   : DUT xform_len == raw_len
+  ok   : DUT stream_crc == crc32(stream) dut=0xd5006fb4 calc=0xd5006fb4
+  ok   : zlib inflate tester stream
+  ok   : inflated stream == DUT pk bytes
+  ok   : inflated stream == independent model
+  ok   : DUT drain words == ceil(stream/32) 124 vs 124
+  ok   : drain byte stream == stream bytes (zero padded word) drain=3968 stream=3965
+  info : drain tail bytes=3 zero=0 (slot word padding; the A1U1 transport pads with zeros separately)
+  ok   : commits == 1 1
+  ok   : releases == 1 1
+  ok   : release status completed(0)
+  ok   : desc frame_bytes == 4096 4096
+  ok   : desc_stream_len == stream_len
+  ok   : desc src_sel == 0
+  ok   : desc camera_id == 1 (B)
+  ok   : desc capture_seq == 7
+  ok   : desc epoch == 11
+  ok   : release cam/slot/seq/epoch
+  info : second-frame commits=1 (pipeline-reuse check is reported by the TB)
+  info : A grant=1 A commit=1 S2_OK=1 S3_READY_SEEN=0
+== tester A-path (S5) content ==
+  info : A frame DUT raw bytes=3840 model=3840 first_mismatch=None mismatched_bytes=0
+  info : A frame zlib inflate ok, 3840 bytes, ==dut_raw=True, ==model=True
+  info : A frame status raw_len=3840 stream_len=3966 stream_bytes=3966 commits=1
+A_PATH_CONTENT MATCH
+ORACLE PASS

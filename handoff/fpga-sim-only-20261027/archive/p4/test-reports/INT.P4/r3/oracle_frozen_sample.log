@@ -1,0 +1,55 @@
+== dev sample ==
+  ok   : magic bytes 'A1U1' b'A1U1'
+  ok   : version == 1
+  ok   : header_len == 44
+  ok   : flags prep=0 pred=0 flags=00
+  ok   : W/H == 64/48 64x48
+  ok   : raw_len == W*H*10/8 3840
+  ok   : xform_len == raw_len (prep=0)
+  ok   : file size == 44 + stream_len 4009 vs 4009
+  ok   : transport tail all zero tail=0
+  ok   : header_crc recomputed over 0..39 calc=0x78aaf30d file=0x78aaf30d
+  ok   : stream_crc recomputed over payload calc=0xd5006fb4 file=0xd5006fb4
+  ok   : raw_crc over .raw file == header calc=0xedbac353 file=0xedbac353
+  ok   : zlib inflate ok
+  ok   : inflated == .raw 3840 vs 3840
+  ok   : pattern-derived packed RAW10 == .raw (independent model) model=3840 raw=3840
+  ok   : pattern-derived raw_crc == header raw_crc model=0xedbac353
+  ok   : json stream_len == header
+  ok   : json raw_crc == header
+  ok   : json stream_crc == header
+  ok   : json header_crc == header
+  ok   : json frame_bytes == 4096
+  ok   : json src_sel == 0
+  ok   : json camera_id == 1 (B)
+  ok   : json source states RTL simulation
+  info : raw_len=3840 stream_len=3965 raw_crc=0xedbac353 stream_crc=0xd5006fb4
+== negative control: one payload byte flipped ==
+  ok   : magic bytes 'A1U1' b'A1U1'
+  ok   : version == 1
+  ok   : header_len == 44
+  ok   : flags prep=0 pred=0 flags=00
+  ok   : W/H == 64/48 64x48
+  ok   : raw_len == W*H*10/8 3840
+  ok   : xform_len == raw_len (prep=0)
+  ok   : file size == 44 + stream_len 4009 vs 4009
+  ok   : transport tail all zero tail=0
+  ok   : header_crc recomputed over 0..39 calc=0x78aaf30d file=0x78aaf30d
+  FAIL : stream_crc recomputed over payload calc=0xe96fc6e0 file=0xd5006fb4
+  ok   : raw_crc over .raw file == header calc=0xedbac353 file=0xedbac353
+  FAIL : zlib inflate: Error -3 while decompressing data: incorrect data check
+  FAIL : zlib inflate ok
+  FAIL : inflated == .raw 0 vs 3840
+  ok   : pattern-derived packed RAW10 == .raw (independent model) model=3840 raw=3840
+  ok   : pattern-derived raw_crc == header raw_crc model=0xedbac353
+  ok   : json stream_len == header
+  ok   : json raw_crc == header
+  ok   : json stream_crc == header
+  ok   : json header_crc == header
+  ok   : json frame_bytes == 4096
+  ok   : json src_sel == 0
+  ok   : json camera_id == 1 (B)
+  ok   : json source states RTL simulation
+  info : raw_len=3840 stream_len=3965 raw_crc=0xedbac353 stream_crc=0xd5006fb4
+  ok   : negative control detected (oracle rejects mutated stream)
+ORACLE PASS

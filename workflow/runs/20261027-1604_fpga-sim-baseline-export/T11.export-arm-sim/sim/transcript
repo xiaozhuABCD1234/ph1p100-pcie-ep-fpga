@@ -1,0 +1,70 @@
+# vsim -c -quiet -voptargs="+acc" -do "D:\fpga\repos\ph1p100-pcie-ep-fpga\workflow\runs\20261027-1604_fpga-sim-baseline-export\T11.export-arm-sim\sim\run_all.do" work.tb_brd_g1_top "+SCEN=0" "+NF=3" 
+# Start time: 18:58:09 on Oct 27,2026
+# do {D:\fpga\repos\ph1p100-pcie-ep-fpga\workflow\runs\20261027-1604_fpga-sim-baseline-export\T11.export-arm-sim\sim\run_all.do}
+# TB_SCEN=0 NF=3 BASEW=2048 CAPB=1048576 IS_NEG=0
+# TB_REQ=2
+# PUSH_G t=8000 g_st=0 ddr_seq=0 ddr_base=0 fbytes=0 claim=0 cb=0 cd=1
+# AWDBG t=9315000 addr=00040000 data0=78 strb=00000000
+# AWDBG t=9585000 addr=00040080 data0=84 strb=00000000
+# AWDBG t=9855000 addr=00040100 data0=f2 strb=00000000
+# AWDBG t=10115000 addr=00040180 data0=7a strb=00000000
+# AWDBG t=10385000 addr=00040200 data0=28 strb=00000000
+# AWDBG t=11125000 addr=00040280 data0=35 strb=00000000
+# AWDBG t=11395000 addr=00040300 data0=94 strb=00000000
+# AWDBG t=11655000 addr=00040380 data0=b4 strb=00000000
+# DESC_VALID t=56664000 seq=1 base_w=2048 fbytes=4096 slen=3966 cap=00040000 sess=a5a50001 ident=1
+# INFO frame=0 seq=1 slot_word=2048 base_bytes=65536 exact_bytes=3966
+# PUSH_G t=56712000 g_st=1 ddr_seq=1 ddr_base=262144 fbytes=4096 claim=0 cb=1 cd=1
+# ARDBG t=56805000 addr=00040000 len=0
+# ARDBG t=56905000 addr=00040080 len=0
+# ARDBG t=57005000 addr=00040100 len=0
+# ARDBG t=57105000 addr=00040180 len=0
+# INFO frame=0 arming frame consumed, slot freed after 0 tl cycles (rel_count=1)
+# DESC_VALID t=144024000 seq=2 base_w=2048 fbytes=4096 slen=3965 cap=00040000 sess=a5a50001 ident=1
+# INFO frame=1 seq=2 slot_word=2048 base_bytes=65536 exact_bytes=3965
+# TXDBG t=144025000 ar_hs=0 ddrR_hs=124 puR_hs=0 owner=0 busy=0 p_arvalid=0 p_arready=0 m_arvalid=0 m_arready=0 m_rvalid=0 m_rready=1 mem_rd_busy=0 mem_rd_left=0 p_st=1 b_arvalid=0
+# PUSH_G t=144040000 g_st=2 ddr_seq=2 ddr_base=262144 fbytes=4096 claim=0 cb=1 cd=1
+# RAW_SOP t=144152000 MSB..LSB = 60000020 010000ff 00000000 01000000 00000000 00000000 00000000 00000000
+# MISMATCH tlp 0 byte 0: got ad exp 78
+# MISMATCH tlp 0 byte 1: got 72 exp 9c
+# MISMATCH tlp 0 byte 2: got 8d exp 00
+# MISMATCH tlp 0 byte 3: got 72 exp a0
+# RAW_SOP t=144248000 MSB..LSB = 60000020 010000ff 00000000 01000080 00000000 00000000 00000000 00000000
+# PUSH_G t=147272000 g_st=3 ddr_seq=2 ddr_base=262144 fbytes=4096 claim=0 cb=1 cd=1
+# PAYLOAD_COMPARE frame=1 seq=2 slot_word=2048 exact_bytes=3965 compared=3965 mismatch=3594 tlps=32 doorbell=1 db_val=1 hdr_err=0
+# FRAME_RESULT frame=1 FAIL (compared=3965 exact=3965 mismatch=3594 tlps=32 db=1 hdr=0)
+# E9 baseline_source=store_write_side frame=1 exp_len=x exact_bytes=3965 extra=x
+# MEMDBG mem[2048]=0000000000000000000000000000000000000000000000000000000000000000 mem[2049]=0000000000000000000000000000000000000000000000000000000000000000 mem[8192]=ad728d728d07738d738cad738c738c07748c748bad748b748bff5f00a0009c78 mem[8193]=0000000000000000000000000000000000000000000000000000000000000000
+# ACK_SEND frame=1 seq=2 db_val=1 sess=a5a50001 | held_seq=2 held_sess=a5a50001 tl_arm_seq=2 tl_arm_sess=a5a50001 m_sess=a5a50001 eg_state=3 wd_cnt=587
+# PASS neg2: wrong ACK did not release (desc_active=1)
+# NEG2_RESULT=PASS
+# PUSH_G t=275976000 g_st=0 ddr_seq=2 ddr_base=262144 fbytes=4096 claim=0 cb=1 cd=1
+# ACK_PROBE frame=1 xack_cnt=2 ack_start=0 ack_free=1 ack_valid=0 x_ack=0 eg_state=0 wd_cnt=19806 slot_rel=0
+# INFO frame=1 ACK(seq=1) released the slot after 754 tl cycles (rel_count=2)
+# INFO frame=1 re-armed for frame 2
+# PUSH_G t=291656000 g_st=1 ddr_seq=2 ddr_base=262144 fbytes=4096 claim=0 cb=1 cd=1
+# DESC_VALID t=345144000 seq=3 base_w=2048 fbytes=4096 slen=3966 cap=00040000 sess=a5a50001 ident=1
+# INFO frame=2 seq=3 slot_word=2048 base_bytes=65536 exact_bytes=3966
+# PUSH_G t=345160000 g_st=2 ddr_seq=3 ddr_base=262144 fbytes=4096 claim=0 cb=1 cd=1
+# MISMATCH tlp 32 byte 0: got 7a exp 78
+# MISMATCH tlp 32 byte 1: got 69 exp 9c
+# MISMATCH tlp 32 byte 2: got 96 exp 00
+# MISMATCH tlp 32 byte 3: got 69 exp a0
+# TXDBG t=345905000 ar_hs=2 ddrR_hs=447 puR_hs=199 owner=1 busy=1 p_arvalid=0 p_arready=0 m_arvalid=0 m_arready=0 m_rvalid=1 m_rready=1 mem_rd_busy=1 mem_rd_left=55 p_st=3 b_arvalid=0
+# PUSH_G t=348392000 g_st=3 ddr_seq=3 ddr_base=262144 fbytes=4096 claim=0 cb=1 cd=1
+# PAYLOAD_COMPARE frame=2 seq=3 slot_word=2048 exact_bytes=3966 compared=3966 mismatch=3578 tlps=32 doorbell=1 db_val=2 hdr_err=0
+# FRAME_RESULT frame=2 FAIL (compared=3966 exact=3966 mismatch=3578 tlps=32 db=1 hdr=0)
+# E9 baseline_source=store_write_side frame=2 exp_len=x exact_bytes=3966 extra=x
+# MEMDBG mem[2048]=0000000000000000000000000000000000000000000000000000000000000000 mem[2049]=0000000000000000000000000000000000000000000000000000000000000000 mem[8192]=7a69966996d069966a967a6a956a95d06a956b957a6b946b94ff5f00a0009c78 mem[8193]=0000000000000000000000000000000000000000000000000000000000000000
+# ACK_SEND frame=2 seq=3 db_val=2 sess=a5a50001 | held_seq=3 held_sess=a5a50001 tl_arm_seq=3 tl_arm_sess=a5a50001 m_sess=a5a50001 eg_state=3 wd_cnt=587
+# PUSH_G t=349064000 g_st=0 ddr_seq=3 ddr_base=262144 fbytes=4096 claim=0 cb=1 cd=1
+# ACK_PROBE frame=2 xack_cnt=3 ack_start=0 ack_free=1 ack_valid=0 x_ack=0 eg_state=0 wd_cnt=599 slot_rel=0
+# INFO frame=2 ACK(seq=2) released the slot after 754 tl cycles (rel_count=3)
+# STREAM_DIFF frame1(7931) vs frame2(3966) bytes_differ=3434
+# INFO summary frames_ok=0 frames_fail=2 req=2 x_cnt=0 ddr_wr_beats=372 ddr_rd_beats=628
+# POS_RESULT=FAIL frames_ok=0 fail=2 req=2 x_cnt=0
+# E8_NEGCTL gate(ok=0,req=2)=0 gate(ok=0,req=3)=0 expect 1_then_0
+# ** Note: $finish    : ../tb/tb_brd_g1.v(776)
+#    Time: 364696 ns  Iteration: 1  Instance: /tb_brd_g1_top/u_h
+# End time: 18:58:14 on Oct 27,2026, Elapsed time: 0:00:05
+# Errors: 0, Warnings: 0

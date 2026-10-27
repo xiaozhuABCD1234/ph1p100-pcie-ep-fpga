@@ -1,0 +1,37 @@
+{
+  "task_id": "T11.BRD.P1",
+  "round": 2,
+  "model": "independent RAW10 contract model (no DUT output read)",
+  "contract": {
+    "roi_rows": [
+      16,
+      63
+    ],
+    "groups": [
+      8,
+      23
+    ],
+    "value": "v = (r*32 + g) & 0x3FF, four identical pixels per beat",
+    "byte_offset": "((r-16)*16 + (g-8))*5",
+    "byte0_3": "v[9:2]",
+    "byte4": "{v[1:0] x4}",
+    "raw_len": 3840,
+    "first_group_v": 520
+  },
+  "expected_raw": {
+    "file": "expected_raw.bin",
+    "len": 3840,
+    "sha256": "FBA49D330DB9196A9BD9B8F29419A5603CEF600FE7D08F73708674F4C3C5111E",
+    "adler32": "392578F9",
+    "crc32": "7269454A",
+    "first5": "8282828200",
+    "last5": "fdfdfdfdff"
+  },
+  "reference_encoder": {
+    "compressor": "CPython 3.11.5 zlib.compress(raw), default level (-1 == 6)",
+    "stream_len": 723,
+    "sha256": "EA4F8DBD37A0EE175269CBCC949DE2F2E6FA6714CA9ED05707673260095E9EB5",
+    "header": "789c",
+    "note": "reference only: the DUT a1_deflate_core is a different RFC1950 encoder (same Adler, different length), so the compressed byte length is not a pass/fail criterion"
+  }
+}

@@ -16,6 +16,7 @@
 >
 > 上一轮（P1 单路闭合 + 双路未闭合）的记录见
 > [arm-mask-20261027/RESULTS.md](../artifacts/arm-mask-20261027/RESULTS.md)。
+> **后续阶段更新**：板卡已交队友，本地仅仿真与证据整理。当前状态和分工以 [FPGA_SIM_ONLY_HANDOFF_20261027.md](FPGA_SIM_ONLY_HANDOFF_20261027.md) 为准，最新离线成果和候选见 [交接包](../handoff/fpga-sim-only-20261027/README.md)。以下正文保留原先 01:32 同步时点的来源说明，不能作为后续候选已通过的结论。
 
 以后主要从这两个原仓库推进，均使用 `main`：
 

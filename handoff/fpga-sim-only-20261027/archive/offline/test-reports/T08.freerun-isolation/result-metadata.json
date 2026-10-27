@@ -1,0 +1,53 @@
+{
+  "task_id": "T08.freerun-isolation",
+  "dimension": "integrated",
+  "dimension_results": {
+    "functional": {
+      "applicability": "applicable",
+      "result": "pass",
+      "G0": "pass",
+      "G1": "pass"
+    },
+    "engineering": {
+      "applicability": "applicable",
+      "result": "pass",
+      "G0": "pass",
+      "G1": "pass",
+      "G2": "not_run",
+      "G5": "pass"
+    },
+    "system": {
+      "applicability": "applicable_offline_interface_and_handoff",
+      "result": "pass",
+      "G1": "pass",
+      "G3": "not_run/awaiting_hardware",
+      "G4": "not_run/awaiting_hardware",
+      "G5": "pass"
+    }
+  },
+  "verdict": "PASS",
+  "report_path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\test-reports\\T08.freerun-isolation-r0-integrated.md",
+  "manifest_path": "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\T08.freerun-isolation\\manifest-r0.json",
+  "blocked": [],
+  "retest": {
+    "required_dimensions": [
+      "functional",
+      "engineering",
+      "system"
+    ],
+    "required_checks": [
+      "same frozen DUT six free-running themes",
+      "independent native bytes/CRC/source conservation",
+      "held-slot and full identity release",
+      "tester long-busy and ready-gated negative controls",
+      "manifest drift and model boundaries"
+    ],
+    "report_paths": [
+      "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\test-reports\\T08.freerun-isolation-r0-integrated.md",
+      "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\test-reports\\T08.freerun-isolation\\tester-oracle-result.json",
+      "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-060708_fpga-parallel-offline-delivery\\test-reports\\T08.freerun-isolation\\input-after.json"
+    ],
+    "input_status": "same",
+    "reuse_decision_paths": []
+  }
+}

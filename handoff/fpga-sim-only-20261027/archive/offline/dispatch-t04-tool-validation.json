@@ -1,0 +1,134 @@
+{
+  "run_id": "20261027-060708_fpga-parallel-offline-delivery",
+  "project_root": "D:/fpga/repos/ph1p100-pcie-ep-fpga",
+  "output_dir": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery",
+  "task_ids": [
+    "T04.real-raw10-benchmark"
+  ],
+  "batch_size": 1,
+  "status": "ready",
+  "needs_user_input": false,
+  "input_paths": [
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/request.md",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/dev-plan.md",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/fpga-design-guide.md",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/input-index.md",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/dispatch-t04-ready.json",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T04.real-raw10-benchmark/manifest-r0.json",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T04.real-raw10-benchmark/result-r0.md",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T04.real-raw10-benchmark/README.md",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T04.real-raw10-benchmark/inputs/inventory.json",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T04.real-raw10-benchmark/inputs/input-schema.json",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T04.real-raw10-benchmark/blocked-r0.json"
+  ],
+  "manifest_path": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T04.real-raw10-benchmark/manifest-r0.json",
+  "manifest_sha256": "3765D01D6E8C370BA0CDC72A2700F492D01BFE7DDA9E956C6B9FBCAEB6AF972E",
+  "write_scope": [
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/test-reports/T04.real-raw10-benchmark/**",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/test-reports/T04.real-raw10-benchmark-r0-integrated.md"
+  ],
+  "protected": [
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T04.real-raw10-benchmark/**",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/dispatch.json",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/dispatch-t04-ready.json",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/dev-plan.md",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/fpga-design-guide.md",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/input-index.md",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/rtl/**",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/tools/**",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workspace/**",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/handoff/**",
+    "D:/fpga/ph1p100/**",
+    "D:/TD/**",
+    "RK checkout/global configuration/hardware/COM/JTAG/Flash"
+  ],
+  "next_action": {
+    "operation": "spawn_single_tester",
+    "role": "fpga-tester",
+    "skill_path": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workspace/ph1p100/.agents/skills/fpga-tester/SKILL.md",
+    "task_id": "T04.real-raw10-benchmark",
+    "new_tester": true,
+    "developer_id": "/root/fpga_dev_real_raw10_benchmark",
+    "instruction": "新建本task首次且唯一独立综合测试者，禁止派生。按本dispatch在同一个T04原包进行有限工具准备核验；原真实收益门槛不变。冻结候选status=blocked是有意现状，不虚构ready_for_test。真实输入缺失是外部阻塞，不续开发空转。读同manifest，核验停止/活动0和151条文件/来源的实际哈希；独立重跑工具controls、空真实输入CLI、独立字节/比例/回退口径及输入拒绝判据。总体report首行必须FAIL，因为真实收益必要输入仍blocked；三维逐项分开写tool_preparation pass/fail与real_measurement blocked，不能写T04真实收益PASS，也不能将缺输入说成DUT实测坏。没有必要缺项之外的真实实现修复轮。报告写预冻结G0/G1/G5中工具已测、真实数据blocked；G2纯软件不适用，G3/G4not_run。",
+    "test_input_paths": [
+      "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T04.real-raw10-benchmark/inputs/real-inputs.json",
+      "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T04.real-raw10-benchmark/inputs/input-schema.json",
+      "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T04.real-raw10-benchmark/local/controls-final/synthetic-inputs.json"
+    ],
+    "required_checks": [
+      "manifest前后0漂移、132包文件与19只读来源实际计数/来源绑定，不盲信开发自述",
+      "重跑39项工具controls并从不同判据独立检查至少一项RAW10/u16规范化或含头/对齐长度及双回退比率",
+      "空真实输入必须rc3、real_sample_count=0、ratio=null、real_summary=null；合成/历史结果不能进入real-summary",
+      "自写至少一个有效CRC但错误几何/长度/字节序或坏来源证据SHA的负对照，必须明确拒绝；独立判据不能只调用原checker",
+      "准确保留输出路径/真实性审阅限制，区分纯软件工具准备与尚缺的真实帧收益，不声称硬件吞吐"
+    ],
+    "output_redirection_rule": "冻结benchmark.run限制out位于模块HERE，verify_controls.main也写HERE/local；不可在冻结包内运行生成新件。允许测试者wrapper只在内存把原模块benchmark.HERE及verify_controls.HERE指向本测试证据域，ROOT保持实际checkout、参考编码器/strict parser路径与SHA不变，并记录该环境重定向及原源SHA；不得改算法/数据校验/统计/真假分类/失败阈值。也可采用等效可审计仅路径重定向的测试副本，须明列diff。保留原输出边界检查的独立拒绝观察；不得为复现写冻结开发包。"
+  },
+  "after_development": {
+    "operation": "return_to_planner",
+    "role_slot": "/root/fpga_plan_parallel_delivery",
+    "instruction": "本字段表示after_testing：只把真实integrated报告/三维/manifest/blocked/retest返回原规划；预期FAIL且blocked非空，主不可续开发修复循环或请求重试。原规划读报告后统一完成run交接、精确数据问题及收尾。"
+  },
+  "scope_limits": {
+    "main_goals": 1,
+    "formal_packages": 3,
+    "levels": 2,
+    "semantic_steps_per_package_max": 5,
+    "batch_size": 1,
+    "new_task_ids": 0,
+    "original_T04_goal_unchanged": true,
+    "authorization": "原dev-plan T04第5步授权原规划决定有限工具核验；不是另立工具包或删除真实门槛"
+  },
+  "execution_limits": {
+    "tool_calls_per_role_turn_max": 30,
+    "tester_minutes_max": 45,
+    "python_runner_process_max": 6,
+    "compile_max": 0,
+    "read_search_deadline_seconds": 60,
+    "local_static_check_deadline_seconds": 300,
+    "same_issue_read_rounds_max": 3,
+    "same_failed_command_attempts_max": 2,
+    "no_progress_cycles_max": 2,
+    "actual_repairs_max": 3,
+    "actual_repairs_used": 0,
+    "td_synth_route_bit_cwc_download_flash_com_jtag_rk_install_commit_push_external_message": 0,
+    "timeout_requirement": "真实subprocess timeout，超时仅结束自身PID树；yield不作deadline。数据缺失不重试，不扩大本地inventory或联网。"
+  },
+  "task_states": {
+    "T03.pcie-byte-replay": {
+      "verdict": "PASS",
+      "round": 0,
+      "actual_repairs": 0
+    },
+    "T08.freerun-isolation": {
+      "verdict": "PASS",
+      "round": 0,
+      "actual_repairs": 0
+    },
+    "T04.real-raw10-benchmark": {
+      "status": "blocked_measurement_with_finite_tool_validation_ready",
+      "tool_preparation": "developer_local_39_controls_pass_not_yet_independent",
+      "real_sample_count": 0,
+      "ratio": null,
+      "benchmark_result": "blocked"
+    }
+  },
+  "blocked": {
+    "category": "missing_qualified_real_input",
+    "status": "blocked",
+    "real_sample_count": 0,
+    "ratio": null,
+    "benchmark_result": "blocked",
+    "resume_input_path": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T04.real-raw10-benchmark/README.md"
+  },
+  "problem": {
+    "problem_id": "T04.real-raw10-benchmark:INPUT_CONFLICT:qualified-real-raw10",
+    "reason_code": "INPUT_CONFLICT",
+    "new_information": true,
+    "evidence_path": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T04.real-raw10-benchmark/inputs/inventory.json",
+    "requested_action": "先有限独立核验已交付工具，之后原规划一次性向用户给准确真实输入缺项；不要求开发重试缺数据。",
+    "resume_input_path": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T04.real-raw10-benchmark/README.md"
+  },
+  "question_path": null,
+  "user_summary_path": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/user-summary-before-t04-validation.md"
+}

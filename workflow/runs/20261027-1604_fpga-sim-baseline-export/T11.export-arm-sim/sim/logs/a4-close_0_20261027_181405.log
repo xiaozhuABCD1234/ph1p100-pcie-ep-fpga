@@ -1,0 +1,53 @@
+Reading D:/intelFPGA/18.1/modelsim_ase/tcl/vsim/pref.tcl
+
+# 10.5b
+
+# vsim -c -quiet -voptargs="+acc" -do "D:\fpga\repos\ph1p100-pcie-ep-fpga\workflow\runs\20261027-1604_fpga-sim-baseline-export\T11.export-arm-sim\sim\run_all.do" work.tb_brd_g1_top "+SCEN=0" "+NF=3" 
+# Start time: 18:14:08 on Oct 27,2026
+# do {D:\fpga\repos\ph1p100-pcie-ep-fpga\workflow\runs\20261027-1604_fpga-sim-baseline-export\T11.export-arm-sim\sim\run_all.do}
+# TB_SCEN=0 NF=3 BASEW=2048 CAPB=1048576 IS_NEG=0
+# TB_REQ=2
+# PUSH_G t=8000 g_st=0 ddr_seq=0 ddr_base=0 fbytes=0 claim=0 cb=0 cd=1
+# DESC_VALID t=56664000 seq=1 base_w=2048 fbytes=4096 slen=3966 cap=00040000 sess=a5a50001 ident=1
+# INFO frame=0 seq=1 slot_word=2048 base_bytes=65536 exact_bytes=3966
+# PUSH_G t=56712000 g_st=1 ddr_seq=1 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# INFO frame=0 arming frame consumed, slot freed after 0 tl cycles (rel_count=1)
+# DESC_VALID t=144024000 seq=2 base_w=2048 fbytes=4096 slen=3965 cap=00040000 sess=a5a50001 ident=1
+# INFO frame=1 seq=2 slot_word=2048 base_bytes=65536 exact_bytes=3965
+# TXDBG t=144025000 ar_hs=0 ddrR_hs=124 puR_hs=0 owner=0 busy=0 p_arvalid=0 p_arready=0 m_arvalid=0 m_arready=0 m_rvalid=0 m_rready=1 mem_rd_busy=0 mem_rd_left=0 p_st=1 b_arvalid=0
+# PUSH_G t=144040000 g_st=2 ddr_seq=2 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# RAW_SOP t=144152000 MSB..LSB = 60000020 010000ff 00000000 01000000 00000000 00000000 00000000 00000000
+# RAW_SOP t=144248000 MSB..LSB = 60000020 010000ff 00000000 01000080 00000000 00000000 00000000 00000000
+# PUSH_G t=147272000 g_st=3 ddr_seq=2 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# PAYLOAD_COMPARE frame=1 seq=2 slot_word=2048 exact_bytes=3965 compared=3965 mismatch=0 tlps=32 doorbell=1 db_val=1 hdr_err=0
+# FRAME_RESULT frame=1 PASS
+# ACK_SEND frame=1 seq=2 db_val=1 sess=a5a50001 | held_seq=2 held_sess=a5a50001 tl_arm_seq=2 tl_arm_sess=a5a50001 m_sess=a5a50001 eg_state=3 wd_cnt=587
+# PASS neg2: wrong ACK did not release (desc_active=1)
+# NEG2_RESULT=PASS
+# PUSH_G t=275976000 g_st=0 ddr_seq=2 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# ACK_PROBE frame=1 xack_cnt=2 ack_start=0 ack_free=1 ack_valid=0 x_ack=0 eg_state=0 wd_cnt=19806 slot_rel=0
+# INFO frame=1 ACK(seq=1) released the slot after 754 tl cycles (rel_count=2)
+# INFO frame=1 re-armed for frame 2
+# PUSH_G t=291656000 g_st=1 ddr_seq=2 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# DESC_VALID t=345144000 seq=3 base_w=2048 fbytes=4096 slen=3966 cap=00040000 sess=a5a50001 ident=1
+# INFO frame=2 seq=3 slot_word=2048 base_bytes=65536 exact_bytes=3966
+# PUSH_G t=345160000 g_st=2 ddr_seq=3 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# FAIL tlp: addr 0000000001000000 != 0000000001001000
+# FAIL tlp: addr 0000000001000080 != 0000000001001080
+# FAIL tlp: addr 0000000001000100 != 0000000001001100
+# FAIL tlp: addr 0000000001000180 != 0000000001001180
+# TXDBG t=345905000 ar_hs=2 ddrR_hs=447 puR_hs=199 owner=1 busy=1 p_arvalid=0 p_arready=0 m_arvalid=0 m_arready=0 m_rvalid=1 m_rready=1 mem_rd_busy=1 mem_rd_left=55 p_st=3 b_arvalid=0
+# PUSH_G t=348392000 g_st=3 ddr_seq=3 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# PAYLOAD_COMPARE frame=2 seq=3 slot_word=2048 exact_bytes=3966 compared=0 mismatch=0 tlps=32 doorbell=1 db_val=2 hdr_err=32
+# FRAME_RESULT frame=2 FAIL (compared=0 exact=3966 mismatch=0 tlps=32 db=1 hdr=32)
+# ACK_SEND frame=2 seq=3 db_val=2 sess=a5a50001 | held_seq=3 held_sess=a5a50001 tl_arm_seq=3 tl_arm_sess=a5a50001 m_sess=a5a50001 eg_state=3 wd_cnt=587
+# PUSH_G t=349064000 g_st=0 ddr_seq=3 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# ACK_PROBE frame=2 xack_cnt=3 ack_start=0 ack_free=1 ack_valid=0 x_ack=0 eg_state=0 wd_cnt=599 slot_rel=0
+# INFO frame=2 ACK(seq=2) released the slot after 754 tl cycles (rel_count=3)
+# INFO summary frames_ok=1 frames_fail=1 req=2 x_cnt=0 ddr_wr_beats=372 ddr_rd_beats=628
+# POS_RESULT=FAIL frames_ok=1 fail=1 req=2 x_cnt=0
+# E8_NEGCTL gate(ok=1,req=2)=0 gate(ok=1,req=3)=0 expect 1_then_0
+# ** Note: $finish    : ../tb/tb_brd_g1.v(712)
+#    Time: 364696 ns  Iteration: 1  Instance: /tb_brd_g1_top/u_h
+# End time: 18:14:12 on Oct 27,2026, Elapsed time: 0:00:04
+# Errors: 0, Warnings: 0

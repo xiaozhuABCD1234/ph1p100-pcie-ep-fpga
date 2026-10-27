@@ -1,0 +1,36 @@
+{
+  "task_id": "T08.freerun-isolation",
+  "status": "ready",
+  "parent_task_ids": [
+    "T08",
+    "T06"
+  ],
+  "role": "fpga-dev",
+  "operation": "spawn_agent",
+  "skill_path": "D:/fpga/repos/ph1p100-pcie-ep-fpga/workspace/ph1p100/.agents/skills/fpga-dev/SKILL.md",
+  "input_paths": [
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/request.md",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/dev-plan.md",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/fpga-design-guide.md",
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/input-index.md"
+  ],
+  "write_scope": [
+    "D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-060708_fpga-parallel-offline-delivery/T08.freerun-isolation/**"
+  ],
+  "execution_limits": {
+    "tool_calls_per_role_turn_max": 45,
+    "role_minutes_max": 75,
+    "compile_max": 2,
+    "case_process_max": 8,
+    "read_search_deadline_seconds": 60,
+    "local_compile_sim_deadline_seconds": 300,
+    "same_issue_read_rounds_max": 3,
+    "same_failed_command_attempts_max": 2,
+    "no_progress_cycles_max": 2,
+    "actual_repairs_max": 3,
+    "problem_supplement_chances_max": 2,
+    "td_synth_route_bit_cwc_download_flash_com_jtag_rk_install_commit_push_external_message": 0,
+    "timeout_requirement": "Use an actual subprocess deadline and safe stop of own children; yield is not a timeout; no killing foreign processes."
+  },
+  "instruction": "新任务，新开发，禁止派生。读取所列输入及实际根AGENTS，执行dev-plan的T08五步与指南§2。复用checkout快照内T08 mode-fix02真实DUT，逐SHA映射旧源闭包；只新增本包TB/runner/checker/接口证据，不重做旧同步/I2C，不改冻结RTL。源无视ready持续运行，覆盖6主题、满队列整帧丢弃/身份/CRC/每路恢复>=2 good。独立库/模型边界/唯一manifest停改后ready_for_test；需要RTL修复即blocked交原规划。"
+}

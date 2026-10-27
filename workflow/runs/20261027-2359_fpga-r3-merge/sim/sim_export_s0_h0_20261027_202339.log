@@ -1,0 +1,101 @@
+Reading D:/intelFPGA/18.1/modelsim_ase/tcl/vsim/pref.tcl
+
+# 10.5b
+
+# do D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-2359_fpga-r3-merge/sim/run_export.do
+# vsim work.tb_brd_export_r3 "+SCEN=0" "+NF=2" "+HOST_MODEL=0" 
+# Start time: 20:23:40 on Oct 27,2026
+# Loading work.tb_brd_export_r3
+# Loading work.brd_g1_harness
+# Loading work.brd_board_datapath
+# Loading work.brd_cfg_xing
+# Loading work.brd_xing_bits
+# Loading work.brd_cam_fe
+# Loading work.a1_raw_crop
+# Loading work.capture_async_fifo
+# Loading work.brd_ack_xing
+# Loading work.brd_pcie_track
+# Loading work.brd_2ff_sync
+# Loading work.integrated_delivery_top
+# Loading work.dual_channel_capture_scheduler
+# Loading work.integrated_input_processing_top
+# Loading work.int_p4_elastic_beats
+# Loading work.raw10_sample_vector_to_packed
+# Loading work.img_algo_parallel_top_p4
+# Loading work.bayer_raw10_demosaic4_p4
+# Loading work.algo_rowwin3_p4
+# Loading work.algo_rowwin_reader
+# Loading work.rgb8_gray_stream
+# Loading work.algo_obuf
+# Loading work.gray8_gaussian3x3_stream_p4
+# Loading work.gray8_he_cdfmin_frame
+# Loading work.frame_good_publish_cancel
+# Loading work.a1_frame_top
+# Loading work.a1_deflate_core
+# Loading work.a1_ddr_slot_store
+# Loading work.a1_ddr_arb2
+# Loading work.aplus_pcie_egress_adapter
+# Loading work.p2_ddr_bridge
+# Loading work.cam_diag_mailbox
+# Loading work.brd_desc_xing
+# Loading work.brd_export_seq
+# Loading work.ddr_frame_pusher
+# Loading work.brd_ddr_rd_arb
+# Loading work.brd_ddr_slave_model
+# TB_SCEN=0 NF=2 BASEW=2048 CAPB=1048576 IS_NEG=0 HOST_MODEL=0
+# TB_REQ=2
+# PUSH_G t=8000 g_st=0 ddr_seq=0 ddr_base=0 fbytes=0 claim=0 cb=0 cd=1
+# AWDBG t=9315000 addr=00010000 data0=78 strb=00000000
+# AWDBG t=9585000 addr=00010020 data0=84 strb=00000000
+# AWDBG t=9855000 addr=00010040 data0=f2 strb=00000000
+# AWDBG t=10115000 addr=00010060 data0=7a strb=00000000
+# AWDBG t=10385000 addr=00010080 data0=28 strb=00000000
+# AWDBG t=11125000 addr=000100a0 data0=35 strb=00000000
+# AWDBG t=11395000 addr=000100c0 data0=94 strb=00000000
+# AWDBG t=11655000 addr=000100e0 data0=b4 strb=00000000
+# DESC_VALID t=56664000 seq=1 base_w=2048 fbytes=4096 slen=3966 cap=00040000 sess=a5a50001 ident=1
+# INFO frame=0 seq=1 slot_word=2048 base_bytes=65536 exact_bytes=3966
+# INFO frame=0 armed; waiting for the export of this descriptor
+# PUSH_G t=56744000 g_st=1 ddr_seq=0 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# TXDBG t=56765000 ar_hs=0 ddrR_hs=0 puR_hs=0 owner=0 busy=0 p_arvalid=0 p_arready=0 m_arvalid=0 m_arready=0 m_rvalid=0 m_rready=1 mem_rd_busy=0 mem_rd_left=0 p_st=1 b_arvalid=0
+# PUSH_G t=56776000 g_st=2 ddr_seq=1 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# ARDBG t=56805000 addr=00010000 len=127
+# RAW_SOP t=56888000 MSB..LSB = 60000020 010000ff 00000000 01000000 00000000 00000000 00000000 00000000
+# RAW_SOP t=56984000 MSB..LSB = 60000020 010000ff 00000000 01000080 00000000 00000000 00000000 00000000
+# PUSH_G t=60008000 g_st=3 ddr_seq=1 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# PAYLOAD_COMPARE frame=0 seq=1 slot_word=2048 exact_bytes=3966 compared=3966 mismatch=0 legacy_mismatch=3830 tlps=32 doorbell=1 db_val=1 hdr_err=0
+# FRAME_RESULT frame=0 PASS
+# E9 baseline_source=store_write_side frame=0 exp_len=x exact_bytes=3966 extra=x
+# MEMDBG mem[2048]=d07b847c847a7c837c83d07c837d837a7d827d82d07d827e82ff5f00a0009c78 mem[2049]=0ef3000df40cf5000bf60af70009f808007a7a857a85d07a857b857a7b847b84 mem[8192]=0000000000000000000000000000000000000000000000000000000000000000 mem[8193]=0000000000000000000000000000000000000000000000000000000000000000
+# ACK_SEND frame=0 seq=1 db_val=1 sess=a5a50001 | held_seq=1 held_sess=a5a50001 desc_seq=1 tx_sess=a5a50001 m_sess=a5a50001 eg_state=3 wd_cnt=602
+# PASS neg2: wrong ACK did not release (desc_active=1)
+# NEG2_RESULT=PASS
+# PUSH_G t=188680000 g_st=0 ddr_seq=1 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# ARDBG t=188785000 addr=00010000 len=0
+# ARDBG t=188885000 addr=00010020 len=0
+# ARDBG t=188985000 addr=00010040 len=0
+# ACK_PROBE frame=0 xack_cnt=2 ack_start=0 ack_free=1 ack_valid=0 x_ack=0 eg_state=0 wd_cnt=19821 slot_rel=0
+# INFO frame=0 ACK(seq=1) released the slot after 756 tl cycles (rel_count=1)
+# INFO frame=0 re-armed for frame 1
+# DESC_VALID t=259720000 seq=2 base_w=2048 fbytes=4096 slen=3965 cap=00040000 sess=a5a50001 ident=1
+# INFO frame=1 seq=2 slot_word=2048 base_bytes=65536 exact_bytes=3965
+# PUSH_G t=259768000 g_st=1 ddr_seq=1 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# PUSH_G t=259800000 g_st=2 ddr_seq=2 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# TXDBG t=260555000 ar_hs=2 ddrR_hs=324 puR_hs=200 owner=1 busy=1 p_arvalid=0 p_arready=0 m_arvalid=0 m_arready=0 m_rvalid=1 m_rready=1 mem_rd_busy=1 mem_rd_left=54 p_st=4 b_arvalid=0
+# PUSH_G t=263032000 g_st=3 ddr_seq=2 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# PAYLOAD_COMPARE frame=1 seq=2 slot_word=2048 exact_bytes=3965 compared=3965 mismatch=0 legacy_mismatch=3845 tlps=32 doorbell=1 db_val=2 hdr_err=0
+# FRAME_RESULT frame=1 PASS
+# E9 baseline_source=store_write_side frame=1 exp_len=x exact_bytes=3965 extra=x
+# MEMDBG mem[2048]=ad728d728d07738d738cad738c738c07748c748bad748b748bff5f00a0009c78 mem[2049]=33ce0032cf31d00030d12fd2002ed32d0007718f718ead718e718e07728e728d mem[8192]=0000000000000000000000000000000000000000000000000000000000000000 mem[8193]=0000000000000000000000000000000000000000000000000000000000000000
+# ACK_SEND frame=1 seq=2 db_val=2 sess=a5a50001 | held_seq=2 held_sess=a5a50001 desc_seq=2 tx_sess=a5a50001 m_sess=a5a50001 eg_state=3 wd_cnt=598
+# PUSH_G t=263672000 g_st=0 ddr_seq=2 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# ACK_PROBE frame=1 xack_cnt=3 ack_start=0 ack_free=1 ack_valid=0 x_ack=0 eg_state=0 wd_cnt=610 slot_rel=0
+# INFO frame=1 ACK(seq=2) released the slot after 756 tl cycles (rel_count=2)
+# STREAM_DIFF frame0(3966) vs frame1(3965) bytes_differ=3601
+# INFO summary frames_ok=2 frames_fail=0 req=2 x_cnt=0 ddr_wr_beats=248 ddr_rd_beats=504
+# POS_RESULT=PASS frames=2 req=2 x_cnt=0
+# E8_NEGCTL gate(ok=2,req=2)=1 gate(ok=2,req=3)=0 expect 1_then_0
+# ** Note: $finish    : D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-2359_fpga-r3-merge/tb/tb_brd_export_r3.v(797)
+#    Time: 279336 ns  Iteration: 1  Instance: /tb_brd_export_r3/u_h
+# End time: 20:23:43 on Oct 27,2026, Elapsed time: 0:00:03
+# Errors: 0, Warnings: 0

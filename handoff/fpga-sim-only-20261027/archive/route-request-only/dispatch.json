@@ -1,0 +1,85 @@
+{
+  "run_id": "20261027-150010_fpga-honly-td-route",
+  "project_root": "D:/fpga/ph1p100",
+  "output_dir": "D:/fpga/ph1p100/workflow/runs/20261027-150010_fpga-honly-td-route",
+  "task_ids": ["T10.ah-td-route-kit"],
+  "batch_size": 1,
+  "status": "blocked",
+  "needs_user_input": true,
+  "blocked_category": "PERMISSION_MISSING",
+  "blocked_summary": "AGENTS.md 2026-10-27 覆盖段禁止本机再启动 TD 综合/布局布线/STA，本轮目标（本地 routed DB + routed STA）在本机不可执行；TD 执行通道=持板队友。已冻结为 P1 队友执行包（本机 0 TD），需用户确认该降级。",
+  "input_paths": [
+    "D:/fpga/ph1p100/AGENTS.md",
+    "D:/fpga/ph1p100/workflow/runs/20261027-150010_fpga-honly-td-route/request.md",
+    "D:/fpga/ph1p100/workflow/runs/20261027-150010_fpga-honly-td-route/input-index.md",
+    "D:/fpga/ph1p100/workflow/runs/20261027-150010_fpga-honly-td-route/fpga-design-guide.md",
+    "D:/fpga/ph1p100/workflow/runs/20261027-150010_fpga-honly-td-route/dev-plan.md",
+    "D:/fpga/ph1p100/workflow/runs/20261027-055621_fpga-honly-td-and-ah/dual-verdict.md",
+    "D:/fpga/ph1p100/workflow/runs/20261027-055621_fpga-honly-td-and-ah/r2-ruling.md"
+  ],
+  "write_scope": [
+    "D:/fpga/ph1p100/workflow/runs/20261027-150010_fpga-honly-td-route/T10.ah-td-route-kit/**",
+    "D:/fpga/ph1p100/workflow/runs/20261027-150010_fpga-honly-td-route/test-reports/**",
+    "D:/fpga/ph1p100/workflow/runs/20261027-150010_fpga-honly-td-route/*.md",
+    "D:/fpga/ph1p100/workflow/runs/20261027-150010_fpga-honly-td-route/dispatch*.json"
+  ],
+  "protected": [
+    "RTL/SDC/时钟/周期/例外/候选（core d2960cfe…、frame_top 4afc26e2…、wrapper 3e2be8ea…、SDC 6d948bba…）只读",
+    "workflow/runs/20261027-055621_fpga-honly-td-and-ah/**（含 T10.ah-honly-synthfix、T10.ah-honly-td、test-reports、manifest）",
+    "workflow/runs/20261027-0726_fpga-board-integration/**、workflow/runs/20261026-2138_fpga-integrated-delivery/**",
+    "b18-b20、integrated delivery、旧 P1-P4、生产源 fpga/**",
+    "workflow/tasks.json、docs/**、workflow/**（task board/records）、.agents/**",
+    "D:/fpga/repos/**（本轮不写主仓）、D:/TD/work/csi2、D:/anlogic/**（只读文档除外）"
+  ],
+  "next_action": {
+    "operation": "relay_to_user",
+    "reason": "本轮唯一目标被 2026-10-27 本地仅仿真边界阻断；降级为队友执行包需用户确认",
+    "question_path": "D:/fpga/ph1p100/workflow/runs/20261027-150010_fpga-honly-td-route/question-01.md"
+  },
+  "after_development": null,
+  "after_user_decision": {
+    "if": "用户选择 A（交付队友执行包）",
+    "operation": "return_to_planner",
+    "detail": "回到本 run 原规划；原规划把 dispatch 的 task_ids 改为 T10.ah-td-route-kit / status=ready 后，主新建 1 个开发会话（fork_turns=none，传 dev-plan.md、fpga-design-guide.md、input-index.md），完成后新建 1 个综合测试者"
+  },
+  "scope_limits": {
+    "round_goal": 1,
+    "max_formal_packages": 3,
+    "levels": 2,
+    "max_semantic_steps_per_package": 5,
+    "batch_size": 1,
+    "note": "本轮 3 包：T10.ah-td-route-kit（ready 待确认）、T10.ah-td-route（blocked=队友执行）、T10.ah-td-route-closeout（blocked）"
+  },
+  "execution_limits": {
+    "source": "work-limits.md 默认值 + 本规划冻结值（0 TD 于本机）",
+    "local_td_launches": 0,
+    "dev": "45 min / 30 calls",
+    "tester": "45 min / 30 calls",
+    "planner": "15 min / 30 calls per dispatch",
+    "run_wallclock_minutes": 150,
+    "teammate_td_quota": {
+      "td_launches_max": 3,
+      "synth_max": 1,
+      "route_max": 2,
+      "analysis_only_max": 1,
+      "bitgen": 0,
+      "download_flash_board_network": 0,
+      "synth_timeout_s": 1800,
+      "route_timeout_s": 2400,
+      "analysis_timeout_s": 600
+    },
+    "repair_rounds_max": 3,
+    "no_batch_delete": true,
+    "no_commit_push": true
+  },
+  "problem": {
+    "problem_id": "T10.ah-td-route:PERMISSION_MISSING:local-td-boundary",
+    "reason_code": "PERMISSION_MISSING",
+    "new_information": true,
+    "evidence_path": "D:/fpga/ph1p100/AGENTS.md",
+    "requested_action": "确认本轮降级为 P1 队友执行包（本机 0 TD）；如需恢复本机 TD，须用户给出新的明确授权与配额",
+    "resume_input_path": "D:/fpga/ph1p100/workflow/runs/20261027-150010_fpga-honly-td-route/dev-plan.md"
+  },
+  "question_path": "D:/fpga/ph1p100/workflow/runs/20261027-150010_fpga-honly-td-route/question-01.md",
+  "user_summary_path": null
+}

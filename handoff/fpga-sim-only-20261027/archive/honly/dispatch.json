@@ -1,0 +1,142 @@
+{
+  "run_id": "20261027-055621_fpga-honly-td-and-ah",
+  "runtime": "OpenCode",
+  "project_root": "D:/fpga/ph1p100",
+  "output_dir": "D:/fpga/ph1p100/workflow/runs/20261027-055621_fpga-honly-td-and-ah",
+  "status": "finished",
+  "needs_user_input": true,
+  "task_ids": [],
+  "batch_size": 1,
+  "finished_at": "2026-10-27 10:10 +08:00",
+  "next_actions": [],
+  "after_development": null,
+  "question_path": null,
+  "user_summary_path": "D:/fpga/ph1p100/workflow/runs/20261027-055621_fpga-honly-td-and-ah/user-summary.md",
+  "blocked": null,
+  "final_state": {
+    "packages": {
+      "T10.ah-a-plus-h-r2": {
+        "status": "closed",
+        "verdict": "kill_verified / A not adopted",
+        "manifest": "T10.ah-a-plus-h-r2/r0/manifest-r0.json sha256 59805d9060a7f3f85629f53ca0d4cf4c3038b0dea2a39aed8d548ea0b12c9132",
+        "report": "test-reports/T10.ah-a-plus-h-r2-r0-integrated.md",
+        "why": "4-frame zlib stream not byte-identical (N stream_len 1,665,923 vs 1,677,912/1,677,336; L 2,153,391/2,154,993 vs 2,156,868/2,156,300; header bytes 36..43 driven X) AND N4 gain 92,265 < 100,000 (6,104,484.5 vs 6,196,749.5)",
+        "reopen": "only with new user budget and a design that first proves token-stream equivalence"
+      },
+      "T10.ah-honly-synthfix": {
+        "status": "closed",
+        "verdict": "PASS",
+        "manifest": "T10.ah-honly-synthfix/r0/manifest-r0.json sha256 034777c55d5a7857f18d9860afbb73f7554940f65213d9228c449bbc5855e510",
+        "report": "test-reports/T10.ah-honly-synthfix-r0-integrated.md",
+        "candidate": "core d2960cfe0111b7b61aff281e3f16427834dda26107f37867d5c7c89ac346aad8 (85,221 B) + frame_top 4afc26e246fbae4e32c5ab7e88dffb496048d10966c5ee42b290b3e71f60e30a (29,207 B)",
+        "gates": "N4 S_ss 6,196,749.5 and L4 5,834,940 exact; 4/4 .frm/.hdr whole-file SHA identical; bench 8b/16b x comp/rand identical; adapter 12/12; 0 cross-block drivers; 0 TD"
+      },
+      "T10.ah-honly-td": {
+        "status": "blocked",
+        "blocked_reason": "TOOL_UNAVAILABLE: TD 6.2.3 coredumps at import_db -> Import ChipWatcher before placement; no routed DB/STA/QoR/CDC",
+        "eligibility": "not_evaluated (false)",
+        "manifests": {
+          "r0": "T10.ah-honly-td/r0/manifest-r0.json (r0 FAIL: HDL-8007 cmem_lo multiple drivers)",
+          "r1": "T10.ah-honly-td/r1/manifest-r1.json sha256 8325f230cb8581783b8e1a0ea835e33d00b8337e0dffb6a15e7d95926c8869fa (83 artifacts)"
+        },
+        "report": "test-reports/T10.ah-honly-td-r1-integrated.md",
+        "synth_measured": {
+          "setup_wns_ns": 0.029,
+          "setup_tns_ns": 0.0,
+          "violated_endpoints": "0 / 4,969",
+          "sta_coverage_pct": 97.06,
+          "period_check_wns_ns": 2.533,
+          "clock": "single clk 5.333 ns (187.512 MHz); gate R-Period 5.304 ns -> 188.537 MHz gate upper bound",
+          "resources": "slice 3,337/71,680; reg 1,663; LUT 4,188 (LUT6 1,978); ERAM 27 + fifo20k 0 (<=300); DSP 0; IO 121/286",
+          "worst10": "2 frame_top (grp_in_row -> smem_waddr_r, +0.029/+0.071 ns), 8 core (htab_b->hb_r; sdata_ptr->state replay/emit; len_r->cand_bits); dual CRC32 chain NOT in worst 10"
+        },
+        "quota": "TD launches 2/3 used; synthesis results 1/1 used; routes 2/2 used (both coredump); analysis 0/1; bitgen/CWC/download/Flash/board/network = 0"
+      },
+      "T10.ah-dual-verdict": {
+        "status": "closed",
+        "artifact": "dual-verdict.md",
+        "cost": "0 sim / 0 TD / 0 new roles"
+      }
+    },
+    "candidate": {
+      "status": "provisional (not implementation-qualified)",
+      "core": "T10.ah-honly-synthfix/r0/changed-src/a1_deflate_core.v d2960cfe...",
+      "frame_top": "T10.ah-honly-synthfix/r0/changed-src/a1_frame_top.v 4afc26e2...",
+      "claims_allowed": [
+        "H-only prototype 4-frame S_ss gate passed with byte-identical A1U1 headers",
+        "H-only (synthfix revision) is elaboratable/synthesizable by TD 2026.2 at 187.5 MHz with +0.029 ns gate-level setup slack, 0 violating endpoints and low resources",
+        "routing was blocked by a TD tool defect (ChipWatcher import coredump, reproducible twice, pre-placement)"
+      ],
+      "claims_forbidden": [
+        "H-only passed TD/STA or timing closure",
+        "routed WNS/hold or real Fmax",
+        "whole-machine G0 closure or 1080p30 production throughput",
+        "bitstream / CWC / board / RK / PCIe",
+        "A+H is impossible (only this implementation was disproved)"
+      ]
+    },
+    "hard_zero": "TD bitgen / CWC / download / Flash / board / COM / JTAG / RK / network / git = 0 for the whole run"
+  },
+  "next_package_recommendation": {
+    "primary": {
+      "id_suggestion": "T10.ah-honly-td-route (new run)",
+      "goal": "work around the TD ChipWatcher coredump and obtain a routed DB + routed STA at 187.5 MHz (209.6 analysis-only optional)",
+      "suggested_quota": "TD launches <=3, synth <=1, route <=2, analysis <=1, bitgen 0, board 0, network 0, <=60 calls / 180 min",
+      "needs_user_authorization": true,
+      "failure_exit": "record implementation not evaluated (tool defect); candidate stays provisional"
+    },
+    "secondary": {
+      "id_suggestion": "H-only diff migration review (read-only)",
+      "repo": "D:/fpga/repos/ph1p100-pcie-ep-fpga (main)",
+      "constraints": "read-only; no write, no commit, no push; merging needs separate user authorization"
+    },
+    "not_recommended": [
+      "reopening A without a new equivalence-proof design and new budget",
+      "bitgen/board work while routed STA is missing"
+    ]
+  },
+  "closeout_paths": {
+    "dual_verdict": "D:/fpga/ph1p100/workflow/runs/20261027-055621_fpga-honly-td-and-ah/dual-verdict.md",
+    "final_summary": "D:/fpga/ph1p100/workflow/runs/20261027-055621_fpga-honly-td-and-ah/final-summary.md",
+    "handoff": "D:/fpga/ph1p100/workflow/runs/20261027-055621_fpga-honly-td-and-ah/handoff.md",
+    "user_summary": "D:/fpga/ph1p100/workflow/runs/20261027-055621_fpga-honly-td-and-ah/user-summary.md",
+    "rulings": [
+      "r0-ruling.md",
+      "r1-ruling.md",
+      "r2-ruling.md"
+    ]
+  },
+  "input_paths": [
+    "D:/fpga/ph1p100/workflow/runs/20261027-055621_fpga-honly-td-and-ah/request.md",
+    "D:/fpga/ph1p100/workflow/runs/20261027-055621_fpga-honly-td-and-ah/dual-verdict.md",
+    "D:/fpga/ph1p100/workflow/runs/20261027-055621_fpga-honly-td-and-ah/final-summary.md",
+    "D:/fpga/ph1p100/workflow/runs/20261027-055621_fpga-honly-td-and-ah/handoff.md",
+    "D:/fpga/ph1p100/workflow/runs/20261027-055621_fpga-honly-td-and-ah/user-summary.md"
+  ],
+  "protected": [
+    "D:/fpga/ph1p100/workflow/runs/20261026-231711_fpga-a-plus-h-prototype/**",
+    "D:/fpga/ph1p100/workflow/runs/20261026-2138_fpga-integrated-delivery/**",
+    "D:/fpga/ph1p100/workflow/runs/20261026-143924_fpga-1080p30-g0-production/**",
+    "D:/fpga/ph1p100/workflow/runs/20261026-144617_fpga-chain-detail-review/**",
+    "D:/fpga/ph1p100/workflow/runs/20261027-0726_fpga-board-integration/**",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b18-b17-b/**",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b19-cam-a/**",
+    "D:/fpga/ph1p100/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b20-a-timing/**",
+    "D:/fpga/ph1p100/fpga/csi2/src/**",
+    "D:/fpga/ph1p100/fpga/csi2/pcie_integration/**",
+    "D:/fpga/ph1p100/upstream/**",
+    "D:/fpga/ph1p100/tools/td/**",
+    "D:/fpga/ph1p100/workflow/tasks.json",
+    "D:/fpga/ph1p100/docs/**",
+    "D:/fpga/ph1p100/.agents/**",
+    "D:/fpga/repos/**",
+    "D:/TD/**",
+    "authoritative GitHub repos (no commit/push/fork)"
+  ],
+  "dispatch_notes": [
+    "The run is finished. Do not spawn any developer or tester.",
+    "Relay user_summary.md to the user as-is; it contains the two next-step options and the exact new-run text.",
+    "needs_user_input=true because the recommended next package (TD route workaround) requires a new user-authorised TD quota.",
+    "No commit/push, no hardware, no network, no batch delete."
+  ]
+}

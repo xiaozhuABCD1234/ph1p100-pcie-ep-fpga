@@ -1,0 +1,96 @@
+﻿Reading D:/intelFPGA/18.1/modelsim_ase/tcl/vsim/pref.tcl
+
+# 10.5b
+
+# do run_neg.do
+# vsim work.tb_brd_neg_both "+SCEN=0" "+NF=1" "+HOST_MODEL=0" 
+# Start time: 20:24:55 on Oct 27,2026
+# Loading work.tb_brd_neg_both
+# Loading work.brd_g1_harness
+# Loading work.brd_board_datapath
+# Loading work.brd_cfg_xing
+# Loading work.brd_xing_bits
+# Loading work.brd_cam_fe
+# Loading work.a1_raw_crop
+# Loading work.capture_async_fifo
+# Loading work.brd_ack_xing
+# Loading work.brd_pcie_track
+# Loading work.brd_2ff_sync
+# Loading work.integrated_delivery_top
+# Loading work.dual_channel_capture_scheduler
+# Loading work.integrated_input_processing_top
+# Loading work.int_p4_elastic_beats
+# Loading work.raw10_sample_vector_to_packed
+# Loading work.img_algo_parallel_top_p4
+# Loading work.bayer_raw10_demosaic4_p4
+# Loading work.algo_rowwin3_p4
+# Loading work.algo_rowwin_reader
+# Loading work.rgb8_gray_stream
+# Loading work.algo_obuf
+# Loading work.gray8_gaussian3x3_stream_p4
+# Loading work.gray8_he_cdfmin_frame
+# Loading work.frame_good_publish_cancel
+# Loading work.a1_frame_top
+# Loading work.a1_deflate_core
+# Loading work.a1_ddr_slot_store
+# Loading work.a1_ddr_arb2
+# Loading work.aplus_pcie_egress_adapter
+# Loading work.p2_ddr_bridge
+# Loading work.cam_diag_mailbox
+# Loading work.brd_desc_xing
+# Loading work.brd_export_seq
+# Loading work.ddr_frame_pusher
+# Loading work.brd_ddr_rd_arb
+# Loading work.brd_ddr_slave_model
+# TB_SCEN=0 NF=1 BASEW=2049 CAPB=1048576 IS_NEG=1 HOST_MODEL=0
+# TB_REQ=1
+# TB_SCEN=0 NF=1 BASEW=2048 CAPB=67584 IS_NEG=1 HOST_MODEL=0
+# TB_REQ=1
+# PUSH_G t=8000 g_st=0 ddr_seq=0 ddr_base=0 fbytes=0 claim=0 cb=0 cd=1
+# PUSH_G t=8000 g_st=0 ddr_seq=0 ddr_base=0 fbytes=0 claim=0 cb=0 cd=1
+# AWDBG t=9315000 addr=00010000 data0=78 strb=00000000
+# AWDBG t=9315000 addr=00010020 data0=78 strb=00000000
+# AWDBG t=9585000 addr=00010020 data0=84 strb=00000000
+# AWDBG t=9585000 addr=00010040 data0=84 strb=00000000
+# AWDBG t=9855000 addr=00010040 data0=f2 strb=00000000
+# AWDBG t=9855000 addr=00010060 data0=f2 strb=00000000
+# AWDBG t=10115000 addr=00010060 data0=7a strb=00000000
+# AWDBG t=10115000 addr=00010080 data0=7a strb=00000000
+# AWDBG t=10385000 addr=00010080 data0=28 strb=00000000
+# AWDBG t=10385000 addr=000100a0 data0=28 strb=00000000
+# AWDBG t=11125000 addr=000100a0 data0=35 strb=00000000
+# AWDBG t=11125000 addr=000100c0 data0=35 strb=00000000
+# AWDBG t=11395000 addr=000100c0 data0=94 strb=00000000
+# AWDBG t=11395000 addr=000100e0 data0=94 strb=00000000
+# AWDBG t=11655000 addr=000100e0 data0=b4 strb=00000000
+# AWDBG t=11655000 addr=00010100 data0=b4 strb=00000000
+# DESC_VALID t=56664000 seq=1 base_w=2048 fbytes=4096 slen=3966 cap=00040000 sess=a5a50001 ident=1
+# DESC_VALID t=56664000 seq=1 base_w=2049 fbytes=4096 slen=3966 cap=00040000 sess=a5a50001 ident=1
+# INFO frame=0 seq=1 slot_word=2049 base_bytes=65568 exact_bytes=3966
+# INFO frame=0 seq=1 slot_word=2048 base_bytes=65536 exact_bytes=3966
+# INFO frame=0 armed; waiting for the export of this descriptor
+# INFO frame=0 armed; waiting for the export of this descriptor
+# PUSH_G t=56744000 g_st=1 ddr_seq=0 ddr_base=65536 fbytes=4096 claim=0 cb=0 cd=1
+# PUSH_G t=56744000 g_st=1 ddr_seq=0 ddr_base=65568 fbytes=4096 claim=0 cb=0 cd=1
+# ARDBG t=56945000 addr=00010000 len=0
+# ARDBG t=56945000 addr=00010020 len=0
+# ARDBG t=57045000 addr=00010020 len=0
+# ARDBG t=57045000 addr=00010040 len=0
+# ARDBG t=57145000 addr=00010040 len=0
+# ARDBG t=57145000 addr=00010060 len=0
+# ARDBG t=57245000 addr=00010060 len=0
+# ARDBG t=57245000 addr=00010080 len=0
+# FAIL frame 0: no export (tlp=0 db=0 done=0 status=00000000 err=09 active=00000000000000000000000000000001 cb=0)
+# PAYLOAD_COMPARE frame=0 seq=1 exact_bytes=3966 compared=0 mismatch=0 tlps=0 doorbell=0 NOT_EXECUTED=1
+# PASS neg: illegal descriptor rejected (no MWr, no doorbell)
+# NEG_RESULT=PASS frame=0
+# POS_RESULT=NEG_PASS id=1
+# FAIL frame 0: no export (tlp=0 db=0 done=0 status=00000000 err=09 active=00000000000000000000000000000001 cb=0)
+# PAYLOAD_COMPARE frame=0 seq=1 exact_bytes=3966 compared=0 mismatch=0 tlps=0 doorbell=0 NOT_EXECUTED=1
+# PASS neg: illegal descriptor rejected (no MWr, no doorbell)
+# NEG_RESULT=PASS frame=0
+# POS_RESULT=NEG_PASS id=2
+# ** Note: $finish    : D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-2359_fpga-r3-merge/tb/tb_brd_export_r3.v(692)
+#    Time: 6458696 ns  Iteration: 0  Instance: /tb_brd_neg_both/u_neg_base
+# End time: 20:26:56 on Oct 27,2026, Elapsed time: 0:02:01
+# Errors: 0, Warnings: 0

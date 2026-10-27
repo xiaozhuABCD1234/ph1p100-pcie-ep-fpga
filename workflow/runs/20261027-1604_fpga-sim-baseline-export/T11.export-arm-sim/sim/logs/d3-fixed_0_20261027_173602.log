@@ -1,0 +1,33 @@
+Reading D:/intelFPGA/18.1/modelsim_ase/tcl/vsim/pref.tcl
+
+# 10.5b
+
+# vsim -c -quiet -voptargs="+acc" -do "D:\fpga\repos\ph1p100-pcie-ep-fpga\workflow\runs\20261027-1604_fpga-sim-baseline-export\T11.export-arm-sim\sim\run_all.do" work.tb_brd_g1_top "+SCEN=0" "+NF=2" 
+# Start time: 17:36:04 on Oct 27,2026
+# do {D:\fpga\repos\ph1p100-pcie-ep-fpga\workflow\runs\20261027-1604_fpga-sim-baseline-export\T11.export-arm-sim\sim\run_all.do}
+# TB_SCEN=0 NF=2 BASEW=2048 CAPB=1048576 IS_NEG=0
+# PUSH_G t=8000 g_st=0 ddr_seq=0 ddr_base=0 fbytes=0 claim=0 cb=0 cd=1
+# DESC_VALID t=56664000 seq=1 base_w=2048 fbytes=4096 slen=3966 cap=00040000 sess=a5a50001 ident=1
+# INFO frame=0 seq=1 slot_word=2048 base_bytes=65536 exact_bytes=3966
+# PUSH_G t=56712000 g_st=1 ddr_seq=1 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# INFO frame=0 arming frame consumed, slot freed after 0 tl cycles (rel_count=1)
+# DESC_VALID t=144024000 seq=2 base_w=2048 fbytes=4096 slen=3965 cap=00040000 sess=a5a50001 ident=1
+# INFO frame=1 seq=2 slot_word=2048 base_bytes=65536 exact_bytes=3965
+# TXDBG t=144025000 ar_hs=0 ddrR_hs=124 puR_hs=0 owner=0 busy=0 p_arvalid=0 p_arready=0 m_arvalid=0 m_arready=0 m_rvalid=0 m_rready=1 mem_rd_busy=0 mem_rd_left=0 p_st=1 b_arvalid=0
+# PUSH_G t=144040000 g_st=2 ddr_seq=2 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# FAIL tlp: addr 0000000000000000 != 0000000001000000
+# FAIL tlp: length 0 != 32
+# MISMATCH tlp 0 byte 3: got 01 exp 00
+# MISMATCH tlp 0 byte 8: got ff exp 00
+# MISMATCH tlp 0 byte 11: got 01 exp 00
+# MISMATCH tlp 0 byte 12: got 20 exp 00
+# FAIL tlp: addr 0000000000000000 != 0000000001000080
+# FAIL tlp: length 0 != 32
+# PUSH_G t=147272000 g_st=3 ddr_seq=2 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# FAIL frame 1: no export (tlp=33 db=0 done=1 status=00000006 err=00 active=00000000000000000000000000000001 cb=1)
+# PAYLOAD_COMPARE frame=1 seq=2 exact_bytes=3965 compared=3965 mismatch=199 tlps=33 doorbell=0 NOT_EXECUTED=1
+# POS_RESULT=FAIL no_export frame=1
+# ** Note: $finish    : ../tb/tb_brd_g1.v(585)
+#    Time: 6544024 ns  Iteration: 1  Instance: /tb_brd_g1_top/u_h
+# End time: 17:36:56 on Oct 27,2026, Elapsed time: 0:00:52
+# Errors: 0, Warnings: 0
