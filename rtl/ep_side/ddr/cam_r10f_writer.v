@@ -194,7 +194,9 @@ module cam_r10f_writer #(
 
     localparam [BTL_CW-1:0] BURST_BEATS_S = BURST_BEATS;   // 参数不能直接位选
     localparam [BTL_CW-1:0] DMA_BEATS_S   = DMA_BEATS;
-    localparam [7:0]        AWLEN_FIRST   = (DMA_BEATS > BURST_BEATS) ? (BURST_BEATS - 1)
+    // 帧首只发 4 拍（128B 头）：载荷要等 ROI 起始行（577 行），帧首若一次抢 4KB，
+    // 这一笔会开着等 9~18ms，axi_busy 一直为 1 把 DDR 写口压死。
+    localparam [7:0]        AWLEN_FIRST   = (DMA_BEATS > BURST_BEATS) ? 8'd3
                                                                       : (DMA_BEATS - 1);
 
     function [FIFO_AW:0] bin2gray;
@@ -429,6 +431,8 @@ module cam_r10f_writer #(
     reg                frame_close;
     reg                axi_err;
     reg                rw_done_r;
+    reg                mid_frame;      // 帧内还有突发没发：停在 A_IDLE 等数据
+    reg                need_first;     // 帧首那一笔（4 拍头）无条件放行
     reg  [16:0]        pub_wait_cnt;
     reg                pub_ack;
     reg  [31:0]        pub_base;
@@ -577,6 +581,29 @@ module cam_r10f_writer #(
         else begin wgray_s1 <= wptr_gray; wgray_s2 <= wgray_s1; end
     end
 
+    /*
+     * 突发级流控（T07 收帧卡死修复）：每笔突发结束回 A_IDLE 交还 DDR 写口，
+     * 等 FIFO 有足够数据再发下一笔；帧首那一笔只有 4 拍（只写头）且无条件放行。
+     * 门槛从 827 降到 500：v4 用 827 时 FIFO 只剩 ~197 组余量（一行就 480 组），
+     * 末段 wfull 会丢几个组（板测整帧差 4 组、verdict=0x4）。降到 500 后余量 ≈524 组，
+     * 代价是发出时 FIFO 可能不足一整笔 128 拍，突发会在中途等一点数据（端口占用略升）。
+     */
+    function [FIFO_AW:0] gray2bin;
+        input [FIFO_AW:0] g;
+        integer i;
+        begin
+            gray2bin[FIFO_AW] = g[FIFO_AW];
+            for (i = FIFO_AW-1; i >= 0; i = i - 1)
+                gray2bin[i] = gray2bin[i+1] ^ g[i];
+        end
+    endfunction
+
+    wire [FIFO_AW:0] wbin_sync_ddr = gray2bin(wgray_s2);
+    wire [FIFO_AW:0] fifo_occ_ddr  = wbin_sync_ddr - rptr_bin;
+    localparam integer BURST_GROUPS = 500;
+    wire tail_phase_ddr = (s_state == S_TAIL) || (s_state == S_DRAIN) || (s_state == S_WAIT);
+    wire burst_ok_ddr   = tail_phase_ddr || (fifo_occ_ddr >= BURST_GROUPS);
+
     // ========================================================================
     //  ddr 域：载荷 CRC（消费侧 4 字节/拍；末字按实际有效载荷字节取变体）
     // ========================================================================
@@ -683,7 +710,9 @@ module cam_r10f_writer #(
             end
 
             // ---- 帧内停滞超时（丢标记兜底；约 10ms @100MHz）----
-            if (((s_state == S_PAY) | (s_state == S_SKIP)) && !pop) begin
+            // 等突发数据（mid_frame，没有突发在飞）时不计超时
+            if (((s_state == S_PAY) | (s_state == S_SKIP) | (s_state == S_HDR)) &&
+                !pop && !mid_frame) begin
                 if (!tmo_hit) tmo <= tmo + 21'd1;
             end else tmo <= 21'd0;
 
@@ -853,7 +882,9 @@ module cam_r10f_writer #(
                        (beat_cnt != DMA_BEATS32) | axi_err;
     wire pub_stuck = (pub_wait_cnt == 17'h1_FFFF);
 
-    wire [BTL_CW-1:0] burst_beats = (beats_left > BURST_BEATS_S) ? BURST_BEATS_S : beats_left;
+    wire [7:0]        cur_awlen1  = m_axi_awlen + 8'd1;
+    wire [BTL_CW-1:0] cur_beats_x = {{(BTL_CW-8){1'b0}}, cur_awlen1};
+    wire [BTL_CW-1:0] burst_beats = (beats_left > cur_beats_x) ? cur_beats_x : beats_left;
     wire [28:0]       burst_step  = {{(29-BTL_CW){1'b0}}, burst_beats} << 5;
     wire [BTL_CW-1:0] next_beats  = beats_left - burst_beats;
     wire [7:0]        next_awlen  = (next_beats > BURST_BEATS_S) ? (BURST_BEATS - 1)
@@ -888,6 +919,8 @@ module cam_r10f_writer #(
             frame_idx     <= 32'd0;
             axi_err       <= 1'b0;
             rw_done_r     <= 1'b0;
+            mid_frame     <= 1'b0;
+            need_first    <= 1'b0;
             pub_base      <= BASE0;
             pub_ok        <= 1'b0;
             pub_err       <= 16'd0;
@@ -907,12 +940,26 @@ module cam_r10f_writer #(
             if (rel0_evt) protect0 <= 1'b0;
             if (rel1_evt) protect1 <= 1'b0;
 
+            // 自愈时清流控状态，否则会停在 A_IDLE 等一个永远不来的 burst_ok
+            if (self_flush) begin
+                mid_frame  <= 1'b0;
+                need_first <= 1'b0;
+            end
+
             // 自愈窗口计数（唯一定义处；触发在下面的 A_IDLE 判定分支里）
             if (self_flush_cnt != 8'd0) self_flush_cnt <= self_flush_cnt - 8'd1;
 
             case (a_st)
                 A_IDLE: begin
-                    if (skip_frm_done) begin
+                    // 换手点：停在这里就是交还端口（awvalid/wvalid/bready 全 0）。
+                    if (mid_frame) begin
+                        if (need_first || burst_ok_ddr) begin
+                            mid_frame     <= 1'b0;
+                            need_first    <= 1'b0;
+                            m_axi_awvalid <= 1'b1;
+                            a_st          <= A_AW;
+                        end
+                    end else if (skip_frm_done) begin
                         if (pub_stuck) begin
                             pub_tgl <= pub_ack_s2;
                             err_cnt <= err_cnt + 16'd1;
@@ -939,11 +986,13 @@ module cam_r10f_writer #(
                         m_axi_awlen   <= AWLEN_FIRST;
                         burst_m1      <= AWLEN_FIRST;
                         w_idx         <= {BEAT_CW{1'b0}};
-                        m_axi_awvalid <= 1'b1;
+                        m_axi_awvalid <= 1'b0;
                         axi_err       <= 1'b0;
                         rw_done_r     <= 1'b0;
                         frame_idx     <= frame_idx + 32'd1;
-                        a_st          <= A_AW;
+                        mid_frame     <= 1'b1;
+                        need_first    <= 1'b1;      // 帧首那一笔（4 拍头）立刻放行
+                        a_st          <= A_IDLE;
                     end else if (rw_done_r && (s_state == S_WAIT)) begin
                         wcnt_last    <= gcnt[15:0];
                         beats_last   <= beat_cnt[15:0];
@@ -1024,8 +1073,9 @@ module cam_r10f_writer #(
                         addr_r        <= addr_r + burst_step;
                         m_axi_awaddr  <= addr_r + burst_step;
                         m_axi_awlen   <= next_awlen;
-                        m_axi_awvalid <= 1'b1;
-                        a_st          <= A_AW;
+                        m_axi_awvalid <= 1'b0;      // 先交还端口，回 A_IDLE 等数据
+                        mid_frame     <= 1'b1;
+                        a_st          <= A_IDLE;
                     end
                 end
 
