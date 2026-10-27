@@ -1,0 +1,119 @@
+{
+  "task_id": "T11.BRD.P1",
+  "round": 3,
+  "generated_at": "2026-10-27T20:15+08:00",
+  "stimulus_contract": {
+    "roi_rows": [
+      16,
+      63
+    ],
+    "groups": [
+      8,
+      23
+    ],
+    "value": "v = (r*32 + g) & 0x3FF; four identical 10-bit pixels per 40-bit beat",
+    "byte_offset": "((r-16)*16 + (g-8))*5",
+    "byte0_3": "v[9:2]",
+    "byte4": "{v[1:0] x4}",
+    "raw_len": 3840,
+    "first_group_v": 520,
+    "geometry": {
+      "cam": [
+        128,
+        96
+      ],
+      "roi": [
+        64,
+        48
+      ],
+      "W": 64,
+      "H": 48
+    }
+  },
+  "independent_golden": {
+    "rule": "derived from the frozen contract only (evidence/gen_expected_raw.py); no DUT output, pk_bytes, slot stream or developer intermediate is read",
+    "expected_raw": {
+      "file": "expected_raw.bin",
+      "len": 3840,
+      "sha256": "FBA49D330DB9196A9BD9B8F29419A5603CEF600FE7D08F73708674F4C3C5111E",
+      "adler32": "392578F9",
+      "crc32": "7269454A",
+      "first5": "8282828200",
+      "last5": "fdfdfdfdff"
+    },
+    "raw_len": 3840,
+    "xform_len_bypass": 3840,
+    "xform_crc_bypass": "7269454A",
+    "frame_bytes": 4096,
+    "mwr_count": 32,
+    "mwr_bytes": 4096,
+    "doorbell_count": 1,
+    "doorbell_payload": "held_seq",
+    "slot_base_bytes": 65536,
+    "slot_base_word": 2048,
+    "slot_first_two_bytes": "789c",
+    "slot_base0_bytes": "all zero (legacy base must stay unused)",
+    "zlib_rule": "CPython 3.11.5 zlib.decompress(slot[0:stream_len]) must succeed",
+    "decompressed_len_rule": "== xform_len",
+    "raw_rule": "decompressed bytes == expected_raw.bin byte-for-byte (PRIMARY judged criterion)",
+    "adler_rule": "last 4 bytes big-endian == zlib.adler32(decompressed bytes) == 392578F9",
+    "frame_bytes_rule": "frame_bytes == align_up(stream_len, 4096) and == 4096 (stream_len < 4096; a conformant deflate of 3840 B cannot exceed ~3845 B even with stored blocks)",
+    "header": {
+      "magic": "A1U1",
+      "version": 1,
+      "header_len": 44,
+      "flags": {
+        "bypass": 0,
+        "prep_pred": 3
+      },
+      "width": 64,
+      "height": 48,
+      "raw_len": 3840,
+      "xform_len": 3840,
+      "stream_len": "== len(slot)",
+      "raw_crc": "== DUT st_raw_crc (bypass: 7269454A)",
+      "xform_crc": "== crc32(expected_raw) in bypass (7269454A)",
+      "header_crc": "zlib.crc32(header[0:40]) over the 44B header",
+      "payload": "header[44:] == slot[0:stream_len]"
+    }
+  },
+  "candidate_bound": {
+    "note": "measured on the frozen r2 TB run; equality is a repeatability/stability check, NOT an independent derivation. Byte equality of the compressed stream is not a valid criterion because a1_deflate_core is a different RFC1950 encoder than CPython zlib.",
+    "source_run": "sim/scen0 (r3 TB, PREP=0 PRED=0)",
+    "stream_len": 2470,
+    "frame_bytes": 4096,
+    "hcrc": "A5ECBAD9",
+    "stream_crc": "9909B919",
+    "stim_probe": {
+      "stim_lane_bad": 0,
+      "stim_chain_bad": 0,
+      "stim_first_v": 520,
+      "pk_first": "0082828282",
+      "pk_bytes_len": 3840
+    }
+  },
+  "candidate_bound_prep": {
+    "note": "PREP=1/PRED=1 run of the frozen r2 TB: different transform domain, so only length/adler/header/transport criteria plus raw_crc apply; the compressed length is again candidate-bound.",
+    "source_run": "sim/prep (r3 TB, PREP=1 PRED=1)",
+    "stream_len": 538,
+    "xform_crc": "7883ABAF",
+    "stream_crc": "10FCD4FE",
+    "hcrc": "69C48065",
+    "adler32_of_decoded": "5F1669E1",
+    "raw_crc": "7269454A"
+  },
+  "reference_encoder": {
+    "compressor": "CPython 3.11.5 zlib.compress(expected_raw) default level (-1 == 6)",
+    "stream_len": 723,
+    "sha256": "EA4F8DBD37A0EE175269CBCC949DE2F2E6FA6714CA9ED05707673260095E9EB5",
+    "header": "789c",
+    "why_not_a_criterion": "proof from the r1 frozen malformed frame: CPython zlib needs 1391 B, the DUT emitted 3137 B, both with the same Adler-32 0xc49f41ae. The encoder choice (match length/block policy) is an implementation detail; the contract is a legal RFC1950 member that decodes to the exact raw with a correct Adler."
+  },
+  "r1_reference_only": {
+    "stream_len_r1_malformed_stimulus": 3137,
+    "hcrc_r1": "1263F0EA",
+    "stream_len_tester_fixvariant_one_group_lag": 2510,
+    "note": "cross-reference only; never a source of expectation for r2"
+  },
+  "r3_note": "r3 keeps every independent golden value unchanged. The only candidate-bound change is the A1U1 header CRC: r3 starts the per-camera capture identity at 1 (r0d), so frame_id 0->1 and hcrc 5436BF73->A5ECBAD9 (bypass) / 981E85CF->69C48065 (PREP=1/PRED=1). The compressed slot stream itself is unchanged (2470 B / 9909B919)."
+}
