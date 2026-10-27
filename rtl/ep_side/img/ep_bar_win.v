@@ -151,6 +151,16 @@ module ep_bar_win #(
     output reg  [6:0]   memrd_addr_lo,
     input  wire [127:0] ddr_ro_b,        // B 路整帧搬运握手字 {len,status,base,seq}（0xEC/0xE8/0xE4/0xE0）
     input  wire [31:0]  cam_diag_b,      // B 路相机直通诊断 {lines_per_frame, max_grp_per_line}（0xD8）
+    // 板级调试（T07 收帧卡死定位用，只读、不参与任何数据路径）：
+    //   0x170 A 路写者状态 {7'd0, pub 未回执, hdr_ready, s_state[2:0], a_st[2:0]}
+    //   0x174 B 路写者状态（同上）
+    //   0x178 DDR 写口仲裁 {30'd0, grant, busy_b, busy_a}
+    input  wire [8:0]   dbgfsm_cama,
+    input  wire [8:0]   dbgfsm_camb,
+    input  wire         dbgwr_busya,
+    input  wire         dbgwr_busyb,
+    input  wire         dbgwr_grant,
+    input  wire [95:0]  dbgdrop_b,       // B 路写者丢帧诊断（0x17C/0x180/0x184）
     output reg  [6:0]   cam_tap_cfg,     // A 路 {manual_en, tap[5:0]} 主机可写（0x9C）
     output reg  [6:0]   cam_tap_b_cfg,   // B 路 {manual_en, tap[5:0]} 主机可写（0xD4）
     output wire         cam_ab_sel,      // CTRL[8]：推帧取哪一路（0 = A，默认；1 = B）
@@ -598,6 +608,13 @@ module ep_bar_win #(
             12'h158: rd_dw_comb = dbg_bank_word6;
             12'h15C: rd_dw_comb = dbg_bank_word7;
             12'h160: rd_dw_comb = dbg_bank_word8;
+            // ---- 板级调试：收帧写者卡死定位（0x170..0x178，只读，非合同寄存器）----
+            12'h170: rd_dw_comb = {23'd0, dbgfsm_cama};
+            12'h174: rd_dw_comb = {23'd0, dbgfsm_camb};
+            12'h178: rd_dw_comb = {29'd0, dbgwr_grant, dbgwr_busyb, dbgwr_busya};
+            12'h17C: rd_dw_comb = dbgdrop_b[31:0];    // {notack[15:0], stuck[15:0]}
+            12'h180: rd_dw_comb = dbgdrop_b[63:32];   // {bad[15:0], last_wcnt[15:0]}
+            12'h184: rd_dw_comb = dbgdrop_b[95:64];   // {24'd0, verdict_snap}
             default: rd_dw_comb = 32'hDEAD_BEEF;
         endcase
     end

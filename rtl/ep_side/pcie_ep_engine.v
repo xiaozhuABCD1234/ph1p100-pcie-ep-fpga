@@ -70,6 +70,13 @@ module pcie_ep_engine #(
     output      wire                cam_ab_sel             ,   // CTRL[8] 推帧取 A/B 路
     input       wire [31:0]         cam_diag_b             ,   // B 路相机直通诊断（0xD8）
     input       wire [95:0]         cam_drop_a             ,   // A 路丢帧诊断（0xDC/0xF0/0xF4）
+    // 板级调试：收帧写者状态快照 + DDR 写口仲裁（只读，透传给 ep_bar_win 的 0x170..0x178）
+    input       wire [8:0]          dbgfsm_cama            ,
+    input       wire [8:0]          dbgfsm_camb            ,
+    input       wire                dbgwr_busya            ,
+    input       wire                dbgwr_busyb            ,
+    input       wire                dbgwr_grant            ,
+    input       wire [95:0]         dbgdrop_b              ,
     input       wire [127:0]        ddr_ro_b               ,   // B 路整帧搬运握手字（0xE0~0xEC）
     // ==== 本移植新增：DDR3 整帧搬运（CTRL[5] + 只读握手字）====
     output      wire                img_ctrl_ddr_en        ,
@@ -425,6 +432,12 @@ ep_bar_win #(
     .cam_ab_sel     (cam_ab_sel             ),
     .cam_diag_b     (cam_diag_b             ),
     .cam_drop_a     (cam_drop_a             ),
+    .dbgfsm_cama    (dbgfsm_cama            ),
+    .dbgfsm_camb    (dbgfsm_camb            ),
+    .dbgwr_busya    (dbgwr_busya            ),
+    .dbgwr_busyb    (dbgwr_busyb            ),
+    .dbgwr_grant    (dbgwr_grant            ),
+    .dbgdrop_b      (dbgdrop_b              ),
     .ddr_ro_b       (ddr_ro_b               ),
     .ctrl_ddr_en    (img_ctrl_ddr_en        ),
     .ddr_ro         (img_ddr_ro             ),

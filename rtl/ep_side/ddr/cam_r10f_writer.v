@@ -115,6 +115,9 @@ module cam_r10f_writer #(
     output reg  [15:0]   dbg_max_grp_per_line,
     output reg           dbg_anomaly,
     output wire [95:0]   dbg_drop,
+    // 板级调试用状态快照（只读，不参与任何数据/控制路径）：
+    //   [2:0] a_st（AXI 写状态机）、[5:3] s_state（源状态机）、[6] hdr_ready、[7] pub 未回执
+    output wire [8:0]    dbg_fsm,
 
     // ---------------- DDR 用户域（100MHz）----------------
     input  wire          clk_ddr,
@@ -502,8 +505,35 @@ module cam_r10f_writer #(
                  (s_state == S_PAY)  ? (data_ready & (pop_pay | pop_mark)) :
                  1'b0;
 
+    /*
+     * 相机域复位必须把读侧指针一起清掉 —— 否则跨域 FIFO 会永久失配。
+     *
+     * 写指针只在 cam_clk 域，复位源是 rst_cam_all（= !cam_rst_n | !alive_c2，
+     * 相机掉时钟/链路抖动都会拉高），是**异步**清 0；而读指针原来只认 rst_ddr。
+     * 一旦相机侧重置一次、DDR 侧没重置，wptr 归 0 而 rptr 停在旧值：
+     *   · rempty 永远不成立 → 读侧一直「有数据」，取到的是垃圾；
+     *   · wfull 按错的 rptr 判 → 写侧很快报满，组被丢光。
+     * 板上表现就是写者每帧只写进去 1023 组（正好卡在 FIFO 深度）后整帧超时，
+     * 且该路永远恢复不了（板测：B 路 seq 卡死、beats 却是整帧长度）。
+     *
+     * 这里把 rst_cam_all 同步到 ddr 域并在清零后保持若干拍，让读侧与写侧同拍归零。
+     */
+    reg [1:0]  cam_rst_sync;
+    reg [7:0]  cam_flush_cnt;
     always @(posedge clk_ddr or posedge rst_ddr) begin
         if (rst_ddr) begin
+            cam_rst_sync  <= 2'b11;
+            cam_flush_cnt <= 8'hFF;
+        end else begin
+            cam_rst_sync <= {cam_rst_sync[0], rst_cam_all};
+            if (cam_rst_sync[1])      cam_flush_cnt <= 8'hFF;      // 见到相机复位就重新装
+            else if (cam_flush_cnt != 8'd0) cam_flush_cnt <= cam_flush_cnt - 8'd1;
+        end
+    end
+    wire cam_flush = (cam_flush_cnt != 8'd0);
+
+    always @(posedge clk_ddr or posedge rst_ddr) begin
+        if (rst_ddr || cam_flush) begin
             rptr_bin  <= {(FIFO_AW+1){1'b0}};
             rptr_gray <= {(FIFO_AW+1){1'b0}};
             ent_vld   <= 1'b0;
@@ -1059,5 +1089,14 @@ module cam_r10f_writer #(
     end
 
     assign wr_len = DMA_BYTES32;
+
+    // 板级调试：把「卡在哪」直接露出来（a_st / s_state / hdr_ready / pub 未回执）。
+    // 先在本域打一拍再出去，避免把 DDR 域的裸组合量直接给 tl 域读。
+    reg [8:0] dbg_fsm_r;
+    always @(posedge clk_ddr or posedge rst_ddr) begin
+        if (rst_ddr) dbg_fsm_r <= 9'd0;
+        else         dbg_fsm_r <= {1'b0, (pub_tgl ^ pub_ack_s2), hdr_ready, s_state, a_st};
+    end
+    assign dbg_fsm = dbg_fsm_r;
 
 endmodule

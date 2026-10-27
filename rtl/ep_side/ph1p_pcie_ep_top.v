@@ -209,6 +209,8 @@ wire [31:0] w_camddr_seq, w_camddr_base, w_camddr_status, w_camddr_len;
 wire [31:0] w_camddr_b_seq, w_camddr_b_base, w_camddr_b_status, w_camddr_b_len;
 // 两路各自的诊断（A → cam_stat[255:224] 即 0xD0；B → 0xD8）
 wire [15:0] w_camddr_lines, w_camddr_grp, w_camddr_b_lines, w_camddr_b_grp;
+wire [8:0]  w_dbgfsm_cama, w_dbgfsm_camb;   // 写者状态快照（调试只读，见 0x170/0x174）
+wire [95:0] w_dbgdrop_b;                  // B 路写者丢帧诊断（调试只读，见 0x17C/0x180/0x184）
 wire        w_camddr_anom, w_camddr_b_anom;
 // 推帧引擎取哪一路（CTRL[8]）
 wire [31:0] w_push_ddr_seq, w_push_ddr_base, w_push_ddr_status, w_push_ddr_len;
@@ -711,6 +713,12 @@ pcie_ep_engine #(
     .ddr_ro_b                                (w_ddr_ro_b                             ),
     .cam_drop_a                              (w_camddr_drop_a                        ),
     .cam_diag_b                              (w_cam_diag_b                           ),
+    .dbgfsm_cama                               (w_dbgfsm_cama                            ),
+    .dbgdrop_b                                 (w_dbgdrop_b                              ),
+    .dbgfsm_camb                               (w_dbgfsm_camb                            ),
+    .dbgwr_busya                           (w_camw_busy                            ),
+    .dbgwr_busyb                           (w_camw_busy_b                          ),
+    .dbgwr_grant                            (w_wr_grant                             ),
     // DDR3 整帧搬运（CTRL[5] + 只读握手字 + fb 读口仲裁）
     .img_ctrl_ddr_en                         (img_ddr_en                             ),
     .img_ddr_ro                              (w_ddr_ro                               ),
@@ -1569,6 +1577,7 @@ cam_r10f_writer #(
     .dbg_max_grp_per_line (w_camddr_grp  ),
     .dbg_anomaly          (w_camddr_anom ),
     .dbg_drop             (w_camddr_drop_a ),
+    .dbg_fsm              (w_dbgfsm_cama     ),
 
     .clk_ddr       (w_ddr_dhi_clk     ),
     .rst_ddr       (~w_ddrphy_rst_n   ),
@@ -1632,6 +1641,8 @@ cam_r10f_writer #(
     .dbg_lines_per_frame  (w_camddr_b_lines),
     .dbg_max_grp_per_line (w_camddr_b_grp  ),
     .dbg_anomaly          (w_camddr_b_anom ),
+    .dbg_fsm              (w_dbgfsm_camb     ),
+    .dbg_drop             (w_dbgdrop_b       ),
 
     .clk_ddr       (w_ddr_dhi_clk     ),
     .rst_ddr       (~w_ddrphy_rst_n   ),
