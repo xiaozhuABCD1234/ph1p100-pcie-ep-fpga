@@ -394,7 +394,12 @@ module ddr_frame_pusher #(
     wire par_valid = (ddr_base == par_base0) || (ddr_base == par_base1);
     wire par_now   = (ddr_base == par_base1) ? 1'b1 : 1'b0;
 
-    wire claim_desc_ok = (src_sel == lat_src) && (cam_sel_live == lat_cam) &&
+    // ★ 2026-10-28 板测：原来这里还有 (cam_sel_live == lat_cam)。lat_cam 只在 ARM 那拍锁存，
+    //   于是「ARM 之后再改 CTRL[8]」会让每一帧的 claim 都被判成 E_SRC=9、g_st 原地停在
+    //   G_ARMED，一个字节都不推；主机 dump 到的是上一块缓冲 → 表现为「换源后又抓到同一帧」。
+    //   基址 base_lat 本来就取自现场的 ddr_base，claimed_cam 也在 claim 时锁存，帧内不会被
+    //   改 bit8 撕裂，所以这里不再需要用「锁存值 vs 现场值」做硬比对。
+    wire claim_desc_ok = (src_sel == lat_src) &&
                          (frame_bytes == lat_fbytes) &&
                          (!src_sel || (frame_bytes == FRAME_BYTES));
     wire claim_base_ok = src_sel ? 1'b1 :
@@ -663,6 +668,7 @@ module ddr_frame_pusher #(
                     db_val      <= st_done + 32'd1;
                     claimed_par   <= par_now;
                     claimed_cam   <= cam_sel_live;
+                    lat_cam       <= cam_sel_live;   // CTRL[8] 自本帧起生效（原来只在 ARM 拍更新）
                     claimed_par_v <= (!src_sel) && par_valid && push_en;
                     addr_q      <= {lat_dst_hi, lat_dst_lo};
                     db_a_q      <= {lat_db_hi, lat_db_lo};

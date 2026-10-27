@@ -180,6 +180,14 @@ wire         w_cam_ddr_want_a, w_cam_ddr_want_b;
  * 没被 arm 的那一路走设计里已有的 skip 路径（跳过不写），不会卡。
  */
 localparam integer CAM_TX_ROT_BITS = 24;
+localparam integer SINGLE_B_TEST   = 1;   // （历史）1 = 只 arm B 路（单路扫频）
+localparam integer DUAL_TEST       = 1;   // 1 = A/B 同时 arm（并发实验）
+// 默认 arm 掩码（scratch=0 时生效）：本轮默认双路，用 0x6C 运行时改
+//   0x6C[1:0] = 1 → 只 A；2 → 只 B；3 → 双路；0 → 用下面这个默认
+localparam [1:0]   CAM_ARM_DEFAULT = DUAL_TEST ? 2'b11 : (SINGLE_B_TEST ? 2'b10 : 2'b11);
+wire [31:0] w_dbg_scratch;                       // 0x6C SCRATCH 直出（pcie_ep_engine）
+wire [1:0]  w_cam_arm_sel = (w_dbg_scratch[1:0] == 2'b00) ? CAM_ARM_DEFAULT
+                                                          : w_dbg_scratch[1:0];
 reg [CAM_TX_ROT_BITS-1:0] cam_tx_rot_cnt;
 reg                       cam_tx_owner;         // 0 = A 路持有发包权，1 = B 路
 
@@ -190,8 +198,10 @@ always @(posedge tl_clk_user) begin
 end
 
 assign w_cam_ddr_want   = img_ddr_en;
-assign w_cam_ddr_want_a = img_ddr_en & ~cam_tx_owner;
-assign w_cam_ddr_want_b = img_ddr_en &  cam_tx_owner;
+// 运行时 arm 掩码（0x6C）：1 = 只 A，2 = 只 B，3 = 双路；0 = 用 CAM_ARM_DEFAULT。
+// 这样一支位流就能分别验 B 单路 / A 单路 / 双路，不必每次改参数重建。
+assign w_cam_ddr_want_a = img_ddr_en &  w_cam_arm_sel[0];
+assign w_cam_ddr_want_b = img_ddr_en &  w_cam_arm_sel[1];
 // img_pattern[0] = CTRL[2] 用作「传感器重触发」（见顶层相机段说明）。
 wire [255:0] w_cam_stat;      // 声明必须早于例化处使用（否则 TD 造 1 位隐式网）
 wire [6:0]   cam_tap_cfg;     // A 路 tap（0x9C）
@@ -246,6 +256,8 @@ wire [31:0] w_camddr_b_seq, w_camddr_b_base, w_camddr_b_status, w_camddr_b_len;
 // 两路各自的诊断（A → cam_stat[255:224] 即 0xD0；B → 0xD8）
 wire [15:0] w_camddr_lines, w_camddr_grp, w_camddr_b_lines, w_camddr_b_grp;
 wire [8:0]  w_dbgfsm_cama, w_dbgfsm_camb;   // 写者状态快照（调试只读，见 0x170/0x174）
+wire [95:0] w_dbgstall_a, w_dbgstall_b;    // 写者 AXI 阶段停滞（调试只读，见 0x188~0x19C）
+wire [255:0] w_dbgframe_a, w_dbgframe_b;   // 写者每帧统计（调试只读，见 0x1A0~0x1DC）
 wire [95:0] w_dbgdrop_b;                  // B 路写者丢帧诊断（调试只读，见 0x17C/0x180/0x184）
 wire        w_camddr_anom, w_camddr_b_anom;
 // 推帧引擎取哪一路（CTRL[8]）
@@ -747,6 +759,11 @@ pcie_ep_engine #(
     .cam_tap_b_cfg                           (cam_tap_b_cfg                          ),
     .cam_ab_sel                              (img_cam_ab_sel                         ),
     .ddr_ro_b                                (w_ddr_ro_b                             ),
+    .dbg_scratch                             (w_dbg_scratch                          ),
+    .cama_stall                              (w_dbgstall_a                           ),
+    .camb_stall                              (w_dbgstall_b                           ),
+    .dbg_frame_a                             (w_dbgframe_a                           ),
+    .dbg_frame_b                             (w_dbgframe_b                           ),
     .cam_drop_a                              (w_camddr_drop_a                        ),
     .cam_diag_b                              (w_cam_diag_b                           ),
     .dbgfsm_cama                               (w_dbgfsm_cama                            ),
@@ -1129,17 +1146,85 @@ assign  debug_led[3] = ltssm_reg_dly[4];
     reg        r_rst_n      = 1'b0;
     always @(posedge tl_clk_user) r_rst_n <= (r_pwr_cnt2 > 23'd1000);
 
-    // ---- (a) 62.5MHz → 12.5MHz（旧分频器：acc+2、>=5 时 -3 并翻转，默认）----
-    //   半周期 2/3 拍交替 → 输出周期恒 80ns、瞬时占空 40/60（无周期抖动）
+    // ---- 50MHz sys_clk → 干净 25MHz（MCLK_SEL=5；先 BUFG 再二分频，50% 占空）----
+    wire w_sys_clk_bufg;
+    PH1P_LOGIC_BUFG u_sys_clk_bufg (.i(sys_clk), .o(w_sys_clk_bufg));
+    reg  r_mclk_25_clean = 1'b0;
+    always @(posedge w_sys_clk_bufg) r_mclk_25_clean <= ~r_mclk_25_clean;
+
+    // 62.5MHz → 27MHz 分数分频（MCLK_SEL=6；Bresenham，平均 27.0MHz）
+    //   INC = round(65536 * 27 / 62.5) = 56623；平均翻转率 62.5*56623/65536 = 54.0MHz
+    localparam [16:0] MCLK27_INC = 17'd56623;
+    reg [16:0] r_mclk27_acc = 17'd0;
+    reg        r_mclk_27    = 1'b0;
+    always @(posedge tl_clk_user) begin
+        if (r_mclk27_acc >= (17'd65536 - MCLK27_INC)) begin
+            r_mclk27_acc <= r_mclk27_acc + MCLK27_INC - 17'd65536;
+            r_mclk_27    <= ~r_mclk_27;
+        end else begin
+            r_mclk27_acc <= r_mclk27_acc + MCLK27_INC;
+        end
+    end
+
+    // ---- (a) 62.5MHz → 可选 MCLK（扫频用；默认 12.5MHz 仍是原分频器）----
+    //   MCLK_SEL: 0=12.5, 1=15.625, 2=20.833, 3=25, 4=31.25 MHz
+    //   非整数半周期用相位状态机在 62.5MHz 边沿上交替 1/2 拍实现：
+    //     20.833MHz: 半周期 1.5 拍（1,2 交替）→ 周期 3 拍
+    //     25MHz   : 半周期 1.25 拍（1,1,1,2）→ 周期 2.5 拍
+    //   输出只在 62.5MHz 边沿翻，最小脉宽 1 拍=16ns；传感器 INCK 的 PLL 需实测。
+    localparam integer MCLK_SEL = 6;
     reg [2:0] r_macc     = 3'd0;
+    reg [2:0] r_mclk_ph  = 3'd0;
     reg       r_mclk_125 = 1'b0;
     always @(posedge tl_clk_user) begin
-        if (r_macc >= 3'd5) begin
-            r_macc     <= r_macc - 3'd3;      // 等价 (acc+2)-5
-            r_mclk_125 <= ~r_mclk_125;
-        end else begin
-            r_macc     <= r_macc + 3'd2;
+        case (MCLK_SEL)
+        0: begin
+            // 12.5MHz：半周期 2/3 拍交替，周期恒 5 拍（原实现）
+            if (r_macc >= 3'd5) begin
+                r_macc     <= r_macc - 3'd3;
+                r_mclk_125 <= ~r_mclk_125;
+            end else begin
+                r_macc     <= r_macc + 3'd2;
+            end
         end
+        1: begin
+            // 15.625MHz：半周期 2 拍
+            if (r_mclk_ph[0]) begin
+                r_mclk_ph  <= 3'd0;
+                r_mclk_125 <= ~r_mclk_125;
+            end else begin
+                r_mclk_ph  <= 3'd1;
+            end
+        end
+        2: begin
+            // 20.833MHz：半周期 1.5 拍（toggle, wait, toggle, wait...）
+            case (r_mclk_ph)
+            3'd0: begin r_mclk_ph <= 3'd1; r_mclk_125 <= ~r_mclk_125; end
+            3'd1: begin r_mclk_ph <= 3'd2; end
+            default: begin r_mclk_ph <= 3'd0; r_mclk_125 <= ~r_mclk_125; end
+            endcase
+        end
+        3: begin
+            // 25MHz：半周期 1.25 拍（1,1,1,2 四个半周期，共 5 拍 = 2.5 拍/周期）
+            case (r_mclk_ph)
+            3'd0: begin r_mclk_ph <= 3'd1; r_mclk_125 <= ~r_mclk_125; end
+            3'd1: begin r_mclk_ph <= 3'd2; r_mclk_125 <= ~r_mclk_125; end
+            3'd2: begin r_mclk_ph <= 3'd3; r_mclk_125 <= ~r_mclk_125; end
+            3'd3: begin r_mclk_ph <= 3'd4; r_mclk_125 <= ~r_mclk_125; end
+            default: begin r_mclk_ph <= 3'd0; end
+            endcase
+        end
+        5: begin
+            // 25MHz 干净源由 sys_clk/2 产生；这里不动 r_mclk_125
+        end
+        6: begin
+            // 27MHz 由 r_mclk27_acc 产生；这里不动 r_mclk_125
+        end
+        default: begin
+            // 31.25MHz：半周期 1 拍
+            r_mclk_125 <= ~r_mclk_125;
+        end
+        endcase
     end
 
     // ---- (b) 已删除：原来的「50MHz sys_clk ÷ 4 = 12.50MHz」那一档 ----
@@ -1150,7 +1235,8 @@ assign  debug_led[3] = ltssm_reg_dly[4];
     //   clock、也没有全局缓冲（DRC RTCLK-5079 / check_timing 的 local clock /
     //   RTCLK-5078 那一类风险）。删掉后 sys_clk 只做 PCIe PLL 的参考时钟，
     //   MCLK 恒等于 (a) 的 12.5MHz，即板上已验证的那一档。
-    wire w_mclk = r_mclk_125;
+    wire w_mclk = (MCLK_SEL == 5) ? r_mclk_25_clean :
+                  (MCLK_SEL == 6) ? r_mclk_27       : r_mclk_125;
 
     // 诊断：img_pattern 历史出现过哪些取值（确认 CTRL 写的毛刺，见 0x80[15:12]）
     reg [3:0] r_mode_hits = 4'd0;
@@ -1191,7 +1277,7 @@ assign  debug_led[3] = ltssm_reg_dly[4];
         // 本包不把 0 说成「已验证几何」，只把判坏/计数接出来。
         .IMAGE_DT (6'h2b), .IMAGE_WC (16'd0), .EXPECTED_LINES (16'd0), .VC_ID (2'd0)
     ) u_csi_a (
-        .I_ref_clk          (tl_clk_user),
+        .I_ref_clk          (w_sys_clk_bufg),
         .I_rst_n            (r_rst_n    ),
         .I_rx_en            (r_rst_n    ),
         .I_clk_pad_hs_p     (mipi_a_clk_hs_p ),
@@ -1233,7 +1319,7 @@ assign  debug_led[3] = ltssm_reg_dly[4];
         .LANE_NUM (4),
         .IMAGE_DT (6'h2b), .IMAGE_WC (16'd0), .EXPECTED_LINES (16'd0), .VC_ID (2'd0)
     ) u_csi_b (
-        .I_ref_clk          (tl_clk_user),
+        .I_ref_clk          (w_sys_clk_bufg),
         .I_rst_n            (r_rst_n    ),
         .I_rx_en            (r_rst_n    ),
         .I_clk_pad_hs_p     (mipi_b_clk_hs_p ),
@@ -1581,7 +1667,7 @@ cam_r10f_writer #(
     .BASE0       (DDR_CAM_BASE0     ),
     .BASE1       (DDR_CAM_BASE1     ),
     .FIFO_AW     (10                ),
-    .BURST_BEATS (128               ),
+    .BURST_BEATS (64                ),
     .CAMERA_ID   (8'd0              ),
     .SRC_BAYER_PHASE (2'd0          ),
     .MODE_ID     (32'd1             )
@@ -1614,6 +1700,8 @@ cam_r10f_writer #(
     .dbg_anomaly          (w_camddr_anom ),
     .dbg_drop             (w_camddr_drop_a ),
     .dbg_fsm              (w_dbgfsm_cama     ),
+    .dbg_stall            (w_dbgstall_a      ),
+    .dbg_frame            (w_dbgframe_a      ),
 
     .clk_ddr       (w_ddr_dhi_clk     ),
     .rst_ddr       (~w_ddrphy_rst_n   ),
@@ -1648,7 +1736,7 @@ cam_r10f_writer #(
     .BASE0       (DDR_CAM_B_BASE0   ),
     .BASE1       (DDR_CAM_B_BASE1   ),
     .FIFO_AW     (10                ),
-    .BURST_BEATS (128               ),
+    .BURST_BEATS (64                ),
     .CAMERA_ID   (8'd1              ),
     .SRC_BAYER_PHASE (2'd0          ),
     .MODE_ID     (32'd1             )
@@ -1679,6 +1767,8 @@ cam_r10f_writer #(
     .dbg_anomaly          (w_camddr_b_anom ),
     .dbg_fsm              (w_dbgfsm_camb     ),
     .dbg_drop             (w_dbgdrop_b       ),
+    .dbg_stall            (w_dbgstall_b      ),
+    .dbg_frame            (w_dbgframe_b      ),
 
     .clk_ddr       (w_ddr_dhi_clk     ),
     .rst_ddr       (~w_ddrphy_rst_n   ),

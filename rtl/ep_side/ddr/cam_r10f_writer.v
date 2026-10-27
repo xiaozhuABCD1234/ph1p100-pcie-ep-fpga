@@ -35,7 +35,8 @@
 //
 //  三、为什么这么写（字节流组装与头 CRC 的三步）
 //  ===========================================================================
-//   1) 帧内容按**字节流**在 DDR 域组装：breg 是 8 字节窗口（最旧字节在低 8 位），
+//   1) 帧内容按**字节流**在 DDR 域组装：breg 是 16 字节窗口（最旧字节在低 8 位），
+//      窗口做宽是为了让「取走一个字」和「插入一组(5B)」能在同一拍发生——见 bcnt 处注释。
 //      每 4 字节消费成一个 32bit word，每 8 个 word 成为一个 256bit AXI 拍。
 //      ── 源排序：header(4 拍) → packed 载荷 → 尾零，总长恒 = DMA_BYTES；
 //      ── 载荷按 5 字节/组追加、头/尾按 4 字节/字追加；追加与消费同拍互斥。
@@ -115,6 +116,20 @@ module cam_r10f_writer #(
     output reg  [15:0]   dbg_max_grp_per_line,
     output reg           dbg_anomaly,
     output wire [95:0]   dbg_drop,
+    // AXI 各阶段最长连续停滞（单位 clk_ddr，饱和计数）+ 突发完成/收口超时次数：
+    //   [15:0]  w 阶段最长停滞、[31:16] b 阶段、[47:32] aw 阶段、[63:48] rwd 阶段
+    //   [79:72] 突发回执次数[7:0]、[95:88] rwd 超时自愈次数[7:0]
+    output wire [95:0]   dbg_stall,
+    // 每帧锁存的吞吐/丢组统计（只读诊断，帧收口时取样）：
+    //   [31:0]  相机侧本帧实际入队像素组数
+    //   [63:32] 相机侧本帧因 wfull 丢掉的像素组数
+    //   [95:64] {frame_lines[15:0], y_cnt[15:0]}（EOF 时刻）
+    //   [127:96]{16'd0, max_grp[15:0]}
+    //   [159:128] 相机侧本帧因 wfull 丢掉的标记数（SOF/EOF）
+    //   [191:160] DDR 侧本帧「打包占用」clk_ddr 周期数（不含 S_SYNC/S_WAIT）
+    //   [223:192] 收口时刻的 gcnt
+    //   [255:224]{27'd0, tmo_seen, p_bad, p_eof_seen, eof_bad_snap}
+    output wire [255:0]  dbg_frame,
     // 板级调试用状态快照（只读，不参与任何数据/控制路径）：
     //   [2:0] a_st（AXI 写状态机）、[5:3] s_state（源状态机）、[6] hdr_ready、[7] pub 未回执
     output wire [8:0]    dbg_fsm,
@@ -360,6 +375,42 @@ module cam_r10f_writer #(
         end
     end
 
+    // ---- 每帧统计（诊断）：帧首清零、EOF 锁存 ----
+    // 关键点：win_grp 只按「窗口内像素」计数，与 wfull 无关，所以 FIFO 溢出丢组
+    // **不会**让 line_bad_seen / eof_bad 置位——这正是「gcnt 偏短但 p_bad=0」的
+    // 唯一自洽解释。这里把「实际入队组数」和「因满丢掉的组数」分开数出来。
+    reg [31:0] fr_push, fr_drop, fr_ovf;
+    reg [31:0] sn_push, sn_drop, sn_ovf;
+    reg [15:0] sn_lines, sn_y, sn_maxgrp;
+    reg        sn_eofbad;
+    always @(posedge cam_clk or negedge cam_rst_n) begin
+        if (!cam_rst_n) begin
+            fr_push  <= 32'd0; fr_drop  <= 32'd0; fr_ovf   <= 32'd0;
+            sn_push  <= 32'd0; sn_drop  <= 32'd0; sn_ovf   <= 32'd0;
+            sn_lines <= 16'd0; sn_y     <= 16'd0; sn_maxgrp<= 16'd0;
+            sn_eofbad<= 1'b0;
+        end else if (rst_cam_all) begin
+            fr_push  <= 32'd0; fr_drop  <= 32'd0; fr_ovf   <= 32'd0;
+        end else begin
+            if (sof_evt) begin
+                fr_push <= 32'd0; fr_drop <= 32'd0; fr_ovf <= 32'd0;
+            end else begin
+                if (f_wr & push_pix)          fr_push <= fr_push + 32'd1;
+                if (push_blocked & push_pix)  fr_drop <= fr_drop + 32'd1;
+                if (push_blocked & ~push_pix) fr_ovf  <= fr_ovf  + 32'd1;
+            end
+            if (eof_evt & frame_armed) begin
+                sn_push   <= fr_push;
+                sn_drop   <= fr_drop;
+                sn_ovf    <= fr_ovf;
+                sn_lines  <= frame_lines;
+                sn_y      <= y_cnt;
+                sn_maxgrp <= max_grp;
+                sn_eofbad <= eof_bad;
+            end
+        end
+    end
+
     // ========================================================================
     //  ddr 域：声明区（先声明后使用）
     // ========================================================================
@@ -375,8 +426,12 @@ module cam_r10f_writer #(
                      S_SKIP  = 3'd6;
     reg  [2:0]  s_state;
     reg  [4:0]  hcnt;
-    reg  [3:0]  bcnt;
-    reg  [63:0] breg;
+    // ★ 128bit 字节缓冲 + 5bit 占用计数：允许「取走一个字」与「插入一组」同拍进行。
+    //   原来的 64bit/4bit 组合下 pay_room(bcnt<=3) 与 word_take(bcnt>=4) 天然互斥，
+    //   每 5 字节一组要花 1 拍 pop + 1.25 拍取字 ≈ 2.25 拍/组；双路合计
+    //   2*(518400+648192)=2.33M 拍 > 一帧只有 2.08M 拍（62.5MHz）→ 物理上做不完。
+    reg  [4:0]  bcnt;
+    reg  [127:0] breg;
     reg  [255:0] pack;
     reg  [2:0]  wlane;
     reg         beat_vld;
@@ -505,8 +560,8 @@ module cam_r10f_writer #(
                       (s_state != S_SYNC) & (s_state != S_SKIP);
     wire [31:0] word_now = breg[31:0];
 
-    wire pay_room  = (bcnt <= 4'd3);
-    wire hdr_room  = (bcnt <= 4'd4);
+    wire pay_room  = (bcnt <= 5'd10);   // 空出 5 字节：bcnt+5 <= 15
+    wire hdr_room  = (bcnt <= 5'd11);   // 空出 4 字节：bcnt+4 <= 15
     wire tail_need = (apos < DMA_BYTES32);
     wire pay_ok    = ((pay_written + 32'd5) <= PAY_BYTES32);
 
@@ -600,7 +655,14 @@ module cam_r10f_writer #(
 
     wire [FIFO_AW:0] wbin_sync_ddr = gray2bin(wgray_s2);
     wire [FIFO_AW:0] fifo_occ_ddr  = wbin_sync_ddr - rptr_bin;
-    localparam integer BURST_GROUPS = 500;
+    // 64 拍突发 = 409.6 组。门槛必须 >=「2 笔突发的量」，否则一笔突发发到尾部时
+    // FIFO 已经见底，wvalid 会断流（此时 busy=1 把写口钉住），双路时正好把换手窗口
+    // 和 W 断流撞在一起。820 组 = 4100B ≈ 2 笔，发完还剩一整笔余量。
+    // ★ 实测教训（2026-10-27 板测）：门槛不能超过「FIFO 深度 - 帧尾剩余量」的约束。
+    //   820 组时，帧尾剩不到 820 组 → 写者停发 → 相机写到 wfull 丢 EOF 标记 → 超时收口，
+    //   B 单路 wcnt 从 0xE900 掉到 0xD304、verdict=0x4（好帧 0）。410（一笔突发）是已验证
+    //   可用值，改大必须先解决「帧尾没到门槛也继续发」的问题。
+    localparam integer BURST_GROUPS = 410;
     wire tail_phase_ddr = (s_state == S_TAIL) || (s_state == S_DRAIN) || (s_state == S_WAIT);
     wire burst_ok_ddr   = tail_phase_ddr || (fifo_occ_ddr >= BURST_GROUPS);
 
@@ -631,14 +693,16 @@ module cam_r10f_writer #(
     wire [31:0] crc_hdr_nxt = crc32_upd4(crc_hdr_q, hdr_w2[7:0], hdr_w2[15:8],
                                          hdr_w2[23:16], hdr_w2[31:24]);
 
-    // 追加源
-    wire [63:0] pay_ins = {24'd0, e_grp} << {bcnt, 3'b000};
-    wire [63:0] hdr_ins = {32'd0, hdr_word(hcnt, 32'd0, 32'd0)} << {bcnt, 3'b000};
-    wire pay_app  = (s_state == S_PAY)  & is_grp & pay_room & data_ready &
-                    pay_ok & ~word_take;
-    wire hdr_app  = (s_state == S_HDR)  & hdr_room & data_ready & ~word_take;
-    wire tail_app = (s_state == S_TAIL) & hdr_room & data_ready &
-                    tail_need & ~word_take;
+    // 追加源（128bit 缓冲）：插入与取字同拍时，先把已发出的 4 字节移出，
+    // 再把新字节拼在「移出后」的偏移上，这样绝不覆盖还没发走的字。
+    wire [4:0]   bcnt_base = word_take ? (bcnt - 5'd4) : bcnt;
+    wire [127:0] breg_base = word_take ? {{96{1'b0}}, breg[127:32]} : breg;
+    wire [6:0]   ins_sh    = {bcnt_base, 3'b000};
+    wire [127:0] pay_ins   = {{88{1'b0}}, e_grp} << ins_sh;
+    wire [127:0] hdr_ins   = {{96{1'b0}}, hdr_word(hcnt, 32'd0, 32'd0)} << ins_sh;
+    wire pay_app  = (s_state == S_PAY)  & is_grp & pay_room & data_ready & pay_ok;
+    wire hdr_app  = (s_state == S_HDR)  & hdr_room & data_ready;
+    wire tail_app = (s_state == S_TAIL) & hdr_room & data_ready & tail_need;
 
     wire tmo_hit = (tmo == TMO_LIMIT);
 
@@ -649,8 +713,8 @@ module cam_r10f_writer #(
         if (rst_ddr) begin
             s_state   <= S_SYNC;
             hcnt      <= 5'd0;
-            bcnt      <= 4'd0;
-            breg      <= 64'd0;
+            bcnt      <= 5'd0;
+            breg      <= 128'd0;
             pack      <= 256'd0;
             wlane     <= 3'd0;
             beat_vld  <= 1'b0;
@@ -683,9 +747,10 @@ module cam_r10f_writer #(
 
             // ---- 消费路径 ----
             if (beat_vld & beat_taken) beat_vld <= 1'b0;
+            // 取字：字节缓冲右移 4 字节（插入同拍发生时由下面的状态机覆盖为合成值）
             if (word_take) begin
-                bcnt <= bcnt - 4'd4;
-                breg <= {32'd0, breg[63:32]};
+                bcnt <= bcnt_base;
+                breg <= breg_base;
                 if (wlane == 3'd7) begin
                     beat_vld  <= 1'b1;
                     beat_data <= {word_now, pack[223:0]};
@@ -711,6 +776,9 @@ module cam_r10f_writer #(
 
             // ---- 帧内停滞超时（丢标记兜底；约 10ms @100MHz）----
             // 等突发数据（mid_frame，没有突发在飞）时不计超时
+            // 注：这个条件会让「相机中途停掉、帧尾组数永远到不了 410 门槛」的那一路
+            //     永久卡在 S_PAY（板测已见）。修它需要单独的长看门狗，不宜和吞吐改动
+            //     混在一次构建里，故本轮保持原样、只记录。
             if (((s_state == S_PAY) | (s_state == S_SKIP) | (s_state == S_HDR)) &&
                 !pop && !mid_frame) begin
                 if (!tmo_hit) tmo <= tmo + 21'd1;
@@ -750,8 +818,8 @@ module cam_r10f_writer #(
                     pay_ep      <= 32'd0;
                     apos        <= 32'd0;
                     cpos        <= 32'd0;
-                    bcnt        <= 4'd0;
-                    breg        <= 64'd0;
+                    bcnt        <= 5'd0;
+                    breg        <= 128'd0;
                     pack        <= 256'd0;
                     wlane       <= 3'd0;
                     beat_cnt    <= 32'd0;
@@ -773,8 +841,8 @@ module cam_r10f_writer #(
 
             S_HDR: begin
                 if (hdr_app) begin
-                    breg <= breg | hdr_ins;
-                    bcnt <= bcnt + 4'd4;
+                    breg <= breg_base | hdr_ins;
+                    bcnt <= bcnt_base + 5'd4;
                     apos <= apos + 32'd4;
                     if (hcnt == 5'd31) begin
                         hcnt    <= 5'd0;
@@ -785,8 +853,8 @@ module cam_r10f_writer #(
 
             S_PAY: begin
                 if (pay_app) begin
-                    breg <= breg | pay_ins;
-                    bcnt <= bcnt + 4'd5;
+                    breg <= breg_base | pay_ins;
+                    bcnt <= bcnt_base + 5'd5;
                     apos        <= apos + 32'd5;
                     pay_written <= pay_written + 32'd5;
                     gcnt        <= gcnt + 32'd1;
@@ -812,8 +880,8 @@ module cam_r10f_writer #(
 
             S_TAIL: begin
                 if (tail_app) begin
-                    breg <= breg | 64'd0;
-                    bcnt <= bcnt + 4'd4;
+                    breg <= breg_base;
+                    bcnt <= bcnt_base + 5'd4;
                     apos <= apos + 32'd4;
                 end
                 if (apos >= DMA_BYTES32) s_state <= S_DRAIN;
@@ -883,7 +951,8 @@ module cam_r10f_writer #(
     wire pub_stuck = (pub_wait_cnt == 17'h1_FFFF);
 
     wire [7:0]        cur_awlen1  = m_axi_awlen + 8'd1;
-    wire [BTL_CW-1:0] cur_beats_x = {{(BTL_CW-8){1'b0}}, cur_awlen1};
+    // (BTL_CW>8?:0)：小几何（仿真里的 8x4/64x8）BTL_CW=7 时不能出现负的重复次数
+    wire [BTL_CW-1:0] cur_beats_x = {{(BTL_CW>8 ? BTL_CW-8 : 0){1'b0}}, cur_awlen1};
     wire [BTL_CW-1:0] burst_beats = (beats_left > cur_beats_x) ? cur_beats_x : beats_left;
     wire [28:0]       burst_step  = {{(29-BTL_CW){1'b0}}, burst_beats} << 5;
     wire [BTL_CW-1:0] next_beats  = beats_left - burst_beats;
@@ -903,6 +972,52 @@ module cam_r10f_writer #(
 
     // [31:0]={notack,stuck}  [63:32]={beats_last,wcnt_last}  [95:64]={24'd0,verdict_snap}
     assign dbg_drop      = {24'd0, verdict_snap, beats_last, wcnt_last, c_notack, c_stuck};
+
+    // ========================================================================
+    //  AXI 停滞观测 + 安全自愈（只加在「尚未发 W」的两个点，绝不断在突发中间）
+    //    · A_AW：awvalid 拉高但长期等不到 awready —— 撤掉 awvalid 不构成事务，
+    //      AXI 语义上合法；代价是本笔突发数据作废，帧按 axi_err 判坏。
+    //    · A_RWD：只等本地 hdr_ready，还没有任何 AW/W —— 直接跳过 CRC 头重写。
+    //    这两个点都不会让从机（DDR MC）等半截突发，因此是安全的兜底。
+    // ========================================================================
+    localparam integer TMO_AXISAFE = 1;              // 1 = 打开两处自愈
+    reg  [15:0] m_aw_cur, m_w_cur, m_b_cur, m_rwd_cur;
+    reg  [15:0] m_aw_max, m_w_max, m_b_max, m_rwd_max;
+    reg  [7:0]  m_burst_done, m_rwd_tmo_cnt;
+    reg  [15:0] rwd_wait;
+
+    wire st_aw  = (a_st == A_AW ) && !m_axi_awready;
+    wire st_w   = (a_st == A_W  ) && !(beat_vld & m_axi_wready);
+    wire st_b   = (a_st == A_B  ) && !m_axi_bvalid;
+    wire st_rwd = (a_st == A_RWD) && !hdr_ready;
+    wire rwd_tmo_evt = TMO_AXISAFE && (a_st == A_RWD) && (rwd_wait == 16'hFFFF);
+    wire aw_tmo_evt  = TMO_AXISAFE && (a_st == A_AW) && (m_aw_cur == 16'hFFFF);
+
+    always @(posedge clk_ddr or posedge rst_ddr) begin
+        if (rst_ddr) begin
+            m_aw_cur <= 16'd0; m_w_cur <= 16'd0; m_b_cur <= 16'd0; m_rwd_cur <= 16'd0;
+            m_aw_max <= 16'd0; m_w_max <= 16'd0; m_b_max <= 16'd0; m_rwd_max <= 16'd0;
+            m_burst_done <= 8'd0; m_rwd_tmo_cnt <= 8'd0; rwd_wait <= 16'd0;
+        end else begin
+            if (st_aw) m_aw_cur <= (m_aw_cur == 16'hFFFF) ? m_aw_cur : (m_aw_cur + 16'd1);
+            else begin if (m_aw_cur > m_aw_max) m_aw_max <= m_aw_cur; m_aw_cur <= 16'd0; end
+            if (st_w)  m_w_cur  <= (m_w_cur  == 16'hFFFF) ? m_w_cur  : (m_w_cur  + 16'd1);
+            else begin if (m_w_cur  > m_w_max)  m_w_max  <= m_w_cur;  m_w_cur  <= 16'd0; end
+            if (st_b)  m_b_cur  <= (m_b_cur  == 16'hFFFF) ? m_b_cur  : (m_b_cur  + 16'd1);
+            else begin if (m_b_cur  > m_b_max)  m_b_max  <= m_b_cur;  m_b_cur  <= 16'd0; end
+            if (st_rwd) m_rwd_cur <= (m_rwd_cur == 16'hFFFF) ? m_rwd_cur : (m_rwd_cur + 16'd1);
+            else begin if (m_rwd_cur > m_rwd_max) m_rwd_max <= m_rwd_cur; m_rwd_cur <= 16'd0; end
+
+            if ((a_st == A_B) && m_axi_bvalid)
+                m_burst_done <= m_burst_done + 8'd1;
+            if (rwd_tmo_evt)
+                m_rwd_tmo_cnt <= m_rwd_tmo_cnt + 8'd1;
+
+            if (a_st != A_RWD) rwd_wait <= 16'd0;
+            else if (rwd_wait != 16'hFFFF) rwd_wait <= rwd_wait + 16'd1;
+        end
+    end
+    assign dbg_stall = {m_rwd_tmo_cnt, m_burst_done, m_rwd_max, m_aw_max, m_w_max, m_b_max};
 
     always @(posedge clk_ddr or posedge rst_ddr) begin
         if (rst_ddr) begin
@@ -1053,6 +1168,14 @@ module cam_r10f_writer #(
                     burst_m1      <= m_axi_awlen;
                     w_idx         <= {BEAT_CW{1'b0}};
                     a_st          <= A_W;
+                end else if (aw_tmo_evt) begin
+                    // 兜底：撤 awvalid（无事务发生，AXI 合法）→ 放弃本笔突发、判坏、
+                    // 释放写口，避免一路把 grant 永久压住把另一路饿死。
+                    m_axi_awvalid <= 1'b0;
+                    m_axi_awlen   <= 8'd0;
+                    axi_err       <= 1'b1;
+                    mid_frame     <= 1'b0;
+                    a_st          <= A_IDLE;
                 end
 
                 A_W: if (beat_vld & m_axi_wready) begin
@@ -1084,6 +1207,12 @@ module cam_r10f_writer #(
                     m_axi_awlen   <= 8'd0;
                     m_axi_awvalid <= 1'b1;
                     a_st          <= A_RW;
+                end else if (rwd_tmo_evt) begin
+                    // 兜底：hdr_ready 没等到（CRC 头遍历没启动/没完成）——此时没有
+                    // 任何 AW/W，直接跳过「CRC 头重写」，判坏并交还写口。
+                    axi_err   <= 1'b1;
+                    rw_done_r <= 1'b1;
+                    a_st      <= A_IDLE;
                 end
 
                 A_RW: if (m_axi_awready) begin
@@ -1191,5 +1320,72 @@ module cam_r10f_writer #(
         else         dbg_fsm_r <= {1'b0, (pub_tgl ^ pub_ack_s2), hdr_ready, s_state, a_st};
     end
     assign dbg_fsm = dbg_fsm_r;
+
+    // ========================================================================
+    //  每帧统计（诊断输出，不参与数据/控制路径）
+    // ========================================================================
+    // 相机域快照 → DDR 域 2 级同步（EOF 之后就是静态值，收口时采样足够安全）
+    reg [31:0] s_push1, s_push2, s_drop1, s_drop2, s_ovf1, s_ovf2;
+    reg [15:0] s_ln1, s_ln2, s_y1, s_y2, s_mg1, s_mg2;
+    reg        s_eb1, s_eb2;
+    reg [31:0] fr_cyc;                       // 本帧「打包占用」周期数
+    reg [31:0] lat_push, lat_drop, lat_ovf, lat_cyc, lat_gcnt;
+    reg [15:0] lat_lines, lat_y, lat_mg;
+    reg        lat_eb, lat_pbad, lat_peof, lat_tmo, tmo_seen;
+
+    always @(posedge clk_ddr or posedge rst_ddr) begin
+        if (rst_ddr) begin
+            s_push1 <= 32'd0; s_push2 <= 32'd0; s_drop1 <= 32'd0; s_drop2 <= 32'd0;
+            s_ovf1  <= 32'd0; s_ovf2  <= 32'd0;
+            s_ln1 <= 16'd0; s_ln2 <= 16'd0; s_y1 <= 16'd0; s_y2 <= 16'd0;
+            s_mg1 <= 16'd0; s_mg2 <= 16'd0; s_eb1 <= 1'b0; s_eb2 <= 1'b0;
+            fr_cyc <= 32'd0; tmo_seen <= 1'b0;
+            lat_push <= 32'd0; lat_drop <= 32'd0; lat_ovf <= 32'd0;
+            lat_cyc  <= 32'd0; lat_gcnt <= 32'd0;
+            lat_lines <= 16'd0; lat_y <= 16'd0; lat_mg <= 16'd0;
+            lat_eb <= 1'b0; lat_pbad <= 1'b0; lat_peof <= 1'b0; lat_tmo <= 1'b0;
+        end else begin
+            s_push1 <= sn_push;  s_push2 <= s_push1;
+            s_drop1 <= sn_drop;  s_drop2 <= s_drop1;
+            s_ovf1  <= sn_ovf;   s_ovf2  <= s_ovf1;
+            s_ln1   <= sn_lines; s_ln2   <= s_ln1;
+            s_y1    <= sn_y;     s_y2    <= s_y1;
+            s_mg1   <= sn_maxgrp;s_mg2   <= s_mg1;
+            s_eb1   <= sn_eofbad;s_eb2   <= s_eb1;
+
+            // 帧起点清零；只统计真正在打包的拍（不含 S_SYNC 空转和 S_WAIT 等回执）
+            if (st_frame_go) begin
+                fr_cyc   <= 32'd0;
+                tmo_seen <= 1'b0;
+            end else if ((s_state != S_SYNC) && (s_state != S_WAIT)) begin
+                fr_cyc <= fr_cyc + 32'd1;
+            end
+            if (tmo_hit) tmo_seen <= 1'b1;
+
+            if (frame_close) begin
+                lat_push  <= s_push2;
+                lat_drop  <= s_drop2;
+                lat_ovf   <= s_ovf2;
+                lat_lines <= s_ln2;
+                lat_y     <= s_y2;
+                lat_mg    <= s_mg2;
+                lat_eb    <= s_eb2;
+                lat_cyc   <= fr_cyc;
+                lat_gcnt  <= gcnt;
+                lat_pbad  <= p_bad;
+                lat_peof  <= p_eof_seen;
+                lat_tmo   <= tmo_seen;
+            end
+        end
+    end
+
+    assign dbg_frame = {27'd0, lat_tmo, lat_pbad, lat_peof, lat_eb,   // [255:224]
+                        lat_gcnt,                                    // [223:192]
+                        lat_cyc,                                     // [191:160]
+                        lat_ovf,                                     // [159:128]
+                        16'd0, lat_mg,                               // [127:96]
+                        lat_lines, lat_y,                            // [95:64]
+                        lat_drop,                                    // [63:32]
+                        lat_push};                                   // [31:0]
 
 endmodule

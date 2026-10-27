@@ -78,6 +78,11 @@ module pcie_ep_engine #(
     input       wire                dbgwr_grant            ,
     input       wire [95:0]         dbgdrop_b              ,
     input       wire [127:0]        ddr_ro_b               ,   // B 路整帧搬运握手字（0xE0~0xEC）
+    output      wire [31:0]         dbg_scratch            ,   // 0x6C SCRATCH 直出（调试 arm 掩码）
+    input       wire [95:0]         cama_stall             ,   // A 路写者 AXI 停滞（0x188~0x190）
+    input       wire [95:0]         camb_stall             ,   // B 路写者 AXI 停滞（0x194~0x19C）
+    input       wire [255:0]        dbg_frame_a            ,   // A 路写者每帧统计（0x1A0~0x1BC）
+    input       wire [255:0]        dbg_frame_b            ,   // B 路写者每帧统计（0x1C0~0x1DC）
     // ==== 本移植新增：DDR3 整帧搬运（CTRL[5] + 只读握手字）====
     output      wire                img_ctrl_ddr_en        ,
     input       wire    [127:0]     img_ddr_ro             ,
@@ -439,6 +444,11 @@ ep_bar_win #(
     .dbgwr_grant    (dbgwr_grant            ),
     .dbgdrop_b      (dbgdrop_b              ),
     .ddr_ro_b       (ddr_ro_b               ),
+    .dbg_scratch    (dbg_scratch            ),
+    .cama_stall     (cama_stall             ),
+    .camb_stall     (camb_stall             ),
+    .dbg_frame_a    (dbg_frame_a            ),
+    .dbg_frame_b    (dbg_frame_b            ),
     .ctrl_ddr_en    (img_ctrl_ddr_en        ),
     .ddr_ro         (img_ddr_ro             ),
     .host_rd_prio   (img_host_rd_prio       ),

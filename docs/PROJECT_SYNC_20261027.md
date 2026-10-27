@@ -1,5 +1,22 @@
 # 当前代码与交接入口（2026-10-27）
 
+> **2026-10-28 进展：双路并行 30fps 已闭合（P0）**
+>
+> 根因不是 AXI 仲裁死锁，而是 DDR 域的 RAW10 打包器「取字」与「FIFO pop」互斥，
+> 每帧事件数（2 × 1,166,592 拍）吃掉了 100MHz 时钟的 70%，两路抢同一个写口时
+> FIFO 溢出丢组；而 wfull 丢组不会置 `line_bad_seen`/`eof_bad`，所以历史现象是
+> 「`gcnt` 偏短但 `p_bad=0`」。把字节缓冲加宽到 128bit、允许同拍 pop+取字后，
+> 每帧事件数降到 648,192 拍/路，双路 60s 稳定 30.1fps，两路 verdict 全程 `0x20`、
+> `0x1A4`/`0x1C4` 丢组恒 0，A/B 各一帧 `R10F_STRICT_OK`。
+>
+> 详见 [dual-pack-20261028/RESULTS.md](../artifacts/dual-pack-20261028/RESULTS.md)：
+> 位流 SHA256 `3d8ad2a7…`，Setup WNS +0.105 ns / Hold WNS +0.020 ns，0 违例。
+> 该目录同时给出 A/B 对照实验（同一诊断、只换打包节拍 → `push+drop=518400` 严格成立）、
+> 新增的 0x1A0~0x1DC 每帧统计寄存器、以及仍未关闭的 5 项遗留问题。
+>
+> 上一轮（P1 单路闭合 + 双路未闭合）的记录见
+> [arm-mask-20261027/RESULTS.md](../artifacts/arm-mask-20261027/RESULTS.md)。
+
 以后主要从这两个原仓库推进，均使用 `main`：
 
 - [FPGA 主仓库](https://github.com/xiaozhuABCD1234/ph1p100-pcie-ep-fpga)：本仓，当前代码见 [rtl](../rtl/)、[约束](../constraints/)、[IP](../al_ip/)、[工具](../tools/)；工程入口为 [ph1p_pcie_ep_top.al](../ph1p_pcie_ep_top.al)、[create_project.tcl](../create_project.tcl) 和 [build.tcl](../build.tcl)。

@@ -97,7 +97,10 @@ module ui_imx415reg (
       48:  REG_DATA = {16'h3064, 8'h4A};// RHS2[19:0]
       49:  REG_DATA = {16'h3065, 8'h00};// RHS2[19:0]
       50:  REG_DATA = {16'h3066, 8'h00};// RHS2[19:0]
-      51:  REG_DATA = (MODE==2'd1) ? {16'h3090, 8'h10} : {16'h3090, 8'h20};// GAIN_PGC_0: 4K=0x10(4.8dB), binning=0x20(9.6dB)
+      51:  REG_DATA = (MODE==2'd1) ? {16'h3090, 8'h40} : {16'h3090, 8'h40};// GAIN_PGC_0: 0x40=64*0.3dB=19.2dB(5.25x) 4K+binning
+     // 2026-10-28: 4K 原为 0x10(4.8dB)。1080p ROI 实测均值只有 70/1023(p99.9=177)，
+     // 而曝光已顶满(SHR0=8 / VMAX=2250 -> 30fps 下 ~33ms)，只能提模拟增益。
+     // 0x40 = 19.2dB ~5.25x -> 均值 ~145。夜里可视；白天需回调，正解是 AEC/AGC。
       52:  REG_DATA = {16'h3091, 8'h00};// GAIN_PGC_0[8]
       53:  REG_DATA = {16'h3092, 8'h00};// GAIN_PGC_1 (HDR only)
       54:  REG_DATA = {16'h3093, 8'h00};// GAIN_PGC_1[8]

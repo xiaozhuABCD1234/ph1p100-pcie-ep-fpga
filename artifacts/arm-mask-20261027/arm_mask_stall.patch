@@ -1,0 +1,893 @@
+diff --git a/rtl/ep_side/cam/ui_imx415_reg.v b/rtl/ep_side/cam/ui_imx415_reg.v
+index a129bc78..0fda183c 100755
+--- a/rtl/ep_side/cam/ui_imx415_reg.v
++++ b/rtl/ep_side/cam/ui_imx415_reg.v
+@@ -1,255 +1,255 @@
+-`timescale 1ns / 1ps
+-/*******************************MILIANKE*******************************
+-*Company : MiLianKe Electronic Technology Co., Ltd.
+-*WebSite:https://www.milianke.com
+-*TechWeb:https://www.uisrc.com
+-*tmall-shop:https://milianke.tmall.com
+-*jd-shop:https://milianke.jd.com
+-*taobao-shop1: https://milianke.taobao.com
+-*Create Date: 2019/12/17
+-*Module Name:HDMI_IN_Test
+-*File Name:HDMI_IN_Test.v
+-*Description: 
+-*The reference demo provided by Milianke is only used for learning. 
+-*We cannot ensure that the demo itself is free of bugs, so users 
+-*should be responsible for the technical problems and consequences
+-*caused by the use of their own products.
+-*Copyright: Copyright (c) MiLianKe
+-*All rights reserved.
+-*Revision: 1.0
+-*Signal description
+-*1) I_ input
+-*2) O_ output
+-*3) IO_ input output
+-*4) S_ system internal signal
+-*5) _n activ low
+-*6) _dg debug signal 
+-*7) _r delay or register
+-*8) _s state mechine
+-*********************************************************************/
+-
+-/*******************************ui_imx415reg***************************
+---1.IMX415寄存器信�?
+-*********************************************************************/
+-
+-module ui_imx415reg (
+-    input      [1 : 0] MODE,       // 0=1080p binning, 1=4K all-pixel, 2=720p(=1080p binning)
+-    input      [8 : 0] REG_INDEX,
+-    output reg [31: 0] REG_DATA,
+-    output     [7 : 0] REG_SIZE
+-);
+-
+-  assign REG_SIZE = 201;
+-  //-----------------------------------------------------------------
+-  /////////////////////   Config Data LUT   //////////////////////////    
+-  // MODE: 0=1080p(binning), 1=4K(all-pixel), 2=720p(binning+FPGA crop)
+-  // Ref: MiLianKe uiimx415reg.v �� 4K uses SYS_MODE=0x08, different INCKSEL & MIPI timing
+-  always @(*) begin
+-    case (REG_INDEX)
+-      0:   REG_DATA = {16'h3000, 8'h01};// STANDBY
+-      1:   REG_DATA = {16'h3001, 8'h00};// REGHOLD
+-      2:   REG_DATA = {16'h3002, 8'h01};// XMSTA
+-      3:   REG_DATA = {16'h3003, 8'h00};// XMASTER
+-      4:   REG_DATA = (MODE==2'd1) ? {16'h3008, 8'h54} : {16'h3008, 8'h5D};// BCWAIT_TIME
+-      5:   REG_DATA = {16'h3009, 8'h00};// BCWAIT_TIME[9:0]
+-      6:   REG_DATA = (MODE==2'd1) ? {16'h300A, 8'h3B} : {16'h300A, 8'h42};// CPWAIT_TIME
+-      7:   REG_DATA = {16'h300B, 8'hA0};// CPWAIT_TIME[9:0]
+-      8:   REG_DATA = {16'h301C, 8'h00};// WINMODE[3:0]
+-      9:   REG_DATA = {16'h301D, 8'h08};// -
+-      10:  REG_DATA = (MODE==2'd1) ? {16'h3020, 8'h00} : {16'h3020, 8'h01};// HADD:  0=no-add(4K), 1=2x2-binning
+-      11:  REG_DATA = (MODE==2'd1) ? {16'h3021, 8'h00} : {16'h3021, 8'h01};// VADD:  0=no-add(4K), 1=2x2-binning
+-      12:  REG_DATA = (MODE==2'd1) ? {16'h3022, 8'h00} : {16'h3022, 8'h01};// ADDMODE: 0=off(4K), 1=binning
+-      13:  REG_DATA = {16'h3023, 8'h01};// VCMODE: always on (ref: 0x01 for all modes)
+-      14:  REG_DATA = (MODE==2'd1) ? {16'h3024, 8'h97} : {16'h3024, 8'hEB};// VMAX[7:0]:  4K=0x97, binning=0xEB
+-      15:  REG_DATA = (MODE==2'd1) ? {16'h3025, 8'h11} : {16'h3025, 8'h08};// VMAX[15:8]: 4K=0x11(4503), binning=0x08(2283)
+-      16:  REG_DATA = {16'h3026, 8'h00};// VMAX[19:16]
+-      17:  REG_DATA = (MODE==2'd1) ? {16'h3028, 8'h15} : {16'h3028, 8'h1E};// HMAX[7:0]:  4K=0x15(533), binning=0x1E(542)
+-      18:  REG_DATA = {16'h3029, 8'h02};// HMAX[15:8]: 0x02 for all modes
+-      19:  REG_DATA = {16'h302C, 8'h00};// WDMODE[1:0]
+-      20:  REG_DATA = {16'h302D, 8'h00};// WDSEL[1:0]
+-      21:  REG_DATA = {16'h3030, 8'h00};// HREVERSE
+-      22:  REG_DATA = {16'h3031, 8'h00};// ADBIT[1:0]
+-      23:  REG_DATA = {16'h3032, 8'h00};// MDBIT
+-      24:  REG_DATA = (MODE==2'd1) ? {16'h3033, 8'h08} : {16'h3033, 8'h05};// SYS_MODE: 4K=0x08, binning=0x05
+-      25:  REG_DATA = {16'h3040, 8'h00};// PIX_HST[12:0]
+-      26:  REG_DATA = {16'h3041, 8'h00};// PIX_HST[12:0]
+-      27:  REG_DATA = {16'h3042, 8'h18};// PIX_HWIDTH[12:0]
+-      28:  REG_DATA = {16'h3043, 8'h0F};// PIX_HWIDTH[12:0]
+-      29:  REG_DATA = {16'h3044, 8'h00};// PIX_VST[12:0]
+-      30:  REG_DATA = {16'h3045, 8'h00};// PIX_VST[12:0]
+-      31:  REG_DATA = {16'h3046, 8'h20};// PIX_VWIDTH[12:0]
+-      32:  REG_DATA = {16'h3047, 8'h11};// PIX_VWIDTH[12:0]
+-      33:  REG_DATA = {16'h3050, 8'h08};// SHR0[19:0]
+-      34:  REG_DATA = {16'h3051, 8'h00};// SHR0[19:0]
+-      35:  REG_DATA = {16'h3052, 8'h00};// SHR0[19:0]
+-      36:  REG_DATA = {16'h3054, 8'h19};// SHR1[19:0]
+-      37:  REG_DATA = {16'h3055, 8'h00};// SHR1[19:0]
+-      38:  REG_DATA = {16'h3056, 8'h00};// SHR1[19:0]
+-      39:  REG_DATA = {16'h3058, 8'h3E};// SHR2[19:0]
+-      40:  REG_DATA = {16'h3059, 8'h00};// SHR2[19:0]
+-      41:  REG_DATA = {16'h305A, 8'h00};// SHR2[19:0]
+-      42:  REG_DATA = {16'h305C, 8'h66};// SHR3[19:0]
+-      43:  REG_DATA = {16'h305D, 8'h00};// SHR3[19:0]
+-      44:  REG_DATA = {16'h305E, 8'h00};// SHR3[19:0]
+-      45:  REG_DATA = {16'h3060, 8'h25};// RHS1[19:0]
+-      46:  REG_DATA = {16'h3061, 8'h00};// RHS1[19:0]
+-      47:  REG_DATA = {16'h3062, 8'h00};// RHS1[19:0]
+-      48:  REG_DATA = {16'h3064, 8'h4A};// RHS2[19:0]
+-      49:  REG_DATA = {16'h3065, 8'h00};// RHS2[19:0]
+-      50:  REG_DATA = {16'h3066, 8'h00};// RHS2[19:0]
+-      51:  REG_DATA = (MODE==2'd1) ? {16'h3090, 8'h10} : {16'h3090, 8'h20};// GAIN_PGC_0: 4K=0x10(4.8dB), binning=0x20(9.6dB)
+-      52:  REG_DATA = {16'h3091, 8'h00};// GAIN_PGC_0[8]
+-      53:  REG_DATA = {16'h3092, 8'h00};// GAIN_PGC_1 (HDR only)
+-      54:  REG_DATA = {16'h3093, 8'h00};// GAIN_PGC_1[8]
+-      55:  REG_DATA = {16'h3094, 8'h00};// GAIN_PGC_2 (HDR only)
+-      56:  REG_DATA = {16'h3095, 8'h00};// GAIN_PGC_2[8]
+-      57:  REG_DATA = {16'h3096, 8'h00};// GAIN_PGC_3 (HDR only)
+-      58:  REG_DATA = {16'h3097, 8'h00};// GAIN_PGC_3[8]
+-      59:  REG_DATA = {16'h30C0, 8'h2A};// XVSOUTSEL[1:0]
+-      60:  REG_DATA = {16'h30C1, 8'h00};// XVS_DRV[1:0]
+-      61:  REG_DATA = {16'h30CC, 8'h00};// -
+-      62:  REG_DATA = {16'h30CD, 8'h00};// -
+-      63:  REG_DATA = {16'h30CF, 8'h00};// XVSMSKCNT_INT[1:0]
+-      64:  REG_DATA = (MODE==2'd1) ? {16'h30D9, 8'h06} : {16'h30D9, 8'h02};// DIG_CLP_VSTART
+-      65:  REG_DATA = (MODE==2'd1) ? {16'h30DA, 8'h02} : {16'h30DA, 8'h01};// DIG_CLP_VNUM
+-      66:  REG_DATA = {16'h30E2, 8'h32};// BLKELVEL[9:0]
+-      67:  REG_DATA = {16'h30E3, 8'h00};// BLKELVEL[9:0]
+-      68:  REG_DATA = {16'h3115, 8'h00};// INCKSEL1[7:0]
+-      69:  REG_DATA = {16'h3116, 8'h23};// INCKSEL2[7:0]
+-      70:  REG_DATA = (MODE==2'd1) ? {16'h3118, 8'hB4} : {16'h3118, 8'hC6};// INCKSEL3: 4K=0xB4, binning=0xC6
+-      71:  REG_DATA = {16'h3119, 8'h00};// INCKSEL3[10:8]
+-      72:  REG_DATA = (MODE==2'd1) ? {16'h311A, 8'hFC} : {16'h311A, 8'hE7};// INCKSEL4: 4K=0xFC, binning=0xE7
+-      73:  REG_DATA = {16'h311B, 8'h00};// INCKSEL4[10:8]
+-      74:  REG_DATA = {16'h311E, 8'h23};// INCKSEL5[7:0]
+-      75:  REG_DATA = {16'h3260, 8'h01};// GAIN_PGC_FIDMD
+-      76:  REG_DATA = {16'h32C8, 8'h01};
+-      77:  REG_DATA = {16'h32D4, 8'h21};
+-      78:  REG_DATA = {16'h32EC, 8'hA1};
+-      79:  REG_DATA = {16'h344C, 8'h2B};
+-      80:  REG_DATA = {16'h344D, 8'h01};
+-      81:  REG_DATA = {16'h344E, 8'hED};
+-      82:  REG_DATA = {16'h344F, 8'h01};
+-      83:  REG_DATA = {16'h3450, 8'hF6};
+-      84:  REG_DATA = {16'h3451, 8'h02};
+-      85:  REG_DATA = {16'h3452, 8'h7F};
+-      86:  REG_DATA = {16'h3453, 8'h03};
+-      87:  REG_DATA = {16'h358A, 8'h04};
+-      88:  REG_DATA = {16'h35A1, 8'h02};
+-      89:  REG_DATA = {16'h35EC, 8'h27};
+-      90:  REG_DATA = {16'h35EE, 8'h8D};
+-      91:  REG_DATA = {16'h35F0, 8'h8D};
+-      92:  REG_DATA = {16'h35F2, 8'h29};
+-      93:  REG_DATA = {16'h36BC, 8'h0C};
+-      94:  REG_DATA = {16'h36CC, 8'h53};
+-      95:  REG_DATA = {16'h36CD, 8'h00};
+-      96:  REG_DATA = {16'h36CE, 8'h3C};
+-      97:  REG_DATA = {16'h36D0, 8'h8C};
+-      98:  REG_DATA = {16'h36D1, 8'h00};
+-      99:  REG_DATA = {16'h36D2, 8'h71};
+-      100: REG_DATA = {16'h36D4, 8'h3C};
+-      101: REG_DATA = {16'h36D6, 8'h53};
+-      102: REG_DATA = {16'h36D7, 8'h00};
+-      103: REG_DATA = {16'h36D8, 8'h71};
+-      104: REG_DATA = {16'h36DA, 8'h8C};
+-      105: REG_DATA = {16'h36DB, 8'h00};
+-      106: REG_DATA = {16'h3701, 8'h00};
+-      107: REG_DATA = {16'h3720, 8'h00};
+-      108: REG_DATA = {16'h3724, 8'h02};
+-      109: REG_DATA = {16'h3726, 8'h02};
+-      110: REG_DATA = {16'h3732, 8'h02};
+-      111: REG_DATA = {16'h3734, 8'h03};
+-      112: REG_DATA = {16'h3736, 8'h03};
+-      113: REG_DATA = {16'h3742, 8'h03};
+-      114: REG_DATA = {16'h3862, 8'hE0};
+-      115: REG_DATA = {16'h38CC, 8'h30};
+-      116: REG_DATA = {16'h38CD, 8'h2F};
+-      117: REG_DATA = {16'h395C, 8'h0C};
+-      118: REG_DATA = {16'h39A4, 8'h07};
+-      119: REG_DATA = {16'h39A8, 8'h32};
+-      120: REG_DATA = {16'h39AA, 8'h32};
+-      121: REG_DATA = {16'h39AC, 8'h32};
+-      122: REG_DATA = {16'h39AE, 8'h32};
+-      123: REG_DATA = {16'h39B0, 8'h32};
+-      124: REG_DATA = {16'h39B2, 8'h2F};
+-      125: REG_DATA = {16'h39B4, 8'h2D};
+-      126: REG_DATA = {16'h39B6, 8'h28};
+-      127: REG_DATA = {16'h39B8, 8'h30};
+-      128: REG_DATA = {16'h39BA, 8'h30};
+-      129: REG_DATA = {16'h39BC, 8'h30};
+-      130: REG_DATA = {16'h39BE, 8'h30};
+-      131: REG_DATA = {16'h39C0, 8'h30};
+-      132: REG_DATA = {16'h39C2, 8'h2E};
+-      133: REG_DATA = {16'h39C4, 8'h2B};
+-      134: REG_DATA = {16'h39C6, 8'h25};
+-      135: REG_DATA = {16'h3A42, 8'hD1};
+-      136: REG_DATA = {16'h3A4C, 8'h77};
+-      137: REG_DATA = {16'h3AE0, 8'h02};
+-      138: REG_DATA = {16'h3AEC, 8'h0C};
+-      139: REG_DATA = {16'h3B00, 8'h2E};
+-      140: REG_DATA = {16'h3B06, 8'h29};
+-      141: REG_DATA = {16'h3B98, 8'h25};
+-      142: REG_DATA = {16'h3B99, 8'h21};
+-      143: REG_DATA = {16'h3B9B, 8'h13};
+-      144: REG_DATA = {16'h3B9C, 8'h13};
+-      145: REG_DATA = {16'h3B9D, 8'h13};
+-      146: REG_DATA = {16'h3B9E, 8'h13};
+-      147: REG_DATA = {16'h3BA1, 8'h00};
+-      148: REG_DATA = {16'h3BA2, 8'h06};
+-      149: REG_DATA = {16'h3BA3, 8'h0B};
+-      150: REG_DATA = {16'h3BA4, 8'h10};
+-      151: REG_DATA = {16'h3BA5, 8'h14};
+-      152: REG_DATA = {16'h3BA6, 8'h18};
+-      153: REG_DATA = {16'h3BA7, 8'h1A};
+-      154: REG_DATA = {16'h3BA8, 8'h1A};
+-      155: REG_DATA = {16'h3BA9, 8'h1A};
+-      156: REG_DATA = {16'h3BAC, 8'hED};
+-      157: REG_DATA = {16'h3BAD, 8'h01};
+-      158: REG_DATA = {16'h3BAE, 8'hF6};
+-      159: REG_DATA = {16'h3BAF, 8'h02};
+-      160: REG_DATA = {16'h3BB0, 8'hA2};
+-      161: REG_DATA = {16'h3BB1, 8'h03};
+-      162: REG_DATA = {16'h3BB2, 8'hE0};
+-      163: REG_DATA = {16'h3BB3, 8'h03};
+-      164: REG_DATA = {16'h3BB4, 8'hE0};
+-      165: REG_DATA = {16'h3BB5, 8'h03};
+-      166: REG_DATA = {16'h3BB6, 8'hE0};
+-      167: REG_DATA = {16'h3BB7, 8'h03};
+-      168: REG_DATA = {16'h3BB8, 8'hE0};
+-      169: REG_DATA = {16'h3BBA, 8'hE0};
+-      170: REG_DATA = {16'h3BBC, 8'hDA};
+-      171: REG_DATA = {16'h3BBE, 8'h88};
+-      172: REG_DATA = {16'h3BC0, 8'h44};
+-      173: REG_DATA = {16'h3BC2, 8'h7B};
+-      174: REG_DATA = {16'h3BC4, 8'hA2};
+-      175: REG_DATA = {16'h3BC8, 8'hBD};
+-      176: REG_DATA = {16'h3BCA, 8'hBD};
+-      177: REG_DATA = {16'h4000, 8'h10};
+-      178: REG_DATA = {16'h4001, 8'h03};//LANEMODE[2:0]
+-      179: REG_DATA = (MODE==2'd1) ? {16'h4004, 8'h00} : {16'h4004, 8'hC0};//TXCLKESC_FREQ: 4K=0x00, binning=0xC0
+-      180: REG_DATA = {16'h4005, 8'h06};//TXCLKESC_FREQ[15:8]
+-      181: REG_DATA = (MODE==2'd1) ? {16'h400C, 8'h01} : {16'h400C, 8'h00};//INCKSEL6: 4K=0x01, binning=0x00
+-      182: REG_DATA = (MODE==2'd1) ? {16'h4018, 8'h9F} : {16'h4018, 8'h7F};//TCLKPOST
+-      183: REG_DATA = {16'h4019, 8'h00};//TCLKPOST[15:8]
+-      184: REG_DATA = (MODE==2'd1) ? {16'h401A, 8'h57} : {16'h401A, 8'h37};//TCLKPREPARE
+-      185: REG_DATA = {16'h401B, 8'h00};//TCLKPREPARE[15:8]
+-      186: REG_DATA = (MODE==2'd1) ? {16'h401C, 8'h57} : {16'h401C, 8'h37};//TCLKTRAIL
+-      187: REG_DATA = {16'h401D, 8'h00};//TCLKTRAIL[15:8]
+-      188: REG_DATA = (MODE==2'd1) ? {16'h401E, 8'h87} : {16'h401E, 8'hF7};//TCLKZERO[7:0]
+-      189: REG_DATA = (MODE==2'd1) ? {16'h401F, 8'h01} : {16'h401F, 8'h00};//TCLKZERO[15:8]: 4K=0x0187, binning=0x00F7
+-      190: REG_DATA = (MODE==2'd1) ? {16'h4020, 8'h5F} : {16'h4020, 8'h3F};//THSPREPARE
+-      191: REG_DATA = {16'h4021, 8'h00};//THSPREPARE[15:8]
+-      192: REG_DATA = (MODE==2'd1) ? {16'h4022, 8'hA7} : {16'h4022, 8'h6F};//THSZERO
+-      193: REG_DATA = {16'h4023, 8'h00};//THSZERO[15:8]
+-      194: REG_DATA = (MODE==2'd1) ? {16'h4024, 8'h5F} : {16'h4024, 8'h3F};//THSTRAIL
+-      195: REG_DATA = {16'h4025, 8'h00};//THSTRAIL[15:8]
+-      196: REG_DATA = (MODE==2'd1) ? {16'h4026, 8'h97} : {16'h4026, 8'h5F};//THSEXIT
+-      197: REG_DATA = {16'h4027, 8'h00};//THSEXIT[15:8]
+-      198: REG_DATA = (MODE==2'd1) ? {16'h4028, 8'h4F} : {16'h4028, 8'h2F};//TLPX
+-      199: REG_DATA = {16'h4029, 8'h00};//TLPX[15:8]
+-      200: REG_DATA = (MODE==2'd1) ? {16'h4074, 8'h00} : {16'h4074, 8'h01};//INCKSEL7: 4K=0x00, binning=0x01
+-      default: REG_DATA = {16'h0000, 8'h00};
+-    endcase
+-  end
+-
+-endmodule
+-
++`timescale 1ns / 1ps
++/*******************************MILIANKE*******************************
++*Company : MiLianKe Electronic Technology Co., Ltd.
++*WebSite:https://www.milianke.com
++*TechWeb:https://www.uisrc.com
++*tmall-shop:https://milianke.tmall.com
++*jd-shop:https://milianke.jd.com
++*taobao-shop1: https://milianke.taobao.com
++*Create Date: 2019/12/17
++*Module Name:HDMI_IN_Test
++*File Name:HDMI_IN_Test.v
++*Description: 
++*The reference demo provided by Milianke is only used for learning. 
++*We cannot ensure that the demo itself is free of bugs, so users 
++*should be responsible for the technical problems and consequences
++*caused by the use of their own products.
++*Copyright: Copyright (c) MiLianKe
++*All rights reserved.
++*Revision: 1.0
++*Signal description
++*1) I_ input
++*2) O_ output
++*3) IO_ input output
++*4) S_ system internal signal
++*5) _n activ low
++*6) _dg debug signal 
++*7) _r delay or register
++*8) _s state mechine
++*********************************************************************/
++
++/*******************************ui_imx415reg***************************
++--1.IMX415寄存器信�?
++*********************************************************************/
++
++module ui_imx415reg (
++    input      [1 : 0] MODE,       // 0=1080p binning, 1=4K all-pixel, 2=720p(=1080p binning)
++    input      [8 : 0] REG_INDEX,
++    output reg [31: 0] REG_DATA,
++    output     [7 : 0] REG_SIZE
++);
++
++  assign REG_SIZE = 201;
++  //-----------------------------------------------------------------
++  /////////////////////   Config Data LUT   //////////////////////////    
++  // MODE: 0=1080p(binning), 1=4K(all-pixel), 2=720p(binning+FPGA crop)
++  // Ref: 4K ֧��Ϊ 27MHz/891Mbps �飨SYS_MODE=0x05, HMAX=1100, VMAX=2250��
++  always @(*) begin
++    case (REG_INDEX)
++      0:   REG_DATA = {16'h3000, 8'h01};// STANDBY
++      1:   REG_DATA = {16'h3001, 8'h00};// REGHOLD
++      2:   REG_DATA = {16'h3002, 8'h01};// XMSTA
++      3:   REG_DATA = {16'h3003, 8'h00};// XMASTER
++      4:   REG_DATA = {16'h3008, 8'h5D};// BCWAIT_TIME
++      5:   REG_DATA = {16'h3009, 8'h00};// BCWAIT_TIME[9:0]
++      6:   REG_DATA = {16'h300A, 8'h42};// CPWAIT_TIME
++      7:   REG_DATA = {16'h300B, 8'hA0};// CPWAIT_TIME[9:0]
++      8:   REG_DATA = {16'h301C, 8'h00};// WINMODE[3:0]
++      9:   REG_DATA = {16'h301D, 8'h08};// -
++      10:  REG_DATA = (MODE==2'd1) ? {16'h3020, 8'h00} : {16'h3020, 8'h01};// HADD:  0=no-add(4K), 1=2x2-binning
++      11:  REG_DATA = (MODE==2'd1) ? {16'h3021, 8'h00} : {16'h3021, 8'h01};// VADD:  0=no-add(4K), 1=2x2-binning
++      12:  REG_DATA = (MODE==2'd1) ? {16'h3022, 8'h00} : {16'h3022, 8'h01};// ADDMODE: 0=off(4K), 1=binning
++      13:  REG_DATA = {16'h3023, 8'h01};// VCMODE: always on (ref: 0x01 for all modes)
++      14:  REG_DATA = (MODE==2'd1) ? {16'h3024, 8'hCA} : {16'h3024, 8'hEB};// VMAX[7:0]:  4K=0xCA(2250), binning=0xEB
++      15:  REG_DATA = {16'h3025, 8'h08};// VMAX[15:8]: 4K=0x08, binning=0x08
++      16:  REG_DATA = {16'h3026, 8'h00};// VMAX[19:16]
++      17:  REG_DATA = (MODE==2'd1) ? {16'h3028, 8'h4C} : {16'h3028, 8'h1E};// HMAX[7:0]:  4K=0x4C(1100), binning=0x1E
++      18:  REG_DATA = (MODE==2'd1) ? {16'h3029, 8'h04} : {16'h3029, 8'h02};// HMAX[15:8]: 4K=0x04, binning=0x02
++      19:  REG_DATA = {16'h302C, 8'h00};// WDMODE[1:0]
++      20:  REG_DATA = {16'h302D, 8'h00};// WDSEL[1:0]
++      21:  REG_DATA = {16'h3030, 8'h00};// HREVERSE
++      22:  REG_DATA = {16'h3031, 8'h00};// ADBIT[1:0]
++      23:  REG_DATA = {16'h3032, 8'h00};// MDBIT
++      24:  REG_DATA = {16'h3033, 8'h05};// SYS_MODE: 4K=0x08, binning=0x05
++      25:  REG_DATA = {16'h3040, 8'h00};// PIX_HST[12:0]
++      26:  REG_DATA = {16'h3041, 8'h00};// PIX_HST[12:0]
++      27:  REG_DATA = {16'h3042, 8'h18};// PIX_HWIDTH[12:0]
++      28:  REG_DATA = {16'h3043, 8'h0F};// PIX_HWIDTH[12:0]
++      29:  REG_DATA = {16'h3044, 8'h00};// PIX_VST[12:0]
++      30:  REG_DATA = {16'h3045, 8'h00};// PIX_VST[12:0]
++      31:  REG_DATA = {16'h3046, 8'h20};// PIX_VWIDTH[12:0]
++      32:  REG_DATA = {16'h3047, 8'h11};// PIX_VWIDTH[12:0]
++      33:  REG_DATA = {16'h3050, 8'h08};// SHR0[19:0]
++      34:  REG_DATA = {16'h3051, 8'h00};// SHR0[19:0]
++      35:  REG_DATA = {16'h3052, 8'h00};// SHR0[19:0]
++      36:  REG_DATA = {16'h3054, 8'h19};// SHR1[19:0]
++      37:  REG_DATA = {16'h3055, 8'h00};// SHR1[19:0]
++      38:  REG_DATA = {16'h3056, 8'h00};// SHR1[19:0]
++      39:  REG_DATA = {16'h3058, 8'h3E};// SHR2[19:0]
++      40:  REG_DATA = {16'h3059, 8'h00};// SHR2[19:0]
++      41:  REG_DATA = {16'h305A, 8'h00};// SHR2[19:0]
++      42:  REG_DATA = {16'h305C, 8'h66};// SHR3[19:0]
++      43:  REG_DATA = {16'h305D, 8'h00};// SHR3[19:0]
++      44:  REG_DATA = {16'h305E, 8'h00};// SHR3[19:0]
++      45:  REG_DATA = {16'h3060, 8'h25};// RHS1[19:0]
++      46:  REG_DATA = {16'h3061, 8'h00};// RHS1[19:0]
++      47:  REG_DATA = {16'h3062, 8'h00};// RHS1[19:0]
++      48:  REG_DATA = {16'h3064, 8'h4A};// RHS2[19:0]
++      49:  REG_DATA = {16'h3065, 8'h00};// RHS2[19:0]
++      50:  REG_DATA = {16'h3066, 8'h00};// RHS2[19:0]
++      51:  REG_DATA = (MODE==2'd1) ? {16'h3090, 8'h10} : {16'h3090, 8'h20};// GAIN_PGC_0: 4K=0x10(4.8dB), binning=0x20(9.6dB)
++      52:  REG_DATA = {16'h3091, 8'h00};// GAIN_PGC_0[8]
++      53:  REG_DATA = {16'h3092, 8'h00};// GAIN_PGC_1 (HDR only)
++      54:  REG_DATA = {16'h3093, 8'h00};// GAIN_PGC_1[8]
++      55:  REG_DATA = {16'h3094, 8'h00};// GAIN_PGC_2 (HDR only)
++      56:  REG_DATA = {16'h3095, 8'h00};// GAIN_PGC_2[8]
++      57:  REG_DATA = {16'h3096, 8'h00};// GAIN_PGC_3 (HDR only)
++      58:  REG_DATA = {16'h3097, 8'h00};// GAIN_PGC_3[8]
++      59:  REG_DATA = {16'h30C0, 8'h2A};// XVSOUTSEL[1:0]
++      60:  REG_DATA = {16'h30C1, 8'h00};// XVS_DRV[1:0]
++      61:  REG_DATA = {16'h30CC, 8'h00};// -
++      62:  REG_DATA = {16'h30CD, 8'h00};// -
++      63:  REG_DATA = {16'h30CF, 8'h00};// XVSMSKCNT_INT[1:0]
++      64:  REG_DATA = (MODE==2'd1) ? {16'h30D9, 8'h06} : {16'h30D9, 8'h02};// DIG_CLP_VSTART
++      65:  REG_DATA = (MODE==2'd1) ? {16'h30DA, 8'h02} : {16'h30DA, 8'h01};// DIG_CLP_VNUM
++      66:  REG_DATA = {16'h30E2, 8'h32};// BLKELVEL[9:0]
++      67:  REG_DATA = {16'h30E3, 8'h00};// BLKELVEL[9:0]
++      68:  REG_DATA = {16'h3115, 8'h00};// INCKSEL1[7:0]
++      69:  REG_DATA = {16'h3116, 8'h23};// INCKSEL2[7:0]
++      70:  REG_DATA = {16'h3118, 8'hC6};// INCKSEL3: 4K=0xB4, binning=0xC6
++      71:  REG_DATA = {16'h3119, 8'h00};// INCKSEL3[10:8]
++      72:  REG_DATA = {16'h311A, 8'hE7};// INCKSEL4: 4K=0xFC, binning=0xE7
++      73:  REG_DATA = {16'h311B, 8'h00};// INCKSEL4[10:8]
++      74:  REG_DATA = {16'h311E, 8'h23};// INCKSEL5[7:0]
++      75:  REG_DATA = {16'h3260, 8'h01};// GAIN_PGC_FIDMD
++      76:  REG_DATA = {16'h32C8, 8'h01};
++      77:  REG_DATA = {16'h32D4, 8'h21};
++      78:  REG_DATA = {16'h32EC, 8'hA1};
++      79:  REG_DATA = {16'h344C, 8'h2B};
++      80:  REG_DATA = {16'h344D, 8'h01};
++      81:  REG_DATA = {16'h344E, 8'hED};
++      82:  REG_DATA = {16'h344F, 8'h01};
++      83:  REG_DATA = {16'h3450, 8'hF6};
++      84:  REG_DATA = {16'h3451, 8'h02};
++      85:  REG_DATA = {16'h3452, 8'h7F};
++      86:  REG_DATA = {16'h3453, 8'h03};
++      87:  REG_DATA = {16'h358A, 8'h04};
++      88:  REG_DATA = {16'h35A1, 8'h02};
++      89:  REG_DATA = {16'h35EC, 8'h27};
++      90:  REG_DATA = {16'h35EE, 8'h8D};
++      91:  REG_DATA = {16'h35F0, 8'h8D};
++      92:  REG_DATA = {16'h35F2, 8'h29};
++      93:  REG_DATA = {16'h36BC, 8'h0C};
++      94:  REG_DATA = {16'h36CC, 8'h53};
++      95:  REG_DATA = {16'h36CD, 8'h00};
++      96:  REG_DATA = {16'h36CE, 8'h3C};
++      97:  REG_DATA = {16'h36D0, 8'h8C};
++      98:  REG_DATA = {16'h36D1, 8'h00};
++      99:  REG_DATA = {16'h36D2, 8'h71};
++      100: REG_DATA = {16'h36D4, 8'h3C};
++      101: REG_DATA = {16'h36D6, 8'h53};
++      102: REG_DATA = {16'h36D7, 8'h00};
++      103: REG_DATA = {16'h36D8, 8'h71};
++      104: REG_DATA = {16'h36DA, 8'h8C};
++      105: REG_DATA = {16'h36DB, 8'h00};
++      106: REG_DATA = {16'h3701, 8'h00};
++      107: REG_DATA = {16'h3720, 8'h00};
++      108: REG_DATA = {16'h3724, 8'h02};
++      109: REG_DATA = {16'h3726, 8'h02};
++      110: REG_DATA = {16'h3732, 8'h02};
++      111: REG_DATA = {16'h3734, 8'h03};
++      112: REG_DATA = {16'h3736, 8'h03};
++      113: REG_DATA = {16'h3742, 8'h03};
++      114: REG_DATA = {16'h3862, 8'hE0};
++      115: REG_DATA = {16'h38CC, 8'h30};
++      116: REG_DATA = {16'h38CD, 8'h2F};
++      117: REG_DATA = {16'h395C, 8'h0C};
++      118: REG_DATA = {16'h39A4, 8'h07};
++      119: REG_DATA = {16'h39A8, 8'h32};
++      120: REG_DATA = {16'h39AA, 8'h32};
++      121: REG_DATA = {16'h39AC, 8'h32};
++      122: REG_DATA = {16'h39AE, 8'h32};
++      123: REG_DATA = {16'h39B0, 8'h32};
++      124: REG_DATA = {16'h39B2, 8'h2F};
++      125: REG_DATA = {16'h39B4, 8'h2D};
++      126: REG_DATA = {16'h39B6, 8'h28};
++      127: REG_DATA = {16'h39B8, 8'h30};
++      128: REG_DATA = {16'h39BA, 8'h30};
++      129: REG_DATA = {16'h39BC, 8'h30};
++      130: REG_DATA = {16'h39BE, 8'h30};
++      131: REG_DATA = {16'h39C0, 8'h30};
++      132: REG_DATA = {16'h39C2, 8'h2E};
++      133: REG_DATA = {16'h39C4, 8'h2B};
++      134: REG_DATA = {16'h39C6, 8'h25};
++      135: REG_DATA = {16'h3A42, 8'hD1};
++      136: REG_DATA = {16'h3A4C, 8'h77};
++      137: REG_DATA = {16'h3AE0, 8'h02};
++      138: REG_DATA = {16'h3AEC, 8'h0C};
++      139: REG_DATA = {16'h3B00, 8'h2E};
++      140: REG_DATA = {16'h3B06, 8'h29};
++      141: REG_DATA = {16'h3B98, 8'h25};
++      142: REG_DATA = {16'h3B99, 8'h21};
++      143: REG_DATA = {16'h3B9B, 8'h13};
++      144: REG_DATA = {16'h3B9C, 8'h13};
++      145: REG_DATA = {16'h3B9D, 8'h13};
++      146: REG_DATA = {16'h3B9E, 8'h13};
++      147: REG_DATA = {16'h3BA1, 8'h00};
++      148: REG_DATA = {16'h3BA2, 8'h06};
++      149: REG_DATA = {16'h3BA3, 8'h0B};
++      150: REG_DATA = {16'h3BA4, 8'h10};
++      151: REG_DATA = {16'h3BA5, 8'h14};
++      152: REG_DATA = {16'h3BA6, 8'h18};
++      153: REG_DATA = {16'h3BA7, 8'h1A};
++      154: REG_DATA = {16'h3BA8, 8'h1A};
++      155: REG_DATA = {16'h3BA9, 8'h1A};
++      156: REG_DATA = {16'h3BAC, 8'hED};
++      157: REG_DATA = {16'h3BAD, 8'h01};
++      158: REG_DATA = {16'h3BAE, 8'hF6};
++      159: REG_DATA = {16'h3BAF, 8'h02};
++      160: REG_DATA = {16'h3BB0, 8'hA2};
++      161: REG_DATA = {16'h3BB1, 8'h03};
++      162: REG_DATA = {16'h3BB2, 8'hE0};
++      163: REG_DATA = {16'h3BB3, 8'h03};
++      164: REG_DATA = {16'h3BB4, 8'hE0};
++      165: REG_DATA = {16'h3BB5, 8'h03};
++      166: REG_DATA = {16'h3BB6, 8'hE0};
++      167: REG_DATA = {16'h3BB7, 8'h03};
++      168: REG_DATA = {16'h3BB8, 8'hE0};
++      169: REG_DATA = {16'h3BBA, 8'hE0};
++      170: REG_DATA = {16'h3BBC, 8'hDA};
++      171: REG_DATA = {16'h3BBE, 8'h88};
++      172: REG_DATA = {16'h3BC0, 8'h44};
++      173: REG_DATA = {16'h3BC2, 8'h7B};
++      174: REG_DATA = {16'h3BC4, 8'hA2};
++      175: REG_DATA = {16'h3BC8, 8'hBD};
++      176: REG_DATA = {16'h3BCA, 8'hBD};
++      177: REG_DATA = {16'h4000, 8'h10};
++      178: REG_DATA = {16'h4001, 8'h03};//LANEMODE[2:0]
++      179: REG_DATA = {16'h4004, 8'hC0};//TXCLKESC_FREQ: 4K=0xC0, binning=0xC0
++      180: REG_DATA = {16'h4005, 8'h06};//TXCLKESC_FREQ[15:8]
++      181: REG_DATA = {16'h400C, 8'h00};//INCKSEL6: 4K=0x00, binning=0x00
++      182: REG_DATA = {16'h4018, 8'h7F};//TCLKPOST
++      183: REG_DATA = {16'h4019, 8'h00};//TCLKPOST[15:8]
++      184: REG_DATA = {16'h401A, 8'h37};//TCLKPREPARE
++      185: REG_DATA = {16'h401B, 8'h00};//TCLKPREPARE[15:8]
++      186: REG_DATA = {16'h401C, 8'h37};//TCLKTRAIL
++      187: REG_DATA = {16'h401D, 8'h00};//TCLKTRAIL[15:8]
++      188: REG_DATA = {16'h401E, 8'hF7};//TCLKZERO[7:0]
++      189: REG_DATA = {16'h401F, 8'h00};//TCLKZERO[15:8]: 4K=0x00F7, binning=0x00F7
++      190: REG_DATA = {16'h4020, 8'h3F};//THSPREPARE
++      191: REG_DATA = {16'h4021, 8'h00};//THSPREPARE[15:8]
++      192: REG_DATA = {16'h4022, 8'h6F};//THSZERO
++      193: REG_DATA = {16'h4023, 8'h00};//THSZERO[15:8]
++      194: REG_DATA = {16'h4024, 8'h3F};//THSTRAIL
++      195: REG_DATA = {16'h4025, 8'h00};//THSTRAIL[15:8]
++      196: REG_DATA = {16'h4026, 8'h5F};//THSEXIT
++      197: REG_DATA = {16'h4027, 8'h00};//THSEXIT[15:8]
++      198: REG_DATA = {16'h4028, 8'h2F};//TLPX
++      199: REG_DATA = {16'h4029, 8'h00};//TLPX[15:8]
++      200: REG_DATA = {16'h4074, 8'h01};//INCKSEL7: 4K=0x01, binning=0x01
++      default: REG_DATA = {16'h0000, 8'h00};
++    endcase
++  end
++
++endmodule
++
+diff --git a/rtl/ep_side/ddr/cam_r10f_writer.v b/rtl/ep_side/ddr/cam_r10f_writer.v
+index f24ddba1..e6041b8a 100644
+--- a/rtl/ep_side/ddr/cam_r10f_writer.v
++++ b/rtl/ep_side/ddr/cam_r10f_writer.v
+@@ -115,6 +115,10 @@ module cam_r10f_writer #(
+     output reg  [15:0]   dbg_max_grp_per_line,
+     output reg           dbg_anomaly,
+     output wire [95:0]   dbg_drop,
++    // AXI 各阶段最长连续停滞（单位 clk_ddr，饱和计数）+ 突发完成/收口超时次数：
++    //   [15:0]  w 阶段最长停滞、[31:16] b 阶段、[47:32] aw 阶段、[63:48] rwd 阶段
++    //   [79:72] 突发回执次数[7:0]、[95:88] rwd 超时自愈次数[7:0]
++    output wire [95:0]   dbg_stall,
+     // 板级调试用状态快照（只读，不参与任何数据/控制路径）：
+     //   [2:0] a_st（AXI 写状态机）、[5:3] s_state（源状态机）、[6] hdr_ready、[7] pub 未回执
+     output wire [8:0]    dbg_fsm,
+@@ -600,7 +604,14 @@ module cam_r10f_writer #(
+ 
+     wire [FIFO_AW:0] wbin_sync_ddr = gray2bin(wgray_s2);
+     wire [FIFO_AW:0] fifo_occ_ddr  = wbin_sync_ddr - rptr_bin;
+-    localparam integer BURST_GROUPS = 500;
++    // 64 拍突发 = 409.6 组。门槛必须 >=「2 笔突发的量」，否则一笔突发发到尾部时
++    // FIFO 已经见底，wvalid 会断流（此时 busy=1 把写口钉住），双路时正好把换手窗口
++    // 和 W 断流撞在一起。820 组 = 4100B ≈ 2 笔，发完还剩一整笔余量。
++    // ★ 实测教训（2026-10-27 板测）：门槛不能超过「FIFO 深度 - 帧尾剩余量」的约束。
++    //   820 组时，帧尾剩不到 820 组 → 写者停发 → 相机写到 wfull 丢 EOF 标记 → 超时收口，
++    //   B 单路 wcnt 从 0xE900 掉到 0xD304、verdict=0x4（好帧 0）。410（一笔突发）是已验证
++    //   可用值，改大必须先解决「帧尾没到门槛也继续发」的问题。
++    localparam integer BURST_GROUPS = 410;
+     wire tail_phase_ddr = (s_state == S_TAIL) || (s_state == S_DRAIN) || (s_state == S_WAIT);
+     wire burst_ok_ddr   = tail_phase_ddr || (fifo_occ_ddr >= BURST_GROUPS);
+ 
+@@ -904,6 +915,52 @@ module cam_r10f_writer #(
+     // [31:0]={notack,stuck}  [63:32]={beats_last,wcnt_last}  [95:64]={24'd0,verdict_snap}
+     assign dbg_drop      = {24'd0, verdict_snap, beats_last, wcnt_last, c_notack, c_stuck};
+ 
++    // ========================================================================
++    //  AXI 停滞观测 + 安全自愈（只加在「尚未发 W」的两个点，绝不断在突发中间）
++    //    · A_AW：awvalid 拉高但长期等不到 awready —— 撤掉 awvalid 不构成事务，
++    //      AXI 语义上合法；代价是本笔突发数据作废，帧按 axi_err 判坏。
++    //    · A_RWD：只等本地 hdr_ready，还没有任何 AW/W —— 直接跳过 CRC 头重写。
++    //    这两个点都不会让从机（DDR MC）等半截突发，因此是安全的兜底。
++    // ========================================================================
++    localparam integer TMO_AXISAFE = 1;              // 1 = 打开两处自愈
++    reg  [15:0] m_aw_cur, m_w_cur, m_b_cur, m_rwd_cur;
++    reg  [15:0] m_aw_max, m_w_max, m_b_max, m_rwd_max;
++    reg  [7:0]  m_burst_done, m_rwd_tmo_cnt;
++    reg  [15:0] rwd_wait;
++
++    wire st_aw  = (a_st == A_AW ) && !m_axi_awready;
++    wire st_w   = (a_st == A_W  ) && !(beat_vld & m_axi_wready);
++    wire st_b   = (a_st == A_B  ) && !m_axi_bvalid;
++    wire st_rwd = (a_st == A_RWD) && !hdr_ready;
++    wire rwd_tmo_evt = TMO_AXISAFE && (a_st == A_RWD) && (rwd_wait == 16'hFFFF);
++    wire aw_tmo_evt  = TMO_AXISAFE && (a_st == A_AW) && (m_aw_cur == 16'hFFFF);
++
++    always @(posedge clk_ddr or posedge rst_ddr) begin
++        if (rst_ddr) begin
++            m_aw_cur <= 16'd0; m_w_cur <= 16'd0; m_b_cur <= 16'd0; m_rwd_cur <= 16'd0;
++            m_aw_max <= 16'd0; m_w_max <= 16'd0; m_b_max <= 16'd0; m_rwd_max <= 16'd0;
++            m_burst_done <= 8'd0; m_rwd_tmo_cnt <= 8'd0; rwd_wait <= 16'd0;
++        end else begin
++            if (st_aw) m_aw_cur <= (m_aw_cur == 16'hFFFF) ? m_aw_cur : (m_aw_cur + 16'd1);
++            else begin if (m_aw_cur > m_aw_max) m_aw_max <= m_aw_cur; m_aw_cur <= 16'd0; end
++            if (st_w)  m_w_cur  <= (m_w_cur  == 16'hFFFF) ? m_w_cur  : (m_w_cur  + 16'd1);
++            else begin if (m_w_cur  > m_w_max)  m_w_max  <= m_w_cur;  m_w_cur  <= 16'd0; end
++            if (st_b)  m_b_cur  <= (m_b_cur  == 16'hFFFF) ? m_b_cur  : (m_b_cur  + 16'd1);
++            else begin if (m_b_cur  > m_b_max)  m_b_max  <= m_b_cur;  m_b_cur  <= 16'd0; end
++            if (st_rwd) m_rwd_cur <= (m_rwd_cur == 16'hFFFF) ? m_rwd_cur : (m_rwd_cur + 16'd1);
++            else begin if (m_rwd_cur > m_rwd_max) m_rwd_max <= m_rwd_cur; m_rwd_cur <= 16'd0; end
++
++            if ((a_st == A_B) && m_axi_bvalid)
++                m_burst_done <= m_burst_done + 8'd1;
++            if (rwd_tmo_evt)
++                m_rwd_tmo_cnt <= m_rwd_tmo_cnt + 8'd1;
++
++            if (a_st != A_RWD) rwd_wait <= 16'd0;
++            else if (rwd_wait != 16'hFFFF) rwd_wait <= rwd_wait + 16'd1;
++        end
++    end
++    assign dbg_stall = {m_rwd_tmo_cnt, m_burst_done, m_rwd_max, m_aw_max, m_w_max, m_b_max};
++
+     always @(posedge clk_ddr or posedge rst_ddr) begin
+         if (rst_ddr) begin
+             a_st          <= A_IDLE;
+@@ -1053,6 +1110,14 @@ module cam_r10f_writer #(
+                     burst_m1      <= m_axi_awlen;
+                     w_idx         <= {BEAT_CW{1'b0}};
+                     a_st          <= A_W;
++                end else if (aw_tmo_evt) begin
++                    // 兜底：撤 awvalid（无事务发生，AXI 合法）→ 放弃本笔突发、判坏、
++                    // 释放写口，避免一路把 grant 永久压住把另一路饿死。
++                    m_axi_awvalid <= 1'b0;
++                    m_axi_awlen   <= 8'd0;
++                    axi_err       <= 1'b1;
++                    mid_frame     <= 1'b0;
++                    a_st          <= A_IDLE;
+                 end
+ 
+                 A_W: if (beat_vld & m_axi_wready) begin
+@@ -1084,6 +1149,12 @@ module cam_r10f_writer #(
+                     m_axi_awlen   <= 8'd0;
+                     m_axi_awvalid <= 1'b1;
+                     a_st          <= A_RW;
++                end else if (rwd_tmo_evt) begin
++                    // 兜底：hdr_ready 没等到（CRC 头遍历没启动/没完成）——此时没有
++                    // 任何 AW/W，直接跳过「CRC 头重写」，判坏并交还写口。
++                    axi_err   <= 1'b1;
++                    rw_done_r <= 1'b1;
++                    a_st      <= A_IDLE;
+                 end
+ 
+                 A_RW: if (m_axi_awready) begin
+diff --git a/rtl/ep_side/img/ep_bar_win.v b/rtl/ep_side/img/ep_bar_win.v
+index a54ea23c..26d6aa89 100644
+--- a/rtl/ep_side/img/ep_bar_win.v
++++ b/rtl/ep_side/img/ep_bar_win.v
+@@ -165,6 +165,11 @@ module ep_bar_win #(
+     output reg  [6:0]   cam_tap_b_cfg,   // B 路 {manual_en, tap[5:0]} 主机可写（0xD4）
+     output wire         cam_ab_sel,      // CTRL[8]：推帧取哪一路（0 = A，默认；1 = B）
+     input  wire [95:0]  cam_drop_a,      // A 路直通通路的丢帧诊断（0xDC/0xF0/0xF4）
++    // 0x6C SCRATCH 原样送到顶层：本轮当「写者 arm 掩码」用（bit0=A, bit1=B；
++    // 0 = 走编译期默认）。只作调试旋钮，不改变 0x6C 的回读值。
++    output wire [31:0]  dbg_scratch,
++    input  wire [95:0]  cama_stall,      // A 路写者 AXI 停滞（0x188~0x190）
++    input  wire [95:0]  camb_stall,      // B 路写者 AXI 停滞（0x194~0x19C）
+     // 控制 / 状态（接 img_frame_src）
+     output reg          ctrl_enable,
+     output reg          ctrl_trigger,
+@@ -615,6 +620,13 @@ module ep_bar_win #(
+             12'h17C: rd_dw_comb = dbgdrop_b[31:0];    // {notack[15:0], stuck[15:0]}
+             12'h180: rd_dw_comb = dbgdrop_b[63:32];   // {bad[15:0], last_wcnt[15:0]}
+             12'h184: rd_dw_comb = dbgdrop_b[95:64];   // {24'd0, verdict_snap}
++            // 写者 AXI 阶段最长连续停滞（clk_ddr 拍）+ 突发完成/收口超时次数
++            12'h188: rd_dw_comb = cama_stall[31:0];    // A {w_max[15:0], b_max[15:0]}
++            12'h18C: rd_dw_comb = cama_stall[63:32];   // A {aw_max[15:0], rwd_max[15:0]}
++            12'h190: rd_dw_comb = cama_stall[95:64];   // A {16'd0, rwd_tmo[7:0], burst_done[7:0]}
++            12'h194: rd_dw_comb = camb_stall[31:0];    // B 同上
++            12'h198: rd_dw_comb = camb_stall[63:32];
++            12'h19C: rd_dw_comb = camb_stall[95:64];
+             default: rd_dw_comb = 32'hDEAD_BEEF;
+         endcase
+     end
+@@ -627,4 +639,7 @@ module ep_bar_win #(
+ 
+     assign mrdata_rd_data = {p_dw0, p_dw1, p_dw2, p_dw3, 128'd0};
+ 
++    // 0x6C SCRATCH 直出（调试 arm 掩码用）
++    assign dbg_scratch = scratch;
++
+ endmodule
+diff --git a/rtl/ep_side/pcie_ep_engine.v b/rtl/ep_side/pcie_ep_engine.v
+index 4665fe96..1d2ac3ec 100644
+--- a/rtl/ep_side/pcie_ep_engine.v
++++ b/rtl/ep_side/pcie_ep_engine.v
+@@ -78,6 +78,9 @@ module pcie_ep_engine #(
+     input       wire                dbgwr_grant            ,
+     input       wire [95:0]         dbgdrop_b              ,
+     input       wire [127:0]        ddr_ro_b               ,   // B 路整帧搬运握手字（0xE0~0xEC）
++    output      wire [31:0]         dbg_scratch            ,   // 0x6C SCRATCH 直出（调试 arm 掩码）
++    input       wire [95:0]         cama_stall             ,   // A 路写者 AXI 停滞（0x188~0x190）
++    input       wire [95:0]         camb_stall             ,   // B 路写者 AXI 停滞（0x194~0x19C）
+     // ==== 本移植新增：DDR3 整帧搬运（CTRL[5] + 只读握手字）====
+     output      wire                img_ctrl_ddr_en        ,
+     input       wire    [127:0]     img_ddr_ro             ,
+@@ -439,6 +442,9 @@ ep_bar_win #(
+     .dbgwr_grant    (dbgwr_grant            ),
+     .dbgdrop_b      (dbgdrop_b              ),
+     .ddr_ro_b       (ddr_ro_b               ),
++    .dbg_scratch    (dbg_scratch            ),
++    .cama_stall     (cama_stall             ),
++    .camb_stall     (camb_stall             ),
+     .ctrl_ddr_en    (img_ctrl_ddr_en        ),
+     .ddr_ro         (img_ddr_ro             ),
+     .host_rd_prio   (img_host_rd_prio       ),
+diff --git a/rtl/ep_side/ph1p_pcie_ep_top.v b/rtl/ep_side/ph1p_pcie_ep_top.v
+index c905d427..80868cb5 100644
+--- a/rtl/ep_side/ph1p_pcie_ep_top.v
++++ b/rtl/ep_side/ph1p_pcie_ep_top.v
+@@ -180,6 +180,14 @@ wire         w_cam_ddr_want_a, w_cam_ddr_want_b;
+  * 没被 arm 的那一路走设计里已有的 skip 路径（跳过不写），不会卡。
+  */
+ localparam integer CAM_TX_ROT_BITS = 24;
++localparam integer SINGLE_B_TEST   = 1;   // （历史）1 = 只 arm B 路（单路扫频）
++localparam integer DUAL_TEST       = 1;   // 1 = A/B 同时 arm（并发实验）
++// 默认 arm 掩码（scratch=0 时生效）：本轮默认双路，用 0x6C 运行时改
++//   0x6C[1:0] = 1 → 只 A；2 → 只 B；3 → 双路；0 → 用下面这个默认
++localparam [1:0]   CAM_ARM_DEFAULT = DUAL_TEST ? 2'b11 : (SINGLE_B_TEST ? 2'b10 : 2'b11);
++wire [31:0] w_dbg_scratch;                       // 0x6C SCRATCH 直出（pcie_ep_engine）
++wire [1:0]  w_cam_arm_sel = (w_dbg_scratch[1:0] == 2'b00) ? CAM_ARM_DEFAULT
++                                                          : w_dbg_scratch[1:0];
+ reg [CAM_TX_ROT_BITS-1:0] cam_tx_rot_cnt;
+ reg                       cam_tx_owner;         // 0 = A 路持有发包权，1 = B 路
+ 
+@@ -190,8 +198,10 @@ always @(posedge tl_clk_user) begin
+ end
+ 
+ assign w_cam_ddr_want   = img_ddr_en;
+-assign w_cam_ddr_want_a = img_ddr_en & ~cam_tx_owner;
+-assign w_cam_ddr_want_b = img_ddr_en &  cam_tx_owner;
++// 运行时 arm 掩码（0x6C）：1 = 只 A，2 = 只 B，3 = 双路；0 = 用 CAM_ARM_DEFAULT。
++// 这样一支位流就能分别验 B 单路 / A 单路 / 双路，不必每次改参数重建。
++assign w_cam_ddr_want_a = img_ddr_en &  w_cam_arm_sel[0];
++assign w_cam_ddr_want_b = img_ddr_en &  w_cam_arm_sel[1];
+ // img_pattern[0] = CTRL[2] 用作「传感器重触发」（见顶层相机段说明）。
+ wire [255:0] w_cam_stat;      // 声明必须早于例化处使用（否则 TD 造 1 位隐式网）
+ wire [6:0]   cam_tap_cfg;     // A 路 tap（0x9C）
+@@ -246,6 +256,7 @@ wire [31:0] w_camddr_b_seq, w_camddr_b_base, w_camddr_b_status, w_camddr_b_len;
+ // 两路各自的诊断（A → cam_stat[255:224] 即 0xD0；B → 0xD8）
+ wire [15:0] w_camddr_lines, w_camddr_grp, w_camddr_b_lines, w_camddr_b_grp;
+ wire [8:0]  w_dbgfsm_cama, w_dbgfsm_camb;   // 写者状态快照（调试只读，见 0x170/0x174）
++wire [95:0] w_dbgstall_a, w_dbgstall_b;    // 写者 AXI 阶段停滞（调试只读，见 0x188~0x19C）
+ wire [95:0] w_dbgdrop_b;                  // B 路写者丢帧诊断（调试只读，见 0x17C/0x180/0x184）
+ wire        w_camddr_anom, w_camddr_b_anom;
+ // 推帧引擎取哪一路（CTRL[8]）
+@@ -747,6 +758,9 @@ pcie_ep_engine #(
+     .cam_tap_b_cfg                           (cam_tap_b_cfg                          ),
+     .cam_ab_sel                              (img_cam_ab_sel                         ),
+     .ddr_ro_b                                (w_ddr_ro_b                             ),
++    .dbg_scratch                             (w_dbg_scratch                          ),
++    .cama_stall                              (w_dbgstall_a                           ),
++    .camb_stall                              (w_dbgstall_b                           ),
+     .cam_drop_a                              (w_camddr_drop_a                        ),
+     .cam_diag_b                              (w_cam_diag_b                           ),
+     .dbgfsm_cama                               (w_dbgfsm_cama                            ),
+@@ -1129,17 +1143,85 @@ assign  debug_led[3] = ltssm_reg_dly[4];
+     reg        r_rst_n      = 1'b0;
+     always @(posedge tl_clk_user) r_rst_n <= (r_pwr_cnt2 > 23'd1000);
+ 
+-    // ---- (a) 62.5MHz → 12.5MHz（旧分频器：acc+2、>=5 时 -3 并翻转，默认）----
+-    //   半周期 2/3 拍交替 → 输出周期恒 80ns、瞬时占空 40/60（无周期抖动）
++    // ---- 50MHz sys_clk → 干净 25MHz（MCLK_SEL=5；先 BUFG 再二分频，50% 占空）----
++    wire w_sys_clk_bufg;
++    PH1P_LOGIC_BUFG u_sys_clk_bufg (.i(sys_clk), .o(w_sys_clk_bufg));
++    reg  r_mclk_25_clean = 1'b0;
++    always @(posedge w_sys_clk_bufg) r_mclk_25_clean <= ~r_mclk_25_clean;
++
++    // 62.5MHz → 27MHz 分数分频（MCLK_SEL=6；Bresenham，平均 27.0MHz）
++    //   INC = round(65536 * 27 / 62.5) = 56623；平均翻转率 62.5*56623/65536 = 54.0MHz
++    localparam [16:0] MCLK27_INC = 17'd56623;
++    reg [16:0] r_mclk27_acc = 17'd0;
++    reg        r_mclk_27    = 1'b0;
++    always @(posedge tl_clk_user) begin
++        if (r_mclk27_acc >= (17'd65536 - MCLK27_INC)) begin
++            r_mclk27_acc <= r_mclk27_acc + MCLK27_INC - 17'd65536;
++            r_mclk_27    <= ~r_mclk_27;
++        end else begin
++            r_mclk27_acc <= r_mclk27_acc + MCLK27_INC;
++        end
++    end
++
++    // ---- (a) 62.5MHz → 可选 MCLK（扫频用；默认 12.5MHz 仍是原分频器）----
++    //   MCLK_SEL: 0=12.5, 1=15.625, 2=20.833, 3=25, 4=31.25 MHz
++    //   非整数半周期用相位状态机在 62.5MHz 边沿上交替 1/2 拍实现：
++    //     20.833MHz: 半周期 1.5 拍（1,2 交替）→ 周期 3 拍
++    //     25MHz   : 半周期 1.25 拍（1,1,1,2）→ 周期 2.5 拍
++    //   输出只在 62.5MHz 边沿翻，最小脉宽 1 拍=16ns；传感器 INCK 的 PLL 需实测。
++    localparam integer MCLK_SEL = 6;
+     reg [2:0] r_macc     = 3'd0;
++    reg [2:0] r_mclk_ph  = 3'd0;
+     reg       r_mclk_125 = 1'b0;
+     always @(posedge tl_clk_user) begin
+-        if (r_macc >= 3'd5) begin
+-            r_macc     <= r_macc - 3'd3;      // 等价 (acc+2)-5
++        case (MCLK_SEL)
++        0: begin
++            // 12.5MHz：半周期 2/3 拍交替，周期恒 5 拍（原实现）
++            if (r_macc >= 3'd5) begin
++                r_macc     <= r_macc - 3'd3;
++                r_mclk_125 <= ~r_mclk_125;
++            end else begin
++                r_macc     <= r_macc + 3'd2;
++            end
++        end
++        1: begin
++            // 15.625MHz：半周期 2 拍
++            if (r_mclk_ph[0]) begin
++                r_mclk_ph  <= 3'd0;
++                r_mclk_125 <= ~r_mclk_125;
++            end else begin
++                r_mclk_ph  <= 3'd1;
++            end
++        end
++        2: begin
++            // 20.833MHz：半周期 1.5 拍（toggle, wait, toggle, wait...）
++            case (r_mclk_ph)
++            3'd0: begin r_mclk_ph <= 3'd1; r_mclk_125 <= ~r_mclk_125; end
++            3'd1: begin r_mclk_ph <= 3'd2; end
++            default: begin r_mclk_ph <= 3'd0; r_mclk_125 <= ~r_mclk_125; end
++            endcase
++        end
++        3: begin
++            // 25MHz：半周期 1.25 拍（1,1,1,2 四个半周期，共 5 拍 = 2.5 拍/周期）
++            case (r_mclk_ph)
++            3'd0: begin r_mclk_ph <= 3'd1; r_mclk_125 <= ~r_mclk_125; end
++            3'd1: begin r_mclk_ph <= 3'd2; r_mclk_125 <= ~r_mclk_125; end
++            3'd2: begin r_mclk_ph <= 3'd3; r_mclk_125 <= ~r_mclk_125; end
++            3'd3: begin r_mclk_ph <= 3'd4; r_mclk_125 <= ~r_mclk_125; end
++            default: begin r_mclk_ph <= 3'd0; end
++            endcase
++        end
++        5: begin
++            // 25MHz 干净源由 sys_clk/2 产生；这里不动 r_mclk_125
++        end
++        6: begin
++            // 27MHz 由 r_mclk27_acc 产生；这里不动 r_mclk_125
++        end
++        default: begin
++            // 31.25MHz：半周期 1 拍
+             r_mclk_125 <= ~r_mclk_125;
+-        end else begin
+-            r_macc     <= r_macc + 3'd2;
+         end
++        endcase
+     end
+ 
+     // ---- (b) 已删除：原来的「50MHz sys_clk ÷ 4 = 12.50MHz」那一档 ----
+@@ -1150,7 +1232,8 @@ assign  debug_led[3] = ltssm_reg_dly[4];
+     //   clock、也没有全局缓冲（DRC RTCLK-5079 / check_timing 的 local clock /
+     //   RTCLK-5078 那一类风险）。删掉后 sys_clk 只做 PCIe PLL 的参考时钟，
+     //   MCLK 恒等于 (a) 的 12.5MHz，即板上已验证的那一档。
+-    wire w_mclk = r_mclk_125;
++    wire w_mclk = (MCLK_SEL == 5) ? r_mclk_25_clean :
++                  (MCLK_SEL == 6) ? r_mclk_27       : r_mclk_125;
+ 
+     // 诊断：img_pattern 历史出现过哪些取值（确认 CTRL 写的毛刺，见 0x80[15:12]）
+     reg [3:0] r_mode_hits = 4'd0;
+@@ -1191,7 +1274,7 @@ assign  debug_led[3] = ltssm_reg_dly[4];
+         // 本包不把 0 说成「已验证几何」，只把判坏/计数接出来。
+         .IMAGE_DT (6'h2b), .IMAGE_WC (16'd0), .EXPECTED_LINES (16'd0), .VC_ID (2'd0)
+     ) u_csi_a (
+-        .I_ref_clk          (tl_clk_user),
++        .I_ref_clk          (w_sys_clk_bufg),
+         .I_rst_n            (r_rst_n    ),
+         .I_rx_en            (r_rst_n    ),
+         .I_clk_pad_hs_p     (mipi_a_clk_hs_p ),
+@@ -1233,7 +1316,7 @@ assign  debug_led[3] = ltssm_reg_dly[4];
+         .LANE_NUM (4),
+         .IMAGE_DT (6'h2b), .IMAGE_WC (16'd0), .EXPECTED_LINES (16'd0), .VC_ID (2'd0)
+     ) u_csi_b (
+-        .I_ref_clk          (tl_clk_user),
++        .I_ref_clk          (w_sys_clk_bufg),
+         .I_rst_n            (r_rst_n    ),
+         .I_rx_en            (r_rst_n    ),
+         .I_clk_pad_hs_p     (mipi_b_clk_hs_p ),
+@@ -1581,7 +1664,7 @@ cam_r10f_writer #(
+     .BASE0       (DDR_CAM_BASE0     ),
+     .BASE1       (DDR_CAM_BASE1     ),
+     .FIFO_AW     (10                ),
+-    .BURST_BEATS (128               ),
++    .BURST_BEATS (64                ),
+     .CAMERA_ID   (8'd0              ),
+     .SRC_BAYER_PHASE (2'd0          ),
+     .MODE_ID     (32'd1             )
+@@ -1614,6 +1697,7 @@ cam_r10f_writer #(
+     .dbg_anomaly          (w_camddr_anom ),
+     .dbg_drop             (w_camddr_drop_a ),
+     .dbg_fsm              (w_dbgfsm_cama     ),
++    .dbg_stall            (w_dbgstall_a      ),
+ 
+     .clk_ddr       (w_ddr_dhi_clk     ),
+     .rst_ddr       (~w_ddrphy_rst_n   ),
+@@ -1648,7 +1732,7 @@ cam_r10f_writer #(
+     .BASE0       (DDR_CAM_B_BASE0   ),
+     .BASE1       (DDR_CAM_B_BASE1   ),
+     .FIFO_AW     (10                ),
+-    .BURST_BEATS (128               ),
++    .BURST_BEATS (64                ),
+     .CAMERA_ID   (8'd1              ),
+     .SRC_BAYER_PHASE (2'd0          ),
+     .MODE_ID     (32'd1             )
+@@ -1679,6 +1763,7 @@ cam_r10f_writer #(
+     .dbg_anomaly          (w_camddr_b_anom ),
+     .dbg_fsm              (w_dbgfsm_camb     ),
+     .dbg_drop             (w_dbgdrop_b       ),
++    .dbg_stall            (w_dbgstall_b      ),
+ 
+     .clk_ddr       (w_ddr_dhi_clk     ),
+     .rst_ddr       (~w_ddrphy_rst_n   ),

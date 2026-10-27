@@ -165,6 +165,13 @@ module ep_bar_win #(
     output reg  [6:0]   cam_tap_b_cfg,   // B 路 {manual_en, tap[5:0]} 主机可写（0xD4）
     output wire         cam_ab_sel,      // CTRL[8]：推帧取哪一路（0 = A，默认；1 = B）
     input  wire [95:0]  cam_drop_a,      // A 路直通通路的丢帧诊断（0xDC/0xF0/0xF4）
+    // 0x6C SCRATCH 原样送到顶层：本轮当「写者 arm 掩码」用（bit0=A, bit1=B；
+    // 0 = 走编译期默认）。只作调试旋钮，不改变 0x6C 的回读值。
+    output wire [31:0]  dbg_scratch,
+    input  wire [95:0]  cama_stall,      // A 路写者 AXI 停滞（0x188~0x190）
+    input  wire [95:0]  camb_stall,      // B 路写者 AXI 停滞（0x194~0x19C）
+    input  wire [255:0] dbg_frame_a,     // A 路写者每帧统计（0x1A0~0x1BC）
+    input  wire [255:0] dbg_frame_b,     // B 路写者每帧统计（0x1C0~0x1DC）
     // 控制 / 状态（接 img_frame_src）
     output reg          ctrl_enable,
     output reg          ctrl_trigger,
@@ -615,6 +622,33 @@ module ep_bar_win #(
             12'h17C: rd_dw_comb = dbgdrop_b[31:0];    // {notack[15:0], stuck[15:0]}
             12'h180: rd_dw_comb = dbgdrop_b[63:32];   // {bad[15:0], last_wcnt[15:0]}
             12'h184: rd_dw_comb = dbgdrop_b[95:64];   // {24'd0, verdict_snap}
+            // 写者 AXI 阶段最长连续停滞（clk_ddr 拍）+ 突发完成/收口超时次数
+            12'h188: rd_dw_comb = cama_stall[31:0];    // A {w_max[15:0], b_max[15:0]}
+            12'h18C: rd_dw_comb = cama_stall[63:32];   // A {aw_max[15:0], rwd_max[15:0]}
+            12'h190: rd_dw_comb = cama_stall[95:64];   // A {16'd0, rwd_tmo[7:0], burst_done[7:0]}
+            12'h194: rd_dw_comb = camb_stall[31:0];    // B 同上
+            12'h198: rd_dw_comb = camb_stall[63:32];
+            12'h19C: rd_dw_comb = camb_stall[95:64];
+            // 每帧统计（帧收口时锁存，只读）：
+            //   0x1A0 相机侧入队组数 / 0x1A4 因满丢组数 / 0x1A8 {lines,y} /
+            //   0x1AC {16'd0,max_grp} / 0x1B0 因满丢标记数 / 0x1B4 打包占用周期数 /
+            //   0x1B8 收口 gcnt / 0x1BC {tmo,p_bad,p_eof,eof_bad}
+            12'h1A0: rd_dw_comb = dbg_frame_a[31:0];
+            12'h1A4: rd_dw_comb = dbg_frame_a[63:32];
+            12'h1A8: rd_dw_comb = dbg_frame_a[95:64];
+            12'h1AC: rd_dw_comb = dbg_frame_a[127:96];
+            12'h1B0: rd_dw_comb = dbg_frame_a[159:128];
+            12'h1B4: rd_dw_comb = dbg_frame_a[191:160];
+            12'h1B8: rd_dw_comb = dbg_frame_a[223:192];
+            12'h1BC: rd_dw_comb = dbg_frame_a[255:224];
+            12'h1C0: rd_dw_comb = dbg_frame_b[31:0];
+            12'h1C4: rd_dw_comb = dbg_frame_b[63:32];
+            12'h1C8: rd_dw_comb = dbg_frame_b[95:64];
+            12'h1CC: rd_dw_comb = dbg_frame_b[127:96];
+            12'h1D0: rd_dw_comb = dbg_frame_b[159:128];
+            12'h1D4: rd_dw_comb = dbg_frame_b[191:160];
+            12'h1D8: rd_dw_comb = dbg_frame_b[223:192];
+            12'h1DC: rd_dw_comb = dbg_frame_b[255:224];
             default: rd_dw_comb = 32'hDEAD_BEEF;
         endcase
     end
@@ -626,5 +660,8 @@ module ep_bar_win #(
     wire [31:0] p_dw3 = bswap32(rd_is_data ? pf3 : 32'd0);
 
     assign mrdata_rd_data = {p_dw0, p_dw1, p_dw2, p_dw3, 128'd0};
+
+    // 0x6C SCRATCH 直出（调试 arm 掩码用）
+    assign dbg_scratch = scratch;
 
 endmodule
