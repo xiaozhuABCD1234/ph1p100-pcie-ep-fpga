@@ -39,3 +39,11 @@ workspace/ph1p100/**/restored-tracked-worktree/
 
 # Original reserved-name evidence directories are published under portable aliases.
 workspace/**/aux/
+
+# 可重建的工作流产物：仿真 trace、布线后网表、板上抓包（体积与处置方式见
+# docs/REPO_HYGIENE_20261027.md）。这里只挡新文件；已入库的路径要显式
+# `git rm --cached` 才离开索引。
+workspace/**/trace.txt
+workspace/**/*_routed_netlist.v
+workspace/**/board/captures*/**/*.bin
+
