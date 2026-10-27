@@ -1,0 +1,277 @@
+﻿{
+    "schema":  "fpga-task-manifest/v1",
+    "task_id":  "T10.p4-core-recon",
+    "run_id":  "20261027-1604_fpga-sim-baseline-export",
+    "round":  0,
+    "candidate":  "P4.core-recon-r0",
+    "candidate_rule":  "fpga-design-guide.md 2.1 branch 2: r2 exact bytes absent (bayer 4e108dd8.. / img_top 1cb8262a.. not found); drift a5c40734.. / e420685c.. + r2-timing-experiment rowwin/gaussian used",
+    "status":  "blocked",
+    "blocked_reason_code":  "NO_PROGRESS",
+    "frozen_at":  "2026-10-27T08:27:32Z",
+    "work_root":  "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-1604_fpga-sim-baseline-export\\T10.p4-core-recon",
+    "tool_versions":  {
+                          "modelsim":  "ModelSim ALTERA ASE 18.1 (vlog/vsim 10.5b Compiler 2016.10)",
+                          "python":  "Python 3.11.5",
+                          "os":  "Windows 10.0.26200.0",
+                          "powershell":  "5.1.26100.9711"
+                      },
+    "geometry":  {
+                     "W":  64,
+                     "H":  48,
+                     "phase":  0,
+                     "max_words":  512,
+                     "frames":  2,
+                     "pixels_per_beat":  4,
+                     "clock_ns":  5.333,
+                     "note":  "reduced geometry, NOT production parameters"
+                 },
+    "commands":  [
+                     "sim\\run_sim.ps1 : vlib work; vlog -quiet -work work \u003c14 rtl + tb\u003e; vsim -c -quiet -do \"run -all; quit -f\" tb_p4_core_golden +BP=\u003c0|1\u003e; python model\\compare_p4.py --bp0 .. --bp1 .. --out evidence"
+                 ],
+    "results":  {
+                    "compile":  "pass: 0 error, 1 warning vlog-2083 (stray CR in algo_rowwin3_p4.v:19, pre-existing source formatting)",
+                    "sim_bp0":  "fail: TB_P4_CORE_GOLDEN FAIL errors=5 xerr=0 abt=4 ; TB_STATS y8=782 gau=768 good_b=1 good_p=1 abt_b=1 abt_p=1 hepub=0 gauabt=1 xerr=0 abt_ev=4 cyc=2217 diff=5",
+                    "sim_bp1":  "not_run (entry exits after bp0 FAIL by design)",
+                    "pixel_compare":  "not_run",
+                    "backpressure_compare":  "not_run",
+                    "negative_mutation":  "not_run",
+                    "reading":  "frozen r2 baseline img_algo_parallel_top (7f1e0544..) aborts identically under this testbench stimulus -\u003e fault is in the TB frame-control contract, NOT evidence of a candidate defect; candidate correctness UNPROVEN"
+                },
+    "gates":  {
+                  "G0":  "pass (compile/elaborate 0 error)",
+                  "G1":  "not_run (no valid frame data; F3/F4 observed fail at TB level)",
+                  "G2":  "not_run (TD synthesis forbidden locally)",
+                  "G3":  "not_run (no board)",
+                  "G4":  "not_run (deferred)",
+                  "G5":  "partial (closure SHA complete, single-command entry reproducible; two-run reproducibility not reached)"
+              },
+    "unimplemented_protocol":  [
+                                   "44B A1U1 frame header (camera/session/seq/slot/epoch identity + 4 CRCs)",
+                                   "page tail 96..4095B zero fill / write mask",
+                                   "BAR 0x130..0x13C, CTRL[9..11], a_enable",
+                                   "DDR address x4 remap (simulation model only)",
+                                   "A-path and dual-path",
+                                   "post-ACK identity release chain and wrong-ACK/session/epoch/slot negatives"
+                               ],
+    "readonly_untouched":  [
+                               "R:\\handoff\\**",
+                               "R:\\rtl\\",
+                               "R:\\al_ip\\",
+                               "R:\\constraints\\",
+                               "R:\\tools\\",
+                               "R:\\workspace\\**",
+                               "R:\\workflow\\runs\\20261027-0726_fpga-board-integration\\**",
+                               "D:\\fpga\\ph1p100\\**",
+                               "D:\\fpga\\ph1p100\\workflow\\tasks.json"
+                           ],
+    "no_git_commit_push":  true,
+    "extra_budget_note":  "default dispatch budget was 30 tool calls; this session used more (documented in lessons.md L6); no scope/authorisation was expanded",
+    "files":  [
+                  {
+                      "path":  "rtl\\algo_obuf.v",
+                      "role":  "rtl",
+                      "sha256":  "07404282d02256541cabf282087499e2540ef800580387de29e3871515c8de81",
+                      "size":  3143,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\img\\algo_obuf.v",
+                      "origin_sha256":  "07404282d02256541cabf282087499e2540ef800580387de29e3871515c8de81",
+                      "r2_expected_sha256":  null,
+                      "drift_from_r2":  false
+                  },
+                  {
+                      "path":  "rtl\\algo_rowwin_reader.v",
+                      "role":  "rtl",
+                      "sha256":  "bbd3f9d3e2e231b7ead693df0b3b74440d7baafc352e2f243fa887b6ac666da2",
+                      "size":  3234,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\img\\algo_rowwin_reader.v",
+                      "origin_sha256":  "bbd3f9d3e2e231b7ead693df0b3b74440d7baafc352e2f243fa887b6ac666da2",
+                      "r2_expected_sha256":  null,
+                      "drift_from_r2":  false
+                  },
+                  {
+                      "path":  "rtl\\algo_rowwin3.v",
+                      "role":  "rtl",
+                      "sha256":  "46a6ceb10844b9ccb2054b8b2a911624dc04db0ca167ef72b8b86c9e08571384",
+                      "size":  15684,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\img\\algo_rowwin3.v",
+                      "origin_sha256":  "46a6ceb10844b9ccb2054b8b2a911624dc04db0ca167ef72b8b86c9e08571384",
+                      "r2_expected_sha256":  null,
+                      "drift_from_r2":  false
+                  },
+                  {
+                      "path":  "rtl\\algo_rowwin3_p4.v",
+                      "role":  "rtl",
+                      "sha256":  "f3f345edd10d40bfb24eba85df7d454a21333a330311ce30d81345311f6473b0",
+                      "size":  17209,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\workflow\\runs\\20261026-2138_fpga-integrated-delivery\\INT.P4\\r2-timing-experiment\\algo_rowwin3_p4.v",
+                      "origin_sha256":  "f3f345edd10d40bfb24eba85df7d454a21333a330311ce30d81345311f6473b0",
+                      "r2_expected_sha256":  "f3f345edd10d40bfb24eba85df7d454a21333a330311ce30d81345311f6473b0",
+                      "drift_from_r2":  false
+                  },
+                  {
+                      "path":  "rtl\\bayer_raw10_demosaic4.v",
+                      "role":  "rtl",
+                      "sha256":  "138e7124de1f57bd199c9f6ea340ed9da8fbb4355326f74c15ef6c85795fdbef",
+                      "size":  10558,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\img\\bayer_raw10_demosaic4.v",
+                      "origin_sha256":  "138e7124de1f57bd199c9f6ea340ed9da8fbb4355326f74c15ef6c85795fdbef",
+                      "r2_expected_sha256":  null,
+                      "drift_from_r2":  false
+                  },
+                  {
+                      "path":  "rtl\\bayer_raw10_demosaic4_p4.v",
+                      "role":  "rtl",
+                      "sha256":  "a5c4073404784b3992487898dcba1f9ce3626fd71cd904c0295d60b13a4047bb",
+                      "size":  14491,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\integrated_delivery\\bayer_raw10_demosaic4_p4.v",
+                      "origin_sha256":  "a5c4073404784b3992487898dcba1f9ce3626fd71cd904c0295d60b13a4047bb",
+                      "r2_expected_sha256":  "4e108dd86ac84465a52e21b8db3c0102238fc35e7dc152432efd5052cecea339",
+                      "drift_from_r2":  true
+                  },
+                  {
+                      "path":  "rtl\\gray8_gaussian3x3_frame.v",
+                      "role":  "rtl",
+                      "sha256":  "d5b14c597401313d25d9096a59f94d101e97fcf090198d04c5b0ef2dccbd86ee",
+                      "size":  7896,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\img\\gray8_gaussian3x3_frame.v",
+                      "origin_sha256":  "d5b14c597401313d25d9096a59f94d101e97fcf090198d04c5b0ef2dccbd86ee",
+                      "r2_expected_sha256":  null,
+                      "drift_from_r2":  false
+                  },
+                  {
+                      "path":  "rtl\\gray8_gaussian3x3_stream.v",
+                      "role":  "rtl",
+                      "sha256":  "c358174f56aeb2d4a64a2b7484c53ea9feed2f6cd857ac06c315250110a55dd6",
+                      "size":  8296,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\img\\gray8_gaussian3x3_stream.v",
+                      "origin_sha256":  "c358174f56aeb2d4a64a2b7484c53ea9feed2f6cd857ac06c315250110a55dd6",
+                      "r2_expected_sha256":  null,
+                      "drift_from_r2":  false
+                  },
+                  {
+                      "path":  "rtl\\gray8_gaussian3x3_stream_p4.v",
+                      "role":  "rtl",
+                      "sha256":  "158aae4d876cd044417795b44a7782a63108ea2e6f04c3232213f02967fa23e3",
+                      "size":  8876,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\workflow\\runs\\20261026-2138_fpga-integrated-delivery\\INT.P4\\r2-timing-experiment\\gray8_gaussian3x3_stream_p4.v",
+                      "origin_sha256":  "158aae4d876cd044417795b44a7782a63108ea2e6f04c3232213f02967fa23e3",
+                      "r2_expected_sha256":  "158aae4d876cd044417795b44a7782a63108ea2e6f04c3232213f02967fa23e3",
+                      "drift_from_r2":  false
+                  },
+                  {
+                      "path":  "rtl\\gray8_he_cdfmin_frame.v",
+                      "role":  "rtl",
+                      "sha256":  "df84b8a49c95bd784e6dd618a5dbc5772200df70f83d35784c381db35629034b",
+                      "size":  22792,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\img\\gray8_he_cdfmin_frame.v",
+                      "origin_sha256":  "df84b8a49c95bd784e6dd618a5dbc5772200df70f83d35784c381db35629034b",
+                      "r2_expected_sha256":  null,
+                      "drift_from_r2":  false
+                  },
+                  {
+                      "path":  "rtl\\img_algo_parallel_top.v",
+                      "role":  "rtl",
+                      "sha256":  "7f1e05443e7432df0069297f515bf96b293022c957f7f05ceda2452f60101811",
+                      "size":  10414,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\img\\img_algo_parallel_top.v",
+                      "origin_sha256":  "7f1e05443e7432df0069297f515bf96b293022c957f7f05ceda2452f60101811",
+                      "r2_expected_sha256":  null,
+                      "drift_from_r2":  false
+                  },
+                  {
+                      "path":  "rtl\\img_algo_parallel_top_p4.v",
+                      "role":  "rtl",
+                      "sha256":  "e420685ccde85f8b5291ea08cd5b4387dbddc239a420dba2ba6087d42b1ea33c",
+                      "size":  12235,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\integrated_delivery\\img_algo_parallel_top_p4.v",
+                      "origin_sha256":  "e420685ccde85f8b5291ea08cd5b4387dbddc239a420dba2ba6087d42b1ea33c",
+                      "r2_expected_sha256":  "1cb8262a598f94fb2837152249edaa130c2945592f7d2f4020821e4266fc400f",
+                      "drift_from_r2":  true
+                  },
+                  {
+                      "path":  "rtl\\img_algo_top_g2.v",
+                      "role":  "rtl",
+                      "sha256":  "5ecc66d9c50afa58659409c50f77fd6c0098f5778f1b036e62a50b3645fb12cc",
+                      "size":  5577,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\img\\img_algo_top_g2.v",
+                      "origin_sha256":  "5ecc66d9c50afa58659409c50f77fd6c0098f5778f1b036e62a50b3645fb12cc",
+                      "r2_expected_sha256":  null,
+                      "drift_from_r2":  false
+                  },
+                  {
+                      "path":  "rtl\\rgb8_gray_stream.v",
+                      "role":  "rtl",
+                      "sha256":  "1a64fa21339a25a9f34ca8206c0fd643b5232baed26028d8d337144374be928e",
+                      "size":  1956,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\img\\rgb8_gray_stream.v",
+                      "origin_sha256":  "1a64fa21339a25a9f34ca8206c0fd643b5232baed26028d8d337144374be928e",
+                      "r2_expected_sha256":  null,
+                      "drift_from_r2":  false
+                  },
+                  {
+                      "path":  "evidence\\closure-sha.txt",
+                      "role":  "evidence",
+                      "sha256":  "e17b1354d39636f6dbdfeb0634f59dbe553b13f4961a272d505cbcd4789dd2f0",
+                      "size":  2230
+                  },
+                  {
+                      "path":  "lessons.md",
+                      "role":  "doc",
+                      "sha256":  "3ddaf6417d70d07bd6f24ec79d1be3a7c4942bdb2510001988f06fb096b66f7e",
+                      "size":  3464
+                  },
+                  {
+                      "path":  "model\\compare_p4.py",
+                      "role":  "model",
+                      "sha256":  "878fd7e34c387385cd3cc744b3286d70960488127d817b6c267c76c42c5d6db7",
+                      "size":  11860
+                  },
+                  {
+                      "path":  "result-r0.md",
+                      "role":  "doc",
+                      "sha256":  "e62f05c48472db8c73753f1b13d05531d5f9a06e6eaa031606535c90d9c9b94e",
+                      "size":  8421
+                  },
+                  {
+                      "path":  "sim\\logs\\compile.log",
+                      "role":  "log",
+                      "sha256":  "2f08b6160fae26a8fa962fa0506dee729bcbde2ca481f13c7e13fe62242e6cca",
+                      "size":  438
+                  },
+                  {
+                      "path":  "sim\\logs\\sim_bp0.log",
+                      "role":  "log",
+                      "sha256":  "2eae5245d650c95612d498144b64275b9287b6b9e23870f0f3d18568de5d3b2b",
+                      "size":  959
+                  },
+                  {
+                      "path":  "sim\\logs\\sim_bp0.log.err",
+                      "role":  "log",
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "size":  0
+                  },
+                  {
+                      "path":  "sim\\logs\\tokens_bp0.txt",
+                      "role":  "log",
+                      "sha256":  "e15edf214f84a32ad474cca2bf909985934dbbdd52ce8571464d775eac1dc750",
+                      "size":  31105
+                  },
+                  {
+                      "path":  "sim\\logs\\vlib.log",
+                      "role":  "log",
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "size":  0
+                  },
+                  {
+                      "path":  "sim\\run_sim.ps1",
+                      "role":  "script",
+                      "sha256":  "a91d0c87139b74916f68d15f001ce42936ff4ab75b6c852a0c94b66756a2fc3b",
+                      "size":  4301
+                  },
+                  {
+                      "path":  "tb\\tb_p4_core_golden.v",
+                      "role":  "tb",
+                      "sha256":  "ec6329dd579c3b3cf8addfb02efe8f5ba36c83cab1cda5be2caf377cb69f8d7b",
+                      "size":  13075
+                  }
+              ]
+}

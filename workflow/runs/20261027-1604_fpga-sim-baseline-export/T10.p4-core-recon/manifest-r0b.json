@@ -1,0 +1,432 @@
+﻿{
+    "schema":  "fpga-task-manifest/v1",
+    "task_id":  "T10.p4-core-recon",
+    "run_id":  "20261027-1604_fpga-sim-baseline-export",
+    "round":  0,
+    "attempt":  2,
+    "candidate":  "P4.core-recon-r0",
+    "status":  "ready_for_test",
+    "frozen_at":  "2026-10-27T08:37:47Z",
+    "work_root":  "D:\\fpga\\repos\\ph1p100-pcie-ep-fpga\\workflow\\runs\\20261027-1604_fpga-sim-baseline-export\\T10.p4-core-recon",
+    "rtl_equivalence":  {
+                            "manifest_r0":  "manifest-r0.json",
+                            "manifest_r0_sha256":  "67b32bd8023e62a6388c20aeca4b4e2d67b94f54c47bf411ac83aa4c230f8b84",
+                            "rtl_files":  14,
+                            "head_check":  "14/14 sha256 equal to manifest-r0.json, 0 mismatch",
+                            "tail_check":  "14/14 sha256 equal to manifest-r0.json, 0 mismatch",
+                            "rtl_unchanged":  true
+                        },
+    "frame_control_contract":  {
+                                   "source":  "handoff/.../inputs/p4/fpga/csi2/src/integrated_delivery/tb_img_algo_equiv_p4.v",
+                                   "source_sha256":  "1350d75ce690477bfc7dace7d10160018b293d935917281f7c25b3026b8a639f",
+                                   "copy":  "tb/tb_p4_equiv_golden.v",
+                                   "modification":  "token dump tap only (dump_tok + $fopen/$fclose + STATS line); no change to stimulus, frame control, ready patterns, DUT instances or scoreboard",
+                                   "geometry":  "W=64 H=48 phase=0 4px/beat 768 beat/frame; frames 0,1 good; frame 2 aborted at its beat 200 with s_abort and no eof; 3 DUTs same beat sequence; LFSR ready SEEDMODE=0/1, SEEDMODE=2 = always ready"
+                               },
+    "differential_baseline":  {
+                                  "base":  "img_algo_parallel_top (7f1e0544..) + bayer_raw10_demosaic4 (138e7124..), r2 frozen bytes",
+                                  "candidate":  "img_algo_parallel_top_p4 + bayer_raw10_demosaic4_p4 (drift a5c40734../e420685c..) + algo_rowwin3_p4 (f3f345ed..) + gray8_gaussian3x3_stream_p4 (158aae4d..)",
+                                  "criterion":  "token sequence equality (marker/data/sof/eol/eof/abort) per ready mode"
+                              },
+    "tool_versions":  {
+                          "modelsim":  "ModelSim ALTERA ASE 18.1 (vlog/vsim 10.5b Compiler 2016.10)",
+                          "python":  "Python 3.11.5",
+                          "os":  "Windows 10.0.26200.0",
+                          "powershell":  "5.1.26100.9711"
+                      },
+    "geometry":  {
+                     "W":  64,
+                     "H":  48,
+                     "phase":  0,
+                     "max_words":  512,
+                     "frames_good":  2,
+                     "frames_aborted_by_stimulus":  1,
+                     "pixels_per_beat":  4,
+                     "beats_per_frame":  768,
+                     "clock_ns":  5.333,
+                     "note":  "reduced geometry, NOT production parameters"
+                 },
+    "commands":  [
+                     "sim\\run_sim_r0b.ps1 : vlib work; vlog -quiet -work work \u003c14 rtl + tb\u003e; vsim -c -quiet -do \"run -all; quit -f\" tb_img_algo_equiv_p4 +SEEDMODE=\u003c0|1|2\u003e +TAG=\u003c0|1\u003e (x4); python model\\compare_p4b.py --dir sim\\logs --out evidence"
+                 ],
+    "reference_model":  "model/compare_p4b.py (independent recompute: Bayer demosaic with CFA-parity clamp -\u003e Y8 -\u003e 3x3 Gaussian with replicate borders)",
+    "results":  {
+                    "compile":  "pass: 0 error, 1 warning vlog-2083 (stray CR in frozen algo_rowwin3_p4.v:19, source untouched)",
+                    "runs":  {
+                                 "sm0":  "CHECK_REF_NEW PASS; TB_IMG_ALGO_EQUIV_P4 PASS; EQUIV_COUNTS dut0=1720/1703/1720 dut1=1720/1703/1720 dut2=1720/1703/1720; cyc=11583",
+                                 "sm1":  "CHECK_REF_NEW PASS; TB_IMG_ALGO_EQUIV_P4 PASS; same counts; cyc=11863",
+                                 "sm2":  "CHECK_REF_NEW PASS; TB_IMG_ALGO_EQUIV_P4 PASS; same counts; cyc=11031",
+                                 "sm0_repeat":  "CHECK_REF_NEW PASS; TB_IMG_ALGO_EQUIV_P4 PASS; same counts; cyc=11583"
+                             },
+                    "f1_f2_golden":  "compared=6144 mismatch=0 for y8 and gau, base and candidate, in all 3 ready modes (12 comparisons)",
+                    "f3_abort_semantics":  "0 abort markers inside good frames; exactly 1 abort marker per stream per run at the same position as base; partial aborted-frame prefix y8 732 px / gau 664 px, mismatch=0",
+                    "f5a_same_mode":  "base vs candidate full-sequence equality: y8 1720 tokens, gau 1703 tokens, mismatch=0 (3 modes)",
+                    "f5b_no_loss":  "candidate token counts equal reference expectation (1536 good + partial + 1 marker) in every mode",
+                    "f5c_cross_mode":  "candidate cross-mode diff == base cross-mode diff == 0 for y8/gau (3 mode pairs)",
+                    "e4_repro":  "sm0 repeated run: identical token sequences (1720/1703 compared, 0 mismatch)",
+                    "negative_control":  "1-LSB mutation on candidate y8 token 200 lane1 detected (mismatch=1)"
+                },
+    "gates":  {
+                  "G0":  "pass (vlog/vsim compile-elaborate, 0 error)",
+                  "G1":  "pass (RTL simulation, this manifest only; reduced geometry, synthetic stimulus)",
+                  "G2":  "not_run (TD synthesis/STA forbidden locally; no r2/r3 timing result reused)",
+                  "G3":  "not_run (no board; awaiting_hardware)",
+                  "G4":  "not_run (deferred)",
+                  "G5":  "pass (closure SHA complete, single-command entry reproducible from a clean temp work dir, two-run reproducibility shown)"
+              },
+    "residual_risk":  "the reference model was re-derived by this task from the frozen module documentation; a model that is wrong in the same way as the spec would not be caught by the differential check. Mitigated (not excluded) by the r2-frozen baseline token equality and the 1-LSB mutation control.",
+    "unimplemented_protocol":  [
+                                   "44B A1U1 frame header (camera/session/seq/slot/epoch identity + 4 CRCs)",
+                                   "page tail 96..4095B zero fill / write mask",
+                                   "BAR 0x130..0x13C, CTRL[9..11], a_enable",
+                                   "DDR address x4 remap (simulation model only)",
+                                   "A-path and dual-path",
+                                   "post-ACK identity release chain and wrong-ACK/session/epoch/slot negatives"
+                               ],
+    "readonly_untouched":  [
+                               "R:\\handoff\\**",
+                               "R:\\rtl\\",
+                               "R:\\al_ip\\",
+                               "R:\\constraints\\",
+                               "R:\\tools\\",
+                               "R:\\workspace\\**",
+                               "R:\\workflow\\runs\\20261027-0726_fpga-board-integration\\**",
+                               "D:\\fpga\\ph1p100\\**",
+                               "D:\\fpga\\ph1p100\\workflow\\tasks.json"
+                           ],
+    "preserved_originals":  [
+                                "manifest-r0.json",
+                                "result-r0.md",
+                                "tb/tb_p4_core_golden.v",
+                                "model/compare_p4.py",
+                                "sim/run_sim.ps1",
+                                "sim/logs/*bp0*",
+                                "evidence/closure-sha.txt",
+                                "rtl/* (14 files)"
+                            ],
+    "no_git_commit_push":  true,
+    "files":  [
+                  {
+                      "path":  "evidence\\abort-semantics.json",
+                      "role":  "evidence",
+                      "sha256":  "4f3241df0b6d2aa35d96abf22cceabe7a0e9c53557c225a51ea27388bff50762",
+                      "size":  5511
+                  },
+                  {
+                      "path":  "evidence\\closure-sha.txt",
+                      "role":  "evidence",
+                      "sha256":  "e17b1354d39636f6dbdfeb0634f59dbe553b13f4961a272d505cbcd4789dd2f0",
+                      "size":  2230
+                  },
+                  {
+                      "path":  "evidence\\e4-repro.json",
+                      "role":  "evidence",
+                      "sha256":  "595ad005c11a36a857321f7116b7b62030c07d74256533aadcf1929e137b2093",
+                      "size":  789
+                  },
+                  {
+                      "path":  "evidence\\f5-ready-pattern.json",
+                      "role":  "evidence",
+                      "sha256":  "9fb03ed4fe691de65928f71345ee4ba38207e0c94dd60525be1ea44d00a66d3c",
+                      "size":  2176
+                  },
+                  {
+                      "path":  "evidence\\negative-mutation.json",
+                      "role":  "evidence",
+                      "sha256":  "f59c5414f391120337e484ea80bf6153809bb7551a3fbd5804af0ea37dbde692",
+                      "size":  481
+                  },
+                  {
+                      "path":  "evidence\\pixel-compare.json",
+                      "role":  "evidence",
+                      "sha256":  "ce967717315c4185b80d4be1ff7207f73c65fb81ff7663af8e27a1d79d040a2a",
+                      "size":  4684
+                  },
+                  {
+                      "path":  "lessons.md",
+                      "role":  "doc",
+                      "sha256":  "879ee2f76313e668cdbda17fa4665f835ef316c5a8e392adbdf88fc8daba44cf",
+                      "size":  4865
+                  },
+                  {
+                      "path":  "manifest-r0.json",
+                      "role":  "doc",
+                      "sha256":  "67b32bd8023e62a6388c20aeca4b4e2d67b94f54c47bf411ac83aa4c230f8b84",
+                      "size":  16603
+                  },
+                  {
+                      "path":  "model\\compare_p4.py",
+                      "role":  "model",
+                      "sha256":  "878fd7e34c387385cd3cc744b3286d70960488127d817b6c267c76c42c5d6db7",
+                      "size":  11860
+                  },
+                  {
+                      "path":  "model\\compare_p4b.py",
+                      "role":  "model",
+                      "sha256":  "7879774def6963da639fc364900e919e6c39f20682b85459f7cd4a5ee686ffc0",
+                      "size":  16485
+                  },
+                  {
+                      "path":  "result-r0.md",
+                      "role":  "doc",
+                      "sha256":  "e62f05c48472db8c73753f1b13d05531d5f9a06e6eaa031606535c90d9c9b94e",
+                      "size":  8421
+                  },
+                  {
+                      "path":  "result-r0b.md",
+                      "role":  "doc",
+                      "sha256":  "3fc1599090e11b4a35b0eb0a8d11e4dd6ef242d0afbc4a384dec8a403b89487f",
+                      "size":  7315
+                  },
+                  {
+                      "path":  "rtl\\algo_obuf.v",
+                      "role":  "rtl",
+                      "sha256":  "07404282d02256541cabf282087499e2540ef800580387de29e3871515c8de81",
+                      "size":  3143,
+                      "sha_matches_manifest_r0":  true,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\img\\algo_obuf.v"
+                  },
+                  {
+                      "path":  "rtl\\algo_rowwin_reader.v",
+                      "role":  "rtl",
+                      "sha256":  "bbd3f9d3e2e231b7ead693df0b3b74440d7baafc352e2f243fa887b6ac666da2",
+                      "size":  3234,
+                      "sha_matches_manifest_r0":  true,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\img\\algo_rowwin_reader.v"
+                  },
+                  {
+                      "path":  "rtl\\algo_rowwin3.v",
+                      "role":  "rtl",
+                      "sha256":  "46a6ceb10844b9ccb2054b8b2a911624dc04db0ca167ef72b8b86c9e08571384",
+                      "size":  15684,
+                      "sha_matches_manifest_r0":  true,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\img\\algo_rowwin3.v"
+                  },
+                  {
+                      "path":  "rtl\\algo_rowwin3_p4.v",
+                      "role":  "rtl",
+                      "sha256":  "f3f345edd10d40bfb24eba85df7d454a21333a330311ce30d81345311f6473b0",
+                      "size":  17209,
+                      "sha_matches_manifest_r0":  true,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\workflow\\runs\\20261026-2138_fpga-integrated-delivery\\INT.P4\\r2-timing-experiment\\algo_rowwin3_p4.v"
+                  },
+                  {
+                      "path":  "rtl\\bayer_raw10_demosaic4.v",
+                      "role":  "rtl",
+                      "sha256":  "138e7124de1f57bd199c9f6ea340ed9da8fbb4355326f74c15ef6c85795fdbef",
+                      "size":  10558,
+                      "sha_matches_manifest_r0":  true,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\img\\bayer_raw10_demosaic4.v"
+                  },
+                  {
+                      "path":  "rtl\\bayer_raw10_demosaic4_p4.v",
+                      "role":  "rtl",
+                      "sha256":  "a5c4073404784b3992487898dcba1f9ce3626fd71cd904c0295d60b13a4047bb",
+                      "size":  14491,
+                      "sha_matches_manifest_r0":  true,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\integrated_delivery\\bayer_raw10_demosaic4_p4.v"
+                  },
+                  {
+                      "path":  "rtl\\gray8_gaussian3x3_frame.v",
+                      "role":  "rtl",
+                      "sha256":  "d5b14c597401313d25d9096a59f94d101e97fcf090198d04c5b0ef2dccbd86ee",
+                      "size":  7896,
+                      "sha_matches_manifest_r0":  true,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\img\\gray8_gaussian3x3_frame.v"
+                  },
+                  {
+                      "path":  "rtl\\gray8_gaussian3x3_stream.v",
+                      "role":  "rtl",
+                      "sha256":  "c358174f56aeb2d4a64a2b7484c53ea9feed2f6cd857ac06c315250110a55dd6",
+                      "size":  8296,
+                      "sha_matches_manifest_r0":  true,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\img\\gray8_gaussian3x3_stream.v"
+                  },
+                  {
+                      "path":  "rtl\\gray8_gaussian3x3_stream_p4.v",
+                      "role":  "rtl",
+                      "sha256":  "158aae4d876cd044417795b44a7782a63108ea2e6f04c3232213f02967fa23e3",
+                      "size":  8876,
+                      "sha_matches_manifest_r0":  true,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\workflow\\runs\\20261026-2138_fpga-integrated-delivery\\INT.P4\\r2-timing-experiment\\gray8_gaussian3x3_stream_p4.v"
+                  },
+                  {
+                      "path":  "rtl\\gray8_he_cdfmin_frame.v",
+                      "role":  "rtl",
+                      "sha256":  "df84b8a49c95bd784e6dd618a5dbc5772200df70f83d35784c381db35629034b",
+                      "size":  22792,
+                      "sha_matches_manifest_r0":  true,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\img\\gray8_he_cdfmin_frame.v"
+                  },
+                  {
+                      "path":  "rtl\\img_algo_parallel_top.v",
+                      "role":  "rtl",
+                      "sha256":  "7f1e05443e7432df0069297f515bf96b293022c957f7f05ceda2452f60101811",
+                      "size":  10414,
+                      "sha_matches_manifest_r0":  true,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\img\\img_algo_parallel_top.v"
+                  },
+                  {
+                      "path":  "rtl\\img_algo_parallel_top_p4.v",
+                      "role":  "rtl",
+                      "sha256":  "e420685ccde85f8b5291ea08cd5b4387dbddc239a420dba2ba6087d42b1ea33c",
+                      "size":  12235,
+                      "sha_matches_manifest_r0":  true,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\integrated_delivery\\img_algo_parallel_top_p4.v"
+                  },
+                  {
+                      "path":  "rtl\\img_algo_top_g2.v",
+                      "role":  "rtl",
+                      "sha256":  "5ecc66d9c50afa58659409c50f77fd6c0098f5778f1b036e62a50b3645fb12cc",
+                      "size":  5577,
+                      "sha_matches_manifest_r0":  true,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\img\\img_algo_top_g2.v"
+                  },
+                  {
+                      "path":  "rtl\\rgb8_gray_stream.v",
+                      "role":  "rtl",
+                      "sha256":  "1a64fa21339a25a9f34ca8206c0fd643b5232baed26028d8d337144374be928e",
+                      "size":  1956,
+                      "sha_matches_manifest_r0":  true,
+                      "origin":  "R:\\handoff\\fpga-sim-only-20261027\\inputs\\p4\\fpga\\csi2\\src\\img\\rgb8_gray_stream.v"
+                  },
+                  {
+                      "path":  "sim\\logs\\compile.log",
+                      "role":  "log",
+                      "sha256":  "2f08b6160fae26a8fa962fa0506dee729bcbde2ca481f13c7e13fe62242e6cca",
+                      "size":  438
+                  },
+                  {
+                      "path":  "sim\\logs\\r0b_compile.log",
+                      "role":  "log",
+                      "sha256":  "2f08b6160fae26a8fa962fa0506dee729bcbde2ca481f13c7e13fe62242e6cca",
+                      "size":  438
+                  },
+                  {
+                      "path":  "sim\\logs\\r0b_sim_tokens_sm0_t0.log",
+                      "role":  "log",
+                      "sha256":  "703daeea59c7ae056023127dc74a394bc38045a4f942b87b3ec8ef8240fe79a0",
+                      "size":  8298
+                  },
+                  {
+                      "path":  "sim\\logs\\r0b_sim_tokens_sm0_t0.log.err",
+                      "role":  "log",
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "size":  0
+                  },
+                  {
+                      "path":  "sim\\logs\\r0b_sim_tokens_sm0_t1.log",
+                      "role":  "log",
+                      "sha256":  "96a6ab6de6d88dae854b6600f167f9b7b78c43b9ad56854d18b6872abc395071",
+                      "size":  8298
+                  },
+                  {
+                      "path":  "sim\\logs\\r0b_sim_tokens_sm0_t1.log.err",
+                      "role":  "log",
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "size":  0
+                  },
+                  {
+                      "path":  "sim\\logs\\r0b_sim_tokens_sm1_t0.log",
+                      "role":  "log",
+                      "sha256":  "3e22e03891cfc4b4ac79c4744a60a67350272ee4506dec5e9cf50dd03b8a6154",
+                      "size":  8376
+                  },
+                  {
+                      "path":  "sim\\logs\\r0b_sim_tokens_sm1_t0.log.err",
+                      "role":  "log",
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "size":  0
+                  },
+                  {
+                      "path":  "sim\\logs\\r0b_sim_tokens_sm2_t0.log",
+                      "role":  "log",
+                      "sha256":  "46c7b170edf677c93d7d7aedae30c2c5b64a9b763fbef90e9d2b3f97d7f0ceee",
+                      "size":  4773
+                  },
+                  {
+                      "path":  "sim\\logs\\r0b_sim_tokens_sm2_t0.log.err",
+                      "role":  "log",
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "size":  0
+                  },
+                  {
+                      "path":  "sim\\logs\\r0b_vlib.log",
+                      "role":  "log",
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "size":  0
+                  },
+                  {
+                      "path":  "sim\\logs\\sim_bp0.log",
+                      "role":  "log",
+                      "sha256":  "2eae5245d650c95612d498144b64275b9287b6b9e23870f0f3d18568de5d3b2b",
+                      "size":  959
+                  },
+                  {
+                      "path":  "sim\\logs\\sim_bp0.log.err",
+                      "role":  "log",
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "size":  0
+                  },
+                  {
+                      "path":  "sim\\logs\\tokens_bp0.txt",
+                      "role":  "log",
+                      "sha256":  "e15edf214f84a32ad474cca2bf909985934dbbdd52ce8571464d775eac1dc750",
+                      "size":  31105
+                  },
+                  {
+                      "path":  "sim\\logs\\tokens_sm0_t0.txt",
+                      "role":  "log",
+                      "sha256":  "9e404191f691b5f7be0e8f2974bd4895f836da62dbb0f51a6510ce7e9c25108f",
+                      "size":  150712
+                  },
+                  {
+                      "path":  "sim\\logs\\tokens_sm0_t1.txt",
+                      "role":  "log",
+                      "sha256":  "bae8fe457821e83272e14fc41c40813e88802b3d763280dc8df67835d8f0e1b5",
+                      "size":  150712
+                  },
+                  {
+                      "path":  "sim\\logs\\tokens_sm1_t0.txt",
+                      "role":  "log",
+                      "sha256":  "6d62c22002d4f845a4056a35daf8ac9ce0ec5a9f72ed9aa64b4d39d9b642fdd8",
+                      "size":  150712
+                  },
+                  {
+                      "path":  "sim\\logs\\tokens_sm2_t0.txt",
+                      "role":  "log",
+                      "sha256":  "eee02a5a7c5e086370c9ab1a262946197cf94774ed6cf2576fb41bbcb7f2c217",
+                      "size":  150712
+                  },
+                  {
+                      "path":  "sim\\logs\\vlib.log",
+                      "role":  "log",
+                      "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "size":  0
+                  },
+                  {
+                      "path":  "sim\\run_sim.ps1",
+                      "role":  "script",
+                      "sha256":  "a91d0c87139b74916f68d15f001ce42936ff4ab75b6c852a0c94b66756a2fc3b",
+                      "size":  4301
+                  },
+                  {
+                      "path":  "sim\\run_sim_r0b.ps1",
+                      "role":  "script",
+                      "sha256":  "385fdbd208cb419e95d467b534663f85279da9fe8bfd9d9c741f82e14fcd2acd",
+                      "size":  4591
+                  },
+                  {
+                      "path":  "tb\\tb_p4_core_golden.v",
+                      "role":  "tb",
+                      "sha256":  "ec6329dd579c3b3cf8addfb02efe8f5ba36c83cab1cda5be2caf377cb69f8d7b",
+                      "size":  13075
+                  },
+                  {
+                      "path":  "tb\\tb_p4_equiv_golden.v",
+                      "role":  "tb",
+                      "sha256":  "eafc9b810825b5be4b8102abeb42c14d9f01274c0a9e44bb17c32c08474037f4",
+                      "size":  21040
+                  }
+              ]
+}

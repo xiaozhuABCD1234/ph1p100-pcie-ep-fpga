@@ -1,0 +1,26 @@
+T11.BRD.P1 r1 CDC static grep log (no STA/CDC engine run)
+== C8/C9 registers and use ==
+357: wire [2:0] c_mps_code;
+358: wire       c_link_up;
+360: (* async_reg = "true" *) reg [2:0] mps_s1, mps_s2;
+361: (* async_reg = "true" *) reg [1:0] lnk_s1, lnk_s2;
+365: mps_s1 <= 3'd0; mps_s2 <= 3'd0;
+366: lnk_s1 <= 2'd0; lnk_s2 <= 2'd0;
+368: mps_s1 <= mps_code; mps_s2 <= mps_s1;
+369: lnk_s1 <= {1'b0, link_up}; lnk_s2 <= lnk_s1;
+372: assign c_mps_code = mps_s2;
+373: assign c_link_up  = lnk_s2[0];
+396: .dst_base(c_dst_base), .db_addr(c_db_addr), .mps_code(c_mps_code),
+397: .link_up(c_link_up),
+609: .link_up(link_up), .mps_code(mps_code),
+== tl-domain raw users (same domain) ==
+311: .i_block_cfg(o_tx_block_cfg), .i_link_up(link_up),
+594: .push_en(cfg_push_en),
+609: .link_up(link_up), .mps_code(mps_code),
+== C4-C7 instances ==
+185: brd_cfg_xing u_cfg (
+288: brd_ack_xing u_ack (
+307: brd_pcie_track u_track (
+376: brd_2ff_sync u_sync_rdy (.clk(clk_core), .rst_n(rst_core_n), .d(ddr_rdy), .q(ddr_rdy_c));
+516: brd_desc_xing u_desc (
+553: brd_export_seq u_export_seq (

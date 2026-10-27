@@ -1,5 +1,7 @@
 # 本地仿真与队友持板接续（2026-10-27）
 
+> **2026-10-27 晚班更新：** T11.BRD.P1 r2 的 64×48 G1 开发自检 PASS，但 r2 包不含板级 ACK 跨域修复，**不是最终构建候选**。T11.export-arm-sim r0g 在完整帧路径上 **blocked**：T03 70 B oracle 已逐字节复现（store 侧 LSB-first 正确），但 pusher 的 32 B beat 解包为 MSB-first，载荷逆序；同时存在 ×32/×128 地址单位冲突。修复点落在 b20 store / 参考 pusher，需先裁定。详见 [晚班状态](STATUS_20261027_EVENING.md)。r3 合并/复测完成前，队友不要按 r2 出最终 bit。
+
 FPGA 板已交队友。此后的本地工作限于 RTL 仿真、参考模型、接口和字节核对、源码与证据整理；TD 综合、布线、最终 STA、位流、下载以及 RK/FPGA 实机联调由队友执行。当前材料集中在本 FPGA 原仓 `main`，RK 驱动与应用继续使用 [RK 原仓](https://github.com/xiaozhuABCD1234/ph1p100-pcie-ep-driver)。
 
 新阶段边界见 [根 AGENTS.md](../AGENTS.md)。候选、原报告、来源映射和离线工具入口见 [交接包](../handoff/fpga-sim-only-20261027/README.md)；包内未验证清单和来源 SHA 应与本文一起看。原始报告不改写，旧本机绝对路径只表示来源。

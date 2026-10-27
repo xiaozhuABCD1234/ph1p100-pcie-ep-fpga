@@ -1,0 +1,39 @@
+Reading D:/intelFPGA/18.1/modelsim_ase/tcl/vsim/pref.tcl
+
+# 10.5b
+
+# vsim -c -quiet -voptargs="+acc" -do "D:\fpga\repos\ph1p100-pcie-ep-fpga\workflow\runs\20261027-1604_fpga-sim-baseline-export\T11.export-arm-sim\sim\run_all.do" work.tb_brd_neg_both "+SCEN=0" 
+# Start time: 18:16:16 on Oct 27,2026
+# do {D:\fpga\repos\ph1p100-pcie-ep-fpga\workflow\runs\20261027-1604_fpga-sim-baseline-export\T11.export-arm-sim\sim\run_all.do}
+# TB_SCEN=0 NF=3 BASEW=2049 CAPB=1048576 IS_NEG=1
+# TB_REQ=2
+# TB_SCEN=0 NF=3 BASEW=2048 CAPB=67584 IS_NEG=1
+# TB_REQ=2
+# PUSH_G t=8000 g_st=0 ddr_seq=0 ddr_base=0 fbytes=0 claim=0 cb=0 cd=1
+# PUSH_G t=8000 g_st=0 ddr_seq=0 ddr_base=0 fbytes=0 claim=0 cb=0 cd=1
+# DESC_VALID t=56664000 seq=1 base_w=2048 fbytes=4096 slen=3966 cap=00040000 sess=a5a50001 ident=1
+# DESC_VALID t=56664000 seq=1 base_w=2049 fbytes=4096 slen=3966 cap=00040000 sess=a5a50001 ident=1
+# INFO frame=0 seq=1 slot_word=2049 base_bytes=65568 exact_bytes=3966
+# INFO frame=0 seq=1 slot_word=2048 base_bytes=65536 exact_bytes=3966
+# PUSH_G t=56712000 g_st=1 ddr_seq=1 ddr_base=65536 fbytes=4096 claim=0 cb=0 cd=1
+# PUSH_G t=56712000 g_st=1 ddr_seq=1 ddr_base=65568 fbytes=4096 claim=0 cb=0 cd=1
+# INFO frame=0 arming frame consumed, slot freed after 0 tl cycles (rel_count=1)
+# INFO frame=0 arming frame consumed, slot freed after 0 tl cycles (rel_count=1)
+# DESC_VALID t=144024000 seq=2 base_w=2048 fbytes=4096 slen=3965 cap=00040000 sess=a5a50001 ident=1
+# DESC_VALID t=144024000 seq=2 base_w=2049 fbytes=4096 slen=3965 cap=00040000 sess=a5a50001 ident=1
+# INFO frame=1 seq=2 slot_word=2049 base_bytes=65568 exact_bytes=3965
+# INFO frame=1 seq=2 slot_word=2048 base_bytes=65536 exact_bytes=3965
+# FAIL frame 1: no export (tlp=0 db=0 done=0 status=00000000 err=09 active=00000000000000000000000000000001 cb=0)
+# PAYLOAD_COMPARE frame=1 seq=2 exact_bytes=3965 compared=0 mismatch=0 tlps=0 doorbell=0 NOT_EXECUTED=1
+# PASS neg: illegal descriptor rejected (no MWr, no doorbell)
+# NEG_RESULT=PASS frame=1
+# POS_RESULT=NEG_PASS id=1
+# FAIL frame 1: no export (tlp=0 db=0 done=0 status=00000000 err=09 active=00000000000000000000000000000001 cb=0)
+# PAYLOAD_COMPARE frame=1 seq=2 exact_bytes=3965 compared=0 mismatch=0 tlps=0 doorbell=0 NOT_EXECUTED=1
+# PASS neg: illegal descriptor rejected (no MWr, no doorbell)
+# NEG_RESULT=PASS frame=1
+# POS_RESULT=NEG_PASS id=2
+# ** Note: $finish    : ../tb/tb_brd_g1.v(638)
+#    Time: 6546024 ns  Iteration: 0  Instance: /tb_brd_neg_both/u_neg_base
+# End time: 18:18:11 on Oct 27,2026, Elapsed time: 0:01:55
+# Errors: 0, Warnings: 0

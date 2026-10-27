@@ -1,0 +1,31 @@
+Reading D:/intelFPGA/18.1/modelsim_ase/tcl/vsim/pref.tcl
+
+# 10.5b
+
+# vsim -c -quiet -voptargs="+acc" -do "D:\fpga\repos\ph1p100-pcie-ep-fpga\workflow\runs\20261027-1604_fpga-sim-baseline-export\T11.export-arm-sim\sim\run_all.do" work.tb_brd_g1_top "+SCEN=0" "+NF=2" 
+# Start time: 17:54:29 on Oct 27,2026
+# do {D:\fpga\repos\ph1p100-pcie-ep-fpga\workflow\runs\20261027-1604_fpga-sim-baseline-export\T11.export-arm-sim\sim\run_all.do}
+# TB_SCEN=0 NF=2 BASEW=2048 CAPB=1048576 IS_NEG=0
+# PUSH_G t=8000 g_st=0 ddr_seq=0 ddr_base=0 fbytes=0 claim=0 cb=0 cd=1
+# DESC_VALID t=56664000 seq=1 base_w=2048 fbytes=4096 slen=3966 cap=00040000 sess=a5a50001 ident=1
+# INFO frame=0 seq=1 slot_word=2048 base_bytes=65536 exact_bytes=3966
+# PUSH_G t=56712000 g_st=1 ddr_seq=1 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# INFO frame=0 arming frame consumed, slot freed after 0 tl cycles (rel_count=1)
+# DESC_VALID t=144024000 seq=2 base_w=2048 fbytes=4096 slen=3965 cap=00040000 sess=a5a50001 ident=1
+# INFO frame=1 seq=2 slot_word=2048 base_bytes=65536 exact_bytes=3965
+# TXDBG t=144025000 ar_hs=0 ddrR_hs=124 puR_hs=0 owner=0 busy=0 p_arvalid=0 p_arready=0 m_arvalid=0 m_arready=0 m_rvalid=0 m_rready=1 mem_rd_busy=0 mem_rd_left=0 p_st=1 b_arvalid=0
+# PUSH_G t=144040000 g_st=2 ddr_seq=2 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# RAW_SOP t=144152000 MSB..LSB = 60000020 010000ff 00000000 01000000 00000000 00000000 00000000 00000000
+# RAW_SOP t=144248000 MSB..LSB = 60000020 010000ff 00000000 01000080 00000000 00000000 00000000 00000000
+# PUSH_G t=147272000 g_st=3 ddr_seq=2 ddr_base=65536 fbytes=4096 claim=0 cb=1 cd=1
+# PAYLOAD_COMPARE frame=1 seq=2 slot_word=2048 exact_bytes=3965 compared=3965 mismatch=0 tlps=32 doorbell=1 db_val=1 hdr_err=0
+# FRAME_RESULT frame=1 PASS
+# ACK_SEND frame=1 seq=2 db_val=1 sess=a5a50001 | held_seq=2 held_sess=a5a50001 tl_arm_seq=2 tl_arm_sess=a5a50001 m_sess=a5a50001 eg_state=3 wd_cnt=587
+# ACK_PROBE frame=1 xack_cnt=1 ack_start=0 ack_free=1 ack_valid=0 x_ack=0 eg_state=3 wd_cnt=651 slot_rel=0
+# INFO frame=1 ACK(seq=1) released the slot after 27810 tl cycles (rel_count=2)
+# INFO summary frames_ok=1 frames_fail=0 ddr_wr_beats=248 ddr_rd_beats=376
+# POS_RESULT=PASS frames=1 of 2
+# ** Note: $finish    : ../tb/tb_brd_g1.v(679)
+#    Time: 596440 ns  Iteration: 1  Instance: /tb_brd_g1_top/u_h
+# End time: 17:54:35 on Oct 27,2026, Elapsed time: 0:00:06
+# Errors: 0, Warnings: 0

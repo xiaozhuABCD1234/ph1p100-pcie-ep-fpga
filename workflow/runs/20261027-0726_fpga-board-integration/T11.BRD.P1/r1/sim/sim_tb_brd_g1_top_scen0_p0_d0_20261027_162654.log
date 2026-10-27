@@ -1,0 +1,37 @@
+Reading D:/intelFPGA/18.1/modelsim_ase/tcl/vsim/pref.tcl
+
+# 10.5b
+
+# vsim -c -quiet -do "run -all; quit -f" work.tb_brd_g1_top "+SCEN=0" "+PREP=0" "+PRED=0" 
+# Start time: 16:26:55 on Oct 27,2026
+# run -all
+# TB_SCEN=0 PREP=0 PRED=0
+# INFO: frame sent (64 raster lines, ROI rows 16..63)
+# INFO: publish seen after 5222 tl cycles (published=1)
+# TLP_CAP n=0 beat_idx=5 dw0=00000000 dw1=00000000 dw2=00000000 dw3=00000000 dw4=01000000
+# FAIL tlp: addr 0000000000000000 != 0000000001000000
+# FAIL tlp: length 0 != 32
+# MISMATCH tlp 0 byte 0: got 00 exp 78
+# MISMATCH tlp 0 byte 1: got 00 exp 9c
+# MISMATCH tlp 0 byte 2: got 00 exp 6a
+# MISMATCH tlp 0 byte 3: got 01 exp 62
+# TLP_CAP n=1 beat_idx=5 dw0=00000000 dw1=00000000 dw2=00000000 dw3=00000000 dw4=01000080
+# FAIL tlp: addr 0000000000000000 != 0000000001000080
+# FAIL tlp: length 0 != 32
+# TLP_CAP n=2 beat_idx=5 dw0=00000000 dw1=00000000 dw2=00000000 dw3=00000000 dw4=01000100
+# TLP_CAP n=3 beat_idx=5 dw0=00000000 dw1=00000000 dw2=00000000 dw3=00000000 dw4=01000180
+# TLP_CAP n=4 beat_idx=5 dw0=00000000 dw1=00000000 dw2=00000000 dw3=00000000 dw4=01000200
+# TLP_CAP n=5 beat_idx=5 dw0=00000000 dw1=00000000 dw2=00000000 dw3=00000000 dw4=01000280
+# INFO: after export tlp=33 mwr_bytes=4224 db=0 db_payload=0 exported=1 held_seq=1 frame_bytes=4096 stream_len=3137
+# HDR xform_crc=93328af0 host_pk_crc=93328af0 raw_crc=93328af0
+# A1U1_HEADER=PASS frame_id=0 W=64 H=48 raw=3840 xform=3840 stream=3137 hcrc=1263f0ea
+# INFO: seq evt_cnt=1 arm_ignored=0 armed=1
+# DBG PUSH g_st=3 src_evt=0 claim=0 last_seq=1 src_seq=1 fbytes=4096 lat_fbytes=4096 push_en=1 ddr_status=00000000000000000000000000000001 ddr_base=00010000 lat_src=0 src_sel=0 lat_cam=0 cam_sel=0 pv=1 dok=1 bok=1 pu_seq=1
+# DBG AXI a_st=0 req_level=0 req_s2=0 fifo_empty=1 arvalid=0 arready=0 rvalid=0 rready=1 arlen=0 araddr=00010c40 arb_busy=0 arb_owner=0 b_arvalid=0 dm_bursts=100 dm_beats=227
+# SLOT_FIRST=78 9c SLOT0=00 00 00 00
+# FAIL pos: no export (tlp=33 db=0 exported=1 err=00 status=00000006)
+# POS_RESULT=FAIL
+# ** Note: $finish    : D:/fpga/repos/ph1p100-pcie-ep-fpga/workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r1/sim/tb_brd_g1_r1.v(797)
+#    Time: 12901064 ns  Iteration: 1  Instance: /tb_brd_g1_top
+# End time: 16:28:42 on Oct 27,2026, Elapsed time: 0:01:47
+# Errors: 0, Warnings: 0

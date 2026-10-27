@@ -1,0 +1,1571 @@
+{
+  "schema": 1,
+  "task_id": "T11.BRD.P1",
+  "run_id": "20261027-0726_fpga-board-integration",
+  "round": 2,
+  "created_at": "2026-10-27T18:05:42+08:00",
+  "work_root": "D:/fpga/repos/ph1p100-pcie-ep-fpga",
+  "work_dir": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2",
+  "handoff_package": "handoff/brd-p1-r2-20261027",
+  "parent_manifest_sha256": "304A2FF08DA88B6F129577D710A5B077B9FCF0A71F205E72BFB03412616CCC05",
+  "parent_manifest": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r1/manifest-brd-p1-r1.json",
+  "local_boundary": "RTL simulation / software+byte checks / static checks / evidence only. No TD synthesis, route, STA, bitgen, CWC, JTAG/COM, download or Flash was run locally (2026-10-27 AGENTS 'sim only, teammate holds the board').",
+  "stopped_modifying": true,
+  "drift_count": 0,
+  "status": "ready_for_test",
+  "round2_delta": {
+    "rtl_delta": 0,
+    "constraints_delta": 0,
+    "filelist_delta": 0,
+    "dut_modified_to_fit_golden": false,
+    "criteria_weakened": false,
+    "changed_scope": [
+      "sim/tb_brd_g1_r2.v",
+      "sim/run_sim_r2.ps1",
+      "sim/** dumps+logs",
+      "evidence/**",
+      "docs",
+      "manifest",
+      "handoff/brd-p1-r2-20261027/**"
+    ],
+    "evidence": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/r1-r2-sha-diff.md"
+  },
+  "round1_inherited": {
+    "verdict": "FAIL (integrated r1)",
+    "blocking_problem_id": "T11.BRD.P1:TB_CAM_STIMULUS_WIDTH",
+    "root_cause": "r1 TB camera stimulus `{4{(line*32+grp) & 10'h3FF}}` replicated a 32-bit expression and truncated to 40 bits, so the four 10-bit lanes were (v,0,0,v[7:0]<<2); `raw == pk_bytes` was a self-comparison",
+    "r1_manifest_sha256": "304A2FF08DA88B6F129577D710A5B077B9FCF0A71F205E72BFB03412616CCC05",
+    "rule": "r1 files are byte-identical and were not rewritten (static_checks_r2.py)"
+  },
+  "independent_model": {
+    "generator": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/gen_expected_raw.py",
+    "reads_dut_output": false,
+    "expected_raw_sha256": "FBA49D330DB9196A9BD9B8F29419A5603CEF600FE7D08F73708674F4C3C5111E",
+    "expected_raw_len": 3840,
+    "expected_raw_adler32": "392578F9",
+    "expected_raw_crc32": "7269454A",
+    "first5": "8282828200",
+    "contract": "rows 16..63, groups 8..23, v=(r*32+g)&0x3FF, 4 identical pixels, byte0..3=v[9:2], byte4={v[1:0] x4}"
+  },
+  "golden": {
+    "doc": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/golden-r2.md",
+    "json": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/golden-r2.json",
+    "candidate_bound": {
+      "note": "measured on the frozen r2 TB; equality is a repeatability check, not an independent derivation",
+      "stream_len": 2470,
+      "frame_bytes": 4096,
+      "hcrc": "5436BF73",
+      "stream_crc": "9909B919",
+      "prep_stream_len": 538,
+      "prep_hcrc": "981E85CF",
+      "prep_xform_crc": "7883ABAF"
+    },
+    "reference_encoder": {
+      "compressor": "CPython 3.11.5 zlib.compress default level",
+      "stream_len": 723,
+      "note": "reference only; the DUT deflate is a different RFC1950 encoder"
+    },
+    "not_a_criterion": "compressed byte equality with Python zlib (proved by r1: 1391 B vs DUT 3137 B, same Adler)"
+  },
+  "gates": {
+    "G0_ports_clocks_resets_cdc": {
+      "result": "pass_static_local",
+      "detail": "43 top ports identical to ph1p_pcie_ep_top; R14 once on pcie_power_on_rst; six SDC one-clock groups with clk_core alone; only R14/user_int_trigger false paths; no multicycle/internal false path; C8/C9 2FF instances; F2 offsets present; no STA/CDC engine run. N1 (second derive_clocks, line ~68) unchanged - teammate STA item.",
+      "evidence": [
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/static-checks.log",
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/sdc-groups.md",
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/cdc-static.log",
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/cdc-list.md"
+      ]
+    },
+    "G1_scaled_top_simulation": {
+      "result": "pass_local_sim",
+      "positive": "SCEN0 (late ARM) / SCEN3 (early ARM, doubled) / SCEN4 (duplicate ARM): exported=1, 32 MWr x 128B = 4096 B = frame_bytes, doorbell=1 payload=held_seq=1, slot 0x1_0000 starts 78 9c, legacy base 0 unused, 0 TLP mismatch, 0 X, correct ACK -> release+1",
+      "independent_byte_criterion": "decompressed raw == expected_raw.bin byte-for-byte in 3/3 bypass scenarios (SHA256 FBA49D33..., Adler 392578F9, xform_crc 7269454A)",
+      "stimulus_probe": "STIM_PROBE=PASS in all four top runs (lane_bad=0, chain_bad=0, first_v=520, pk_first=0082828282)",
+      "negative_missing_eof": "PASS: last ROI row absent -> committed=0 published=0 exported=0, 0 TLP, 0 doorbell, aborted+released",
+      "negative_wrong_ack": "PASS: held_seq^1 keeps HELD and does not release; correct held_seq releases +1",
+      "negative_duplicate_arm": "PASS: repeated ARM ignored/counted, one export",
+      "read_arbiter": "PASS 6/6 (no mid-burst handover, bridge single beat, late beat counted once/not rerouted, o_switch_err=0)",
+      "prep_pred": "PREP=1/PRED=1 PASS: standard zlib decodes 3840 B, Adler 5F1669E1, header raw_crc 7269454A (raw domain still the contract raw), xform_crc 7883ABAF != raw_crc; transform domain not byte-compared to expected_raw (different domain, documented)",
+      "evidence": [
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/verify_slot_r2.log",
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/gen_expected_raw.log",
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/tb-stimulus-fix.md",
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_scen0_r2.log",
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_scen3_r2.log",
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_scen4_r2.log",
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_scen1_r2.log",
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_scen2_r2.log",
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_prep_r2.log",
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_arb_r2.log",
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/scen0/**"
+      ]
+    },
+    "G2p_real_top_sta": {
+      "result": "not_run",
+      "status": "teammate_required",
+      "historical_reference_only": {
+        "source": "r0 td/brd_board_Runs/syn_1/flow.status + gate.qor",
+        "clk_core_mhz": 150.0,
+        "setup_wns_ns": -2.273,
+        "setup_tns_ns": -31.547,
+        "violated_endpoints": 79,
+        "hold": "basic mode 0 endpoints, unverified",
+        "125mhz": "not_run",
+        "route_bitgen_cwc": "0/0/0",
+        "note": "r0 numbers; r2 RTL/constraints are byte-identical to r1 and different from r0 - the teammate must re-measure (or reuse an r1 run with the same input hash)"
+      },
+      "required_teammate_evidence": [
+        "real synth+route WNS/TNS/endpoints on this filelist",
+        "hold",
+        "unconstrained IO list",
+        "resource/clock interaction/comb loops/undriven inputs",
+        "CDC report incl. N1 second derive_clocks",
+        "bit/CWC SHA + candidate binding"
+      ]
+    },
+    "G5_build_entry": {
+      "result": "pass_local_static",
+      "source_count": 78,
+      "filelist": "handoff/brd-p1-r2-20261027/filelist.tcl",
+      "filelist_sha256": "41A61493335B84FA8AAFB1FF41FB99C2F8AC71D5E73F018187F567BA277A84A3",
+      "guards": "0 missing, 0 duplicate modules, 0 r3 paths/SHAs, 0 stale/src-src/peer-ref, 0 .bit/.cwc",
+      "n2_fixed": "build/filelist-sha256.json paths are repository-relative",
+      "n3_fixed": "no pre-generated brd_board.al in the package; gen_al.py expands @REPO_ROOT@ (must be run first)",
+      "n1": "second derive_clocks in brd_board.sdc kept unchanged; restated in known-risks.md for the teammate STA",
+      "r1_integrity": "r1 manifest 218/218 files unchanged; r0 manifest files unchanged",
+      "handoff_package": "handoff/brd-p1-r2-20261027",
+      "evidence": [
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/filelist-check.log",
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/static-checks.log",
+        "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/g5-refs.log",
+        "handoff/brd-p1-r2-20261027/build/filelist-sha256.json"
+      ]
+    },
+    "G3_G4": {
+      "result": "not_run",
+      "status": "awaiting_hardware",
+      "note": "no bit, no download, no real PCIe/RK, no A path, no 1080p30/long-run"
+    }
+  },
+  "d7_adler": {
+    "decision": "accept_no_delta_closure",
+    "facts": [
+      "r0 'tail 4 bytes zero' did not reproduce in this harness",
+      "standard zlib.decompress + independently written Adler-32 both pass",
+      "rtl/a1_core_fix01/* is byte-identical to the b20 originals (no behavioural variant)"
+    ],
+    "closure_conditions_r2": {
+      "C1_standard_zlib": true,
+      "C2_len_eq_xform_len": true,
+      "C3_raw_eq_independent_model": true,
+      "C4_tail_eq_independent_adler": true,
+      "C5_slot_is_zlib_only_header_is_host": true,
+      "C6_zero_tail_mutation_detected": "r1 evidence (mutation_zero_adler_reproduces_r0_f3)"
+    },
+    "wording": "the current candidate slot stream is a legal RFC1950 member and D7 is closed by independent evidence",
+    "forbidden_wording": [
+      "r0 Adler defect fixed",
+      "adler-fix01 effective"
+    ],
+    "reopen_condition": "board or real RK host observes an invalid tail / zlib decode failure / raw mismatch -> separate task that first reproduces the r0 condition"
+  },
+  "a1_core_fix01": {
+    "alias_of_b20": true,
+    "behavioral_variant": false,
+    "filelist_included": false,
+    "note": "carried for byte-identity with r1; the filelist compiles the b20 originals"
+  },
+  "source_count": 78,
+  "r3_rejected": [
+    {
+      "path": "fpga/csi2/src/integrated_delivery/algo_rowwin3_p4.v",
+      "sha256": "863932B3D42FBB4F97AD2A6A9397E477A012B61B534CD4DBEAD1997AF73A44BC"
+    },
+    {
+      "path": "fpga/csi2/src/integrated_delivery/gray8_gaussian3x3_stream_p4.v",
+      "sha256": "B8096430C060BE77BE408B1D4103DE87F543193F94E78DE418189EA32C412B64"
+    }
+  ],
+  "bits": {
+    "local_bit": null,
+    "local_cwc": null,
+    "b20_bit": null,
+    "note": "no bit/CWC exists locally or in the package"
+  },
+  "simulation_budget": {
+    "top_level_g1_runs_max": 10,
+    "top_level_g1_runs_used": 6,
+    "top_level_g1_scenarios": [
+      "scen0",
+      "scen3",
+      "scen4",
+      "scen1",
+      "scen2",
+      "prep"
+    ],
+    "arb_runs_max": 6,
+    "arb_runs_used": 1,
+    "harness_startup_failures": 2,
+    "note": "2 additional vsim invocations failed at startup (cd while a design is loaded / work library not found) and advanced no simulation time; they are harness iterations, not scenario runs",
+    "per_run_timeout_min": 20
+  },
+  "files": [
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/al_ip/ddr3_mc_0/ddr3_mc_0.xml",
+      "sha256": "ED124035986B727346246A75CD20970FFF9D8967D8EC68D48C9879BE2C0CAA41",
+      "size": 44737
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/al_ip/pcie_ep_core/pcie_ep_core.xml",
+      "sha256": "BE3A63A90135D75E94667BBD3431F36F357D196E7AA7CCEE83C34B42C59A4315",
+      "size": 35033
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/al_ip/pcie_pll_ep/pcie_pll_ep.xml",
+      "sha256": "DE7439ED736615C4E8FC82AB27B23B81FB4B7ACC0E6F918AE57A52D0E513832A",
+      "size": 6727
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/al_ip/ram/ram.xml",
+      "sha256": "F5749A8B1AD3312A3822831072E72FC7F26BA2F3300FE4A92A294892CF96178A",
+      "size": 5951
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/checked/csi_rx_10bit_unpack_checked.v",
+      "sha256": "9B5421C55B0F09871F8A939FB3381D4C7D5726286B30F9D5450CC09404065A12",
+      "size": 1484
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/checked/csi_rx_packet_integrity.v",
+      "sha256": "50B4C77BE684F078BDF6DCA93848E9298E3CBD8010E45EAB4B0ECFB2DEBDC6C0",
+      "size": 11408
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/common/ph1p_pcie_case_param.v",
+      "sha256": "7E9A8A9E57B44B8EDB400897B1530A9B4B93E77B7176616C6E8587A12AE123F3",
+      "size": 161
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/common/ph1p_pcie_rst_sync.v",
+      "sha256": "EAD457AE6DC09A84F18E68FC6CFE1A95246BEA51106F5C5578396C438296859B",
+      "size": 2661
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/common/uart/bps_setting.v",
+      "sha256": "E8D3E388BE2ADAF9786490C28E2DE73B13CF8C434AD3CD6B28582742B0FBB5D2",
+      "size": 983
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/common/uart/pcie_uart.v",
+      "sha256": "29E5FA8F68FFAA80946CD673B233B9D5752956F5AEA1E75CBD4B3BCD48C774EA",
+      "size": 8714
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/common/uart/pcie_uprotocol.v",
+      "sha256": "13D08D56365E98023E361CDB08ED60CF69709D2F8090397C2750D2EFC7DBF9B5",
+      "size": 7939
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/common/uart/uart_cdc.v",
+      "sha256": "5CB1E4D902841F74B6B16C429F5A6A61CA45B3AE30809118C454F95D245205C4",
+      "size": 5160
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/common/uart/uart_rx_setting.v",
+      "sha256": "DDCC4A50CFEB7614E688A191844A4F4381EE00A96D8E06E6FE577432BF2F6AB9",
+      "size": 6133
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/common/uart/uart_tx_setting.v",
+      "sha256": "B59E8EB924EB63ED2C8FF5A8070CBBA3D8711E8B17E33EA00FB0A18DB8FF8AEB",
+      "size": 4557
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/common/ubus2hxt_apb.v",
+      "sha256": "5FFE893445C06166B34292A148E0244CCA9E3E77A28284B15BEC3EABE50E39F4",
+      "size": 4630
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/common/ubus2pcie_apb.v",
+      "sha256": "768E410B3CBA707D790C3E837C2ED73AABBC4158C0533E95F04E15C1AB7D5535",
+      "size": 4440
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/cam/auto_delay_ctl.v",
+      "sha256": "155681DCB59055D6FC9EEE8029C75E0796763BB0EC89B61DDA6B2322D1F520BD",
+      "size": 6631
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/cam/clk_activity.v",
+      "sha256": "566954217277EBE6A5294124332AC68B9947FF2810F5FE0B284CE1702EF01B90",
+      "size": 1159
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/cam/csi_rx_10bit_unpack.v",
+      "sha256": "C66019F622ACEC04830F2AE6FE039EE17C3B3A5FFC524C604C5B12884686FB30",
+      "size": 7271
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/cam/csi_rx_byte_align.v",
+      "sha256": "1E76D86BA1E9C5464EDD19B08B4C856F5AAAEEAB47D93B12851D20065EBFC839",
+      "size": 5522
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/cam/csi_rx_clock_det.v",
+      "sha256": "EB079A9E13D8744AFCF49A866640D6DE8719C41CFFFAA62BA8E44DE93A44B32F",
+      "size": 3588
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/cam/csi_rx_hdr_ecc.v",
+      "sha256": "F20BF32792A6734C49FED579F8CB4AB086DA7C1254D9E00570CBB1C834634B76",
+      "size": 1587
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/cam/csi_rx_packet_handler.v",
+      "sha256": "A2394AFD29270A6D05AC3DCFF636D903385413E3BA3205BE9F25BB6FD009FE31",
+      "size": 11326
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/cam/csi_rx_word_align.v",
+      "sha256": "310BEF19CA967197BA81A9A45CBC6DA8B2F2212146BB76D070E2965E9B4526DD",
+      "size": 5898
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/cam/csi_rx_word_gear_box.v",
+      "sha256": "0F8137E3A65C0335D162C0CE3AFB39DA21F90B03F61C01B455161197B6C1A230",
+      "size": 1965
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/cam/mipi_csi2_rx_ph1p.v",
+      "sha256": "54FB40DD8FD8B5013C72BC96FA71ED11E01599B83618ACDC45E42E715EA4954D",
+      "size": 5945
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/cam/mipi_csi2_rx_ph1p_checked.v",
+      "sha256": "60ED7770442E159F02B5B1BA51EA70E9048E3EA4FC5330E0D345E5369745F9AB",
+      "size": 11126
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/cam/pulse2toggle.v",
+      "sha256": "A71FD594175DE9B2882A9439368BDFB823D253C856D13F8FB47D24A885A65E4F",
+      "size": 831
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/cam/rx_phy_ph1p.v",
+      "sha256": "AC711C853A345BF747D539EDB7E0093CD315D90A362D62512289C3E396D967EF",
+      "size": 7493
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/cam/sfifo.v",
+      "sha256": "795A54967A3C5515C6BBAC5EE9D2F0E0C049002D21C6287025D79C1BBE14752F",
+      "size": 34306
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/cam/ui_cfg_imx415.v",
+      "sha256": "F91F263BC9927755DC1475390CB805881227F0F21E893968E858D1CAA210AF8C",
+      "size": 8721
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/cam/ui_i2c.v",
+      "sha256": "F887902B6038B3C5C13E92524EE854ED5AC94704A49E906F8AA891299E65C305",
+      "size": 12921
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/cam/ui_imx415_reg.v",
+      "sha256": "4A058E988125A68A129FD00645FD641DD991443DED1D2A840090EC2BDC028AF3",
+      "size": 13070
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/cam/wfifo.v",
+      "sha256": "A0FA03B0739C3E6C5382C582296D70BC3B778B66A55C399BD6013F36E3D68BC0",
+      "size": 37826
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/ddr/ddr_frame_pusher.v",
+      "sha256": "E0DD673CD19DD09C0343DD5811A6BC4EFBFAB48ECE2AB5E59396A17EF6F57A5B",
+      "size": 48909
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/img/ep_bar_win.v",
+      "sha256": "A3B6B57D60124409DCC1B3B9CE0AFB122C3AC4D6AA89D583E19738F9DFD0CF30",
+      "size": 30672
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/img/img_regs.v",
+      "sha256": "AA62707B15CF6811AFD241F0AF49D086FA6F9A011F73829EFF31EF4D83DC0A3E",
+      "size": 5923
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/pcie_ep_engine.v",
+      "sha256": "BF59991A8BCA3F8B030C47369930BE2580DB380E185A47DADC0EC68DDA006401",
+      "size": 39079
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/pcie_ep_int_handle.v",
+      "sha256": "3E137FE6369A845D1AB94C24E733EF7BF9092AA64134FCC4357002F5FDE0CA49",
+      "size": 6396
+    },
+    {
+      "path": "handoff/brd-p1-r1-20261027/external/pcie_integration/rtl/ep_side/ubus_bridge/ep_ubus_bridge.v",
+      "sha256": "C3C8886FD6B69606D84BEB0612F14394C1C08446E6EE2B256FC80C565A01FA3F",
+      "size": 13325
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/README.md",
+      "sha256": "A9542368CBA8D3F956DFDE89F919624D917AD31FC8A921404668AA75D843DF97",
+      "size": 7369
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/a1u1-header-contract.md",
+      "sha256": "AB11427D3384B6CD1DC77C57307ECD5535F400C71224C273352C92F3ED7DE7BF",
+      "size": 2510
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/build/01_synth.tcl",
+      "sha256": "27B605F6FC8666E7AD486A3C703F149166039B764F341A41AE6D555A142A6D20",
+      "size": 1452
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/build/02_route.tcl",
+      "sha256": "A48C0365253B22EADCB68CB8E4E4EC9E49B8C1CFB1997952A82664C12434F1E0",
+      "size": 1132
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/build/03_bitgen.tcl",
+      "sha256": "CDAE7BE229CB85C988D1F09EF1496FCB5FBD79ACCD8C4EE95820C607380888DB",
+      "size": 2469
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/build/04_cwc.tcl",
+      "sha256": "45677FA68C48F741B5922C65864C5EBF04660952EAA423166B0749D6E8D7672C",
+      "size": 1972
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/build/brd_board.al.tmpl",
+      "sha256": "E2CF953DE3DC6D8DC5446DDD4DAD6EDAE0C1E1D32752525F9132D63188AE8883",
+      "size": 2097
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/build/build.tcl",
+      "sha256": "EC5DA2BE81A6DFF66E8CE96A1E27802A4D299505370A6E1AB010E00619D6D743",
+      "size": 2715
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/build/check_filelist.py",
+      "sha256": "C8F9C284DAB021862367FD47273FD7637CFF920D6BD997408B5082507550FA0D",
+      "size": 4386
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/build/filelist-sha256.json",
+      "sha256": "8C9814DFFF4A7ED5BF76F7F13412B4A7835EE72BE355D45AB345706B3D19F098",
+      "size": 18667
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/build/gen_al.py",
+      "sha256": "6164EC104A42E2FC38AFA6CD01E8EE4D23F6FFF1A1500B8C133BD44B0E4B34FE",
+      "size": 3000
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/build/run_build.ps1",
+      "sha256": "B140627E8A4F37480B5A35B48AFB458B7F4F714E171EBA7BA2B2870454ACA6B2",
+      "size": 1650
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/cdc-list.md",
+      "sha256": "3EFCDD717403EF2C5B07FA61E9B9290997FC69F0D8867414E49E7310867481F2",
+      "size": 4147
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/constraints/brd_board.sdc",
+      "sha256": "D69A5092E87A4DA1A648FD407870F12CA021856CF34EF21D53C1BC930B65CAF0",
+      "size": 4485
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/constraints/ph1p_pcie_case_ep.adc",
+      "sha256": "67831295AEF0F5AFBEC9F2DFBF062922B793A6586E56C074ACE21787B6365C98",
+      "size": 5668
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/expected-g1.md",
+      "sha256": "DD0E4CCC8CA0B4B5315CD84219B7FE948796A5A9C4AE4C9DD465B5DA003861E3",
+      "size": 3993
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/al_ip/ddr3_mc_0/ddr3_mc_0.xml",
+      "sha256": "ED124035986B727346246A75CD20970FFF9D8967D8EC68D48C9879BE2C0CAA41",
+      "size": 44737
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/al_ip/pcie_ep_core/pcie_ep_core.xml",
+      "sha256": "BE3A63A90135D75E94667BBD3431F36F357D196E7AA7CCEE83C34B42C59A4315",
+      "size": 35033
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/al_ip/pcie_pll_ep/pcie_pll_ep.xml",
+      "sha256": "DE7439ED736615C4E8FC82AB27B23B81FB4B7ACC0E6F918AE57A52D0E513832A",
+      "size": 6727
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/al_ip/ram/ram.xml",
+      "sha256": "F5749A8B1AD3312A3822831072E72FC7F26BA2F3300FE4A92A294892CF96178A",
+      "size": 5951
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/checked/crc16_upd4.v",
+      "sha256": "20520D044773247BDD6469C3FD04EFCF1EA4C31366ABF41F7FDE3EA27E98841F",
+      "size": 8905
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/checked/csi_rx_10bit_unpack_checked.v",
+      "sha256": "9B5421C55B0F09871F8A939FB3381D4C7D5726286B30F9D5450CC09404065A12",
+      "size": 1484
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/checked/csi_rx_packet_integrity.v",
+      "sha256": "50B4C77BE684F078BDF6DCA93848E9298E3CBD8010E45EAB4B0ECFB2DEBDC6C0",
+      "size": 11408
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/common/BDF.v",
+      "sha256": "C59A0AACF5200B349B9B549E886EA5256FCB525E7E224C5138AC7FF6CD72ADF1",
+      "size": 2998
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/common/TLP_FMT_TYPE.v",
+      "sha256": "167BCD7FB3213A886AFFDED2945F0FA46A0F1D5B92FBFB55761E6ECF4E98B9E4",
+      "size": 3057
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/common/ph1p_pcie_case_param.v",
+      "sha256": "7E9A8A9E57B44B8EDB400897B1530A9B4B93E77B7176616C6E8587A12AE123F3",
+      "size": 161
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/common/ph1p_pcie_rst_sync.v",
+      "sha256": "EAD457AE6DC09A84F18E68FC6CFE1A95246BEA51106F5C5578396C438296859B",
+      "size": 2661
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/common/uart/bps_setting.v",
+      "sha256": "E8D3E388BE2ADAF9786490C28E2DE73B13CF8C434AD3CD6B28582742B0FBB5D2",
+      "size": 983
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/common/uart/pcie_uart.v",
+      "sha256": "29E5FA8F68FFAA80946CD673B233B9D5752956F5AEA1E75CBD4B3BCD48C774EA",
+      "size": 8714
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/common/uart/pcie_uprotocol.v",
+      "sha256": "13D08D56365E98023E361CDB08ED60CF69709D2F8090397C2750D2EFC7DBF9B5",
+      "size": 7939
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/common/uart/uart_cdc.v",
+      "sha256": "5CB1E4D902841F74B6B16C429F5A6A61CA45B3AE30809118C454F95D245205C4",
+      "size": 5160
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/common/uart/uart_rx_setting.v",
+      "sha256": "DDCC4A50CFEB7614E688A191844A4F4381EE00A96D8E06E6FE577432BF2F6AB9",
+      "size": 6133
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/common/uart/uart_tx_setting.v",
+      "sha256": "B59E8EB924EB63ED2C8FF5A8070CBBA3D8711E8B17E33EA00FB0A18DB8FF8AEB",
+      "size": 4557
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/common/ubus2hxt_apb.v",
+      "sha256": "5FFE893445C06166B34292A148E0244CCA9E3E77A28284B15BEC3EABE50E39F4",
+      "size": 4630
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/common/ubus2pcie_apb.v",
+      "sha256": "768E410B3CBA707D790C3E837C2ED73AABBC4158C0533E95F04E15C1AB7D5535",
+      "size": 4440
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/cam/auto_delay_ctl.v",
+      "sha256": "155681DCB59055D6FC9EEE8029C75E0796763BB0EC89B61DDA6B2322D1F520BD",
+      "size": 6631
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/cam/clk_activity.v",
+      "sha256": "566954217277EBE6A5294124332AC68B9947FF2810F5FE0B284CE1702EF01B90",
+      "size": 1159
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/cam/csi_rx_10bit_unpack.v",
+      "sha256": "C66019F622ACEC04830F2AE6FE039EE17C3B3A5FFC524C604C5B12884686FB30",
+      "size": 7271
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/cam/csi_rx_byte_align.v",
+      "sha256": "1E76D86BA1E9C5464EDD19B08B4C856F5AAAEEAB47D93B12851D20065EBFC839",
+      "size": 5522
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/cam/csi_rx_clock_det.v",
+      "sha256": "EB079A9E13D8744AFCF49A866640D6DE8719C41CFFFAA62BA8E44DE93A44B32F",
+      "size": 3588
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/cam/csi_rx_hdr_ecc.v",
+      "sha256": "F20BF32792A6734C49FED579F8CB4AB086DA7C1254D9E00570CBB1C834634B76",
+      "size": 1587
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/cam/csi_rx_packet_handler.v",
+      "sha256": "A2394AFD29270A6D05AC3DCFF636D903385413E3BA3205BE9F25BB6FD009FE31",
+      "size": 11326
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/cam/csi_rx_word_align.v",
+      "sha256": "310BEF19CA967197BA81A9A45CBC6DA8B2F2212146BB76D070E2965E9B4526DD",
+      "size": 5898
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/cam/csi_rx_word_gear_box.v",
+      "sha256": "0F8137E3A65C0335D162C0CE3AFB39DA21F90B03F61C01B455161197B6C1A230",
+      "size": 1965
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/cam/mipi_csi2_rx_ph1p.v",
+      "sha256": "54FB40DD8FD8B5013C72BC96FA71ED11E01599B83618ACDC45E42E715EA4954D",
+      "size": 5945
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/cam/mipi_csi2_rx_ph1p_checked.v",
+      "sha256": "60ED7770442E159F02B5B1BA51EA70E9048E3EA4FC5330E0D345E5369745F9AB",
+      "size": 11126
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/cam/pulse2toggle.v",
+      "sha256": "A71FD594175DE9B2882A9439368BDFB823D253C856D13F8FB47D24A885A65E4F",
+      "size": 831
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/cam/rx_phy_ph1p.v",
+      "sha256": "AC711C853A345BF747D539EDB7E0093CD315D90A362D62512289C3E396D967EF",
+      "size": 7493
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/cam/sfifo.v",
+      "sha256": "795A54967A3C5515C6BBAC5EE9D2F0E0C049002D21C6287025D79C1BBE14752F",
+      "size": 34306
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/cam/ui_cfg_imx415.v",
+      "sha256": "F91F263BC9927755DC1475390CB805881227F0F21E893968E858D1CAA210AF8C",
+      "size": 8721
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/cam/ui_i2c.v",
+      "sha256": "F887902B6038B3C5C13E92524EE854ED5AC94704A49E906F8AA891299E65C305",
+      "size": 12921
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/cam/ui_imx415_reg.v",
+      "sha256": "4A058E988125A68A129FD00645FD641DD991443DED1D2A840090EC2BDC028AF3",
+      "size": 13070
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/cam/wfifo.v",
+      "sha256": "A0FA03B0739C3E6C5382C582296D70BC3B778B66A55C399BD6013F36E3D68BC0",
+      "size": 37826
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/ddr/ddr_frame_pusher.v",
+      "sha256": "E0DD673CD19DD09C0343DD5811A6BC4EFBFAB48ECE2AB5E59396A17EF6F57A5B",
+      "size": 48909
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/img/ep_bar_win.v",
+      "sha256": "A3B6B57D60124409DCC1B3B9CE0AFB122C3AC4D6AA89D583E19738F9DFD0CF30",
+      "size": 30672
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/img/img_regs.v",
+      "sha256": "AA62707B15CF6811AFD241F0AF49D086FA6F9A011F73829EFF31EF4D83DC0A3E",
+      "size": 5923
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/pcie_ep_engine.v",
+      "sha256": "BF59991A8BCA3F8B030C47369930BE2580DB380E185A47DADC0EC68DDA006401",
+      "size": 39079
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/pcie_ep_int_handle.v",
+      "sha256": "3E137FE6369A845D1AB94C24E733EF7BF9092AA64134FCC4357002F5FDE0CA49",
+      "size": 6396
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/external/pcie_integration/rtl/ep_side/ubus_bridge/ep_ubus_bridge.v",
+      "sha256": "C3C8886FD6B69606D84BEB0612F14394C1C08446E6EE2B256FC80C565A01FA3F",
+      "size": 13325
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/filelist.tcl",
+      "sha256": "41A61493335B84FA8AAFB1FF41FB99C2F8AC71D5E73F018187F567BA277A84A3",
+      "size": 7405
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/historical-evidence-sha256.json",
+      "sha256": "E07C1E2E5A47FC9B9636CDD18E13E329A8C36B749F8C9530015EFC889D0AFB92",
+      "size": 1436
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/known-risks.md",
+      "sha256": "26F97C6D188E3701541148CCFA38E4438CB713889EEC0636F41D3E35D087FC0D",
+      "size": 4700
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/prohibitions.md",
+      "sha256": "71F31A410D55DCEF295B71D9AB8D53F75300F0E09B5F7CF5966C375A83278C0F",
+      "size": 3037
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/rtl/a1_core_fix01/a1_ddr_arb2.v",
+      "sha256": "B84019BDA057AFE82FF558E0848D6171FA12732BD8CDB7C6239CB71B3F81D6BA",
+      "size": 4164
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/rtl/a1_core_fix01/a1_ddr_slot_store.v",
+      "sha256": "6C619CF90E54385D667F1EC0F63CC87EE58AADD3C42143330AC4945EB47DEFE9",
+      "size": 22093
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/rtl/a1_core_fix01/a1_deflate_core.v",
+      "sha256": "A91C2ED82FBEF654C4E065B64AE1CC268CA232FEAA26FDD313C58D8740F81B3E",
+      "size": 80501
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/rtl/a1_core_fix01/a1_frame_top.v",
+      "sha256": "CDA28C941321F28DF8318DACAF291F6268EA5E4D6EA9FAF9921ED824B3A2160C",
+      "size": 27245
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/rtl/a1_raw_crop.v",
+      "sha256": "33A6FEE77FD1AA67A31CACF26DD5530E5E2EA474EE655CBD5F1D98D887C5D72D",
+      "size": 7257
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/rtl/brd_a1_core_pll.v",
+      "sha256": "6E484834EE0274B5D985DC87D266027B96A1BB87144FBAF0BA026E2AAD5FB89F",
+      "size": 3654
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/rtl/brd_board_datapath.v",
+      "sha256": "3FF99847C5F7393EA39F56FFDBB345D874553FA180CCD544AD1C64763E13CFDF",
+      "size": 32090
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/rtl/brd_cam_fe.v",
+      "sha256": "C96A6575250E0D48EBF6EEB489A3295191741743CDAEC55A553506A4E3785EA5",
+      "size": 6462
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/rtl/brd_cdc_mailboxes.v",
+      "sha256": "5F5651B7E91A6EAC01066FB34E0899E0315367DEC68F2E0BDD8696FA746CDD00",
+      "size": 18173
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/rtl/brd_ddr_rd_arb.v",
+      "sha256": "66AE727C73E5D70B513DAEFE9C3FB61D7C074D4ADB5EE2BDA887C092CCABE396",
+      "size": 6934
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/rtl/brd_export_seq.v",
+      "sha256": "BCE77E897A2860DA5E5ED7BC190530E0AC3F6CB748D57B4796407AA341C3FBE2",
+      "size": 4943
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/rtl/brd_integrated_top.v",
+      "sha256": "957BC59C3A28D5B8D8EECF329E5669FEE03D71666080332ACE6B616E46A52E0E",
+      "size": 93569
+    },
+    {
+      "path": "handoff/brd-p1-r2-20261027/rtl/p2_ddr_bridge.v",
+      "sha256": "790D8226EC69499C87B92B0E4A05AC0F26915F57B96BD541AFFDCDAC8E740A61",
+      "size": 31332
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/board-filelist/fpga/csi2/src/img/algo_obuf.v",
+      "sha256": "07404282D02256541CABF282087499E2540EF800580387DE29E3871515C8DE81",
+      "size": 3143
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/board-filelist/fpga/csi2/src/img/algo_rowwin3.v",
+      "sha256": "46A6CEB10844B9CCB2054B8B2A911624DC04DB0CA167EF72B8B86C9E08571384",
+      "size": 15684
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/board-filelist/fpga/csi2/src/img/algo_rowwin_reader.v",
+      "sha256": "BBD3F9D3E2E231B7EAD693DF0B3B74440D7BAAFC352E2F243FA887B6AC666DA2",
+      "size": 3234
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/board-filelist/fpga/csi2/src/img/bayer_raw10_demosaic4.v",
+      "sha256": "138E7124DE1F57BD199C9F6EA340ED9DA8FBB4355326F74C15EF6C85795FDBEF",
+      "size": 10558
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/board-filelist/fpga/csi2/src/img/gray8_gaussian3x3_frame.v",
+      "sha256": "D5B14C597401313D25D9096A59F94D101E97FCF090198D04C5B0EF2DCCBD86EE",
+      "size": 7896
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/board-filelist/fpga/csi2/src/img/gray8_gaussian3x3_stream.v",
+      "sha256": "C358174F56AEB2D4A64A2B7484C53EA9FEED2F6CD857AC06C315250110A55DD6",
+      "size": 8296
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/board-filelist/fpga/csi2/src/img/gray8_he_cdfmin_frame.v",
+      "sha256": "DF84B8A49C95BD784E6DD618A5DBC5772200DF70F83D35784C381DB35629034B",
+      "size": 22792
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/board-filelist/fpga/csi2/src/img/img_algo_parallel_top.v",
+      "sha256": "7F1E05443E7432DF0069297F515BF96B293022C957F7F05CEDA2452F60101811",
+      "size": 10414
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/board-filelist/fpga/csi2/src/img/img_algo_top_g2.v",
+      "sha256": "5ECC66D9C50AFA58659409C50F77FD6C0098F5778F1B036E62A50B3645FB12CC",
+      "size": 5577
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/board-filelist/fpga/csi2/src/img/rgb8_gray_stream.v",
+      "sha256": "1A64FA21339A25A9F34CA8206C0FD643B5232BAED26028D8D337144374BE928E",
+      "size": 1956
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/board-filelist/fpga/csi2/src/integrated_delivery/aplus_pcie_egress_adapter.v",
+      "sha256": "39301DC7598FAAA3DF5FB81748F53A82E9E346618C99ED766F442817F85EA71C",
+      "size": 8863
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/board-filelist/fpga/csi2/src/integrated_delivery/bayer_raw10_demosaic4_p4.v",
+      "sha256": "A5C4073404784B3992487898DCBA1F9CE3626FD71CD904C0295D60B13A4047BB",
+      "size": 14491
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/board-filelist/fpga/csi2/src/integrated_delivery/dual_channel_capture_scheduler.v",
+      "sha256": "0EC7C80C45EC5B787BBEF390DC75B82F30C5E89F152657CD688F23FF92E4C529",
+      "size": 7962
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/board-filelist/fpga/csi2/src/integrated_delivery/frame_good_publish_cancel.v",
+      "sha256": "3E3D0B9162A28753888382E8BB0510B8E7890592A02DA27D69191DC412ADF0AF",
+      "size": 5202
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/board-filelist/fpga/csi2/src/integrated_delivery/img_algo_parallel_top_p4.v",
+      "sha256": "E420685CCDE85F8B5291EA08CD5B4387DBDDC239A420DBA2BA6087D42B1EA33C",
+      "size": 12235
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/board-filelist/fpga/csi2/src/integrated_delivery/integrated_delivery_top.v",
+      "sha256": "149E89C1A6B014663EC8EB48A172442F37FE01D4CA8638D9A4789350089BDC8A",
+      "size": 36284
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/board-filelist/fpga/csi2/src/integrated_delivery/integrated_input_processing_top.v",
+      "sha256": "2601FA425C5ECC378ACD6B205D18CDE864BC7AB8AC249706C61E8D82C0DAE7FD",
+      "size": 11420
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/board-filelist/fpga/csi2/src/integrated_delivery/raw10_sample_vector_to_packed.v",
+      "sha256": "48EB39331816A638BFF9024FB0A57EBBEA1F2B15EB00D039352C4D1F81905B20",
+      "size": 1887
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/board-filelist/fpga/csi2/src/mem/capture_async_fifo.v",
+      "sha256": "59DD6DCB5B7E7774F7D6518F50F56CAFBC8BE6B70E8AE1508236BAC2B5AF531D",
+      "size": 2044
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/board-filelist/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b18-b17-b/r0/changed-src/cam_diag_mailbox.v",
+      "sha256": "352AF7C85094EA99B575E99DA952AF8D33871352140E4C6EFDDFF9E6C2407278",
+      "size": 3911
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/board-filelist/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b18-b17-b/r0/td/src/camera/uisrc/03_ip/raw10_clocks/raw10_clocks.xml",
+      "sha256": "58361329DA9A15B3F658359C10C1948C2B85ADA5C110379E15F328F561275C35",
+      "size": 9290
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/p4/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b20-a-timing/r0/changed-src/a1_ddr_arb2.v",
+      "sha256": "B84019BDA057AFE82FF558E0848D6171FA12732BD8CDB7C6239CB71B3F81D6BA",
+      "size": 4164
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/p4/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b20-a-timing/r0/changed-src/a1_ddr_slot_store.v",
+      "sha256": "6C619CF90E54385D667F1EC0F63CC87EE58AADD3C42143330AC4945EB47DEFE9",
+      "size": 22093
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/p4/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b20-a-timing/r0/changed-src/a1_deflate_core.v",
+      "sha256": "A91C2ED82FBEF654C4E065B64AE1CC268CA232FEAA26FDD313C58D8740F81B3E",
+      "size": 80501
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/p4/workflow/runs/20261020-0209_singleA_aplus_closedloop/T10.b20-a-timing/r0/changed-src/a1_frame_top.v",
+      "sha256": "CDA28C941321F28DF8318DACAF291F6268EA5E4D6EA9FAF9921ED824B3A2160C",
+      "size": 27245
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/p4/workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/r2-timing-experiment/algo_rowwin3_p4.v",
+      "sha256": "F3F345EDD10D40BFB24EBA85DF7D454A21333A330311CE30D81345311F6473B0",
+      "size": 17209
+    },
+    {
+      "path": "handoff/fpga-sim-only-20261027/inputs/p4/workflow/runs/20261026-2138_fpga-integrated-delivery/INT.P4/r2-timing-experiment/gray8_gaussian3x3_stream_p4.v",
+      "sha256": "158AAE4D876CD044417795B44A7782A63108EA2E6F04C3232213F02967FA23E3",
+      "size": 8876
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r1/constraints/brd_board.sdc",
+      "sha256": "D69A5092E87A4DA1A648FD407870F12CA021856CF34EF21D53C1BC930B65CAF0",
+      "size": 4485
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r1/constraints/ph1p_pcie_case_ep.adc",
+      "sha256": "67831295AEF0F5AFBEC9F2DFBF062922B793A6586E56C074ACE21787B6365C98",
+      "size": 5668
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r1/rtl/a1_raw_crop.v",
+      "sha256": "33A6FEE77FD1AA67A31CACF26DD5530E5E2EA474EE655CBD5F1D98D887C5D72D",
+      "size": 7257
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r1/rtl/brd_a1_core_pll.v",
+      "sha256": "6E484834EE0274B5D985DC87D266027B96A1BB87144FBAF0BA026E2AAD5FB89F",
+      "size": 3654
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r1/rtl/brd_board_datapath.v",
+      "sha256": "3FF99847C5F7393EA39F56FFDBB345D874553FA180CCD544AD1C64763E13CFDF",
+      "size": 32090
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r1/rtl/brd_cam_fe.v",
+      "sha256": "C96A6575250E0D48EBF6EEB489A3295191741743CDAEC55A553506A4E3785EA5",
+      "size": 6462
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r1/rtl/brd_cdc_mailboxes.v",
+      "sha256": "5F5651B7E91A6EAC01066FB34E0899E0315367DEC68F2E0BDD8696FA746CDD00",
+      "size": 18173
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r1/rtl/brd_ddr_rd_arb.v",
+      "sha256": "66AE727C73E5D70B513DAEFE9C3FB61D7C074D4ADB5EE2BDA887C092CCABE396",
+      "size": 6934
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r1/rtl/brd_export_seq.v",
+      "sha256": "BCE77E897A2860DA5E5ED7BC190530E0AC3F6CB748D57B4796407AA341C3FBE2",
+      "size": 4943
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r1/rtl/brd_integrated_top.v",
+      "sha256": "957BC59C3A28D5B8D8EECF329E5669FEE03D71666080332ACE6B616E46A52E0E",
+      "size": 93569
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r1/rtl/p2_ddr_bridge.v",
+      "sha256": "790D8226EC69499C87B92B0E4A05AC0F26915F57B96BD541AFFDCDAC8E740A61",
+      "size": 31332
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/README.md",
+      "sha256": "D9CD43ED59DD6CDF5FF5D819A8238D8546CA876AA6094473712159E0AAE1B567",
+      "size": 3180
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/build-entry.md",
+      "sha256": "370B4574AE0622107C0492EF2D919E66FE0042EC5799459F19C4D2AC3FFEE407",
+      "size": 1126
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/cdc-list.md",
+      "sha256": "3EFCDD717403EF2C5B07FA61E9B9290997FC69F0D8867414E49E7310867481F2",
+      "size": 4147
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/constraints/brd_board.sdc",
+      "sha256": "D69A5092E87A4DA1A648FD407870F12CA021856CF34EF21D53C1BC930B65CAF0",
+      "size": 4485
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/constraints/ph1p_pcie_case_ep.adc",
+      "sha256": "67831295AEF0F5AFBEC9F2DFBF062922B793A6586E56C074ACE21787B6365C98",
+      "size": 5668
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/delta-vs-r1.md",
+      "sha256": "B7BBE0A4CD5F420A286FACAA507DBE34DBA48463EA27F02A76F49B9A96A8CA4F",
+      "size": 5261
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/adler-rootcause.md",
+      "sha256": "48E0B62584BAE17238EBE464667458D59619CEC0ED30E747FBF16E8612DD4E5F",
+      "size": 3740
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/cdc-static.log",
+      "sha256": "BCFCC9BE2BBC04CAD00164CFDDC82525438D53597516EEE5C105D895FA5301ED",
+      "size": 1091
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/expected_raw.bin",
+      "sha256": "FBA49D330DB9196A9BD9B8F29419A5603CEF600FE7D08F73708674F4C3C5111E",
+      "size": 3840
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/expected_raw.json",
+      "sha256": "74575670D94DA491C59CD96DB1A5B849F8CF061948BA8C4B79DB8C3A302EDA37",
+      "size": 1144
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/filelist-check.log",
+      "sha256": "A6F88BDC4DE5CF7AA6DAFF695F21F2A78B89C96022AE4A6BFD0DA828532ADF41",
+      "size": 418
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/g5-refs.log",
+      "sha256": "A092E616765B2C56529F1AB027B66FEEB30430A1561DD46993E7CE9E278F4AE1",
+      "size": 646
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/g5_refs_r2.py",
+      "sha256": "72461818C711533EB2A78D3B7D9EBE7C549A4273F402DBA6EB54ED09914357DF",
+      "size": 3821
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/gen_expected_raw.log",
+      "sha256": "6864C0EAAD95709DB5F486709DDEFB31C52059D1E90E14B91F0DB6EFE48019B6",
+      "size": 762
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/gen_expected_raw.py",
+      "sha256": "6F8B0861FD084FADA6DFB25263843534525FD8B045E2CF92B67076F4BA2822BF",
+      "size": 5366
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/golden-r2.json",
+      "sha256": "567DC8E08C9B235422F8F9771D37C4A184A1C33A30985BC0CEC779502293CE4F",
+      "size": 4199
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/golden-r2.md",
+      "sha256": "4E9FFCF46470C27D3275435E4AC84EB202E1A25EB45DC885C14B20DB4EB6BBA1",
+      "size": 4481
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/historical-evidence-sha256.json",
+      "sha256": "E07C1E2E5A47FC9B9636CDD18E13E329A8C36B749F8C9530015EFC889D0AFB92",
+      "size": 1436
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/r1-r2-sha-diff.log",
+      "sha256": "E4C4BB6A07C257EEA56D6FCFF242DFBBD1AC2B0598F00E420AA32D8388B55119",
+      "size": 404
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/r1-r2-sha-diff.md",
+      "sha256": "B7E10D21643756934A8DF0A76F6A579DA3067D39C2030B1B5EBEBA1749209CA5",
+      "size": 6806
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/r1_r2_sha_diff.py",
+      "sha256": "4FA8564DD58238DFF5D71EA4C78E7820FEAFD4E5FA95CE5FE0DD0B8245E1C253",
+      "size": 4776
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/sdc-groups.md",
+      "sha256": "FAE87DD4E076A597ACB4F3AC98229396708C15681A757CB3197D8C3BBEF7282C",
+      "size": 2099
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/static-checks.log",
+      "sha256": "2D0E2B43D31DCDF8AFB9D25C959793D89930E16A5BAF276771A612B60F12B6E9",
+      "size": 4930
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/static_checks_r2.py",
+      "sha256": "2B154DED7445281C90A0F6AA2D5A20604D3A7F10C4A95E194E7D0749565FEB45",
+      "size": 10606
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/tb-fix-notes.md",
+      "sha256": "0B18E7A3FE77F4F42A08E3565E8C365608D82DF3E166DA4AC9FD24C9C5BA6465",
+      "size": 2504
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/tb-stimulus-fix.md",
+      "sha256": "6BE170E7249C992E5DF715F1075653108F0D7FB2499BB4F86B3AB8D397A7DFEC",
+      "size": 4897
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/verify_manifest_r2.py",
+      "sha256": "BF71EE8B4D2E6DB09CF5D36AFCEA4D2A36547134E23A2D87834732F91708A815",
+      "size": 5095
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/verify_slot_r2.log",
+      "sha256": "828C992113FE0B8869BE42E842D92BF9253A912430480CD42D8CC5373044A4E3",
+      "size": 14126
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/verify_slot_r2.py",
+      "sha256": "BE193735568471728AA41DF0FA680B0114FC37045B2B7C6A86E0E8419DC49DD2",
+      "size": 11397
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/filelist.tcl",
+      "sha256": "41A61493335B84FA8AAFB1FF41FB99C2F8AC71D5E73F018187F567BA277A84A3",
+      "size": 7405
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/gen_manifest_r2.py",
+      "sha256": "740FD1B39CC1B4354879EEF4AE8103BE25404A3283926D99AE127AA755CF2CB5",
+      "size": 17663
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/lessons-r2.md",
+      "sha256": "D774ECC45081890D3034C4FD7BF3D92B891D302EF1E7894EB0F77D74187E7B8A",
+      "size": 3436
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/result-r2.md",
+      "sha256": "12F6C50649A4854B8311166ED4C0CCDFD066CACA9FC11E7EF0636A245E5B913E",
+      "size": 10393
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/rtl/a1_core_fix01/a1_ddr_arb2.v",
+      "sha256": "B84019BDA057AFE82FF558E0848D6171FA12732BD8CDB7C6239CB71B3F81D6BA",
+      "size": 4164
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/rtl/a1_core_fix01/a1_ddr_slot_store.v",
+      "sha256": "6C619CF90E54385D667F1EC0F63CC87EE58AADD3C42143330AC4945EB47DEFE9",
+      "size": 22093
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/rtl/a1_core_fix01/a1_deflate_core.v",
+      "sha256": "A91C2ED82FBEF654C4E065B64AE1CC268CA232FEAA26FDD313C58D8740F81B3E",
+      "size": 80501
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/rtl/a1_core_fix01/a1_frame_top.v",
+      "sha256": "CDA28C941321F28DF8318DACAF291F6268EA5E4D6EA9FAF9921ED824B3A2160C",
+      "size": 27245
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/rtl/a1_raw_crop.v",
+      "sha256": "33A6FEE77FD1AA67A31CACF26DD5530E5E2EA474EE655CBD5F1D98D887C5D72D",
+      "size": 7257
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/rtl/brd_a1_core_pll.v",
+      "sha256": "6E484834EE0274B5D985DC87D266027B96A1BB87144FBAF0BA026E2AAD5FB89F",
+      "size": 3654
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/rtl/brd_board_datapath.v",
+      "sha256": "3FF99847C5F7393EA39F56FFDBB345D874553FA180CCD544AD1C64763E13CFDF",
+      "size": 32090
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/rtl/brd_cam_fe.v",
+      "sha256": "C96A6575250E0D48EBF6EEB489A3295191741743CDAEC55A553506A4E3785EA5",
+      "size": 6462
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/rtl/brd_cdc_mailboxes.v",
+      "sha256": "5F5651B7E91A6EAC01066FB34E0899E0315367DEC68F2E0BDD8696FA746CDD00",
+      "size": 18173
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/rtl/brd_ddr_rd_arb.v",
+      "sha256": "66AE727C73E5D70B513DAEFE9C3FB61D7C074D4ADB5EE2BDA887C092CCABE396",
+      "size": 6934
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/rtl/brd_export_seq.v",
+      "sha256": "BCE77E897A2860DA5E5ED7BC190530E0AC3F6CB748D57B4796407AA341C3FBE2",
+      "size": 4943
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/rtl/brd_integrated_top.v",
+      "sha256": "957BC59C3A28D5B8D8EECF329E5669FEE03D71666080332ACE6B616E46A52E0E",
+      "size": 93569
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/rtl/p2_ddr_bridge.v",
+      "sha256": "790D8226EC69499C87B92B0E4A05AC0F26915F57B96BD541AFFDCDAC8E740A61",
+      "size": 31332
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/rtl/ref/common/BDF.v",
+      "sha256": "C59A0AACF5200B349B9B549E886EA5256FCB525E7E224C5138AC7FF6CD72ADF1",
+      "size": 2998
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/rtl/ref/common/TLP_FMT_TYPE.v",
+      "sha256": "167BCD7FB3213A886AFFDED2945F0FA46A0F1D5B92FBFB55761E6ECF4E98B9E4",
+      "size": 3057
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/rtl/ref/ep_side/ddr/ddr_frame_pusher.v",
+      "sha256": "E0DD673CD19DD09C0343DD5811A6BC4EFBFAB48ECE2AB5E59396A17EF6F57A5B",
+      "size": 48909
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/compile_r2.log",
+      "sha256": "45D7974B3F8CE7690B2AC4DB63C92451D0AC0B146368C58B5D4F28A25BFB0D07",
+      "size": 532
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/prep/a1u1_frame.bin",
+      "sha256": "3D1FFD753BA37D07E1002D056DF504049C132A92936560CAEF1661BD410E39D0",
+      "size": 582
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/prep/pk_bytes.bin",
+      "sha256": "FBA49D330DB9196A9BD9B8F29419A5603CEF600FE7D08F73708674F4C3C5111E",
+      "size": 3840
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/prep/sim_meta.txt",
+      "sha256": "E9E5EBE6FBA6DE36FDD5C0B89A211CDF6CA77818CD5F3467487B335724660A78",
+      "size": 336
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/prep/slot_dump.bin",
+      "sha256": "AE507A744F3CDFB66988A5E0F9ADD3AF7E534A1321125CD6EC30046C8D3E03DC",
+      "size": 538
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/prep/slotbase0_dump.bin",
+      "sha256": "AD7FACB2586FC6E966C004D7D1D16B024F5805FF7CB47C7A85DABD8B48892CA7",
+      "size": 4096
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/prep/tb_probe_r2.txt",
+      "sha256": "1C4E0A6833FEAD5FB3A8FD7831137742A1433F2DF77492C965C1DEEB941E24EA",
+      "size": 880
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_arb_r2.log",
+      "sha256": "B6BEA35BA811C82E0ADF8B45AF94EC380F3597758DE0E947B4CFC9EA76BC3AD6",
+      "size": 611
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_prep_r2.log",
+      "sha256": "ADE891A6FF1D3434C5851403DF7B1F74D0C4B53751D6087680C2D2831B643741",
+      "size": 672
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_scen0_r2.log",
+      "sha256": "3F62E221F9BEE24A25651E5FF5DBA78321C185560FDE26081D1C514FC72CF486",
+      "size": 674
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_scen1_r2.log",
+      "sha256": "AEE46FE42B7B06F2CB0CA6433FA3318416575C872B6C72685A39B29E0B5EFE53",
+      "size": 330
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_scen2_r2.log",
+      "sha256": "D0AA3E2954933026825D12F1387214CF316E9832FF298C0F29A386657AA060C9",
+      "size": 387
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_scen3_r2.log",
+      "sha256": "909EA3AD93EE4C5500223BD42EC91E9AD1988A27FCFE2D12467EBE12551AA71A",
+      "size": 674
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_scen4_r2.log",
+      "sha256": "D669EA19F027C86372D32326C1B2AB6FBA3A163642E9C7E7F5D7DD16F725F039",
+      "size": 674
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_sim_r2.ps1",
+      "sha256": "C0EBA627D259FF82C543F029FE034E4951B22875AC78AC96CA8DCC82D820A1B4",
+      "size": 6732
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_tb_brd_arb_scen0_p0_d0.do",
+      "sha256": "EF907ED3D67CA4D54FF1D26B1D6C3594D4C36978188968DE7348783A3DA7016A",
+      "size": 155
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_tb_brd_g1_top_scen0_p0_d0.do",
+      "sha256": "727F8FE66B1C82DEEEB833C3FC2E849EA2B35B52163B017398B65D2A98015EEA",
+      "size": 184
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_tb_brd_g1_top_scen0_p1_d1.do",
+      "sha256": "9E233631C804214BA0F1043BD2C98846619893C4856B792C3FBBF5CBA6ADFCC2",
+      "size": 183
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_tb_brd_g1_top_scen1_p0_d0.do",
+      "sha256": "36F280B79D009B04D33397BE0B975909DACA78AAB7371BC5128724F0E6B86148",
+      "size": 184
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_tb_brd_g1_top_scen2_p0_d0.do",
+      "sha256": "5904521DA951DC54F736C4E6B08A757F84386403896CF9B363A291F0E84E7BE4",
+      "size": 184
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_tb_brd_g1_top_scen3_p0_d0.do",
+      "sha256": "557D805E043D279A9615AE253C9761532DFAFC229CF45F4F458DDFFA43C434B3",
+      "size": 184
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_tb_brd_g1_top_scen4_p0_d0.do",
+      "sha256": "6064367A4C3036C5BACE3C2D3120198C187B7334D90EA8F06F961B30FA32BFD8",
+      "size": 184
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/scen0/a1u1_frame.bin",
+      "sha256": "5BC20EA7446BC81D243A5B116ED31D2DF255B34D0CDFD00D71417063D9739148",
+      "size": 2514
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/scen0/pk_bytes.bin",
+      "sha256": "FBA49D330DB9196A9BD9B8F29419A5603CEF600FE7D08F73708674F4C3C5111E",
+      "size": 3840
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/scen0/sim_meta.txt",
+      "sha256": "17BE802C15BCFD181D512176F020D2CCB8D3730E74AB129C62CC25451CE37BB3",
+      "size": 337
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/scen0/slot_dump.bin",
+      "sha256": "DB9688389C979E866A71441879DE990046D858147C4F01F8EEDBF21B8AD54558",
+      "size": 2470
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/scen0/slotbase0_dump.bin",
+      "sha256": "AD7FACB2586FC6E966C004D7D1D16B024F5805FF7CB47C7A85DABD8B48892CA7",
+      "size": 4096
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/scen0/tb_probe_r2.txt",
+      "sha256": "1C4E0A6833FEAD5FB3A8FD7831137742A1433F2DF77492C965C1DEEB941E24EA",
+      "size": 880
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/scen1/tb_probe_r2.txt",
+      "sha256": "1C4E0A6833FEAD5FB3A8FD7831137742A1433F2DF77492C965C1DEEB941E24EA",
+      "size": 880
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/scen2/tb_probe_r2.txt",
+      "sha256": "1C4E0A6833FEAD5FB3A8FD7831137742A1433F2DF77492C965C1DEEB941E24EA",
+      "size": 880
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/scen3/a1u1_frame.bin",
+      "sha256": "5BC20EA7446BC81D243A5B116ED31D2DF255B34D0CDFD00D71417063D9739148",
+      "size": 2514
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/scen3/pk_bytes.bin",
+      "sha256": "FBA49D330DB9196A9BD9B8F29419A5603CEF600FE7D08F73708674F4C3C5111E",
+      "size": 3840
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/scen3/sim_meta.txt",
+      "sha256": "17BE802C15BCFD181D512176F020D2CCB8D3730E74AB129C62CC25451CE37BB3",
+      "size": 337
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/scen3/slot_dump.bin",
+      "sha256": "DB9688389C979E866A71441879DE990046D858147C4F01F8EEDBF21B8AD54558",
+      "size": 2470
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/scen3/slotbase0_dump.bin",
+      "sha256": "AD7FACB2586FC6E966C004D7D1D16B024F5805FF7CB47C7A85DABD8B48892CA7",
+      "size": 4096
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/scen3/tb_probe_r2.txt",
+      "sha256": "1C4E0A6833FEAD5FB3A8FD7831137742A1433F2DF77492C965C1DEEB941E24EA",
+      "size": 880
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/scen4/a1u1_frame.bin",
+      "sha256": "5BC20EA7446BC81D243A5B116ED31D2DF255B34D0CDFD00D71417063D9739148",
+      "size": 2514
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/scen4/pk_bytes.bin",
+      "sha256": "FBA49D330DB9196A9BD9B8F29419A5603CEF600FE7D08F73708674F4C3C5111E",
+      "size": 3840
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/scen4/sim_meta.txt",
+      "sha256": "17BE802C15BCFD181D512176F020D2CCB8D3730E74AB129C62CC25451CE37BB3",
+      "size": 337
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/scen4/slot_dump.bin",
+      "sha256": "DB9688389C979E866A71441879DE990046D858147C4F01F8EEDBF21B8AD54558",
+      "size": 2470
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/scen4/slotbase0_dump.bin",
+      "sha256": "AD7FACB2586FC6E966C004D7D1D16B024F5805FF7CB47C7A85DABD8B48892CA7",
+      "size": 4096
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/scen4/tb_probe_r2.txt",
+      "sha256": "1C4E0A6833FEAD5FB3A8FD7831137742A1433F2DF77492C965C1DEEB941E24EA",
+      "size": 880
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/sim_tb_brd_arb_scen0_p0_d0_20261027_175011.log",
+      "sha256": "D8B2A13ECAF1D8CCF40CDB17FE2FE4E47FA6E29FB352C9132A0978F9D5569936",
+      "size": 966
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/sim_tb_brd_arb_scen0_p0_d0_20261027_175011.log.err",
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "size": 0
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/sim_tb_brd_g1_top_scen0_p0_d0_20261027_174521.log",
+      "sha256": "536F67961E97C55A2531D84DA8F39FCB2D9C4C5AAA0A707FD9016FC6A348DD24",
+      "size": 1131
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/sim_tb_brd_g1_top_scen0_p0_d0_20261027_174521.log.err",
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "size": 0
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/sim_tb_brd_g1_top_scen0_p0_d0_20261027_174615.log",
+      "sha256": "7D7102EA691C3F0E8B85B0DDE7763848F88BAE845CB7FC0FABB4AD93F218FB5A",
+      "size": 549
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/sim_tb_brd_g1_top_scen0_p0_d0_20261027_174615.log.err",
+      "sha256": "74C912E08B7E00158D87153A4E936C4451E411B1FE0C0C0287D9F8925AF0185D",
+      "size": 22
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/sim_tb_brd_g1_top_scen0_p0_d0_20261027_174701.log",
+      "sha256": "16F9E3425D77D7FDD397A31F714785B7115F2E87EE20CDDD2AF7A7299123C96D",
+      "size": 3517
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/sim_tb_brd_g1_top_scen0_p0_d0_20261027_174701.log.err",
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "size": 0
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/sim_tb_brd_g1_top_scen0_p1_d1_20261027_175003.log",
+      "sha256": "5F8F3032D3597A729C4A8BA18E1A2824997ADF752B289E8CAE42EA3491B2B86E",
+      "size": 3515
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/sim_tb_brd_g1_top_scen0_p1_d1_20261027_175003.log.err",
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "size": 0
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/sim_tb_brd_g1_top_scen1_p0_d0_20261027_174951.log",
+      "sha256": "522C00C54BBD21FCBAD7998CF1102125A62494D2DA7B35548EC0264446561AAD",
+      "size": 2038
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/sim_tb_brd_g1_top_scen1_p0_d0_20261027_174951.log.err",
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "size": 0
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/sim_tb_brd_g1_top_scen2_p0_d0_20261027_174956.log",
+      "sha256": "C4301779DC547C4B146A8E0DE0BC8916EE1A99F30530980F9CD1D6169DB86D75",
+      "size": 2816
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/sim_tb_brd_g1_top_scen2_p0_d0_20261027_174956.log.err",
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "size": 0
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/sim_tb_brd_g1_top_scen3_p0_d0_20261027_174924.log",
+      "sha256": "2435BC85B2960719E1A15781463EAA1A4B59FFA4C2CA1580648ECE5FCBB45382",
+      "size": 3513
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/sim_tb_brd_g1_top_scen3_p0_d0_20261027_174924.log.err",
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "size": 0
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/sim_tb_brd_g1_top_scen4_p0_d0_20261027_174933.log",
+      "sha256": "99FA8BB74C34D13112C80682993579F903ED4A5196112DA27DB18A96F5FBBD92",
+      "size": 3517
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/sim_tb_brd_g1_top_scen4_p0_d0_20261027_174933.log.err",
+      "sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "size": 0
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/tb_brd_g1_r2.v",
+      "sha256": "71B658D7947B4320AC7939DD883DE37D06A06582670D731E8D225106FDD1C9F6",
+      "size": 43096
+    },
+    {
+      "path": "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/transcript",
+      "sha256": "1CD78B7FC7A554444B4888C08257CAAA44371F099C85911CE80E38B6D958898A",
+      "size": 895
+    }
+  ],
+  "file_count": 265,
+  "test_input_paths": [
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/manifest-brd-p1-r2.json",
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/result-r2.md",
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/golden-r2.md",
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/gen_expected_raw.py",
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/expected_raw.bin",
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/verify_slot_r2.py",
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/verify_slot_r2.log",
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/static_checks_r2.py",
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/static-checks.log",
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/r1-r2-sha-diff.md",
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/evidence/tb-stimulus-fix.md",
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/tb_brd_g1_r2.v",
+    "workflow/runs/20261027-0726_fpga-board-integration/T11.BRD.P1/r2/sim/run_sim_r2.ps1",
+    "handoff/brd-p1-r2-20261027/README.md",
+    "handoff/brd-p1-r2-20261027/filelist.tcl",
+    "handoff/brd-p1-r2-20261027/build/filelist-sha256.json",
+    "handoff/brd-p1-r2-20261027/expected-g1.md"
+  ],
+  "notes": [
+    "P4 remains warning; r2/r3 evidence is never spliced",
+    "G2p/bit/board are not local pass or fail: teammate_required/awaiting_hardware/not_run",
+    "r2 RTL/constraints/filelist are byte-identical to r1; only TB/golden/evidence/manifest/handoff changed",
+    "the DUT was not modified to fit the golden and no criterion was weakened (raw==pk demoted to additional)",
+    "r0 640KiB slot text is an arithmetic error; SLOT_WORDS=81920 x 32B = 2.5 MiB/slot",
+    "A1U1 header is host-owned (D6); the DUT slot stores only zlib",
+    "D2 BAR 0x130..0x13C / CTRL[9..11] is rejected; host cannot read P4 status yet",
+    "the manifest copies in the handoff package are byte-identical to this file; the manifest excludes itself and its copy"
+  ]
+}
