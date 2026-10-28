@@ -38,9 +38,18 @@ tb/csi_rx_packet_integrity_ref.v
 ../rtl/ep_side/cam/ui_i2c.v
 ../rtl/ep_side/cam/ui_cfg_imx415.v
 ../rtl/ep_side/cam/ui_imx415_reg.v
+../rtl/ep_side/cam/sync_offline/sync_reset.v
+../rtl/ep_side/cam/sync_offline/sync_sof_mailbox.v
+../rtl/ep_side/cam/sync_offline/sync_sof_pair.v
+../rtl/ep_side/cam/sync_offline/sync_start_ctrl.v
+../rtl/ep_side/cam/sync_offline/sync_offline_top.v
+../rtl/ep_side/cam/sync_frame_gate.v
+../rtl/ep_side/cam/sync_i2c_config.v
 
 # ---- DDR / 推帧 / 寄存器面 ----
 ../rtl/ep_side/ddr/ddr_frame_pusher.v
+../rtl/ep_side/ddr/ddr_rd_arb2.v
+../rtl/ep_side/ddr/utx_arb2.v
 ../rtl/ep_side/ddr/cam_ddr_writer.v
 # T11: RAW10->R10F writer (crc32_upd4.v is its include, not compiled separately)
 ../rtl/ep_side/ddr/cam_r10f_writer.v

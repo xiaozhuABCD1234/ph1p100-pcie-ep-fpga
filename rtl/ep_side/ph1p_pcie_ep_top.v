@@ -16,7 +16,14 @@
  module ph1p_pcie_ep_top #(
     // T11 debug：仅 ph1p_pcie_ep_top_dbg 覆盖为 1'b1；生产/00_all 默认 0（行为不变）
     parameter DBG_CTRL_DEFAULT_EN = 1'b0,
-    parameter CLOSEDLOOP_EN = 1'b0
+    parameter CLOSEDLOOP_EN = 1'b0,
+    // 硬件同步：A 主 / B 从，共享 XHS/XVS；默认开启，主机写 0x1E0.START 才启动。
+    parameter SYNC_ENABLE = 1'b1,
+    parameter integer SYNC_WAIT_CYCLES = 1500000,   // 24ms @ 62.5MHz
+    parameter integer SYNC_FRAME_TIMEOUT = 50000000,
+    parameter integer SYNC_PAIR_WINDOW = 100000,
+    parameter integer SYNC_I2C_TIMEOUT = 5000000,
+    parameter         SYNC_MASTER_B = 1'b0   // 0 = A 主/B 从（默认）；1 = B 主/A 从
 )(
 
     // serdes high speed pin
@@ -94,27 +101,24 @@
     localparam IMG_PTRBYTES = IMG_W * IMG_H;
     localparam IMG_PTRMSK   = (IMG_WORDS * 4) - 4;   // 保留（未用）
 
-    // ---- 相机正式 RAW10 通路（cam_r10f_writer，T11 新增）----
-    //  传感器跑 4K（I_cam_mode=1），MIPI/CSI-2 收到整行 3840 像素；片内帧缓存
-    //  装不下 4K，所以正式路走「CSI-2 4 像素组 → 偶数 ROI → packed RAW10 →
-    //  R10F v1 → AXI 写 DDR3」。ROI 尺寸必须使 DMA 区为 4KiB 整数倍（1920×1080
-    //  packed = 2,592,000B + 128B 头 = 2,592,128B ⇒ dma_bytes = 2,592,768B = 633×4KiB）。
-    //  几何（板证前按“未板证”对待；来自源包实际 WC/行数标定）：
-    //    3840×2160 有效图居中取 1920×1080：X0=960、有效图 Y0=540（物理行 = 37+540）；
-    //    帧头 embedded + 物理哑行 SKIP_ROWS=37（T07 实测来源，未板证）。
-    localparam integer CAMDDR_W   = 1920;
-    localparam integer CAMDDR_H   = 1080;
-    localparam [15:0]  CAMDDR_X0  = 16'd960;
-    localparam [15:0]  CAMDDR_Y0  = 16'd540;
+    // ---- 相机正式 RAW10 通路（cam_r10f_writer）----
+    //  传感器固定 4K30 全像素（I_cam_mode=1、HMAX=1100、VMAX=2250、891Mbps×4lane），
+    //  CSI-2 每行就是 3840 像素。这里取整帧，不做 ROI：
+    //    3840×2160 packed RAW10 → stride 4800B、payload 10,368,000B，
+    //    R10F 头 128B + 载荷 + 4KiB 对齐尾 ⇒ 10,371,072B/帧（= 2532 × 4KiB）。
+    //  要回到 1080p ROI 只改这五行：W=1920 H=1080 X0=960 Y0=540，DDR 基址可不动。
+    //  帧头 embedded + 物理哑行 SKIP_ROWS=37（板测标定）。
+    localparam integer CAMDDR_W   = 3840;
+    localparam integer CAMDDR_H   = 2160;
+    localparam [15:0]  CAMDDR_X0  = 16'd0;
+    localparam [15:0]  CAMDDR_Y0  = 16'd0;
     localparam [15:0]  CAMDDR_SKIP_ROWS = 16'd37;
-    //  两路各一对双缓冲（A/B 互不重叠；一帧 8294400B = 7.91MB，两块间隔 8MB）：
-    //    A: 块0 1MB 起、块1 9MB 起   → 占用 1MB..16.914MB
-    //    B: 块0 17MB 起、块1 25MB 起 → 占用 17MB..32.914MB
-    localparam [31:0]  DDR_CAM_BASE0   = 32'h0010_0000;   // A 路 4K 帧双缓冲块 0（1MB）
-    localparam [31:0]  DDR_CAM_BASE1   = 32'h0090_0000;   // A 路块 1（9MB；一帧 7.9MB，不重叠）
-    localparam [31:0]  DDR_CAM_B_BASE0 = 32'h0110_0000;   // B 路块 0（17MB）
-    localparam [31:0]  DDR_CAM_B_BASE1 = 32'h0190_0000;   // B 路块 1（25MB）
-    localparam integer CAMDDR_BYTES  = CAMDDR_W * CAMDDR_H;   // 2,073,600（ROI 像素数；正式路是 packed，不用这个数）
+    //  两路各一对双缓冲；一帧 10.4MB ⇒ 块间隔 16MB（A 16/32MB，B 48/64MB，共 74MB）
+    localparam [31:0]  DDR_CAM_BASE0   = 32'h0100_0000;
+    localparam [31:0]  DDR_CAM_BASE1   = 32'h0200_0000;
+    localparam [31:0]  DDR_CAM_B_BASE0 = 32'h0300_0000;
+    localparam [31:0]  DDR_CAM_B_BASE1 = 32'h0400_0000;
+    localparam integer CAMDDR_BYTES  = CAMDDR_W * CAMDDR_H;
     // T07：实际板载 DDR3L 容量（x16、2048Mb、单 CS ⇒ 256MB）。依据是本工程匹配
     // 生成的 al_ip/ddr3_mc_0/.params_ddr3_mc_0.txt（PH1P_COMP_DENSITY=2048、
     // PH1P_COMP_TYPE=x16、PH1P_DDR_CS=1）与板载颗粒规格；**不拿 AXI 29 位地址线
@@ -134,6 +138,19 @@ wire         img_ddr_en;         // CTRL[5]
 // B01 debug-only exclusive reader and same-domain publication contract.
 wire [3:0] push_arid;wire [28:0] push_araddr;wire [7:0] push_arlen;
 wire [2:0] push_arsize;wire [1:0] push_arburst;wire push_arvalid,push_arready,push_rvalid,push_rready;
+// B 路 pusher 的 AXI 读通道 + 两路仲裁后的单一读口
+wire [3:0] push_b_arid;wire [28:0] push_b_araddr;wire [7:0] push_b_arlen;
+wire [2:0] push_b_arsize;wire [1:0] push_b_arburst;
+wire push_b_arvalid,push_b_arready,push_b_rvalid,push_b_rready;
+wire [3:0] push_rd_arid;wire [28:0] push_rd_araddr;wire [7:0] push_rd_arlen;
+wire [2:0] push_rd_arsize;wire [1:0] push_rd_arburst;
+wire push_rd_arvalid,push_rd_arready,push_rd_rvalid,push_rd_rready;
+wire [3:0] push_rd_rid;wire [255:0] push_rd_rdata;wire [1:0] push_rd_rresp;wire push_rd_rlast;
+wire [3:0] push_rid; wire [255:0] push_rdata; wire [1:0] push_rresp; wire push_rlast;
+wire [3:0] push_b_rid; wire [255:0] push_b_rdata; wire [1:0] push_b_rresp; wire push_b_rlast;
+wire utx_sel_a, utx_sel_b, utx_req_a, utx_req_b;
+wire [255:0] utx_data_a, utx_data_b; wire utx_sop_a, utx_sop_b, utx_eop_a, utx_eop_b;
+wire [7:0] utx_valid_a, utx_valid_b;
 wire [1:0] cl_release;wire cl_pub_valid;wire [31:0] cl_pub_seq,cl_pub_base,cl_pub_len,cl_pub_session,cl_writer_good,cl_writer_bad;
 wire cl_inject_abort;
 // ==== 图像通路（本移植新增：img_regs + img_frame_src）====
@@ -262,8 +279,23 @@ wire [95:0] w_dbgdrop_b;                  // B 路写者丢帧诊断（调试只
 wire        w_camddr_anom, w_camddr_b_anom;
 // 推帧引擎取哪一路（CTRL[8]）
 wire [31:0] w_push_ddr_seq, w_push_ddr_base, w_push_ddr_status, w_push_ddr_len;
+wire [31:0] w_push_ddr_seq_b, w_push_ddr_base_b, w_push_ddr_status_b, w_push_ddr_len_b;
 // 推帧引擎的「本帧字节数」：DDR 源按选中的写者给，ERAM 源按 fb 的 DATA_LEN 给
-wire [31:0] w_push_frame_bytes;
+wire [31:0] w_push_frame_bytes, w_push_frame_bytes_b;
+
+// ==== 硬件同步曝光控制/状态（0x1E0..0x20C）====
+wire        sync_start, sync_abort;
+wire        sync_req_valid, sync_req_ready, sync_camera;
+wire        sync_a_ready, sync_b_ready, sync_a_rsp, sync_b_rsp, sync_a_ok, sync_b_ok;
+wire        sync_ready_ctrl, sync_ready, sync_busy, sync_stopped, sync_pair, sync_locked;
+wire [15:0] sync_addr;
+wire [7:0]  sync_data;
+wire [3:0]  sync_error;
+wire [31:0] sync_skew, sync_pairs, sync_warmup, sync_timestamp;
+wire [31:0] sync_miss_a, sync_miss_b, sync_overrun_a, sync_overrun_b, sync_relock;
+wire [31:0] sync_pair_seq_a, sync_pair_seq_b;
+wire [31:0] sync_status_word;
+wire [351:0] sync_ro;
 
 // ==== 【本步新增】推帧引擎（ddr_frame_pusher）====
 //  · 引擎自己的 TL 发送口先接到 e_tl_tx_*，再由顶层 mux 与用户侧那一组合并成
@@ -276,10 +308,30 @@ wire         utx_sop, utx_eop, utx_req, utx_sel;
 wire [7:0]   utx_valid;
 wire         img_push_en;        // CTRL[6]
 wire         img_push_src;       // CTRL[7]：1 = 推帧数据源取片内 ERAM 帧缓存
+wire         img_pair_en;        // CTRL[9]：1 = A/B 双路同时推帧
 wire [31:0]  img_push_dst_lo, img_push_dst_hi, img_push_db_lo, img_push_db_hi;
 wire [31:0]  img_push_done, img_push_status, img_push_tlp;
 wire [7:0]   img_push_err;
 wire [127:0] img_push_ro;        // {tlp_cnt, err, status, done} → ep_bar_win 0xCC/0xC8/0xC4/0xC0
+// 双路（B 路）推帧
+wire [31:0]  img_pair_dst_lo, img_pair_dst_hi, img_pair_db_lo, img_pair_db_hi;
+wire [31:0]  img_pair_ack_seq;
+wire         img_pair_arm, img_pair_ack, img_pair_cancel;
+wire [31:0]  img_push_done_b, img_push_status_b, img_push_tlp_b;
+wire [7:0]   img_push_err_b;
+wire [127:0] img_push_ro_b;
+wire [31:0]  img_pair_status;
+wire         img_pair_block_cfg;
+assign img_push_ro_b = {img_push_tlp_b, 24'd0, img_push_err_b, img_push_status_b, img_push_done_b};
+// 单路 B 兼容：CTRL[8]=1 且 pair_en=0 时，B 片复用 0xB0/0xB8 的 A 套寄存器。
+wire [31:0] w_b_dst_lo = img_pair_en ? img_pair_dst_lo : img_push_dst_lo;
+wire [31:0] w_b_dst_hi = img_pair_en ? img_pair_dst_hi : img_push_dst_hi;
+wire [31:0] w_b_db_lo  = img_pair_en ? img_pair_db_lo  : img_push_db_lo;
+wire [31:0] w_b_db_hi  = img_pair_en ? img_pair_db_hi  : img_push_db_hi;
+// [1]=A held, [0]=B held；[15:8]=A err，[23:16]=B err。ACK 后必须两位都为 0。
+assign img_pair_status = {14'd0, img_push_err_b, img_push_err,
+                          w_tx_status_b[2], w_tx_status[2]};
+assign img_pair_block_cfg = img_push_status_b[0] | img_push_status_b[2];
 // 字面顺序必须与 ep_bar_win.v 头部那张表逐位一致（也是主机侧唯一口径）：
 //   0xCC=[127:96] TLP 数 / 0xC8=[95:64] 错误码 / 0xC4=[63:32] 状态 / 0xC0=[31:0] 已推帧数
 assign img_push_ro = {img_push_tlp, 24'd0, img_push_err, img_push_status, img_push_done};
@@ -313,8 +365,8 @@ wire         w_ddr_rlast, w_ddr_rvalid, w_ddr_rready;
 // RKA1 安全扩展（ep_bar_win ↔ 安全门，都是 tl_clk_user 域，直连）
 wire [31:0]  w_tx_cap_bytes, w_tx_session_id, w_tx_ack_seq, w_tx_ack_session;
 wire         w_tx_cmd_arm, w_tx_cmd_ack, w_tx_cmd_cancel;
-wire [31:0]  w_tx_status;
-wire         w_tx_block_cfg, w_tx_cfg_reject;
+wire [31:0]  w_tx_status, w_tx_status_b;
+wire         w_tx_block_cfg, w_tx_block_cfg_b, w_tx_cfg_reject;
 wire         w_link_up;                       // pl_link_up & 两个锁相都就绪
 // 推帧引擎的源所有权信号
 // T07 round1：release 按相机分开（A: rel_tgl0/1 → writer A；B: rel_tgl2/3 → writer B），
@@ -357,11 +409,16 @@ assign w_ddr_ro   = {w_camddr_len,   w_camddr_status,   w_camddr_base,   w_camdd
 assign w_ddr_ro_b = {w_camddr_b_len, w_camddr_b_status, w_camddr_b_base, w_camddr_b_seq};
 assign w_cam_diag_b = {w_camddr_b_lines, w_camddr_b_grp};
 
-// 推帧引擎的 DDR 源：按 CTRL[8] 取 A 路或 B 路那组握手字（准静态，帧内不变）
-assign w_push_ddr_seq    = img_cam_ab_sel ? w_camddr_b_seq    : w_camddr_seq;
-assign w_push_ddr_base   = img_cam_ab_sel ? w_camddr_b_base   : w_camddr_base;
-assign w_push_ddr_status = img_cam_ab_sel ? w_camddr_b_status : w_camddr_status;
-assign w_push_ddr_len    = img_cam_ab_sel ? w_camddr_b_len    : w_camddr_len;
+// 推帧引擎的 DDR 源：A 路固定接 A 写者、B 路固定接 B 写者。
+// 单路模式下由 ARM 命令选中的那一片 pusher 工作，另一片保持 push_en=0/不授权。
+assign w_push_ddr_seq    = w_camddr_seq;
+assign w_push_ddr_base   = w_camddr_base;
+assign w_push_ddr_status = w_camddr_status;
+assign w_push_ddr_len    = w_camddr_len;
+assign w_push_ddr_seq_b    = w_camddr_b_seq;
+assign w_push_ddr_base_b   = w_camddr_b_base;
+assign w_push_ddr_status_b = w_camddr_b_status;
+assign w_push_ddr_len_b    = w_camddr_b_len;
 // ↑ 方向别写反：w_ddr_ro 是「汇聚到寄存器窗口的那条总线」，四个字是它的源。
 //   写反（assign {w_ddr_len,...} = w_ddr_ro;）会让这 128bit 整条悬空，
 //   TD 综合报 SYN-5013 Undriven net / SYN-5025 Using 0 for all undriven pins and nets，
@@ -371,7 +428,8 @@ assign w_push_ddr_len    = img_cam_ab_sel ? w_camddr_b_len    : w_camddr_len;
 // 推帧引擎的「本帧字节数」：DDR 源用选中的那组 len；ERAM 源用 fb 的 DATA_LEN。
 // 这两个数都必须是 4KB 的整数倍（640x480 = 75x4096、4K = 2025x4096），否则
 // 推帧的 MWr 数/突发数不是整数（见 ddr_frame_pusher.v 端口说明）。
-assign w_push_frame_bytes = img_push_src ? img_data_len : w_push_ddr_len;
+assign w_push_frame_bytes   = img_push_src ? img_data_len : w_push_ddr_len;
+assign w_push_frame_bytes_b = w_push_ddr_len_b;
 
     // clock and reset signals
     // T07：tl_clk_user / pcie_pll_locked / tl_clk_locked / tl_rst_user / pl_link_up /
@@ -732,11 +790,23 @@ pcie_ep_engine #(
     // ==== 本步新增：推帧寄存器面 + 用户侧 TL 发送口 ====
     .img_push_en                             (img_push_en                            ),
     .img_push_src                            (img_push_src                           ),
+    .img_pair_en                             (img_pair_en                            ),
     .img_push_dst_lo                         (img_push_dst_lo                        ),
     .img_push_dst_hi                         (img_push_dst_hi                        ),
     .img_push_db_lo                          (img_push_db_lo                         ),
     .img_push_db_hi                          (img_push_db_hi                         ),
+    .img_pair_dst_lo                         (img_pair_dst_lo                        ),
+    .img_pair_dst_hi                         (img_pair_dst_hi                        ),
+    .img_pair_db_lo                          (img_pair_db_lo                         ),
+    .img_pair_db_hi                          (img_pair_db_hi                         ),
+    .img_pair_ack_seq                        (img_pair_ack_seq                       ),
+    .img_pair_arm                            (img_pair_arm                           ),
+    .img_pair_ack                            (img_pair_ack                           ),
+    .img_pair_cancel                         (img_pair_cancel                        ),
     .img_push_ro                             (img_push_ro                            ),
+    .img_push_ro_b                           (img_push_ro_b                          ),
+    .img_pair_status                         (img_pair_status                        ),
+    .img_pair_block_cfg                      (img_pair_block_cfg                     ),
     .utx_req                                 (utx_req                                ),
     .utx_eop                                 (utx_eop                                ),
     .utx_valid                               (utx_valid                              ),
@@ -791,7 +861,10 @@ pcie_ep_engine #(
     .csi_diag_a                              (r_csi_a_cnt2                           ),
     .csi_diag_a2                             (r_csi_a_geo2                           ),
     .csi_diag_b                              (r_csi_b_cnt2                           ),
-    .csi_diag_b2                             (r_csi_b_geo2                           )
+    .csi_diag_b2                             (r_csi_b_geo2                           ),
+    .sync_start                              (sync_start                             ),
+    .sync_abort                              (sync_abort                             ),
+    .sync_ro                                 (sync_ro                                )
 );
 
 pcie_ep_int_handle u_pcie_ep_int_handle(
@@ -1358,7 +1431,113 @@ assign  debug_led[3] = ltssm_reg_dly[4];
 
 
 
-    ui_cfg_imx415 #(.CLK_DIV(16'd624)) u_cfg_a (
+    // ==== 硬件同步曝光：A 主 / B 从，共享 XHS/XVS ====
+    //  sync_offline_top 通过各自的 ui_cfg I2C 写传感器；sync_frame_gate 只在
+    //  pair 锁定并越过 warmup 后放行整帧，避免把失锁/半帧送给 writer。
+    assign sync_ready      = SYNC_ENABLE ? (sync_ready_ctrl && sync_locked) : 1'b1;
+    assign sync_req_ready  = sync_camera ? sync_b_ready : sync_a_ready;
+    generate if (SYNC_ENABLE) begin : g_sync_ctrl
+        sync_offline_top #(
+            .WAIT_CYCLES   (SYNC_WAIT_CYCLES),
+            .WARMUP_FRAMES (8),
+            .I2C_TIMEOUT   (SYNC_I2C_TIMEOUT),
+            .FRAME_TIMEOUT (SYNC_FRAME_TIMEOUT),
+            .PAIR_WINDOW   (SYNC_PAIR_WINDOW),
+            .MASTER_B      (SYNC_MASTER_B)
+        ) u_sync (
+            .clk_ctrl          (tl_clk_user),
+            .clk_a             (w_a_byte_clk),
+            .clk_b             (w_b_byte_clk),
+            .rst_n             (pcie_power_on_rst && r_rst_n_slow),
+            .start             (sync_start),
+            .abort_req         (sync_abort),
+            .prereq_ok         (w_a_cfg_done && w_b_cfg_done && w_ddrphy_rdy),
+            .sof_a             (w_a_vsync),
+            .sof_b             (w_b_vsync),
+            .req_valid         (sync_req_valid),
+            .req_ready         (sync_req_ready),
+            .camera_id         (sync_camera),
+            .reg_addr          (sync_addr),
+            .reg_data          (sync_data),
+            .rsp_valid         (sync_a_rsp || sync_b_rsp),
+            .rsp_ok            ((sync_a_rsp && sync_a_ok) || (sync_b_rsp && sync_b_ok)),
+            .ready             (sync_ready_ctrl),
+            .busy              (sync_busy),
+            .stopped_confirmed (sync_stopped),
+            .error_code        (sync_error),
+            .pair_valid        (sync_pair),
+            .locked            (sync_locked),
+            .skew              (sync_skew),
+            .pair_seq_a        (sync_pair_seq_a),
+            .pair_seq_b        (sync_pair_seq_b),
+            .pair_count        (sync_pairs),
+            .miss_a            (sync_miss_a),
+            .miss_b            (sync_miss_b),
+            .overrun_a         (sync_overrun_a),
+            .overrun_b         (sync_overrun_b),
+            .relock_count      (sync_relock),
+            .warmup_count      (sync_warmup),
+            .ignored_starts    (),
+            .timestamp         (sync_timestamp)
+        );
+    end else begin : g_no_sync
+        assign sync_req_valid = 1'b0;
+        assign sync_camera    = 1'b0;
+        assign sync_addr      = 16'd0;
+        assign sync_data      = 8'd0;
+        assign sync_ready_ctrl = 1'b1;
+        assign sync_busy      = 1'b0;
+        assign sync_stopped   = 1'b0;
+        assign sync_error     = 4'd0;
+        assign sync_pair      = 1'b0;
+        assign sync_locked    = 1'b0;
+        assign sync_warmup    = 32'd0;
+        assign sync_pairs     = 32'd0;
+        assign sync_skew      = 32'd0;
+        assign sync_pair_seq_a = 32'd0;
+        assign sync_pair_seq_b = 32'd0;
+        assign sync_miss_a    = 32'd0;
+        assign sync_miss_b    = 32'd0;
+        assign sync_overrun_a = 32'd0;
+        assign sync_overrun_b = 32'd0;
+        assign sync_relock    = 32'd0;
+        assign sync_timestamp = 32'd0;
+    end endgenerate
+
+    // 状态字：bit0 ready / 2 locked / 3 busy / 4 stopped / 5 pair_valid /
+    //         [11:8] error / [31:16] warmup。其余见 0x1E8..0x20C。
+    assign sync_status_word = {sync_warmup[15:0], 4'd0, sync_error, 2'b00,
+                               sync_pair, sync_stopped, sync_busy, sync_locked, 1'b0, sync_ready};
+    wire [31:0] sync_overrun_word = {sync_overrun_b[15:0], sync_overrun_a[15:0]};
+    assign sync_ro = {sync_pair_seq_b, sync_pair_seq_a, sync_relock,
+                      sync_overrun_word, sync_miss_b, sync_miss_a,
+                      sync_timestamp, sync_warmup, sync_pairs, sync_skew, sync_status_word};
+
+    wire gate_a_vsync, gate_b_vsync, gate_a_frame, gate_b_frame;
+    wire gate_a_line, gate_b_line, gate_a_pixel_valid, gate_b_pixel_valid;
+    wire gate_a_good, gate_b_good, gate_a_abort, gate_b_abort;
+    sync_frame_gate #(.ENABLE(SYNC_ENABLE)) u_gate_a (
+        .clk(w_a_byte_clk), .rst_n(w_a_rst_out), .permit(sync_ready),
+        .sof(w_a_vsync), .in_frame(w_a_in_frame), .in_line(w_a_in_line),
+        .pixel_valid(w_a_pixel_valid), .good(w_a_frame_good), .abort_in(w_a_frame_abort),
+        .out_sof(gate_a_vsync), .out_frame(gate_a_frame), .out_line(gate_a_line),
+        .out_pixel_valid(gate_a_pixel_valid), .out_good(gate_a_good), .out_abort(gate_a_abort)
+    );
+    sync_frame_gate #(.ENABLE(SYNC_ENABLE)) u_gate_b (
+        .clk(w_b_byte_clk), .rst_n(w_b_rst_out), .permit(sync_ready),
+        .sof(w_b_vsync), .in_frame(w_b_in_frame), .in_line(w_b_in_line),
+        .pixel_valid(w_b_pixel_valid), .good(w_b_frame_good), .abort_in(w_b_frame_abort),
+        .out_sof(gate_b_vsync), .out_frame(gate_b_frame), .out_line(gate_b_line),
+        .out_pixel_valid(gate_b_pixel_valid), .out_good(gate_b_good), .out_abort(gate_b_abort)
+    );
+
+    ui_cfg_imx415 #(.SYNC_ENABLE(SYNC_ENABLE),.CLK_DIV(16'd624)) u_cfg_a (
+        .I_sync_req    (sync_req_valid && sync_req_ready && !sync_camera),
+        .I_sync_addr   (sync_addr     ),
+        .I_sync_data   (sync_data     ),
+        .O_sync_ready  (sync_a_ready  ),
+        .O_sync_rsp_valid(sync_a_rsp  ),
+        .O_sync_rsp_ok (sync_a_ok     ),
         .I_clk         (tl_clk_user   ),
         .I_rst_n       (r_rst_n_slow  ),
         .I_cam_mode    (2'd1          ),   // 1 = 4K
@@ -1373,7 +1552,13 @@ assign  debug_led[3] = ltssm_reg_dly[4];
         .O_dbg_busy    (w_a_cfg_busy  )
     );
 
-    ui_cfg_imx415 #(.CLK_DIV(16'd624)) u_cfg_b (
+    ui_cfg_imx415 #(.SYNC_ENABLE(SYNC_ENABLE),.CLK_DIV(16'd624)) u_cfg_b (
+        .I_sync_req    (sync_req_valid && sync_req_ready && sync_camera),
+        .I_sync_addr   (sync_addr     ),
+        .I_sync_data   (sync_data     ),
+        .O_sync_ready  (sync_b_ready  ),
+        .O_sync_rsp_valid(sync_b_rsp  ),
+        .O_sync_rsp_ok (sync_b_ok     ),
         .I_clk         (tl_clk_user   ),
         .I_rst_n       (r_rst_n_slow  ),
         .I_cam_mode    (2'd1          ),
@@ -1664,6 +1849,7 @@ cam_r10f_writer #(
     .X0          (CAMDDR_X0         ),
     .Y0          (CAMDDR_Y0         ),
     .SKIP_ROWS   (CAMDDR_SKIP_ROWS  ),
+    .LINE_CHECK  (0                 ),   // 全宽 4K：行分隔不可靠，只查整帧组数/拍数
     .BASE0       (DDR_CAM_BASE0     ),
     .BASE1       (DDR_CAM_BASE1     ),
     .FIFO_AW     (10                ),
@@ -1674,16 +1860,16 @@ cam_r10f_writer #(
 ) u_cam_r10f_writer (
     .cam_clk       (w_a_byte_clk    ),
     .cam_rst_n     (w_a_rst_out     ),
-    .cam_vsync     (w_a_vsync       ),
-    .cam_in_frame  (w_a_in_frame    ),
-    .cam_in_line   (w_a_in_line     ),
+    .cam_vsync     (gate_a_vsync       ),
+    .cam_in_frame  (gate_a_frame    ),
+    .cam_in_line   (gate_a_line     ),
     .cam_pix       (w_a_pixel       ),
-    .cam_pix_valid (w_a_pixel_valid ),
-    .cam_frame_good(w_a_frame_good  ),
-    .cam_frame_abort(w_a_frame_abort | cl_inject_abort),
+    .cam_pix_valid (gate_a_pixel_valid ),
+    .cam_frame_good(gate_a_good  ),
+    .cam_frame_abort(gate_a_abort | cl_inject_abort),
     // 只有被 CTRL[8] 选中的那一路才做「发布即保护」：pusher 只给选中相机发 release，
     // 未选中那路若也开保护，发布完两块后再没有 release，写者会永久停在封锁态。
-    .prot_en       (img_push_en && ~img_cam_ab_sel),
+    .prot_en       (img_push_en && (img_pair_en || ~img_cam_ab_sel)),
     .rel_tgl0      (w_rel_tgl0      ),
     .rel_tgl1      (w_rel_tgl1      ),
 
@@ -1733,6 +1919,7 @@ cam_r10f_writer #(
     .X0          (CAMDDR_X0         ),
     .Y0          (CAMDDR_Y0         ),
     .SKIP_ROWS   (CAMDDR_SKIP_ROWS  ),
+    .LINE_CHECK  (0                 ),   // 同 A 路：全宽 4K 只查整帧组数/拍数
     .BASE0       (DDR_CAM_B_BASE0   ),
     .BASE1       (DDR_CAM_B_BASE1   ),
     .FIFO_AW     (10                ),
@@ -1743,14 +1930,14 @@ cam_r10f_writer #(
 ) u_cam_r10f_writer_b (
     .cam_clk       (w_b_byte_clk    ),
     .cam_rst_n     (w_b_rst_out     ),
-    .cam_vsync     (w_b_vsync       ),
-    .cam_in_frame  (w_b_in_frame    ),
-    .cam_in_line   (w_b_in_line     ),
+    .cam_vsync     (gate_b_vsync       ),
+    .cam_in_frame  (gate_b_frame    ),
+    .cam_in_line   (gate_b_line     ),
     .cam_pix       (w_b_pixel       ),
-    .cam_pix_valid (w_b_pixel_valid ),
-    .cam_frame_good(w_b_frame_good  ),
-    .cam_frame_abort(w_b_frame_abort),
-    .prot_en       (img_push_en && img_cam_ab_sel),   // 同 A 路：只保护被 CTRL[8] 选中的相机
+    .cam_pix_valid (gate_b_pixel_valid ),
+    .cam_frame_good(gate_b_good  ),
+    .cam_frame_abort(gate_b_abort),
+    .prot_en       (img_push_en && (img_pair_en || img_cam_ab_sel)),   // 双路时两路都保护
     .rel_tgl0      (w_rel_tgl2      ),
     .rel_tgl1      (w_rel_tgl3      ),
 
@@ -1854,6 +2041,7 @@ ddr_frame_pusher #(
     .PAY_DW      (32                ),   // 128 字节 = 协商出的 MaxPayload
     .FIFO_AW     (7                 ),   // 128 拍 × 32B = 4KB，与突发等长
     .BURST_BEATS (128               ),   // 128 × 32B = 4KB，不跨页
+    .MAX_FRAME_BYTES (16*1024*1024  ),   // 4K 整帧 10.4MB；默认 8.29MB 会拒 ARM
     .WAIT_LIMIT  (16'hFFFF          ),
     .BASE0       (DDR_CAM_BASE0     ),   // DDR 源 A 路双缓冲块（与 cam_ddr_writer A 一致）
     .BASE1       (DDR_CAM_BASE1     ),
@@ -1863,8 +2051,8 @@ ddr_frame_pusher #(
     .clk_fb        (tl_clk_user       ),
     .rst_fb        (power_on_rst_dly ),
 
-    .push_en       (CLOSEDLOOP_EN ? 1'b0 : img_push_en),
-    .src_sel       (img_push_src      ),
+    .push_en       (CLOSEDLOOP_EN ? 1'b0 : (img_push_en && (img_pair_en || ~img_cam_ab_sel))),
+    .src_sel       (img_pair_en ? 1'b0 : img_push_src),
     .fb_frame_cnt  (img_frame_cnt     ),
     .fb_rd_addr    (img_push_fb_addr  ),
     .fb_rd_data    (img_fb_rd2_data   ),
@@ -1882,9 +2070,9 @@ ddr_frame_pusher #(
     .st_tlp_cnt    (img_push_tlp     ),
 
     // T07：RKA1 one-shot 安全门
-    .arm_pulse     (w_tx_cmd_arm     ),
-    .ack_pulse     (w_tx_cmd_ack     ),
-    .cancel_pulse  (w_tx_cmd_cancel  ),
+    .arm_pulse     (img_pair_en ? img_pair_arm    : (w_tx_cmd_arm    && ~img_cam_ab_sel)),
+    .ack_pulse     (img_pair_en ? img_pair_ack    : (w_tx_cmd_ack    && ~img_cam_ab_sel)),
+    .cancel_pulse  (img_pair_en ? img_pair_cancel : (w_tx_cmd_cancel && ~img_cam_ab_sel)),
     .cap_bytes     (w_tx_cap_bytes   ),
     .session_id    (w_tx_session_id  ),
     .ack_seq_w     (w_tx_ack_seq     ),
@@ -1893,13 +2081,13 @@ ddr_frame_pusher #(
     .link_up       (w_link_up        ),
     .mps_code      (tl_cfg_max_payload_size),
     .ddr_cap_bytes (DDR_CAP_BYTES    ),
-    .cam_sel_live  (img_cam_ab_sel   ),
+    .cam_sel_live  (1'b0              ),
     .tx_status     (w_tx_status      ),
     .tx_block_cfg  (w_tx_block_cfg   ),
     .rel_tgl0      (w_rel_tgl0       ),
     .rel_tgl1      (w_rel_tgl1       ),
-    .rel_tgl2      (w_rel_tgl2       ),
-    .rel_tgl3      (w_rel_tgl3       ),
+    .rel_tgl2      (),
+    .rel_tgl3      (),
     .tx_src_lock   (w_push_src_lock  ),
 
     .frame_bytes   (w_push_frame_bytes),
@@ -1907,13 +2095,13 @@ ddr_frame_pusher #(
     .ddr_base      (w_push_ddr_base   ),
     .ddr_status    (w_push_ddr_status  ),
 
-    .utx_sel       (utx_sel           ),
+    .utx_sel       (utx_sel_a         ),
     .tl_tx_wait    (tl_tx_wait        ),
-    .utx_req       (utx_req           ),
-    .utx_data      (utx_data          ),
-    .utx_sop       (utx_sop           ),
-    .utx_eop       (utx_eop           ),
-    .utx_valid     (utx_valid         ),
+    .utx_req       (utx_req_a         ),
+    .utx_data      (utx_data_a        ),
+    .utx_sop       (utx_sop_a         ),
+    .utx_eop       (utx_eop_a         ),
+    .utx_valid     (utx_valid_a       ),
 
     .clk_ddr       (w_ddr_dhi_clk     ),
     .rst_ddr       (~w_ddrphy_rst_n   ),
@@ -1925,17 +2113,178 @@ ddr_frame_pusher #(
     .m_axi_arburst (push_arburst     ),
     .m_axi_arvalid (push_arvalid     ),
     .m_axi_arready (push_arready     ),
-    .m_axi_rid     (w_ddr_rid         ),
-    .m_axi_rdata   (w_ddr_rdata       ),
-    .m_axi_rresp   (w_ddr_rresp       ),
-    .m_axi_rlast   (w_ddr_rlast       ),
+    .m_axi_rid     (push_rid         ),
+    .m_axi_rdata   (push_rdata       ),
+    .m_axi_rresp   (push_rresp       ),
+    .m_axi_rlast   (push_rlast       ),
     .m_axi_rvalid  (push_rvalid      ),
     .m_axi_rready  (push_rready      )
 );
 
 
+// --------------------------------------------------------------------
+//  B 路推帧引擎（与 A 路完全对称；pair_en=1 时两片同时 ARM）
+// --------------------------------------------------------------------
+ddr_frame_pusher #(
+    .W           (IMG_W             ),
+    .H           (IMG_H             ),
+    .PAY_DW      (32                ),
+    .FIFO_AW     (7                 ),
+    .BURST_BEATS (128               ),
+    .WAIT_LIMIT  (16'hFFFF          ),
+    .BASE0       (DDR_CAM_BASE0     ),
+    .BASE1       (DDR_CAM_BASE1     ),
+    .BASE0B      (DDR_CAM_B_BASE0   ),
+    .BASE1B      (DDR_CAM_B_BASE1   )
+) u_ddr_frame_pusher_b (
+    .clk_fb        (tl_clk_user       ),
+    .rst_fb        (power_on_rst_dly ),
+
+    .push_en       (CLOSEDLOOP_EN ? 1'b0 : (img_push_en && (img_pair_en || img_cam_ab_sel))),
+    .src_sel       (1'b0              ),
+    .fb_frame_cnt  (img_frame_cnt     ),
+    .fb_rd_addr    (),
+    .fb_rd_data    (32'd0             ),
+    .fb_req        (),
+    .fb_grant      (1'b0              ),
+    .src_act       (),
+    .fb_hold       (),
+    .dst_lo        (w_b_dst_lo        ),
+    .dst_hi        (w_b_dst_hi        ),
+    .db_lo         (w_b_db_lo         ),
+    .db_hi         (w_b_db_hi         ),
+    .st_done       (img_push_done_b   ),
+    .st_status     (img_push_status_b ),
+    .st_err        (img_push_err_b    ),
+    .st_tlp_cnt    (img_push_tlp_b    ),
+
+    .arm_pulse     (img_pair_en ? img_pair_arm    : (w_tx_cmd_arm    && img_cam_ab_sel)),
+    .ack_pulse     (img_pair_en ? img_pair_ack    : (w_tx_cmd_ack    && img_cam_ab_sel)),
+    .cancel_pulse  (img_pair_en ? img_pair_cancel : (w_tx_cmd_cancel && img_cam_ab_sel)),
+    .cap_bytes     (w_tx_cap_bytes    ),
+    .session_id    (w_tx_session_id   ),
+    .ack_seq_w     (img_pair_en ? img_pair_ack_seq : w_tx_ack_seq),
+    .ack_session_w (w_tx_ack_session  ),
+    .cfg_reject    (w_tx_cfg_reject   ),
+    .link_up       (w_link_up         ),
+    .mps_code      (tl_cfg_max_payload_size),
+    .ddr_cap_bytes (DDR_CAP_BYTES     ),
+    .cam_sel_live  (1'b1              ),
+    .tx_status     (w_tx_status_b     ),
+    .tx_block_cfg  (w_tx_block_cfg_b  ),
+    .rel_tgl0      (),
+    .rel_tgl1      (),
+    .rel_tgl2      (w_rel_tgl2        ),
+    .rel_tgl3      (w_rel_tgl3        ),
+    .tx_src_lock   (),
+
+    .frame_bytes   (w_push_frame_bytes_b),
+    .ddr_seq       (w_push_ddr_seq_b    ),
+    .ddr_base      (w_push_ddr_base_b   ),
+    .ddr_status    (w_push_ddr_status_b ),
+
+    .utx_sel       (utx_sel_b         ),
+    .tl_tx_wait    (tl_tx_wait        ),
+    .utx_req       (utx_req_b         ),
+    .utx_data      (utx_data_b        ),
+    .utx_sop       (utx_sop_b         ),
+    .utx_eop       (utx_eop_b         ),
+    .utx_valid     (utx_valid_b       ),
+
+    .clk_ddr       (w_ddr_dhi_clk     ),
+    .rst_ddr       (~w_ddrphy_rst_n   ),
+
+    .m_axi_arid    (push_b_arid        ),
+    .m_axi_araddr  (push_b_araddr      ),
+    .m_axi_arlen   (push_b_arlen       ),
+    .m_axi_arsize  (push_b_arsize      ),
+    .m_axi_arburst (push_b_arburst     ),
+    .m_axi_arvalid (push_b_arvalid     ),
+    .m_axi_arready (push_b_arready     ),
+    .m_axi_rid     (push_b_rid         ),
+    .m_axi_rdata   (push_b_rdata       ),
+    .m_axi_rresp   (push_b_rresp       ),
+    .m_axi_rlast   (push_b_rlast       ),
+    .m_axi_rvalid  (push_b_rvalid      ),
+    .m_axi_rready  (push_b_rready      )
+);
+
+// A/B 读通道仲裁：DDR 只有一个用户读口，两片 pusher 串行使用。
+ddr_rd_arb2 u_push_rd_arb (
+    .clk         (w_ddr_dhi_clk     ),
+    .rst         (~w_ddrphy_rst_n   ),
+    .m0_arvalid  (push_arvalid      ),
+    .m0_arready  (push_arready      ),
+    .m0_araddr   (push_araddr       ),
+    .m0_arlen    (push_arlen        ),
+    .m0_arsize   (push_arsize       ),
+    .m0_arburst  (push_arburst      ),
+    .m0_arid     (push_arid         ),
+    .m0_rready   (push_rready       ),
+    .m0_rvalid   (push_rvalid       ),
+    .m0_rdata    (push_rdata        ),
+    .m0_rresp    (push_rresp        ),
+    .m0_rlast    (push_rlast        ),
+    .m0_rid      (push_rid          ),
+    .m1_arvalid  (push_b_arvalid    ),
+    .m1_arready  (push_b_arready    ),
+    .m1_araddr   (push_b_araddr     ),
+    .m1_arlen    (push_b_arlen      ),
+    .m1_arsize   (push_b_arsize     ),
+    .m1_arburst  (push_b_arburst    ),
+    .m1_arid     (push_b_arid       ),
+    .m1_rready   (push_b_rready     ),
+    .m1_rvalid   (push_b_rvalid     ),
+    .m1_rdata    (push_b_rdata      ),
+    .m1_rresp    (push_b_rresp      ),
+    .m1_rlast    (push_b_rlast      ),
+    .m1_rid      (push_b_rid        ),
+    .s_arvalid   (push_rd_arvalid   ),
+    .s_arready   (push_rd_arready   ),
+    .s_araddr    (push_rd_araddr    ),
+    .s_arlen     (push_rd_arlen     ),
+    .s_arsize    (push_rd_arsize    ),
+    .s_arburst   (push_rd_arburst   ),
+    .s_arid      (push_rd_arid      ),
+    .s_rvalid    (push_rd_rvalid    ),
+    .s_rdata     (push_rd_rdata     ),
+    .s_rresp     (push_rd_rresp     ),
+    .s_rlast     (push_rd_rlast     ),
+    .s_rid       (push_rd_rid       ),
+    .s_rready    (push_rd_rready    )
+);
+
+// 两路推帧共享 TL 用户发送口：帧级授权，A/B 数据绝不交错。
+utx_arb2 u_push_utx_arb (
+    .clk    (tl_clk_user),
+    .rst    (power_on_rst_dly),
+    .utx_sel(utx_sel),
+    .req0   (utx_req_a),
+    .busy0  (img_push_status[0]),
+    .data0  (utx_data_a),
+    .sop0   (utx_sop_a),
+    .eop0   (utx_eop_a),
+    .valid0 (utx_valid_a),
+    .sel0   (utx_sel_a),
+    .req1   (utx_req_b),
+    .busy1  (img_push_status_b[0]),
+    .data1  (utx_data_b),
+    .sop1   (utx_sop_b),
+    .eop1   (utx_eop_b),
+    .valid1 (utx_valid_b),
+    .sel1   (utx_sel_b),
+    .req    (utx_req),
+    .data   (utx_data),
+    .sop    (utx_sop),
+    .eop    (utx_eop),
+    .valid  (utx_valid)
+);
+
 generate if(CLOSEDLOOP_EN) begin:g_closedloop
     assign push_arready=1'b0;assign push_rvalid=1'b0;
+    assign push_b_arready=1'b0;assign push_b_rvalid=1'b0;
+    assign push_rd_arready=1'b0;assign push_rd_rvalid=1'b0;
+    assign push_rd_rdata=256'd0;assign push_rd_rresp=2'd0;assign push_rd_rlast=1'b0;assign push_rd_rid=4'd0;
     ddr_closedloop_readback u_readback(
         .clk(w_ddr_dhi_clk),.rst(~w_ddrphy_rst_n),
         .pub_valid(cl_pub_valid),.pub_seq(cl_pub_seq),.pub_base(cl_pub_base),.pub_len(cl_pub_len),.pub_session(cl_pub_session),
@@ -1963,9 +2312,11 @@ generate if(CLOSEDLOOP_EN) begin:g_closedloop
     end
 end else begin:g_original_reader
     assign cl_release=0;assign cl_inject_abort=0;
-    assign w_ddr_arid=push_arid;assign w_ddr_araddr=push_araddr;assign w_ddr_arlen=push_arlen;
-    assign w_ddr_arsize=push_arsize;assign w_ddr_arburst=push_arburst;assign w_ddr_arvalid=push_arvalid;
-    assign push_arready=w_ddr_arready;assign push_rvalid=w_ddr_rvalid;assign w_ddr_rready=push_rready;
+    assign w_ddr_arid=push_rd_arid;assign w_ddr_araddr=push_rd_araddr;assign w_ddr_arlen=push_rd_arlen;
+    assign w_ddr_arsize=push_rd_arsize;assign w_ddr_arburst=push_rd_arburst;assign w_ddr_arvalid=push_rd_arvalid;
+    assign push_rd_arready=w_ddr_arready;assign push_rd_rvalid=w_ddr_rvalid;
+    assign push_rd_rdata=w_ddr_rdata;assign push_rd_rresp=w_ddr_rresp;assign push_rd_rlast=w_ddr_rlast;assign push_rd_rid=w_ddr_rid;
+    assign w_ddr_rready=push_rd_rready;
 end endgenerate
 
 endmodule

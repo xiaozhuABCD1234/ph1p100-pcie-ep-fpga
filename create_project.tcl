@@ -40,12 +40,22 @@ add_files rtl/ep_side/cam/wfifo.v
 add_files rtl/ep_side/cam/ui_cfg_imx415.v
 add_files rtl/ep_side/cam/ui_i2c.v
 add_files rtl/ep_side/cam/ui_imx415_reg.v
+# ---- 硬件同步曝光（A 主/B 从，共享 XHS/XVS）----
+add_files rtl/ep_side/cam/sync_offline/sync_reset.v
+add_files rtl/ep_side/cam/sync_offline/sync_sof_mailbox.v
+add_files rtl/ep_side/cam/sync_offline/sync_sof_pair.v
+add_files rtl/ep_side/cam/sync_offline/sync_start_ctrl.v
+add_files rtl/ep_side/cam/sync_offline/sync_offline_top.v
+add_files rtl/ep_side/cam/sync_frame_gate.v
+add_files rtl/ep_side/cam/sync_i2c_config.v
 # ---- raw10-rka1 迁入：checked 包层（T11 冻结版）+ checked PHY wrapper ----
 add_files rtl/checked/csi_rx_packet_integrity.v
 add_files rtl/checked/csi_rx_10bit_unpack_checked.v
 add_files rtl/ep_side/cam/mipi_csi2_rx_ph1p_checked.v
 # ---- DDR 通路 ----
 add_files rtl/ep_side/ddr/ddr_frame_pusher.v
+add_files rtl/ep_side/ddr/ddr_rd_arb2.v
+add_files rtl/ep_side/ddr/utx_arb2.v
 add_files rtl/ep_side/ddr/ddr_wr_arb.v
 # 相机整帧（4K）直写 DDR3：CSI-2 -> 异步 FIFO -> AXI -> DDR3（旧写者，诊断/备用）
 add_files rtl/ep_side/ddr/cam_ddr_writer.v

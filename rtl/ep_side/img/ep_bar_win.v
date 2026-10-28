@@ -115,6 +115,10 @@
 //    0x11C EXT_VERSION   R   0x0001_0000（major1.minor0）
 //  以上 8 个偏移严格按合同，不再占用 0xD0..0xF4 的旧诊断。
 //
+//  0x1E0 SYNC_CMD W1：bit0=START，bit1=ABORT。
+//  0x1E4..0x20C 同步只读状态：STATUS/SKEW/PAIR_COUNT/WARMUP/TIMESTAMP/
+//    MISS_A/MISS_B/OVERRUN/RELOCK/PAIR_SEQ_A/PAIR_SEQ_B。
+//
 //  额外只读诊断（**不在合同里，属 T07 新增 diag，主机可忽略**）：
 //    0x120 CSI_DIAG_A  R {good[7:0], bad[7:0], hdr_err[7:0], crc_err[7:0]}（A 路低 8 位）
 //    0x124 CSI_DIAG_A2 R {last_lines[15:0], last_wc[15:0]}（A 路最近帧几何）
@@ -187,10 +191,23 @@ module ep_bar_win #(
     input  wire [127:0] push_ro,
     output reg          ctrl_push_en,
     output reg          ctrl_push_src,
+    output reg          ctrl_pair_en,
     output reg  [31:0]  push_dst_lo,
     output reg  [31:0]  push_dst_hi,
     output reg  [31:0]  push_db_lo,
     output reg  [31:0]  push_db_hi,
+    // 双路推帧：B 路目标/门铃/ACK 序号与状态
+    output reg  [31:0]  pair_dst_lo,
+    output reg  [31:0]  pair_dst_hi,
+    output reg  [31:0]  pair_db_lo,
+    output reg  [31:0]  pair_db_hi,
+    output reg  [31:0]  pair_ack_seq,
+    output reg          pair_cmd_arm,
+    output reg          pair_cmd_ack,
+    output reg          pair_cmd_cancel,
+    input  wire [127:0] push_ro_b,
+    input  wire [31:0]  pair_status_in,
+    input  wire         pair_block_cfg,
     // 与 DDR 搬运共用 fb 唯一读口的握手指（见 img_frame_src 头部仲裁）
     output wire         host_rd_prio,
     input  wire         host_grant,
@@ -206,6 +223,11 @@ module ep_bar_win #(
     input  wire [31:0]  fb_rdata,
     input  wire [31:0]  dbg_rd_idx,
     input  wire [255:0] cam_stat,
+
+    // ==== 硬件同步曝光控制/状态（0x1E0..0x20C）====
+    input  wire [351:0] sync_ro,
+    output reg          sync_start,
+    output reg          sync_abort,
 
     // ==== T07 新增：RKA1 安全扩展寄存器面（与 ddr_frame_pusher 的安全门直连）====
     output reg  [31:0]  tx_cap_bytes,     // 0x100（暂存，ARM 时由安全门锁存并校验）
@@ -228,6 +250,7 @@ module ep_bar_win #(
     // 引擎的数据字段是“首字节在高位”，而主机按小端读 → 每个 dw 都要翻转字节序
     // 指针规整：4 字节对齐；>= 帧大小就回卷到 0
     function [31:0] ptr_fix;
+
         input [31:0] v;
         begin
             ptr_fix = (v >= PTR_BYTES) ? 32'd0 : {v[31:2], 2'b00};
@@ -302,6 +325,15 @@ module ep_bar_win #(
             push_dst_hi    <= 32'd0;
             push_db_lo     <= 32'd0;
             push_db_hi     <= 32'd0;
+            pair_dst_lo    <= 32'd0;
+            pair_dst_hi    <= 32'd0;
+            pair_db_lo     <= 32'd0;
+            pair_db_hi     <= 32'd0;
+            pair_ack_seq   <= 32'd0;
+            pair_cmd_arm   <= 1'b0;
+            pair_cmd_ack   <= 1'b0;
+            pair_cmd_cancel<= 1'b0;
+            ctrl_pair_en   <= 1'b0;
             tx_cap_bytes   <= 32'd0;      // 默认 cap=0（不授权）
             tx_session_id  <= 32'd0;      // 默认 session=0（不授权）
             tx_cmd_arm     <= 1'b0;
@@ -310,6 +342,8 @@ module ep_bar_win #(
             tx_ack_seq     <= 32'd0;
             tx_ack_session <= 32'd0;
             cfg_reject     <= 1'b0;
+            sync_start     <= 1'b0;
+            sync_abort     <= 1'b0;
             ptr           <= 32'd0;
             scratch       <= 32'd0;
             last_wr       <= 32'd0;
@@ -318,7 +352,12 @@ module ep_bar_win #(
             tx_cmd_arm <= 1'b0;
             tx_cmd_ack <= 1'b0;
             tx_cmd_cancel <= 1'b0;
+            pair_cmd_arm  <= 1'b0;
+            pair_cmd_ack  <= 1'b0;
+            pair_cmd_cancel <= 1'b0;
             cfg_reject <= 1'b0;
+            sync_start <= 1'b0;
+            sync_abort <= 1'b0;
 
             if (req_rd) begin
                 rd_addr32     <= tlp_addr;
@@ -337,6 +376,7 @@ module ep_bar_win #(
                         ctrl_ddr_en    <= tlp_dw_s[5];   // 1 = 每完成一帧自动搬进 DDR3
                         ctrl_push_en   <= tlp_dw_s[6];   // 1 = 每有一帧就推给主机
                         ctrl_push_src  <= tlp_dw_s[7];   // 1 = 推帧数据源取片内 ERAM 帧缓存
+                        ctrl_pair_en   <= tlp_dw_s[9];   // 1 = A/B 双路同时推帧
                     end
                     12'h5C: ptr     <= ptr_fix(tlp_dw_s);
                     12'h9C: cam_tap_cfg   <= tlp_dw_s[6:0];   // A 路 tap
@@ -345,32 +385,45 @@ module ep_bar_win #(
                     12'hB4: push_dst_hi <= tlp_dw_s;
                     12'hB8: push_db_lo  <= tlp_dw_s;
                     12'hBC: push_db_hi  <= tlp_dw_s;
+                    // ---- 双路推帧 B 路目标/门铃/ACK 序号 ----
+                    12'h220: pair_ack_seq <= tlp_dw_s;
+                    12'h224: pair_dst_lo  <= tlp_dw_s;
+                    12'h228: pair_dst_hi  <= tlp_dw_s;
+                    12'h22C: pair_db_lo   <= tlp_dw_s;
+                    12'h230: pair_db_hi   <= tlp_dw_s;
                     12'h6C: scratch <= tlp_dw_s;
                     12'h74: last_wr <= tlp_dw_s;
                     // ---- RKA1 安全扩展（0x100..0x11C）----
                     // 活动配置（cap/session）只在 IDLE 可写；busy/held/draining
                     // 期间的写被拒并置 cfg_reject（安全门记错误码 10）。
                     12'h100: begin
-                        if (tx_block_cfg) cfg_reject <= 1'b1;
-                        else              tx_cap_bytes <= tlp_dw_s;
+                        if (tx_block_cfg || pair_block_cfg) cfg_reject <= 1'b1;
+                        else                                tx_cap_bytes <= tlp_dw_s;
                     end
                     12'h104: begin
-                        if (tx_block_cfg) cfg_reject <= 1'b1;
-                        else              tx_session_id <= tlp_dw_s;
+                        if (tx_block_cfg || pair_block_cfg) cfg_reject <= 1'b1;
+                        else                                tx_session_id <= tlp_dw_s;
                     end
                     // TX_CMD：每笔写必须恰好一个 bit 置位（W1，读恒 0）
                     12'h108: begin
-                        if      ((tlp_dw_s[2:0] == 3'b001) && (tlp_dw_s[31:3] == 29'd0))
-                            tx_cmd_arm    <= 1'b1;
-                        else if ((tlp_dw_s[2:0] == 3'b010) && (tlp_dw_s[31:3] == 29'd0))
-                            tx_cmd_ack    <= 1'b1;
-                        else if ((tlp_dw_s[2:0] == 3'b100) && (tlp_dw_s[31:3] == 29'd0))
-                            tx_cmd_cancel <= 1'b1;
-                        else
-                            cfg_reject    <= 1'b1;   // 0/多 bit 或未知 bit：拒绝
+                        case (tlp_dw_s)
+                            32'd1:  tx_cmd_arm     <= 1'b1;
+                            32'd2:  tx_cmd_ack     <= 1'b1;
+                            32'd4:  tx_cmd_cancel  <= 1'b1;
+                            32'd8:  pair_cmd_arm   <= 1'b1;
+                            32'd16: pair_cmd_ack   <= 1'b1;
+                            32'd32: pair_cmd_cancel<= 1'b1;
+                            default: cfg_reject    <= 1'b1; // 0/多 bit 或未知 bit：拒绝
+                        endcase
                     end
                     12'h10C: tx_ack_seq     <= tlp_dw_s;
                     12'h110: tx_ack_session <= tlp_dw_s;
+                    // 同步控制：W1，单 bit；start/abort 只产生 1 拍脉冲
+                    12'h1E0: begin
+                        if (tlp_dw_s == 32'h1) sync_start <= 1'b1;
+                        else if (tlp_dw_s == 32'h2) sync_abort <= 1'b1;
+                        else cfg_reject <= 1'b1;
+                    end
                     default: ;
                 endcase
             end else begin
@@ -615,6 +668,30 @@ module ep_bar_win #(
             12'h158: rd_dw_comb = dbg_bank_word6;
             12'h15C: rd_dw_comb = dbg_bank_word7;
             12'h160: rd_dw_comb = dbg_bank_word8;
+            // ---- 硬件同步曝光（0x1E0..0x20C）----
+            12'h1E0: rd_dw_comb = 32'd0;                  // SYNC_CMD（W1，读恒 0）
+            12'h1E4: rd_dw_comb = sync_ro[31:0];           // SYNC_STATUS
+            12'h1E8: rd_dw_comb = sync_ro[63:32];          // SYNC_SKEW（signed）
+            12'h1EC: rd_dw_comb = sync_ro[95:64];          // SYNC_PAIR_COUNT
+            12'h1F0: rd_dw_comb = sync_ro[127:96];         // SYNC_WARMUP
+            12'h1F4: rd_dw_comb = sync_ro[159:128];        // SYNC_TIMESTAMP
+            12'h1F8: rd_dw_comb = sync_ro[191:160];        // SYNC_MISS_A
+            12'h1FC: rd_dw_comb = sync_ro[223:192];        // SYNC_MISS_B
+            12'h200: rd_dw_comb = sync_ro[255:224];        // SYNC_OVERRUN {B,A}
+            12'h204: rd_dw_comb = sync_ro[287:256];        // SYNC_RELOCK
+            12'h208: rd_dw_comb = sync_ro[319:288];        // SYNC_PAIR_SEQ_A
+            12'h20C: rd_dw_comb = sync_ro[351:320];        // SYNC_PAIR_SEQ_B
+            // ---- 双路推帧：B 路状态 + pair 配置（0x210..0x234）----
+            12'h210: rd_dw_comb = push_ro_b[31:0];          // PUSH_DONE_B
+            12'h214: rd_dw_comb = push_ro_b[63:32];         // PUSH_STATUS_B
+            12'h218: rd_dw_comb = push_ro_b[95:64];         // PUSH_ERR_B
+            12'h21C: rd_dw_comb = push_ro_b[127:96];        // PUSH_TLP_B
+            12'h220: rd_dw_comb = pair_ack_seq;             // PAIR_ACK_SEQ_B
+            12'h224: rd_dw_comb = pair_dst_lo;              // PAIR_DST_LO_B
+            12'h228: rd_dw_comb = pair_dst_hi;              // PAIR_DST_HI_B
+            12'h22C: rd_dw_comb = pair_db_lo;               // PAIR_DB_LO_B
+            12'h230: rd_dw_comb = pair_db_hi;               // PAIR_DB_HI_B
+            12'h234: rd_dw_comb = pair_status_in;           // PAIR_STATUS
             // ---- 板级调试：收帧写者卡死定位（0x170..0x178，只读，非合同寄存器）----
             12'h170: rd_dw_comb = {23'd0, dbgfsm_cama};
             12'h174: rd_dw_comb = {23'd0, dbgfsm_camb};

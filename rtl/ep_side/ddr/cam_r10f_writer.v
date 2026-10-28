@@ -73,6 +73,10 @@ module cam_r10f_writer #(
     parameter [15:0]  X0          = 16'd960,       // ROI x 原点（源行内像素坐标；须为 4 的倍数）
     parameter [15:0]  Y0          = 16'd540,       // ROI y 原点（**有效图**坐标）
     parameter [15:0]  SKIP_ROWS   = 16'd37,        // 帧头 embedded + 物理哑行（4K 实测 37，未板证）
+    // 行边界校验：1 = 每行组数必须等于 GPQ，否则整帧判坏（1080p ROI 用）；
+    // 0 = 只看整帧组数与 AXI 拍数（全宽 4K 用：CSI 行分隔信号在 4K 全宽下不可靠，
+    //     见 docs/BOARD_TEST.md「4K 行边界」；组数/拍数两项仍严格把关）。
+    parameter integer LINE_CHECK  = 1,
     // ---- DDR3 双缓冲基址（4KiB 对齐，两块互不重叠且都 >= DMA_BYTES）----
     parameter [31:0]  BASE0       = 32'h0010_0000,
     parameter [31:0]  BASE1       = 32'h0090_0000,
@@ -321,8 +325,9 @@ module cam_r10f_writer #(
     wire        push_sof = sof_evt & arm_c[1];
     wire        push_eof = eof_evt & frame_armed;
     wire        eof_good = cam_frame_good | good_seen;
+    wire        line_warn = line_bad_seen | last_line_bad;
     wire        eof_bad  = (~eof_good) | abort_seen | cam_frame_abort |
-                           line_bad_seen | last_line_bad;
+                           (LINE_CHECK ? line_warn : 1'b0);
     wire        push_pix = cam_pix_valid & in_win & frame_armed & ~push_sof & ~push_eof;
     wire        push     = push_sof | push_eof | push_pix;
     wire [42:0] f_din    = {push_sof, push_eof, (push_eof & eof_bad), pgroup};

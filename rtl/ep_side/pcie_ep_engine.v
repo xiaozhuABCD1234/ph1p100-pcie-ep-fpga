@@ -95,11 +95,23 @@ module pcie_ep_engine #(
     //   换成用户侧那一组（见 ph1p_pcie_ep_top.v 的推帧段）。
     output      wire                img_push_en            , // CTRL[6]
     output      wire                img_push_src           , // CTRL[7] 推帧数据源选择
+    output      wire                img_pair_en            , // CTRL[9] 双路推帧
     output      wire    [31:0]      img_push_dst_lo        , // 0xB0
     output      wire    [31:0]      img_push_dst_hi        , // 0xB4
     output      wire    [31:0]      img_push_db_lo         , // 0xB8
     output      wire    [31:0]      img_push_db_hi         , // 0xBC
+    output      wire    [31:0]      img_pair_dst_lo        , // 0x224 B 路目标
+    output      wire    [31:0]      img_pair_dst_hi        , // 0x228
+    output      wire    [31:0]      img_pair_db_lo         , // 0x22C B 路门铃
+    output      wire    [31:0]      img_pair_db_hi         , // 0x230
+    output      wire    [31:0]      img_pair_ack_seq       , // 0x220 B 路 ACK 序号
+    output      wire                img_pair_arm           , // 0x108=8
+    output      wire                img_pair_ack           , // 0x108=16
+    output      wire                img_pair_cancel        , // 0x108=32
     input       wire    [127:0]     img_push_ro            , // {tlp_cnt, status, done, err}
+    input       wire    [127:0]     img_push_ro_b          , // B 路同上
+    input       wire    [31:0]      img_pair_status        , // 0x234
+    input       wire                img_pair_block_cfg     , // B 路 busy/held/draining
     // ==== T07 新增：RKA1 安全扩展寄存器面（0x100..0x11C）+ CSI 诊断 ====
     //   这些只是把 ep_bar_win 的端口引到顶层的「过路」端口，逻辑都在顶层/安全门里。
     output      wire    [31:0]      tx_cap_bytes           , // 0x100
@@ -116,6 +128,10 @@ module pcie_ep_engine #(
     input       wire    [31:0]      csi_diag_a2            , // 0x124
     input       wire    [31:0]      csi_diag_b             , // 0x128
     input       wire    [31:0]      csi_diag_b2            , // 0x12C
+    // 硬件同步曝光控制/状态（0x1E0..0x20C，透传 ep_bar_win）
+    output      wire                sync_start             ,
+    output      wire                sync_abort             ,
+    input       wire    [351:0]     sync_ro                ,
     input       wire                utx_req                ,
     input       wire                utx_eop                ,
     input       wire    [7:0]       utx_valid              ,
@@ -457,10 +473,22 @@ ep_bar_win #(
     .push_ro        (img_push_ro            ),
     .ctrl_push_en   (img_push_en            ),
     .ctrl_push_src  (img_push_src           ),
+    .ctrl_pair_en   (img_pair_en            ),
     .push_dst_lo    (img_push_dst_lo        ),
     .push_dst_hi    (img_push_dst_hi        ),
     .push_db_lo     (img_push_db_lo         ),
     .push_db_hi     (img_push_db_hi         ),
+    .pair_dst_lo    (img_pair_dst_lo        ),
+    .pair_dst_hi    (img_pair_dst_hi        ),
+    .pair_db_lo     (img_pair_db_lo         ),
+    .pair_db_hi     (img_pair_db_hi         ),
+    .pair_ack_seq   (img_pair_ack_seq       ),
+    .pair_cmd_arm   (img_pair_arm           ),
+    .pair_cmd_ack   (img_pair_ack           ),
+    .pair_cmd_cancel(img_pair_cancel        ),
+    .push_ro_b      (img_push_ro_b          ),
+    .pair_status_in (img_pair_status        ),
+    .pair_block_cfg (img_pair_block_cfg     ),
     // T07：RKA1 安全扩展寄存器面 + CSI 诊断（过路，逻辑在顶层/安全门）
     .tx_cap_bytes   (tx_cap_bytes           ),
     .tx_session_id  (tx_session_id          ),
@@ -475,7 +503,10 @@ ep_bar_win #(
     .csi_diag_a     (csi_diag_a             ),
     .csi_diag_a2    (csi_diag_a2            ),
     .csi_diag_b     (csi_diag_b             ),
-    .csi_diag_b2    (csi_diag_b2            )
+    .csi_diag_b2    (csi_diag_b2            ),
+    .sync_ro        (sync_ro                ),
+    .sync_start     (sync_start             ),
+    .sync_abort     (sync_abort             )
 );
 
 // ====================================================================
