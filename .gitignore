@@ -17,6 +17,13 @@ td_*.log
 td_*.logw
 *.logw
 
+# TD 工具崩溃时由 sig_handler 写在 CWD 的栈转储 `.tmp_<pid>_1`：
+# 内容只有被截断的 gdb 栈帧，不含可复用信息（见 docs/TMP_CLEANUP_20261028.md）。
+.tmp_*
+
+# 仿真 testbench 用 $fopen(...,"wb") 直接写到 CWD 的比对数据，每跑一次即重建。
+t11_writer_*.bin
+
 # TD 编程器/bw 脚本在 CWD 留下的日志
 log/bw_*
 multirun_script.tcl
