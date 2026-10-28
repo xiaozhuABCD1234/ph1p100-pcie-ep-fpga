@@ -24,6 +24,9 @@ add_files rtl/ep_side/codec/codec_roi_crop.v
 add_files rtl/ep_side/codec/codec_pack.v
 add_files rtl/ep_side/codec/a1_frame_top.v
 add_files rtl/ep_side/codec/a1_deflate_core.v
+add_files rtl/ep_side/codec/gray4_byte.v
+add_files rtl/ep_side/codec/rle_enc.v
+add_files rtl/ep_side/codec/rle_to_words.v
 add_files rtl/ep_side/img/ep_bar_win.v
 add_files rtl/ep_side/img/img_regs.v
 add_files rtl/ep_side/img/img_frame_src.v

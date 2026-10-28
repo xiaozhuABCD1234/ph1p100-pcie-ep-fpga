@@ -2410,7 +2410,7 @@ utx_arb2 u_push_utx_arb (
     // 并行顶层是单输入流：任一路不 ready 就会卡住共享流，所以未选中的两路恒 ready、
     // 数据直接丢；只有选中的那一路把反压传回 ROI 适配器。
     assign algo_ready[0] = (!codec_sel && algo_sel == 2'd0) ? algo_ms_ready : 1'b1;
-    assign algo_ready[1] = (!codec_sel && algo_sel == 2'd1) ? algo_ms_ready : 1'b1;
+    assign algo_ready[1] = codec_sel ? g4_r : ((algo_sel == 2'd1) ? algo_ms_ready : 1'b1);
     assign algo_ready[2] = (!codec_sel && algo_sel == 2'd2) ? algo_ms_ready : 1'b1;
 
     wire        algo_sel_v = (algo_sel == 2'd0) ? algo_v[0] : (algo_sel == 2'd1) ? algo_v[1] : algo_v[2];
@@ -2420,66 +2420,82 @@ utx_arb2 u_push_utx_arb (
     wire        algo_sel_e = (algo_sel == 2'd0) ? algo_eof[0] : (algo_sel == 2'd1) ? algo_eof[1] : algo_eof[2];
 
     // 0x240[0]=1 时改送 LZ77 压缩流（同样 1920×1088 定长帧，主机按长度截取）
-    wire        src_v = codec_sel ? cp_valid : algo_sel_v;
-    wire [31:0] src_d = codec_sel ? cp_data  : algo_sel_d;
-    wire        src_s = codec_sel ? cp_sof   : algo_sel_s;
-    wire        src_l = codec_sel ? cp_eol   : algo_sel_l;
-    wire        src_e = codec_sel ? cp_eof   : algo_sel_e;
+    wire        src_v = codec_sel ? pk_v    : algo_sel_v;
+    wire [31:0] src_d = codec_sel ? pk_d    : algo_sel_d;
+    wire        src_s = codec_sel ? pk_sof  : algo_sel_s;
+    wire        src_l = codec_sel ? pk_eol  : algo_sel_l;
+    wire        src_e = codec_sel ? pk_eof  : algo_sel_e;
+    // codec_pack 的出口反压：选压缩流时接到 writer，否则恒 ready（数据丢弃）
+    assign pk_ready = codec_sel ? algo_ms_ready : 1'b1;
 
-    // ==== LZ77 压缩通路：裁 1920×1088 RAW10 → a1_frame_top → 打包成定长帧 ====
-    //  0x240[0] 选源：0 = 预处理（灰度/高斯/均衡），1 = LZ77 压缩流。
-    //  压缩流塞进 8bit 采样位，主机按 st_stream_len 截前 N 字节后 zlib 解压。
-    wire        cdc_valid, cdc_sof, cdc_ready;
-    wire [39:0] cdc_pix;
-    wire        cp_valid, cp_sof, cp_eol, cp_eof, cp_ready;
-    wire [31:0] cp_data;
-    wire [31:0] c_stream_len, c_raw_len, c_raw_crc, c_blocks, c_words;
-    wire        c_done, c_overflow;
-    wire        c_abort;
-    reg  [31:0] c_abort_cnt;
-    always @(posedge w_a_byte_clk or negedge w_a_rst_out) begin
-        if (!w_a_rst_out) c_abort_cnt <= 32'd0;
-        else if (c_abort)  c_abort_cnt <= c_abort_cnt + 32'd1;
-    end
-    wire        c_commit;
-    wire [31:0] c_fed, c_skipped;
-    wire [31:0] cp_out_data;
-    wire [3:0]  cp_out_keep;
-    wire        cp_out_valid, cp_out_last;
+    // ==== 硬件压缩通路：高斯分支 → 字节化 → RLE(差分+零游程) → 定长帧打包 ====
+    //  0x240[0] 选源：0 = 预处理帧，1 = 压缩流。
+    //  压缩字节塞进 8bit 采样位，主机按 st_stream_len（0x250）截前 N 字节再解压。
+    wire        g4_v, g4_r, g4_sof, g4_eof;
+    wire [7:0]  g4_d;
+    wire        rle_v, rle_r, rle_d8_eof;
+    wire [7:0]  rle_d;
+    wire        w_v, w_keep_v, w_last, w_ready;
+    wire [31:0] w_word;
+    wire [3:0]  w_keep;
+    wire        pk_v, pk_ready, pk_sof, pk_eol, pk_eof;
+    wire [31:0] pk_d;
+    wire [31:0] c_stream_len, c_raw_len, c_raw_crc, c_words;
+    wire        c_done;
     wire        codec_sel = w_algo_ctrl[0];
-    wire        cp_out_ready;
 
-    codec_roi_crop #(.W(ALGO_W), .H(CODEC_H), .X0(ALGO_X0), .Y0(CODEC_Y0), .FIFO_AW(10)) u_codec_crop (
+    gray4_byte u_g4 (
         .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
-        .cam_vsync(gate_a_vsync), .cam_in_frame(gate_a_frame), .cam_in_line(gate_a_line),
-        .cam_pix(w_a_pixel), .cam_pix_valid(gate_a_pixel_valid),
-        .enable(1'b1), .keep_div(w_algo_ctrl[3]),
-        .o_valid(cdc_valid), .o_pix(cdc_pix), .o_sof(cdc_sof), .o_ready(cdc_ready),
-        .frames_fed(c_fed), .frames_skipped(c_skipped), .overflow(c_overflow)
+        .s_data(algo_d1), .s_valid(algo_v[1]), .s_ready(g4_r),
+        .s_sof(algo_sof[1]), .s_eof(algo_eof[1]),
+        .o_data(g4_d), .o_valid(g4_v), .o_ready(rle_r),
+        .o_sof(g4_sof), .o_eof(g4_eof)
     );
 
-    a1_frame_top #(.W(ALGO_W), .H(CODEC_H)) u_codec (
+    rle_enc u_rle (
         .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
-        .in_pix(cdc_pix), .in_valid(cdc_valid), .in_ready(cdc_ready), .in_sof(cdc_sof),
-        .prep_en(1'b1), .pred_en(1'b1), .abort(1'b0),
-        .out_data(cp_out_data), .out_valid(cp_out_valid), .out_ready(cp_out_ready),
-        .out_keep(cp_out_keep), .out_last(cp_out_last),
-        .frame_commit(c_commit), .frame_abort(c_abort),
-        .st_raw_len(c_raw_len), .st_xform_len(), .st_stream_len(c_stream_len),
-        .st_raw_crc(c_raw_crc), .st_xform_crc(), .st_stream_crc(),
-        .st_blocks(c_blocks), .st_stall_cycles(), .st_busy()
+        .in_data(g4_d), .in_valid(g4_v), .in_ready(rle_r),
+        .in_sof(g4_sof), .in_eof(g4_eof),
+        .out_data(rle_d), .out_valid(rle_v), .out_ready(w_ready),
+        .st_in_bytes(), .st_out_bytes()
+    );
+
+    // rle_enc 没有帧尾输出：用高斯分支的 EOF 延迟 16 拍当帧尾。
+    // 不能用「输出空闲 N 拍」判——ROI 每行之间本来就有上千拍空隙，会把一帧切成很多段。
+    reg [5:0] rle_eof_dly;
+    reg       rle_frm_end;
+    always @(posedge w_a_byte_clk or negedge w_a_rst_out) begin
+        if (!w_a_rst_out) begin
+            rle_eof_dly <= 6'd0; rle_frm_end <= 1'b0;
+        end else begin
+            rle_frm_end <= 1'b0;
+            if (algo_eof[1]) rle_eof_dly <= 6'd63;
+            else if (rle_eof_dly != 6'd0) begin
+                rle_eof_dly <= rle_eof_dly - 1'b1;
+                if (rle_eof_dly == 6'd1) rle_frm_end <= 1'b1;
+            end
+        end
+    end
+
+    rle_to_words u_rlew (
+        .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
+        .s_data(rle_d), .s_valid(rle_v), .s_ready(w_ready), .s_eof(rle_frm_end),
+        .o_data(w_word), .o_valid(w_keep_v), .o_keep(w_keep), .o_last(w_last),
+        .o_ready(pk_ready)
     );
 
     codec_pack #(.W(ALGO_W), .H(ALGO_H), .GPQ(ALGO_W/4)) u_codec_pack (
         .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
-        .c_data(cp_out_data), .c_valid(cp_out_valid), .c_keep(cp_out_keep),
-        .c_last(cp_out_last), .c_commit(c_commit), .c_abort(c_abort), .c_ready(cp_out_ready),
-        .s_data(cp_data), .s_valid(cp_valid), .s_ready(cp_ready),
-        .s_sof(cp_sof), .s_eol(cp_eol), .s_eof(cp_eof),
-        .st_stream_len(), .st_words(c_words), .st_done(c_done)
+        .c_data(w_word), .c_valid(w_keep_v), .c_keep(w_keep),
+        .c_last(w_last), .c_commit(1'b0), .c_abort(1'b0), .c_ready(),
+        .s_data(pk_d), .s_valid(pk_v), .s_ready(pk_ready), .s_sof(pk_sof),
+        .s_eol(pk_eol), .s_eof(pk_eof),
+        .st_stream_len(c_stream_len), .st_words(c_words), .st_done(c_done)
     );
 
-    assign w_codec_stat = {c_fed[15:0], c_abort_cnt[15:0], c_raw_crc, c_raw_len, c_stream_len};
+    assign c_raw_len = 32'd2088960;
+    assign c_raw_crc = 32'd0;
+    assign w_codec_stat = {32'd0, c_raw_crc, c_raw_len, c_stream_len};
 
     algo_y8_to_legacy u_algo_ms (
         .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
