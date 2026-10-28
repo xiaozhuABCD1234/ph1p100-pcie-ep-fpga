@@ -40,6 +40,8 @@ module codec_pack #(
     assign c_ready = ~(pending_frame && !streaming);
 
     reg [31:0] widx;          // 本帧已发字数
+    reg [15:0] col;           // 本行已发字数（0..GPQ-1）—— 用计数器代替 widx%GPQ，
+                              // 取模会综合出除法器，板测那一版 SWNS 直接 -0.149ns
     reg [31:0] blen;          // 本帧压缩字节数
     reg        streaming;     // 1 = 还在收编码器输出
     reg        pending_frame; // 1 = 本帧还没发完（要补零 + eof）
@@ -55,7 +57,7 @@ module codec_pack #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             s_data <= 0; s_valid <= 0; s_sof <= 0; s_eol <= 0; s_eof <= 0;
-            widx <= 0; blen <= 0; streaming <= 1'b0; pending_frame <= 1'b0;
+            widx <= 0; col <= 0; blen <= 0; streaming <= 1'b0; pending_frame <= 1'b0;
             st_stream_len <= 0; st_words <= 0; st_done <= 1'b0;
         end else begin
             st_done <= 1'b0;
@@ -68,12 +70,14 @@ module codec_pack #(
                     s_valid <= 1'b1;
                     s_data  <= 32'd0;
                     s_sof   <= 1'b0;
-                    s_eol   <= ((widx % GPQ) == GPQ - 1);
+                    s_eol   <= (col == GPQ - 1);
                     s_eof   <= (widx == TOTW - 1);
                     widx    <= widx + 32'd1;
+                    col     <= (col == GPQ - 1) ? 16'd0 : (col + 16'd1);
                     if (widx == TOTW - 1) begin
                         pending_frame <= 1'b0;
                         widx  <= 0;
+                        col   <= 16'd0;
                         blen  <= 0;
                         st_words <= TOTW;
                         st_done  <= 1'b1;
@@ -82,9 +86,10 @@ module codec_pack #(
                     s_valid <= 1'b1;
                     s_data  <= c_data;
                     s_sof   <= (widx == 32'd0);
-                    s_eol   <= ((widx % GPQ) == GPQ - 1);
+                    s_eol   <= (col == GPQ - 1);
                     s_eof   <= 1'b0;
                     widx    <= widx + 32'd1;
+                    col     <= (col == GPQ - 1) ? 16'd0 : (col + 16'd1);
                     blen    <= blen + pc4(c_keep);
                     streaming <= 1'b1;
                     pending_frame <= 1'b1;

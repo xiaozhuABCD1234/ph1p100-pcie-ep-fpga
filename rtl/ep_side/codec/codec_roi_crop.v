@@ -88,7 +88,7 @@ module codec_roi_crop #(
                 if (pixel && collect) begin
                     if (sent < TOTAL) begin
                         if (!full) begin
-                            mem[wp[FIFO_AW-1:0]] <= {pending_sof, cam_pix};
+                            mem[wp[FIFO_AW-1:0]] <= {2'b00, pending_sof, cam_pix};  // sof 在 bit40
                             wp <= wp + 1'b1;
                             sent <= sent + 1;
                             pending_sof <= 1'b0;
@@ -105,7 +105,7 @@ module codec_roi_crop #(
             // 出队：一帧恰好 1 个 sof + TOTAL 个数据
             if (!empty && (!o_valid || o_ready)) begin
                 o_valid <= 1'b1;
-                o_sof   <= mem[rp[FIFO_AW-1:0]][42];
+                o_sof   <= mem[rp[FIFO_AW-1:0]][40];
                 o_pix   <= mem[rp[FIFO_AW-1:0]][39:0];
                 rp      <= rp + 1'b1;
             end
