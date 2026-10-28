@@ -17,8 +17,12 @@
     // T11 debug：仅 ph1p_pcie_ep_top_dbg 覆盖为 1'b1；生产/00_all 默认 0（行为不变）
     parameter DBG_CTRL_DEFAULT_EN = 1'b0,
     parameter CLOSEDLOOP_EN = 1'b0,
-    // 硬件同步：A 主 / B 从，共享 XHS/XVS；默认开启，主机写 0x1E0.START 才启动。
-    parameter SYNC_ENABLE = 1'b1,
+    // 硬件同步：A 主 / B 从，共享 XHS/XVS；开启时由 0x1E0.START 启动。
+    // **当前默认关闭**：开启后 sync_start_ctrl 走到 WARM 就等不到 pair_event
+    // （A 路能锁、in_frame=1，B 路不出 SOF，见 docs/BOARD_TEST.md「硬件同步未闭合」），
+    // 而同步控制器是唯一的 I2C 主人，失败后会把两路 sensor 都停掉，正常取帧也一起没了。
+    // 修好 B 路的配对再改回 1'b1。
+    parameter SYNC_ENABLE = 1'b0,
     parameter integer SYNC_WAIT_CYCLES = 1500000,   // 24ms @ 62.5MHz
     parameter integer SYNC_FRAME_TIMEOUT = 50000000,
     parameter integer SYNC_PAIR_WINDOW = 100000,
@@ -102,17 +106,23 @@
     localparam IMG_PTRMSK   = (IMG_WORDS * 4) - 4;   // 保留（未用）
 
     // ---- 相机正式 RAW10 通路（cam_r10f_writer）----
-    //  传感器固定 4K30 全像素（I_cam_mode=1、HMAX=1100、VMAX=2250、891Mbps×4lane），
-    //  CSI-2 每行就是 3840 像素。这里取整帧，不做 ROI：
+    //  传感器固定 4K30 全阵列（I_cam_mode=1、HMAX=1100、VMAX=2250、891Mbps×4lane），
+    //  每行 CSI-2 长包 WC=4830B = 3864 像素（3840 有效 + 左右各 12 列 OB），
+    //  每帧 2192 行（2160 有效 + 上下各 16 行 OB）。取有效图、不做 ROI：
     //    3840×2160 packed RAW10 → stride 4800B、payload 10,368,000B，
     //    R10F 头 128B + 载荷 + 4KiB 对齐尾 ⇒ 10,371,072B/帧（= 2532 × 4KiB）。
-    //  要回到 1080p ROI 只改这五行：W=1920 H=1080 X0=960 Y0=540，DDR 基址可不动。
-    //  帧头 embedded + 物理哑行 SKIP_ROWS=37（板测标定）。
+    //  板测：push=2,073,600（=2160×960）、drop=0、beats=324,096、29.9fps。
+    //  要回到 1080p ROI 就改 W/H/X0/Y0（ROI 时 X_OFF 保持 0），DDR 基址可不动。
     localparam integer CAMDDR_W   = 3840;
     localparam integer CAMDDR_H   = 2160;
     localparam [15:0]  CAMDDR_X0  = 16'd0;
     localparam [15:0]  CAMDDR_Y0  = 16'd0;
-    localparam [15:0]  CAMDDR_SKIP_ROWS = 16'd37;
+    // 4K 传感器出的是 3864×2192 全阵列：有效图 3840×2160 的物理原点是 (12,16)
+    // （左 12 列 / 上 16 行是 OB）。X_OFF 只平移取数窗口、roi_x 仍写 0；
+    // SKIP_ROWS=16 跳过上方 OB 行，窗口才是真正的 2160 行（37 是 1080p ROI 时代的
+    // 旧标定，2192-37 只有 2155 行，会让帧短 5 行）。
+    localparam [15:0]  CAMDDR_X_OFF     = 16'd12;
+    localparam [15:0]  CAMDDR_SKIP_ROWS = 16'd16;
     //  两路各一对双缓冲；一帧 10.4MB ⇒ 块间隔 16MB（A 16/32MB，B 48/64MB，共 74MB）
     localparam [31:0]  DDR_CAM_BASE0   = 32'h0100_0000;
     localparam [31:0]  DDR_CAM_BASE1   = 32'h0200_0000;
@@ -201,7 +211,10 @@ localparam integer SINGLE_B_TEST   = 1;   // （历史）1 = 只 arm B 路（单
 localparam integer DUAL_TEST       = 1;   // 1 = A/B 同时 arm（并发实验）
 // 默认 arm 掩码（scratch=0 时生效）：本轮默认双路，用 0x6C 运行时改
 //   0x6C[1:0] = 1 → 只 A；2 → 只 B；3 → 双路；0 → 用下面这个默认
-localparam [1:0]   CAM_ARM_DEFAULT = DUAL_TEST ? 2'b11 : (SINGLE_B_TEST ? 2'b10 : 2'b11);
+// 4K 单路：双路 4K30 时两片 writer 共用一个 DDR 写口，实测 A 路 FIFO 溢出
+// 23%（push 1,583,646 / drop 485,410），出图是横条纹。单路 4K 只占 311 MB/s，
+// 不丢组。双路 4K 要先把写通道带宽/仲裁做掉，见 docs/BOARD_TEST.md。
+localparam [1:0]   CAM_ARM_DEFAULT = 2'b01;   // 只 arm A 路
 wire [31:0] w_dbg_scratch;                       // 0x6C SCRATCH 直出（pcie_ep_engine）
 wire [1:0]  w_cam_arm_sel = (w_dbg_scratch[1:0] == 2'b00) ? CAM_ARM_DEFAULT
                                                           : w_dbg_scratch[1:0];
@@ -1847,6 +1860,7 @@ cam_r10f_writer #(
     .W           (CAMDDR_W          ),
     .H           (CAMDDR_H          ),
     .X0          (CAMDDR_X0         ),
+    .X_OFF       (CAMDDR_X_OFF      ),
     .Y0          (CAMDDR_Y0         ),
     .SKIP_ROWS   (CAMDDR_SKIP_ROWS  ),
     .LINE_CHECK  (0                 ),   // 全宽 4K：行分隔不可靠，只查整帧组数/拍数
@@ -1917,6 +1931,7 @@ cam_r10f_writer #(
     .W           (CAMDDR_W          ),
     .H           (CAMDDR_H          ),
     .X0          (CAMDDR_X0         ),
+    .X_OFF       (CAMDDR_X_OFF      ),
     .Y0          (CAMDDR_Y0         ),
     .SKIP_ROWS   (CAMDDR_SKIP_ROWS  ),
     .LINE_CHECK  (0                 ),   // 同 A 路：全宽 4K 只查整帧组数/拍数

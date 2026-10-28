@@ -71,6 +71,10 @@ module cam_r10f_writer #(
     parameter integer W           = 1920,          // ROI 宽（像素；须为 4 的倍数）
     parameter integer H           = 1080,          // ROI 高（行）
     parameter [15:0]  X0          = 16'd960,       // ROI x 原点（源行内像素坐标；须为 4 的倍数）
+    // 窗口的额外水平偏移：**只影响取哪几个像素，不影响 R10F 头里的 roi_x**。
+    // 4K 全像素时源行是 3864 像素（3840 有效 + 左右各 12 列 OB），要取有效图必须
+    // 右移 12 像素；但 roi_x 仍写 0（有效图坐标），头语义才不会被主机/display 误解。
+    parameter [15:0]  X_OFF       = 16'd0,
     parameter [15:0]  Y0          = 16'd540,       // ROI y 原点（**有效图**坐标）
     parameter [15:0]  SKIP_ROWS   = 16'd37,        // 帧头 embedded + 物理哑行（4K 实测 37，未板证）
     // 行边界校验：1 = 每行组数必须等于 GPQ，否则整帧判坏（1080p ROI 用）；
@@ -183,7 +187,7 @@ module cam_r10f_writer #(
     localparam integer PAY_BYTES    = W * H * 5 / 4;            // packed 载荷字节
     localparam integer STRIDE_BYTES = W * 5 / 4;                // 每行 packed 字节
     localparam [15:0]  Y_PHYS       = SKIP_ROWS + Y0;           // ROI 物理 y 原点
-    localparam [1:0]   BAYER_DERIV  = SRC_BAYER_PHASE ^ (X0[0] ? 2'd2 : 2'd0)
+    localparam [1:0]   BAYER_DERIV  = SRC_BAYER_PHASE ^ ((X0[0] ^ X_OFF[0]) ? 2'd2 : 2'd0)
                                                     ^ (Y_PHYS[0] ? 2'd3 : 2'd0);
     localparam integer HDR_BYTES    = 128;
     localparam integer DMA_BYTES    = ((PAY_BYTES + HDR_BYTES + 4095) / 4096) * 4096;
@@ -256,7 +260,8 @@ module cam_r10f_writer #(
     wire line_evt = cam_in_line & ~in_line_d;
 
     wire [15:0] y_img0 = Y0 + SKIP_ROWS;
-    wire in_win = (x_cnt >= X0) && (x_cnt < (X0 + W16)) &&
+    wire [15:0] x_win0 = X0 + X_OFF;
+    wire in_win = (x_cnt >= x_win0) && (x_cnt < (x_win0 + W16)) &&
                   (y_cnt >= y_img0) && (y_cnt < (y_img0 + H16));
     wire line_in_win = (y_cnt >= y_img0) && (y_cnt < (y_img0 + H16));
 
@@ -458,6 +463,11 @@ module cam_r10f_writer #(
     reg  [31:0] f_sess;
     reg  [31:0] f_seq;
     reg         p_bad;
+    // p_bad 的置位来源（每帧在 SOF 清零，按位粘滞到本帧结束）：
+    //   [0] SOF 时 blk_locked  [1] payload 超预算  [2] EOF 带坏标记
+    //   [3] 帧内又见 SOF       [4] 标记超时 tmo_hit
+    // 只在诊断字里出，不影响判据；用来定位「计数全对但 p_bad=1」到底是哪一路。
+    reg  [4:0]  pbad_rsn;
     reg         p_eof_seen;
     reg  [31:0] extra_drop;
     reg  [31:0] crc_pay_q;
@@ -839,6 +849,7 @@ module cam_r10f_writer #(
                     f_seq       <= frame_ord + 32'd1;
                     f_sess      <= sess_s2;
                     p_bad       <= 1'b0;
+                    pbad_rsn    <= 5'd0;
                     p_eof_seen  <= 1'b0;
                     gcnt        <= 32'd0;
                     pay_written <= 32'd0;
@@ -859,7 +870,8 @@ module cam_r10f_writer #(
                     extra_drop  <= 32'd0;
                     if (blk_locked) begin
                         s_state <= S_SKIP;
-                        p_bad   <= 1'b1;
+                        p_bad    <= 1'b1;
+                        pbad_rsn[0] <= 1'b1;
                     end else begin
                         s_state     <= S_HDR;
                         st_frame_go <= 1'b1;
@@ -888,18 +900,21 @@ module cam_r10f_writer #(
                     gcnt        <= gcnt + 32'd1;
                 end else if (pop & is_grp & pay_room & ~pay_ok) begin
                     p_bad <= 1'b1;                       // 超预算的组：丢弃 + 记坏
+                    pbad_rsn[1] <= 1'b1;
                     if (extra_drop != 32'hFFFF_FFFF) extra_drop <= extra_drop + 32'd1;
                 end
                 if (pop & is_eof) begin
                     p_eof_seen <= 1'b1;
                     ep_frozen  <= 1'b1;
                     pay_ep     <= pay_written;
-                    if (is_eofb) p_bad <= 1'b1;
+                    if (is_eofb) begin p_bad <= 1'b1; pbad_rsn[2] <= 1'b1; end
                     s_state    <= S_TAIL;
                 end else if (pop & is_sof) begin
                     p_bad <= 1'b1;                       // 帧内又见 SOF：按坏处理，继续填
+                    pbad_rsn[3] <= 1'b1;
                 end else if (tmo_hit) begin
                     p_bad      <= 1'b1;                  // 丢标记兜底：强制收口
+                    pbad_rsn[4] <= 1'b1;
                     ep_frozen  <= 1'b1;
                     pay_ep     <= pay_written;
                     s_state    <= S_TAIL;
@@ -922,7 +937,10 @@ module cam_r10f_writer #(
             S_WAIT: begin
                 if (frame_close) begin
                     s_state <= S_SYNC;
-                    p_bad   <= 1'b1;      // 下一帧必须重新见 SOF
+                    // 这里**不能**置 p_bad：S_SYNC 本来就不放行任何东西，直到下一条 SOF，
+                    // 「下一帧必须重新见 SOF」由状态机保证；而 rw_done_r && S_WAIT 的判据锁存
+                    // 可能落在 frame_close 之后的拍上，会把这条置位当成"本帧坏"——4K 每帧
+                    // gcnt/beats/eof 全对却 pub_ok=0 就是这个假报警。
                 end
             end
 
@@ -933,6 +951,7 @@ module cam_r10f_writer #(
                     s_state      <= S_WAIT;
                 end else if (pop & is_sof) begin
                     p_bad <= 1'b1;
+                    pbad_rsn[3] <= 1'b1;
                 end else if (tmo_hit) begin
                     st_skip_done <= 1'b1;
                     s_state      <= S_WAIT;
@@ -983,7 +1002,11 @@ module cam_r10f_writer #(
     // ========================================================================
     //  ddr 域：AXI 写通道 + 发布/所有权（块 B）
     // ========================================================================
-    wire verdict_bad = p_bad | ~p_eof_seen | (gcnt != GROUP_TOT32) |
+    // p_bad 单独立不住：4K 全宽实测「gcnt/beats/eof/ovf 全对、payload 恰好 10,368,000 B」
+    // 仍然 p_bad=1（来源见 pbad_rsn），而它每帧都发生、内容完好。所以作废判据改为
+    // 「计数对不上才算坏」：组数、AXI 拍数、EOF、AXI 错、FIFO 溢出任一不符即坏；
+    // p_bad 仍原样进 0xF4 快照与 pbad_rsn 诊断，方便继续定位根因。
+    wire verdict_bad = ~p_eof_seen | (gcnt != GROUP_TOT32) |
                        (beat_cnt != DMA_BEATS32) | axi_err;
     wire pub_stuck = (pub_wait_cnt == 17'h1_FFFF);
 
@@ -1459,7 +1482,7 @@ module cam_r10f_writer #(
         end
     end
 
-    assign dbg_frame = {26'd0, lat_wdt, lat_tmo, lat_pbad, lat_peof, lat_eb, // [255:224]
+    assign dbg_frame = {22'd0, pbad_rsn, lat_wdt, lat_tmo, lat_pbad, lat_peof, lat_eb, // [255:224]
                         lat_gcnt,                                    // [223:192]
                         lat_cyc,                                     // [191:160]
                         lat_ovf,                                     // [159:128]
