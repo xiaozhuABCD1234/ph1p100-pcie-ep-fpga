@@ -6,6 +6,18 @@
 #   说明：只建工程 + 加源 + 综合/布线/出 bit；不下载、不写 Flash、不 reset/clean 旧工程。
 create_project ph1p_pcie_ep_top ./ -family PH1 -device PH1P100SBG484 -speed 3 -force
 
+
+# ---- FPGA 预处理：ROI 适配 + 三路并行算法 + 算法流→writer 时序转换 ----
+add_files rtl/ep_side/img/algo/algo_rowwin_reader.v
+add_files rtl/ep_side/img/algo/algo_rowwin3.v
+add_files rtl/ep_side/img/algo/bayer_raw10_demosaic4.v
+add_files rtl/ep_side/img/algo/rgb8_gray_stream.v
+add_files rtl/ep_side/img/algo/gray8_gaussian3x3_stream.v
+add_files rtl/ep_side/img/algo/gray8_he_cdfmin_frame.v
+add_files rtl/ep_side/img/algo/algo_obuf.v
+add_files rtl/ep_side/img/algo/img_algo_parallel_top.v
+add_files rtl/ep_side/img/algo/csi_algo_roi_adapter.v
+add_files rtl/ep_side/img/algo/algo_y8_to_legacy.v
 add_files rtl/ep_side/img/ep_bar_win.v
 add_files rtl/ep_side/img/img_regs.v
 add_files rtl/ep_side/img/img_frame_src.v

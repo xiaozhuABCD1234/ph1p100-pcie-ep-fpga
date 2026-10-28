@@ -227,6 +227,13 @@ module ep_bar_win #(
     // ==== 端到端延迟时间基准（0x238/0x23C，只读）====
     input  wire [63:0]  ts_now,
 
+    // ==== 预处理模式（0x240，可读写）====
+    //  bit0 = 使能（1 = B 路 writer 写算法帧而非 B 相机）
+    //  [2:1] = 选哪一路：0 灰度、1 高斯、2 直方图均衡
+    output reg  [31:0]  algo_ctrl,
+    // 预处理通路诊断：{overflow, rejected, accepted}（0x244/0x248/0x24C 只读）
+    input  wire [95:0]  algo_dbg,
+
     // ==== 硬件同步曝光控制/状态（0x1E0..0x20C）====
     input  wire [351:0] sync_ro,
     output reg          sync_start,
@@ -394,6 +401,7 @@ module ep_bar_win #(
                     12'h228: pair_dst_hi  <= tlp_dw_s;
                     12'h22C: pair_db_lo   <= tlp_dw_s;
                     12'h230: pair_db_hi   <= tlp_dw_s;
+                    12'h240: algo_ctrl    <= tlp_dw_s;
                     12'h6C: scratch <= tlp_dw_s;
                     12'h74: last_wr <= tlp_dw_s;
                     // ---- RKA1 安全扩展（0x100..0x11C）----
@@ -695,6 +703,10 @@ module ep_bar_win #(
             12'h22C: rd_dw_comb = pair_db_lo;               // PAIR_DB_LO_B
             12'h230: rd_dw_comb = pair_db_hi;               // PAIR_DB_HI_B
             12'h234: rd_dw_comb = pair_status_in;           // PAIR_STATUS
+            12'h240: rd_dw_comb = algo_ctrl;                // ALGO_CTRL
+            12'h244: rd_dw_comb = algo_dbg[31:0];            // ALGO_ACCEPTED（ROI 适配器收下的帧数）
+            12'h248: rd_dw_comb = algo_dbg[63:32];           // ALGO_REJECTED
+            12'h24C: rd_dw_comb = algo_dbg[95:64];           // ALGO_OVERFLOW
             12'h238: rd_dw_comb = ts_now[31:0];             // TS_NOW_LO（clk_ddr 100MHz 自由计数）
             12'h23C: rd_dw_comb = ts_now[63:32];            // TS_NOW_HI
             // ---- 板级调试：收帧写者卡死定位（0x170..0x178，只读，非合同寄存器）----

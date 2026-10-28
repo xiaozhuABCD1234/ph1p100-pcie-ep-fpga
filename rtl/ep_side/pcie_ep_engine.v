@@ -130,6 +130,10 @@ module pcie_ep_engine #(
     input       wire    [31:0]      csi_diag_b2            , // 0x12C
     // 端到端延迟时间基准（0x238/0x23C，透传 ep_bar_win）
     input       wire    [63:0]      ts_now                 ,
+    // 预处理模式（0x240，透传 ep_bar_win）
+    output      wire    [31:0]      algo_ctrl              ,
+    // 预处理通路诊断（0x244..0x24C）：{overflow, rejected, accepted}
+    input       wire    [95:0]      algo_dbg               ,
     // 硬件同步曝光控制/状态（0x1E0..0x20C，透传 ep_bar_win）
     output      wire                sync_start             ,
     output      wire                sync_abort             ,
@@ -492,6 +496,8 @@ ep_bar_win #(
     .pair_status_in (img_pair_status        ),
     .pair_block_cfg (img_pair_block_cfg     ),
     .ts_now         (ts_now                 ),
+    .algo_ctrl      (algo_ctrl              ),
+    .algo_dbg       (algo_dbg               ),
     // T07：RKA1 安全扩展寄存器面 + CSI 诊断（过路，逻辑在顶层/安全门）
     .tx_cap_bytes   (tx_cap_bytes           ),
     .tx_session_id  (tx_session_id          ),

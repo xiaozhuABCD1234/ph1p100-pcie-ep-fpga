@@ -129,6 +129,15 @@
     localparam [31:0]  DDR_CAM_B_BASE0 = 32'h0300_0000;
     localparam [31:0]  DDR_CAM_B_BASE1 = 32'h0400_0000;
     localparam integer CAMDDR_BYTES  = CAMDDR_W * CAMDDR_H;
+
+    // ---- FPGA 预处理通路的几何（算法 IP 宽度上限 2048，所以只能取 ROI）----
+    //  传感器全阵列 3864×2192 的中心 1920×1088：X=(3864-1920)/2=972、Y=(2192-1088)/2=552。
+    //  选这个高度而不是 1080，是为了让越界判断留一行余量（适配器窗口 = Y0..Y0+H）。
+    localparam integer ALGO_W      = 1920;
+    localparam integer ALGO_H      = 1088;
+    localparam integer ALGO_X0     = 972;
+    localparam integer ALGO_Y0     = 552;
+    localparam [1:0]   ALGO_PHASE  = 2'd0;   // ROI 原点偶/偶 ⇒ 与传感器原相位一致（RGGB）
     // T07：实际板载 DDR3L 容量（x16、2048Mb、单 CS ⇒ 256MB）。依据是本工程匹配
     // 生成的 al_ip/ddr3_mc_0/.params_ddr3_mc_0.txt（PH1P_COMP_DENSITY=2048、
     // PH1P_COMP_TYPE=x16、PH1P_DDR_CS=1）与板载颗粒规格；**不拿 AXI 29 位地址线
@@ -214,7 +223,9 @@ localparam integer DUAL_TEST       = 1;   // 1 = A/B 同时 arm（并发实验�
 // 4K 单路：双路 4K30 时两片 writer 共用一个 DDR 写口，实测 A 路 FIFO 溢出
 // 23%（push 1,583,646 / drop 485,410），出图是横条纹。单路 4K 只占 311 MB/s，
 // 不丢组。双路 4K 要先把写通道带宽/仲裁做掉，见 docs/BOARD_TEST.md。
-localparam [1:0]   CAM_ARM_DEFAULT = 2'b01;   // 只 arm A 路
+// 当前默认只 arm B 路（= 预处理帧通道）。A 路 4K 与 B 路算法帧同时 arm 时打包预算
+// 78% + 20% ≈ 98%，压不住；要两路同时出，得先解决打包节拍（见 docs/BOARD_TEST.md）。
+localparam [1:0]   CAM_ARM_DEFAULT = 2'b01;   // 只 arm A 路（预处理帧走 A）
 wire [31:0] w_dbg_scratch;                       // 0x6C SCRATCH 直出（pcie_ep_engine）
 wire [1:0]  w_cam_arm_sel = (w_dbg_scratch[1:0] == 2'b00) ? CAM_ARM_DEFAULT
                                                           : w_dbg_scratch[1:0];
@@ -309,6 +320,14 @@ wire [31:0] sync_miss_a, sync_miss_b, sync_overrun_a, sync_overrun_b, sync_reloc
 wire [31:0] sync_pair_seq_a, sync_pair_seq_b;
 wire [31:0] sync_status_word;
 wire [351:0] sync_ro;
+// 预处理模式：0x240 bit0=使能，[2:1]=选哪一路（0 灰度 / 1 高斯 / 2 直方图均衡）
+wire [31:0] w_algo_ctrl;
+// 预处理通路的跨块连线：**必须在这里声明**。Verilog 要求先声明后使用，
+// 声明写在使用点附近会被 TD 当成隐式 1 位网（只在 log 里报 undeclared，
+// 不报错），结果 40 位像素被截成 1 位、整个算法通路静默失效。
+wire [31:0] algo_acc, algo_rej, algo_ovf;
+wire        algo_ms_ready, algo_ms_valid, algo_ms_vsync, algo_ms_frame, algo_ms_line;
+wire [39:0] algo_ms_pix;
 
 // ==== 端到端延迟的时间基准 ====
 //  自由运行 64 位计数器，clk_ddr 域（100 MHz）。writer 在 SOF 到达时锁存它的值写进
@@ -854,6 +873,8 @@ pcie_ep_engine #(
     ,.img_dbg_rd_idx                          (img_dbg_idx                            ),
     .cam_stat_bus                            (w_cam_stat                             ),
     .ts_now                                  (r_ts_cnt_s2                            ),
+    .algo_ctrl                               (w_algo_ctrl                            ),
+    .algo_dbg                                ({algo_ovf, algo_rej, algo_acc}          ),
     .cam_tap_cfg                             (cam_tap_cfg                            ),
     .cam_tap_b_cfg                           (cam_tap_b_cfg                          ),
     .cam_ab_sel                              (img_cam_ab_sel                         ),
@@ -1873,13 +1894,13 @@ ddr3_mc_0 u_ddr3_mc_0 (
 // ====================================================================
 cam_r10f_writer #(
     .CLOSEDLOOP_EN(CLOSEDLOOP_EN),
-    .W           (CAMDDR_W          ),
-    .H           (CAMDDR_H          ),
-    .X0          (CAMDDR_X0         ),
-    .X_OFF       (CAMDDR_X_OFF      ),
-    .Y0          (CAMDDR_Y0         ),
-    .SKIP_ROWS   (CAMDDR_SKIP_ROWS  ),
-    .LINE_CHECK  (0                 ),   // 全宽 4K：行分隔不可靠，只查整帧组数/拍数
+    .W           (ALGO_W           ),
+    .H           (ALGO_H           ),
+    .X0          (16'd0             ),
+    .X_OFF       (16'd0             ),
+    .Y0          (16'd0             ),
+    .SKIP_ROWS   (16'd0             ),
+    .LINE_CHECK  (0                 ),   // 算法侧已按 ROI 切好，只查整帧组数/拍数
     .BASE0       (DDR_CAM_BASE0     ),
     .BASE1       (DDR_CAM_BASE1     ),
     .FIFO_AW     (10                ),
@@ -1890,13 +1911,13 @@ cam_r10f_writer #(
 ) u_cam_r10f_writer (
     .cam_clk       (w_a_byte_clk    ),
     .cam_rst_n     (w_a_rst_out     ),
-    .cam_vsync     (gate_a_vsync       ),
-    .cam_in_frame  (gate_a_frame    ),
-    .cam_in_line   (gate_a_line     ),
-    .cam_pix       (w_a_pixel       ),
-    .cam_pix_valid (gate_a_pixel_valid ),
-    .cam_frame_good(gate_a_good  ),
-    .cam_frame_abort(gate_a_abort | cl_inject_abort),
+    .cam_vsync     (algo_ms_vsync   ),
+    .cam_in_frame  (algo_ms_frame   ),
+    .cam_in_line   (algo_ms_line    ),
+    .cam_pix       (algo_ms_pix     ),
+    .cam_pix_valid (algo_ms_valid   ),
+    .cam_frame_good(1'b1            ),
+    .cam_frame_abort(1'b0           ),
     // 只有被 CTRL[8] 选中的那一路才做「发布即保护」：pusher 只给选中相机发 release，
     // 未选中那路若也开保护，发布完两块后再没有 release，写者会永久停在封锁态。
     .prot_en       (img_push_en && (img_pair_en || ~img_cam_ab_sel)),
@@ -1944,6 +1965,10 @@ cam_r10f_writer #(
     .m_axi_bready  (w_camw_bready     )
 );
 
+// ---- B 路 writer 改作「预处理结果写者」----
+//  B 相机在本阶段不可用（切 slave 后一帧不出，见 docs/BOARD_TEST.md §9），而 DDR 写口
+//  只有两个仲裁通道，所以直接把 B 路 writer 复用来写算法帧：几何换 1920×1088，
+//  cam 侧时钟/信号全部来自 A 路的算法链。B 相机恢复后要另开一路时才需要扩仲裁。
 cam_r10f_writer #(
     .W           (CAMDDR_W          ),
     .H           (CAMDDR_H          ),
@@ -1951,24 +1976,24 @@ cam_r10f_writer #(
     .X_OFF       (CAMDDR_X_OFF      ),
     .Y0          (CAMDDR_Y0         ),
     .SKIP_ROWS   (CAMDDR_SKIP_ROWS  ),
-    .LINE_CHECK  (0                 ),   // 同 A 路：全宽 4K 只查整帧组数/拍数
+    .LINE_CHECK  (0                 ),   // 全宽 4K 只查整帧组数/拍数
     .BASE0       (DDR_CAM_B_BASE0   ),
     .BASE1       (DDR_CAM_B_BASE1   ),
     .FIFO_AW     (10                ),
     .BURST_BEATS (64                ),
     .CAMERA_ID   (8'd1              ),
     .SRC_BAYER_PHASE (2'd0          ),
-    .MODE_ID     (32'd1             )
+    .MODE_ID     (32'd2             )
 ) u_cam_r10f_writer_b (
     .cam_clk       (w_b_byte_clk    ),
     .cam_rst_n     (w_b_rst_out     ),
-    .cam_vsync     (gate_b_vsync       ),
+    .cam_vsync     (gate_b_vsync    ),
     .cam_in_frame  (gate_b_frame    ),
     .cam_in_line   (gate_b_line     ),
     .cam_pix       (w_b_pixel       ),
     .cam_pix_valid (gate_b_pixel_valid ),
-    .cam_frame_good(gate_b_good  ),
-    .cam_frame_abort(gate_b_abort),
+    .cam_frame_good(gate_b_good     ),
+    .cam_frame_abort(gate_b_abort   ),
     .prot_en       (img_push_en && (img_pair_en || img_cam_ab_sel)),   // 双路时两路都保护
     .rel_tgl0      (w_rel_tgl2      ),
     .rel_tgl1      (w_rel_tgl3      ),
@@ -2313,6 +2338,84 @@ utx_arb2 u_push_utx_arb (
     .valid  (utx_valid)
 );
 
+    // ==== FPGA 预处理通路：灰度 / 3×3 高斯 / 直方图均衡（三路并行，AXI-Stream）====
+    //  旁路 A 路 4K 组流，取中心 1920×1088 ROI，送 img_algo_parallel_top；
+    //  选中的一路经 algo_y8_to_legacy 转成 writer 的标记时序，写进 DDR3，
+    //  再由 B 路 pusher 送主机（B 相机本阶段不用，原因见 docs/BOARD_TEST.md）。
+    //  ROI 原点用**传感器全阵列坐标**：3864×2192 的中心 ⇒ (972, 552)。
+    wire        algo_s_valid, algo_s_ready, algo_s_sof, algo_s_eol, algo_s_eof, algo_s_abort;
+    wire [39:0] algo_s_data;
+    wire [2:0]  algo_v, algo_sof, algo_eol, algo_eof, algo_abort;
+    wire [2:0]  algo_ready;
+    wire [31:0] algo_d0, algo_d1, algo_d2;
+    wire        algo_cfg_error;
+    reg         algo_cfg_ok;
+    wire [1:0]  algo_sel    = w_algo_ctrl[2:1];
+    // 配置必须是一个**单拍脉冲**（参考用法如此）：cfg_valid 常 1 会让并行顶层
+    // 反复重新锁定配置，流水线一直处于刚复位状态，输出永远不来。
+    reg [3:0] algo_cfg_dly;
+    always @(posedge w_a_byte_clk or negedge w_a_rst_out) begin
+        if (!w_a_rst_out) algo_cfg_dly <= 4'd0;
+        else              algo_cfg_dly <= {algo_cfg_dly[2:0], 1'b1};
+    end
+    wire algo_cfg_pulse = (algo_cfg_dly == 4'b0111);
+    always @(posedge w_a_byte_clk or negedge w_a_rst_out) begin
+        if (!w_a_rst_out) algo_cfg_ok <= 1'b0;
+        else if (algo_cfg_pulse) algo_cfg_ok <= ~algo_cfg_error;
+    end
+
+
+
+    csi_algo_roi_adapter #(
+        .W(ALGO_W), .H(ALGO_H), .X0(ALGO_X0), .Y0(ALGO_Y0), .SKIP_ROWS(0), .FIFO_AW(10)
+    ) u_algo_roi (
+        .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
+        .cam_vsync(gate_a_vsync), .cam_in_frame(gate_a_frame), .cam_in_line(gate_a_line),
+        .cam_pix(w_a_pixel), .cam_pix_valid(gate_a_pixel_valid),
+        .cam_good(gate_a_good), .cam_abort(gate_a_abort),
+        .configured(algo_cfg_ok), .outputs_done(1'b1),
+        .s_valid(algo_s_valid), .s_ready(algo_s_ready), .s_data(algo_s_data),
+        .s_sof(algo_s_sof), .s_eol(algo_s_eol), .s_eof(algo_s_eof), .s_abort(algo_s_abort),
+        .accepted_frames(algo_acc), .rejected_frames(algo_rej), .overflow_frames(algo_ovf),
+        .accepted_beats(), .busy()
+    );
+
+    img_algo_parallel_top #(.MAX_WORDS(512)) u_algo_top (
+        .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
+        .cfg_valid(algo_cfg_pulse), .cfg_ready(), .cfg_width(ALGO_W[11:0]), .cfg_height(ALGO_H[11:0]),
+        .cfg_phase(ALGO_PHASE), .cfg_error(algo_cfg_error),
+        .s_valid(algo_s_valid), .s_ready(algo_s_ready), .s_data(algo_s_data),
+        .s_sof(algo_s_sof), .s_eol(algo_s_eol), .s_eof(algo_s_eof), .s_abort(algo_s_abort),
+        .y8_valid(algo_v[0]),  .y8_ready(algo_ready[0]),  .y8_data(algo_d0),
+        .y8_sof(algo_sof[0]),  .y8_eol(algo_eol[0]),      .y8_eof(algo_eof[0]),  .y8_abort(algo_abort[0]),
+        .gau_valid(algo_v[1]), .gau_ready(algo_ready[1]), .gau_data(algo_d1),
+        .gau_sof(algo_sof[1]), .gau_eol(algo_eol[1]),     .gau_eof(algo_eof[1]), .gau_abort(algo_abort[1]),
+        .he_valid(algo_v[2]),  .he_ready(algo_ready[2]),  .he_data(algo_d2),
+        .he_sof(algo_sof[2]),  .he_eol(algo_eol[2]),      .he_eof(algo_eof[2]),  .he_abort(algo_abort[2]),
+        .st_frames_good(), .st_frames_abort(), .st_he_published(), .st_he_rejected(),
+        .st_gau_abort(), .he_lut_addr(8'd0), .he_lut_data()
+    );
+
+    // 并行顶层是单输入流：任一路不 ready 就会卡住共享流，所以未选中的两路恒 ready、
+    // 数据直接丢；只有选中的那一路把反压传回 ROI 适配器。
+    assign algo_ready[0] = (algo_sel == 2'd0) ? algo_ms_ready : 1'b1;
+    assign algo_ready[1] = (algo_sel == 2'd1) ? algo_ms_ready : 1'b1;
+    assign algo_ready[2] = (algo_sel == 2'd2) ? algo_ms_ready : 1'b1;
+
+    wire        algo_sel_v = (algo_sel == 2'd0) ? algo_v[0] : (algo_sel == 2'd1) ? algo_v[1] : algo_v[2];
+    wire [31:0] algo_sel_d = (algo_sel == 2'd0) ? algo_d0 : (algo_sel == 2'd1) ? algo_d1 : algo_d2;
+    wire        algo_sel_s = (algo_sel == 2'd0) ? algo_sof[0] : (algo_sel == 2'd1) ? algo_sof[1] : algo_sof[2];
+    wire        algo_sel_l = (algo_sel == 2'd0) ? algo_eol[0] : (algo_sel == 2'd1) ? algo_eol[1] : algo_eol[2];
+    wire        algo_sel_e = (algo_sel == 2'd0) ? algo_eof[0] : (algo_sel == 2'd1) ? algo_eof[1] : algo_eof[2];
+
+    algo_y8_to_legacy u_algo_ms (
+        .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
+        .s_valid(algo_sel_v), .s_ready(algo_ms_ready), .s_data(algo_sel_d),
+        .s_sof(algo_sel_s), .s_eol(algo_sel_l), .s_eof(algo_sel_e),
+        .o_valid(algo_ms_valid), .o_pix(algo_ms_pix),
+        .o_vsync(algo_ms_vsync), .o_frame(algo_ms_frame), .o_line(algo_ms_line)
+    );
+
 generate if(CLOSEDLOOP_EN) begin:g_closedloop
     assign push_arready=1'b0;assign push_rvalid=1'b0;
     assign push_b_arready=1'b0;assign push_b_rvalid=1'b0;
@@ -2325,9 +2428,6 @@ generate if(CLOSEDLOOP_EN) begin:g_closedloop
         .arid(w_ddr_arid),.araddr(w_ddr_araddr),.arlen(w_ddr_arlen),.arsize(w_ddr_arsize),.arburst(w_ddr_arburst),
         .arvalid(w_ddr_arvalid),.arready(w_ddr_arready),.rid(w_ddr_rid),.rdata(w_ddr_rdata),.rresp(w_ddr_rresp),
         .rlast(w_ddr_rlast),.rvalid(w_ddr_rvalid),.rready(w_ddr_rready));
-    cam_algo_diagnostics #(.W(CAMDDR_W),.H(CAMDDR_H),.X0(CAMDDR_X0),.Y0(CAMDDR_Y0),.SKIP_ROWS(CAMDDR_SKIP_ROWS),.PHASE(2'd3)) u_algo(
-        .clk(w_a_byte_clk),.rst_n(w_a_rst_out),.cam_vsync(w_a_vsync),.cam_in_frame(w_a_in_frame),.cam_in_line(w_a_in_line),
-        .cam_pix(w_a_pixel),.cam_pix_valid(w_a_pixel_valid),.cam_good(w_a_frame_good),.cam_abort(w_a_frame_abort|cl_inject_abort),.sink_ready(3'b111));
     // One deliberate internal abort on the third real source frame. No sensor,
     // I2C, link or external wire changes. It must reject RAW publication once.
     reg vs_d, injected,inject_pulse;
