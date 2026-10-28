@@ -9,9 +9,9 @@
 *Create Date: 2023/08/07
 *Module Name:key
 *File Name:key.v
-*Description: 
-*The reference demo provided by Milianke is only used for learning. 
-*We cannot ensure that the demo itself is free of bugs, so users 
+*Description:
+*The reference demo provided by Milianke is only used for learning.
+*We cannot ensure that the demo itself is free of bugs, so users
 *should be responsible for the technical problems and consequences
 *caused by the use of their own products.
 *Copyright: Copyright (c) MiLianKe
@@ -23,7 +23,7 @@
 *3) IO_ input output
 *4) S_ system internal signal
 *5) _n activ low
-*6) _dg debug signal 
+*6) _dg debug signal
 *7) _r delay or register
 *8) _s state mechine
 *********************************************************************/
@@ -33,6 +33,7 @@
 
 module ui_cfg_imx415#
 (
+parameter SYNC_ENABLE = 1'b0,
 parameter	 CLK_DIV  = 16'd999
 )
 (
@@ -43,16 +44,33 @@ input  wire             I_ae_req,//摄像头AE控制
 input  wire	 [7:0] 		I_ae_data,
 output wire             O_cam_scl, //I2C总线，SCL时钟
 inout  wire             IO_cam_sda, //I2C总线，SDA数据
-output reg              O_cfg_done, //配置完成
+output wire             O_cfg_done, //配置完成
 output reg              O_ae_cfg_done,
 output wire             O_bus_error,
 output wire [8:0]       O_dbg_idx,
-output wire             O_dbg_busy
-);	
+output wire             O_dbg_busy,
+input wire I_sync_req,
+input wire [15:0] I_sync_addr,
+input wire [7:0] I_sync_data,
+output wire O_sync_ready, O_sync_rsp_valid, O_sync_rsp_ok
+);
 
-localparam CAM_ID = 8'h34;		//器件地址 
+generate if (SYNC_ENABLE) begin : g_sync
+ sync_i2c_config #(.CLK_DIV(CLK_DIV)) transport(
+ .clk(I_clk),.rst_n(I_rst_n),.cam_mode(I_cam_mode),
+ .scl(O_cam_scl),.sda(IO_cam_sda),.cfg_done(O_cfg_done),
+ .bus_error(O_bus_error),.dbg_idx(O_dbg_idx),.dbg_busy(O_dbg_busy),
+ .req_valid(I_sync_req),.req_addr(I_sync_addr),.req_data(I_sync_data),
+ .req_ready(O_sync_ready),.rsp_valid(O_sync_rsp_valid),.rsp_ok(O_sync_rsp_ok));
+ always @* O_ae_cfg_done = 1'b1;
+end else begin : g_legacy
+ assign O_sync_ready=1'b0;
+ assign O_sync_rsp_valid=1'b0;
+ assign O_sync_rsp_ok=1'b0;
+reg O_cfg_done_l;
+localparam CAM_ID = 8'h34;		//器件地址
 
-wire 		ic_busy			; 	//I2C控制器忙信号 
+wire 		ic_busy			; 	//I2C控制器忙信号
 wire   		O_iic_bus_error	;
 // T07 仿真兼容修正（行为不变）：原 peer 用隐式网 iic_busy（TD 会造 1 位网），
 // ModelSim vlog 报 vlog-2730 未定义；这里显式声明，接线/DUT 不变。
@@ -92,13 +110,13 @@ wire        mode_changed = (I_cam_mode != cam_mode_r) & rst_cnt[7]; // ģʽ�л
 
 
 //内部计数器产生一�?延迟复位
-always@(posedge I_clk or negedge I_rst_n)  
+always@(posedge I_clk or negedge I_rst_n)
     if(I_rst_n == 1'b0) //复位初�?�化寄存�?
-        rst_cnt<= 8'd0; 
+        rst_cnt<= 8'd0;
     else if(rst_cnt[7] == 1'b0)
-       rst_cnt <= rst_cnt + 1'b1; 
-    else 
-       rst_cnt <= rst_cnt; 
+       rst_cnt <= rst_cnt + 1'b1;
+    else
+       rst_cnt <= rst_cnt;
 
 // --- cam_mode ���� ---
 always@(posedge I_clk or negedge I_rst_n)
@@ -106,13 +124,13 @@ always@(posedge I_clk or negedge I_rst_n)
         cam_mode_r <= 2'd0;
     else
         cam_mode_r <= I_cam_mode;
-	   
+
 always@(posedge I_clk or negedge I_rst_n)  begin
     if(I_rst_n == 1'b0) //复位初�?�化寄存�?
          cnt <= 0;
     else if(cnt == 1000_000)
          cnt <= 0;
-    else if(O_cfg_done == 1'b1)
+    else if(O_cfg_done_l == 1'b1)
          cnt <= cnt + 1;
     else if(O_cfg_done_r == 1'b1)
          cnt <= cnt;
@@ -123,15 +141,15 @@ always@(posedge I_clk or negedge I_rst_n)begin
 		REG_SIZE <= 8'b0;
 		REG_DATA <= 24'b0;
 	end
-	else if(O_cfg_done == 1'b0)begin
+	else if(O_cfg_done_l == 1'b0)begin
 		REG_SIZE <= REG_SIZE_REG;
 		REG_DATA <= REG_DATA_REG;
 	end
-	else if(O_cfg_done == 1'b1 && O_cfg_done_r == 1'b0)begin
+	else if(O_cfg_done_l == 1'b1 && O_cfg_done_r == 1'b0)begin
 		REG_SIZE <= REG_SIZE_ST;
 		REG_DATA <= REG_DATA_ST;
 	end
-	else if(O_cfg_done == 1'b1 && O_cfg_done_r == 1'b1)begin
+	else if(O_cfg_done_l == 1'b1 && O_cfg_done_r == 1'b1)begin
 		REG_SIZE <= REG_SIZE_AE;
 		REG_DATA <= REG_DATA_AE;
 	end
@@ -141,21 +159,21 @@ always@(posedge I_clk or negedge I_rst_n)begin
 	end
 end
 
-always@(posedge I_clk ) begin 
+always@(posedge I_clk ) begin
     if(rst_cnt[7] == 1'b0)begin //复位初�?�化寄存�?
         reg_index  <= 9'd0;
         iic_req    <= 1'b0;
         wr_data    <= 32'd0;
-        O_cfg_done <= 1'b0;
+        O_cfg_done_l <= 1'b0;
         O_cfg_done_r <= 1'b0;
         O_ae_cfg_done <= 1'b1;
-        TS_S     <= 2'd0;    
+        TS_S     <= 2'd0;
     end
     else begin
         // --- ģʽ�л�: ���������������� (STANDBY����д�Ĵ���������) ---
         if(mode_changed) begin
             reg_index    <= 9'd0;
-            O_cfg_done   <= 1'b0;
+            O_cfg_done_l   <= 1'b0;
             O_cfg_done_r <= 1'b0;
             O_ae_cfg_done<= 1'b1;
             iic_req      <= 1'b0;
@@ -163,41 +181,41 @@ always@(posedge I_clk ) begin
         end
         else
         case(TS_S)
-        0:if(reg_index == REG_SIZE && O_cfg_done == 1'b0) begin//如果配置完成
-            O_cfg_done <= 1'b1;       //设置 cfg_done标准
-        end 
-        else if(reg_index == REG_SIZE && O_cfg_done == 1'b1 && O_cfg_done_r == 1'b0) begin//如果配置完成
+        0:if(reg_index == REG_SIZE && O_cfg_done_l == 1'b0) begin//如果配置完成
+            O_cfg_done_l <= 1'b1;       //设置 cfg_done标准
+        end
+        else if(reg_index == REG_SIZE && O_cfg_done_l == 1'b1 && O_cfg_done_r == 1'b0) begin//如果配置完成
             O_cfg_done_r <= 1'b1;       //设置 cfg_done标准
-        end 
+        end
         else if(cnt== 1000_000)begin
             O_cfg_done_r <= 0;
             reg_index   <= 0;
         end
-		else if(reg_index == REG_SIZE && O_cfg_done == 1'b1 && O_cfg_done_r == 1'b1) begin//如果配置完成
+		else if(reg_index == REG_SIZE && O_cfg_done_l == 1'b1 && O_cfg_done_r == 1'b1) begin//如果配置完成
             O_ae_cfg_done <= 1'b1;       //设置 cfg_done标准
-        end 
+        end
         else if(I_ae_req && O_ae_cfg_done)begin  // ���� AE ����ʱ��Ӧ�����󣬷�ֹ����
             O_ae_cfg_done <= 0;
             reg_index   <= 0;
         end
-        else if((O_cfg_done&O_cfg_done_r&O_ae_cfg_done) == 1'b0)
+        else if((O_cfg_done_l&O_cfg_done_r&O_ae_cfg_done) == 1'b0)
             TS_S <= 2'd1;           //下一�?状�?
         1:if(!iic_busy)begin        //当总线非忙，才�?以操作I2C控制�?
             iic_req  <= 1'b1;       //请求操作I2C控制�?
-			wr_data[7  :0] <= CAM_ID;           //器件地址   
-			wr_data[15 :8] <= REG_DATA[23:16];  //寄存器地址-�?8bit    
-			wr_data[23:16] <= REG_DATA[15: 8];  //寄存器地址-�?8bit  
+			wr_data[7  :0] <= CAM_ID;           //器件地址
+			wr_data[15 :8] <= REG_DATA[23:16];  //寄存器地址-�?8bit
+			wr_data[23:16] <= REG_DATA[15: 8];  //寄存器地址-�?8bit
             wr_data[31:24] <= REG_DATA[7 : 0];  //寄存器数�?
             TS_S      <= 2'd2; //下一�?状�?
-        end    
+        end
         2:if(iic_busy)begin
              iic_req  <= 1'b0;  //重置 iic_req =0
              TS_S     <= 2'd3;  //下一�?状�?
         end
-        3:if(!iic_busy)begin  //当总线非忙，才�?以操作I2C控制�? 
+        3:if(!iic_busy)begin  //当总线非忙，才�?以操作I2C控制�?
 			reg_index<= reg_index + 1'b1;//寄存器索引加1
 			TS_S    <= 2'd0;//回到初�?�状�?
-        end 
+        end
         endcase
    end
 end
@@ -233,12 +251,12 @@ ui_imx415reg X_ui_imx415reg
 	.REG_SIZE	(REG_SIZE_REG	),  //寄存器数�?
 	.REG_INDEX	(reg_index		),    //寄存索引
 	.REG_DATA	(REG_DATA_REG	)   //寄存器数�?
-);  
+);
 
 always@(*)
    case(reg_index)
-		0:		REG_DATA_ST = {16'h3000, 8'h00}; 
-		1:		REG_DATA_ST = {16'h3002, 8'h00}; 
+		0:		REG_DATA_ST = {16'h3000, 8'h00};
+		1:		REG_DATA_ST = {16'h3002, 8'h00};
 		default:REG_DATA_ST = {16'h0000, 8'h00};
    endcase
 
@@ -248,4 +266,6 @@ always@(*)
 		default:REG_DATA_AE = {16'h0000, 8'h00};
    endcase
 
+assign O_cfg_done = O_cfg_done_l;
+end endgenerate
 endmodule

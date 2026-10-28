@@ -22,7 +22,7 @@ module tb_sync_offline;
   case(n)
    0:expected={1'b0,16'h3000,8'h01};1:expected={1'b0,16'h3002,8'h01};
    2:expected={1'b0,16'h30c1,8'h0f};3:expected={1'b1,16'h3000,8'h01};
-   4:expected={1'b1,16'h3002,8'h01};5:expected={1'b1,16'h30c1,8'h0f};
+   4:expected={1'b1,16'h3002,8'h00};5:expected={1'b1,16'h30c1,8'h0f};
    6:expected={1'b1,16'h3003,8'h01};7:expected={1'b1,16'h30c0,8'h2a};
    8:expected={1'b0,16'h3003,8'h00};9:expected={1'b0,16'h30c0,8'h2a};
    10:expected={1'b0,16'h30c1,8'h00};11:expected={1'b1,16'h3000,8'h00};

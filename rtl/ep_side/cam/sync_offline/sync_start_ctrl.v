@@ -3,7 +3,8 @@ module sync_start_ctrl #(
  parameter integer WAIT_CYCLES=(CTRL_HZ/1000)*24,
  parameter integer WARMUP_FRAMES=8,
  parameter integer I2C_TIMEOUT=5000000,
- parameter integer FRAME_TIMEOUT=5000000
+ parameter integer FRAME_TIMEOUT=5000000,
+parameter         MASTER_B=0  // reserved; role swap not yet implemented
 )(input wire clk,reset_n,start,abort_req,prereq_ok,pair_event,
  output wire req_valid,input wire req_ready,
  output reg camera_id,output reg [15:0] reg_addr,output reg [7:0] reg_data,
@@ -13,6 +14,7 @@ module sync_start_ctrl #(
  output reg [31:0] ignored_starts
 );
  localparam IDLE=0,SEND=1,ACK=2,WAIT_B=3,WAIT_A=4,WARM=5,RUN=6,ERROR=7;
+ localparam M=MASTER_B, S=~MASTER_B;
  reg [3:0] state; reg [4:0] step;
  reg cleanup,transport_poison,cancel_pending;
  reg [31:0] timer;
@@ -36,16 +38,16 @@ module sync_start_ctrl #(
    1: begin camera_id=0;reg_addr=16'h3002;reg_data=1;end
    2: begin camera_id=0;reg_addr=16'h30c1;reg_data=8'h0f;end
    3: begin camera_id=1;reg_addr=16'h3000;reg_data=1;end
-   4: begin camera_id=1;reg_addr=16'h3002;reg_data=1;end
+   4: begin camera_id=1;reg_addr=16'h3002;reg_data=MASTER_B;end // B slave=0 / B master=1
    5: begin camera_id=1;reg_addr=16'h30c1;reg_data=8'h0f;end
-   6: begin camera_id=1;reg_addr=16'h3003;reg_data=1;end
-   7: begin camera_id=1;reg_addr=16'h30c0;reg_data=8'h2a;end
-   8: begin camera_id=0;reg_addr=16'h3003;reg_data=0;end
-   9: begin camera_id=0;reg_addr=16'h30c0;reg_data=8'h2a;end
-   10:begin camera_id=0;reg_addr=16'h30c1;reg_data=0;end
-   11:begin camera_id=1;reg_addr=16'h3000;reg_data=0;end
-   12:begin camera_id=0;reg_addr=16'h3000;reg_data=0;end
-   13:begin camera_id=0;reg_addr=16'h3002;reg_data=0;end
+   6: begin camera_id=S;reg_addr=16'h3003;reg_data=1;end
+   7: begin camera_id=S;reg_addr=16'h30c0;reg_data=8'h2a;end
+   8: begin camera_id=M;reg_addr=16'h3003;reg_data=0;end
+   9: begin camera_id=M;reg_addr=16'h30c0;reg_data=8'h2a;end
+   10:begin camera_id=M;reg_addr=16'h30c1;reg_data=0;end
+   11:begin camera_id=S;reg_addr=16'h3000;reg_data=0;end
+   12:begin camera_id=M;reg_addr=16'h3000;reg_data=0;end
+   13:begin camera_id=M;reg_addr=16'h3002;reg_data=0;end
   endcase
  end
  always @(posedge clk) begin
