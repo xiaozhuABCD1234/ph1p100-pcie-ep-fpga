@@ -233,6 +233,8 @@ module ep_bar_win #(
     output reg  [31:0]  algo_ctrl,
     // 预处理通路诊断：{overflow, rejected, accepted}（0x244/0x248/0x24C 只读）
     input  wire [95:0]  algo_dbg,
+    // LZ77 压缩通路状态（0x250..0x25C 只读）
+    input  wire [127:0] codec_stat,
 
     // ==== 硬件同步曝光控制/状态（0x1E0..0x20C）====
     input  wire [351:0] sync_ro,
@@ -707,6 +709,10 @@ module ep_bar_win #(
             12'h244: rd_dw_comb = algo_dbg[31:0];            // ALGO_ACCEPTED（ROI 适配器收下的帧数）
             12'h248: rd_dw_comb = algo_dbg[63:32];           // ALGO_REJECTED
             12'h24C: rd_dw_comb = algo_dbg[95:64];           // ALGO_OVERFLOW
+            12'h250: rd_dw_comb = codec_stat[31:0];          // CODEC_STREAM_LEN（压缩后字节数）
+            12'h254: rd_dw_comb = codec_stat[63:32];         // CODEC_RAW_LEN
+            12'h258: rd_dw_comb = codec_stat[95:64];         // CODEC_RAW_CRC
+            12'h25C: rd_dw_comb = codec_stat[127:96];        // {blocks[15:0], fed[31:0]}
             12'h238: rd_dw_comb = ts_now[31:0];             // TS_NOW_LO（clk_ddr 100MHz 自由计数）
             12'h23C: rd_dw_comb = ts_now[63:32];            // TS_NOW_HI
             // ---- 板级调试：收帧写者卡死定位（0x170..0x178，只读，非合同寄存器）----

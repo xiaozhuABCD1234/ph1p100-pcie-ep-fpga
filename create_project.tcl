@@ -18,6 +18,12 @@ add_files rtl/ep_side/img/algo/algo_obuf.v
 add_files rtl/ep_side/img/algo/img_algo_parallel_top.v
 add_files rtl/ep_side/img/algo/csi_algo_roi_adapter.v
 add_files rtl/ep_side/img/algo/algo_y8_to_legacy.v
+
+# ---- LZ77 压缩通路：ROI 裁剪 + 帧级封包 + deflate 核心 + 定长帧打包 ----
+add_files rtl/ep_side/codec/codec_roi_crop.v
+add_files rtl/ep_side/codec/codec_pack.v
+add_files rtl/ep_side/codec/a1_frame_top.v
+add_files rtl/ep_side/codec/a1_deflate_core.v
 add_files rtl/ep_side/img/ep_bar_win.v
 add_files rtl/ep_side/img/img_regs.v
 add_files rtl/ep_side/img/img_frame_src.v

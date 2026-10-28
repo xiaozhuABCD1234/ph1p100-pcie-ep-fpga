@@ -137,7 +137,15 @@
     localparam integer ALGO_H      = 1088;
     localparam integer ALGO_X0     = 972;
     localparam integer ALGO_Y0     = 552;
-    localparam [1:0]   ALGO_PHASE  = 2'd0;   // ROI 原点偶/偶 ⇒ 与传感器原相位一致（RGGB）
+    localparam [1:0]   ALGO_PHASE  = 2'd0;
+// LZ77 压缩通路：编码器 2.39 cycle/byte，187.5 MHz 下只有 78.5 MB/s。
+// 喂 1920×1088 需要 78.3 MB/s —— 只剩 0.3% 余量，实际跑不动（板测第一版就卡在半帧）。
+// 所以压缩 ROI 取 1920×544（中心），只要 39.2 MB/s，留一倍余量，可以每帧都压。
+// 容器仍是 1920×1088（packer 补零到定长），主机按 st_stream_len 截取。
+localparam integer CODEC_H      = 544;
+localparam integer CODEC_Y0     = (2192 - CODEC_H) / 2;   // 824，全阵列居中
+// keep_div：0 = 每帧都压；1 = 隔帧压。运行时用 0x240[3] 覆盖，方便现场调。
+localparam [31:0]  CODEC_KEEP_DIV = 32'd0;   // ROI 原点偶/偶 ⇒ 与传感器原相位一致（RGGB）
     // T07：实际板载 DDR3L 容量（x16、2048Mb、单 CS ⇒ 256MB）。依据是本工程匹配
     // 生成的 al_ip/ddr3_mc_0/.params_ddr3_mc_0.txt（PH1P_COMP_DENSITY=2048、
     // PH1P_COMP_TYPE=x16、PH1P_DDR_CS=1）与板载颗粒规格；**不拿 AXI 29 位地址线
@@ -326,6 +334,8 @@ wire [31:0] w_algo_ctrl;
 // 声明写在使用点附近会被 TD 当成隐式 1 位网（只在 log 里报 undeclared，
 // 不报错），结果 40 位像素被截成 1 位、整个算法通路静默失效。
 wire [31:0] algo_acc, algo_rej, algo_ovf;
+// CODEC 状态（0x250..0x25C）：{commit 计数, blocks, raw_crc, raw_len, stream_len, words, done}
+wire [127:0] w_codec_stat;
 wire        algo_ms_ready, algo_ms_valid, algo_ms_vsync, algo_ms_frame, algo_ms_line;
 wire [39:0] algo_ms_pix;
 
@@ -875,6 +885,7 @@ pcie_ep_engine #(
     .ts_now                                  (r_ts_cnt_s2                            ),
     .algo_ctrl                               (w_algo_ctrl                            ),
     .algo_dbg                                ({algo_ovf, algo_rej, algo_acc}          ),
+    .codec_stat                              (w_codec_stat                           ),
     .cam_tap_cfg                             (cam_tap_cfg                            ),
     .cam_tap_b_cfg                           (cam_tap_b_cfg                          ),
     .cam_ab_sel                              (img_cam_ab_sel                         ),
@@ -2398,9 +2409,9 @@ utx_arb2 u_push_utx_arb (
 
     // 并行顶层是单输入流：任一路不 ready 就会卡住共享流，所以未选中的两路恒 ready、
     // 数据直接丢；只有选中的那一路把反压传回 ROI 适配器。
-    assign algo_ready[0] = (algo_sel == 2'd0) ? algo_ms_ready : 1'b1;
-    assign algo_ready[1] = (algo_sel == 2'd1) ? algo_ms_ready : 1'b1;
-    assign algo_ready[2] = (algo_sel == 2'd2) ? algo_ms_ready : 1'b1;
+    assign algo_ready[0] = (!codec_sel && algo_sel == 2'd0) ? algo_ms_ready : 1'b1;
+    assign algo_ready[1] = (!codec_sel && algo_sel == 2'd1) ? algo_ms_ready : 1'b1;
+    assign algo_ready[2] = (!codec_sel && algo_sel == 2'd2) ? algo_ms_ready : 1'b1;
 
     wire        algo_sel_v = (algo_sel == 2'd0) ? algo_v[0] : (algo_sel == 2'd1) ? algo_v[1] : algo_v[2];
     wire [31:0] algo_sel_d = (algo_sel == 2'd0) ? algo_d0 : (algo_sel == 2'd1) ? algo_d1 : algo_d2;
@@ -2408,10 +2419,72 @@ utx_arb2 u_push_utx_arb (
     wire        algo_sel_l = (algo_sel == 2'd0) ? algo_eol[0] : (algo_sel == 2'd1) ? algo_eol[1] : algo_eol[2];
     wire        algo_sel_e = (algo_sel == 2'd0) ? algo_eof[0] : (algo_sel == 2'd1) ? algo_eof[1] : algo_eof[2];
 
+    // 0x240[0]=1 时改送 LZ77 压缩流（同样 1920×1088 定长帧，主机按长度截取）
+    wire        src_v = codec_sel ? cp_valid : algo_sel_v;
+    wire [31:0] src_d = codec_sel ? cp_data  : algo_sel_d;
+    wire        src_s = codec_sel ? cp_sof   : algo_sel_s;
+    wire        src_l = codec_sel ? cp_eol   : algo_sel_l;
+    wire        src_e = codec_sel ? cp_eof   : algo_sel_e;
+
+    // ==== LZ77 压缩通路：裁 1920×1088 RAW10 → a1_frame_top → 打包成定长帧 ====
+    //  0x240[0] 选源：0 = 预处理（灰度/高斯/均衡），1 = LZ77 压缩流。
+    //  压缩流塞进 8bit 采样位，主机按 st_stream_len 截前 N 字节后 zlib 解压。
+    wire        cdc_valid, cdc_sof, cdc_ready;
+    wire [39:0] cdc_pix;
+    wire        cp_valid, cp_sof, cp_eol, cp_eof, cp_ready;
+    wire [31:0] cp_data;
+    wire [31:0] c_stream_len, c_raw_len, c_raw_crc, c_blocks, c_words;
+    wire        c_done, c_overflow;
+    wire        c_abort;
+    reg  [31:0] c_abort_cnt;
+    always @(posedge w_a_byte_clk or negedge w_a_rst_out) begin
+        if (!w_a_rst_out) c_abort_cnt <= 32'd0;
+        else if (c_abort)  c_abort_cnt <= c_abort_cnt + 32'd1;
+    end
+    wire        c_commit;
+    wire [31:0] c_fed, c_skipped;
+    wire [31:0] cp_out_data;
+    wire [3:0]  cp_out_keep;
+    wire        cp_out_valid, cp_out_last;
+    wire        codec_sel = w_algo_ctrl[0];
+    wire        cp_out_ready;
+
+    codec_roi_crop #(.W(ALGO_W), .H(CODEC_H), .X0(ALGO_X0), .Y0(CODEC_Y0), .FIFO_AW(10)) u_codec_crop (
+        .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
+        .cam_vsync(gate_a_vsync), .cam_in_frame(gate_a_frame), .cam_in_line(gate_a_line),
+        .cam_pix(w_a_pixel), .cam_pix_valid(gate_a_pixel_valid),
+        .enable(1'b1), .keep_div(w_algo_ctrl[3]),
+        .o_valid(cdc_valid), .o_pix(cdc_pix), .o_sof(cdc_sof), .o_ready(cdc_ready),
+        .frames_fed(c_fed), .frames_skipped(c_skipped), .overflow(c_overflow)
+    );
+
+    a1_frame_top #(.W(ALGO_W), .H(CODEC_H)) u_codec (
+        .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
+        .in_pix(cdc_pix), .in_valid(cdc_valid), .in_ready(cdc_ready), .in_sof(cdc_sof),
+        .prep_en(1'b1), .pred_en(1'b1), .abort(1'b0),
+        .out_data(cp_out_data), .out_valid(cp_out_valid), .out_ready(cp_out_ready),
+        .out_keep(cp_out_keep), .out_last(cp_out_last),
+        .frame_commit(c_commit), .frame_abort(c_abort),
+        .st_raw_len(c_raw_len), .st_xform_len(), .st_stream_len(c_stream_len),
+        .st_raw_crc(c_raw_crc), .st_xform_crc(), .st_stream_crc(),
+        .st_blocks(c_blocks), .st_stall_cycles(), .st_busy()
+    );
+
+    codec_pack #(.W(ALGO_W), .H(ALGO_H), .GPQ(ALGO_W/4)) u_codec_pack (
+        .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
+        .c_data(cp_out_data), .c_valid(cp_out_valid), .c_keep(cp_out_keep),
+        .c_last(cp_out_last), .c_commit(c_commit), .c_ready(cp_out_ready),
+        .s_data(cp_data), .s_valid(cp_valid), .s_ready(cp_ready),
+        .s_sof(cp_sof), .s_eol(cp_eol), .s_eof(cp_eof),
+        .st_stream_len(), .st_words(c_words), .st_done(c_done)
+    );
+
+    assign w_codec_stat = {c_fed[15:0], c_abort_cnt[15:0], c_raw_crc, c_raw_len, c_stream_len};
+
     algo_y8_to_legacy u_algo_ms (
         .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
-        .s_valid(algo_sel_v), .s_ready(algo_ms_ready), .s_data(algo_sel_d),
-        .s_sof(algo_sel_s), .s_eol(algo_sel_l), .s_eof(algo_sel_e),
+        .s_valid(src_v), .s_ready(algo_ms_ready), .s_data(src_d),
+        .s_sof(src_s), .s_eol(src_l), .s_eof(src_e),
         .o_valid(algo_ms_valid), .o_pix(algo_ms_pix),
         .o_vsync(algo_ms_vsync), .o_frame(algo_ms_frame), .o_line(algo_ms_line)
     );
