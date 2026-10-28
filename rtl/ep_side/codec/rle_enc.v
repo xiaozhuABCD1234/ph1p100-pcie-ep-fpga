@@ -16,6 +16,8 @@ module rle_enc (
     output wire        in_ready,
     input  wire        in_sof,
     input  wire        in_eof,
+    input  wire        in_flush,   // 帧尾：把挂着的零游程吐出来
+    output wire        o_idle,     // 1 = 没有待发数据（可以安全封帧）
     output reg  [7:0]  out_data,
     output reg         out_valid,
     input  wire        out_ready,
@@ -36,7 +38,8 @@ module rle_enc (
     wire [3:0] oused = owp - orp;
     wire       room = (oused < 12);
 
-    assign in_ready = (st == S_IDLE) && room;
+    assign in_ready = (st == S_IDLE) && room && !in_flush;
+    assign o_idle   = (st == S_IDLE) && (run == 8'd0);
 
     wire [7:0] d = have_prev ? (in_data - prev_y) : (in_data - 8'd128);
     wire       push = room;                       // 输出 FIFO 有地方
@@ -60,7 +63,10 @@ module rle_enc (
             end
 
             case (st)
-            S_IDLE: if (in_valid && in_ready) begin
+            S_IDLE: if (in_flush && run != 8'd0) begin
+                after <= 2'd0;
+                st <= S_FL0;                    // 帧尾：先把游程发完
+            end else if (in_valid && in_ready) begin
                 st_in_bytes <= st_in_bytes + 32'd1;
                 prev_y <= in_data;
                 have_prev <= 1'b1;

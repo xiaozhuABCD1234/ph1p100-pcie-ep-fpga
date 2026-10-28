@@ -2455,24 +2455,34 @@ utx_arb2 u_push_utx_arb (
     rle_enc u_rle (
         .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
         .in_data(g4_d), .in_valid(g4_v), .in_ready(rle_r),
-        .in_sof(g4_sof), .in_eof(g4_eof),
+        .in_sof(g4_sof), .in_eof(g4_eof), .in_flush(rle_flush),
+        .o_idle(rle_idle_ok),
         .out_data(rle_d), .out_valid(rle_v), .out_ready(w_ready),
         .st_in_bytes(), .st_out_bytes()
     );
 
-    // rle_enc 没有帧尾输出：用高斯分支的 EOF 延迟 16 拍当帧尾。
-    // 不能用「输出空闲 N 拍」判——ROI 每行之间本来就有上千拍空隙，会把一帧切成很多段。
-    reg [5:0] rle_eof_dly;
-    reg       rle_frm_end;
+    // 帧尾：用「下一帧的 SOF」收上一帧。EOF 不可靠（不同分支的 eof 语义不一致，
+    // 实测会让一帧只封几个字节），而 SOF 是确定的帧起点，还能顺便把编码器里压着的
+    // 零游程冲刷干净：SOF → flush → 等编码器 o_idle → 给打包器单拍封帧脉冲。
+    wire rle_idle_ok;
+    reg  rle_flush;
+    reg  rle_frm_end;
+    reg  frm_has_data;
+    reg  close_pending;
     always @(posedge w_a_byte_clk or negedge w_a_rst_out) begin
         if (!w_a_rst_out) begin
-            rle_eof_dly <= 6'd0; rle_frm_end <= 1'b0;
+            rle_flush <= 1'b0; rle_frm_end <= 1'b0; frm_has_data <= 1'b0; close_pending <= 1'b0;
         end else begin
             rle_frm_end <= 1'b0;
-            if (algo_eof[1]) rle_eof_dly <= 6'd63;
-            else if (rle_eof_dly != 6'd0) begin
-                rle_eof_dly <= rle_eof_dly - 1'b1;
-                if (rle_eof_dly == 6'd1) rle_frm_end <= 1'b1;
+            if (g4_v) frm_has_data <= 1'b1;
+            if (algo_sof[1] && frm_has_data && !close_pending) begin
+                rle_flush     <= 1'b1;
+                close_pending <= 1'b1;
+                frm_has_data  <= 1'b0;
+            end else if (close_pending && rle_idle_ok) begin
+                rle_flush     <= 1'b0;
+                close_pending <= 1'b0;
+                rle_frm_end   <= 1'b1;
             end
         end
     end
