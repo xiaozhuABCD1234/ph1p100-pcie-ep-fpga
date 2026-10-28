@@ -2378,7 +2378,7 @@ utx_arb2 u_push_utx_arb (
 
 
     csi_algo_roi_adapter #(
-        .W(ALGO_W), .H(ALGO_H), .X0(ALGO_X0), .Y0(ALGO_Y0), .SKIP_ROWS(0), .FIFO_AW(10)
+        .W(ALGO_W), .H(ALGO_H), .X0(ALGO_X0), .Y0(ALGO_Y0), .SKIP_ROWS(0), .FIFO_AW(12)
     ) u_algo_roi (
         .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
         .cam_vsync(gate_a_vsync), .cam_in_frame(gate_a_frame), .cam_in_line(gate_a_line),
