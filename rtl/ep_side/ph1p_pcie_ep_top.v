@@ -2503,9 +2503,21 @@ utx_arb2 u_push_utx_arb (
         .st_stream_len(c_stream_len), .st_words(c_words), .st_done(c_done)
     );
 
+    // 诊断：高斯分支每秒实际进到 gray4_byte 的拍数（定位消费速率问题）
+    reg  [31:0] dbg_gau_beats;
+    reg  [31:0] dbg_rle_bytes;
+    always @(posedge w_a_byte_clk or negedge w_a_rst_out) begin
+        if (!w_a_rst_out) begin
+            dbg_gau_beats <= 32'd0; dbg_rle_bytes <= 32'd0;
+        end else begin
+            if (algo_v[1] && g4_r) dbg_gau_beats <= dbg_gau_beats + 32'd1;
+            if (rle_v && w_ready)   dbg_rle_bytes <= dbg_rle_bytes + 32'd1;
+        end
+    end
+
     assign c_raw_len = 32'd2088960;
     assign c_raw_crc = 32'd0;
-    assign w_codec_stat = {32'd0, c_raw_crc, c_raw_len, c_stream_len};
+    assign w_codec_stat = {dbg_rle_bytes, dbg_gau_beats, c_raw_len, c_stream_len};
 
     algo_y8_to_legacy u_algo_ms (
         .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
