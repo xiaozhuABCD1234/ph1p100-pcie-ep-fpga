@@ -1,9 +1,0 @@
-# B01 production timing variants
-
-This directory derives from the approved ROOT/fpga/csi2/src/img algorithm reference. That reference, ROOT/tools/algo/oracle_algo.py, original TB and vectors remain read-only. Production copies are no longer claimed byte-identical for these variants:
-
-- img_algo_parallel_top.v: two RGB slots with registered capacity flag; separate two-slot36bit Gaussian/HE input queues; atomic4lane data plus SOF/EOL/EOF/abort. Broadcast only into independent registered-capacity queues. Abort notifications to the gray output FIFO are gated by the actual broadcast transfer so a held marker cannot enqueue twice. EOF/abort delay matches three enabled gray cycles.
-- bayer_raw10_demosaic4.v: pipe_en=m_ready conservatively freezes all stages, including empty bubbles, when the following registered-capacity FIFO has no room. It removes final-valid feedback into row-bank controls. No accepted token is dropped and no pixel arithmetic changes.
-- rgb8_gray_stream.v: products77R/150G/29B remain exact. Stage2 registers RG and B+128 partial sums, stage3 adds them then takes bits15:8. Maximum65408 fits16bits, intermediate18bits prevent truncation. Latency3 under the original common stall enable; all sidebands/valid share it. Coefficients, rounding and output value unchanged.
-
-Local core24-scenario exact independent-vector checks, final256entry LUT, branch hold and abort markers, varying Bayer/gray/Gaussian/previous-frame HE oracle, HE/ROI negative controls, RAW isolation/recovery and full1080p continuous service must bind the exact production SHA. G1 proves tested numerical/protocol semantics; final sameDB setup/hold/CWC and independent integrated acceptance remain separate gates. No PHY/IP/clock/ADC/SDC/seed changes.

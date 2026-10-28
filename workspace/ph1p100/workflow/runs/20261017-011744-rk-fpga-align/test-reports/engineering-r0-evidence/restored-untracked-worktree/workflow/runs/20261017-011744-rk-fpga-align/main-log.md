@@ -1,4 +1,0 @@
-- 261017 0117 新run；PROJECT_ROOT=C:\Users\czz\OneDrive\桌面\实验室\竞赛\嵌入式\FPGA创新设计赛道；BATCH_SIZE=1；需求原话保存request.md；list_agents实际仅/root。
-- 261017 0118 spawn_agent实际返回规划ID=/root/fpga_planner_rk_align；fork_turns=none；原话需求路径=request.md。
-- 261017 0118 用户补充原话保存user-feedback-01.md，转原规划ID=/root/fpga_planner_rk_align。
-- 261017 0126 规划ready；dispatch.json：T03.rk-align-freeze；spawn_agent实际返回开发ID=/root/fpga_dev_rk_freeze；round=0；仅按派发范围。

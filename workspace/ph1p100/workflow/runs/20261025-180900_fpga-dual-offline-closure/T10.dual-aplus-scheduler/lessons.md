@@ -1,9 +1,0 @@
-# Reusable lessons
-
-- A frozen encoder's frame_abort may be sticky and an already-presented killed output may remain valid. Treat abort as a lifecycle contract: first stop requests/drain accepted DDR, then clean only the codec state; do not reset ownership or release while DDR remains outstanding. Entry: original `evidence/faults/console.log`, candidate RELEASE cleanup.
-- Packed RAW10 groups cross 32-byte words; the reservoir must combine same-clock five-byte take and 32-byte refill using one next-count value. The W64/H8 source pattern and strict byte checker exercise repeated cross-word boundaries.
-- An odd final prep block in the frozen frame top has W samples, not 2W. A decoder copied from an old helper can assume zero padding that the actual core never emits. Read the immutable core's bank_ns and independently consume only present planes. Entry: `sim/check.py`, `evidence/prep8x3/checker.json`.
-- ModelSim 10.5b vsim path arguments require normalized forward slashes in this environment. The earlier backslash modelsim.ini failure is preserved, and the corrected small8x2 retry is the only retry of that case.
-- Fixed-width Verilog strings are bounded buffers. Adding a retry suffix pushed metadata/event paths beyond the TB's 128-byte path limit while shorter stream paths still worked. Every output open requires an explicit nonzero descriptor assertion; use SV string or a sufficiently bounded relative path in a future authorized correction. Entry: `evidence/faults-retry/console.log` vsim-3533 warnings.
-- Exit0 and TB_DONE are insufficient: require expected metadata, event stats and strict content checks. The retry's missing files correctly blocked completion despite four zlib files and TB_DONE.
-- Keep original evidence when retrying. A distinct retry directory preserved the original premature-release failure, but the path itself must be included in path-length validation.

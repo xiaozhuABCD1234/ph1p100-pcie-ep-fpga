@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "D:\fpga\ph1p100\workflow\runs\20261020-0209_singleA_aplus_closedloop\T10.b12-r1-last\r0\sim\T10\check_strict.py", line 114, in <module>
-    result=check(sys.argv[1]);pathlib.Path(sys.argv[1],'result.json').write_text(json.dumps(result,indent=2));print(json.dumps(result,indent=2));sys.exit(result['status']!='PASS')
-           ^^^^^^^^^^^^^^^^^^
-  File "D:\fpga\ph1p100\workflow\runs\20261020-0209_singleA_aplus_closedloop\T10.b12-r1-last\r0\sim\T10\check_strict.py", line 79, in check
-    data=bytes(map(int,(case/'capture.dec').read_text().split()));wire=bytes(map(int,(case/'wire.dec').read_text().split()))
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-ValueError: invalid literal for int() with base 10: 'z'

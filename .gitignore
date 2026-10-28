@@ -18,7 +18,7 @@ td_*.logw
 *.logw
 
 # TD 工具崩溃时由 sig_handler 写在 CWD 的栈转储 `.tmp_<pid>_1`：
-# 内容只有被截断的 gdb 栈帧，不含可复用信息（见 docs/TMP_CLEANUP_20261028.md）。
+# 内容只有被截断的 gdb 栈帧，不含可复用信息。
 .tmp_*
 
 # 仿真 testbench 用 $fopen(...,"wb") 直接写到 CWD 的比对数据，每跑一次即重建。
@@ -57,7 +57,7 @@ workspace/ph1p100/**/restored-tracked-worktree/
 workspace/**/aux/
 
 # 可重建的工作流产物：仿真 trace、布线后网表、板上抓包（体积与处置方式见
-# docs/REPO_HYGIENE_20261027.md）。这里只挡新文件；已入库的路径要显式
+# 一次性清理记录）。这里只挡新文件；已入库的路径要显式
 # `git rm --cached` 才离开索引。
 workspace/**/trace.txt
 workspace/**/*_routed_netlist.v

@@ -1,8 +1,0 @@
-{
-  "content": [
-    {
-      "type": "text",
-      "text": "{\"task_id\": \"9c684ae859cd41128efd4254eb10fd9c\", \"project_root\": \"C:\\\\Users\\\\czz\\\\OneDrive\\\\桌面\\\\实验室\\\\竞赛\\\\嵌入式\\\\FPGA创新设计赛道\", \"status\": \"completed\", \"rounds\": 1, \"usage\": {\"prompt_tokens\": 852, \"completion_tokens\": 540, \"total_tokens\": 1392}, \"answer\": \"以下为简短中文 Markdown 模板文本，**未访问任何文件、未执行任何命令**。所有不确定项均留空占位。\\n\\n```markdown\\n# 上板准备模板（A-RAW10→DDR 板内 checker / 三算法集成）\\n\\n> 状态：候选仍在仿真/构建，**未上板、未证通过**。本模板仅作准备，填写与核验由 Codex 完成。\\n\\n## 0. 占位（未知即留空，不得臆造）\\n- bit 路径：`<待填>`\\n- CWC（camera 时钟/约束）：`<待填>`\\n- manifest 路径：`<待填>`\\n- 触发方式：**仅 GUI Instant Trigger**\\n- 读回方式：**仅 SRAM**（无 CLI 读回）\\n\\n## 1. 条件门禁（缺一即停）\\n- 上述占位全部填写且由独立核验确认来源；\\n- bit/CWC/manifest 三者一致，冲突则停止。\\n\\n## 2. 采集要求（单 A）\\n- 两次 GUI Instant Trigger，**间隔 ≥ 20 秒**；\\n- 每次 CSR 读出 `words=648192`，**四个 ok=1 且 err=0**；\\n- 至少 **2 个不同 seq** 的样本；\\n- `pass_count` 为 **32bit**，跨触发单调推进（含回绕以 32bit 判定）。\\n- GUI 观察分属 DDR 与 camera 两个时钟域，**不得称单样本为原子/跨域一致**。\\n\\n## 3. 闸门一致性\\n- 内部注入一次 abort，须**被 RAW 拒发布**，随后恢复正常；\\n- 该现象**仅说明内部注入路径**有效，不外推为外部验证。\\n\\n## 4. 未板证项\\n- 几何（像素/行列映射）与相位未上板证明 → **不得判 PASS**，记 UNPROVEN。\\n\\n## 5. 禁止\\n- 无 SRAM 以外读回；无 Flash 操作；无 PCIe/RK 通信；无推送；不改线、不改电源。\\n\\n## 6. 回退入口（占位）\\n- 回退 bit：`<待填>`\\n- 恢复步骤：`<待填>`\\n```\\n\\n变更路径：无（仅返回文本）。验证：未执行。不确定项：bit/CWC/manifest/回退路径待 Codex 填实与独立核验。\", \"review_required\": true}"
-    }
-  ]
-}

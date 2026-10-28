@@ -1,7 +1,0 @@
-# lessons-learned — T11.runB-debug-rtl P1-fix
-
-1. Wrapper hierarchy vs production SDC: adding u_top silently invalidates rename_clock/create_generated_clock/set_clock_groups; TD logs CRITICAL-WARNING USR-8159/8124/8225 yet still exits 0 and Routed. Reusable fix: mechanically derive a debug SDC variant (prefix insertions only) + fail-closed checks (prod hash, 3-line diff, clock table identity, 4 groups, zero post-build warnings).
-2. TD CWC mechanism: RTL (* MARK_DEBUG=true *) nets are auto-collected by the flow insert_debugger (KIT-2501 disappears; 9 view nodes / 288 trigger / 288 data nets) and setup_debugger emits cw/compiled.cwc|bit. mark_debug works on registers, not folded constants — register the probes.
-3. Gate the marks with the existing debug-only parameter + generate block so production 00_all never sees them (shared RTL stays silent).
-4. Validator limitation is real: check_chipwatcher_readback.py assumes single-section/full-depth and equal logic widths; TD 2026.2 auto-CWC for one 288-bit probe produced a geometry failing its BID-width equality. Diagnose geometry before choosing probe partitioning (e.g. 9 word-sized instances) or extend the check with planner approval.
-5. Budget: build 776.8 s inside the 30-min wrapper; the 45-min role budget was consumed by mechanism research + one build + parsing — no second build attempted.

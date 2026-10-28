@@ -1,3 +1,0 @@
-- 261017 1452 用户请求只说明进度。建立只读状态查询记录；不启动开发、测试或硬件操作。
-- 261017 1453 spawn_agent 实际返回 task_name=/root/fpga_status_planner；只读状态调查，输出目录=workflow/runs/20261017-145234-status。
-- 261017 1456 /root/fpga_status_planner 返回 finished、needs_user_input=false；dispatch next_action=relay_to_user；原样转发 user-summary.md。
