@@ -310,6 +310,21 @@ wire [31:0] sync_pair_seq_a, sync_pair_seq_b;
 wire [31:0] sync_status_word;
 wire [351:0] sync_ro;
 
+// ==== 端到端延迟的时间基准 ====
+//  自由运行 64 位计数器，clk_ddr 域（100 MHz）。writer 在 SOF 到达时锁存它的值写进
+//  R10F 头 16/17/18 字；同一计数器的当前值通过 0x238/0x23C 给主机读（2 级同步到
+//  tl_clk_user 域，多比特同步的偏差上限是几十 µs 量级，对 ≤50ms 的判定足够）。
+reg  [63:0] r_ts_cnt;
+reg  [63:0] r_ts_cnt_s1, r_ts_cnt_s2;
+always @(posedge w_ddr_dhi_clk) begin
+    if (!w_ddrphy_rst_n) r_ts_cnt <= 64'd0;
+    else                 r_ts_cnt <= r_ts_cnt + 64'd1;
+end
+always @(posedge tl_clk_user) begin
+    r_ts_cnt_s1 <= r_ts_cnt;
+    r_ts_cnt_s2 <= r_ts_cnt_s1;
+end
+
 // ==== 【本步新增】推帧引擎（ddr_frame_pusher）====
 //  · 引擎自己的 TL 发送口先接到 e_tl_tx_*，再由顶层 mux 与用户侧那一组合并成
 //    tl_tx_*（见下面推帧段）：utx_sel = 1 时 TL 发送口归用户侧。
@@ -838,6 +853,7 @@ pcie_ep_engine #(
     .img_fb_rdata                            (img_fb_rdata                           )
     ,.img_dbg_rd_idx                          (img_dbg_idx                            ),
     .cam_stat_bus                            (w_cam_stat                             ),
+    .ts_now                                  (r_ts_cnt_s2                            ),
     .cam_tap_cfg                             (cam_tap_cfg                            ),
     .cam_tap_b_cfg                           (cam_tap_b_cfg                          ),
     .cam_ab_sel                              (img_cam_ab_sel                         ),
@@ -1905,6 +1921,7 @@ cam_r10f_writer #(
 
     .clk_ddr       (w_ddr_dhi_clk     ),
     .rst_ddr       (~w_ddrphy_rst_n   ),
+    .timestamp_in  (r_ts_cnt          ),
     .ddr_cal_done  (w_ddrphy_rdy      ),
     .arm           (w_cam_ddr_want_a  ),
     .axi_busy      (w_camw_busy       ),
@@ -1974,6 +1991,7 @@ cam_r10f_writer #(
 
     .clk_ddr       (w_ddr_dhi_clk     ),
     .rst_ddr       (~w_ddrphy_rst_n   ),
+    .timestamp_in  (r_ts_cnt          ),
     .ddr_cal_done  (w_ddrphy_rdy      ),
     .arm           (w_cam_ddr_want_b  ),
     .axi_busy      (w_camw_busy_b     ),

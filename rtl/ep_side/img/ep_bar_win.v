@@ -224,6 +224,9 @@ module ep_bar_win #(
     input  wire [31:0]  dbg_rd_idx,
     input  wire [255:0] cam_stat,
 
+    // ==== 端到端延迟时间基准（0x238/0x23C，只读）====
+    input  wire [63:0]  ts_now,
+
     // ==== 硬件同步曝光控制/状态（0x1E0..0x20C）====
     input  wire [351:0] sync_ro,
     output reg          sync_start,
@@ -692,6 +695,8 @@ module ep_bar_win #(
             12'h22C: rd_dw_comb = pair_db_lo;               // PAIR_DB_LO_B
             12'h230: rd_dw_comb = pair_db_hi;               // PAIR_DB_HI_B
             12'h234: rd_dw_comb = pair_status_in;           // PAIR_STATUS
+            12'h238: rd_dw_comb = ts_now[31:0];             // TS_NOW_LO（clk_ddr 100MHz 自由计数）
+            12'h23C: rd_dw_comb = ts_now[63:32];            // TS_NOW_HI
             // ---- 板级调试：收帧写者卡死定位（0x170..0x178，只读，非合同寄存器）----
             12'h170: rd_dw_comb = {23'd0, dbgfsm_cama};
             12'h174: rd_dw_comb = {23'd0, dbgfsm_camb};

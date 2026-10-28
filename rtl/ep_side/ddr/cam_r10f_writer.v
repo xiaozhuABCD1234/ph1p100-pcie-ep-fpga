@@ -81,6 +81,7 @@ module cam_r10f_writer #(
     // 0 = 只看整帧组数与 AXI 拍数（全宽 4K 用：CSI 行分隔信号在 4K 全宽下不可靠，
     //     见 docs/BOARD_TEST.md「4K 行边界」；组数/拍数两项仍严格把关）。
     parameter integer LINE_CHECK  = 1,
+    parameter integer TIMESTAMP_HZ = 100_000_000,   // timestamp_in 的计数频率
     // ---- DDR3 双缓冲基址（4KiB 对齐，两块互不重叠且都 >= DMA_BYTES）----
     parameter [31:0]  BASE0       = 32'h0010_0000,
     parameter [31:0]  BASE1       = 32'h0090_0000,
@@ -151,6 +152,9 @@ module cam_r10f_writer #(
     // ---------------- DDR 用户域（100MHz）----------------
     input  wire          clk_ddr,
     input  wire          rst_ddr,          // 高有效（= !ddrphy_rst_n）
+    // 自由运行的 64 位计数器（clk_ddr 域，频率 = TIMESTAMP_HZ）。SOF 到达本模块时
+    // 锁存一帧的时刻，写进 R10F 头 16/17/18 字；主机侧用同一个计数器算端到端延迟。
+    input  wire [63:0]   timestamp_in,
     input  wire          ddr_cal_done,
     input  wire          arm,              // 1 = 本模块拥有 DDR 写口（顶层 sel_eff）
     output wire          axi_busy,
@@ -468,6 +472,8 @@ module cam_r10f_writer #(
     //   [3] 帧内又见 SOF       [4] 标记超时 tmo_hit
     // 只在诊断字里出，不影响判据；用来定位「计数全对但 p_bad=1」到底是哪一路。
     reg  [4:0]  pbad_rsn;
+    // 本帧 SOF 到达时刻（clk_ddr 域计数器值），进 R10F 头 16/17 字
+    reg  [63:0] ts_sof_r;
     reg         p_eof_seen;
     reg  [31:0] extra_drop;
     reg  [31:0] crc_pay_q;
@@ -550,9 +556,9 @@ module cam_r10f_writer #(
                 5'd13:   hdr_word = 32'd1;                               // block_count
                 5'd14:   hdr_word = 32'd0;                               // exposure_code
                 5'd15:   hdr_word = 32'd0;                               // gain_code
-                5'd16:   hdr_word = 32'd0;                               // sof_timestamp[31:0]
-                5'd17:   hdr_word = 32'd0;                               // sof_timestamp[63:32]
-                5'd18:   hdr_word = 32'd0;                               // timestamp_hz
+                5'd16:   hdr_word = ts_sof_r[31:0];                      // sof_timestamp[31:0]
+                5'd17:   hdr_word = ts_sof_r[63:32];                     // sof_timestamp[63:32]
+                5'd18:   hdr_word = TIMESTAMP_HZ;                        // timestamp_hz
                 5'd19:   hdr_word = FLAGS_VAL;                           // flags（ROI 裁减置 CROPPED）
                 5'd20:   hdr_word = wraw;                                // raw_crc32
                 5'd21:   hdr_word = wpay;                                // payload_crc32
@@ -850,6 +856,7 @@ module cam_r10f_writer #(
                     f_sess      <= sess_s2;
                     p_bad       <= 1'b0;
                     pbad_rsn    <= 5'd0;
+                    ts_sof_r    <= timestamp_in;
                     p_eof_seen  <= 1'b0;
                     gcnt        <= 32'd0;
                     pay_written <= 32'd0;
