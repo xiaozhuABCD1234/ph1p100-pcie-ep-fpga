@@ -462,7 +462,9 @@ module cam_r10f_writer #(
     reg  [31:0] crc_hdr_q;
     reg  [31:0] hdr_crc_r;
     reg  [20:0] tmo;
-    reg  [23:0] wdt;                 // 「等突发数据」连续拍数（数据侧长看门狗）
+    reg  [23:0] wdt;                 // 无前进拍数（数据侧长看门狗）
+    reg  [31:0] apos_snap, cpos_snap; // 上一拍进度快照（判停滞用）
+    reg  [2:0]  s_state_snap;
     reg         st_frame_go;
     reg         st_skip_done;
 
@@ -716,8 +718,16 @@ module cam_r10f_writer #(
     // ---- 数据侧长看门狗（与帧内 tmo 独立）----
     // 条件「A_IDLE 里还有突发没发、但 FIFO 永远攒不到 410 组」= 相机停流/丢标记，
     // 此时 mid_frame=1 让帧内 tmo 一直被清零，只能靠这条长计时兜底。
-    wire wdt_hit      = (wdt == WDT_LIMIT);
-    wire waiting_data = (a_st == A_IDLE) && mid_frame && !burst_ok_ddr;
+    // 通用停滞判据：不只是 A_IDLE+mid_frame。板测「相机中途 XCLR/停流」会把
+    // 状态机留在 S_TAIL（0x170=0x18）等一个永远不来的 tail_app，旧条件
+    // (a_st==A_IDLE && mid_frame) 在 S_TAIL 下 burst_ok_ddr 恒 1，永远不触发。
+    // 这里改成：只要不在 S_SYNC、AXI 处于 A_IDLE（没有在飞的写事务）、且
+    // apos/cpos/pop/beat/frame_close 在 WDT_LIMIT 拍内没有任何前进，就自愈。
+    wire wdt_active   = (s_state != S_SYNC) && (a_st == A_IDLE) && !self_flush;
+    wire wdt_progress = (s_state != s_state_snap) | (apos != apos_snap) |
+                        (cpos != cpos_snap) | pop | beat_taken | frame_close;
+    wire waiting_data = wdt_active & ~wdt_progress;
+    wire wdt_hit      = (wdt == WDT_LIMIT) && waiting_data;
 
     // ========================================================================
     //  ddr 域：流状态机 + 消费路径（块 A）
@@ -929,7 +939,16 @@ module cam_r10f_writer #(
 
             // 自愈期间把流状态机拨回 S_SYNC，等下一条 SOF 重新对齐
             // （self_flush_cnt 的递减在 a_st 那个 always 块里做，避免同一寄存器多驱动）
-            if (self_flush) s_state <= S_SYNC;
+            // ★ 只回 S_SYNC 不够：卡死时 beat_vld 已经为 1，data_ready=~beat_busy 恒 0，
+            //   下一帧连 S_HDR 都进不去。自愈必须把字节/拍流水一起清空。
+            if (self_flush) begin
+                s_state  <= S_SYNC;
+                beat_vld <= 1'b0;
+                bcnt     <= 5'd0;
+                breg     <= 128'd0;
+                pack     <= 256'd0;
+                wlane    <= 3'd0;
+            end
         end
     end
 
@@ -1059,6 +1078,12 @@ module cam_r10f_writer #(
             rw_done_r     <= 1'b0;
             mid_frame     <= 1'b0;
             wdt           <= 24'd0;
+            // self_flush_cnt 必须复位：漏了它 self_flush 恒为 X，wdt_active/waiting_data
+            // 跟着变 X，if (waiting_data) 按假处理 → wdt 永远不计数（仿真 x，实测随机）。
+            self_flush_cnt <= 8'd0;
+            apos_snap     <= 32'd0;
+            cpos_snap     <= 32'd0;
+            s_state_snap  <= S_SYNC;
             need_first    <= 1'b0;
             pub_base      <= BASE0;
             pub_ok        <= 1'b0;
@@ -1075,6 +1100,9 @@ module cam_r10f_writer #(
         end else begin
             frame_close <= 1'b0;
             cl_pub_valid <= 1'b0;
+            apos_snap    <= apos;
+            cpos_snap    <= cpos;
+            s_state_snap <= s_state;
 
             if (rel0_evt) protect0 <= 1'b0;
             if (rel1_evt) protect1 <= 1'b0;
@@ -1096,17 +1124,17 @@ module cam_r10f_writer #(
             case (a_st)
                 A_IDLE: begin
                     // 换手点：停在这里就是交还端口（awvalid/wvalid/bready 全 0）。
-                    if (mid_frame) begin
-                        if (wdt_hit) begin
-                            // 长看门狗超限：相机中途停流，本帧的突发永远补不齐。
-                            // 交还写口 + 清流控 + 请求自愈（回 S_SYNC 等下一帧 SOF），
-                            // 本帧按「未发布」丢弃，比永久卡在 S_PAY 强。
-                            mid_frame      <= 1'b0;
-                            need_first     <= 1'b0;
-                            axi_err        <= 1'b1;
-                            wdt            <= 24'd0;
-                            self_flush_cnt <= 8'hFF;
-                        end else if (need_first || burst_ok_ddr) begin
+                    if (wdt_hit) begin
+                        // 长看门狗超限：不只是 mid_frame 丢突发，也包括 S_TAIL 等
+                        // tail_app、S_WAIT 等 frame_close。交还写口 + 清流控 + 自愈
+                        // （回 S_SYNC 等下一帧 SOF），本帧按「未发布」丢弃。
+                        mid_frame      <= 1'b0;
+                        need_first     <= 1'b0;
+                        axi_err        <= 1'b1;
+                        wdt            <= 24'd0;
+                        self_flush_cnt <= 8'hFF;
+                    end else if (mid_frame) begin
+                        if (need_first || burst_ok_ddr) begin
                             mid_frame     <= 1'b0;
                             need_first    <= 1'b0;
                             m_axi_awvalid <= 1'b1;
@@ -1214,6 +1242,10 @@ module cam_r10f_writer #(
                     axi_err       <= 1'b1;
                     mid_frame     <= 1'b0;
                     a_st          <= A_IDLE;
+                    // ★ aw 超时是终态：若此时已在 S_TAIL，A_IDLE 里只有 mid_frame=1
+                    //   才会再发突发，beat_vld 会永久卡 1 → data_ready=0 → tail_app
+                    //   永不触发 → apos 冻死（板测 0x174=0x18 的真因）。直接自愈。
+                    self_flush_cnt <= 8'hFF;
                 end
 
                 A_W: if (beat_vld & m_axi_wready) begin

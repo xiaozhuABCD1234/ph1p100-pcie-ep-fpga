@@ -43,16 +43,16 @@ module ui_imx415reg (
   //-----------------------------------------------------------------
   /////////////////////   Config Data LUT   //////////////////////////    
   // MODE: 0=1080p(binning), 1=4K(all-pixel), 2=720p(binning+FPGA crop)
-  // Ref: MiLianKe uiimx415reg.v �� 4K uses SYS_MODE=0x08, different INCKSEL & MIPI timing
+  // Ref: 4K ֧��Ϊ 27MHz/891Mbps �飨SYS_MODE=0x05, HMAX=1100, VMAX=2250��
   always @(*) begin
     case (REG_INDEX)
       0:   REG_DATA = {16'h3000, 8'h01};// STANDBY
       1:   REG_DATA = {16'h3001, 8'h00};// REGHOLD
       2:   REG_DATA = {16'h3002, 8'h01};// XMSTA
       3:   REG_DATA = {16'h3003, 8'h00};// XMASTER
-      4:   REG_DATA = (MODE==2'd1) ? {16'h3008, 8'h54} : {16'h3008, 8'h5D};// BCWAIT_TIME
+      4:   REG_DATA = {16'h3008, 8'h5D};// BCWAIT_TIME
       5:   REG_DATA = {16'h3009, 8'h00};// BCWAIT_TIME[9:0]
-      6:   REG_DATA = (MODE==2'd1) ? {16'h300A, 8'h3B} : {16'h300A, 8'h42};// CPWAIT_TIME
+      6:   REG_DATA = {16'h300A, 8'h42};// CPWAIT_TIME
       7:   REG_DATA = {16'h300B, 8'hA0};// CPWAIT_TIME[9:0]
       8:   REG_DATA = {16'h301C, 8'h00};// WINMODE[3:0]
       9:   REG_DATA = {16'h301D, 8'h08};// -
@@ -60,17 +60,17 @@ module ui_imx415reg (
       11:  REG_DATA = (MODE==2'd1) ? {16'h3021, 8'h00} : {16'h3021, 8'h01};// VADD:  0=no-add(4K), 1=2x2-binning
       12:  REG_DATA = (MODE==2'd1) ? {16'h3022, 8'h00} : {16'h3022, 8'h01};// ADDMODE: 0=off(4K), 1=binning
       13:  REG_DATA = {16'h3023, 8'h01};// VCMODE: always on (ref: 0x01 for all modes)
-      14:  REG_DATA = (MODE==2'd1) ? {16'h3024, 8'h97} : {16'h3024, 8'hEB};// VMAX[7:0]:  4K=0x97, binning=0xEB
-      15:  REG_DATA = (MODE==2'd1) ? {16'h3025, 8'h11} : {16'h3025, 8'h08};// VMAX[15:8]: 4K=0x11(4503), binning=0x08(2283)
+      14:  REG_DATA = (MODE==2'd1) ? {16'h3024, 8'hCA} : {16'h3024, 8'hEB};// VMAX[7:0]:  4K=0xCA(2250), binning=0xEB
+      15:  REG_DATA = {16'h3025, 8'h08};// VMAX[15:8]: 4K=0x08, binning=0x08
       16:  REG_DATA = {16'h3026, 8'h00};// VMAX[19:16]
-      17:  REG_DATA = (MODE==2'd1) ? {16'h3028, 8'h15} : {16'h3028, 8'h1E};// HMAX[7:0]:  4K=0x15(533), binning=0x1E(542)
-      18:  REG_DATA = {16'h3029, 8'h02};// HMAX[15:8]: 0x02 for all modes
+      17:  REG_DATA = (MODE==2'd1) ? {16'h3028, 8'h4C} : {16'h3028, 8'h1E};// HMAX[7:0]:  4K=0x4C(1100), binning=0x1E
+      18:  REG_DATA = (MODE==2'd1) ? {16'h3029, 8'h04} : {16'h3029, 8'h02};// HMAX[15:8]: 4K=0x04, binning=0x02
       19:  REG_DATA = {16'h302C, 8'h00};// WDMODE[1:0]
       20:  REG_DATA = {16'h302D, 8'h00};// WDSEL[1:0]
       21:  REG_DATA = {16'h3030, 8'h00};// HREVERSE
       22:  REG_DATA = {16'h3031, 8'h00};// ADBIT[1:0]
       23:  REG_DATA = {16'h3032, 8'h00};// MDBIT
-      24:  REG_DATA = (MODE==2'd1) ? {16'h3033, 8'h08} : {16'h3033, 8'h05};// SYS_MODE: 4K=0x08, binning=0x05
+      24:  REG_DATA = {16'h3033, 8'h05};// SYS_MODE: 4K=0x08, binning=0x05
       25:  REG_DATA = {16'h3040, 8'h00};// PIX_HST[12:0]
       26:  REG_DATA = {16'h3041, 8'h00};// PIX_HST[12:0]
       27:  REG_DATA = {16'h3042, 8'h18};// PIX_HWIDTH[12:0]
@@ -98,9 +98,9 @@ module ui_imx415reg (
       49:  REG_DATA = {16'h3065, 8'h00};// RHS2[19:0]
       50:  REG_DATA = {16'h3066, 8'h00};// RHS2[19:0]
       51:  REG_DATA = (MODE==2'd1) ? {16'h3090, 8'h40} : {16'h3090, 8'h40};// GAIN_PGC_0: 0x40=64*0.3dB=19.2dB(5.25x) 4K+binning
-     // 2026-10-28: 4K 原为 0x10(4.8dB)。1080p ROI 实测均值只有 70/1023(p99.9=177)，
-     // 而曝光已顶满(SHR0=8 / VMAX=2250 -> 30fps 下 ~33ms)，只能提模拟增益。
-     // 0x40 = 19.2dB ~5.25x -> 均值 ~145。夜里可视；白天需回调，正解是 AEC/AGC。
+     // 2026-10-28: 4K was 0x10(4.8dB). 1080p ROI mean was only 70/1023 (p99.9=177) while
+     // exposure is already maxed (SHR0=8 of VMAX=2250 -> ~33ms at 30fps), so the only knob
+     // left is analog gain. 0x40 = 19.2dB ~ 5.25x -> expect mean ~370. Do not exceed 0x64(30dB).
       52:  REG_DATA = {16'h3091, 8'h00};// GAIN_PGC_0[8]
       53:  REG_DATA = {16'h3092, 8'h00};// GAIN_PGC_1 (HDR only)
       54:  REG_DATA = {16'h3093, 8'h00};// GAIN_PGC_1[8]
@@ -119,9 +119,9 @@ module ui_imx415reg (
       67:  REG_DATA = {16'h30E3, 8'h00};// BLKELVEL[9:0]
       68:  REG_DATA = {16'h3115, 8'h00};// INCKSEL1[7:0]
       69:  REG_DATA = {16'h3116, 8'h23};// INCKSEL2[7:0]
-      70:  REG_DATA = (MODE==2'd1) ? {16'h3118, 8'hB4} : {16'h3118, 8'hC6};// INCKSEL3: 4K=0xB4, binning=0xC6
+      70:  REG_DATA = {16'h3118, 8'hC6};// INCKSEL3: 4K=0xB4, binning=0xC6
       71:  REG_DATA = {16'h3119, 8'h00};// INCKSEL3[10:8]
-      72:  REG_DATA = (MODE==2'd1) ? {16'h311A, 8'hFC} : {16'h311A, 8'hE7};// INCKSEL4: 4K=0xFC, binning=0xE7
+      72:  REG_DATA = {16'h311A, 8'hE7};// INCKSEL4: 4K=0xFC, binning=0xE7
       73:  REG_DATA = {16'h311B, 8'h00};// INCKSEL4[10:8]
       74:  REG_DATA = {16'h311E, 8'h23};// INCKSEL5[7:0]
       75:  REG_DATA = {16'h3260, 8'h01};// GAIN_PGC_FIDMD
@@ -228,28 +228,28 @@ module ui_imx415reg (
       176: REG_DATA = {16'h3BCA, 8'hBD};
       177: REG_DATA = {16'h4000, 8'h10};
       178: REG_DATA = {16'h4001, 8'h03};//LANEMODE[2:0]
-      179: REG_DATA = (MODE==2'd1) ? {16'h4004, 8'h00} : {16'h4004, 8'hC0};//TXCLKESC_FREQ: 4K=0x00, binning=0xC0
+      179: REG_DATA = {16'h4004, 8'hC0};//TXCLKESC_FREQ: 4K=0xC0, binning=0xC0
       180: REG_DATA = {16'h4005, 8'h06};//TXCLKESC_FREQ[15:8]
-      181: REG_DATA = (MODE==2'd1) ? {16'h400C, 8'h01} : {16'h400C, 8'h00};//INCKSEL6: 4K=0x01, binning=0x00
-      182: REG_DATA = (MODE==2'd1) ? {16'h4018, 8'h9F} : {16'h4018, 8'h7F};//TCLKPOST
+      181: REG_DATA = {16'h400C, 8'h00};//INCKSEL6: 4K=0x00, binning=0x00
+      182: REG_DATA = {16'h4018, 8'h7F};//TCLKPOST
       183: REG_DATA = {16'h4019, 8'h00};//TCLKPOST[15:8]
-      184: REG_DATA = (MODE==2'd1) ? {16'h401A, 8'h57} : {16'h401A, 8'h37};//TCLKPREPARE
+      184: REG_DATA = {16'h401A, 8'h37};//TCLKPREPARE
       185: REG_DATA = {16'h401B, 8'h00};//TCLKPREPARE[15:8]
-      186: REG_DATA = (MODE==2'd1) ? {16'h401C, 8'h57} : {16'h401C, 8'h37};//TCLKTRAIL
+      186: REG_DATA = {16'h401C, 8'h37};//TCLKTRAIL
       187: REG_DATA = {16'h401D, 8'h00};//TCLKTRAIL[15:8]
-      188: REG_DATA = (MODE==2'd1) ? {16'h401E, 8'h87} : {16'h401E, 8'hF7};//TCLKZERO[7:0]
-      189: REG_DATA = (MODE==2'd1) ? {16'h401F, 8'h01} : {16'h401F, 8'h00};//TCLKZERO[15:8]: 4K=0x0187, binning=0x00F7
-      190: REG_DATA = (MODE==2'd1) ? {16'h4020, 8'h5F} : {16'h4020, 8'h3F};//THSPREPARE
+      188: REG_DATA = {16'h401E, 8'hF7};//TCLKZERO[7:0]
+      189: REG_DATA = {16'h401F, 8'h00};//TCLKZERO[15:8]: 4K=0x00F7, binning=0x00F7
+      190: REG_DATA = {16'h4020, 8'h3F};//THSPREPARE
       191: REG_DATA = {16'h4021, 8'h00};//THSPREPARE[15:8]
-      192: REG_DATA = (MODE==2'd1) ? {16'h4022, 8'hA7} : {16'h4022, 8'h6F};//THSZERO
+      192: REG_DATA = {16'h4022, 8'h6F};//THSZERO
       193: REG_DATA = {16'h4023, 8'h00};//THSZERO[15:8]
-      194: REG_DATA = (MODE==2'd1) ? {16'h4024, 8'h5F} : {16'h4024, 8'h3F};//THSTRAIL
+      194: REG_DATA = {16'h4024, 8'h3F};//THSTRAIL
       195: REG_DATA = {16'h4025, 8'h00};//THSTRAIL[15:8]
-      196: REG_DATA = (MODE==2'd1) ? {16'h4026, 8'h97} : {16'h4026, 8'h5F};//THSEXIT
+      196: REG_DATA = {16'h4026, 8'h5F};//THSEXIT
       197: REG_DATA = {16'h4027, 8'h00};//THSEXIT[15:8]
-      198: REG_DATA = (MODE==2'd1) ? {16'h4028, 8'h4F} : {16'h4028, 8'h2F};//TLPX
+      198: REG_DATA = {16'h4028, 8'h2F};//TLPX
       199: REG_DATA = {16'h4029, 8'h00};//TLPX[15:8]
-      200: REG_DATA = (MODE==2'd1) ? {16'h4074, 8'h00} : {16'h4074, 8'h01};//INCKSEL7: 4K=0x00, binning=0x01
+      200: REG_DATA = {16'h4074, 8'h01};//INCKSEL7: 4K=0x01, binning=0x01
       default: REG_DATA = {16'h0000, 8'h00};
     endcase
   end
