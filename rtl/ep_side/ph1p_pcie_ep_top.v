@@ -2473,7 +2473,7 @@ utx_arb2 u_push_utx_arb (
     codec_pack #(.W(ALGO_W), .H(ALGO_H), .GPQ(ALGO_W/4)) u_codec_pack (
         .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
         .c_data(cp_out_data), .c_valid(cp_out_valid), .c_keep(cp_out_keep),
-        .c_last(cp_out_last), .c_commit(c_commit), .c_ready(cp_out_ready),
+        .c_last(cp_out_last), .c_commit(c_commit), .c_abort(c_abort), .c_ready(cp_out_ready),
         .s_data(cp_data), .s_valid(cp_valid), .s_ready(cp_ready),
         .s_sof(cp_sof), .s_eol(cp_eol), .s_eof(cp_eof),
         .st_stream_len(), .st_words(c_words), .st_done(c_done)

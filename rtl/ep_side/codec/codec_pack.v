@@ -21,6 +21,7 @@ module codec_pack #(
     input  wire [3:0]  c_keep,
     input  wire        c_last,        // 流结束
     input  wire        c_commit,
+    input  wire        c_abort,       // 编码器判帧坏：丢弃半帧、立刻回到空闲
     output wire        c_ready,       // 补零期间拉低：不让下一帧的流插进来
     // 给 algo_y8_to_legacy
     output reg  [31:0] s_data,
@@ -61,6 +62,14 @@ module codec_pack #(
             st_stream_len <= 0; st_words <= 0; st_done <= 1'b0;
         end else begin
             st_done <= 1'b0;
+
+            // 编码器 abort 时不会给 c_last。这里必须丢弃半帧并回到空闲，
+            // 否则 pending_frame 永远为 1（补零等不到结尾），writer 就停在半帧不动。
+            if (c_abort) begin
+                widx <= 32'd0; col <= 16'd0; blen <= 32'd0;
+                streaming <= 1'b0; pending_frame <= 1'b0;
+                s_valid <= 1'b0; s_sof <= 1'b0; s_eol <= 1'b0; s_eof <= 1'b0;
+            end else
 
             // 编码器输出 → 组流（反压时同拍保持，algo_y8_to_legacy 有 FIFO 兜底）
             if (!s_valid || s_ready) begin
