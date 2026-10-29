@@ -29,6 +29,14 @@ add_files rtl/ep_side/codec/rle_enc.v
 add_files rtl/ep_side/codec/rle_to_words.v
 add_files rtl/ep_side/codec/cstream_reader.v
 add_files rtl/ep_side/codec/cstream_writer.v
+add_files rtl/ep_side/codec/dct1d8.v
+add_files rtl/ep_side/codec/dct2d8.v
+add_files rtl/ep_side/codec/jpeg_quant_zz.v
+add_files rtl/ep_side/codec/jpeg_huff_tab.v
+add_files rtl/ep_side/codec/jpeg_huff_enc.v
+add_files rtl/ep_side/codec/jpeg_enc.v
+add_files rtl/ep_side/codec/line2block.v
+add_files rtl/ep_side/codec/jpeg_frame.v
 add_files rtl/ep_side/img/ep_bar_win.v
 add_files rtl/ep_side/img/img_regs.v
 add_files rtl/ep_side/img/img_frame_src.v

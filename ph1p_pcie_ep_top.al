@@ -563,6 +563,70 @@
                     <Attr Name="CompileOrder" Val="95"/>
                 </FileInfo>
             </File>
+            <File Path="rtl/ep_side/codec/dct1d8.v">
+                <FileInfo>
+                    <Attr Name="UsedInSyn" Val="true"/>
+                    <Attr Name="UsedInP&R" Val="true"/>
+                    <Attr Name="BelongTo" Val="design_1"/>
+                    <Attr Name="CompileOrder" Val="100"/>
+                </FileInfo>
+            </File>
+            <File Path="rtl/ep_side/codec/dct2d8.v">
+                <FileInfo>
+                    <Attr Name="UsedInSyn" Val="true"/>
+                    <Attr Name="UsedInP&R" Val="true"/>
+                    <Attr Name="BelongTo" Val="design_1"/>
+                    <Attr Name="CompileOrder" Val="101"/>
+                </FileInfo>
+            </File>
+            <File Path="rtl/ep_side/codec/jpeg_quant_zz.v">
+                <FileInfo>
+                    <Attr Name="UsedInSyn" Val="true"/>
+                    <Attr Name="UsedInP&R" Val="true"/>
+                    <Attr Name="BelongTo" Val="design_1"/>
+                    <Attr Name="CompileOrder" Val="102"/>
+                </FileInfo>
+            </File>
+            <File Path="rtl/ep_side/codec/jpeg_huff_tab.v">
+                <FileInfo>
+                    <Attr Name="UsedInSyn" Val="true"/>
+                    <Attr Name="UsedInP&R" Val="true"/>
+                    <Attr Name="BelongTo" Val="design_1"/>
+                    <Attr Name="CompileOrder" Val="103"/>
+                </FileInfo>
+            </File>
+            <File Path="rtl/ep_side/codec/jpeg_huff_enc.v">
+                <FileInfo>
+                    <Attr Name="UsedInSyn" Val="true"/>
+                    <Attr Name="UsedInP&R" Val="true"/>
+                    <Attr Name="BelongTo" Val="design_1"/>
+                    <Attr Name="CompileOrder" Val="104"/>
+                </FileInfo>
+            </File>
+            <File Path="rtl/ep_side/codec/jpeg_enc.v">
+                <FileInfo>
+                    <Attr Name="UsedInSyn" Val="true"/>
+                    <Attr Name="UsedInP&R" Val="true"/>
+                    <Attr Name="BelongTo" Val="design_1"/>
+                    <Attr Name="CompileOrder" Val="105"/>
+                </FileInfo>
+            </File>
+            <File Path="rtl/ep_side/codec/line2block.v">
+                <FileInfo>
+                    <Attr Name="UsedInSyn" Val="true"/>
+                    <Attr Name="UsedInP&R" Val="true"/>
+                    <Attr Name="BelongTo" Val="design_1"/>
+                    <Attr Name="CompileOrder" Val="110"/>
+                </FileInfo>
+            </File>
+            <File Path="rtl/ep_side/codec/jpeg_frame.v">
+                <FileInfo>
+                    <Attr Name="UsedInSyn" Val="true"/>
+                    <Attr Name="UsedInP&R" Val="true"/>
+                    <Attr Name="BelongTo" Val="design_1"/>
+                    <Attr Name="CompileOrder" Val="111"/>
+                </FileInfo>
+            </File>
         </Verilog>
         <ADC_FILE>
             <File Path="constraints/ph1p_pcie_case_ep.adc">
