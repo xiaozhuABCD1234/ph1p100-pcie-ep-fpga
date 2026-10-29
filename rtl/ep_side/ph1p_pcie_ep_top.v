@@ -2483,7 +2483,16 @@ utx_arb2 u_push_utx_arb (
         end
     end
     // 诊断：0x25C = {writer seq[11:0], rd_start 次数[15:0], reader 状态[3:0]}
-    assign w_codec_stat = {w_camddr_seq[11:0], dbg_rd_start_n[15:0], rd_st_dbg, dbg_rd_bytes, cw_stream_len};
+    // 0x25C = {jb_done 计数[15:0], jb_v 计数[15:0]}：定位 JPEG 到底有没有出字节
+    reg [15:0] dbg_jb_v, dbg_jb_done;
+    always @(posedge w_ddr_dhi_clk or negedge w_ddrphy_rst_n) begin
+        if (!w_ddrphy_rst_n) begin dbg_jb_v <= 0; dbg_jb_done <= 0; end
+        else begin
+            if (jb_v)   dbg_jb_v    <= dbg_jb_v + 16'd1;
+            if (jb_done) dbg_jb_done <= dbg_jb_done + 16'd1;
+        end
+    end
+    assign w_codec_stat = {dbg_jb_done, dbg_jb_v, dbg_rd_bytes, cw_stream_len};
 
 
     // ==== DDR 回读压缩（0x240[4] 使能）====
@@ -2515,43 +2524,58 @@ utx_arb2 u_push_utx_arb (
     assign r2_flush = rd_last | rd_last_d;
 
     // ---- 字节流拼成 4 像素/拍，喂给 JPEG 编码器 ----
-    reg [31:0] jpx;            // 4 个像素
-    reg [1:0]  jcnt;           // 已攒字节数
+    //  注意 jpx 是 4 个字节，第 4 个字节要等下一次时钟才写进寄存器，
+    //  所以 valid 必须比最后一个字节晚一拍，并且要保持到被接收（下游在 S_OUT
+    //  期间 ready=0，不保持就会丢像素）。
+    reg [31:0] jpx;
+    reg [1:0]  jcnt;
+    reg        jpx_v;
     reg [15:0] jcol;           // 当前行已攒的拍数（每 480 拍 = 一行）
     reg [11:0] jrow;           // 当前行号（每 1088 行 = 一帧）
-    wire       jpx_v = (jcnt == 2'd3);   // 攒满 4 字节才有完整一拍
-    wire       jeol  = (jcol == 16'd479);
-    wire       jeof  = jeol && (jrow == 12'd1087);
-    wire       jpx_r;
-    wire [7:0] jb_d;
-    wire       jb_v;
-    wire [31:0] jb_blk;
+    reg        jeol_r, jeof_r; // 和 jpx_v 同拍的行尾/帧尾标记
+    wire       jpx_r;          // jpeg_frame 的 ready
+    wire [7:0] jb_d;           // JPEG 码流字节
+    wire       jb_v;           // JPEG 码流有效
+    wire       jb_done;        // JPEG 整帧码流结束
+    // 行尾/帧尾必须和 jpx_v 同拍：jcol/jrow 在攒满 4 字节那拍就递增了，
+    // 如果直接用它们和 jpx_v 组合，标记会晚一拍、帧永远结束不了。
+    wire       jeol = jeol_r && jpx_v;
+    wire       jeof = jeof_r && jpx_v;
+
+    // 缓冲空着、或者当前这拍正被接收 → 可以继续收字节
+    assign rd_r = (!jpx_v) || jpx_r;
 
     always @(posedge w_ddr_dhi_clk or negedge w_ddrphy_rst_n) begin
         if (!w_ddrphy_rst_n) begin
-            jpx <= 0; jcnt <= 0; jcol <= 0; jrow <= 0;
-        end else if (rd_v && rd_r) begin
-            jpx[jcnt*8 +: 8] <= rd_d;
-            if (jcnt == 2'd3) begin
-                jcnt <= 0;
-                if (jcol == 16'd479) begin
-                    jcol <= 0;
-                    if (jrow == 12'd1087) jrow <= 0;
-                    else jrow <= jrow + 12'd1;
-                end else jcol <= jcol + 16'd1;
-            end else jcnt <= jcnt + 2'd1;
+            jpx <= 0; jcnt <= 0; jpx_v <= 0; jcol <= 0; jrow <= 0;
+            jeol_r <= 1'b0; jeof_r <= 1'b0;
+        end else begin
+            // 被接收后清 valid
+            if (jpx_v && jpx_r) jpx_v <= 1'b0;
+
+            if (rd_v && rd_r) begin
+                jpx[jcnt*8 +: 8] <= rd_d;
+                if (jcnt == 2'd3) begin
+                    jcnt   <= 2'd0;
+                    jpx_v  <= 1'b1;         // 下一拍 jpx 完整
+                    jeol_r <= (jcol == 16'd479);
+                    jeof_r <= (jcol == 16'd479) && (jrow == 12'd1087);
+                    if (jcol == 16'd479) begin
+                        jcol <= 0;
+                        if (jrow == 12'd1087) jrow <= 0;
+                        else jrow <= jrow + 12'd1;
+                    end else jcol <= jcol + 16'd1;
+                end else jcnt <= jcnt + 2'd1;
+            end
         end
     end
-
-    // reader 的 ready 只在攒满前一拍拉低，保证 jpx 稳定
-    assign rd_r = jpx_r;
 
     jpeg_frame #(.W(1920)) u_jpeg (
         .clk(w_ddr_dhi_clk), .rst_n(w_ddrphy_rst_n),
         .s_data(jpx), .s_valid(jpx_v), .s_ready(jpx_r),
         .s_eol(jeol), .s_eof(jeof),
         .m_data(jb_d), .m_valid(jb_v), .m_ready(1'b1),
-        .st_blocks());
+        .st_blocks(), .m_done(jb_done));
 
     assign r2_d = jb_d;
     assign r2_v = jb_v;
@@ -2559,7 +2583,7 @@ utx_arb2 u_push_utx_arb (
     cstream_writer u_cw (
         .clk(w_ddr_dhi_clk), .rst_n(w_ddrphy_rst_n),
         .s_data(r2_d), .s_valid(r2_v), .s_ready(r2_r),
-        .s_sof(rd_start), .s_eof(r2_flush),
+        .s_sof(rd_start), .s_eof(jb_done),
         .wr_seq(cw_seq), .wr_base(), .wr_len(cw_len), .wr_valid(cw_v),
         .st_bytes(), .st_stream_len(cw_stream_len),
         .m_awaddr(cw_awaddr), .m_awlen(cw_awlen), .m_awsize(cw_awsize),

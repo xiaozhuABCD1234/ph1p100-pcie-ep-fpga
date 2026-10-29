@@ -20,7 +20,8 @@ module jpeg_frame #(
     output wire [7:0]   m_data,
     output wire         m_valid,
     input  wire         m_ready,
-    output wire [31:0]  st_blocks
+    output wire [31:0]  st_blocks,
+    output wire         m_done
 );
     // ---------------- 行转块 ----------------
     wire [31:0] bx_d;
@@ -40,6 +41,6 @@ module jpeg_frame #(
         .s_data(bx_d), .s_valid(bx_v), .s_ready(bx_r),
         .s_sof(bx_sof), .s_eof(bx_eof),
         .m_data(m_data), .m_valid(m_valid), .m_ready(m_ready),
-        .st_blocks(st_blocks));
+        .st_blocks(st_blocks), .m_done(m_done));
 
 endmodule

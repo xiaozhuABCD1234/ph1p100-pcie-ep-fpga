@@ -20,7 +20,8 @@ module jpeg_huff_enc (
     output reg          m_valid,
     input  wire         m_ready,
     output reg  [31:0]  st_bits,
-    output reg  [31:0]  st_blocks
+    output reg  [31:0]  st_blocks,
+    output reg          m_done      // 帧末块（带 eof）处理完时给一拍脉冲
 );
     localparam S_IDLE  = 3'd0,   // 等 SOF
                S_COLL  = 3'd1,   // 收 8 拍系数
@@ -97,12 +98,13 @@ module jpeg_huff_enc (
         if (!rst_n) begin
             st <= S_IDLE; wn <= 0; k <= 0; run <= 0; prev_dc <= 0;
             sym <= 0; is_ac <= 0; cur <= 0; ccat <= 0;
-            bitacc <= 0; bitcnt <= 0; ffd_sent <= 0; eof_lat <= 0;
+            bitacc <= 0; bitcnt <= 0; ffd_sent <= 0; eof_lat <= 0; m_done <= 1'b0;
             m_valid <= 0; m_data <= 0;
             st_bits <= 0; st_blocks <= 0;
             for (i = 0; i < 64; i = i + 1) qz[i] <= 0;
         end else begin
             if (m_valid && m_ready) m_valid <= 1'b0;
+            m_done <= 1'b0;
 
             // ---------------- 字节输出（只在这两个状态）----------------
             if (!m_valid && (st == S_DRAIN || st == S_FLUSH)) begin
@@ -227,6 +229,7 @@ module jpeg_huff_enc (
                     if (bitcnt < 6'd8 && !m_valid && !ffd_sent) begin
                         st_blocks <= st_blocks + 32'd1;
                         wn <= 3'd0;
+                        m_done <= 1'b1;      // 整帧码流结束
                         st <= S_IDLE;
                     end
                 end

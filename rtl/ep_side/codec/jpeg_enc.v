@@ -21,7 +21,8 @@ module jpeg_enc (
     output wire [7:0]   m_data,
     output wire         m_valid,
     input  wire         m_ready,
-    output wire [31:0]  st_blocks
+    output wire [31:0]  st_blocks,
+    output wire         m_done
 );
     // ---------------- 一级：二维 DCT ----------------
     wire [127:0] dct_d;
@@ -52,6 +53,6 @@ module jpeg_enc (
         .s_data(qz_d), .s_valid(qz_v), .s_ready(qz_r),
         .s_sof(qz_sof), .s_eof(dct_eof),
         .m_data(m_data), .m_valid(m_valid), .m_ready(m_ready),
-        .st_bits(), .st_blocks(st_blocks));
+        .st_bits(), .st_blocks(st_blocks), .m_done(m_done));
 
 endmodule
