@@ -319,6 +319,25 @@ wire        cw_v, cw_busy;
 wire [2:0]  cw_st_dbg;
 wire [127:0] w_codec_dbg;
 wire        jb_done;       // JPEG 整帧码流结束（huff m_done）
+wire        jb_v;          // JPEG 码流有效
+// 压缩分阶段计时（100 MHz 周期）：0x270 = rd_start→首字节，0x274 = →jb_done。
+reg  [31:0] cyc_cnt, cyc_first_lat, cyc_frame_lat;
+reg         cyc_run, cyc_first;
+always @(posedge w_ddr_dhi_clk or negedge codec_rst_n) begin
+    if (!codec_rst_n) begin
+        cyc_cnt <= 0; cyc_run <= 0; cyc_first <= 0;
+        cyc_first_lat <= 0; cyc_frame_lat <= 0;
+    end else begin
+        if (rd_start) begin
+            cyc_cnt <= 0; cyc_run <= 1'b1; cyc_first <= 1'b0;
+        end else if (cyc_run) begin
+            cyc_cnt <= cyc_cnt + 32'd1;
+            if (!cyc_first && jb_v) begin cyc_first <= 1'b1; cyc_first_lat <= cyc_cnt; end
+            if (jb_done) begin cyc_run <= 1'b0; cyc_frame_lat <= cyc_cnt; end
+        end
+    end
+end
+wire [63:0] w_codec_ts = {cyc_frame_lat, cyc_first_lat};
 wire [31:0] cw_len, cw_stream_len;
 reg  [31:0] cw_seq_top;   // 压缩帧计数器（不随 c2_en 复位，推帧源要用）
 wire [28:0] cw_awaddr; wire [7:0] cw_awlen; wire [2:0] cw_awsize;
@@ -942,6 +961,7 @@ pcie_ep_engine #(
     .algo_dbg                                ({algo_ovf, algo_rej, algo_acc}          ),
     .codec_stat                              (w_codec_stat                           ),
     .codec_dbg                               (w_codec_dbg                            ),
+    .codec_ts                                (w_codec_ts                             ),
     .cam_tap_cfg                             (cam_tap_cfg                            ),
     .cam_tap_b_cfg                           (cam_tap_b_cfg                          ),
     .cam_ab_sel                              (img_cam_ab_sel                         ),
@@ -2599,7 +2619,6 @@ utx_arb2 u_push_utx_arb (
     reg        jeol_r, jeof_r; // 和 jpx_v 同拍的行尾/帧尾标记
     wire       jpx_r;          // jpeg_frame 的 ready
     wire [7:0] jb_d;           // JPEG 码流字节
-    wire       jb_v;           // JPEG 码流有效
     // 行尾/帧尾必须和 jpx_v 同拍：jcol/jrow 在攒满 4 字节那拍就递增了，
     // 如果直接用它们和 jpx_v 组合，标记会晚一拍、帧永远结束不了。
     wire       jeol = jeol_r && jpx_v;

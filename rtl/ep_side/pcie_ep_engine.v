@@ -137,6 +137,7 @@ module pcie_ep_engine #(
     // 压缩通路状态（0x250..0x25C）与调试（0x260..0x26C）
     input       wire    [127:0]     codec_stat             ,
     input       wire    [127:0]     codec_dbg              ,
+    input       wire    [63:0]      codec_ts               ,
     // 硬件同步曝光控制/状态（0x1E0..0x20C，透传 ep_bar_win）
     output      wire                sync_start             ,
     output      wire                sync_abort             ,
@@ -503,6 +504,7 @@ ep_bar_win #(
     .algo_dbg       (algo_dbg               ),
     .codec_stat     (codec_stat             ),
     .codec_dbg      (codec_dbg              ),
+    .codec_ts       (codec_ts               ),
     // T07：RKA1 安全扩展寄存器面 + CSI 诊断（过路，逻辑在顶层/安全门）
     .tx_cap_bytes   (tx_cap_bytes           ),
     .tx_session_id  (tx_session_id          ),

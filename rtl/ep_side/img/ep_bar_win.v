@@ -237,6 +237,7 @@ module ep_bar_win #(
     input  wire [127:0] codec_stat,
     // 压缩链调试（0x260..0x26C 只读）：reader/writer 状态与读口握手
     input  wire [127:0] codec_dbg,
+    input  wire [63:0]  codec_ts,          // 压缩分阶段周期：{整帧, 首字节}
 
     // ==== 硬件同步曝光控制/状态（0x1E0..0x20C）====
     input  wire [351:0] sync_ro,
@@ -719,6 +720,8 @@ module ep_bar_win #(
             12'h264: rd_dw_comb = codec_dbg[63:32];          // {rd_st, cw_st, rd_busy, cw_busy}
             12'h268: rd_dw_comb = codec_dbg[95:64];          // 读口握手快照
             12'h26C: rd_dw_comb = codec_dbg[127:96];         // 保留
+            12'h270: rd_dw_comb = codec_ts[31:0];             // rd_start→jb_done 周期
+            12'h274: rd_dw_comb = codec_ts[63:32];            // rd_start→首字节周期
             12'h238: rd_dw_comb = ts_now[31:0];             // TS_NOW_LO（clk_ddr 100MHz 自由计数）
             12'h23C: rd_dw_comb = ts_now[63:32];            // TS_NOW_HI
             // ---- 板级调试：收帧写者卡死定位（0x170..0x178，只读，非合同寄存器）----
