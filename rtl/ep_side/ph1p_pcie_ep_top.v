@@ -2514,12 +2514,47 @@ utx_arb2 u_push_utx_arb (
     end
     assign r2_flush = rd_last | rd_last_d;
 
-    rle_enc u_rle2 (
+    // ---- 字节流拼成 4 像素/拍，喂给 JPEG 编码器 ----
+    reg [31:0] jpx;            // 4 个像素
+    reg [1:0]  jcnt;           // 已攒字节数
+    reg [15:0] jcol;           // 当前行已攒的拍数（每 480 拍 = 一行）
+    reg [11:0] jrow;           // 当前行号（每 1088 行 = 一帧）
+    wire       jpx_v = (jcnt == 2'd3);   // 攒满 4 字节才有完整一拍
+    wire       jeol  = (jcol == 16'd479);
+    wire       jeof  = jeol && (jrow == 12'd1087);
+    wire       jpx_r;
+    wire [7:0] jb_d;
+    wire       jb_v;
+    wire [31:0] jb_blk;
+
+    always @(posedge w_ddr_dhi_clk or negedge w_ddrphy_rst_n) begin
+        if (!w_ddrphy_rst_n) begin
+            jpx <= 0; jcnt <= 0; jcol <= 0; jrow <= 0;
+        end else if (rd_v && rd_r) begin
+            jpx[jcnt*8 +: 8] <= rd_d;
+            if (jcnt == 2'd3) begin
+                jcnt <= 0;
+                if (jcol == 16'd479) begin
+                    jcol <= 0;
+                    if (jrow == 12'd1087) jrow <= 0;
+                    else jrow <= jrow + 12'd1;
+                end else jcol <= jcol + 16'd1;
+            end else jcnt <= jcnt + 2'd1;
+        end
+    end
+
+    // reader 的 ready 只在攒满前一拍拉低，保证 jpx 稳定
+    assign rd_r = jpx_r;
+
+    jpeg_frame #(.W(1920)) u_jpeg (
         .clk(w_ddr_dhi_clk), .rst_n(w_ddrphy_rst_n),
-        .in_data(rd_d), .in_valid(rd_v), .in_ready(rd_r),
-        .in_sof(rd_start), .in_eof(1'b0), .in_flush(r2_flush), .o_idle(),
-        .out_data(r2_d), .out_valid(r2_v), .out_ready(r2_r),
-        .st_in_bytes(), .st_out_bytes());
+        .s_data(jpx), .s_valid(jpx_v), .s_ready(jpx_r),
+        .s_eol(jeol), .s_eof(jeof),
+        .m_data(jb_d), .m_valid(jb_v), .m_ready(1'b1),
+        .st_blocks());
+
+    assign r2_d = jb_d;
+    assign r2_v = jb_v;
 
     cstream_writer u_cw (
         .clk(w_ddr_dhi_clk), .rst_n(w_ddrphy_rst_n),
