@@ -224,13 +224,15 @@ module jpeg_huff_enc (
                     st <= S_COLL;
                 end else begin
                     // 帧末：把低 (8-bitcnt) 位补 1 凑满字节，再把残留字节吐完
+                    // 先补位，再等补出来的那个字节真正发出去（bitcnt 归 0）。
+                    // 原实现用同一拍的旧 bitcnt 判断退出，bitcnt=1..7 时会直接回
+                    // S_IDLE，最后的 pad 字节（含 EOB 尾部）丢失，并残留到下一帧开头。
                     if (bitcnt != 0 && bitcnt < 6'd8) begin
                         // 补位语义要和 T.81 一致：把有效数据左移到字节高位，
                         // 低位补 1。直接在高位 OR 1 会把数据挤到低端，输出就反了。
                         bitacc <= (bitacc << (8 - bitcnt)) | ((48'd1 << (8 - bitcnt)) - 48'd1);
                         bitcnt <= 6'd8;
-                    end
-                    if (bitcnt < 6'd8 && !m_valid && !ffd_sent) begin
+                    end else if (bitcnt == 6'd0 && !m_valid && !ffd_sent) begin
                         st_blocks <= st_blocks + 32'd1;
                         wn <= 3'd0;
                         m_done <= 1'b1;      // 整帧码流结束

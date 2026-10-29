@@ -2531,7 +2531,14 @@ utx_arb2 u_push_utx_arb (
             if (jb_done) dbg_jb_done <= dbg_jb_done + 16'd1;
         end
     end
-    assign w_codec_stat = {dbg_jb_done, dbg_jb_v, dbg_rd_bytes, cw_stream_len};
+    // 0x250 必须活过 c2_en=0：主机切到推帧时 codec 会被复位，writer 的
+    // st_stream_len 随之清零；这里在 cw_v 时锁存一份，供推帧阶段读取。
+    reg [31:0] cw_len_hold;
+    always @(posedge w_ddr_dhi_clk or negedge w_ddrphy_rst_n) begin
+        if (!w_ddrphy_rst_n) cw_len_hold <= 32'd0;
+        else if (cw_v)       cw_len_hold <= cw_stream_len;
+    end
+    assign w_codec_stat = {dbg_jb_done, dbg_jb_v, dbg_rd_bytes, cw_len_hold};
 
     // 压缩帧号：writer 的 wr_valid 每帧一拍。不能放在 cstream_writer 里用
     // codec_rst_n 复位，否则关掉 c2_en 后推帧源序号会丢。

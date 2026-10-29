@@ -145,8 +145,6 @@ module cstream_writer #(
                     fill  <= 0;
                     acc   <= 0;
                 end else st <= S_PAD;
-            end else if (m_awvalid && m_awready) begin
-                bv <= 1'b0;
             end
             S_PAD: begin
                 // 按**已写地址**收尾，不按收到的字节数：尾部不足 32 B 的 beat 已经补齐，
