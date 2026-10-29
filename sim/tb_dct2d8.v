@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-// tb_dct2d8.v — 对拍二维 DCT：读 8x8 块，输出 64 个系数（8 个/行）
+// tb_dct2d8.v — 2x2 DCT 批量对拍：连续送 20 个 8x8 块，逐块比对系数
 module tb_dct2d8;
     reg clk = 0, rst_n = 0;
     reg [31:0] s_data = 0;
@@ -17,8 +17,8 @@ module tb_dct2d8;
 
     always #5 clk = ~clk;
 
-    integer fi, fo, i, j, k, code, nb;
-    integer px [0:63];
+    integer fi, fo, i, j, k, code, v, nblk, nline;
+    reg [7:0] px [0:63];
     reg [127:0] cap;
 
     always @(posedge clk) begin
@@ -26,6 +26,7 @@ module tb_dct2d8;
             cap = m_data;
             for (k = 0; k < 8; k = k + 1)
                 $fwrite(fo, "%0d%s", $signed(cap[k*16 +: 16]), (k == 7) ? "\n" : " ");
+            nline = nline + 1;
         end
     end
 
@@ -34,29 +35,28 @@ module tb_dct2d8;
         fo = $fopen("/tmp/d2d_out.txt", "w");
         rst_n = 0; repeat (4) @(negedge clk); rst_n = 1; repeat (2) @(negedge clk);
 
-        nb = 0;
+        nblk = 0; nline = 0;
         for (j = 0; j < 20; j = j + 1) begin
             for (i = 0; i < 64; i = i + 1) begin
-                code = $fscanf(fi, "%d", px[i]);
+                code = $fscanf(fi, "%d", v);
+                px[i] = v[7:0];
             end
-            if (code != 1) j = 20;
-            else begin
-                // 16 拍送完 64 像素
-                for (i = 0; i < 16; i = i + 1) begin
-                    s_data  = {px[i*4+3], px[i*4+2], px[i*4+1], px[i*4]};
-                    s_valid = 1;
-                    s_sof   = (i == 0);
-
-                    s_eof   = (j == 19) && (i == 15);
-                    @(negedge clk);
-                    while (!s_ready) @(negedge clk);
-                end
-                s_valid = 0; s_sof = 0;
-                repeat (150) @(negedge clk);  // 等变换 + 输出 8 拍
-                nb = nb + 1;
+            // 送 64 个像素：16 拍 x 4
+            for (i = 0; i < 16; i = i + 1) begin
+                s_data  = {px[i*4+3], px[i*4+2], px[i*4+1], px[i*4]};
+                s_valid = 1;
+                s_sof   = (i == 0);
+                s_eof   = (j == 19) && (i == 15);
+                @(negedge clk);
+                while (!s_ready) @(negedge clk);
             end
+            s_valid = 0; s_sof = 0; s_eof = 0;
+            // 等这一块算完并输出（约 45 拍），再多留余量
+            wait (nline >= (j + 1) * 8);
+            repeat (5) @(negedge clk);
+            nblk = nblk + 1;
         end
-        $display("处理 %0d 块", nb);
+        $display("处理 %0d 块，输出 %0d 行", nblk, nline);
         $fclose(fo);
         $finish;
     end
