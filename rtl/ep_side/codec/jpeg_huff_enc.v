@@ -125,6 +125,10 @@ module jpeg_huff_enc (
             case (st)
             // ---------------- 收系数 ----------------
             S_IDLE: if (s_valid && s_sof && s_ready) begin
+                // 每帧第一块的 DC 预测必须从 0 起（T.81）。原来只在复位清，
+                // 连续帧时第一块 DC 会带上一帧的尾值，整帧被一个常数抬亮
+                // （板上实测 +102，图像结构正确但整体发白）。
+                prev_dc <= 16'sd0;
                 qz[0] <= s_data[15:0];   qz[1] <= s_data[31:16];
                 qz[2] <= s_data[47:32];  qz[3] <= s_data[63:48];
                 qz[4] <= s_data[79:64];  qz[5] <= s_data[95:80];

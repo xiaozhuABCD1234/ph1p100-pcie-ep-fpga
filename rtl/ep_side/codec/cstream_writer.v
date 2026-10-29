@@ -15,7 +15,6 @@ module cstream_writer #(
     input  wire [7:0]  s_data,
     input  wire        s_valid,
     output wire        s_ready,
-    input  wire        s_sof,
     input  wire        s_eof,
     output reg  [31:0] wr_seq,
     output wire [31:0] wr_base,
@@ -23,6 +22,8 @@ module cstream_writer #(
     output reg         wr_valid,
     output reg  [31:0] st_bytes,
     output reg  [31:0] st_stream_len,   // 帧尾时的真实压缩字节数（不含补零）
+    output wire        busy,            // 写通道占用中（给 DDR 写仲裁器用）
+    output wire [2:0]  st_dbg,          // 状态机快照（诊断）
     output reg  [28:0] m_awaddr,
     output reg  [7:0]  m_awlen,
     output reg  [2:0]  m_awsize,
@@ -38,33 +39,42 @@ module cstream_writer #(
     input  wire        m_bvalid,
     output wire        m_bready
 );
-    assign m_bready = 1'b1;
-    assign wr_base  = BASE;
-    assign wr_len   = FRAME_BYTES;
-
     localparam S_IDLE = 3'd0, S_DATA = 3'd1, S_FLUSH = 3'd2, S_PAD = 3'd3;
+    localparam [28:0] FRAME_END = BASE + FRAME_BYTES;
+
     reg [2:0]   st;
     reg [255:0] acc;
     reg [5:0]   fill;
-    reg [31:0]  nbytes;
     reg         eof_seen;   // s_eof 是单拍脉冲，可能正好落在不 ready 的拍上
     reg [28:0]  addr;
+    reg [31:0]  fbytes;     // 本帧已收字节数（st_bytes 是累计量，不能用来报帧长）
 
     // 待发的 beat（1 深）
     reg         bv;
     reg [255:0] bdata;
     reg [28:0]  baddr;
 
-    // acc 还能再收字节，且没有卡住的 beat
-    assign s_ready = (st == S_DATA) && (fill != 32) && (!bv || (m_awvalid && m_awready));
+    assign m_bready = 1'b1;
+    assign wr_base  = BASE;
+    assign wr_len   = FRAME_BYTES;
+    // 仲裁器只认 busy：有 beat 在飞或在等端口时必须保持授权，否则会被换手饿死。
+    assign busy     = (st != S_IDLE) || bv || m_awvalid || m_wvalid;
+    assign st_dbg   = st;
+
+    // acc 还能再收字节，且没有卡住的 beat。
+    // 只在收到第一个码流字节时开帧 —— 不用 s_sof。否则一旦 start 脉冲到了、
+    // 但回读/JPEG 没有真正出数，writer 会停在 S_DATA 并把 DDR 写口永久占住
+    // （busy=1 让写仲裁器不再把授权还给相机写者，板上实测相机整条路停摆）。
+    assign s_ready = ((st == S_DATA) || (st == S_IDLE)) && (fill != 32)
+                     && (!bv || (m_awvalid && m_awready));
 
     reg [255:0] full_beat;
     always @(*) full_beat = {s_data, acc[247:0]};
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            st <= S_IDLE; acc <= 0; fill <= 0; nbytes <= 0; addr <= BASE;
-            wr_seq <= 0; wr_valid <= 0; st_bytes <= 0; st_stream_len <= 0;
+            st <= S_IDLE; acc <= 0; fill <= 0; addr <= BASE;
+            wr_seq <= 0; wr_valid <= 0; st_bytes <= 0; st_stream_len <= 0; fbytes <= 0;
             m_awaddr <= 0; m_awlen <= 0; m_awsize <= 3'b101; m_awburst <= 2'b01;
             m_awvalid <= 0; m_wdata <= 0; m_wstrb <= 0; m_wlast <= 0; m_wvalid <= 0;
             bv <= 0; bdata <= 0; baddr <= 0; eof_seen <= 1'b0;
@@ -91,22 +101,23 @@ module cstream_writer #(
             end
 
             case (st)
-            S_IDLE: if (s_sof || s_valid) begin
-                acc <= 0; fill <= 0; nbytes <= 0; addr <= BASE; st <= S_DATA;
-                if (s_valid && s_ready) begin
-                    // 第一个字节就在这一拍到了，顺手收下
-                    acc[7:0] <= s_data;
-                    fill <= 6'd1;
-                    nbytes <= 32'd1;
-                    st_bytes <= st_bytes + 32'd1;
-                end
+            S_IDLE: if (s_valid && s_ready) begin
+                // 第一个字节就是帧头：收下并进入 S_DATA
+                acc <= 0;
+                acc[7:0] <= s_data;
+                fill <= 6'd1;
+                addr <= BASE;
+                eof_seen <= s_eof;
+                st_bytes <= st_bytes + 32'd1;
+                fbytes   <= 32'd1;
+                st <= S_DATA;
             end
             S_DATA: begin
                 if (s_eof) eof_seen <= 1'b1;      // 先锁住，避免落在不 ready 的拍上丢掉
                 if (s_valid && s_ready) begin
                     acc[fill*8 +: 8] <= s_data;
-                    nbytes   <= nbytes + 32'd1;
                     st_bytes <= st_bytes + 32'd1;
+                    fbytes   <= fbytes + 32'd1;
                     if (fill == 31) begin
                         bdata <= full_beat;
                         baddr <= addr;
@@ -115,12 +126,12 @@ module cstream_writer #(
                         fill  <= 0;
                     end else fill <= fill + 1'b1;
                     if (s_eof || eof_seen) begin
-                        st_stream_len <= st_bytes + 32'd1;
+                        st_stream_len <= fbytes + 32'd1;
                         eof_seen <= 1'b0;
                         st <= S_FLUSH;
                     end
                 end else if (eof_seen) begin
-                    st_stream_len <= st_bytes;
+                    st_stream_len <= fbytes;
                     eof_seen <= 1'b0;
                     st <= S_FLUSH;
                 end
@@ -138,7 +149,9 @@ module cstream_writer #(
                 bv <= 1'b0;
             end
             S_PAD: begin
-                if (nbytes >= FRAME_BYTES) begin
+                // 按**已写地址**收尾，不按收到的字节数：尾部不足 32 B 的 beat 已经补齐，
+                // 用字节数判断会多写一个 beat、越过本帧的定长区。
+                if (addr >= FRAME_END) begin
                     if (!bv && !m_awvalid && !m_wvalid) begin
                         wr_seq   <= wr_seq + 1'b1;
                         wr_valid <= 1'b1;
@@ -148,7 +161,6 @@ module cstream_writer #(
                     bdata   <= 256'd0;
                     baddr   <= addr;
                     bv      <= 1'b1;
-                    nbytes  <= nbytes + 32'd32;
                 end
             end
             default: st <= S_IDLE;

@@ -11,10 +11,12 @@ module jpeg_quant_zz (
     input  wire [127:0] s_data,     // 8 个 16bit 有符号系数/拍
     input  wire         s_valid,
     output wire         s_ready,
+    input  wire         s_eof,      // 与最后 8 个系数同拍：本块是整帧最后一块
     output reg  [127:0] m_data,     // 8 个量化后的之字形系数/拍
     output reg          m_valid,
     input  wire         m_ready,
     output reg          m_sof,
+    output reg          m_eof,      // 与 m_data 同拍：本块是整帧最后一块
     output reg  [31:0]  st_blocks   // 已处理块数（观测用）
 );
     localparam integer S = 16;
@@ -77,6 +79,7 @@ module jpeg_quant_zz (
     reg [15:0] cbuf [0:63];      // 量化后的系数，自然顺序
     reg [2:0]  wn, on;
     reg        ready_out;
+    reg        eof_in_lat;       // 本块是否帧末块（收数时锁存，出数时随最后一拍给出）
 
     // ready_out=0 时才收数据。wn 到 7 的那一拍仍要能收（是第 8 个系数），
     // 所以不能用 wn != 7 判断。
@@ -97,8 +100,8 @@ module jpeg_quant_zz (
     integer i;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            wn <= 0; on <= 0; m_valid <= 0; m_data <= 0; m_sof <= 0;
-            ready_out <= 0; st_blocks <= 0;
+            wn <= 0; on <= 0; m_valid <= 0; m_data <= 0; m_sof <= 0; m_eof <= 0;
+            ready_out <= 0; st_blocks <= 0; eof_in_lat <= 1'b0;
             for (i = 0; i < 64; i = i + 1) cbuf[i] <= 0;
         end else begin
             if (m_valid && m_ready) m_valid <= 1'b0;
@@ -107,7 +110,11 @@ module jpeg_quant_zz (
             if (s_valid && s_ready) begin
                 for (i = 0; i < 8; i = i + 1)
                     cbuf[wn*8 + i] <= qz(s_data[i*16 +: 16], rtab[wn*8 + i]);
-                if (wn == 3'd7) begin wn <= 0; ready_out <= 1'b1; on <= 0; end
+                if (wn == 3'd7) begin
+                    wn <= 0; ready_out <= 1'b1; on <= 0;
+                    // 帧末标记跟着系数一起进流水线，出数时再随最后一拍还给下游
+                    eof_in_lat <= s_eof;
+                end
                 else wn <= wn + 3'd1;
             end
 
@@ -117,6 +124,7 @@ module jpeg_quant_zz (
                     m_data[i*16 +: 16] <= cbuf[ztab[on*8 + i]];
                 m_valid <= 1'b1;
                 m_sof   <= (on == 3'd0);
+                m_eof   <= eof_in_lat && (on == 3'd7);
                 if (on == 3'd7) begin
                     ready_out <= 1'b0;
                     st_blocks <= st_blocks + 32'd1;

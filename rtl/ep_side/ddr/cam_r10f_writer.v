@@ -1141,6 +1141,9 @@ module cam_r10f_writer #(
 
             if (rel0_evt) protect0 <= 1'b0;
             if (rel1_evt) protect1 <= 1'b0;
+            // 保护关掉时把锁清掉：否则上一次压缩中途退出留下的保护位，
+            // 会在下一次压缩打开时把两块都锁死，写者再也不发布。
+            if (!protect_enabled) begin protect0 <= 1'b0; protect1 <= 1'b0; end
 
             // 自愈时清流控状态，否则会停在 A_IDLE 等一个永远不来的 burst_ok
             if (self_flush) begin

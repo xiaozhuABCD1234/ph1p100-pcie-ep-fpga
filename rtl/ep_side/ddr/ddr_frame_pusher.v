@@ -163,6 +163,8 @@ module ddr_frame_pusher #(
     input  wire [31:0]  ddr_seq,
     input  wire [31:0]  ddr_base,
     input  wire [31:0]  ddr_status,
+    // 1 = ARM 后立即推当前已发布的那一帧（压缩块没有新帧事件，用它强制一次）
+    input  wire         src_force,
 
     // ---- ERAM 帧缓存源 ----
     input  wire         src_sel,
@@ -731,7 +733,9 @@ module ddr_frame_pusher #(
                     reject_sticky <= 1'b0;
                     g_st       <= G_ARMED;
                     st_err     <= E_NONE;
-                    last_seq   <= src_seq;      // 只推 ARM 之后新发布的帧
+                    // 普通源只推 ARM 之后新发布的帧；src_force 时故意退一格，
+                    // 让当前已发布的帧立刻成为一次新事件（压缩块分时推帧用）。
+                    last_seq   <= src_force ? (src_seq - 32'd1) : src_seq;
                 end
             end
 

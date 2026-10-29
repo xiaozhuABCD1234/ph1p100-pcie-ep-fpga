@@ -54,9 +54,19 @@ tb/csi_rx_packet_integrity_ref.v
 # T11: RAW10->R10F writer (crc32_upd4.v is its include, not compiled separately)
 ../rtl/ep_side/ddr/cam_r10f_writer.v
 ../rtl/ep_side/ddr/ddr_wr_arb.v
+# ---- hardware JPEG codec ----
+../rtl/ep_side/codec/cstream_reader.v
+../rtl/ep_side/codec/cstream_writer.v
+../rtl/ep_side/codec/dct1d8.v
+../rtl/ep_side/codec/dct2d8.v
+../rtl/ep_side/codec/line2block.v
+../rtl/ep_side/codec/jpeg_quant_zz.v
+../rtl/ep_side/codec/jpeg_huff_tab.v
+../rtl/ep_side/codec/jpeg_huff_enc.v
+../rtl/ep_side/codec/jpeg_enc.v
+../rtl/ep_side/codec/jpeg_frame.v
 ../rtl/ep_side/img/ep_bar_win.v
 ../rtl/ep_side/img/img_frame_src.v
-../rtl/ep_side/img/img_regs.v
 
 # ---- 引擎 / 顶层 / 桥 ----
 ../rtl/ep_side/pcie_ep_engine.v
@@ -85,12 +95,10 @@ tb/csi_rx_packet_integrity_ref.v
 
 # B01 closedloop production integration
 ../rtl/ep_side/ddr/closedloop/ddr_closedloop_readback.v
-../rtl/ep_side/img/algo/algo_diagnostic_sink.v
 ../rtl/ep_side/img/algo/algo_obuf.v
 ../rtl/ep_side/img/algo/algo_rowwin3.v
 ../rtl/ep_side/img/algo/algo_rowwin_reader.v
 ../rtl/ep_side/img/algo/bayer_raw10_demosaic4.v
-../rtl/ep_side/img/algo/cam_algo_diagnostics.v
 ../rtl/ep_side/img/algo/csi_algo_roi_adapter.v
 ../rtl/ep_side/img/algo/gray8_gaussian3x3_frame.v
 ../rtl/ep_side/img/algo/gray8_gaussian3x3_stream.v

@@ -306,22 +306,28 @@ wire [1:0]  a1_bresp; wire a1_bvalid, a1_bready;
 wire [28:0] m1_araddr; wire [7:0] m1_arlen; wire [2:0] m1_arsize;
 wire [1:0]  m1_arburst; wire m1_arvalid, m1_arready;
 wire [255:0] m1_rdata; wire m1_rvalid, m1_rready;
-wire        rd_start, rd_busy, rd_v, rd_r, rd_last;
+wire        rd_start, rd_busy, rd_v, rd_r, rd_done;
 wire [3:0]  rd_st_dbg;
 wire        rd_arready_i, rd_rvalid_i;
 wire [255:0] rd_rdata_i;
 wire [7:0]  rd_d;
 wire [28:0] rd_araddr; wire [7:0] rd_arlen; wire [2:0] rd_arsize;
 wire [1:0]  rd_arburst; wire rd_arvalid;
-wire        r2_v, r2_r, r2_flush;
+wire        r2_v, r2_r;
 wire [7:0]  r2_d;
-wire        cw_v;
-wire [31:0] cw_seq, cw_len, cw_stream_len;
+wire        cw_v, cw_busy;
+wire [2:0]  cw_st_dbg;
+wire [127:0] w_codec_dbg;
+wire [31:0] cw_len, cw_stream_len;
+reg  [31:0] cw_seq_top;   // 压缩帧计数器（不随 c2_en 复位，推帧源要用）
 wire [28:0] cw_awaddr; wire [7:0] cw_awlen; wire [2:0] cw_awsize;
 wire [1:0]  cw_awburst; wire cw_awvalid;
 wire [255:0] cw_wdata; wire [31:0] cw_wstrb; wire cw_wlast, cw_wvalid;
 
 assign c2_en = w_algo_ctrl[4];
+wire push_comp = w_algo_ctrl[6];   // 1 = 推 0x0500_0000 的压缩块（此时 c2_en=0）
+// 压缩链只在 c2_en=1 时放行；关掉即整链复位，下一次从干净状态开始。
+wire codec_rst_n = w_ddrphy_rst_n && c2_en;
 assign a1_awaddr  = c2_en ? cw_awaddr  : w_camw_b_awaddr;
 assign a1_awlen   = c2_en ? cw_awlen   : w_camw_b_awlen;
 assign a1_awsize  = c2_en ? cw_awsize  : w_camw_b_awsize;
@@ -331,12 +337,12 @@ assign a1_wdata   = c2_en ? cw_wdata   : w_camw_b_wdata;
 assign a1_wstrb   = c2_en ? cw_wstrb   : w_camw_b_wstrb;
 assign a1_wlast   = c2_en ? cw_wlast   : w_camw_b_wlast;
 assign a1_wvalid  = c2_en ? cw_wvalid  : w_camw_b_wvalid;
-assign m1_araddr  = c2_en ? rd_araddr  : push_b_araddr;
-assign m1_arlen   = c2_en ? rd_arlen   : push_b_arlen;
-assign m1_arsize  = c2_en ? rd_arsize  : push_b_arsize;
-assign m1_arburst = c2_en ? rd_arburst : push_b_arburst;
-assign m1_arvalid = c2_en ? rd_arvalid : push_b_arvalid;
-assign m1_rready  = c2_en ? 1'b1       : push_b_rready;
+assign m1_araddr  = push_b_araddr;
+assign m1_arlen   = push_b_arlen;
+assign m1_arsize  = push_b_arsize;
+assign m1_arburst = push_b_arburst;
+assign m1_arvalid = push_b_arvalid;
+assign m1_rready  = push_b_rready;
 // m1 是仲裁器的输出口：数据/有效分发给 B 路 pusher 和回读引擎
 assign push_b_rdata  = m1_rdata;
 assign push_b_rvalid = m1_rvalid;
@@ -472,7 +478,10 @@ wire         w_link_up;                       // pl_link_up & 两个锁相都就
 // 推帧引擎的源所有权信号
 // T07 round1：release 按相机分开（A: rel_tgl0/1 → writer A；B: rel_tgl2/3 → writer B），
 // 避免共享一对 toggle 时 A 路的 release 误清 B 路的保护位（system round0 F1）。
-wire         w_rel_tgl0, w_rel_tgl1;          // A 路块 0/1 release toggle
+wire         push_rel0, push_rel1;            // pusher 发的 A 路块 release toggle
+reg          rd_rel_tgl;                      // 压缩回读读完一帧后释放两块
+wire         w_rel_tgl0 = push_rel0 ^ rd_rel_tgl;
+wire         w_rel_tgl1 = push_rel1 ^ rd_rel_tgl;
 wire         w_rel_tgl2, w_rel_tgl3;          // B 路块 0/1 release toggle
 wire         w_push_fb_hold;                  // ERAM 源冻结（pusher 输出）
 wire         w_push_src_lock;                 // 诊断：源被 one-shot 占着
@@ -510,12 +519,13 @@ assign w_ddr_ro   = {w_camddr_len,   w_camddr_status,   w_camddr_base,   w_camdd
 assign w_ddr_ro_b = {w_camddr_b_len, w_camddr_b_status, w_camddr_b_base, w_camddr_b_seq};
 assign w_cam_diag_b = {w_camddr_b_lines, w_camddr_b_grp};
 
-// 推帧引擎的 DDR 源：A 路固定接 A 写者、B 路固定接 B 写者。
-// 单路模式下由 ARM 命令选中的那一片 pusher 工作，另一片保持 push_en=0/不授权。
-assign w_push_ddr_seq    = c2_en ? cw_seq : w_camddr_seq;
-assign w_push_ddr_base   = c2_en ? 29'h0500_0000 : w_camddr_base;
-assign w_push_ddr_status = w_camddr_status;
-assign w_push_ddr_len    = w_camddr_len;
+// 推帧引擎的 DDR 源：默认是 A 路相机帧；0x240[6]=1 时改推压缩块。
+// 压缩与推流是**分时**的（c2_en=1 压、c2_en=0 推），所以压缩块在推的时候
+// 已经没有读者，DDR 读口不需要并发仲裁。
+assign w_push_ddr_seq    = push_comp ? cw_seq_top : w_camddr_seq;
+assign w_push_ddr_base   = push_comp ? 29'h0500_0000 : w_camddr_base;
+assign w_push_ddr_status = push_comp ? {31'd0, (cw_seq_top != 32'd0)} : w_camddr_status;
+assign w_push_ddr_len    = push_comp ? 32'd2613248 : w_camddr_len;
 assign w_push_ddr_seq_b    = w_camddr_b_seq;
 assign w_push_ddr_base_b   = w_camddr_b_base;
 assign w_push_ddr_status_b = w_camddr_b_status;
@@ -930,6 +940,7 @@ pcie_ep_engine #(
     .algo_ctrl                               (w_algo_ctrl                            ),
     .algo_dbg                                ({algo_ovf, algo_rej, algo_acc}          ),
     .codec_stat                              (w_codec_stat                           ),
+    .codec_dbg                               (w_codec_dbg                            ),
     .cam_tap_cfg                             (cam_tap_cfg                            ),
     .cam_tap_b_cfg                           (cam_tap_b_cfg                          ),
     .cam_ab_sel                              (img_cam_ab_sel                         ),
@@ -1975,7 +1986,9 @@ cam_r10f_writer #(
     .cam_frame_abort(1'b0           ),
     // 只有被 CTRL[8] 选中的那一路才做「发布即保护」：pusher 只给选中相机发 release，
     // 未选中那路若也开保护，发布完两块后再没有 release，写者会永久停在封锁态。
-    .prot_en       (img_push_en && (img_pair_en || ~img_cam_ab_sel)),
+    // 推帧时按 pusher 的 release 保护；压缩时由回读引擎读完一帧后释放，
+    // 防止 220 ms 的慢速回读期间相机把源块覆盖掉（否则会时域撕裂）。
+    .prot_en       ((img_push_en && (img_pair_en || ~img_cam_ab_sel)) || c2_en),
     .rel_tgl0      (w_rel_tgl0      ),
     .rel_tgl1      (w_rel_tgl1      ),
 
@@ -2097,7 +2110,9 @@ ddr_wr_arb u_ddr_wr_arb (
     .clk       (w_ddr_dhi_clk    ),
     .rst       (~w_ddrphy_rst_n  ),
     .busy0     (w_camw_busy      ),
-    .busy1     (w_camw_busy_b    ),
+    // c2_en 时 A1 写口归压缩写出器，busy 必须跟着换人，否则仲裁器以为 1 号
+    // 客户机空闲，grant 永远停在 0 号，压缩流的 awready 恒 0（板上死锁根因）。
+    .busy1     (c2_en ? cw_busy : w_camw_busy_b),
     .grant_out (w_wr_grant       ),
     .a0_awaddr (w_camw_awaddr    ), .a0_awlen (w_camw_awlen),
     .a0_awsize (w_camw_awsize    ), .a0_awburst (w_camw_awburst),
@@ -2197,8 +2212,8 @@ ddr_frame_pusher #(
     .cam_sel_live  (1'b0              ),
     .tx_status     (w_tx_status      ),
     .tx_block_cfg  (w_tx_block_cfg   ),
-    .rel_tgl0      (w_rel_tgl0       ),
-    .rel_tgl1      (w_rel_tgl1       ),
+    .rel_tgl0      (push_rel0        ),
+    .rel_tgl1      (push_rel1        ),
     .rel_tgl2      (),
     .rel_tgl3      (),
     .tx_src_lock   (w_push_src_lock  ),
@@ -2207,6 +2222,7 @@ ddr_frame_pusher #(
     .ddr_seq       (w_push_ddr_seq    ),
     .ddr_base      (w_push_ddr_base   ),
     .ddr_status    (w_push_ddr_status  ),
+    .src_force     (push_comp          ),
 
     .utx_sel       (utx_sel_a         ),
     .tl_tx_wait    (tl_tx_wait        ),
@@ -2295,6 +2311,7 @@ ddr_frame_pusher #(
     .ddr_seq       (w_push_ddr_seq_b    ),
     .ddr_base      (w_push_ddr_base_b   ),
     .ddr_status    (w_push_ddr_status_b ),
+    .src_force     (1'b0                ),
 
     .utx_sel       (utx_sel_b         ),
     .tl_tx_wait    (tl_tx_wait        ),
@@ -2494,34 +2511,65 @@ utx_arb2 u_push_utx_arb (
     end
     assign w_codec_stat = {dbg_jb_done, dbg_jb_v, dbg_rd_bytes, cw_stream_len};
 
+    // 压缩帧号：writer 的 wr_valid 每帧一拍。不能放在 cstream_writer 里用
+    // codec_rst_n 复位，否则关掉 c2_en 后推帧源序号会丢。
+    always @(posedge w_ddr_dhi_clk or negedge w_ddrphy_rst_n) begin
+        if (!w_ddrphy_rst_n) cw_seq_top <= 32'd0;
+        else if (cw_v)       cw_seq_top <= cw_seq_top + 32'd1;
+    end
+
+    always @(posedge w_ddr_dhi_clk or negedge w_ddrphy_rst_n) begin
+        if (!w_ddrphy_rst_n) rd_rel_tgl <= 1'b0;
+        else if (rd_done)    rd_rel_tgl <= ~rd_rel_tgl;
+    end
+
+    // 压缩链调试：回读 start 次数 + reader/writer 状态 + 读口握手。
+    // 0x260 start 计数、0x264 {rd_st,cw_st,rd_busy,cw_busy}、0x268 握手快照。
+    reg [15:0] dbg_rd_start_cnt;
+    always @(posedge w_ddr_dhi_clk or negedge w_ddrphy_rst_n) begin
+        if (!w_ddrphy_rst_n) dbg_rd_start_cnt <= 16'd0;
+        else if (rd_start)   dbg_rd_start_cnt <= dbg_rd_start_cnt + 16'd1;
+    end
+    assign w_codec_dbg = {cw_seq_top,
+        {rd_arvalid, rd_arready_i, m1_arvalid, m1_arready, push_rd_arvalid, push_rd_arready,
+         w_ddr_arvalid, w_ddr_arready, 24'd0},
+        {16'd0, rd_st_dbg, cw_st_dbg, rd_busy, cw_busy, 7'd0},
+        {16'd0, dbg_rd_start_cnt}};
+
+
+    // 读口静默窗：c2_en 刚打开时，推帧引擎可能还有 DDR 读突发在飞。
+    // 直接切给回读引擎会把别人的 R 拍当自己的，left 早减完、帧尾 eof 丢失
+    // （板上表现为 reader 提前 idle、JPEG 永远等不到帧尾）。等读口连续
+    // 8191 拍（约 82 us）没有 AR/R 活动再启动第一帧。
+    reg [12:0] rd_quiet_cnt;
+    always @(posedge w_ddr_dhi_clk or negedge w_ddrphy_rst_n) begin
+        if (!w_ddrphy_rst_n) rd_quiet_cnt <= 13'd0;
+        else if (!c2_en) rd_quiet_cnt <= 13'd0;
+        else if (w_ddr_arvalid || w_ddr_rvalid) rd_quiet_cnt <= 13'd0;
+        else if (rd_quiet_cnt != 13'h1FFF) rd_quiet_cnt <= rd_quiet_cnt + 13'd1;
+    end
+    wire rd_quiet = (rd_quiet_cnt == 13'h1FFF);
 
     // ==== DDR 回读压缩（0x240[4] 使能）====
-    //  实时流喂不动慢速压缩链，所以改成：A 路 writer 把整帧灰度写进 DDR →
-    //  这里按自己的节奏读回（packed RAW10 的 5→4 拆包）→ RLE →
+    //  实时流喂不动慢速压缩链，所以：A 路 writer 把整帧 R10F 写进 DDR →
+    //  这里按自己的节奏读回（packed RAW10 的 5→4 拆包）→ 灰度 JPEG 编码 →
     //  写成定长帧到 0x0500_0000 → A 路 pusher 送主机（真实长度在 0x250）。
     reg [31:0] camddr_seq_d;
     always @(posedge w_ddr_dhi_clk or negedge w_ddrphy_rst_n) begin
         if (!w_ddrphy_rst_n) camddr_seq_d <= 32'd0;
         else              camddr_seq_d <= w_camddr_seq;
     end
-    assign rd_start = c2_en && (w_camddr_seq != camddr_seq_d) && !rd_busy;
+    assign rd_start = c2_en && rd_quiet && (w_camddr_seq != camddr_seq_d) && !rd_busy;
 
     cstream_reader u_crd (
-        .clk(w_ddr_dhi_clk), .rst_n(w_ddrphy_rst_n),
+        .clk(w_ddr_dhi_clk), .rst_n(codec_rst_n),
         .start(rd_start), .base(w_camddr_base + 29'd128), .bytes(32'd2611200),
-        .o_data(rd_d), .o_valid(rd_v), .o_ready(rd_r), .o_last(rd_last),
+        .o_data(rd_d), .o_valid(rd_v), .o_ready(rd_r), .o_done(rd_done),
         .busy(rd_busy), .st_dbg(rd_st_dbg),
         .m_araddr(rd_araddr), .m_arlen(rd_arlen), .m_arsize(rd_arsize),
         .m_arburst(rd_arburst), .m_arvalid(rd_arvalid), .m_arready(rd_arready_i),
         .m_rdata(rd_rdata_i), .m_rresp(2'b00), .m_rlast(1'b0),
         .m_rvalid(rd_rvalid_i), .m_rready(1'b1));
-
-    reg rd_last_d;
-    always @(posedge w_ddr_dhi_clk or negedge w_ddrphy_rst_n) begin
-        if (!w_ddrphy_rst_n) rd_last_d <= 1'b0;
-        else              rd_last_d <= rd_last;
-    end
-    assign r2_flush = rd_last | rd_last_d;
 
     // ---- 字节流拼成 4 像素/拍，喂给 JPEG 编码器 ----
     //  注意 jpx 是 4 个字节，第 4 个字节要等下一次时钟才写进寄存器，
@@ -2545,8 +2593,8 @@ utx_arb2 u_push_utx_arb (
     // 缓冲空着、或者当前这拍正被接收 → 可以继续收字节
     assign rd_r = (!jpx_v) || jpx_r;
 
-    always @(posedge w_ddr_dhi_clk or negedge w_ddrphy_rst_n) begin
-        if (!w_ddrphy_rst_n) begin
+    always @(posedge w_ddr_dhi_clk or negedge codec_rst_n) begin
+        if (!codec_rst_n) begin
             jpx <= 0; jcnt <= 0; jpx_v <= 0; jcol <= 0; jrow <= 0;
             jeol_r <= 1'b0; jeof_r <= 1'b0;
         end else begin
@@ -2571,7 +2619,7 @@ utx_arb2 u_push_utx_arb (
     end
 
     jpeg_frame #(.W(1920)) u_jpeg (
-        .clk(w_ddr_dhi_clk), .rst_n(w_ddrphy_rst_n),
+        .clk(w_ddr_dhi_clk), .rst_n(codec_rst_n),
         .s_data(jpx), .s_valid(jpx_v), .s_ready(jpx_r),
         .s_eol(jeol), .s_eof(jeof),
         // ready 必须接到 writer：writer 补零期间不接收，恒 1 会把 JPEG 的字节丢掉
@@ -2582,11 +2630,11 @@ utx_arb2 u_push_utx_arb (
     assign r2_v = jb_v;
 
     cstream_writer u_cw (
-        .clk(w_ddr_dhi_clk), .rst_n(w_ddrphy_rst_n),
+        .clk(w_ddr_dhi_clk), .rst_n(codec_rst_n),
         .s_data(r2_d), .s_valid(r2_v), .s_ready(r2_r),
-        .s_sof(rd_start), .s_eof(jb_done),
-        .wr_seq(cw_seq), .wr_base(), .wr_len(cw_len), .wr_valid(cw_v),
-        .st_bytes(), .st_stream_len(cw_stream_len),
+        .s_eof(jb_done),
+        .wr_seq(), .wr_base(), .wr_len(cw_len), .wr_valid(cw_v),
+        .st_bytes(), .st_stream_len(cw_stream_len), .busy(cw_busy), .st_dbg(cw_st_dbg),
         .m_awaddr(cw_awaddr), .m_awlen(cw_awlen), .m_awsize(cw_awsize),
         .m_awburst(cw_awburst), .m_awvalid(cw_awvalid), .m_awready(a1_awready),
         .m_wdata(cw_wdata), .m_wstrb(cw_wstrb), .m_wlast(cw_wlast),
@@ -2631,23 +2679,26 @@ generate if(CLOSEDLOOP_EN) begin:g_closedloop
     end
 end else begin:g_original_reader
     assign cl_release=0;assign cl_inject_abort=0;
-    // 压缩模式（0x240[4]）下 DDR 读口归回读引擎：两路在仲裁器里共享会互相饿死，
-    // 而压缩和推流本来可以错开（压缩完再推），先保证压缩链路跑通。
-    assign w_ddr_arid   = c2_en ? 4'd0       : push_rd_arid;
-    assign w_ddr_araddr = c2_en ? rd_araddr  : push_rd_araddr;
-    assign w_ddr_arlen  = c2_en ? rd_arlen   : push_rd_arlen;
-    assign w_ddr_arsize = c2_en ? rd_arsize  : push_rd_arsize;
-    assign w_ddr_arburst= c2_en ? rd_arburst : push_rd_arburst;
-    assign w_ddr_arvalid= c2_en ? rd_arvalid : push_rd_arvalid;
-    assign push_rd_arready = c2_en ? 1'b0    : w_ddr_arready;
-    assign push_rd_rvalid  = c2_en ? 1'b0    : w_ddr_rvalid;
+    // DDR 读口按模式整口让出：c2_en=1 归压缩回读，c2_en=0 归推帧仲裁器。
+    // 不做并发共享是刻意的：回读用 32B 单拍 AR，读仲裁器按 RLAST 释放授权，
+    // 单拍突发上会停在 active 把口锁死（板上实测 0x264=0x1100：rd 卡在 S_AR、
+    // s_arvalid 恒 0）。压缩完成后再推，对端到端延迟无影响。
+    assign w_ddr_arid    = c2_en ? 4'd0       : push_rd_arid;
+    assign w_ddr_araddr  = c2_en ? rd_araddr  : push_rd_araddr;
+    assign w_ddr_arlen   = c2_en ? rd_arlen   : push_rd_arlen;
+    assign w_ddr_arsize  = c2_en ? rd_arsize  : push_rd_arsize;
+    assign w_ddr_arburst = c2_en ? rd_arburst : push_rd_arburst;
+    assign w_ddr_arvalid = c2_en ? rd_arvalid : push_rd_arvalid;
+    assign push_rd_arready = c2_en ? 1'b0     : w_ddr_arready;
+    assign push_rd_rvalid  = c2_en ? 1'b0     : w_ddr_rvalid;
     assign push_rd_rdata   = w_ddr_rdata;
     assign push_rd_rresp   = w_ddr_rresp;
-    assign push_rd_rlast   = c2_en ? 1'b0    : w_ddr_rlast;
+    assign push_rd_rlast   = c2_en ? 1'b0     : w_ddr_rlast;
     assign push_rd_rid     = w_ddr_rid;
-    assign w_ddr_rready    = c2_en ? 1'b1    : push_rd_rready;
-    assign rd_arready_i    = w_ddr_arready;
-    assign rd_rvalid_i     = w_ddr_rvalid;
+    assign w_ddr_rready    = c2_en ? 1'b1     : push_rd_rready;
+    // 回读引擎只在 c2_en=1 时运行（rst 也被 codec_rst_n 钳住）
+    assign rd_arready_i    = c2_en ? w_ddr_arready : 1'b0;
+    assign rd_rvalid_i     = c2_en ? w_ddr_rvalid  : 1'b0;
     assign rd_rdata_i      = w_ddr_rdata;
 end endgenerate
 

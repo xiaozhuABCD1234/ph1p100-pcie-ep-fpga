@@ -14,8 +14,8 @@ module cstream_reader (
     output reg  [7:0]  o_data,
     output reg         o_valid,
     input  wire        o_ready,
-    output reg         o_last,         // 最后一个字节
     output wire        busy,
+    output reg         o_done,         // 一帧读完（单拍）：通知相机写者释放源块
     output wire [3:0]  st_dbg,
     // AXI 读
     output reg  [28:0] m_araddr,
@@ -38,6 +38,7 @@ module cstream_reader (
     reg [5:0]  bi;            // beat 内字节下标
     reg [2:0]  ggrp;          // 0..4：5 字节里第几个
     reg        lastbeat;
+    reg        start_pend;   // 帧尾还有字节没交出去时收到的 start
     reg [31:0] total;
 
     assign busy     = (st != S_IDLE);
@@ -46,13 +47,19 @@ module cstream_reader (
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; left <= 0; addr <= 0; beat <= 0; bi <= 0; ggrp <= 0;
-            o_data <= 0; o_valid <= 0; o_last <= 0; lastbeat <= 0; total <= 0;
+            o_data <= 0; o_valid <= 0; lastbeat <= 0; total <= 0; start_pend <= 0; o_done <= 0;
             m_araddr <= 0; m_arlen <= 0; m_arsize <= 3'b101; m_arburst <= 2'b01; m_arvalid <= 0;
         end else begin
+            o_done <= 1'b0;
             case (st)
             S_IDLE: begin
-                o_valid <= 1'b0; o_last <= 1'b0;
-                if (start) begin
+                // 上一个 beat 的最后一个字节可能还没被接收：先把它交出去，再接受新 start。
+                // 原来这里无条件清 o_valid，会丢掉每帧的最后一个字节，下游就永远等不到帧尾。
+                if (start) start_pend <= 1'b1;
+                if (o_valid) begin
+                    if (o_ready) o_valid <= 1'b0;
+                end else if (start || start_pend) begin
+                    start_pend <= 1'b0;
                     addr  <= base;
                     left  <= (bytes + 31) >> 5;
                     total <= bytes;
@@ -84,23 +91,25 @@ module cstream_reader (
             S_OUT: begin
                 // 5 字节里取前 4 个（第 5 个是低 2 位）
                 if (o_valid && o_ready) o_valid <= 1'b0;
-                if (!o_valid) begin
+                // bi==32 表示这个 beat 的 32 字节已经处理完；必须先判它，
+                // 否则会在同一拍从 beat[32] 取一个越界字节（X），每 beat 多吐一个。
+                if (bi == 6'd32) begin
+                    if (!o_valid || o_ready) begin
+                        if (lastbeat) begin
+                            o_done <= 1'b1;   // 源块已经全部读进片内，可以还给相机写者
+                            st     <= S_IDLE;
+                        end else st <= S_AR;
+                    end
+                end else if (!o_valid) begin
                     if (ggrp == 3'd4) begin
                         ggrp <= 0;
-                        bi <= bi + 1'b1;
+                        bi   <= bi + 1'b1;
                     end else begin
                         o_data  <= beat[bi*8 +: 8];
                         o_valid <= 1'b1;
                         ggrp <= ggrp + 1'b1;
                         bi   <= bi + 1'b1;
                     end
-                end
-                // 这个 beat 的 32 字节处理完 → 下一个
-                if (bi == 6'd32) begin
-                    if (lastbeat) begin
-                        o_last <= 1'b1;
-                        st <= S_IDLE;
-                    end else st <= S_AR;
                 end
             end
             default: st <= S_IDLE;

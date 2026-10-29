@@ -19,14 +19,7 @@ add_files rtl/ep_side/img/algo/img_algo_parallel_top.v
 add_files rtl/ep_side/img/algo/csi_algo_roi_adapter.v
 add_files rtl/ep_side/img/algo/algo_y8_to_legacy.v
 
-# ---- LZ77 压缩通路：ROI 裁剪 + 帧级封包 + deflate 核心 + 定长帧打包 ----
-add_files rtl/ep_side/codec/codec_roi_crop.v
-add_files rtl/ep_side/codec/codec_pack.v
-add_files rtl/ep_side/codec/a1_frame_top.v
-add_files rtl/ep_side/codec/a1_deflate_core.v
-add_files rtl/ep_side/codec/gray4_byte.v
-add_files rtl/ep_side/codec/rle_enc.v
-add_files rtl/ep_side/codec/rle_to_words.v
+# ---- 硬件 JPEG 压缩通路 ----
 add_files rtl/ep_side/codec/cstream_reader.v
 add_files rtl/ep_side/codec/cstream_writer.v
 add_files rtl/ep_side/codec/dct1d8.v
@@ -38,7 +31,6 @@ add_files rtl/ep_side/codec/jpeg_enc.v
 add_files rtl/ep_side/codec/line2block.v
 add_files rtl/ep_side/codec/jpeg_frame.v
 add_files rtl/ep_side/img/ep_bar_win.v
-add_files rtl/ep_side/img/img_regs.v
 add_files rtl/ep_side/img/img_frame_src.v
 add_files rtl/common/ph1p_pcie_case_param.v
 add_files rtl/common/ph1p_pcie_rst_sync.v

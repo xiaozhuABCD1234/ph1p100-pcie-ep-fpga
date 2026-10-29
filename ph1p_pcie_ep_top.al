@@ -19,14 +19,6 @@
                     <Attr Name="CompileOrder" Val="1"/>
                 </FileInfo>
             </File>
-            <File Path="rtl/ep_side/img/img_regs.v">
-                <FileInfo>
-                    <Attr Name="UsedInSyn" Val="true"/>
-                    <Attr Name="UsedInP&R" Val="true"/>
-                    <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="2"/>
-                </FileInfo>
-            </File>
             <File Path="rtl/ep_side/img/img_frame_src.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>
@@ -489,62 +481,6 @@
                     <Attr Name="UsedInP&R" Val="true"/>
                     <Attr Name="BelongTo" Val="design_1"/>
                     <Attr Name="CompileOrder" Val="69"/>
-                </FileInfo>
-            </File>
-            <File Path="rtl/ep_side/codec/codec_roi_crop.v">
-                <FileInfo>
-                    <Attr Name="UsedInSyn" Val="true"/>
-                    <Attr Name="UsedInP&R" Val="true"/>
-                    <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="80"/>
-                </FileInfo>
-            </File>
-            <File Path="rtl/ep_side/codec/codec_pack.v">
-                <FileInfo>
-                    <Attr Name="UsedInSyn" Val="true"/>
-                    <Attr Name="UsedInP&R" Val="true"/>
-                    <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="81"/>
-                </FileInfo>
-            </File>
-            <File Path="rtl/ep_side/codec/a1_frame_top.v">
-                <FileInfo>
-                    <Attr Name="UsedInSyn" Val="true"/>
-                    <Attr Name="UsedInP&R" Val="true"/>
-                    <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="82"/>
-                </FileInfo>
-            </File>
-            <File Path="rtl/ep_side/codec/a1_deflate_core.v">
-                <FileInfo>
-                    <Attr Name="UsedInSyn" Val="true"/>
-                    <Attr Name="UsedInP&R" Val="true"/>
-                    <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="83"/>
-                </FileInfo>
-            </File>
-            <File Path="rtl/ep_side/codec/gray4_byte.v">
-                <FileInfo>
-                    <Attr Name="UsedInSyn" Val="true"/>
-                    <Attr Name="UsedInP&R" Val="true"/>
-                    <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="90"/>
-                </FileInfo>
-            </File>
-            <File Path="rtl/ep_side/codec/rle_enc.v">
-                <FileInfo>
-                    <Attr Name="UsedInSyn" Val="true"/>
-                    <Attr Name="UsedInP&R" Val="true"/>
-                    <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="91"/>
-                </FileInfo>
-            </File>
-            <File Path="rtl/ep_side/codec/rle_to_words.v">
-                <FileInfo>
-                    <Attr Name="UsedInSyn" Val="true"/>
-                    <Attr Name="UsedInP&R" Val="true"/>
-                    <Attr Name="BelongTo" Val="design_1"/>
-                    <Attr Name="CompileOrder" Val="92"/>
                 </FileInfo>
             </File>
             <File Path="rtl/ep_side/codec/cstream_reader.v">
