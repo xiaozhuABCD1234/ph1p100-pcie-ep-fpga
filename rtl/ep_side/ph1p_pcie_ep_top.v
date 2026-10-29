@@ -2574,7 +2574,8 @@ utx_arb2 u_push_utx_arb (
         .clk(w_ddr_dhi_clk), .rst_n(w_ddrphy_rst_n),
         .s_data(jpx), .s_valid(jpx_v), .s_ready(jpx_r),
         .s_eol(jeol), .s_eof(jeof),
-        .m_data(jb_d), .m_valid(jb_v), .m_ready(1'b1),
+        // ready 必须接到 writer：writer 补零期间不接收，恒 1 会把 JPEG 的字节丢掉
+        .m_data(jb_d), .m_valid(jb_v), .m_ready(r2_r),
         .st_blocks(), .m_done(jb_done));
 
     assign r2_d = jb_d;

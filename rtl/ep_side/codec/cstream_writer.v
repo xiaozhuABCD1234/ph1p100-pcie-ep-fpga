@@ -47,6 +47,7 @@ module cstream_writer #(
     reg [255:0] acc;
     reg [5:0]   fill;
     reg [31:0]  nbytes;
+    reg         eof_seen;   // s_eof 是单拍脉冲，可能正好落在不 ready 的拍上
     reg [28:0]  addr;
 
     // 待发的 beat（1 深）
@@ -66,7 +67,7 @@ module cstream_writer #(
             wr_seq <= 0; wr_valid <= 0; st_bytes <= 0; st_stream_len <= 0;
             m_awaddr <= 0; m_awlen <= 0; m_awsize <= 3'b101; m_awburst <= 2'b01;
             m_awvalid <= 0; m_wdata <= 0; m_wstrb <= 0; m_wlast <= 0; m_wvalid <= 0;
-            bv <= 0; bdata <= 0; baddr <= 0;
+            bv <= 0; bdata <= 0; baddr <= 0; eof_seen <= 1'b0;
         end else begin
             wr_valid <= 1'b0;
 
@@ -100,18 +101,29 @@ module cstream_writer #(
                     st_bytes <= st_bytes + 32'd1;
                 end
             end
-            S_DATA: if (s_valid && s_ready) begin
-                acc[fill*8 +: 8] <= s_data;
-                nbytes   <= nbytes + 32'd1;
-                st_bytes <= st_bytes + 32'd1;
-                if (fill == 31) begin
-                    bdata <= full_beat;
-                    baddr <= addr;
-                    bv    <= 1'b1;
-                    acc   <= 0;
-                    fill  <= 0;
-                end else fill <= fill + 1'b1;
-                if (s_eof) begin st_stream_len <= st_bytes + 32'd1; st <= S_FLUSH; end
+            S_DATA: begin
+                if (s_eof) eof_seen <= 1'b1;      // 先锁住，避免落在不 ready 的拍上丢掉
+                if (s_valid && s_ready) begin
+                    acc[fill*8 +: 8] <= s_data;
+                    nbytes   <= nbytes + 32'd1;
+                    st_bytes <= st_bytes + 32'd1;
+                    if (fill == 31) begin
+                        bdata <= full_beat;
+                        baddr <= addr;
+                        bv    <= 1'b1;
+                        acc   <= 0;
+                        fill  <= 0;
+                    end else fill <= fill + 1'b1;
+                    if (s_eof || eof_seen) begin
+                        st_stream_len <= st_bytes + 32'd1;
+                        eof_seen <= 1'b0;
+                        st <= S_FLUSH;
+                    end
+                end else if (eof_seen) begin
+                    st_stream_len <= st_bytes;
+                    eof_seen <= 1'b0;
+                    st <= S_FLUSH;
+                end
             end
             S_FLUSH: if (!bv) begin
                 // 尾部不足 32 字节：补零凑一个 beat（主机只读前 stream_len 字节）
