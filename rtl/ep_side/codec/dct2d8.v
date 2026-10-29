@@ -29,6 +29,7 @@ module dct2d8 (
     reg [71:0] dx;              // 第一遍：8 x 9bit
     reg [95:0] dx2;             // 第二遍：8 x 12bit
     reg        dstart, dstart2;
+    reg        eof_lat;   // 本块是否帧末块（像素阶段的 eof 要带到输出）
     wire [127:0] dy, dy2;
     wire       ddone, ddone2;
 
@@ -55,7 +56,7 @@ module dct2d8 (
     integer k;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            st <= S_IDLE; wn <= 0; idx <= 0; on <= 0;
+            st <= S_IDLE; wn <= 0; idx <= 0; on <= 0; eof_lat <= 0;
             dx <= 0; dx2 <= 0; dstart <= 0; dstart2 <= 0;
             m_valid <= 0; m_data <= 0; m_sof <= 0; m_eof <= 0;
             for (k = 0; k < 64; k = k + 1) begin blk[k] <= 0; tmp[k] <= 0; out[k] <= 0; end
@@ -78,7 +79,10 @@ module dct2d8 (
                 blk[wn + 6'd1] <= s_data[15:8];
                 blk[wn + 6'd2] <= s_data[23:16];
                 blk[wn + 6'd3] <= s_data[31:24];
-                if (wn >= 6'd60) begin wn <= 0; idx <= 0; st <= S_ROWP; end
+                if (wn >= 6'd60) begin
+                    eof_lat <= s_eof;
+                    wn <= 0; idx <= 0; st <= S_ROWP;
+                end
                 else wn <= wn + 6'd4;
             end
 
@@ -115,8 +119,11 @@ module dct2d8 (
                              out[on*8+3], out[on*8+2], out[on*8+1], out[on*8+0] };
                 m_valid <= 1'b1;
                 m_sof   <= (on == 3'd0);
-                m_eof   <= (on == 3'd7) && s_eof;
-                if (on == 3'd7) begin st <= S_IDLE; wn <= 0; end
+                m_eof   <= (on == 3'd7) && eof_lat;
+                if (on == 3'd7) begin
+                    // 块是连续的：直接回去收下一块的 64 个像素，不用等 SOF
+                    st <= S_FILL; wn <= 0;
+                end
                 else on <= on + 3'd1;
             end
             default: st <= S_IDLE;

@@ -48,6 +48,7 @@ module jpeg_huff_enc (
     reg [47:0] bitacc;         // 右对齐，低 bitcnt 位有效
     reg [5:0]  bitcnt;
     reg        ffd_sent;       // 上一字节是 0xFF，下一拍必须补 0x00
+    reg        eof_lat;        // 本块是否帧末块（eof 跟着系数来，要锁存到收尾）
 
     jpeg_huff_tab u_tab (.sym(sym), .is_ac(is_ac), .code(hcode), .len(hlen));
 
@@ -96,7 +97,7 @@ module jpeg_huff_enc (
         if (!rst_n) begin
             st <= S_IDLE; wn <= 0; k <= 0; run <= 0; prev_dc <= 0;
             sym <= 0; is_ac <= 0; cur <= 0; ccat <= 0;
-            bitacc <= 0; bitcnt <= 0; ffd_sent <= 0;
+            bitacc <= 0; bitcnt <= 0; ffd_sent <= 0; eof_lat <= 0;
             m_valid <= 0; m_data <= 0;
             st_bits <= 0; st_blocks <= 0;
             for (i = 0; i < 64; i = i + 1) qz[i] <= 0;
@@ -135,7 +136,10 @@ module jpeg_huff_enc (
                 qz[wn*8+2] <= s_data[47:32];  qz[wn*8+3] <= s_data[63:48];
                 qz[wn*8+4] <= s_data[79:64];  qz[wn*8+5] <= s_data[95:80];
                 qz[wn*8+6] <= s_data[111:96]; qz[wn*8+7] <= s_data[127:112];
-                if (wn == 3'd7) begin wn <= 0; k <= 0; run <= 0; st <= S_HC; end
+                if (wn == 3'd7) begin
+                    eof_lat <= s_eof;
+                    wn <= 0; k <= 0; run <= 0; st <= S_HC;
+                end
                 else wn <= wn + 3'd1;
             end
 
@@ -207,7 +211,7 @@ module jpeg_huff_enc (
 
             // ---------------- 收尾：补 1 到字节边界 ----------------
             S_FLUSH: begin
-                if (!s_eof) begin
+                if (!eof_lat) begin
                     // 帧内块之间**不补位**：JPEG 熵编码比特流是连续的，只在帧末补 1
                     st_blocks <= st_blocks + 32'd1;
                     wn <= 3'd0;
