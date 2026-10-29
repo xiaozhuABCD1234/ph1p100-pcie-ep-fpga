@@ -90,8 +90,15 @@ module cstream_writer #(
             end
 
             case (st)
-            S_IDLE: if (s_sof) begin
+            S_IDLE: if (s_sof || s_valid) begin
                 acc <= 0; fill <= 0; nbytes <= 0; addr <= BASE; st <= S_DATA;
+                if (s_valid && s_ready) begin
+                    // 第一个字节就在这一拍到了，顺手收下
+                    acc[7:0] <= s_data;
+                    fill <= 6'd1;
+                    nbytes <= 32'd1;
+                    st_bytes <= st_bytes + 32'd1;
+                end
             end
             S_DATA: if (s_valid && s_ready) begin
                 acc[fill*8 +: 8] <= s_data;

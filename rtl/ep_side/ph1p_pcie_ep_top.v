@@ -308,6 +308,8 @@ wire [1:0]  m1_arburst; wire m1_arvalid, m1_arready;
 wire [255:0] m1_rdata; wire m1_rvalid, m1_rready;
 wire        rd_start, rd_busy, rd_v, rd_r, rd_last;
 wire [3:0]  rd_st_dbg;
+wire        rd_arready_i, rd_rvalid_i;
+wire [255:0] rd_rdata_i;
 wire [7:0]  rd_d;
 wire [28:0] rd_araddr; wire [7:0] rd_arlen; wire [2:0] rd_arsize;
 wire [1:0]  rd_arburst; wire rd_arvalid;
@@ -2475,7 +2477,6 @@ utx_arb2 u_push_utx_arb (
         if (!w_a_rst_out) begin
             dbg_rd_bytes <= 0; dbg_r2_bytes <= 0; dbg_cw_frames <= 0; dbg_rd_start_n <= 0;
         end else begin
-            if (rd_start)     dbg_rd_start_n <= dbg_rd_start_n + 16'd1;
             if (rd_v && rd_r) dbg_rd_bytes <= dbg_rd_bytes + 32'd1;
             if (r2_v && r2_r) dbg_r2_bytes <= dbg_r2_bytes + 32'd1;
             if (cw_v)         dbg_cw_frames <= dbg_cw_frames + 32'd1;
@@ -2490,38 +2491,38 @@ utx_arb2 u_push_utx_arb (
     //  这里按自己的节奏读回（packed RAW10 的 5→4 拆包）→ RLE →
     //  写成定长帧到 0x0500_0000 → A 路 pusher 送主机（真实长度在 0x250）。
     reg [31:0] camddr_seq_d;
-    always @(posedge w_a_byte_clk or negedge w_a_rst_out) begin
-        if (!w_a_rst_out) camddr_seq_d <= 32'd0;
+    always @(posedge w_ddr_dhi_clk or negedge w_ddrphy_rst_n) begin
+        if (!w_ddrphy_rst_n) camddr_seq_d <= 32'd0;
         else              camddr_seq_d <= w_camddr_seq;
     end
     assign rd_start = c2_en && (w_camddr_seq != camddr_seq_d) && !rd_busy;
 
     cstream_reader u_crd (
-        .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
+        .clk(w_ddr_dhi_clk), .rst_n(w_ddrphy_rst_n),
         .start(rd_start), .base(w_camddr_base + 29'd128), .bytes(32'd2611200),
         .o_data(rd_d), .o_valid(rd_v), .o_ready(rd_r), .o_last(rd_last),
         .busy(rd_busy), .st_dbg(rd_st_dbg),
         .m_araddr(rd_araddr), .m_arlen(rd_arlen), .m_arsize(rd_arsize),
-        .m_arburst(rd_arburst), .m_arvalid(rd_arvalid), .m_arready(m1_arready),
-        .m_rdata(m1_rdata), .m_rresp(2'b00), .m_rlast(1'b0),
-        .m_rvalid(m1_rvalid), .m_rready(m1_rready));
+        .m_arburst(rd_arburst), .m_arvalid(rd_arvalid), .m_arready(rd_arready_i),
+        .m_rdata(rd_rdata_i), .m_rresp(2'b00), .m_rlast(1'b0),
+        .m_rvalid(rd_rvalid_i), .m_rready(1'b1));
 
     reg rd_last_d;
-    always @(posedge w_a_byte_clk or negedge w_a_rst_out) begin
-        if (!w_a_rst_out) rd_last_d <= 1'b0;
+    always @(posedge w_ddr_dhi_clk or negedge w_ddrphy_rst_n) begin
+        if (!w_ddrphy_rst_n) rd_last_d <= 1'b0;
         else              rd_last_d <= rd_last;
     end
     assign r2_flush = rd_last | rd_last_d;
 
     rle_enc u_rle2 (
-        .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
+        .clk(w_ddr_dhi_clk), .rst_n(w_ddrphy_rst_n),
         .in_data(rd_d), .in_valid(rd_v), .in_ready(rd_r),
         .in_sof(rd_start), .in_eof(1'b0), .in_flush(r2_flush), .o_idle(),
         .out_data(r2_d), .out_valid(r2_v), .out_ready(r2_r),
         .st_in_bytes(), .st_out_bytes());
 
     cstream_writer u_cw (
-        .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
+        .clk(w_ddr_dhi_clk), .rst_n(w_ddrphy_rst_n),
         .s_data(r2_d), .s_valid(r2_v), .s_ready(r2_r),
         .s_sof(rd_start), .s_eof(r2_flush),
         .wr_seq(cw_seq), .wr_base(), .wr_len(cw_len), .wr_valid(cw_v),
@@ -2570,11 +2571,24 @@ generate if(CLOSEDLOOP_EN) begin:g_closedloop
     end
 end else begin:g_original_reader
     assign cl_release=0;assign cl_inject_abort=0;
-    assign w_ddr_arid=push_rd_arid;assign w_ddr_araddr=push_rd_araddr;assign w_ddr_arlen=push_rd_arlen;
-    assign w_ddr_arsize=push_rd_arsize;assign w_ddr_arburst=push_rd_arburst;assign w_ddr_arvalid=push_rd_arvalid;
-    assign push_rd_arready=w_ddr_arready;assign push_rd_rvalid=w_ddr_rvalid;
-    assign push_rd_rdata=w_ddr_rdata;assign push_rd_rresp=w_ddr_rresp;assign push_rd_rlast=w_ddr_rlast;assign push_rd_rid=w_ddr_rid;
-    assign w_ddr_rready=push_rd_rready;
+    // 压缩模式（0x240[4]）下 DDR 读口归回读引擎：两路在仲裁器里共享会互相饿死，
+    // 而压缩和推流本来可以错开（压缩完再推），先保证压缩链路跑通。
+    assign w_ddr_arid   = c2_en ? 4'd0       : push_rd_arid;
+    assign w_ddr_araddr = c2_en ? rd_araddr  : push_rd_araddr;
+    assign w_ddr_arlen  = c2_en ? rd_arlen   : push_rd_arlen;
+    assign w_ddr_arsize = c2_en ? rd_arsize  : push_rd_arsize;
+    assign w_ddr_arburst= c2_en ? rd_arburst : push_rd_arburst;
+    assign w_ddr_arvalid= c2_en ? rd_arvalid : push_rd_arvalid;
+    assign push_rd_arready = c2_en ? 1'b0    : w_ddr_arready;
+    assign push_rd_rvalid  = c2_en ? 1'b0    : w_ddr_rvalid;
+    assign push_rd_rdata   = w_ddr_rdata;
+    assign push_rd_rresp   = w_ddr_rresp;
+    assign push_rd_rlast   = c2_en ? 1'b0    : w_ddr_rlast;
+    assign push_rd_rid     = w_ddr_rid;
+    assign w_ddr_rready    = c2_en ? 1'b1    : push_rd_rready;
+    assign rd_arready_i    = w_ddr_arready;
+    assign rd_rvalid_i     = w_ddr_rvalid;
+    assign rd_rdata_i      = w_ddr_rdata;
 end endgenerate
 
 endmodule
