@@ -149,12 +149,21 @@ module jpeg_huff_enc (
                     prev_dc<= qz[0];
                     st     <= S_AMP;
                 end else if (qz[k] == 16'd0) begin
-                    // AC 零：累积游程
-                    if (run == 4'd15) begin
-                        sym   <= 8'hF0;    // ZRL
+                    // 尾部剩下的零一律用 EOB 表示（T.81）：不要在这之前发 ZRL，
+                    // 否则一块会多发好几个 ZRL，码流对不上。
+                    if (k == 6'd63) begin
+                        sym   <= 8'h00;
                         is_ac <= 1'b1;
-                        ccat  <= 4'd0;     // 没有幅度
+                        ccat  <= 4'd0;
+                        st    <= S_AMP;
+                    end else if (run == 4'd15) begin
+                        // 攒满 16 个零发 ZRL；当前这个零也算在里面，所以 k 要前进
+                        // （k=63 时不前进，让 S_NEXT 直接去收尾）
+                        sym   <= 8'hF0;
+                        is_ac <= 1'b1;
+                        ccat  <= 4'd0;
                         run   <= 4'd0;
+                        if (k != 6'd63) k <= k + 6'd1;
                         st    <= S_AMP;
                     end else begin
                         run <= run + 4'd1;
