@@ -61,7 +61,7 @@ module ddr_rd_arb2 (
     output wire         s_rready
 );
     // sel = 当前授权路；active = 已发出 AR，等 RLAST
-    reg sel, active;
+    reg sel, active, last;
 
     assign m0_arready = (sel == 1'b0) ? s_arready : 1'b0;
     assign m1_arready = (sel == 1'b1) ? s_arready : 1'b0;
@@ -91,12 +91,20 @@ module ddr_rd_arb2 (
         if (rst) begin
             sel    <= 1'b0;
             active <= 1'b0;
+            last   <= 1'b1;
         end else if (!active) begin
             if (s_arvalid && s_arready) begin
                 active <= 1'b1;
+                last   <= sel;              // 记住这次服务了谁，下次让另一个
             end else if (!s_arvalid) begin
-                if (m0_arvalid)      sel <= 1'b0;
-                else if (m1_arvalid) sel <= 1'b1;
+                // 轮询：上一笔是谁就优先给另一路，避免长请求饿死对方
+                if (last) begin
+                    if (m0_arvalid)      sel <= 1'b0;
+                    else if (m1_arvalid) sel <= 1'b1;
+                end else begin
+                    if (m1_arvalid)      sel <= 1'b1;
+                    else if (m0_arvalid) sel <= 1'b0;
+                end
             end
         end else if (s_rvalid && s_rready && s_rlast) begin
             active <= 1'b0;

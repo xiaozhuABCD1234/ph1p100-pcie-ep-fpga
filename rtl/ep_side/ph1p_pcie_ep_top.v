@@ -307,6 +307,7 @@ wire [28:0] m1_araddr; wire [7:0] m1_arlen; wire [2:0] m1_arsize;
 wire [1:0]  m1_arburst; wire m1_arvalid, m1_arready;
 wire [255:0] m1_rdata; wire m1_rvalid, m1_rready;
 wire        rd_start, rd_busy, rd_v, rd_r, rd_last;
+wire [3:0]  rd_st_dbg;
 wire [7:0]  rd_d;
 wire [28:0] rd_araddr; wire [7:0] rd_arlen; wire [2:0] rd_arsize;
 wire [1:0]  rd_arburst; wire rd_arvalid;
@@ -2467,8 +2468,70 @@ utx_arb2 u_push_utx_arb (
     wire        src_l = algo_sel_l;
     wire        src_e = algo_sel_e;
 
-    // 0x250 = 本帧压缩后的真实字节数（DDR 回读通路）
-    assign w_codec_stat = {32'd0, cw_stream_len, 32'd2088960, 32'd2088960};
+    // 回读链观测：0x250=压缩长度、0x254=回读字节、0x258=RLE 输出字节、0x25C=完成帧数
+    reg [31:0] dbg_rd_bytes, dbg_r2_bytes, dbg_cw_frames;
+    reg [15:0] dbg_rd_start_n;
+    always @(posedge w_a_byte_clk or negedge w_a_rst_out) begin
+        if (!w_a_rst_out) begin
+            dbg_rd_bytes <= 0; dbg_r2_bytes <= 0; dbg_cw_frames <= 0; dbg_rd_start_n <= 0;
+        end else begin
+            if (rd_start)     dbg_rd_start_n <= dbg_rd_start_n + 16'd1;
+            if (rd_v && rd_r) dbg_rd_bytes <= dbg_rd_bytes + 32'd1;
+            if (r2_v && r2_r) dbg_r2_bytes <= dbg_r2_bytes + 32'd1;
+            if (cw_v)         dbg_cw_frames <= dbg_cw_frames + 32'd1;
+        end
+    end
+    // 诊断：0x25C = {writer seq[11:0], rd_start 次数[15:0], reader 状态[3:0]}
+    assign w_codec_stat = {w_camddr_seq[11:0], dbg_rd_start_n[15:0], rd_st_dbg, dbg_rd_bytes, cw_stream_len};
+
+
+    // ==== DDR 回读压缩（0x240[4] 使能）====
+    //  实时流喂不动慢速压缩链，所以改成：A 路 writer 把整帧灰度写进 DDR →
+    //  这里按自己的节奏读回（packed RAW10 的 5→4 拆包）→ RLE →
+    //  写成定长帧到 0x0500_0000 → A 路 pusher 送主机（真实长度在 0x250）。
+    reg [31:0] camddr_seq_d;
+    always @(posedge w_a_byte_clk or negedge w_a_rst_out) begin
+        if (!w_a_rst_out) camddr_seq_d <= 32'd0;
+        else              camddr_seq_d <= w_camddr_seq;
+    end
+    assign rd_start = c2_en && (w_camddr_seq != camddr_seq_d) && !rd_busy;
+
+    cstream_reader u_crd (
+        .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
+        .start(rd_start), .base(w_camddr_base + 29'd128), .bytes(32'd2611200),
+        .o_data(rd_d), .o_valid(rd_v), .o_ready(rd_r), .o_last(rd_last),
+        .busy(rd_busy), .st_dbg(rd_st_dbg),
+        .m_araddr(rd_araddr), .m_arlen(rd_arlen), .m_arsize(rd_arsize),
+        .m_arburst(rd_arburst), .m_arvalid(rd_arvalid), .m_arready(m1_arready),
+        .m_rdata(m1_rdata), .m_rresp(2'b00), .m_rlast(1'b0),
+        .m_rvalid(m1_rvalid), .m_rready(m1_rready));
+
+    reg rd_last_d;
+    always @(posedge w_a_byte_clk or negedge w_a_rst_out) begin
+        if (!w_a_rst_out) rd_last_d <= 1'b0;
+        else              rd_last_d <= rd_last;
+    end
+    assign r2_flush = rd_last | rd_last_d;
+
+    rle_enc u_rle2 (
+        .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
+        .in_data(rd_d), .in_valid(rd_v), .in_ready(rd_r),
+        .in_sof(rd_start), .in_eof(1'b0), .in_flush(r2_flush), .o_idle(),
+        .out_data(r2_d), .out_valid(r2_v), .out_ready(r2_r),
+        .st_in_bytes(), .st_out_bytes());
+
+    cstream_writer u_cw (
+        .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
+        .s_data(r2_d), .s_valid(r2_v), .s_ready(r2_r),
+        .s_sof(rd_start), .s_eof(r2_flush),
+        .wr_seq(cw_seq), .wr_base(), .wr_len(cw_len), .wr_valid(cw_v),
+        .st_bytes(), .st_stream_len(cw_stream_len),
+        .m_awaddr(cw_awaddr), .m_awlen(cw_awlen), .m_awsize(cw_awsize),
+        .m_awburst(cw_awburst), .m_awvalid(cw_awvalid), .m_awready(a1_awready),
+        .m_wdata(cw_wdata), .m_wstrb(cw_wstrb), .m_wlast(cw_wlast),
+        .m_wvalid(cw_wvalid), .m_wready(a1_wready),
+        .m_bresp(a1_bresp), .m_bvalid(a1_bvalid), .m_bready(a1_bready));
+
 
     algo_y8_to_legacy u_algo_ms (
         .clk(w_a_byte_clk), .rst_n(w_a_rst_out),

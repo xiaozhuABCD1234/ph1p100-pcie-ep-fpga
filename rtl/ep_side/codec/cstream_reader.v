@@ -16,6 +16,7 @@ module cstream_reader (
     input  wire        o_ready,
     output reg         o_last,         // 最后一个字节
     output wire        busy,
+    output wire [3:0]  st_dbg,
     // AXI 读
     output reg  [28:0] m_araddr,
     output reg  [7:0]  m_arlen,
@@ -27,7 +28,7 @@ module cstream_reader (
     input  wire [1:0]  m_rresp,
     input  wire        m_rlast,
     input  wire        m_rvalid,
-    output wire        m_rready
+    input  wire        m_rready
 );
     localparam S_IDLE = 2'd0, S_AR = 2'd1, S_RD = 2'd2, S_OUT = 2'd3;
     reg [1:0]  st;
@@ -40,7 +41,7 @@ module cstream_reader (
     reg [31:0] total;
 
     assign busy     = (st != S_IDLE);
-    assign m_rready = (st == S_RD);
+    assign st_dbg   = {2'b00, st};
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
