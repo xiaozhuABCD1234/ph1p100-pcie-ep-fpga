@@ -35,7 +35,7 @@ module jpeg_huff_enc (
     reg [15:0] qz [0:63];
     reg [2:0]  wn;
     reg [5:0]  k;
-    reg [3:0]  run;
+    reg [5:0]  run;      // 游程长度，够表示一整块的零个数
     reg signed [15:0] prev_dc;
 
     reg [7:0]  sym;
@@ -113,6 +113,7 @@ module jpeg_huff_enc (
                     m_data   <= obyt;
                     m_valid  <= 1'b1;
                     ffd_sent <= (obyt == 8'hFF);
+                    // 不移 bitacc：低 bitcnt 位始终有效，靠 bitcnt 递减即可
                     bitcnt   <= bitcnt - 6'd8;
                     st_bits  <= st_bits + 32'd8;
                 end
@@ -138,10 +139,11 @@ module jpeg_huff_enc (
                 else wn <= wn + 3'd1;
             end
 
-            // ---------------- 定符号（DC 或 AC 的第一个非零）----------------
+            // ---------------- 定符号（DC 差分 / AC 游程）----------------
+            // AC 的游程**只在遇到非零系数时**才展开成 ZRL（T.81 的做法）：
+            // 块尾剩下的零一律用 EOB 表示，不在尾部发 ZRL。
             S_HC: begin
                 if (k == 6'd0) begin
-                    // DC：差分
                     sym    <= {4'd0, cat(dc_diff)};
                     is_ac  <= 1'b0;
                     cur    <= dc_diff;
@@ -149,40 +151,26 @@ module jpeg_huff_enc (
                     prev_dc<= qz[0];
                     st     <= S_AMP;
                 end else if (qz[k] == 16'd0) begin
-                    // 尾部剩下的零一律用 EOB 表示（T.81）：不要在这之前发 ZRL，
-                    // 否则一块会多发好几个 ZRL，码流对不上。
+                    run <= run + 6'd1;
                     if (k == 6'd63) begin
-                        sym   <= 8'h00;
+                        sym   <= 8'h00;      // EOB：后面全是零
                         is_ac <= 1'b1;
                         ccat  <= 4'd0;
                         st    <= S_AMP;
-                    end else if (run == 4'd15) begin
-                        // 攒满 16 个零发 ZRL；当前这个零也算在里面，所以 k 要前进
-                        // （k=63 时不前进，让 S_NEXT 直接去收尾）
-                        sym   <= 8'hF0;
-                        is_ac <= 1'b1;
-                        ccat  <= 4'd0;
-                        run   <= 4'd0;
-                        if (k != 6'd63) k <= k + 6'd1;
-                        st    <= S_AMP;
-                    end else begin
-                        run <= run + 4'd1;
-                        if (k == 6'd63) begin
-                            // 尾部还有零 -> 必须发 EOB（T.81 的 0x00 符号）
-                            sym   <= 8'h00;
-                            is_ac <= 1'b1;
-                            ccat  <= 4'd0;
-                            st    <= S_AMP;
-                        end
-                        else k <= k + 6'd1;
-                    end
+                    end else k <= k + 6'd1;
+                end else if (run >= 6'd16) begin
+                    // 积压的零超过 15 个：先发一个 ZRL（16 个零），k 不动
+                    sym   <= 8'hF0;
+                    is_ac <= 1'b1;
+                    ccat  <= 4'd0;
+                    run   <= run - 6'd16;
+                    st    <= S_AMP;
                 end else begin
-                    // AC 非零
-                    sym   <= {run, ac_cat};
+                    sym   <= {run[3:0], ac_cat};
                     is_ac <= 1'b1;
                     cur   <= qz[k];
                     ccat  <= ac_cat;
-                    run   <= 4'd0;
+                    run   <= 6'd0;
                     st    <= S_AMP;
                 end
             end
@@ -205,8 +193,14 @@ module jpeg_huff_enc (
 
             // ---------------- 下一个系数 / 收尾 ----------------
             S_NEXT: begin
-                if (k == 6'd63) st <= S_FLUSH;
-                else begin k <= k + 6'd1; st <= S_DRAIN; end
+                if (sym == 8'hF0) begin
+                    // ZRL：k 不动，drain 完接着处理同一个系数
+                    st <= S_DRAIN;
+                end else if (k == 6'd63) st <= S_FLUSH;
+                else begin
+                    k  <= k + 6'd1;
+                    st <= S_DRAIN;
+                end
             end
 
             S_DRAIN: if (!m_valid && bitcnt < 6'd8 && !ffd_sent) st <= S_HC;
@@ -221,7 +215,9 @@ module jpeg_huff_enc (
                 end else begin
                     // 帧末：把低 (8-bitcnt) 位补 1 凑满字节，再把残留字节吐完
                     if (bitcnt != 0 && bitcnt < 6'd8) begin
-                        bitacc <= bitacc | ((48'd1 << (8 - bitcnt)) - 48'd1);
+                        // 补位语义要和 T.81 一致：把有效数据左移到字节高位，
+                        // 低位补 1。直接在高位 OR 1 会把数据挤到低端，输出就反了。
+                        bitacc <= (bitacc << (8 - bitcnt)) | ((48'd1 << (8 - bitcnt)) - 48'd1);
                         bitcnt <= 6'd8;
                     end
                     if (bitcnt < 6'd8 && !m_valid && !ffd_sent) begin
