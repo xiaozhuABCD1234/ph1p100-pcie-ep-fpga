@@ -306,7 +306,7 @@ wire [1:0]  a1_bresp; wire a1_bvalid, a1_bready;
 wire [28:0] m1_araddr; wire [7:0] m1_arlen; wire [2:0] m1_arsize;
 wire [1:0]  m1_arburst; wire m1_arvalid, m1_arready;
 wire [255:0] m1_rdata; wire m1_rvalid, m1_rready;
-wire        rd_start, rd_busy, rd_v, rd_r, rd_done;
+wire        rd_start, rd_busy, rd_v, rd_r, rd_done, rd_m_rready;
 wire [3:0]  rd_st_dbg;
 wire        rd_arready_i, rd_rvalid_i;
 wire [255:0] rd_rdata_i;
@@ -318,6 +318,7 @@ wire [7:0]  r2_d;
 wire        cw_v, cw_busy;
 wire [2:0]  cw_st_dbg;
 wire [127:0] w_codec_dbg;
+wire        jb_done;       // JPEG 整帧码流结束（huff m_done）
 wire [31:0] cw_len, cw_stream_len;
 reg  [31:0] cw_seq_top;   // 压缩帧计数器（不随 c2_en 复位，推帧源要用）
 wire [28:0] cw_awaddr; wire [7:0] cw_awlen; wire [2:0] cw_awsize;
@@ -2559,7 +2560,22 @@ utx_arb2 u_push_utx_arb (
         if (!w_ddrphy_rst_n) camddr_seq_d <= 32'd0;
         else              camddr_seq_d <= w_camddr_seq;
     end
-    assign rd_start = c2_en && rd_quiet && (w_camddr_seq != camddr_seq_d) && !rd_busy;
+    // 帧级握手：上一帧 JPEG 没结束前不启动下一帧的回读，避免新帧像素
+    // 灌进还在处理上一帧的编码器（会丢 SOF、串帧）。相机发布事件先锁存。
+    reg codec_ready;
+    always @(posedge w_ddr_dhi_clk or negedge codec_rst_n) begin
+        if (!codec_rst_n) codec_ready <= 1'b1;
+        else if (rd_start) codec_ready <= 1'b0;
+        else if (jb_done)  codec_ready <= 1'b1;
+    end
+    reg frame_pend;
+    always @(posedge w_ddr_dhi_clk or negedge w_ddrphy_rst_n) begin
+        if (!w_ddrphy_rst_n) frame_pend <= 1'b0;
+        else if (!c2_en)     frame_pend <= 1'b0;
+        else if (w_camddr_seq != camddr_seq_d) frame_pend <= 1'b1;
+        else if (rd_start)   frame_pend <= 1'b0;
+    end
+    assign rd_start = c2_en && rd_quiet && codec_ready && frame_pend && !rd_busy;
 
     cstream_reader u_crd (
         .clk(w_ddr_dhi_clk), .rst_n(codec_rst_n),
@@ -2569,7 +2585,7 @@ utx_arb2 u_push_utx_arb (
         .m_araddr(rd_araddr), .m_arlen(rd_arlen), .m_arsize(rd_arsize),
         .m_arburst(rd_arburst), .m_arvalid(rd_arvalid), .m_arready(rd_arready_i),
         .m_rdata(rd_rdata_i), .m_rresp(2'b00), .m_rlast(1'b0),
-        .m_rvalid(rd_rvalid_i), .m_rready(1'b1));
+        .m_rvalid(rd_rvalid_i), .m_rready(rd_m_rready));
 
     // ---- 字节流拼成 4 像素/拍，喂给 JPEG 编码器 ----
     //  注意 jpx 是 4 个字节，第 4 个字节要等下一次时钟才写进寄存器，
@@ -2584,7 +2600,6 @@ utx_arb2 u_push_utx_arb (
     wire       jpx_r;          // jpeg_frame 的 ready
     wire [7:0] jb_d;           // JPEG 码流字节
     wire       jb_v;           // JPEG 码流有效
-    wire       jb_done;        // JPEG 整帧码流结束
     // 行尾/帧尾必须和 jpx_v 同拍：jcol/jrow 在攒满 4 字节那拍就递增了，
     // 如果直接用它们和 jpx_v 组合，标记会晚一拍、帧永远结束不了。
     wire       jeol = jeol_r && jpx_v;
