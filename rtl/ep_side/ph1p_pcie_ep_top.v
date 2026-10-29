@@ -499,9 +499,10 @@ wire         w_link_up;                       // pl_link_up & 两个锁相都就
 // T07 round1：release 按相机分开（A: rel_tgl0/1 → writer A；B: rel_tgl2/3 → writer B），
 // 避免共享一对 toggle 时 A 路的 release 误清 B 路的保护位（system round0 F1）。
 wire         push_rel0, push_rel1;            // pusher 发的 A 路块 release toggle
-reg          rd_rel_tgl;                      // 压缩回读读完一帧后释放两块
-wire         w_rel_tgl0 = push_rel0 ^ rd_rel_tgl;
-wire         w_rel_tgl1 = push_rel1 ^ rd_rel_tgl;
+reg          rd_rel0_tgl, rd_rel1_tgl;       // 读完一帧只释放被读的那一块
+reg          rd_base0_lat;                   // 本次读的是不是 BASE0
+wire         w_rel_tgl0 = push_rel0 ^ rd_rel0_tgl;
+wire         w_rel_tgl1 = push_rel1 ^ rd_rel1_tgl;
 wire         w_rel_tgl2, w_rel_tgl3;          // B 路块 0/1 release toggle
 wire         w_push_fb_hold;                  // ERAM 源冻结（pusher 输出）
 wire         w_push_src_lock;                 // 诊断：源被 one-shot 占着
@@ -2539,9 +2540,18 @@ utx_arb2 u_push_utx_arb (
         else if (cw_v)       cw_seq_top <= cw_seq_top + 32'd1;
     end
 
+    // 只释放被读的那一块：另一块里是已经发布好的下一帧，必须保持保护，
+    // 否则写者会立刻覆盖它，回读只能等写者重新写一帧（周期从 ~66 ms 变成 ~250 ms）。
     always @(posedge w_ddr_dhi_clk or negedge w_ddrphy_rst_n) begin
-        if (!w_ddrphy_rst_n) rd_rel_tgl <= 1'b0;
-        else if (rd_done)    rd_rel_tgl <= ~rd_rel_tgl;
+        if (!w_ddrphy_rst_n) begin
+            rd_rel0_tgl <= 1'b0; rd_rel1_tgl <= 1'b0; rd_base0_lat <= 1'b0;
+        end else begin
+            if (rd_start) rd_base0_lat <= (w_camddr_base == DDR_CAM_BASE0[28:0]);
+            if (rd_done) begin
+                if (rd_base0_lat) rd_rel0_tgl <= ~rd_rel0_tgl;
+                else              rd_rel1_tgl <= ~rd_rel1_tgl;
+            end
+        end
     end
 
     // 压缩链调试：回读 start 次数 + reader/writer 状态 + 读口握手。
