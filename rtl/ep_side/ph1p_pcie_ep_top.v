@@ -296,6 +296,47 @@ wire [1:0]  w_camw_bresp;    wire w_camw_bvalid, w_camw_bready;
 // B 路（CSI-2 B → DDR3）的 AXI 写口
 wire [28:0] w_camw_b_awaddr; wire [7:0] w_camw_b_awlen; wire [2:0] w_camw_b_awsize;
 wire [1:0]  w_camw_b_awburst;wire w_camw_b_awvalid, w_camw_b_awready;
+// ---- DDR 回读压缩：写口 a1 / 读口 m1 的复用 ----
+// 压缩模式（0x240[4]）下，B 路 writer/pusher 让位给回读压缩链（相机 B 本来就没在用）。
+wire c2_en;
+wire [28:0] a1_awaddr; wire [7:0] a1_awlen; wire [2:0] a1_awsize;
+wire [1:0]  a1_awburst; wire a1_awvalid; wire a1_awready;
+wire [255:0] a1_wdata; wire [31:0] a1_wstrb; wire a1_wlast, a1_wvalid, a1_wready;
+wire [1:0]  a1_bresp; wire a1_bvalid, a1_bready;
+wire [28:0] m1_araddr; wire [7:0] m1_arlen; wire [2:0] m1_arsize;
+wire [1:0]  m1_arburst; wire m1_arvalid, m1_arready;
+wire [255:0] m1_rdata; wire m1_rvalid, m1_rready;
+wire        rd_start, rd_busy, rd_v, rd_r, rd_last;
+wire [7:0]  rd_d;
+wire [28:0] rd_araddr; wire [7:0] rd_arlen; wire [2:0] rd_arsize;
+wire [1:0]  rd_arburst; wire rd_arvalid;
+wire        r2_v, r2_r, r2_flush;
+wire [7:0]  r2_d;
+wire        cw_v;
+wire [31:0] cw_seq, cw_len, cw_stream_len;
+wire [28:0] cw_awaddr; wire [7:0] cw_awlen; wire [2:0] cw_awsize;
+wire [1:0]  cw_awburst; wire cw_awvalid;
+wire [255:0] cw_wdata; wire [31:0] cw_wstrb; wire cw_wlast, cw_wvalid;
+
+assign c2_en = w_algo_ctrl[4];
+assign a1_awaddr  = c2_en ? cw_awaddr  : w_camw_b_awaddr;
+assign a1_awlen   = c2_en ? cw_awlen   : w_camw_b_awlen;
+assign a1_awsize  = c2_en ? cw_awsize  : w_camw_b_awsize;
+assign a1_awburst = c2_en ? cw_awburst : w_camw_b_awburst;
+assign a1_awvalid = c2_en ? cw_awvalid : w_camw_b_awvalid;
+assign a1_wdata   = c2_en ? cw_wdata   : w_camw_b_wdata;
+assign a1_wstrb   = c2_en ? cw_wstrb   : w_camw_b_wstrb;
+assign a1_wlast   = c2_en ? cw_wlast   : w_camw_b_wlast;
+assign a1_wvalid  = c2_en ? cw_wvalid  : w_camw_b_wvalid;
+assign m1_araddr  = c2_en ? rd_araddr  : push_b_araddr;
+assign m1_arlen   = c2_en ? rd_arlen   : push_b_arlen;
+assign m1_arsize  = c2_en ? rd_arsize  : push_b_arsize;
+assign m1_arburst = c2_en ? rd_arburst : push_b_arburst;
+assign m1_arvalid = c2_en ? rd_arvalid : push_b_arvalid;
+assign m1_rready  = c2_en ? 1'b1       : push_b_rready;
+// m1 是仲裁器的输出口：数据/有效分发给 B 路 pusher 和回读引擎
+assign push_b_rdata  = m1_rdata;
+assign push_b_rvalid = m1_rvalid;
 wire [255:0] w_camw_b_wdata; wire [31:0] w_camw_b_wstrb;
 wire        w_camw_b_wlast, w_camw_b_wvalid, w_camw_b_wready;
 wire [1:0]  w_camw_b_bresp;  wire w_camw_b_bvalid, w_camw_b_bready;
@@ -468,8 +509,8 @@ assign w_cam_diag_b = {w_camddr_b_lines, w_camddr_b_grp};
 
 // 推帧引擎的 DDR 源：A 路固定接 A 写者、B 路固定接 B 写者。
 // 单路模式下由 ARM 命令选中的那一片 pusher 工作，另一片保持 push_en=0/不授权。
-assign w_push_ddr_seq    = w_camddr_seq;
-assign w_push_ddr_base   = w_camddr_base;
+assign w_push_ddr_seq    = c2_en ? cw_seq : w_camddr_seq;
+assign w_push_ddr_base   = c2_en ? 29'h0500_0000 : w_camddr_base;
 assign w_push_ddr_status = w_camddr_status;
 assign w_push_ddr_len    = w_camddr_len;
 assign w_push_ddr_seq_b    = w_camddr_b_seq;
@@ -2061,12 +2102,12 @@ ddr_wr_arb u_ddr_wr_arb (
     .a0_wdata  (w_camw_wdata     ), .a0_wstrb (w_camw_wstrb),
     .a0_wlast  (w_camw_wlast     ), .a0_wvalid (w_camw_wvalid), .a0_wready (w_camw_wready),
     .a0_bresp  (w_camw_bresp     ), .a0_bvalid (w_camw_bvalid), .a0_bready (w_camw_bready),
-    .a1_awaddr (w_camw_b_awaddr  ), .a1_awlen (w_camw_b_awlen),
-    .a1_awsize (w_camw_b_awsize  ), .a1_awburst (w_camw_b_awburst),
-    .a1_awvalid(w_camw_b_awvalid ), .a1_awready (w_camw_b_awready),
-    .a1_wdata  (w_camw_b_wdata   ), .a1_wstrb (w_camw_b_wstrb),
-    .a1_wlast  (w_camw_b_wlast   ), .a1_wvalid (w_camw_b_wvalid), .a1_wready (w_camw_b_wready),
-    .a1_bresp  (w_camw_b_bresp   ), .a1_bvalid (w_camw_b_bvalid), .a1_bready (w_camw_b_bready),
+    .a1_awaddr (a1_awaddr  ), .a1_awlen (a1_awlen),
+    .a1_awsize (a1_awsize  ), .a1_awburst (a1_awburst),
+    .a1_awvalid(a1_awvalid ), .a1_awready (a1_awready),
+    .a1_wdata  (a1_wdata   ), .a1_wstrb (a1_wstrb),
+    .a1_wlast  (a1_wlast   ), .a1_wvalid (a1_wvalid), .a1_wready (a1_wready),
+    .a1_bresp  (a1_bresp   ), .a1_bvalid (a1_bvalid), .a1_bready (a1_bready),
     .m_awaddr  (w_ddr_awaddr     ), .m_awlen (w_ddr_awlen),
     .m_awsize  (w_ddr_awsize     ), .m_awburst (w_ddr_awburst),
     .m_awvalid (w_ddr_awvalid    ), .m_awready (w_ddr_awready),
@@ -2297,14 +2338,14 @@ ddr_rd_arb2 u_push_rd_arb (
     .m0_rid      (push_rid          ),
     .m1_arvalid  (push_b_arvalid    ),
     .m1_arready  (push_b_arready    ),
-    .m1_araddr   (push_b_araddr     ),
+    .m1_araddr   (m1_araddr     ),
     .m1_arlen    (push_b_arlen      ),
     .m1_arsize   (push_b_arsize     ),
     .m1_arburst  (push_b_arburst    ),
     .m1_arid     (push_b_arid       ),
-    .m1_rready   (push_b_rready     ),
-    .m1_rvalid   (push_b_rvalid     ),
-    .m1_rdata    (push_b_rdata      ),
+    .m1_rready   (m1_rready         ),
+    .m1_rvalid   (m1_rvalid         ),
+    .m1_rdata    (m1_rdata      ),
     .m1_rresp    (push_b_rresp      ),
     .m1_rlast    (push_b_rlast      ),
     .m1_rid      (push_b_rid        ),
@@ -2409,9 +2450,9 @@ utx_arb2 u_push_utx_arb (
 
     // 并行顶层是单输入流：任一路不 ready 就会卡住共享流，所以未选中的两路恒 ready、
     // 数据直接丢；只有选中的那一路把反压传回 ROI 适配器。
-    assign algo_ready[0] = (!codec_sel && algo_sel == 2'd0) ? algo_ms_ready : 1'b1;
-    assign algo_ready[1] = codec_sel ? g4_r : ((algo_sel == 2'd1) ? algo_ms_ready : 1'b1);
-    assign algo_ready[2] = (!codec_sel && algo_sel == 2'd2) ? algo_ms_ready : 1'b1;
+    assign algo_ready[0] = (algo_sel == 2'd0) ? algo_ms_ready : 1'b1;
+    assign algo_ready[1] = (algo_sel == 2'd1) ? algo_ms_ready : 1'b1;
+    assign algo_ready[2] = (algo_sel == 2'd2) ? algo_ms_ready : 1'b1;
 
     wire        algo_sel_v = (algo_sel == 2'd0) ? algo_v[0] : (algo_sel == 2'd1) ? algo_v[1] : algo_v[2];
     wire [31:0] algo_sel_d = (algo_sel == 2'd0) ? algo_d0 : (algo_sel == 2'd1) ? algo_d1 : algo_d2;
@@ -2419,105 +2460,15 @@ utx_arb2 u_push_utx_arb (
     wire        algo_sel_l = (algo_sel == 2'd0) ? algo_eol[0] : (algo_sel == 2'd1) ? algo_eol[1] : algo_eol[2];
     wire        algo_sel_e = (algo_sel == 2'd0) ? algo_eof[0] : (algo_sel == 2'd1) ? algo_eof[1] : algo_eof[2];
 
-    // 0x240[0]=1 时改送 LZ77 压缩流（同样 1920×1088 定长帧，主机按长度截取）
-    wire        src_v = codec_sel ? pk_v    : algo_sel_v;
-    wire [31:0] src_d = codec_sel ? pk_d    : algo_sel_d;
-    wire        src_s = codec_sel ? pk_sof  : algo_sel_s;
-    wire        src_l = codec_sel ? pk_eol  : algo_sel_l;
-    wire        src_e = codec_sel ? pk_eof  : algo_sel_e;
-    // codec_pack 的出口反压：选压缩流时接到 writer，否则恒 ready（数据丢弃）
-    assign pk_ready = codec_sel ? algo_ms_ready : 1'b1;
+    // 压缩不再走实时通路（见下方 DDR 回读方案），这里恒送预处理帧
+    wire        src_v = algo_sel_v;
+    wire [31:0] src_d = algo_sel_d;
+    wire        src_s = algo_sel_s;
+    wire        src_l = algo_sel_l;
+    wire        src_e = algo_sel_e;
 
-    // ==== 硬件压缩通路：高斯分支 → 字节化 → RLE(差分+零游程) → 定长帧打包 ====
-    //  0x240[0] 选源：0 = 预处理帧，1 = 压缩流。
-    //  压缩字节塞进 8bit 采样位，主机按 st_stream_len（0x250）截前 N 字节再解压。
-    wire        g4_v, g4_r, g4_sof, g4_eof;
-    wire [7:0]  g4_d;
-    wire        rle_v, rle_r, rle_d8_eof;
-    wire [7:0]  rle_d;
-    wire        w_v, w_keep_v, w_last, w_ready;
-    wire [31:0] w_word;
-    wire [3:0]  w_keep;
-    wire        pk_v, pk_ready, pk_sof, pk_eol, pk_eof;
-    wire [31:0] pk_d;
-    wire [31:0] c_stream_len, c_raw_len, c_raw_crc, c_words;
-    wire        c_done;
-    wire        codec_sel = w_algo_ctrl[0];
-
-    gray4_byte u_g4 (
-        .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
-        .s_data(algo_d1), .s_valid(algo_v[1]), .s_ready(g4_r),
-        .s_sof(algo_sof[1]), .s_eof(algo_eof[1]),
-        .o_data(g4_d), .o_valid(g4_v), .o_ready(rle_r),
-        .o_sof(g4_sof), .o_eof(g4_eof)
-    );
-
-    rle_enc u_rle (
-        .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
-        .in_data(g4_d), .in_valid(g4_v), .in_ready(rle_r),
-        .in_sof(g4_sof), .in_eof(g4_eof), .in_flush(rle_flush),
-        .o_idle(rle_idle_ok),
-        .out_data(rle_d), .out_valid(rle_v), .out_ready(w_ready),
-        .st_in_bytes(), .st_out_bytes()
-    );
-
-    // 帧尾：用「下一帧的 SOF」收上一帧。EOF 不可靠（不同分支的 eof 语义不一致，
-    // 实测会让一帧只封几个字节），而 SOF 是确定的帧起点，还能顺便把编码器里压着的
-    // 零游程冲刷干净：SOF → flush → 等编码器 o_idle → 给打包器单拍封帧脉冲。
-    wire rle_idle_ok;
-    reg  rle_flush;
-    reg  rle_frm_end;
-    reg  frm_has_data;
-    reg  close_pending;
-    always @(posedge w_a_byte_clk or negedge w_a_rst_out) begin
-        if (!w_a_rst_out) begin
-            rle_flush <= 1'b0; rle_frm_end <= 1'b0; frm_has_data <= 1'b0; close_pending <= 1'b0;
-        end else begin
-            rle_frm_end <= 1'b0;
-            if (g4_v) frm_has_data <= 1'b1;
-            if (algo_sof[1] && frm_has_data && !close_pending) begin
-                rle_flush     <= 1'b1;
-                close_pending <= 1'b1;
-                frm_has_data  <= 1'b0;
-            end else if (close_pending && rle_idle_ok) begin
-                rle_flush     <= 1'b0;
-                close_pending <= 1'b0;
-                rle_frm_end   <= 1'b1;
-            end
-        end
-    end
-
-    rle_to_words u_rlew (
-        .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
-        .s_data(rle_d), .s_valid(rle_v), .s_ready(w_ready), .s_eof(rle_frm_end),
-        .o_data(w_word), .o_valid(w_keep_v), .o_keep(w_keep), .o_last(w_last),
-        .o_ready(pk_ready)
-    );
-
-    codec_pack #(.W(ALGO_W), .H(ALGO_H), .GPQ(ALGO_W/4)) u_codec_pack (
-        .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
-        .c_data(w_word), .c_valid(w_keep_v), .c_keep(w_keep),
-        .c_last(w_last), .c_commit(1'b0), .c_abort(1'b0), .c_ready(),
-        .s_data(pk_d), .s_valid(pk_v), .s_ready(pk_ready), .s_sof(pk_sof),
-        .s_eol(pk_eol), .s_eof(pk_eof),
-        .st_stream_len(c_stream_len), .st_words(c_words), .st_done(c_done)
-    );
-
-    // 诊断：高斯分支每秒实际进到 gray4_byte 的拍数（定位消费速率问题）
-    reg  [31:0] dbg_gau_beats;
-    reg  [31:0] dbg_rle_bytes;
-    always @(posedge w_a_byte_clk or negedge w_a_rst_out) begin
-        if (!w_a_rst_out) begin
-            dbg_gau_beats <= 32'd0; dbg_rle_bytes <= 32'd0;
-        end else begin
-            if (algo_v[1] && g4_r) dbg_gau_beats <= dbg_gau_beats + 32'd1;
-            if (rle_v && w_ready)   dbg_rle_bytes <= dbg_rle_bytes + 32'd1;
-        end
-    end
-
-    assign c_raw_len = 32'd2088960;
-    assign c_raw_crc = 32'd0;
-    assign w_codec_stat = {dbg_rle_bytes, dbg_gau_beats, c_raw_len, c_stream_len};
+    // 0x250 = 本帧压缩后的真实字节数（DDR 回读通路）
+    assign w_codec_stat = {32'd0, cw_stream_len, 32'd2088960, 32'd2088960};
 
     algo_y8_to_legacy u_algo_ms (
         .clk(w_a_byte_clk), .rst_n(w_a_rst_out),
