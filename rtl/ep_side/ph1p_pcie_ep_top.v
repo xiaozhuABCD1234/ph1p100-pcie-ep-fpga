@@ -2542,11 +2542,16 @@ utx_arb2 u_push_utx_arb (
 
     // 只释放被读的那一块：另一块里是已经发布好的下一帧，必须保持保护，
     // 否则写者会立刻覆盖它，回读只能等写者重新写一帧（周期从 ~66 ms 变成 ~250 ms）。
+    // reader 的 start 在 S_IDLE 里面还会打一拍（start_pend），base 是下一拍才锁存的；
+    // 这里必须同样晚一拍采 w_camddr_base，否则发布正好撞上 rd_start 时会把 bank 记反，
+    // release 到错误的块 → 两块都被锁死、写者停发布（长稳 12 s 后必现的死锁）。
+    reg rd_start_d;
     always @(posedge w_ddr_dhi_clk or negedge w_ddrphy_rst_n) begin
         if (!w_ddrphy_rst_n) begin
-            rd_rel0_tgl <= 1'b0; rd_rel1_tgl <= 1'b0; rd_base0_lat <= 1'b0;
+            rd_rel0_tgl <= 1'b0; rd_rel1_tgl <= 1'b0; rd_base0_lat <= 1'b0; rd_start_d <= 1'b0;
         end else begin
-            if (rd_start) rd_base0_lat <= (w_camddr_base == DDR_CAM_BASE0[28:0]);
+            rd_start_d <= rd_start;
+            if (rd_start_d) rd_base0_lat <= (w_camddr_base == DDR_CAM_BASE0[28:0]);
             if (rd_done) begin
                 if (rd_base0_lat) rd_rel0_tgl <= ~rd_rel0_tgl;
                 else              rd_rel1_tgl <= ~rd_rel1_tgl;
