@@ -19,7 +19,7 @@
     parameter CLOSEDLOOP_EN = 1'b0,
     // 硬件同步：A 主 / B 从，共享 XHS/XVS；开启时由 0x1E0.START 启动。
     // **当前默认关闭**：开启后 sync_start_ctrl 走到 WARM 就等不到 pair_event
-    // （A 路能锁、in_frame=1，B 路不出 SOF，见 docs/BOARD_TEST.md「硬件同步未闭合」），
+    // （A 路能锁、in_frame=1，B 路不出 SOF，见 docs/TEST_REPORT §6 与源码注释「4K 同步未闭合」），
     // 而同步控制器是唯一的 I2C 主人，失败后会把两路 sensor 都停掉，正常取帧也一起没了。
     // 修好 B 路的配对再改回 1'b1。
     parameter SYNC_ENABLE = 1'b0,
@@ -230,9 +230,9 @@ localparam integer DUAL_TEST       = 1;   // 1 = A/B 同时 arm（并发实验�
 //   0x6C[1:0] = 1 → 只 A；2 → 只 B；3 → 双路；0 → 用下面这个默认
 // 4K 单路：双路 4K30 时两片 writer 共用一个 DDR 写口，实测 A 路 FIFO 溢出
 // 23%（push 1,583,646 / drop 485,410），出图是横条纹。单路 4K 只占 311 MB/s，
-// 不丢组。双路 4K 要先把写通道带宽/仲裁做掉，见 docs/BOARD_TEST.md。
+// 不丢组。双路 4K 要先把写通道带宽/仲裁做掉，见 docs/TEST_REPORT §3。
 // 当前默认只 arm B 路（= 预处理帧通道）。A 路 4K 与 B 路算法帧同时 arm 时打包预算
-// 78% + 20% ≈ 98%，压不住；要两路同时出，得先解决打包节拍（见 docs/BOARD_TEST.md）。
+// 78% + 20% ≈ 98%，压不住；要两路同时出，得先解决打包节拍（见 docs/TEST_REPORT §3）。
 localparam [1:0]   CAM_ARM_DEFAULT = 2'b01;   // 只 arm A 路（预处理帧走 A）
 wire [31:0] w_dbg_scratch;                       // 0x6C SCRATCH 直出（pcie_ep_engine）
 wire [1:0]  w_cam_arm_sel = (w_dbg_scratch[1:0] == 2'b00) ? CAM_ARM_DEFAULT
@@ -400,6 +400,15 @@ wire [31:0] sync_status_word;
 wire [351:0] sync_ro;
 // 预处理模式：0x240 bit0=使能，[2:1]=选哪一路（0 灰度 / 1 高斯 / 2 直方图均衡）
 wire [31:0] w_algo_ctrl;
+// 传感器模拟增益：BAR 0x280 写目标码值 → 顶层状态机发一拍 AE 请求，写 I2C 0x3090。
+// 只在两路 O_ae_cfg_done 都为高时发请求，避免打断正在进行的寄存器表初始化。
+wire [31:0] w_cam_gain_ctl;
+wire        w_cam_gain_req;
+wire [31:0] w_cam_gain_stat;
+reg  [1:0]  r_ae_st;
+reg  [7:0]  r_ae_gain;
+reg         r_ae_req_a, r_ae_req_b;
+reg  [5:0]  r_ae_idle_cnt;
 // 预处理通路的跨块连线：**必须在这里声明**。Verilog 要求先声明后使用，
 // 声明写在使用点附近会被 TD 当成隐式 1 位网（只在 log 里报 undeclared，
 // 不报错），结果 40 位像素被截成 1 位、整个算法通路静默失效。
@@ -1002,7 +1011,11 @@ pcie_ep_engine #(
     .csi_diag_b2                             (r_csi_b_geo2                           ),
     .sync_start                              (sync_start                             ),
     .sync_abort                              (sync_abort                             ),
-    .sync_ro                                 (sync_ro                                )
+    .sync_ro                                 (sync_ro                                ),
+    // 传感器模拟增益（0x280 写 / 0x284 读）
+    .cam_gain_ctl                            (w_cam_gain_ctl                         ),
+    .cam_gain_req                            (w_cam_gain_req                         ),
+    .cam_gain_stat                           (w_cam_gain_stat                        )
 );
 
 pcie_ep_int_handle u_pcie_ep_int_handle(
@@ -1679,8 +1692,8 @@ assign  debug_led[3] = ltssm_reg_dly[4];
         .I_clk         (tl_clk_user   ),
         .I_rst_n       (r_rst_n_slow  ),
         .I_cam_mode    (2'd1          ),   // 1 = 4K
-        .I_ae_req      (1'b0          ),
-        .I_ae_data     (8'd100        ),
+        .I_ae_req      (r_ae_req_a    ),
+        .I_ae_data     (r_ae_gain     ),
         .O_cam_scl     (cam_a_scl     ),
         .IO_cam_sda    (cam_a_sda     ),
         .O_cfg_done    (w_a_cfg_done  ),
@@ -1700,14 +1713,57 @@ assign  debug_led[3] = ltssm_reg_dly[4];
         .I_clk         (tl_clk_user   ),
         .I_rst_n       (r_rst_n_slow  ),
         .I_cam_mode    (2'd1          ),
-        .I_ae_req      (1'b0          ),
-        .I_ae_data     (8'd100        ),
+        .I_ae_req      (r_ae_req_b    ),
+        .I_ae_data     (r_ae_gain     ),
         .O_cam_scl     (cam_b_scl     ),
         .IO_cam_sda    (cam_b_sda     ),
         .O_cfg_done    (w_b_cfg_done  ),
         .O_ae_cfg_done (w_b_ae_done   ),
         .O_bus_error   (w_b_bus_err   )
     );
+
+    // ==== 传感器模拟增益写入（BAR 0x280 → I2C 0x3090）====
+    // ui_cfg_imx415 的 AE 通道约定：I_ae_req 必须是 1 拍脉冲，只在 O_ae_cfg_done
+    // 为高时被接受；接受后 done 拉低，写完再拉高。这里用「两路都空闲且连续 16 拍」
+    // 做门控，避免在寄存器表初始化或同步 I2C 写期间插进来。
+    wire w_ae_idle = w_a_ae_done && w_b_ae_done;
+    always @(posedge tl_clk_user) begin
+        r_ae_req_a <= 1'b0;
+        r_ae_req_b <= 1'b0;
+        if (!r_rst_n_slow) begin
+            r_ae_st       <= 2'd0;
+            r_ae_gain     <= 8'd100;
+            r_ae_idle_cnt <= 6'd0;
+        end else begin
+            if (w_ae_idle) begin
+                if (r_ae_idle_cnt != 6'd63)
+                    r_ae_idle_cnt <= r_ae_idle_cnt + 6'd1;
+            end else begin
+                r_ae_idle_cnt <= 6'd0;
+            end
+
+            case (r_ae_st)
+                2'd0: if (w_cam_gain_req) begin
+                          r_ae_gain     <= w_cam_gain_ctl[7:0];
+                          // 计数器上电后一路数到 63 就饱和；这里不清零就永远等不到
+                          // "== 15" 这个门限，状态机会卡在 2'd1（已踩过的真实 bug）。
+                          r_ae_idle_cnt <= 6'd0;
+                          r_ae_st       <= 2'd1;          // 等空闲稳定
+                      end
+                2'd1: if (r_ae_idle_cnt == 6'd15) begin
+                          r_ae_req_a <= 1'b1;             // 两路各 1 拍请求
+                          r_ae_req_b <= 1'b1;
+                          r_ae_st    <= 2'd2;
+                      end
+                // done 回落即认定写入已开始；若对端没响应，空闲计数到 63 也会放行
+                2'd2: if (!w_ae_idle || r_ae_idle_cnt == 6'd63)
+                          r_ae_st <= 2'd0;
+                default: r_ae_st <= 2'd0;
+            endcase
+        end
+    end
+
+    assign w_cam_gain_stat = {18'd0, w_b_ae_done, w_a_ae_done, r_ae_st, 2'd0, r_ae_gain};
 
     // ---- 诊断：I2C 两根线电平 ----
     //   （原来这里还有一个 always @(posedge sys_clk) 的 r_syscnt 计数器，用来验证
@@ -2056,7 +2112,7 @@ cam_r10f_writer #(
 );
 
 // ---- B 路 writer 改作「预处理结果写者」----
-//  B 相机在本阶段不可用（切 slave 后一帧不出，见 docs/BOARD_TEST.md §9），而 DDR 写口
+//  B 相机在本阶段不可用（切 slave 后一帧不出，见 docs/TEST_REPORT §3），而 DDR 写口
 //  只有两个仲裁通道，所以直接把 B 路 writer 复用来写算法帧：几何换 1920×1088，
 //  cam 侧时钟/信号全部来自 A 路的算法链。B 相机恢复后要另开一路时才需要扩仲裁。
 cam_r10f_writer #(
@@ -2435,7 +2491,7 @@ utx_arb2 u_push_utx_arb (
     // ==== FPGA 预处理通路：灰度 / 3×3 高斯 / 直方图均衡（三路并行，AXI-Stream）====
     //  旁路 A 路 4K 组流，取中心 1920×1088 ROI，送 img_algo_parallel_top；
     //  选中的一路经 algo_y8_to_legacy 转成 writer 的标记时序，写进 DDR3，
-    //  再由 B 路 pusher 送主机（B 相机本阶段不用，原因见 docs/BOARD_TEST.md）。
+    //  再由 B 路 pusher 送主机（B 相机本阶段不用，原因见 docs/TEST_REPORT §6）。
     //  ROI 原点用**传感器全阵列坐标**：3864×2192 的中心 ⇒ (972, 552)。
     wire        algo_s_valid, algo_s_ready, algo_s_sof, algo_s_eol, algo_s_eof, algo_s_abort;
     wire [39:0] algo_s_data;

@@ -76,10 +76,10 @@ module cam_r10f_writer #(
     // 右移 12 像素；但 roi_x 仍写 0（有效图坐标），头语义才不会被主机/display 误解。
     parameter [15:0]  X_OFF       = 16'd0,
     parameter [15:0]  Y0          = 16'd540,       // ROI y 原点（**有效图**坐标）
-    parameter [15:0]  SKIP_ROWS   = 16'd37,        // 帧头 embedded + 物理哑行（4K 实测 37，未板证）
+    parameter [15:0]  SKIP_ROWS   = 16'd37,        // 默认值沿用 1080p ROI 时代；顶层 4K 实例显式覆盖为 16
     // 行边界校验：1 = 每行组数必须等于 GPQ，否则整帧判坏（1080p ROI 用）；
     // 0 = 只看整帧组数与 AXI 拍数（全宽 4K 用：CSI 行分隔信号在 4K 全宽下不可靠，
-    //     见 docs/BOARD_TEST.md「4K 行边界」；组数/拍数两项仍严格把关）。
+    //     见 docs/TEST_REPORT §3「4K 几何」；组数/拍数两项仍严格把关）。
     parameter integer LINE_CHECK  = 1,
     parameter integer TIMESTAMP_HZ = 100_000_000,   // timestamp_in 的计数频率
     // ---- DDR3 双缓冲基址（4KiB 对齐，两块互不重叠且都 >= DMA_BYTES）----

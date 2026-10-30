@@ -12,7 +12,7 @@ cd fpga
 ~~~
 
 `build.tcl` 打开已入库的 `.al`；从零重建源列表用 `create_project.tcl`。
-最近一次完整构建的时序/资源见 [docs/build-status.md](docs/build-status.md)。
+最近一次完整构建（1920×1088 JPEG 位流）的时序/资源见 [docs/build-status.md](docs/build-status.md)。
 
 下载 SRAM（不写 Flash）：
 
@@ -67,4 +67,5 @@ cd fpga
 - 一次 ARM 推一帧；双路时 `ARM_PAIR` 同时授权两片，PCIe 上两帧串行发送、不交错。
 - `sof_timestamp/timestamp_hz` 在 4K 采集位流实测有效；JPEG 位流未单独复核。
 - 位流是 SRAM 配置，掉电/重下后必须重启主机。
-- 最近构建 Setup WNS 仅 26 ps，改动后必须重新确认时序。
+- 最近一次构建是 1920×1088 JPEG 位流（Setup WNS 26 ps / Hold 20 ps）；4K 采集位流是
+  SWNS 268 ps / HWNS 20 ps。两者都是擦边余量，改 RTL 或约束后必须重看时序报告。

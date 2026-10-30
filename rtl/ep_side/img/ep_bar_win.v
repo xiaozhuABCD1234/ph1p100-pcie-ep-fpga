@@ -259,7 +259,15 @@ module ep_bar_win #(
     input  wire [31:0]  csi_diag_a,
     input  wire [31:0]  csi_diag_a2,
     input  wire [31:0]  csi_diag_b,
-    input  wire [31:0]  csi_diag_b2
+    input  wire [31:0]  csi_diag_b2,
+
+    // ==== 传感器模拟增益（0x280 写 / 0x284 读，运行时调曝光）====
+    //   0x280 写 {24'd0, gain[7:0]}：锁存目标增益并触发一次 I2C 写 0x3090；
+    //   0x284 读 {14'd0, done_b, done_a, ae_st[1:0], 2'd0, applied_gain[7:0]}。
+    //   增益码 IMX415 每 LSB 约 0.3 dB：0x10=4.8 dB、0x40=19.2 dB。
+    output reg  [31:0]  cam_gain_ctl,
+    output reg          cam_gain_req,      // W1 单拍脉冲，写 0x280 产生
+    input  wire [31:0]  cam_gain_stat
 );
 
     // 引擎的数据字段是“首字节在高位”，而主机按小端读 → 每个 dw 都要翻转字节序
@@ -407,6 +415,11 @@ module ep_bar_win #(
                     12'h22C: pair_db_lo   <= tlp_dw_s;
                     12'h230: pair_db_hi   <= tlp_dw_s;
                     12'h240: algo_ctrl    <= tlp_dw_s;
+                    // 传感器增益：锁存目标值 + 一拍请求脉冲（电荷在顶层 AE 状态机）
+                    12'h280: begin
+                        cam_gain_ctl <= {24'd0, tlp_dw_s[7:0]};
+                        cam_gain_req <= 1'b1;
+                    end
                     12'h6C: scratch <= tlp_dw_s;
                     12'h74: last_wr <= tlp_dw_s;
                     // ---- RKA1 安全扩展（0x100..0x11C）----
@@ -444,6 +457,7 @@ module ep_bar_win #(
                 endcase
             end else begin
                 ctrl_trigger <= 1'b0;
+                cam_gain_req <= 1'b0;
             end
 
             // 读 DATA：按请求长度前进指针（限 4 个 dw）
@@ -709,6 +723,8 @@ module ep_bar_win #(
             12'h230: rd_dw_comb = pair_db_hi;               // PAIR_DB_HI_B
             12'h234: rd_dw_comb = pair_status_in;           // PAIR_STATUS
             12'h240: rd_dw_comb = algo_ctrl;                // ALGO_CTRL
+            12'h280: rd_dw_comb = cam_gain_ctl;             // CAM_GAIN_CTL
+            12'h284: rd_dw_comb = cam_gain_stat;            // CAM_GAIN_STAT
             12'h244: rd_dw_comb = algo_dbg[31:0];            // ALGO_ACCEPTED（ROI 适配器收下的帧数）
             12'h248: rd_dw_comb = algo_dbg[63:32];           // ALGO_REJECTED
             12'h24C: rd_dw_comb = algo_dbg[95:64];           // ALGO_OVERFLOW

@@ -142,6 +142,10 @@ module pcie_ep_engine #(
     output      wire                sync_start             ,
     output      wire                sync_abort             ,
     input       wire    [351:0]     sync_ro                ,
+    // 传感器模拟增益（0x280 写 / 0x284 读，透传 ep_bar_win）
+    output      wire    [31:0]      cam_gain_ctl           ,
+    output      wire                cam_gain_req           ,
+    input       wire    [31:0]      cam_gain_stat          ,
     input       wire                utx_req                ,
     input       wire                utx_eop                ,
     input       wire    [7:0]       utx_valid              ,
@@ -505,6 +509,9 @@ ep_bar_win #(
     .codec_stat     (codec_stat             ),
     .codec_dbg      (codec_dbg              ),
     .codec_ts       (codec_ts               ),
+    .cam_gain_ctl   (cam_gain_ctl           ),
+    .cam_gain_req   (cam_gain_req           ),
+    .cam_gain_stat  (cam_gain_stat          ),
     // T07：RKA1 安全扩展寄存器面 + CSI 诊断（过路，逻辑在顶层/安全门）
     .tx_cap_bytes   (tx_cap_bytes           ),
     .tx_session_id  (tx_session_id          ),
