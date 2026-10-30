@@ -11,6 +11,9 @@ cd fpga
 # 产物：ph1p_pcie_ep_top_Runs/best_result/ph1p_pcie_ep_top.bit
 ~~~
 
+`build.tcl` 打开已入库的 `.al`；从零重建源列表用 `create_project.tcl`。
+最近一次完整构建的时序/资源见 [docs/build-status.md](docs/build-status.md)。
+
 下载 SRAM（不写 Flash）：
 
 ~~~sh
@@ -18,6 +21,15 @@ cd fpga
 ~~~
 
 下载后必须重启 RK3588 才会重新枚举 Gen2 ×2。同一时间只能跑一个 TD 实例。
+
+## 位流变体
+
+| 变体 | 入口 | 说明 |
+|---|---|---|
+| 生产 4K R10F | `ph1p_pcie_ep_top.al`（top = `ph1p_pcie_ep_top`） | 默认构建；SYNC/CLOSEDLOOP 参数默认关闭 |
+| debug 计数 | `rtl/ep_side/debug/ph1p_pcie_ep_top_dbg.v` | 包装顶层，不在 `.al` 中，需手工换 top_module |
+| closed-loop 回读 | `rtl/ep_side/debug/ph1p_pcie_ep_top_closedloop.v` | 包装顶层，不在 `.al` 中，需手工换 top_module |
+| 历史 1080p/灰度 JPEG | 同一顶层用几何参数 + `c2_en` 选择 | 仓库不跟踪 `.bit`，板上位流需靠构建时间/日志对应 |
 
 ## 源码入口
 
@@ -33,16 +45,26 @@ cd fpga
 | `constraints/ph1p_pcie_case_ep.adc/.sdc` | 引脚与时序 |
 | `docs/protocol/rka1-r10f-v1/` | RKA1/R10F 冻结合同与合成向量（driver 仓有同一镜像） |
 
+## 目录与证据
+
+- `rtl/rc_side/`、`rtl/common/PCIE_REG_TABLE.v`：RC 参考/仿真资产，不参与当前 EP 构建。
+- `rtl/ep_side/ddr/cam_ddr_writer.v`：旧 8 bit 写者，仅诊断/TB 参照，未实例化。
+- `sim/compile_checked.f`：当前仿真源清单；`sim_do/` 是厂商 ModelSim/VCS 模板，路径不可直接复用。
+- `docs/debug/`：B 路 SOF 与 4K writer 的调试分析。
+- `workflow/`：历史流程记录，不参与构建。
+
 ## 几何
 
-顶层 `ph1p_pcie_ep_top.v` 里一行一个量：`CAMDDR_W/H=3840/2160`、`X0=Y0=0`（不做 ROI）、
-`SKIP_ROWS=37`、`DDR_CAM_BASE0/1=0x0100_0000/0x0200_0000`（B 路 0x0300_0000/0x0400_0000）。
-要回 1080p ROI 只改这五行。
+顶层 `ph1p_pcie_ep_top.v`：`CAMDDR_W/H=3840/2160`、`X0=Y0=0`（4K 不做 ROI）、
+`CAMDDR_X_OFF=12`、`CAMDDR_SKIP_ROWS=16`（物理原点 (12,16)），
+`DDR_CAM_BASE0/1=0x0100_0000/0x0200_0000`（B 路 0x0300_0000/0x0400_0000）。
+要回 1080p ROI 只改这几行；`cam_r10f_writer` 的参数默认值仍是 1080p 时代的
+`SKIP_ROWS=37`，顶层实例会显式覆盖，不要按默认值推断生产几何。
 
 ## 边界
 
-- 4K 全帧通路未上板验证；`SKIP_ROWS=37` 是 1080p 时代的标定值，4K 未复测。
+- 4K30 单路已上板（29.9 fps、丢组 0）；双路 4K 不可行（单路打包已占 78%），4K+同步未验证。
 - 一次 ARM 推一帧；双路时 `ARM_PAIR` 同时授权两片，PCIe 上两帧串行发送、不交错。
-- R10F 的 `sof_timestamp/timestamp_hz` 仍为 0；同步证据看 BAR `0x1E4/0x1E8`。
+- `sof_timestamp/timestamp_hz` 在 4K 采集位流实测有效；JPEG 位流未单独复核。
 - 位流是 SRAM 配置，掉电/重下后必须重启主机。
-- `workspace/`、`handoff/`、`workflow/` 是历史证据，不是当前入口。
+- 最近构建 Setup WNS 仅 26 ps，改动后必须重新确认时序。

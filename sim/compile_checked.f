@@ -27,12 +27,7 @@ tb/csi_rx_packet_integrity_ref.v
 ../rtl/ep_side/cam/csi_rx_word_gear_box.v
 ../rtl/ep_side/cam/csi_rx_byte_align.v
 ../rtl/ep_side/cam/csi_rx_clock_det.v
-../rtl/ep_side/cam/csi_rx_packet_handler.v
-../rtl/ep_side/cam/csi_rx_10bit_unpack.v
 ../rtl/ep_side/cam/rx_phy_ph1p.v
-../rtl/ep_side/cam/sfifo.v
-../rtl/ep_side/cam/wfifo.v
-../rtl/ep_side/cam/pulse2toggle.v
 ../rtl/ep_side/cam/clk_activity.v
 ../rtl/ep_side/cam/auto_delay_ctl.v
 ../rtl/ep_side/cam/ui_i2c.v

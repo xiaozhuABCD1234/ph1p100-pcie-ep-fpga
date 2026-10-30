@@ -1,4 +1,4 @@
-# TD 流程产物（不入库，按你的 TD 工程约定）
+# TD 流程产物（不入库）
 ph1p_pcie_ep_top_Runs/
 *_Runs/
 *.db
@@ -10,59 +10,83 @@ ph1p_pcie_ep_top_Runs/
 *.prj
 settings.cfg
 flow.status
-run.sh
-*.f
+# 注意：不要忽略 *.f。sim/compile_checked.f 是手工维护的仿真源清单，
+# 只有工具生成的绝对路径展开清单才忽略（见文件末尾）。
+
 # TD 日志（写在 CWD，跑完即弃）
 td_*.log
 td_*.logw
 *.logw
 
-# TD 工具崩溃时由 sig_handler 写在 CWD 的栈转储 `.tmp_<pid>_1`：
-# 内容只有被截断的 gdb 栈帧，不含可复用信息。
+# TD 工具崩溃时由 sig_handler 写在 CWD 的栈转储 .tmp_<pid>_1
 .tmp_*
 
 # 仿真 testbench 用 $fopen(...,"wb") 直接写到 CWD 的比对数据，每跑一次即重建。
 t11_writer_*.bin
 
-# TD 编程器/bw 脚本在 CWD 留下的日志
+# TD 编程器/bw 脚本在 CWD 留下的日志，以及 GUI 生成的单次运行脚本
 log/bw_*
 multirun_script.tcl
+/run.sh
 
 # TD IpTool 在工程内留下的日志（GUI 生成 IP 时写进 CWD 与 al_ip）
-# 注意：只忽略日志，IP 目录本身（al_ip/<ip>/ 下的 xml/RTL/adc/params/sdc）必须入库，
-#       否则工程搬走后无法重建 IP。
+# 注意：只忽略日志，IP 目录本身（al_ip/<ip>/ 下的 xml/RTL/adc/params/sdc）必须入库。
 log/ipgen.log
 *_adc.log
 *_proc.log
 *_drc_check.log
 
-# 命令行生成 IP 时给 IpTool 补的 Tcl 库软链接（指向 TD 安装目录的绝对路径，不能入库）
+# 命令行生成 IP 时给 IpTool 补的 Tcl 库软链接（指向 TD 安装目录的绝对路径）
 /lib/tcl8.6
 
-# Local verification and duplicated restore-test worktrees.
+# 历史同步/恢复工作树
 /out-sync-20261027/
 **/__pycache__/
+*.py[cod]
+.DS_Store
+*.swp
+*~
 
-# ModelSim/Questa work libraries and waveform caches (run evidence only).
+# ModelSim/Questa/VCS/iverilog 运行产物（源码与 .f 清单仍入库）
+sim/**/work/
+sim_do/**/work/
 workflow/**/work/
 workflow/**/work2/
-workflow/**/*.qpg
-workflow/**/*.qtl
-workflow/**/*.qdb
-workflow/**/*.wlf
-workflow/**/*.vstf
-workspace/ph1p100/**/restored-tracked-worktree/
+*.qpg
+*.qtl
+*.qdb
+*.wlf
+*.vstf
+*.vcd
+*.fsdb
+*.vvp
+*.daidir/
+simv
+simv.daidir/
+csrc/
+verdiLog/
+novas.*
+sim_do/**/transcript
+sim_do/**/*.log
+sim_do/**/work/
+# 厂商原始 filelist 引用本仓库外的 ../../prj 与 /software1 路径，仅作参考。
+sim_do/tb/pcie_subsystem_ae_sim.f
+sim_do/tb/pcie_subsystem_sim_tb.f
+# TD 生成 IP 时附带的仿真 fileset（非 RTL 源）
+al_ip/**/sim/
+al_ip/**/*_mis.f
+# run_sim.ps1 / vlog -f 展开出的绝对路径清单
+abs.f
+*.abs.f
 
-# Original reserved-name evidence directories are published under portable aliases.
+# 历史证据工作树中的 reserved-name 别名
+workspace/ph1p100/**/restored-tracked-worktree/
 workspace/**/aux/
 
-# 可重建的工作流产物：仿真 trace、布线后网表、板上抓包（体积与处置方式见
-# 一次性清理记录）。这里只挡新文件；已入库的路径要显式
-# `git rm --cached` 才离开索引。
+# 可重建的工作流产物：仿真 trace、布线后网表、板上抓包
 workspace/**/trace.txt
 workspace/**/*_routed_netlist.v
 workspace/**/board/captures*/**/*.bin
-
 
 # 构建/下载日志与一次性调试记录：结论进 docs/，这里不入库。
 log/

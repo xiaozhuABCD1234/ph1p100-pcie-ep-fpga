@@ -47,19 +47,13 @@ add_files rtl/ep_side/pcie_ep_int_handle.v
 add_files rtl/ep_side/ph1p_pcie_ep_top.v
 add_files rtl/ep_side/ubus_bridge/ep_ubus_bridge.v
 add_files rtl/ep_side/cam/clk_activity.v
-add_files rtl/ep_side/cam/pulse2toggle.v
 add_files rtl/ep_side/cam/auto_delay_ctl.v
-add_files rtl/ep_side/cam/csi_rx_10bit_unpack.v
 add_files rtl/ep_side/cam/csi_rx_byte_align.v
 add_files rtl/ep_side/cam/csi_rx_clock_det.v
 add_files rtl/ep_side/cam/csi_rx_hdr_ecc.v
-add_files rtl/ep_side/cam/csi_rx_packet_handler.v
 add_files rtl/ep_side/cam/csi_rx_word_align.v
 add_files rtl/ep_side/cam/csi_rx_word_gear_box.v
-add_files rtl/ep_side/cam/mipi_csi2_rx_ph1p.v
 add_files rtl/ep_side/cam/rx_phy_ph1p.v
-add_files rtl/ep_side/cam/sfifo.v
-add_files rtl/ep_side/cam/wfifo.v
 add_files rtl/ep_side/cam/ui_cfg_imx415.v
 add_files rtl/ep_side/cam/ui_i2c.v
 add_files rtl/ep_side/cam/ui_imx415_reg.v
@@ -84,6 +78,9 @@ add_files rtl/ep_side/ddr/ddr_wr_arb.v
 add_files rtl/ep_side/ddr/cam_ddr_writer.v
 # T11: RAW10 -> R10F 写者（crc32_upd4.v 为其 include；crc16_upd4.v 为 checked 包层 include，不单独编译）
 add_files rtl/ep_side/ddr/cam_r10f_writer.v
+# closedloop 变体：顶层 generate if(CLOSEDLOOP_EN) 会例化，默认 0 时不进网表
+add_files rtl/ep_side/ddr/closedloop/ddr_closedloop_readback.v
+add_files rtl/ep_side/ddr/ddr_frame_readback_checker.v
 add_files constraints/ph1p_pcie_case_ep.adc
 add_files constraints/ph1p_pcie_case_ep.sdc
 add_files al_ip/pcie_ep_core/pcie_ep_core.xml
