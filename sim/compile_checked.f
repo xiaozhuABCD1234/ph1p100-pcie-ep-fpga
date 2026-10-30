@@ -97,6 +97,7 @@ tb/csi_rx_packet_integrity_ref.v
 ../rtl/ep_side/img/algo/csi_algo_roi_adapter.v
 ../rtl/ep_side/img/algo/gray8_gaussian3x3_frame.v
 ../rtl/ep_side/img/algo/gray8_gaussian3x3_stream.v
+../rtl/ep_side/img/algo/gray8_sobel3x3_stream.v
 ../rtl/ep_side/img/algo/gray8_he_cdfmin_frame.v
 ../rtl/ep_side/img/algo/img_algo_parallel_top.v
 ../rtl/ep_side/img/algo/rgb8_gray_stream.v

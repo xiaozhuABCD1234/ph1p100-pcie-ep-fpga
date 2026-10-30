@@ -395,6 +395,14 @@
                     <Attr Name="CompileOrder" Val="64"/>
                 </FileInfo>
             </File>
+            <File Path="rtl/ep_side/img/algo/gray8_sobel3x3_stream.v">
+                <FileInfo>
+                    <Attr Name="UsedInSyn" Val="true"/>
+                    <Attr Name="UsedInP&R" Val="true"/>
+                    <Attr Name="BelongTo" Val="design_1"/>
+                    <Attr Name="CompileOrder" Val="64"/>
+                </FileInfo>
+            </File>
             <File Path="rtl/ep_side/img/algo/gray8_he_cdfmin_frame.v">
                 <FileInfo>
                     <Attr Name="UsedInSyn" Val="true"/>

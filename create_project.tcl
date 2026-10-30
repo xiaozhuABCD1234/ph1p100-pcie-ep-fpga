@@ -13,6 +13,7 @@ add_files rtl/ep_side/img/algo/algo_rowwin3.v
 add_files rtl/ep_side/img/algo/bayer_raw10_demosaic4.v
 add_files rtl/ep_side/img/algo/rgb8_gray_stream.v
 add_files rtl/ep_side/img/algo/gray8_gaussian3x3_stream.v
+add_files rtl/ep_side/img/algo/gray8_sobel3x3_stream.v
 add_files rtl/ep_side/img/algo/gray8_he_cdfmin_frame.v
 add_files rtl/ep_side/img/algo/algo_obuf.v
 add_files rtl/ep_side/img/algo/img_algo_parallel_top.v

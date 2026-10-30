@@ -2495,9 +2495,9 @@ utx_arb2 u_push_utx_arb (
     //  ROI 原点用**传感器全阵列坐标**：3864×2192 的中心 ⇒ (972, 552)。
     wire        algo_s_valid, algo_s_ready, algo_s_sof, algo_s_eol, algo_s_eof, algo_s_abort;
     wire [39:0] algo_s_data;
-    wire [2:0]  algo_v, algo_sof, algo_eol, algo_eof, algo_abort;
-    wire [2:0]  algo_ready;
-    wire [31:0] algo_d0, algo_d1, algo_d2;
+    wire [3:0]  algo_v, algo_sof, algo_eol, algo_eof, algo_abort;
+    wire [3:0]  algo_ready;
+    wire [31:0] algo_d0, algo_d1, algo_d2, algo_d3;
     wire        algo_cfg_error;
     reg         algo_cfg_ok;
     wire [1:0]  algo_sel    = w_algo_ctrl[2:1];
@@ -2542,6 +2542,8 @@ utx_arb2 u_push_utx_arb (
         .gau_sof(algo_sof[1]), .gau_eol(algo_eol[1]),     .gau_eof(algo_eof[1]), .gau_abort(algo_abort[1]),
         .he_valid(algo_v[2]),  .he_ready(algo_ready[2]),  .he_data(algo_d2),
         .he_sof(algo_sof[2]),  .he_eol(algo_eol[2]),      .he_eof(algo_eof[2]),  .he_abort(algo_abort[2]),
+        .sob_valid(algo_v[3]), .sob_ready(algo_ready[3]), .sob_data(algo_d3),
+        .sob_sof(algo_sof[3]), .sob_eol(algo_eol[3]),     .sob_eof(algo_eof[3]), .sob_abort(algo_abort[3]),
         .st_frames_good(), .st_frames_abort(), .st_he_published(), .st_he_rejected(),
         .st_gau_abort(), .he_lut_addr(8'd0), .he_lut_data()
     );
@@ -2551,12 +2553,14 @@ utx_arb2 u_push_utx_arb (
     assign algo_ready[0] = (algo_sel == 2'd0) ? algo_ms_ready : 1'b1;
     assign algo_ready[1] = (algo_sel == 2'd1) ? algo_ms_ready : 1'b1;
     assign algo_ready[2] = (algo_sel == 2'd2) ? algo_ms_ready : 1'b1;
+    assign algo_ready[3] = (algo_sel == 2'd3) ? algo_ms_ready : 1'b1;
 
-    wire        algo_sel_v = (algo_sel == 2'd0) ? algo_v[0] : (algo_sel == 2'd1) ? algo_v[1] : algo_v[2];
-    wire [31:0] algo_sel_d = (algo_sel == 2'd0) ? algo_d0 : (algo_sel == 2'd1) ? algo_d1 : algo_d2;
-    wire        algo_sel_s = (algo_sel == 2'd0) ? algo_sof[0] : (algo_sel == 2'd1) ? algo_sof[1] : algo_sof[2];
-    wire        algo_sel_l = (algo_sel == 2'd0) ? algo_eol[0] : (algo_sel == 2'd1) ? algo_eol[1] : algo_eol[2];
-    wire        algo_sel_e = (algo_sel == 2'd0) ? algo_eof[0] : (algo_sel == 2'd1) ? algo_eof[1] : algo_eof[2];
+    wire        algo_sel_v = algo_v[algo_sel];
+    wire [31:0] algo_sel_d = (algo_sel == 2'd0) ? algo_d0 : (algo_sel == 2'd1) ? algo_d1 :
+                             (algo_sel == 2'd2) ? algo_d2 : algo_d3;
+    wire        algo_sel_s = algo_sof[algo_sel];
+    wire        algo_sel_l = algo_eol[algo_sel];
+    wire        algo_sel_e = algo_eof[algo_sel];
 
     // 压缩不再走实时通路（见下方 DDR 回读方案），这里恒送预处理帧
     wire        src_v = algo_sel_v;

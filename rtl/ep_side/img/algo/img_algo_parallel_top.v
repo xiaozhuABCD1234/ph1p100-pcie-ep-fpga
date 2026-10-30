@@ -76,6 +76,14 @@ module img_algo_parallel_top #(
     output wire        he_eol,
     output wire        he_eof,
     output wire        he_abort,
+    // Sobel（梯度幅值）输出流：与前三路同契约，共享同一输入流
+    output wire        sob_valid,
+    input  wire        sob_ready,
+    output wire [31:0] sob_data,
+    output wire        sob_sof,
+    output wire        sob_eol,
+    output wire        sob_eof,
+    output wire        sob_abort,
     // status / monitor
     output wire [15:0] st_frames_good,
     output wire [15:0] st_frames_abort,
@@ -86,11 +94,11 @@ module img_algo_parallel_top #(
     output wire [7:0]  he_lut_data
 );
     // ---------------- config distribution ----------------
-    wire f_cfg_ready, a_cfg_ready, h_cfg_ready;
-    wire f_cfg_error, a_cfg_error, h_cfg_error;
+    wire f_cfg_ready, a_cfg_ready, h_cfg_ready, s_cfg_ready;
+    wire f_cfg_error, a_cfg_error, h_cfg_error, s_cfg_error;
 
-    assign cfg_ready = f_cfg_ready && a_cfg_ready && h_cfg_ready;
-    assign cfg_error = f_cfg_error || a_cfg_error || h_cfg_error;
+    assign cfg_ready = f_cfg_ready && a_cfg_ready && h_cfg_ready && s_cfg_ready;
+    assign cfg_error = f_cfg_error || a_cfg_error || h_cfg_error || s_cfg_error;
 
     // ---------------- demosaic front end (RGB8 4px) ----------------
     wire        f_valid;
@@ -157,11 +165,17 @@ module img_algo_parallel_top #(
     wire        g0_sof, g0_last;
     wire        gau_s_ready;
     wire        he_s_ready;
+    wire        sob_s_ready;
     wire        y8_fifo_ready;
     wire        gau_fifo_ready;
     wire        he_fifo_ready;
-    wire gau_in_space,he_in_space;
-    wire gau_in_valid,he_in_valid;
+    wire gau_in_space,he_in_space,sob_in_space;
+    wire gau_in_valid,he_in_valid,sob_in_valid;
+    wire        sob_w_valid, sob_w_sof, sob_w_eol, sob_w_eof, sob_w_abort;
+    wire [31:0] sob_w_data;
+    wire        sob_fifo_ready;
+    wire        sob_in_sof,sob_in_eol,sob_in_eof,sob_in_abort;
+    wire [31:0] sob_in_data;
     wire [31:0] gau_in_data,he_in_data;
     wire gau_in_sof,gau_in_eol,gau_in_eof,gau_in_abort;
     wire he_in_sof,he_in_eol,he_in_eof,he_in_abort;
@@ -176,7 +190,7 @@ module img_algo_parallel_top #(
     // Independent branch queues break HE/state -> Gaussian row enable paths.
     // Broadcast only to registered-capacity sinks, never qualify branch valid
     // combinationally with that same branch's input ready.
-    wire y8_stream_ready = y8_fifo_ready && gau_in_space && he_in_space;
+    wire y8_stream_ready = y8_fifo_ready && gau_in_space && he_in_space && sob_in_space;
     wire y8_xfer         = g0_valid && y8_stream_ready;
 
     assign rgb_gray_ready = g0_s_ready && g1_s_ready && g2_s_ready && g3_s_ready;
@@ -262,6 +276,14 @@ module img_algo_parallel_top #(
         .r_sof(he_sof), .r_eol(he_eol), .r_eof(he_eof), .r_abort(he_abort)
     );
 
+    algo_obuf #(.DW(32), .DEPTH(8)) u_obuf_sob (
+        .clk(clk), .rst_n(rst_n),
+        .w_valid(sob_w_valid), .w_ready(sob_fifo_ready), .w_data(sob_w_data),
+        .w_sof(sob_w_sof), .w_eol(sob_w_eol), .w_eof(sob_w_eof), .w_abort(sob_w_abort),
+        .r_valid(sob_valid), .r_ready(sob_ready), .r_data(sob_data),
+        .r_sof(sob_sof), .r_eol(sob_eol), .r_eof(sob_eof), .r_abort(sob_abort)
+    );
+
     // ---------------- Gaussian branch ----------------
     algo_branch_elastic2 u_gau_input (
         .clk(clk),.rst_n(rst_n),.w_valid(y8_xfer),.w_ready(gau_in_space),
@@ -275,6 +297,12 @@ module img_algo_parallel_top #(
         .r_valid(he_in_valid),.r_ready(he_s_ready),
         .r_token({he_in_sof,he_in_eol,he_in_eof,he_in_abort,he_in_data})
     );
+    algo_branch_elastic2 u_sob_input (
+        .clk(clk),.rst_n(rst_n),.w_valid(y8_xfer),.w_ready(sob_in_space),
+        .w_token({g0_sof,g0_last,y8_eof_r,y8_abort_r,y8_data_i}),
+        .r_valid(sob_in_valid),.r_ready(sob_s_ready),
+        .r_token({sob_in_sof,sob_in_eol,sob_in_eof,sob_in_abort,sob_in_data})
+    );
     wire [15:0] gau_good_unused;
 
     gray8_gaussian3x3_stream #(.MAX_WORDS(MAX_WORDS)) u_gau (
@@ -287,6 +315,21 @@ module img_algo_parallel_top #(
         .m_valid(gau_w_valid), .m_ready(gau_fifo_ready), .m_data(gau_w_data),
         .m_sof(gau_w_sof), .m_eol(gau_w_eol), .m_eof(gau_w_eof), .m_abort(gau_w_abort),
         .st_frames_good(gau_good_unused), .st_frames_abort(st_gau_abort)
+    );
+
+    // ---------------- Sobel branch ----------------
+    wire [15:0] sob_good_unused, sob_abort_unused;
+
+    gray8_sobel3x3_stream #(.MAX_WORDS(MAX_WORDS)) u_sob (
+        .clk(clk), .rst_n(rst_n),
+        .cfg_valid(cfg_valid), .cfg_ready(s_cfg_ready),
+        .cfg_width(cfg_width), .cfg_height(cfg_height),
+        .cfg_error(s_cfg_error),
+        .s_valid(sob_in_valid), .s_ready(sob_s_ready), .s_data(sob_in_data),
+        .s_sof(sob_in_sof), .s_eol(sob_in_eol), .s_eof(sob_in_eof), .s_abort(sob_in_abort),
+        .m_valid(sob_w_valid), .m_ready(sob_fifo_ready), .m_data(sob_w_data),
+        .m_sof(sob_w_sof), .m_eol(sob_w_eol), .m_eof(sob_w_eof), .m_abort(sob_w_abort),
+        .st_frames_good(sob_good_unused), .st_frames_abort(sob_abort_unused)
     );
 
     // ---------------- HE branch ----------------
